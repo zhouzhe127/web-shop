@@ -1,0 +1,22 @@
+
+.cardType span[data-v-5417d1dd] {
+	display: inline-block;
+	color: #333;
+	min-width: 100px;
+	text-align: center;
+	line-height: 38px;
+	height: 38px;
+	border: 1px solid #D2D2D2;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+}
+.cardType span.sign[data-v-5417d1dd] {
+	color: #FF9200;
+	border: 1px solid #FF9200;
+}
+.cardType span[data-v-5417d1dd]:hover {
+	background-color: #FFFFFF;
+}
+

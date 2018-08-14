@@ -1,0 +1,132 @@
+
+#activity[data-v-7c6b4603] {
+	min-width: 800px;
+}
+.list[data-v-7c6b4603] {
+	min-width: 1300px;
+}
+.list .oUl[data-v-7c6b4603] {
+	width: 100%;
+	height: 50px;
+	height: 50px;
+	background-color: #e6e6e6;
+}
+.list .oUl li[data-v-7c6b4603] {
+	height: 50px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	float: left;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(1) {
+	width: 10%;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(2) {
+	width: 10%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(3) {
+	width: 10%;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(4) {
+	width: 20%;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(5) {
+	width: 10%;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(6) {
+	width: 10%;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(7) {
+	width: 10%;
+}
+.list .oUl li[data-v-7c6b4603]:nth-child(8) {
+	width: 20%;
+}
+.list .oUl li:nth-child(8) a[data-v-7c6b4603] {
+	float: left;
+}
+.list .oUl li section[data-v-7c6b4603] {
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	float: left;
+	cursor: pointer;
+	color: #808080;
+}
+.sel[data-v-7c6b4603] {
+	display: inline-block;
+	width: 120px;
+	height: 40px;
+	font-size: 16px;
+	background: #f2f2f2;
+	border-radius: 3px;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+	margin-right: 10px;
+}
+.on[data-v-7c6b4603] {
+	background: #28a8e0;
+	color: #fff;
+}
+.off[data-v-7c6b4603] {
+	background: #f2f2f2;
+}
+#test[data-v-7c6b4603] {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	width: 400px;
+	height: 40px;
+	margin: 20px 0;
+}
+#test .oClickBox[data-v-7c6b4603] {
+	display: inline-block;
+	border: 1px solid #b3b3b3;
+	width: 300px;
+	height: 40px;
+	line-height: 40px;
+	position: relative;
+	cursor: pointer;
+}
+.oClickBox .oSpan[data-v-7c6b4603] {
+	border-right: 1px solid #b3b3b3;
+	display: inline-block;
+	text-align: center;
+	width: 255px;
+	height: 38px;
+}
+#test .down[data-v-7c6b4603] {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 10px solid #b3b3b3;
+	position: absolute;
+	right: 17px;
+	top: 17px;
+}
+.down[data-v-7c6b4603] {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 10px solid #b3b3b3;
+	position: absolute;
+	top: 15px;
+	right: 16px;
+}
+.search[data-v-7c6b4603] {
+	display: inline-block;
+	width: 44px;
+	height: 38px;
+	background-color: #29A7E1;
+	cursor: pointer;
+}
+.search[data-v-7c6b4603] {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM3Q0IyMDNCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM3Q0IyMDRCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzdDQjIwMUJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzdDQjIwMkJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pr9ucPQAAAFaSURBVHjarNQ7LARBHMfx2ROF9/tc4gqJREGhUduLgkYjUUmUOlEqlCqJRojCoxMVtYIoKBUaOc8gItGcZ0Mj1neSWTln/mtu3T/5JLc3s7/Mzvx3vSAIlKVSGEA79IRL7CGnHCpRcJ3GFo4xiDKUYxhnWEfyz1S9UqMXd5hGRd7/oRrM4grdlvFv4Y823GMoarIxhms0SXM8s6cbOMeMcqt5VGFcevw0HlDpsMpQI15RbxvXB9WPXbwp93rCIfqk09dtk1XFl+6QDin0E16M0ITpYevADXpihOp7LqSDSuERtUUcVCteTO+KLbVmNn/KcZWreMdk1BvVgluMOqxyAidRT5Z/0WVewTk0WCYnsYwsjuC7hGrNWMEztrGIJeyYfV9AHTLIScGe8OmrRgadpm1OcVDwgujxTYxgX/pKxeHbVvzfUGtwKUJ/BZcq9EewdFBxy8fHlwADAMK7/x/UqqS7AAAAAElFTkSuQmCC) center center no-repeat;
+}
+

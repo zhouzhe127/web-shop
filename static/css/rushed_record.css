@@ -1,0 +1,149 @@
+
+#rushedRecord[data-v-3e90c635] {
+	width: 1437px;
+	height: auto;
+}
+#rushedRecord .rushedstatus[data-v-3e90c635] {
+	margin-bottom: 31px;
+	color: #1DA527;
+}
+#rushedRecord .list[data-v-3e90c635] {
+	width: 1436px;
+	min-height: 156px;
+	border: 1px solid #D2D2D2;
+}
+#rushedRecord .list .list_title[data-v-3e90c635] {
+	width: 1436px;
+	height: 45px;
+	line-height: 45px;
+	padding-left: 17px;
+	padding-right: 68px;
+}
+#rushedRecord .list .list_title span[data-v-3e90c635] {
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+}
+#rushedRecord .list .list_title span[data-v-3e90c635]:first-child {
+	margin-right: 11px;
+}
+#rushedRecord .list .list_title span[data-v-3e90c635]:nth-child(2) {
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #000;
+	margin-right: 11px;
+	vertical-align: middle;
+	margin-top: 20px;
+}
+#rushedRecord .list .list_title .record[data-v-3e90c635] {
+	font-size: 16px;
+	color: #FF3C05;
+}
+#rushedRecord .list .list_title .num[data-v-3e90c635] {
+	height: 45px;
+	line-height: 45px;
+}
+#rushedRecord .list .list_title .num p[data-v-3e90c635] {
+	display: inline;
+	font-size: 16px;
+}
+#rushedRecord .list .heads[data-v-3e90c635] {
+	width: 1436px;
+	height: 41px;
+	background: #F2F2F2;
+}
+#rushedRecord .list .heads li[data-v-3e90c635] {
+	float: left;
+	text-align: center;
+	line-height: 41px;
+	font-size: 16px;
+	color: #43414A;
+}
+#rushedRecord .list .heads li[data-v-3e90c635]:nth-child(1) {
+	width: 25%;
+}
+#rushedRecord .list .heads li[data-v-3e90c635]:nth-child(2) {
+	width: 25%;
+}
+#rushedRecord .list .heads li[data-v-3e90c635]:nth-child(3) {
+	width: 25%;
+}
+#rushedRecord .list .heads li[data-v-3e90c635]:nth-child(4) {
+	width: 25%;
+}
+#rushedRecord .list .nolist[data-v-3e90c635] {
+	width: 1436px;
+	text-align: center;
+	line-height: 70px;
+	font-size: 24px;
+	color: #E0E0E0;
+}
+#rushedRecord .list .contents[data-v-3e90c635] {
+	width: 1436px;
+	height: 69px;
+	border-bottom: 1px solid #F7F7F7;
+}
+#rushedRecord .list .contents li[data-v-3e90c635] {
+	float: left;
+	height: 69px;
+	text-align: center;
+	line-height: 69px;
+	font-size: 14px;
+	color: #666;
+}
+#rushedRecord .list .contents li[data-v-3e90c635]:nth-child(1) {
+	width: 25%;
+}
+#rushedRecord .list .contents li:nth-child(1) .imgbox[data-v-3e90c635] {
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+#rushedRecord .list .contents li:nth-child(1) .imgbox img[data-v-3e90c635] {
+	width: 42px;
+	height: 42px;
+	float: right;
+	margin-top: 13px;
+}
+#rushedRecord .list .contents li:nth-child(1) .namebox[data-v-3e90c635] {
+	width: 50%;
+	height: 100%;
+	float: left;
+	text-align: left;
+	padding-left: 22px;
+}
+#rushedRecord .list .contents li[data-v-3e90c635]:nth-child(2) {
+	width: 25%;
+}
+#rushedRecord .list .contents li[data-v-3e90c635]:nth-child(3) {
+	width: 25%;
+}
+#rushedRecord .list .contents li[data-v-3e90c635]:nth-child(4) {
+	width: 25%;
+}
+#rushedRecord .list .contents li:first-child a[data-v-3e90c635] {
+	cursor: pointer;
+	display: inline-block;
+	width: 80px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	color: #28A8E0;
+}
+#rushedRecord .turn-page[data-v-3e90c635] {
+	margin: 10px 0 30px 0;
+}
+.fr.num[data-v-3e90c635] {
+	position: absolute;
+	float: right;
+	width: 100%;
+	left: 66%;
+	top: 113px;
+}
+.fr.num p[data-v-3e90c635] {
+	float: left;
+	font-size: 16px;
+}
+

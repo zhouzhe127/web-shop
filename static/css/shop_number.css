@@ -1,0 +1,43 @@
+
+#shopnum[data-v-1dba4817] {
+	width: 100%;
+	height: 180px;
+	min-width: 700px;
+	font-weight: bolder;
+	overflow: hidden;
+}
+#shopnum span[data-v-1dba4817] {
+	display: block;
+	float: left;
+	font-size: 18px;
+	width: 80px;
+	height: 40px;
+	line-height: 40px;
+	padding: 0;
+	margin: 0;
+}
+.shopToken[data-v-1dba4817] {
+	margin-left: 10px;
+	letter-spacing: 2px;
+}
+#shopnum textarea[data-v-1dba4817] {
+	width: 60%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 18px;
+	padding: 0;
+	color: #000;
+	border: none;
+	overflow: hidden;
+	resize: none;
+	text-decoration: none;
+	background: #fff;
+	font-weight: bolder;
+	outline: none;
+}
+#shopnum textarea[data-v-1dba4817]:focus {
+	-webkit-transition: none;
+	transition: none;
+	box-shadow: none;
+}
+

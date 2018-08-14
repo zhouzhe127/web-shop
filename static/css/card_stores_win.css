@@ -1,0 +1,22 @@
+
+.shopList span[data-v-be9fb3e8] {
+	display: inline-block;
+	color: #333;
+	min-width: 100px;
+	text-align: center;
+	line-height: 38px;
+	height: 38px;
+	border: 1px solid #D2D2D2;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+}
+.shopList span.sign[data-v-be9fb3e8] {
+	color: #FF9200;
+	border: 1px solid #FF9200;
+}
+.shopList span[data-v-be9fb3e8]:hover {
+	background-color: #FFFFFF;
+}
+

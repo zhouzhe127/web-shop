@@ -1,0 +1,88 @@
+
+#house[data-v-7b1e96e0] {
+  padding: 20px;
+}
+#house .sousuo input[data-v-7b1e96e0] {
+  width: 180px;
+  height: 40px;
+  float: left;
+  margin-left: 80px;
+  margin-bottom: 20px;
+  padding-left: 15px;
+}
+#house .sousuo input[data-v-7b1e96e0]::-webkit-input-placeholder {
+  padding-left: 5px;
+}
+#house .sousuo .res[data-v-7b1e96e0] {
+  width: 100px;
+  height: 40px;
+  border: 1px solid #cccccc;
+  text-align: center;
+  line-height: 40px;
+  margin-left: 30px;
+  font-size: 15px;
+  color: #cccccc;
+  float: left;
+  cursor: pointer;
+}
+#house .sousuo .choose[data-v-7b1e96e0] {
+  width: 100px;
+  height: 40px;
+  background: #00bfff;
+  text-align: center;
+  line-height: 40px;
+  margin-left: 10px;
+  font-size: 15px;
+  color: #fff;
+  float: left;
+  cursor: pointer;
+}
+#house .sel[data-v-7b1e96e0] {
+  display: inline-block;
+  width: 180px;
+  height: 40px;
+  font-size: 16px;
+  background: #f2f2f2;
+  border-radius: 3px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#house .on[data-v-7b1e96e0] {
+  background: #28a8e0;
+  color: #fff;
+}
+#house .selectbtns span[data-v-7b1e96e0] {
+  display: inline-block;
+  width: 180px;
+  height: 40px;
+  line-height: 40px;
+  margin-right: 9px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: #f2f2f2;
+}
+#house .dian[data-v-7b1e96e0] {
+  width: 10px;
+  height: 1px;
+  border-top: 1px solid #E1E1E1;
+  margin: 20px 5px;
+  float: left;
+}
+#house .selectbtns[data-v-7b1e96e0] {
+  width: 100%;
+}
+.selectbtns span[data-v-7b1e96e0] {
+  width: 180px;
+  height: 40px;
+}
+

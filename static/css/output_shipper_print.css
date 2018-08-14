@@ -1,0 +1,344 @@
+/*a4纸的宽度按96dip计算,with:794px,height:1123px*/
+/*这里不需要讲.output-print包裹在样式表最外层，因为print-page将会被提取 移动到body 包裹了.output-print会导致没有样式*/
+.printHtml *[data-v-35ac9ce4] {
+  color: #000;
+}
+.print-page[data-v-35ac9ce4] {
+  width: 714px;
+  height: 1036px;
+}
+.print-page.one-page[data-v-35ac9ce4] {
+  min-height: 1036px;
+  height: auto;
+}
+.handle[data-v-35ac9ce4] {
+  width: 100%;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+.handle span[data-v-35ac9ce4] {
+  height: 40px;
+  line-height: 38px;
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #fe8d01;
+  color: #fe8d01;
+  float: left;
+}
+.handle .back[data-v-35ac9ce4] {
+  margin-left: 20px;
+  border: 1px solid #28a8e0;
+  color: #28a8e0;
+}
+.page-box[data-v-35ac9ce4] {
+  width: 100%;
+  padding-bottom: 10px;
+  text-align: right;
+}
+.head[data-v-35ac9ce4] {
+  padding: 0 20px;
+}
+.head .order-num[data-v-35ac9ce4] {
+  font-size: 24px;
+  padding-bottom: 15px;
+}
+.head .name[data-v-35ac9ce4] {
+  font-size: 24px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+.head ul[data-v-35ac9ce4] {
+  padding: 5px 0;
+  overflow: hidden;
+}
+.head ul li[data-v-35ac9ce4] {
+  width: 50%;
+  position: relative;
+  padding-left: 70px;
+  font-size: 14px;
+  line-height: 1.5;
+  float: left;
+  min-height: 19px;
+}
+.head ul li span[data-v-35ac9ce4] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 14px;
+  line-height: normal;
+}
+.head ul li[data-v-35ac9ce4]:first-child {
+  padding-right: 20px;
+}
+.head ul .three[data-v-35ac9ce4] {
+  padding-left: 55px;
+}
+.head ul .tow[data-v-35ac9ce4] {
+  padding-left: 40px;
+}
+.main[data-v-35ac9ce4] {
+  border: 1px solid #333;
+  margin-top: 10px;
+}
+.main span[data-v-35ac9ce4] {
+  text-align: center;
+  float: left;
+}
+.main .head[data-v-35ac9ce4] {
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
+  border-bottom: 1px solid #333;
+}
+.main .title-one[data-v-35ac9ce4] {
+  overflow: hidden;
+  border-bottom: 1px solid #333;
+}
+.main .title-one span[data-v-35ac9ce4] {
+  width: 22%;
+  height: 25px;
+  line-height: 25px;
+}
+.main .title-one .narrow[data-v-35ac9ce4] {
+  width: 12%;
+}
+.main .list-one[data-v-35ac9ce4] {
+  border-bottom: 1px dashed #000;
+}
+.main .list-one .item-one[data-v-35ac9ce4] {
+  overflow: hidden;
+}
+.main .list-one .item-one span[data-v-35ac9ce4] {
+  width: 22%;
+  padding: 10px 5px;
+  font-size: 12px;
+  color: #000;
+}
+.main .list-one .item-one span em[data-v-35ac9ce4] {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  font-size: inherit;
+  color: inherit;
+}
+.main .list-one .item-one .narrow[data-v-35ac9ce4] {
+  width: 12%;
+}
+.main .list-one[data-v-35ac9ce4]:last-child {
+  border-bottom: 0;
+}
+.main .list-two[data-v-35ac9ce4] {
+  padding-left: 5%;
+  padding-bottom: 10px;
+}
+.main .list-two span[data-v-35ac9ce4] {
+  color: #333;
+  font-size: 12px;
+}
+.main .list-two .title-two[data-v-35ac9ce4] {
+  overflow: hidden;
+}
+.main .list-two .title-two span[data-v-35ac9ce4] {
+  width: 15%;
+  height: 30px;
+  line-height: 30px;
+}
+.main .list-two .title-two .narrow[data-v-35ac9ce4] {
+  width: 10%;
+}
+.main .list-two .item-two[data-v-35ac9ce4] {
+  overflow: hidden;
+}
+.main .list-two .item-two span[data-v-35ac9ce4] {
+  width: 15%;
+  padding: 3px;
+}
+.main .list-two .item-two span em[data-v-35ac9ce4] {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  font-size: inherit;
+}
+.main .list-two .item-two .narrow[data-v-35ac9ce4] {
+  width: 10%;
+}
+.main .material .list-two span[data-v-35ac9ce4] {
+  width: 15% !important;
+}
+.main .material .list-two .narrow[data-v-35ac9ce4] {
+  width: 10% !important;
+}
+
+/*a4纸的宽度按96dip计算,with:794px,height:1123px*/
+/*这里不需要讲.output-print包裹在样式表最外层，因为print-page将会被提取 移动到body 包裹了.output-print会导致没有样式*/
+.printHtml *[data-v-9e91f5be] {
+  color: #000;
+}
+.print-page[data-v-9e91f5be] {
+  width: 714px;
+  height: 1036px;
+}
+.print-page.one-page[data-v-9e91f5be] {
+  min-height: 1036px;
+  height: auto;
+}
+.handle[data-v-9e91f5be] {
+  width: 100%;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+.handle span[data-v-9e91f5be] {
+  height: 40px;
+  line-height: 38px;
+  width: 80px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #fe8d01;
+  color: #fe8d01;
+  float: left;
+}
+.handle .back[data-v-9e91f5be] {
+  margin-left: 20px;
+  border: 1px solid #28a8e0;
+  color: #28a8e0;
+}
+.page-box[data-v-9e91f5be] {
+  width: 100%;
+  padding-bottom: 10px;
+  text-align: right;
+}
+.head[data-v-9e91f5be] {
+  padding: 0 20px;
+}
+.head .order-num[data-v-9e91f5be] {
+  font-size: 24px;
+  padding-bottom: 15px;
+}
+.head .name[data-v-9e91f5be] {
+  font-size: 24px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+.head ul[data-v-9e91f5be] {
+  padding: 5px 0;
+  overflow: hidden;
+}
+.head ul li[data-v-9e91f5be] {
+  width: 50%;
+  position: relative;
+  padding-left: 70px;
+  font-size: 14px;
+  line-height: 1.5;
+  float: left;
+  min-height: 19px;
+}
+.head ul li span[data-v-9e91f5be] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 14px;
+  line-height: normal;
+}
+.head ul li[data-v-9e91f5be]:first-child {
+  padding-right: 20px;
+}
+.head ul .three[data-v-9e91f5be] {
+  padding-left: 55px;
+}
+.head ul .tow[data-v-9e91f5be] {
+  padding-left: 40px;
+}
+.main[data-v-9e91f5be] {
+  border: 1px solid #333;
+  margin-top: 10px;
+}
+.main span[data-v-9e91f5be] {
+  text-align: center;
+  float: left;
+}
+.main .head[data-v-9e91f5be] {
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
+  border-bottom: 1px solid #333;
+}
+.main .title-one[data-v-9e91f5be] {
+  overflow: hidden;
+  border-bottom: 1px solid #333;
+}
+.main .title-one span[data-v-9e91f5be] {
+  width: 18%;
+  height: 25px;
+  line-height: 25px;
+}
+.main .title-one .narrow[data-v-9e91f5be] {
+  width: 10%;
+}
+.main .list-one[data-v-9e91f5be] {
+  border-bottom: 1px dashed #000;
+}
+.main .list-one .item-one[data-v-9e91f5be] {
+  overflow: hidden;
+}
+.main .list-one .item-one span[data-v-9e91f5be] {
+  width: 18%;
+  padding: 10px 5px;
+  font-size: 12px;
+  color: #000;
+}
+.main .list-one .item-one span em[data-v-9e91f5be] {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  font-size: inherit;
+  color: inherit;
+}
+.main .list-one .item-one .narrow[data-v-9e91f5be] {
+  width: 10%;
+}
+.main .list-one[data-v-9e91f5be]:last-child {
+  border-bottom: 0;
+}
+.main .list-two[data-v-9e91f5be] {
+  padding-left: 5%;
+  padding-bottom: 10px;
+}
+.main .list-two span[data-v-9e91f5be] {
+  color: #333;
+  font-size: 12px;
+}
+.main .list-two .title-two[data-v-9e91f5be] {
+  overflow: hidden;
+}
+.main .list-two .title-two span[data-v-9e91f5be] {
+  width: 15%;
+  height: 30px;
+  line-height: 30px;
+}
+.main .list-two .title-two .narrow[data-v-9e91f5be] {
+  width: 10%;
+}
+.main .list-two .item-two[data-v-9e91f5be] {
+  overflow: hidden;
+}
+.main .list-two .item-two span[data-v-9e91f5be] {
+  width: 15%;
+  padding: 3px 10px;
+}
+.main .list-two .item-two span em[data-v-9e91f5be] {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  font-size: inherit;
+}
+.main .list-two .item-two .narrow[data-v-9e91f5be] {
+  width: 10%;
+}
+.main .material .list-two span[data-v-9e91f5be] {
+  width: 15% !important;
+}
+.main .material .list-two .narrow[data-v-9e91f5be] {
+  width: 10% !important;
+}
+

@@ -1,0 +1,123 @@
+
+.infoDetail[data-v-5fb56bf4] {
+  display: inline-block;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.infoDetail a[data-v-5fb56bf4] {
+  display: inline-block;
+  width: 33.33%;
+  text-align: center;
+}
+.invendetail .showBefore[data-v-5fb56bf4] {
+  font-size: 16px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+  text-align: right;
+  color: #333;
+  margin-right: 5px;
+}
+.invendetail .shopAfter[data-v-5fb56bf4] {
+  font-size: 16px;
+  max-width: 75%;
+  height: 40px;
+  line-height: 40px;
+  text-align: left;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.invendetail .shopAfter span[data-v-5fb56bf4] {
+  font-size: 16px;
+}
+.invendetail .cList[data-v-5fb56bf4] {
+  font-size: 16px;
+  width: 100%;
+  padding-left: 7%;
+}
+.invendetail .other-clist[data-v-5fb56bf4] {
+  font-size: 16px;
+  overflow: hidden;
+  width: 100%;
+  min-width: 825px;
+  padding-left: 4%;
+}
+.cList-one[data-v-5fb56bf4],
+.cList-two[data-v-5fb56bf4],
+.cList-three[data-v-5fb56bf4],
+.cList-four[data-v-5fb56bf4] {
+  display: inline-block;
+  vertical-align: top;
+}
+.dian[data-v-5fb56bf4] {
+  width: 10px;
+  height: 1px;
+  border-top: 1px solid #e1e1e1;
+  margin: 20px 5px;
+  float: left;
+}
+.modify[data-v-5fb56bf4] {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  text-decoration: underline;
+  color: #ffac32;
+  vertical-align: top;
+  cursor: pointer;
+}
+.shopAfter[data-v-5fb56bf4] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.clearfix[data-v-5fb56bf4]:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.clearfix img[data-v-5fb56bf4] {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 11px;
+  margin: auto;
+  cursor: pointer;
+}
+.infoDetail[data-v-5fb56bf4] {
+  display: inline-block;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.infoDetail a[data-v-5fb56bf4] {
+  display: inline-block;
+  width: 33.33%;
+  text-align: center;
+}
+#emptyData[data-v-5fb56bf4] {
+  margin: 0 auto;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  color: orange;
+}
+.tebBox[data-v-5fb56bf4] {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+}
+.tebBox li[data-v-5fb56bf4] {
+  border: 1px orange solid;
+  display: inline-block;
+  padding: 10px 30px;
+}
+.tebBox .active[data-v-5fb56bf4] {
+  background-color: orange;
+  color: #ffffff;
+}
+

@@ -1,0 +1,89 @@
+
+#jurdetail .topbox[data-v-d850f6b0] {
+  width: 100%;
+  height: 40px;
+  margin: 10px;
+  line-height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+#jurdetail .topbox i[data-v-d850f6b0] {
+  width: 2px;
+  height: 28px;
+  position: absolute;
+  top: 6px;
+  left: 0;
+  background-color: #28a8e0;
+}
+#jurdetail .topbox h3[data-v-d850f6b0] {
+  height: 40px;
+  margin-left: 10px;
+  float: left;
+  font-size: 16px;
+}
+#jurdetail .topbox .dian[data-v-d850f6b0] {
+  width: 10px;
+  height: 1px;
+  border-top: 1px solid #e1e1e1;
+  margin: 20px 5px;
+  float: left;
+}
+#jurdetail .innerBox[data-v-d850f6b0] {
+  padding: 10px 0 20px 50px;
+}
+#jurdetail .innerBox ul[data-v-d850f6b0] {
+  display: inline-block;
+  width: 32%;
+  vertical-align: top;
+}
+#jurdetail .innerBox ul li[data-v-d850f6b0] {
+  margin-bottom: 15px;
+}
+#jurdetail .innerBox ul li span[data-v-d850f6b0] {
+  display: inline-block;
+  max-width: 70%;
+  line-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#jurdetail .table[data-v-d850f6b0] {
+  margin-top: 10px;
+}
+#jurdetail .table .tabbutton li[data-v-d850f6b0] {
+  width: 105px;
+  height: 35px;
+  background-color: #e9e9e9;
+  text-align: center;
+  border-radius: 6px;
+  display: inline-block;
+  margin-right: 15px;
+  cursor: pointer;
+  line-height: 35px;
+}
+#jurdetail .table .tabbutton .active[data-v-d850f6b0] {
+  background-color: #29abe2;
+  color: #ffffff;
+}
+#jurdetail .table .childBox[data-v-d850f6b0] {
+  width: 35%;
+  display: inline-block;
+}
+#jurdetail .table .childBox .inputBox[data-v-d850f6b0] {
+  height: 40px;
+  margin-top: 15px;
+}
+#jurdetail .table .childBox .inputBox h1[data-v-d850f6b0] {
+  width: 130px;
+  text-align: right;
+  vertical-align: middle;
+  display: inline-block;
+}
+#jurdetail .table .childBox .inputBox .middle[data-v-d850f6b0] {
+  vertical-align: middle;
+}
+#jurdetail .table .childBox .inputBox .right[data-v-d850f6b0] {
+  display: inline-block;
+  margin-left: 10px;
+}
+

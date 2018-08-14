@@ -1,0 +1,185 @@
+
+#output-shipper[data-v-7e100e40] {
+  position: relative;
+  overflow: auto;
+}
+#output-shipper .color-size[data-v-7e100e40] {
+  color: #333;
+  font-size: 16px;
+}
+#output-shipper .head[data-v-7e100e40] {
+  padding-left: 15px;
+  height: 30px;
+  border-left: 2px solid #28a8e0;
+  font-size: 16px;
+  line-height: 30px;
+  color: #333;
+}
+#output-shipper .head[data-v-7e100e40]:after {
+  content: '';
+  display: inline-block;
+  width: 535px;
+  margin-left: 25px;
+  border: 1px dashed #ccc;
+  position: relative;
+  top: -5px;
+}
+#output-shipper .detail[data-v-7e100e40] {
+  padding-left: 45px;
+  padding-top: 25px;
+}
+#output-shipper .detail .list[data-v-7e100e40] {
+  font-size: 16px;
+  color: #333;
+}
+#output-shipper .detail .list div[data-v-7e100e40] {
+  margin-bottom: 15px;
+  line-height: 1.5;
+  display: inline-block;
+  color: #333;
+  font-size: 16px;
+  width: 400px;
+  padding-right: 20px;
+}
+#output-shipper .chooseBtn[data-v-7e100e40] {
+  margin-top: 10px;
+  width: 240px;
+  height: 34px;
+  cursor: pointer;
+}
+#output-shipper .chooseBtn li[data-v-7e100e40] {
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  line-height: 34px;
+  color: #fe8d01;
+  border: 1px solid #fe8d01;
+  float: left;
+}
+#output-shipper .chooseBtn .select[data-v-7e100e40] {
+  background: #fe8d01;
+  color: #ffffff;
+}
+#output-shipper .table[data-v-7e100e40] {
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-top: 10px;
+}
+#output-shipper .table .scroll-box[data-v-7e100e40] {
+  overflow: auto;
+}
+#output-shipper .table .table-head[data-v-7e100e40] {
+  padding-left: 20px;
+  height: 46px;
+  line-height: 46px;
+  color: #333;
+  font-size: 16px;
+}
+#output-shipper .table .table-head em[data-v-7e100e40] {
+  color: #fe8d01;
+  display: inline-block;
+  padding: 0 3px;
+}
+#output-shipper .table .table-head .detail-toggle[data-v-7e100e40] {
+  color: #28a8e0;
+  margin-left: 20px;
+  font-size: 16px;
+  -webkit-text-decoration: underline #28a8e0;
+          text-decoration: underline #28a8e0;
+  cursor: pointer;
+}
+#output-shipper .table .table-head .circle[data-v-7e100e40] {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border: 1px solid #333;
+  border-radius: 50%;
+  margin: 0 15px;
+  background-color: #333;
+  vertical-align: middle;
+  margin-top: -4px;
+}
+#output-shipper .table .table-li[data-v-7e100e40] {
+  float: left;
+  list-style: none;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#output-shipper .table .table-title[data-v-7e100e40] {
+  min-width: 1200px;
+  height: 40px;
+  background-color: #f2f2f2;
+  line-height: 40px;
+  overflow: hidden;
+}
+#output-shipper .table .table-title li[data-v-7e100e40] {
+  height: 40px;
+  float: left;
+  list-style: none;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+  font-size: 16px;
+  width: 22.5%;
+}
+#output-shipper .table .table-title li[data-v-7e100e40]:first-child {
+  width: 10%;
+}
+#output-shipper .table .table-body[data-v-7e100e40] {
+  min-width: 1200px;
+}
+#output-shipper .table .table-body .table-item[data-v-7e100e40] {
+  border-bottom: 2px solid #f7f7f7;
+}
+#output-shipper .table .table-body .table-item[data-v-7e100e40]:last-child {
+  border-bottom: 0;
+}
+#output-shipper .table .table-body .one-item[data-v-7e100e40] {
+  overflow: hidden;
+}
+#output-shipper .table .table-body li[data-v-7e100e40] {
+  float: left;
+  list-style: none;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 70px;
+  line-height: 70px;
+  color: #666;
+  font-size: 14px;
+  width: 22.5%;
+}
+#output-shipper .table .table-body li[data-v-7e100e40]:first-child {
+  width: 10%;
+}
+#output-shipper .table .table-body .small-table .small-head[data-v-7e100e40],
+#output-shipper .table .table-body .small-table .small-body[data-v-7e100e40] {
+  overflow: hidden;
+  height: 30px;
+  padding-left: 5%;
+}
+#output-shipper .table .table-body .small-table .small-head span[data-v-7e100e40],
+#output-shipper .table .table-body .small-table .small-body span[data-v-7e100e40] {
+  color: #999;
+  font-size: 16px;
+  float: left;
+  height: 30px;
+  line-height: 30px;
+  width: 15%;
+  text-align: center;
+}
+#output-shipper .table .table-body .small-table .small-head span[data-v-7e100e40]:first-child,
+#output-shipper .table .table-body .small-table .small-body span[data-v-7e100e40]:first-child {
+  width: 10%;
+}
+#output-shipper .table .table-body .small-table .small-body span[data-v-7e100e40] {
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+}
+

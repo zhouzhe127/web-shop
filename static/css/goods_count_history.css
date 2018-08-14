@@ -1,0 +1,109 @@
+
+.tab-div[data-v-1dc4d8eb] {
+  padding-bottom: 20px;
+}
+.tab-div span[data-v-1dc4d8eb] {
+  width: 135px;
+  height: 40px;
+  border: 1px solid #ff8d01;
+  line-height: 38px;
+  color: #ff8d01;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+}
+.tab-div span[data-v-1dc4d8eb]:first-child {
+  float: left;
+}
+.tab-div .select-tab[data-v-1dc4d8eb] {
+  color: #fff;
+  background-color: #ff8d01;
+  text-align: center;
+}
+.common-btn[data-v-1dc4d8eb] {
+  width: 100px;
+  height: 40px;
+  border: none;
+  line-height: 40px;
+  color: #fff;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  margin-right: 10px;
+}
+.clear[data-v-1dc4d8eb] {
+  content: "";
+  display: block;
+  line-height: 0;
+  visibility: hidden;
+  clear: both;
+}
+.required-no[data-v-1dc4d8eb]:after {
+  position: relative;
+  top: -8px;
+  right: -2px;
+  content: "*";
+  visibility: hidden;
+}
+.text-ellipsis[data-v-1dc4d8eb] {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#goods-count-history .search-div .submit-time[data-v-1dc4d8eb] {
+  line-height: 40px;
+  color: #333;
+  font-size: 16px;
+  display: inline-block;
+  vertical-align: top;
+}
+#goods-count-history .search-div .in-block[data-v-1dc4d8eb] {
+  display: inline-block;
+  margin-right: 15px;
+  vertical-align: top;
+  margin-bottom: 10px;
+}
+#goods-count-history .search-div .in-block .line[data-v-1dc4d8eb] {
+  display: inline-block;
+  width: 10px;
+  height: 20px;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+#goods-count-history .search-div .in-block .font[data-v-1dc4d8eb] {
+  font-size: 16px;
+}
+#goods-count-history .search-div .in-block .input-txt[data-v-1dc4d8eb] {
+  width: 180px;
+  height: 40px;
+  border: 1px solid #ccc;
+  vertical-align: top;
+  padding: 0 10px;
+  font-size: 16px;
+  outline: none;
+  margin-right: 15px;
+  font-size: 14px;
+}
+#goods-count-history .content-body .operation[data-v-1dc4d8eb] {
+  color: #22aae0;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-block;
+  height: 40px;
+  width: auto;
+  padding: 0 10px;
+  line-height: 40px;
+  vertical-align: middle;
+}
+#goods-count-history .content-body .line[data-v-1dc4d8eb]:after {
+  content: '';
+  display: inline-block;
+  margin: 0px 5px;
+  width: 1px;
+  height: 18px;
+  border: none;
+  vertical-align: middle;
+  border-right: 1px solid #aaa;
+}
+

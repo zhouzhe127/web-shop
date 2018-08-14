@@ -1,0 +1,21 @@
+
+#tan input[data-v-fc35c2a8] {
+  width: 300px;
+  margin-top: 80px;
+  outline: none;
+  height: 40px;
+  margin-left: 10px;
+  padding-left: 10px;
+}
+#tan .shop[data-v-fc35c2a8] {
+  display: inline-block;
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

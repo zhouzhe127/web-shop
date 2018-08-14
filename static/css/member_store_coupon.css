@@ -1,0 +1,28 @@
+
+.sel[data-v-027848f6] {
+		display: inline-block;
+		width: 120px;
+		height: 40px;
+		font-size: 16px;
+		background: #f2f2f2;
+		border-radius: 3px;
+		text-align: center;
+		line-height: 40px;
+		cursor: pointer;
+		margin-right: 10px;
+}
+.on[data-v-027848f6] {
+		background: #28a8e0;
+		color: #fff;
+}
+.comList[data-v-027848f6] {
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		margin-bottom: 30px;
+}
+
+	/* .comList .selectbtns{width: 100%;}
+        .comList .selectbtns span,.packageList span{background-color: #F1F1F1;}
+        .comList .selectbtns span:hover,.packageList span:hover{background-color: #F1F1F1;} */
+

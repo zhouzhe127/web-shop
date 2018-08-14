@@ -1,0 +1,71 @@
+
+#wareImport[data-v-37d9d926] {
+  width: 100%;
+}
+#wareImport .titleHeand span[data-v-37d9d926] {
+  font-size: 16px;
+}
+#wareImport .tebBox[data-v-37d9d926] {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+}
+#wareImport .tebBox li[data-v-37d9d926] {
+  border: 1px orange solid;
+  display: inline-block;
+  padding: 10px 35px;
+}
+#wareImport .tebBox li[data-v-37d9d926]:nth-child(n + 2) {
+  border-left: none;
+}
+#wareImport .tebBox .active[data-v-37d9d926] {
+  background-color: orange;
+  color: #ffffff;
+}
+#wareImport .serBox[data-v-37d9d926] {
+  margin-top: 20px;
+}
+#wareImport .serBox h1[data-v-37d9d926] {
+  display: inline-block;
+  line-height: 42px;
+}
+#wareImport .serBox .timer[data-v-37d9d926] {
+  display: inline-block;
+  width: 200px;
+}
+#wareImport .serBox .search-input[data-v-37d9d926] {
+  height: 40px;
+  color: #a5a5a5;
+  font-size: 14px;
+  line-height: 40px;
+  text-indent: 15px;
+  padding: 0;
+  outline: none;
+  margin-right: 15px;
+}
+#wareImport .tableCon[data-v-37d9d926] {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+          justify-content: space-between;
+  border-bottom: 1px #cccccc solid;
+}
+#wareImport .tableCon li[data-v-37d9d926] {
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+}
+#wareImport .ellipsis[data-v-37d9d926] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#wareImport .page-box[data-v-37d9d926] {
+  margin-top: 10px;
+}
+

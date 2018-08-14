@@ -1,0 +1,27 @@
+
+#unit-create-edit[data-v-4ec017b0] {
+  padding-top: 80px;
+  padding-left: 120px;
+}
+#unit-create-edit .input-content[data-v-4ec017b0] {
+  display: inline-block;
+  width: 300px;
+}
+#unit-create-edit .input-content span[data-v-4ec017b0] {
+  font-size: 14px;
+  color: #333;
+  vertical-align: middle;
+  line-height: 40px;
+}
+#unit-create-edit .input-content .input[data-v-4ec017b0] {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 40px;
+  width: 210px;
+  color: #333;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  margin-top: -3px;
+  margin-left: 7px;
+}
+

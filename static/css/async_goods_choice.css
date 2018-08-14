@@ -1,0 +1,14 @@
+
+#configTan[data-v-23b121a5]{width:550px;height: 100%;padding:30px 15px;background-color:#fff;
+}
+.aLi[data-v-23b121a5]{padding:0 15px;height: 40px;line-height: 40px;cursor: pointer;color:#b3aeae;
+	text-align: center;margin:5px 10px;display: inline-block;border: 1px solid #D2D2D2
+}
+.shoName-select[data-v-23b121a5]{border-color: #FF9800;color:#FF9800;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAVCAYAAAC+NTVfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQNJREFUeNpi/P//P8OAgJmMASwDYKkAkFwAxP5M9PYtkHwAshjEZaG3b5GFmejtW2TAQm/f0t7neHxLO58T4Vva+JxI31LX58T61moCA8PbCwwMNxdQyefE+tYRaKFuPgPDzw9U8DkpcQuyWC2egeFAItCZGyiMc1LiFtlipOAm3XKQb2cygpy+Hoj5wWImDQwMIcB4ZBMg2WLiLcfl2/tAt/AqMDD4HUB1ABEWgwAj3iqVmLgVNoBY/hnotk0ODAzWE4iyGL/lEN8ugAcxPgBzAAiw8RNlMXbLSSyl4EAK6GsHoLazDURZjGk5Kb6lAmChyLcUAsb/MxhgFgvQu0UFEGAAwkZhpDEtycMAAAAASUVORK5CYII=) right bottom no-repeat;
+}
+.allselect[data-v-23b121a5]{border-color: #FF9800!important;color: #FF9700!important;
+}
+.isallselect[data-v-23b121a5]{cursor: pointer;width: 100px;height: 30px;float: left;line-height: 30px;
+	text-align: center;margin:5px;border:1px solid #A0A0A0;color: #A0A0A0;
+}
+

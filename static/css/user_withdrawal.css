@@ -1,0 +1,45 @@
+
+#comments[data-v-0c5f0076] {
+  padding-bottom: 40px;
+  min-width: 1245px;
+}
+#comments .filter[data-v-0c5f0076] {
+  margin-bottom: 20px;
+}
+#comments .filter .input-box[data-v-0c5f0076] {
+  display: inline-block;
+  vertical-align: middle;
+}
+#comments .filter .search-box[data-v-0c5f0076] {
+  display: inline-block;
+  vertical-align: middle;
+  width: 200px;
+  height: 40px;
+  margin-left: 20px;
+}
+#comments .filter .search-box span[data-v-0c5f0076] {
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 0;
+  color: #fff;
+  display: inline-block;
+  cursor: pointer;
+}
+#comments .filter .search-box .search-btn[data-v-0c5f0076] {
+  margin-right: 20px;
+}
+#comments .btnLink a[data-v-0c5f0076] {
+  cursor: pointer;
+  display: inline-block;
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  color: #28A8E0;
+}
+#comments .turn-page[data-v-0c5f0076] {
+  margin: 10px 0 30px 0;
+}
+

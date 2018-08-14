@@ -1,0 +1,118 @@
+
+.tab-div[data-v-38315e16] {
+  padding-bottom: 20px;
+}
+.tab-div span[data-v-38315e16] {
+  width: 135px;
+  height: 40px;
+  border: 1px solid #ff8d01;
+  line-height: 38px;
+  color: #ff8d01;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+}
+.tab-div span[data-v-38315e16]:first-child {
+  float: left;
+}
+.tab-div .select-tab[data-v-38315e16] {
+  color: #fff;
+  background-color: #ff8d01;
+  text-align: center;
+}
+.common-btn[data-v-38315e16] {
+  width: 100px;
+  height: 40px;
+  border: none;
+  line-height: 40px;
+  color: #fff;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  margin-right: 10px;
+}
+.clear[data-v-38315e16] {
+  content: "";
+  display: block;
+  line-height: 0;
+  visibility: hidden;
+  clear: both;
+}
+.required-no[data-v-38315e16]:after {
+  position: relative;
+  top: -8px;
+  right: -2px;
+  content: "*";
+  visibility: hidden;
+}
+.text-ellipsis[data-v-38315e16] {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#goods-count-history .content-body .opera-common[data-v-38315e16] {
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  border: none;
+  line-height: 40px;
+  vertical-align: middle;
+  -webkit-user-select: none;
+          user-select: none;
+}
+#goods-count-history .content-body .operation-left[data-v-38315e16] {
+  color: #ff3d04;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  border: none;
+  line-height: 40px;
+  vertical-align: middle;
+  -webkit-user-select: none;
+          user-select: none;
+}
+#goods-count-history .content-body .line[data-v-38315e16]:after {
+  content: '';
+  display: inline-block;
+  margin: 0px 10px;
+  width: 1px;
+  height: 18px;
+  border: none;
+  vertical-align: middle;
+  border-right: 1px solid #aaa;
+}
+#goods-count-history .content-body .operation-right[data-v-38315e16] {
+  color: #29a8e0;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-block;
+  width: auto;
+  height: 40px;
+  border: none;
+  line-height: 40px;
+  vertical-align: middle;
+  -webkit-user-select: none;
+          user-select: none;
+}
+#goods-count-history .content-body .count-num[data-v-38315e16] {
+  width: 100px;
+  height: 40px;
+  border: 1px solid #ccc;
+  margin-right: 15px;
+  vertical-align: top;
+  padding: 0 10px;
+  font-size: 16px;
+  outline: none;
+  margin: 0;
+  margin-top: 15px;
+  color: #666;
+  font-size: 14px;
+}
+#goods-count-history .content-body .canWrite[data-v-38315e16] {
+  background-color: #f2f2f2;
+  cursor: not-allowed;
+}
+

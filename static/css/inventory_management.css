@@ -1,0 +1,64 @@
+
+@media only screen and (max-width: 1250px) {
+.selBox[data-v-4c013206] {
+    margin-top: 10px;
+    display: block;
+}
+}
+#inventory[data-v-4c013206] {
+  overflow: hidden;
+}
+.tebBox[data-v-4c013206] {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+}
+.tebBox li[data-v-4c013206] {
+  border: 1px orange solid;
+  display: inline-block;
+  padding: 10px 40px;
+}
+.tebBox .active[data-v-4c013206] {
+  background-color: orange;
+  color: #ffffff;
+}
+.selBox[data-v-4c013206] {
+  margin-right: 40px;
+  display: inline-block;
+}
+.infoDetail[data-v-4c013206] {
+  display: inline-block;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-around;
+          justify-content: space-around;
+}
+.infoDetail a[data-v-4c013206] {
+  display: inline-block;
+  text-align: center;
+}
+.filter input[data-v-4c013206] {
+  width: 160px;
+  height: 41px;
+  padding-left: 5px;
+  margin-right: 20px;
+}
+#inventory .somePage[data-v-4c013206] {
+  margin-top: 10px;
+}
+.selectbtns span[data-v-4c013206] {
+  display: inline-block;
+  width: 180px;
+  height: 40px;
+  line-height: 40px;
+  margin-right: 9px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

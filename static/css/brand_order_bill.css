@@ -1,0 +1,143 @@
+
+.brandBill .filter .search-box[data-v-88e9d482] {
+  margin-right: 10px;
+  display: inline-block;
+}
+.brandBill .filter .search-box span[data-v-88e9d482] {
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 0;
+  color: #fff;
+  display: inline-block;
+  cursor: pointer;
+}
+.brandBill .filter .search-box .search-btn[data-v-88e9d482] {
+  margin-right: 5px;
+}
+.brandBill .filter .block[data-v-88e9d482] {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.brandBill .filter .shops[data-v-88e9d482] {
+  margin-bottom: 10px;
+  line-height: 20px;
+}
+.brandBill .filter .time i[data-v-88e9d482] {
+  height: 20px;
+  width: 20px;
+  border-radius: 2px;
+  margin-right: 5px;
+  color: #444;
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid #bbb;
+  vertical-align: middle;
+  margin-top: -3px;
+}
+.brandBill .filter .time i.active[data-v-88e9d482] {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA4ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpjZTQ3ZWMyNi00ZTAxLTYyNDAtOWIzOS0yYmEzODJmZWExOTkiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MEFGM0E3ODg3RTNCMTFFNzhERDVCN0FERDk5QkJCN0QiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MEFGM0E3ODc3RTNCMTFFNzhERDVCN0FERDk5QkJCN0QiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5MzZjY2M2OC00NmZhLTQzNjYtYWVmYy05ZmJkZGQzNjk0ZTQiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpmM2VkMDU2Ni03YzE0LTExN2EtOTJlNi05ZjhlNmE5OWJjZmYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6KLZGcAAAAaUlEQVR42mL8//8/AyWAiYFCMDQNqIdiCAAFIgm4/j8E/AFiHXAEkKk5HCaOTVE9sZrRDdCBKviPZgiy5jB0w9FtCkczBK9mXGGAbAhezfgCEWYIXs0gzIIjrlcisVfhSxSMQz8zAQQYAKHmcsKA87T7AAAAAElFTkSuQmCC) #28a8e0 center no-repeat;
+  border: 1px solid #28a8e0;
+}
+.brandBill .filter .time span[data-v-88e9d482] {
+  font-size: 16px;
+}
+.brandBill .loading[data-v-88e9d482] {
+  width: 100%;
+  height: 350px;
+  padding-top: 100px;
+  text-align: center;
+}
+.brandBill .main .total[data-v-88e9d482] {
+  border: 1px solid #ccc;
+}
+.brandBill .main .total span[data-v-88e9d482] {
+  float: left;
+  width: 25%;
+  text-align: center;
+}
+.brandBill .main .total .title[data-v-88e9d482] {
+  height: 40px;
+  overflow: hidden;
+  background: #e6e6e6;
+}
+.brandBill .main .total .title span[data-v-88e9d482] {
+  color: #333;
+  height: 40px;
+  line-height: 40px;
+}
+.brandBill .main .total .total-data[data-v-88e9d482] {
+  overflow: hidden;
+}
+.brandBill .main .total .total-data span[data-v-88e9d482] {
+  color: #f8941f;
+  height: 50px;
+  line-height: 50px;
+}
+.brandBill .main .store-list[data-v-88e9d482] {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+}
+.brandBill .main .store-list .length[data-v-88e9d482] {
+  height: 50px;
+  line-height: 50px;
+  padding-left: 10px;
+  font-size: 16px;
+}
+.brandBill .main .store-list .length span[data-v-88e9d482] {
+  color: #f30;
+  font-size: 16px;
+}
+.brandBill .main .store-list .title[data-v-88e9d482] {
+  overflow: hidden;
+  background: #e6e6e6;
+}
+.brandBill .main .store-list .title span[data-v-88e9d482] {
+  float: left;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  width: 33.33%;
+  color: #666;
+}
+.brandBill .main .store-list .day span[data-v-88e9d482] {
+  width: 25%;
+}
+.brandBill .main .store-list ul[data-v-88e9d482] {
+  background: #fff;
+}
+.brandBill .main .store-list ul li[data-v-88e9d482] {
+  overflow: hidden;
+  border-bottom: 1px solid #f7f7f7;
+}
+.brandBill .main .store-list ul li span[data-v-88e9d482] {
+  float: left;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  width: 33.33%;
+  color: #f8941f;
+}
+.brandBill .main .store-list ul li .light[data-v-88e9d482] {
+  color: #29a7e1;
+  cursor: pointer;
+}
+.brandBill .main .store-list ul li .light[data-v-88e9d482]:hover {
+  color: #09f;
+}
+.brandBill .main .store-list ul li[data-v-88e9d482]:last-child {
+  border-bottom: 0;
+}
+.brandBill .main .store-list ul .day span[data-v-88e9d482] {
+  width: 25%;
+}
+.brandBill .main .store-list ul .list-empty[data-v-88e9d482] {
+  height: 70px;
+  line-height: 70px;
+  font-size: 20px;
+  text-align: center;
+  color: #999;
+}
+

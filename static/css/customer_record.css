@@ -1,0 +1,30 @@
+
+#customer[data-v-18a70d6e] {
+	width: 100%;
+	height: auto;
+}
+#customer .worker_staff_belongs input[data-v-18a70d6e] {
+	width: 184px;
+	height: 42px;
+	border: 1px solid #b3b3b3;
+	margin-left: 19px;
+	padding: 0 17px;
+}
+#customer .worker_staff_belongs button[data-v-18a70d6e] {
+	width: 101px;
+	height: 42px;
+	margin-left: 19px;
+}
+#customer .worker_staff_belongs .shop_selects[data-v-18a70d6e] {
+	background: #28a8e0;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+}
+#customer .worker_staff_belongs .shop_resert[data-v-18a70d6e] {
+	background: #b3b3b3;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+}
+

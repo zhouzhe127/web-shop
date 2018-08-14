@@ -1,0 +1,268 @@
+
+#select-batch[data-v-1f7205fd] {
+  padding: 20px;
+  background-color: #f7f7f7;
+  overflow: auto;
+  min-height: 450px;
+  padding-bottom: 0;
+}
+#select-batch .color-size-16[data-v-1f7205fd] {
+  color: #333;
+  font-size: 16px;
+}
+#select-batch .batch-title[data-v-1f7205fd] {
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+#select-batch .batch-title li[data-v-1f7205fd] {
+  list-style: none;
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  color: #333;
+  font-size: 16px;
+  overflow: hidden;
+  width: 33.33%;
+}
+#select-batch .batch-title li[data-v-1f7205fd]:last-child {
+  text-align: right;
+}
+#select-batch .batch-title li .clear[data-v-1f7205fd] {
+  float: right;
+  height: 40px;
+  width: 100px;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  background: #fe8d01;
+  cursor: pointer;
+}
+#select-batch .batch-title .small-li[data-v-1f7205fd] {
+  width: 130px;
+  text-align: center;
+}
+#select-batch .search-div[data-v-1f7205fd] {
+  height: 62px;
+  border: 1px solid transparent;
+}
+#select-batch .search-div .search-input[data-v-1f7205fd] {
+  width: 180px;
+  height: 40px;
+  border: 1px solid #ccc;
+  text-indent: 15px;
+  font-size: 14px;
+  color: #a5a5a5;
+  margin-right: 10px;
+  padding: 0;
+  vertical-align: top;
+  outline: none;
+}
+#select-batch .search-div .calendar-gap[data-v-1f7205fd] {
+  width: 250px;
+  height: 40px;
+  position: relative;
+  border: 1px solid #ccc;
+  display: inline-block;
+  vertical-align: top;
+  line-height: 40px;
+  cursor: pointer;
+}
+#select-batch .search-div .calendar-gap span[data-v-1f7205fd] {
+  width: 39%;
+  float: left;
+  text-align: center;
+}
+#select-batch .search-div .calendar-gap span[data-v-1f7205fd]:nth-child(2) {
+  width: 5%;
+}
+#select-batch .search-div .calendar-gap .dropDown[data-v-1f7205fd] {
+  width: 40px;
+  height: 40px;
+  float: right;
+  position: relative;
+  z-index: 5;
+  border-left: #ccc solid 1px;
+}
+#select-batch .search-div .calendar-gap .dropDown i[data-v-1f7205fd] {
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -5px;
+  border-top: 10px solid #ccc;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  box-sizing: border-box;
+}
+#select-batch .search-div .calendar-gap .chooseTime[data-v-1f7205fd] {
+  position: absolute;
+  left: 0px;
+  top: 40px;
+  z-index: 5px;
+}
+#select-batch .search-div .filter-reset[data-v-1f7205fd] {
+  width: 100px;
+  height: 40px;
+  display: inline-block;
+  line-height: 40px;
+  font-size: 16px;
+  text-align: center;
+}
+#select-batch .search-div .filter[data-v-1f7205fd] {
+  color: #fff;
+  width: 100px;
+  height: 40px;
+  display: inline-block;
+  line-height: 40px;
+  font-size: 16px;
+  text-align: center;
+  margin-right: 10px;
+}
+#select-batch .search-div .reset[data-v-1f7205fd] {
+  color: #fff;
+  width: 100px;
+  height: 40px;
+  display: inline-block;
+  line-height: 40px;
+  font-size: 16px;
+  text-align: center;
+}
+#select-batch .table[data-v-1f7205fd] {
+  overflow: hidden;
+}
+#select-batch .table .table-head[data-v-1f7205fd] {
+  overflow: hidden;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+#select-batch .table .table-head li[data-v-1f7205fd] {
+  list-style: none;
+  border-right: 1px solid #ccc;
+  height: 40px;
+  line-height: 40px;
+  color: #333;
+  float: left;
+  font-size: 14px;
+  width: 13%;
+  text-align: center;
+}
+#select-batch .table .table-head li[data-v-1f7205fd]:first-child {
+  width: 9%;
+}
+#select-batch .table .table-head li[data-v-1f7205fd]:last-child {
+  border-right: 0;
+}
+#select-batch .table .table-body[data-v-1f7205fd] {
+  height: 320px;
+  overflow: scroll;
+}
+#select-batch .table .table-body .table-row[data-v-1f7205fd] {
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+}
+#select-batch .table .table-body .table-row li[data-v-1f7205fd] {
+  list-style: none;
+  height: 62px;
+  line-height: 62px;
+  color: #666;
+  float: left;
+  font-size: 14px;
+  width: 13%;
+  text-align: center;
+  overflow: hidden;
+}
+#select-batch .table .table-body .table-row li[data-v-1f7205fd]:first-child {
+  width: 9%;
+}
+#select-batch .table .table-body .table-row li .input-num[data-v-1f7205fd] {
+  width: 100px;
+  height: 40px;
+  text-indent: 15px;
+  color: #666;
+  outline: none;
+}
+
+
+#enter-goods-error[data-v-6d6de9cb] {
+  padding: 15px;
+}
+#enter-goods-error .tab[data-v-6d6de9cb] {
+  overflow: hidden;
+}
+#enter-goods-error .tab span[data-v-6d6de9cb] {
+  float: left;
+  height: 35px;
+  line-height: 33px;
+  width: 100px;
+  color: #f8941f;
+  border: 1px solid #f8941f;
+  text-align: center;
+  cursor: pointer;
+}
+#enter-goods-error .tab span.active[data-v-6d6de9cb] {
+  background: #f8941f;
+  color: #fff;
+}
+#enter-goods-error .list[data-v-6d6de9cb] {
+  padding-top: 15px;
+}
+#enter-goods-error .list span[data-v-6d6de9cb] {
+  width: 28.33%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#enter-goods-error .list span[data-v-6d6de9cb]:first-child {
+  width: 15%;
+}
+#enter-goods-error .list .title[data-v-6d6de9cb] {
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  overflow: hidden;
+}
+#enter-goods-error .list .title span[data-v-6d6de9cb] {
+  float: left;
+  border-right: 1px solid #ccc;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+}
+#enter-goods-error .list .title span[data-v-6d6de9cb]:last-child {
+  border-right: 0;
+}
+#enter-goods-error .list ul[data-v-6d6de9cb] {
+  overflow: auto;
+  height: 200px;
+}
+#enter-goods-error .list ul li[data-v-6d6de9cb] {
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+}
+#enter-goods-error .list ul li[data-v-6d6de9cb]:last-child {
+  border-bottom: 0;
+}
+#enter-goods-error .list ul li span[data-v-6d6de9cb] {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+#enter-goods-error .list ul .empty[data-v-6d6de9cb] {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #999;
+}
+#enter-goods-error .material span[data-v-6d6de9cb] {
+  width: 28.33%;
+}
+#enter-goods-error .material span[data-v-6d6de9cb]:first-child {
+  width: 15%;
+}
+#enter-goods-error .material span[data-v-6d6de9cb]:nth-child(2) {
+  width: 56.67%;
+}
+

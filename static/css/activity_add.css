@@ -1,0 +1,79 @@
+
+.sec[data-v-d0810136] {
+	padding: 20px 50px;
+}
+.top[data-v-d0810136] {
+	border-bottom: 1px dashed #ccc;
+	padding-bottom: 20px;
+}
+.choiceact[data-v-d0810136] {
+	padding-top: 10px;
+	position: relative;
+}
+.choiceact .span_1[data-v-d0810136] {
+	font-size: 14px;
+	color: #999999;
+}
+.choiceact .sp[data-v-d0810136] {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	        justify-content: center;
+	margin-top: 20px;
+}
+.sp .selectbtns[data-v-d0810136] {
+	width: auto;
+}
+.choiceact .div_1[data-v-d0810136] {
+	vertical-align: top;
+	position: relative;
+	display: inline-block;
+	width: 120px;
+	height: 120px;
+	text-align: center;
+	background-color: #f1f1f1;
+	border-radius: 8px;
+}
+.choiceact .span_2[data-v-d0810136] {
+	line-height: 120px;
+}
+.choiceact .span_3[data-v-d0810136] {
+	position: absolute;
+	right: 35px;
+	bottom: 20px;
+	font-size: 12px;
+	color: #999999;
+}
+.sel[data-v-d0810136] {
+	display: inline-block;
+	width: 120px;
+	height: 40px;
+	font-size: 16px;
+	background: #f2f2f2;
+	border-radius: 3px;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+	margin-right: 10px;
+}
+.on[data-v-d0810136] {
+	background-color: #28a8e0;
+	color: #fff;
+}
+.sp section>span[data-v-d0810136] {
+	min-width: 120px;
+	height: 120px;
+	display: inline-block;
+	text-align: center;
+	line-height: 120px;
+	cursor: pointer;
+	background-color: #f2f2f2;
+	border-radius: 8px;
+	margin-right: 8px;
+}
+.sp .effect[data-v-d0810136] {
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAVCAYAAAC+NTVfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQNJREFUeNpi/P//P8OAgJmMASwDYKkAkFwAxP5M9PYtkHwAshjEZaG3b5GFmejtW2TAQm/f0t7neHxLO58T4Vva+JxI31LX58T61moCA8PbCwwMNxdQyefE+tYRaKFuPgPDzw9U8DkpcQuyWC2egeFAItCZGyiMc1LiFtlipOAm3XKQb2cygpy+Hoj5wWImDQwMIcB4ZBMg2WLiLcfl2/tAt/AqMDD4HUB1ABEWgwAj3iqVmLgVNoBY/hnotk0ODAzWE4iyGL/lEN8ugAcxPgBzAAiw8RNlMXbLSSyl4EAK6GsHoLazDURZjGk5Kb6lAmChyLcUAsb/MxhgFgvQu0UFEGAAwkZhpDEtycMAAAAASUVORK5CYII=) #f2f2f2 no-repeat right bottom;
+}
+

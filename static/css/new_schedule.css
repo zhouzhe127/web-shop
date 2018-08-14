@@ -1,0 +1,181 @@
+
+#shipment .topBox .title[data-v-9d6d0356] {
+  width: 98%;
+  height: 40px;
+  margin: 10px;
+  line-height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+#shipment .topBox .title i[data-v-9d6d0356] {
+  width: 2px;
+  height: 28px;
+  position: absolute;
+  top: 6px;
+  left: 0;
+  background-color: #28a8e0;
+}
+#shipment .topBox .title h3[data-v-9d6d0356] {
+  width: 70px;
+  height: 40px;
+  margin-left: 10px;
+  float: left;
+  font-size: 16px;
+  font-family: "\5FAE\8F6F\96C5\9ED1";
+}
+#shipment .topBox .innerBox[data-v-9d6d0356] {
+  padding-left: 50px;
+}
+#shipment .topBox .innerBox ul[data-v-9d6d0356] {
+  display: inline-block;
+  width: 32%;
+  vertical-align: top;
+}
+#shipment .topBox .innerBox ul li[data-v-9d6d0356] {
+  margin-bottom: 20px;
+}
+#shipment .topBox .innerBox ul li span[data-v-9d6d0356] {
+  display: inline-block;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+}
+#shipment .topBox .innerBox ul li img[data-v-9d6d0356] {
+  cursor: pointer;
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+#shipment .topBox .dian[data-v-9d6d0356] {
+  width: 10px;
+  height: 1px;
+  border-top: 1px solid #e1e1e1;
+  margin: 20px 5px;
+  float: left;
+}
+#shipment .tebBox[data-v-9d6d0356] {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+}
+#shipment .tebBox li[data-v-9d6d0356] {
+  width: 120px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  border: 1px orange solid;
+  display: inline-block;
+}
+#shipment .tebBox .active[data-v-9d6d0356] {
+  background-color: orange;
+  color: #ffffff;
+}
+#shipment .inputBox[data-v-9d6d0356] {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+#shipment .inputBox .errStyle[data-v-9d6d0356] {
+  color: red;
+}
+#shipment .inputBox .errStyle span[data-v-9d6d0356] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background-color: red;
+  color: #ffffff;
+  text-align: center;
+  margin-right: 5px;
+  line-height: 14px;
+}
+#shipment .inputBox .input-num[data-v-9d6d0356] {
+  width: 60px;
+  height: 40px;
+  text-indent: 2px;
+  outline: none;
+  margin-left: 10px;
+  position: relative;
+  right: -2px;
+}
+#shipment .inputBox .active[data-v-9d6d0356] {
+  background-color: #e5e5e0;
+}
+#shipment .inputBox span[data-v-9d6d0356] {
+  background-color: #ffffff;
+}
+#shipment .inputBox .unitBox[data-v-9d6d0356] {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 1px #cccccc solid;
+  text-align: center;
+  line-height: 36px;
+  border-left: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#shipment .surplusBox[data-v-9d6d0356] {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#shipment .line[data-v-9d6d0356] {
+  text-decoration: underline;
+  cursor: pointer;
+}
+#shipment .detailsBtn[data-v-9d6d0356] {
+  color: #29abe2;
+  text-decoration: underline;
+  cursor: pointer;
+}
+#shipment .errbtn[data-v-9d6d0356] {
+  color: #D1EDF9;
+  text-decoration: underline;
+  cursor: pointer;
+}
+#shipment .delBtn[data-v-9d6d0356] {
+  display: inline-block;
+}
+#shipment .delBtn .del[data-v-9d6d0356] {
+  color: red;
+  cursor: pointer;
+}
+#shipment .bottomBtn[data-v-9d6d0356] {
+  margin-top: 40px;
+}
+#shipment .bottomBtn li[data-v-9d6d0356] {
+  display: inline-block;
+  width: 150px;
+  height: 40px;
+  margin-right: 10px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+}
+#shipment .bottomBtn li[data-v-9d6d0356]:first-child {
+  background-color: #dddddd;
+  color: #ffffff;
+}
+#shipment .bottomBtn li[data-v-9d6d0356]:nth-child(2) {
+  border: 1px orange solid;
+  color: orange;
+}
+#shipment .bottomBtn li[data-v-9d6d0356]:nth-child(3) {
+  background-color: orange;
+  color: #ffffff;
+}
+

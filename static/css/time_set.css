@@ -1,0 +1,35 @@
+
+#marketing[data-v-6df5f84a] {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 600px;
+  border: 1px solid #d2d2d2;
+  height: auto;
+  overflow: hidden;
+}
+#marketing .oUbox[data-v-6df5f84a] {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  overflow: hidden;
+}
+#marketing .oUbox .oLbox[data-v-6df5f84a] {
+  width: 25%;
+  height: 60px;
+  text-align: center;
+  color: #434248;
+  line-height: 60px;
+  overflow: hidden;
+  float: left;
+  border-bottom: 3px solid #f7f7f7;
+}
+#marketing .oUbox .oLbox .o-span[data-v-6df5f84a] {
+  border-bottom: 1px solid #01a9e7;
+  color: #01a9e7;
+  cursor: pointer;
+}
+#marketing .ulTime[data-v-6df5f84a] {
+  background-color: #ecedf2;
+  height: 57px;
+}
+

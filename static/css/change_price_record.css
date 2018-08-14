@@ -1,0 +1,98 @@
+
+#change-price .allSection[data-v-0dc45f57] {
+  margin-right: 40px;
+  display: inline-block;
+}
+#change-price .allSection .searchgoods[data-v-0dc45f57] {
+  text-align: center;
+  display: inline-block;
+  height: 41px;
+  line-height: 41px;
+  outline: none;
+  width: 174px;
+  border: 1px solid #b3b3b3;
+}
+#change-price .allSection a[data-v-0dc45f57] {
+  width: 90px;
+  height: 40px;
+  border: 1px solid #00adef;
+  line-height: 40px;
+  display: inline-block;
+}
+#change-price .allSection .reset[data-v-0dc45f57] {
+  background: #b3b3b3;
+  border: none;
+  color: #fff;
+}
+#change-price .diel[data-v-0dc45f57] {
+  display: inline-block;
+  width: 136px;
+  height: 40px;
+  font-size: 16px;
+  background: #fff;
+  border: 1px solid #e9c048;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  color: #f8931f;
+  /*margin-bottom:10px;*/
+}
+#change-price .on[data-v-0dc45f57] {
+  background: #f8931f;
+  color: #fff;
+}
+/*头部================================*/
+/**/
+/*.box {*/
+/*width: 100%;*/
+/*height: 100%;*/
+/*overflow: auto;*/
+/*min-width:780px;*/
+/*}*/
+/*.box .title {*/
+/*width: 100%;*/
+/*height: 70px;*/
+/*background: #fbfbfb;*/
+/*border-bottom: 1px solid #b3b3b3;*/
+/*}*/
+/*.box .title span {*/
+/*display: inline-block;*/
+/*width: 150px;*/
+/*line-height: 70px;*/
+/*text-align: center;*/
+/*font-size: 16px;*/
+/*vertical-align: middle;*/
+/*cursor: pointer;*/
+/*}*/
+/*.box .title .tab {*/
+/*border-right: 1px solid #b3b3b3;*/
+/*border-left: 1px solid #b3b3b3;*/
+/*border-top: 4px solid #28a8e0;*/
+/*width: 149px;*/
+/*background: #fff;*/
+/*height: 70px;*/
+/*line-height: 66px;*/
+/*}*/
+/*.box .title .tab2 {*/
+/*border-left: none;*/
+/*}*/
+/*.box .content {*/
+/*width: 100%;*/
+/*padding: 20px;*/
+/*}*/
+/*.box .content ul li{*/
+/*display: inline-block;*/
+/*width: 22%;*/
+/*height: 50px;*/
+/*line-height: 50px;*/
+/*text-align: center;*/
+/*overflow: hidden;*/
+/*white-space: nowrap;*/
+/*text-overflow:ellipsis;*/
+/*}*/
+/*.box .content .ulT {*/
+/*background: #e6e6e6;*/
+/*width: 100%;*/
+/*height: 50px;*/
+/*}*/
+

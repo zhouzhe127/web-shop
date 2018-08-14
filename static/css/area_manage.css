@@ -1,0 +1,74 @@
+
+#area-show[data-v-f309db88] {
+  padding-top: 30px;
+}
+#area-show ul.tas-variety li[data-v-f309db88]:first-child {
+  width: 300px;
+  height: 200px;
+  float: left;
+  margin-right: 15px;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #b3b3b3;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 16px;
+  border: 1px #b3b3b3 solid;
+}
+#area-show ul.tas-variety li:first-child span[data-v-f309db88] {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+#area-show .tas-variety .taste-list[data-v-f309db88] {
+  width: 300px;
+  height: 200px;
+  background-color: #f2f2f2;
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  color: #333333;
+  cursor: pointer;
+}
+#area-show .tas-variety .taste-list .divOne[data-v-f309db88] {
+  background-color: #6cc2e6;
+  height: 8px;
+}
+#area-show .tas-variety .taste-list .divThree[data-v-f309db88] {
+  position: relative;
+  margin-left: 20px;
+}
+#area-show .tas-variety .taste-list .divThree .spanName[data-v-f309db88] {
+  float: left;
+  margin: 30px 0 50px 0;
+  font-size: 26px;
+  width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#area-show .tas-variety .taste-list .divThree .spanIndex[data-v-f309db88] {
+  float: right;
+  margin: 20px 15px 30px 10px;
+  font-size: 72px;
+  color: #cbe3ee;
+}
+#area-show .tas-variety .taste-list .divTwo[data-v-f309db88] {
+  margin-left: 20px;
+  clear: both;
+}
+#area-show .tas-variety .taste-list .divTwo .jobDiv[data-v-f309db88] {
+  display: inline-block;
+  font-size: 14px;
+  width: 120px;
+  border-right: 1px solid #d2d2d2;
+}
+#area-show .tas-variety .taste-list .divTwo .telDiv[data-v-f309db88] {
+  display: inline-block;
+  margin: 0 15px 0 20px;
+}
+#area-show .tas-variety .taste-list .divTwo .divAll[data-v-f309db88] {
+  margin-top: 10px;
+  font-size: 18px;
+}
+

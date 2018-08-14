@@ -1,0 +1,122 @@
+
+@media only screen and (max-width: 1325px) {
+.setspeen[data-v-152e7408] {
+    margin-top: 10px;
+}
+}
+.warehouse-lists .filter[data-v-152e7408] {
+  width: 100%;
+}
+.warehouse-lists .filter .inline-box[data-v-152e7408] {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.warehouse-lists .filter .inline-box input[data-v-152e7408] {
+  width: 180px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+}
+.warehouse-lists .filter .inline-box input[data-v-152e7408]:focus {
+  outline: none;
+}
+.warehouse-lists .filter .button-box span[data-v-152e7408] {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  width: 80px;
+  color: #fff;
+  text-align: center;
+}
+.warehouse-lists .filter .button-box .blue[data-v-152e7408] {
+  margin-right: 10px;
+}
+.warehouse-lists .main[data-v-152e7408] {
+  margin-top: 20px;
+  padding-bottom: 50px;
+}
+.warehouse-lists .main .list[data-v-152e7408] {
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ddd;
+}
+.warehouse-lists .main .list .head[data-v-152e7408] {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+.warehouse-lists .main .list .head em[data-v-152e7408] {
+  color: #ff3c04;
+  font-size: inherit;
+}
+.warehouse-lists .main .list .title[data-v-152e7408] {
+  background: #e6e6e6;
+  overflow: hidden;
+}
+.warehouse-lists .main .list .title span[data-v-152e7408] {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  width: 14%;
+}
+.warehouse-lists .main .list .title .wide[data-v-152e7408] {
+  width: 13.33%;
+}
+.warehouse-lists .main .list ul li[data-v-152e7408] {
+  overflow: hidden;
+  border-bottom: 2px solid #ddd;
+}
+.warehouse-lists .main .list ul li[data-v-152e7408]:last-child {
+  border-bottom: 0;
+}
+.warehouse-lists .main .list ul li span[data-v-152e7408] {
+  float: left;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  width: 14%;
+  color: #555;
+}
+.warehouse-lists .main .list ul li .wide[data-v-152e7408] {
+  width: 13.33%;
+}
+.warehouse-lists .main .list ul li .handle em[data-v-152e7408] {
+  display: inline-block;
+  padding: 0 20px;
+  height: 18px;
+  line-height: normal;
+  cursor: pointer;
+}
+.warehouse-lists .main .list ul li .handle em[data-v-152e7408]:hover {
+  text-decoration: underline;
+}
+.warehouse-lists .main .list ul li .handle .edit[data-v-152e7408] {
+  color: #ff8d00;
+  border-right: 1px solid #ddd;
+}
+.warehouse-lists .main .list ul li .handle .detail[data-v-152e7408] {
+  color: #27a8e0;
+}
+.warehouse-lists .main .page-box[data-v-152e7408] {
+  margin-top: 20px;
+  padding-bottom: 20px;
+  text-align: left;
+}
+.tebBox[data-v-152e7408] {
+  display: inline-block;
+  color: orange;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.tebBox li[data-v-152e7408] {
+  border: 1px orange solid;
+  display: inline-block;
+  padding: 10px 40px;
+}
+.tebBox .active[data-v-152e7408] {
+  background-color: orange;
+  color: #ffffff;
+}
+

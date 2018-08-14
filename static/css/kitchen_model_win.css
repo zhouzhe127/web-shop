@@ -1,0 +1,45 @@
+
+.jobWin[data-v-2d632810] {
+  width: 480px;
+  height: auto;
+  min-height: 480px;
+  padding-top: 20px;
+  background-color: #f2f2f2;
+}
+.jobWin .tag[data-v-2d632810] {
+  float: left;
+  width: 102px;
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+}
+.jobWin .mes[data-v-2d632810] {
+  float: left;
+  width: 300px;
+  padding-left: 15px;
+  text-indent: 0;
+  line-height: 0;
+}
+.jobWin .clear[data-v-2d632810] {
+  clear: both;
+  font-size: 0;
+  line-height: 0;
+  height: 15px;
+  width: 100%;
+}
+.jobWin .computeStyle[data-v-2d632810] {
+  width: 100px;
+  height: 38px;
+  text-align: center;
+  border: 1px solid #bdbebf;
+  margin-left: 15px;
+  cursor: pointer;
+  float: left;
+  line-height: 38px;
+}
+.jobWin .icSelect[data-v-2d632810] {
+  border: 1px solid #f49332 !important;
+  background-color: #f9f0e3;
+  color: #f39801;
+}
+

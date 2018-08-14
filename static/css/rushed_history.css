@@ -1,0 +1,54 @@
+
+#rushedHistory[data-v-5c9ceee0] {
+	width: 1437px;
+	height: auto;
+}
+#rushedHistory .rushedstatus[data-v-5c9ceee0] {
+	margin-bottom: 31px;
+	color: #1DA527;
+}
+#rushedHistory .list[data-v-5c9ceee0] {
+	width: 1436px;
+	min-height: 156px;
+	border: 1px solid #D2D2D2;
+}
+#rushedHistory .list .list_title[data-v-5c9ceee0] {
+	width: 1436px;
+	height: 45px;
+	line-height: 45px;
+	padding-left: 17px;
+}
+#rushedHistory .list .list_title span[data-v-5c9ceee0] {
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+}
+#rushedHistory .list .list_title span[data-v-5c9ceee0]:first-child {
+	margin-right: 11px;
+}
+#rushedHistory .list .list_title span[data-v-5c9ceee0]:nth-child(2) {
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #000;
+	margin-right: 11px;
+	vertical-align: middle;
+}
+#rushedHistory .list .list_title span:last-child a[data-v-5c9ceee0] {
+	font-size: 16px;
+	color: #FF3C05;
+}
+#rushedHistory .btnLink a[data-v-5c9ceee0] {
+	cursor: pointer;
+	display: inline-block;
+	width: 80px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	color: #28A8E0;
+}
+#rushedHistory .turn-page[data-v-5c9ceee0] {
+	margin: 10px 0 30px 0;
+}
+

@@ -1,0 +1,68 @@
+
+@media only screen and (max-width: 1650px) {
+.sleBox[data-v-c5005ee2] {
+    margin-top: 15px;
+}
+}
+@media only screen and (max-width: 1255px) {
+.rightEvt[data-v-c5005ee2] {
+    margin-top: 15px;
+}
+.inpBox input[data-v-c5005ee2] {
+    width: 150px !important;
+}
+}
+#waredeliver .serBox h1[data-v-c5005ee2] {
+  display: inline-block;
+}
+#waredeliver .serBox .timer[data-v-c5005ee2] {
+  display: inline-block;
+}
+#waredeliver .serBox .rightEvt[data-v-c5005ee2] {
+  display: inline-block;
+}
+#waredeliver .inpBox[data-v-c5005ee2] {
+  margin-top: 15px;
+  display: inline-block;
+}
+#waredeliver .inpBox input[data-v-c5005ee2] {
+  width: 200px;
+  height: 40px;
+  text-indent: 10px;
+  margin-left: 10px;
+  display: inline-block;
+}
+#waredeliver .sleBox[data-v-c5005ee2] {
+  display: inline-block;
+}
+#waredeliver .sleBox h1[data-v-c5005ee2] {
+  margin-left: 10px;
+  display: inline-block;
+}
+#waredeliver .sleBox .btnChange[data-v-c5005ee2] {
+  display: inline-block;
+}
+#waredeliver .sleBox .btnChange a[data-v-c5005ee2] {
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  margin-left: 10px;
+}
+#waredeliver .sleBox input[data-v-c5005ee2] {
+  width: 200px;
+  height: 40px;
+  text-indent: 10px;
+  display: inline-block;
+}
+#waredeliver .orBtn[data-v-c5005ee2] {
+  color: orange;
+  cursor: pointer;
+}
+#waredeliver .detailsBtn[data-v-c5005ee2] {
+  color: #29abe2;
+  cursor: pointer;
+}
+#waredeliver .page-box[data-v-c5005ee2] {
+  margin-top: 10px;
+}
+

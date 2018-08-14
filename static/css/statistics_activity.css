@@ -1,0 +1,176 @@
+
+@media screen and (max-width: 1440px) {
+.real-time[data-v-f1553b84] {
+    width: 80%;
+}
+.real-time .right[data-v-f1553b84] {
+    margin-top: 20px;
+}
+}
+@media screen and (min-width: 1440px) {
+.real-time .left[data-v-f1553b84] {
+    float: left;
+}
+.real-time .right[data-v-f1553b84] {
+    float: right;
+}
+.activity .real-time .block > div[data-v-f1553b84] {
+    width: 49.7%;
+}
+.activity .real-time[data-v-f1553b84] {
+    width: 100%;
+}
+}
+.activity[data-v-f1553b84] {
+  width: 100%;
+}
+.activity .back span[data-v-f1553b84] {
+  display: block;
+  color: #f8931f;
+  border: 1px solid #f8931f;
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+.activity .real-time[data-v-f1553b84] {
+  border: 1px solid #ccc;
+}
+.activity .real-time .title[data-v-f1553b84] {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 20px;
+  font-size: 16px;
+  background: #f2f2f2;
+}
+.activity .real-time .block[data-v-f1553b84] {
+  overflow: hidden;
+  background: #f2f2f2;
+}
+.activity .real-time .block > div[data-v-f1553b84] {
+  background: #fff;
+  overflow: hidden;
+  padding-bottom: 30px;
+}
+.activity .real-time .block .name[data-v-f1553b84] {
+  width: 100%;
+  float: left;
+  height: 50px;
+  line-height: 50px;
+  padding-left: 40px;
+  font-size: 16px;
+}
+.activity .real-time .block .name em[data-v-f1553b84] {
+  height: 10px;
+  width: 10px;
+  background: #f8931f;
+  display: inline-block;
+  margin-right: 15px;
+}
+.activity .real-time .block .card[data-v-f1553b84] {
+  float: left;
+  width: 210px;
+  height: 100px;
+  line-height: 100px;
+  margin-left: calc((100% - 420px)/3);
+  background: #f2f2f2;
+  text-align: center;
+  font-size: 16px;
+}
+.activity .real-time .block .card em[data-v-f1553b84] {
+  color: #f8931f;
+  font-size: inherit;
+}
+.activity .filter[data-v-f1553b84] {
+  margin-top: 20px;
+}
+.activity .filter .tab-box[data-v-f1553b84] {
+  float: left;
+}
+.activity .filter .tab-box span[data-v-f1553b84] {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  width: 130px;
+  border: 1px solid #f8931f;
+  color: #f8931f;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+.activity .filter .tab-box span.active[data-v-f1553b84] {
+  background: #f8931f;
+  color: #fff;
+}
+.activity .filter .right-box[data-v-f1553b84] {
+  float: right;
+}
+.activity .filter .select-btn[data-v-f1553b84] {
+  float: left;
+  margin-right: 20px;
+}
+.activity .filter .search-box[data-v-f1553b84] {
+  float: left;
+}
+.activity .filter .search-box span[data-v-f1553b84] {
+  display: inline-block;
+  margin-right: 10px;
+  width: 100px;
+  text-align: center;
+  color: #fff;
+  height: 40px;
+  line-height: 40px;
+}
+.activity .filter[data-v-f1553b84]:after {
+  content: '';
+  clear: both;
+  zoom: 1;
+  display: block;
+}
+.activity .list[data-v-f1553b84] {
+  border: 1px solid #ccc;
+  margin-top: 20px;
+}
+.activity .list span[data-v-f1553b84] {
+  float: left;
+  width: 12.5%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+.activity .list .head[data-v-f1553b84] {
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+  padding-left: 20px;
+}
+.activity .list .head em[data-v-f1553b84] {
+  color: #f8931f;
+  padding: 0 3px;
+  font-size: inherit;
+}
+.activity .list .title[data-v-f1553b84] {
+  background: #e6e6e6;
+  overflow: hidden;
+}
+.activity .list ul li[data-v-f1553b84] {
+  overflow: hidden;
+}
+.activity .list ul li span[data-v-f1553b84] {
+  height: 60px;
+  line-height: 60px;
+}
+.activity .list ul li span .under-line[data-v-f1553b84] {
+  color: #f8931f;
+  display: inline-block;
+  border-bottom: 1px solid #f8931f;
+  line-height: normal;
+  cursor: pointer;
+}
+.activity .page-box[data-v-f1553b84] {
+  width: 100%;
+  text-align: left;
+  padding-top: 20px;
+}
+

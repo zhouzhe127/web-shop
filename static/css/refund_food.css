@@ -1,0 +1,51 @@
+
+.return_be .return_one[data-v-3b9cfaaa] {
+  margin-bottom: 15px;
+}
+.return_be .return_one .btn-concent[data-v-3b9cfaaa] {
+  width: 100px;
+}
+.return_be .return_two[data-v-3b9cfaaa] {
+  /*width:1024px;*/
+  min-width: 780px;
+  max-width: 1024px;
+  border: 1px solid #d2d2d2;
+  margin-top: 20px;
+  background-color: #ffffff;
+}
+.return_be .return_two .oUl[data-v-3b9cfaaa] {
+  width: 100%;
+  color: #333333;
+  overflow: hidden;
+  border-bottom: 3px solid #f7f7f7;
+}
+.return_be .return_two .oUl li[data-v-3b9cfaaa] {
+  width: 33%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  float: left;
+}
+.return_be .return_two .oulFirst[data-v-3b9cfaaa] {
+  background-color: #f2f2f2;
+  color: #434149;
+}
+.return_be .return_two .oulFirst li[data-v-3b9cfaaa] {
+  font-size: 16px;
+}
+.return_be .return_two .oulSecond[data-v-3b9cfaaa] {
+  color: #666666;
+  font-size: 14px;
+}
+.return_be .return_two .oulSecond li span span[data-v-3b9cfaaa] {
+  font-size: 16px;
+}
+.return_be .return_two .ul-null li[data-v-3b9cfaaa] {
+  display: inline-block;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  color: orange;
+}
+

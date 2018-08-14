@@ -1,0 +1,30 @@
+
+#rushedHistoryDetail[data-v-bcc91a80] {
+	width: 1437px;
+	height: auto;
+}
+#rushedHistoryDetail .rushedstatus[data-v-bcc91a80] {
+	margin-bottom: 31px;
+	color: #1DA527;
+}
+#rushedHistoryDetail .btnLink a[data-v-bcc91a80] {
+	cursor: pointer;
+	display: inline-block;
+	width: 80px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	color: #28A8E0;
+}
+#rushedHistoryDetail .list_img[data-v-bcc91a80] {
+	height: 80px;
+}
+#rushedHistoryDetail .list_img img[data-v-bcc91a80] {
+	width: 45px;
+	height: 45px;
+	margin: 17.5px auto;
+}
+#rushedHistoryDetail .turn-page[data-v-bcc91a80] {
+	margin: 10px 0 30px 0;
+}
+

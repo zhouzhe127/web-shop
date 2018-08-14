@@ -1,0 +1,14 @@
+
+#good-invcontrol[data-v-c35778da] {
+  min-height: 400px;
+}
+#good-invcontrol .childCid-on[data-v-c35778da] {
+  background-color: #b5b5b7;
+  color: #fff;
+}
+#good-invcontrol .text-ellipsis[data-v-c35778da] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

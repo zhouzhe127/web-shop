@@ -1,0 +1,36 @@
+
+.selectbtns[data-v-188b7b50] {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.activ[data-v-188b7b50] {
+  display: inline;
+}
+.selectbtns span[data-v-188b7b50] {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 18px;
+  padding-right: 18px;
+  background-color: #FFFFFF;
+  text-align: center;
+  cursor: pointer;
+  margin: 1px;
+  border-radius: 2px;
+  max-width: 350px;
+  word-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #D2D2D2;
+}
+.selectbtns span[data-v-188b7b50]:hover {
+  background-color: #eeeeee;
+}
+.selectbtns .sign[data-v-188b7b50] {
+  background: #FFEDD3;
+  border-color: #FF9200;
+  color: #FF9200;
+}
+

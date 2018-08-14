@@ -1,0 +1,195 @@
+
+#select-batch[data-v-d1c93b62] {
+  padding: 15px;
+  background-color: #f7f7f7;
+  overflow: auto;
+  min-height: 450px;
+  padding-bottom: 0;
+}
+#select-batch .color-size-16[data-v-d1c93b62] {
+  color: #333;
+  font-size: 16px;
+}
+#select-batch .batch-title[data-v-d1c93b62] {
+  overflow: hidden;
+  padding-bottom: 10px;
+}
+#select-batch .batch-title li[data-v-d1c93b62] {
+  min-height: 16px;
+  position: relative;
+  padding-left: 70px;
+  list-style: none;
+  float: left;
+  overflow: hidden;
+  width: 33.33%;
+}
+#select-batch .batch-title li .clear[data-v-d1c93b62] {
+  float: right;
+  height: 40px;
+  width: 100px;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  background: #fe8d01;
+  cursor: pointer;
+}
+#select-batch .batch-title li em[data-v-d1c93b62] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+#select-batch .batch-title .narrow[data-v-d1c93b62] {
+  padding-left: 40px;
+}
+#select-batch .batch-title .mid[data-v-d1c93b62] {
+  padding-left: 55px;
+}
+#select-batch .batch-title .small-li[data-v-d1c93b62] {
+  width: 130px;
+  text-align: center;
+}
+#select-batch .filter[data-v-d1c93b62] {
+  padding-bottom: 10px;
+}
+#select-batch .filter .inline-box[data-v-d1c93b62] {
+  padding-top: 10px;
+  float: left;
+  margin-right: 5px;
+}
+#select-batch .filter .inline-box .search-btn[data-v-d1c93b62] {
+  float: left;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM3Q0IyMDNCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM3Q0IyMDRCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzdDQjIwMUJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzdDQjIwMkJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pr9ucPQAAAFaSURBVHjarNQ7LARBHMfx2ROF9/tc4gqJREGhUduLgkYjUUmUOlEqlCqJRojCoxMVtYIoKBUaOc8gItGcZ0Mj1neSWTln/mtu3T/5JLc3s7/Mzvx3vSAIlKVSGEA79IRL7CGnHCpRcJ3GFo4xiDKUYxhnWEfyz1S9UqMXd5hGRd7/oRrM4grdlvFv4Y823GMoarIxhms0SXM8s6cbOMeMcqt5VGFcevw0HlDpsMpQI15RbxvXB9WPXbwp93rCIfqk09dtk1XFl+6QDin0E16M0ITpYevADXpihOp7LqSDSuERtUUcVCteTO+KLbVmNn/KcZWreMdk1BvVgluMOqxyAidRT5Z/0WVewTk0WCYnsYwsjuC7hGrNWMEztrGIJeyYfV9AHTLIScGe8OmrRgadpm1OcVDwgujxTYxgX/pKxeHbVvzfUGtwKUJ/BZcq9EewdFBxy8fHlwADAMK7/x/UqqS7AAAAAElFTkSuQmCC) #29abe2 center no-repeat;
+}
+#select-batch .filter .inline-box input[data-v-d1c93b62] {
+  width: 140px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+}
+#select-batch .filter .inline-box input[data-v-d1c93b62]:focus {
+  outline: none;
+}
+#select-batch .filter .inline-box input[data-v-d1c93b62]:last-child {
+  margin-right: 0;
+}
+#select-batch .filter .inline-box[data-v-d1c93b62]:last-child {
+  margin-right: 0;
+}
+#select-batch .filter .button-box[data-v-d1c93b62] {
+  overflow: hidden;
+}
+#select-batch .filter .button-box span[data-v-d1c93b62] {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  width: 75px;
+  color: #fff;
+  text-align: center;
+}
+#select-batch .filter .button-box .blue[data-v-d1c93b62] {
+  margin-right: 5px;
+}
+#select-batch .filter[data-v-d1c93b62]:after {
+  content: '';
+  zoom: 1;
+  clear: both;
+  display: block;
+}
+#select-batch .table[data-v-d1c93b62] {
+  overflow: hidden;
+}
+#select-batch .table .table-head[data-v-d1c93b62] {
+  overflow: hidden;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 0;
+}
+#select-batch .table .table-head span[data-v-d1c93b62] {
+  border-right: 1px solid #ccc;
+  height: 40px;
+  line-height: 40px;
+  color: #333;
+  float: left;
+  font-size: 14px;
+  width: 14%;
+  text-align: center;
+}
+#select-batch .table .table-head span[data-v-d1c93b62]:first-child {
+  width: 6%;
+}
+#select-batch .table .table-head span[data-v-d1c93b62]:last-child {
+  width: 24%;
+  border-right: 0;
+}
+#select-batch .table .table-head span em[data-v-d1c93b62] {
+  color: red;
+  display: inline-block;
+  margin-left: 15px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+#select-batch .table .table-body[data-v-d1c93b62] {
+  height: 370px;
+  overflow: scroll;
+}
+#select-batch .table .table-body .table-row[data-v-d1c93b62] {
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+}
+#select-batch .table .table-body .table-row .cell[data-v-d1c93b62] {
+  height: 62px;
+  line-height: 62px;
+  color: #666;
+  float: left;
+  font-size: 14px;
+  width: 14%;
+  text-align: center;
+  overflow: hidden;
+}
+#select-batch .table .table-body .table-row .cell[data-v-d1c93b62]:first-child {
+  width: 6%;
+}
+#select-batch .table .table-body .table-row .cell[data-v-d1c93b62]:last-child {
+  width: 24%;
+}
+#select-batch .table .table-body .table-row .cell .input-num[data-v-d1c93b62] {
+  width: 100px;
+  height: 40px;
+  text-indent: 15px;
+  color: #666;
+  outline: none;
+}
+#select-batch .table .table-body .table-row .input-box[data-v-d1c93b62] {
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+}
+#select-batch .table .table-body .table-row .input-box input[data-v-d1c93b62],
+#select-batch .table .table-body .table-row .input-box .word[data-v-d1c93b62] {
+  height: 40px;
+  line-height: 38px;
+  border: 1px solid #ccc;
+  float: left;
+  background: #fff;
+}
+#select-batch .table .table-body .table-row .input-box input[data-v-d1c93b62] {
+  width: 65px;
+  padding: 0 5px;
+}
+#select-batch .table .table-body .table-row .input-box .word[data-v-d1c93b62] {
+  width: 40px;
+  border-left: 0;
+  text-align: center;
+}
+#select-batch .table .table-body .empty[data-v-d1c93b62] {
+  line-height: 70px;
+  text-align: center;
+  color: #ccc;
+  font-size: 20px;
+}
+

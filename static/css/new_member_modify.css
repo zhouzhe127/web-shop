@@ -1,0 +1,33 @@
+
+#tan[data-v-60f58ece] {
+	padding: 40px 0;
+}
+#tan .online-box[data-v-60f58ece] {
+	width: 100%;
+	height: auto;
+	min-height: 40px;
+	margin-bottom: 29px;
+}
+#tan .online-box .online-sub[data-v-60f58ece] {
+	display: block;
+	font-size: 16px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	color: #333;
+	text-align: right;
+	margin-right: 14px;
+}
+#tan .online-box .rightHalf[data-v-60f58ece] {
+	width: 500px;
+	height: auto;
+	float: left;
+}
+#tan .online-box .rightHalf .name[data-v-60f58ece] {
+	width: 180px;
+	height: 40px;
+	background-color: #ffffff;
+	border: solid 1px #cecdcd;
+	text-indent: 15px;
+}
+

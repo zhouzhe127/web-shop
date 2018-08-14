@@ -1,0 +1,19 @@
+
+#goods-sync[data-v-b7b7230c]{padding:10px 30px;padding-bottom: 60px;
+}
+#goods-sync ul[data-v-b7b7230c]{width:100%;height:auto;overflow: hidden;
+}
+#goods-sync ul li[data-v-b7b7230c]{
+	min-width:120px;
+	height:45px;
+	line-height: 45px;
+	float: left;
+	text-align: center;
+	padding:0 10px;
+	cursor: pointer;
+}
+#goods-sync .sucTitle[data-v-b7b7230c]{width:20%;height: 40px;line-height: 40px;text-align: right;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;float: left;font-size: 14px;color: #ea3b44;
+}
+#foodDetial input[data-v-b7b7230c]:disabled{background-color: #fff!important;
+}
+

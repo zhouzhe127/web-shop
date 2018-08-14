@@ -1,0 +1,226 @@
+
+.clearfix:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.canlander-weeken .chairFix:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.canlander-weeken .sevenToSix span {
+  color: #29abe2;
+  display: block;
+  float: left;
+  height: 41px;
+  width: 62px;
+  border: 1px #29abe2 solid;
+  margin-right: 5px;
+  line-height: 41px;
+  text-align: center;
+  cursor: pointer;
+}
+.canlander-weeken .sevenToSix span.active {
+  color: #fff;
+  background: #29abe2;
+}
+.canlander-weeken .timeSlot {
+  margin-top: 20px;
+  position: relative;
+}
+.canlander-weeken .timeSlot .show span {
+  width: 80px;
+  height: 41px;
+  line-height: 41px;
+  text-align: center;
+  margin-right: 10px;
+  border: #ccc solid 1px;
+  display: block;
+  float: left;
+}
+.canlander-weeken .timeSlot .show span:nth-of-type(2) {
+  width: 10px;
+  border: none;
+}
+.canlander-weeken .timeSlot .chooseTime {
+  width: 200px;
+  position: absolute;
+  top: 42px;
+  left: 0px;
+  border: 1px #ccc solid;
+  background-color: #fff;
+}
+.canlander-weeken .timeSlot .chooseTime > div {
+  position: relative;
+}
+.canlander-weeken .timeSlot .chooseTime > div:nth-of-type(1) {
+  border-bottom: 1px #ccc solid;
+}
+.canlander-weeken .timeSlot .chooseTime > div .timeDrag {
+  margin: 0;
+  margin-left: 5px;
+  display: block;
+  float: left;
+  height: 41px;
+  width: 153px;
+  border: none;
+  margin-top: -1px;
+  position: relative;
+}
+.canlander-weeken .timeSlot .chooseTime .hourOrMinute > span:nth-of-type(1) {
+  color: #fff;
+  line-height: 41px;
+  text-align: center;
+  width: 34px;
+  height: 41px;
+  background: #29abe2;
+  display: block;
+  float: left;
+}
+.canlander-weeken .timeSlot .chooseTime .timeDrag .dragTiao {
+  height: 4px;
+  width: 148px;
+  margin-top: 25px;
+  background: #29abe2;
+}
+.canlander-weeken .timeSlot .chooseTime .timeDrag .dragKuai {
+  height: 16px;
+  width: 12px;
+  top: 17px;
+  border: 1px #29abe2 solid;
+  position: absolute;
+  background: #fff;
+}
+.canlander-weeken .timeSlot .chooseTime .timeDrag .dragKuai span {
+  font-size: 12px;
+  color: #29abe2;
+  position: absolute;
+  top: -18px;
+}
+/*时间日历---跨时间段*/
+.calendar-multi {
+  /*margin: 20px auto;*/
+  width: 350px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px #ccc;
+  position: relative;
+  background-color: #fff;
+  z-index: 10;
+}
+.calendar-multi .header {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 3px 3px 0 0;
+  border-bottom: 1px solid #CCCCCC;
+}
+.calendar-multi .header .pre-btn {
+  display: block;
+  float: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.calendar-multi .header .next-btn {
+  display: block;
+  float: right;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.calendar-multi .title {
+  font-size: 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 6px;
+}
+.calendar-multi .title span {
+  font-size: 14px;
+  display: inline-block;
+  width: 50px;
+  text-align: center;
+  line-height: 30px;
+}
+.calendar-multi .content {
+  overflow: hidden;
+  padding-bottom: 6px;
+}
+.calendar-multi .content ul .placeholder,
+.calendar-multi .content ul li {
+  display: block;
+  float: left;
+  width: 48px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  margin: 1px;
+  -webkit-transition: all 0.1s;
+  transition: all 0.1s;
+  position: relative;
+}
+.calendar-multi .content ul li:hover {
+  background: #F5F5F5;
+}
+.calendar-multi .content ul li .festival,
+.calendar-multi .content ul li .startOrend {
+  position: absolute;
+  top: 2px;
+  right: -5px;
+  font-size: 10px!important;
+  -webkit-transform-origin: 0,0;
+          transform-origin: 0,0;
+  -webkit-transform: scale(0.8);
+          transform: scale(0.8);
+  height: 10px;
+  width: 48px;
+  text-align: center;
+  line-height: 10px;
+  color: red;
+}
+.calendar-multi .content ul li .startOrend {
+  bottom: 2px;
+  right: -8px;
+  font-size: 8px!important;
+  width: 54px;
+  color: #FFFFFF;
+}
+.calendar-multi .content ul li.gray {
+  background-color: #ccc;
+}
+.calendar-multi .content ul li.yellow {
+  background-color: #F8931F;
+  color: #fff;
+}
+.calendar-multi .operat {
+  position: absolute;
+  width: 100%;
+  bottom: -40px;
+  height: 40px;
+}
+.calendar-multi .esc,
+.calendar-multi .choose,
+.calendar-multi .ent {
+  width: 33.3%;
+  height: 100%;
+  float: left;
+  background-color: #A0A0A0;
+  text-align: center;
+  line-height: 40px;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+.calendar-multi .ent {
+  background-color: #F8941F;
+}
+.calendar-multi .ent:hover {
+  background-color: #bd823e;
+}
+.calendar-multi .esc:hover {
+  background-color: #918686;
+}
+.calendar-multi .choose {
+  background-color: #0d9d58;
+}
+.calendar-multi .choose:hover {
+  background-color: #0fad68;
+}
+

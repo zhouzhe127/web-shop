@@ -1,0 +1,211 @@
+
+#transaction-enquiry .content[data-v-662c9b10] {
+  width: 100%;
+  margin-bottom: 30px;
+}
+#transaction-enquiry .content .date[data-v-662c9b10] {
+  float: left;
+  /*搜索图标*/
+}
+#transaction-enquiry .content .date .data-center[data-v-662c9b10] {
+  float: left;
+  width: 25px;
+  line-height: 40px;
+  text-align: center;
+}
+#transaction-enquiry .content .date .order-order-searchA[data-v-662c9b10],
+#transaction-enquiry .content .date .order-order-search[data-v-662c9b10] {
+  display: inline-block;
+  float: left;
+  width: 40px;
+  height: 40px;
+  background-color: #29A7E1;
+  cursor: pointer;
+  margin-right: 15px;
+}
+#transaction-enquiry .content .date .order-order-searchA[data-v-662c9b10]:hover {
+  background-color: #1878a5;
+  -webkit-transition: background-color ease-in-out 0.2s;
+  transition: background-color ease-in-out 0.2s;
+}
+#transaction-enquiry .content .date .order-order-searchA[data-v-662c9b10]:active {
+  background-color: #154961;
+}
+#transaction-enquiry .content .date .order-order-search[data-v-662c9b10] {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM3Q0IyMDNCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM3Q0IyMDRCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzdDQjIwMUJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzdDQjIwMkJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pr9ucPQAAAFaSURBVHjarNQ7LARBHMfx2ROF9/tc4gqJREGhUduLgkYjUUmUOlEqlCqJRojCoxMVtYIoKBUaOc8gItGcZ0Mj1neSWTln/mtu3T/5JLc3s7/Mzvx3vSAIlKVSGEA79IRL7CGnHCpRcJ3GFo4xiDKUYxhnWEfyz1S9UqMXd5hGRd7/oRrM4grdlvFv4Y823GMoarIxhms0SXM8s6cbOMeMcqt5VGFcevw0HlDpsMpQI15RbxvXB9WPXbwp93rCIfqk09dtk1XFl+6QDin0E16M0ITpYevADXpihOp7LqSDSuERtUUcVCteTO+KLbVmNn/KcZWreMdk1BvVgluMOqxyAidRT5Z/0WVewTk0WCYnsYwsjuC7hGrNWMEztrGIJeyYfV9AHTLIScGe8OmrRgadpm1OcVDwgujxTYxgX/pKxeHbVvzfUGtwKUJ/BZcq9EewdFBxy8fHlwADAMK7/x/UqqS7AAAAAElFTkSuQmCC) center center no-repeat;
+}
+/*三角形-所有的边框线*/
+.calendar-ctr[data-v-662c9b10] {
+  width: 38px;
+  height: 40px;
+  position: relative;
+  z-index: 5;
+  border-left: #b3b3b3 solid 1px;
+}
+.calendar-ctr i[data-v-662c9b10] {
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -5px;
+  border-top: 10px solid #b3b3b3;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  box-sizing: border-box;
+}
+.statisticsLists[data-v-662c9b10] {
+  border: 1px solid #cccccc;
+}
+/*下拉列表选择*/
+#transaction-enquiry .statisticsLists[data-v-662c9b10] {
+  position: relative;
+  line-height: 35px;
+  font-size: 16px;
+  text-align: left;
+  display: inline-block;
+  width: 180px;
+  vertical-align: middle;
+  float: left;
+  margin-right: 5px;
+}
+#transaction-enquiry .statisticsLists .spanSty[data-v-662c9b10] {
+  height: 38px;
+  width: 137px;
+  display: block;
+  float: left;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#transaction-enquiry .statisticsLists ul[data-v-662c9b10] {
+  width: 100%;
+  max-height: 205px;
+  overflow: auto;
+  margin: 0;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: 10;
+  background: #fff;
+}
+#transaction-enquiry .statisticsLists ul li[data-v-662c9b10] {
+  width: 100%;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  height: 41px;
+  border: 1px #b3b3b3 solid;
+  border-top: 0;
+  background: #fff;
+  cursor: pointer;
+}
+#transaction-enquiry .statisticsLists ul li[data-v-662c9b10]:hover {
+  background: #f1f1f1;
+}
+#transaction-enquiry .choise .tableListInp div[data-v-662c9b10] {
+  width: 38px;
+  height: 38px;
+  position: relative;
+  z-index: 5;
+}
+/*搜索和重置*/
+#transaction-enquiry .content a[data-v-662c9b10] {
+  display: block;
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 16px;
+  color: #fff;
+  float: left;
+  margin-left: 5px;
+}
+/*分页*/
+#transaction-enquiry .pages[data-v-662c9b10] {
+  float: left;
+  width: 100%;
+  margin-top: 40px;
+  height: 40px;
+  position: relative;
+  margin-bottom: 40px;
+}
+/*列表*/
+/*#transaction-enquiry .list{*/
+/*width: 100%;*/
+/*min-height: 156px;*/
+/*border: 1px solid #D2D2D2;*/
+/*}*/
+/*#transaction-enquiry .list .list_title{*/
+/*width: 100%;*/
+/*height: 45px;*/
+/*line-height: 45px;*/
+/*padding-left: 17px;*/
+/*}*/
+/*#transaction-enquiry .list .list_title span{*/
+/*font-size: 16px;*/
+/*color: #333;*/
+/*font-weight: bold;*/
+/*}*/
+/*#transaction-enquiry .list .list_title span:first-child{*/
+/*margin-right: 11px;*/
+/*}*/
+/*#transaction-enquiry .list .list_title span:nth-child(2){*/
+/*display:inline-block;*/
+/*width: 5px;*/
+/*height: 5px;*/
+/*border-radius: 50%;*/
+/*background: #000;*/
+/*margin-right: 11px;*/
+/*vertical-align:middle;*/
+/*}*/
+/*#transaction-enquiry .list .list_title span:last-child a{*/
+/*font-size: 16px;*/
+/*color: #FF3C05;*/
+/*}*/
+/*#transaction-enquiry .list .heads{*/
+/*width: 100%;*/
+/*height: 41px;*/
+/*background: #F2F2F2;*/
+/*}*/
+/*#transaction-enquiry .list .heads li{*/
+/*float: left;*/
+/*width: 8.75%;*/
+/*text-align: center;*/
+/*line-height: 41px;*/
+/*font-size: 16px;*/
+/*color: #43414A;*/
+/*}*/
+/*#transaction-enquiry .list .noList{*/
+/*width: 100%;*/
+/*height: 68px;*/
+/*text-align: center;*/
+/*line-height: 68px;*/
+/*font-size: 24px;*/
+/*color: #E0E0E0;*/
+/*}*/
+/*#transaction-enquiry .list .contents{*/
+/*width: 100%;*/
+/*height: 69px;*/
+/*border-bottom: 1px solid #F7F7F7;*/
+/*}*/
+/*#transaction-enquiry .list .contents .sty{*/
+/*color: #00AAE5;*/
+/*cursor: pointer;*/
+/*}*/
+/*#transaction-enquiry .list .contents li{*/
+/*float: left;*/
+/*width: 8.75%;*/
+/*height: 69px;*/
+/*text-align: center;*/
+/*line-height: 69px;*/
+/*font-size: 14px;*/
+/*color: #666;*/
+/*overflow: hidden;*/
+/*text-overflow: ellipsis;*/
+/*white-space: nowrap;*/
+/*}*/
+

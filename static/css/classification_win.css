@@ -1,0 +1,41 @@
+
+#addEditBox .classifyName[data-v-910bd16c] {
+	width: 100%;
+	height: 50px;
+	margin-top: 50px;
+	float: left;
+}
+#addEditBox .classifyName span[data-v-910bd16c] {
+	margin-left: 70px;
+	font-size: 16px;
+}
+#addEditBox .classifyName span[data-v-910bd16c]::after {
+	content: '*';
+	color: red;
+	position: relative;
+	top: -3px;
+	left: -22px;
+}
+#addEditBox .classifyName input[data-v-910bd16c] {
+	padding-left: 10px;
+	height: 30px;
+}
+/*input::-webkit-input-placeholder{padding-left: 10px;}*/
+#addEditBox .sortList[data-v-910bd16c] {
+	width: 100%;
+	height: 50px;
+	float: left;
+}
+#addEditBox .sortList i[data-v-910bd16c] {
+	margin-top: 10px;
+	margin-left: 70px;
+	font-size: 16px;
+	float: left;
+}
+#addEditBox .sortList div[data-v-910bd16c] {
+	width: 185px;
+	height: 50px;
+	margin-left: 10px;
+	float: left;
+}
+

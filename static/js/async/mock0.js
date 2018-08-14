@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["mock0"],{"11e8":function(e,t,a){"use strict";a.r(t),t.default={"total|1-100":10,"count|1-100":1,"list|1-10":[{logId:7,"status|0-1":1,createTime:"@time",createUName:"@cname",planName:"@ctitle()"}]}}}]);

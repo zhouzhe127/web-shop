@@ -1,0 +1,62 @@
+
+.picName[data-v-b835553e] {
+  width: 100%;
+  min-width: 600px;
+  padding-top: 10px;
+  overflow: hidden;
+}
+.picName .line[data-v-b835553e] {
+  display: block;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  margin: 10px 0;
+  float: left;
+}
+.picName .line .commodity-name[data-v-b835553e] {
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+  margin-right: 38px;
+}
+.picName .line .feeRoute[data-v-b835553e] {
+  display: block;
+  width: 130px;
+  line-height: 40px;
+  margin-right: 10px;
+  float: left;
+}
+.picName .line input[data-v-b835553e] {
+  width: 100px;
+  line-height: 25px;
+  padding: 5px;
+  margin: 0;
+}
+.picName .line .feeSet[data-v-b835553e] {
+  width: 130px;
+  line-height: 40px;
+  margin-right: 10px;
+}
+.picName .line .feeInput[data-v-b835553e] {
+  width: 120px;
+  height: 30px;
+  border: 1px solid #ccc;
+}
+.picName .line .feeGoods[data-v-b835553e] {
+  width: 130px;
+  line-height: 40px;
+  margin-right: 10px;
+}
+.picName .line .spanCom[data-v-b835553e] {
+  height: 40px;
+  line-height: 40px;
+  text-align: left;
+  margin-right: 10px;
+}
+
+
+.picName .line span .selectbtns span {
+	background-color: #f2f2f2;
+}
+

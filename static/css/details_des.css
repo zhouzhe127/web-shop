@@ -1,0 +1,68 @@
+
+.detLi {
+  position: relative;
+  cursor: pointer;
+}
+.detImg {
+  position: absolute;
+  right: 0px;
+  top: 15px;
+}
+.detDiv {
+  width: 250px;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  padding: 10px;
+  box-shadow: 3px 2px 10px #ccc;
+  z-index: 9;
+  background-color: #45404b ;
+}
+.detDiv .detI {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  border-width: 10px;
+  border-top: 0px;
+  border-style: solid;
+  border-color: #E6E6E6 #E6E6E6 #45404b #E6E6E6;
+}
+.detDiv .detH3 {
+  height: 30px;
+  line-height: 30px;
+  color: #818181;
+  text-align: left;
+  color: #e6e6e7;
+}
+.rightDetDiv {
+  width: 250px;
+  position: absolute;
+  padding: 10px;
+  box-shadow: 3px 2px 10px #ccc;
+  z-index: 9;
+  background-color: #45404b ;
+  top: 6px;
+  right: 0;
+}
+.rightDetDiv .detI {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  top: 10px;
+  left: -10px;
+  border-right: 10px solid #333;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.rightDetDiv .detH3 {
+  height: 30px;
+  line-height: 30px;
+  color: #818181;
+  text-align: left;
+  color: #e6e6e7;
+}
+

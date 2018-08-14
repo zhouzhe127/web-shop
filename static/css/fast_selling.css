@@ -1,0 +1,101 @@
+
+#quicksel .topR .on_off[data-v-404cc350] {
+  display: inline-block;
+  vertical-align: middle;
+}
+#quicksel .box[data-v-404cc350] {
+  height: 40px;
+  margin-bottom: 40px;
+}
+#quicksel .box .commodity-name[data-v-404cc350] {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  margin-right: 20px;
+  line-height: 40px;
+  text-align: right;
+}
+#quicksel .box .div_wai[data-v-404cc350] {
+  border: 1px solid #f8941f;
+  display: inline-block;
+  cursor: pointer;
+}
+#quicksel .box .div_wai .span_type[data-v-404cc350] {
+  display: inline-block;
+  height: 40px;
+  width: 100px;
+  line-height: 40px;
+  text-align: center;
+}
+#quicksel .box .div_wai .sel_true[data-v-404cc350] {
+  background-color: #f8941f;
+  color: white;
+}
+#quicksel .box .div_wai .sel_false[data-v-404cc350] {
+  background-color: white;
+  color: #f8941f;
+}
+#quicksel .box input[data-v-404cc350] {
+  width: 120px;
+  vertical-align: middle;
+  height: 30px;
+  margin-right: 20px;
+}
+#quicksel .ic-title[data-v-404cc350] {
+  height: 30px;
+  line-height: 30px;
+  position: relative;
+}
+#quicksel .ic-title .text[data-v-404cc350] {
+  width: 120px;
+  height: 20px;
+  line-height: 20px;
+  text-indent: 10px;
+  position: absolute;
+  left: 0;
+  top: 10px;
+  border-left: 6px solid #f8931f;
+}
+#quicksel .ic-title .dashed[data-v-404cc350] {
+  width: 800px;
+  height: 10px;
+  border-top: 1px dashed #e4e5e6;
+  position: absolute;
+  left: 125px;
+  top: 20px;
+}
+#quicksel .cardBox[data-v-404cc350] {
+  overflow: auto;
+  width: 700px;
+  height: 340px;
+  border: 1px solid #b3b3b3;
+  padding: 20px;
+  margin-left: 25px;
+}
+#quicksel .cardBox .section_one[data-v-404cc350] {
+  width: 300px;
+  height: 30px;
+  float: left;
+  padding-left: 25px;
+  position: relative;
+  margin-bottom: 10px;
+}
+#quicksel .cardBox .span_one[data-v-404cc350] {
+  position: absolute;
+  top: 8px;
+  font-size: 16px;
+  left: 35px;
+}
+#quicksel .cardBox .span_two[data-v-404cc350] {
+  position: absolute;
+  right: 35px;
+}
+#quicksel .cardBox .img_style[data-v-404cc350] {
+  height: 30px;
+  padding: 5px;
+}
+#quicksel a[data-v-404cc350] {
+  margin: 10px 0;
+  width: 250px;
+}
+

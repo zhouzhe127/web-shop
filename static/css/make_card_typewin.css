@@ -1,0 +1,24 @@
+
+.newCard[data-v-772bc212] span {
+	color: #333;
+	min-width: 100px;
+	border: 1px solid #D2D2D2;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+}
+.newCard[data-v-772bc212] span.sign {
+	color: #FF9200;
+	border: 1px solid #FF9200;
+}
+.newCard[data-v-772bc212] span:hover {
+	background-color: #FFFFFF;
+}
+.newCard .unsign[data-v-772bc212] {
+	background: #eee;
+}
+.newCard .unsign[data-v-772bc212]:hover {
+	background: #eee;
+}
+

@@ -1,0 +1,198 @@
+
+.warehouse-lists[data-v-406d6c52] {
+  padding-top: 15px;
+}
+.warehouse-lists .choose-btn[data-v-406d6c52] {
+  width: 240px;
+  height: 40px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+.warehouse-lists .choose-btn li[data-v-406d6c52] {
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  line-height: 38px;
+  color: #fe8d01;
+  border: 1px solid #fe8d01;
+  float: left;
+}
+.warehouse-lists .choose-btn .select[data-v-406d6c52] {
+  background: #fe8d01;
+  color: #ffffff;
+}
+.warehouse-lists .filter[data-v-406d6c52] {
+  width: 100%;
+}
+.warehouse-lists .filter .block[data-v-406d6c52] {
+  display: inline-block;
+  padding-bottom: 20px;
+}
+.warehouse-lists .filter .inline-box[data-v-406d6c52] {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.warehouse-lists .filter .inline-box input[data-v-406d6c52] {
+  width: 180px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+  vertical-align: top;
+}
+.warehouse-lists .filter .inline-box input[data-v-406d6c52]:focus {
+  outline: none;
+}
+.warehouse-lists .filter .button-box span[data-v-406d6c52] {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  width: 80px;
+  color: #fff;
+  text-align: center;
+}
+.warehouse-lists .filter .button-box .blue[data-v-406d6c52] {
+  margin-right: 10px;
+}
+.warehouse-lists .filter .input-check[data-v-406d6c52] {
+  font-size: 16px;
+  color: #333;
+}
+.warehouse-lists .filter .input-check i[data-v-406d6c52] {
+  height: 20px;
+  width: 20px;
+  border-radius: 2px;
+  margin-right: 5px;
+  color: #444;
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid #bbb;
+  vertical-align: middle;
+  margin-top: -3px;
+}
+.warehouse-lists .filter .input-check i.active[data-v-406d6c52] {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA4ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDpjZTQ3ZWMyNi00ZTAxLTYyNDAtOWIzOS0yYmEzODJmZWExOTkiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MEFGM0E3ODg3RTNCMTFFNzhERDVCN0FERDk5QkJCN0QiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MEFGM0E3ODc3RTNCMTFFNzhERDVCN0FERDk5QkJCN0QiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5MzZjY2M2OC00NmZhLTQzNjYtYWVmYy05ZmJkZGQzNjk0ZTQiIHN0UmVmOmRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDpmM2VkMDU2Ni03YzE0LTExN2EtOTJlNi05ZjhlNmE5OWJjZmYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6KLZGcAAAAaUlEQVR42mL8//8/AyWAiYFCMDQNqIdiCAAFIgm4/j8E/AFiHXAEkKk5HCaOTVE9sZrRDdCBKviPZgiy5jB0w9FtCkczBK9mXGGAbAhezfgCEWYIXs0gzIIjrlcisVfhSxSMQz8zAQQYAKHmcsKA87T7AAAAAElFTkSuQmCC) #28a8e0 center no-repeat;
+  border: 1px solid #28a8e0;
+}
+.warehouse-lists .main .list[data-v-406d6c52] {
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ddd;
+  position: relative;
+}
+.warehouse-lists .main .list .head[data-v-406d6c52] {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+.warehouse-lists .main .list .head em[data-v-406d6c52] {
+  color: #ff3c04;
+  font-size: inherit;
+}
+.warehouse-lists .main .list .list-box[data-v-406d6c52] {
+  max-width: 100%;
+  overflow: auto;
+}
+.warehouse-lists .main .list .fixed[data-v-406d6c52] {
+  position: absolute;
+  left: 0;
+  top: 50px;
+  background: #fff;
+}
+.warehouse-lists .main .list .fixed .fixed-title[data-v-406d6c52] {
+  display: block;
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background: #e6e6e6;
+}
+.warehouse-lists .main .list .fixed .fixed-list[data-v-406d6c52] {
+  border-bottom: 2px solid #ddd;
+}
+.warehouse-lists .main .list .fixed .fixed-list[data-v-406d6c52]:last-child {
+  border-bottom: 0;
+}
+.warehouse-lists .main .list .fixed .fixed-list span[data-v-406d6c52] {
+  display: block;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  color: #27a8e0;
+  cursor: pointer;
+}
+.warehouse-lists .main .list .title[data-v-406d6c52] {
+  background: #e6e6e6;
+  overflow: hidden;
+  min-width: 1400px;
+  width: 100%;
+  padding-left: 150px;
+}
+.warehouse-lists .main .list .title span[data-v-406d6c52] {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  width: 13%;
+}
+.warehouse-lists .main .list .title .narrow[data-v-406d6c52] {
+  width: 9%;
+}
+.warehouse-lists .main .list ul[data-v-406d6c52] {
+  min-width: 1400px;
+  width: 100%;
+}
+.warehouse-lists .main .list ul li[data-v-406d6c52] {
+  overflow: hidden;
+  border-bottom: 2px solid #ddd;
+  padding-left: 150px;
+}
+.warehouse-lists .main .list ul li[data-v-406d6c52]:last-child {
+  border-bottom: 0;
+}
+.warehouse-lists .main .list ul li span[data-v-406d6c52] {
+  float: left;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  width: 13%;
+  color: #555;
+  padding: 0 5px;
+}
+.warehouse-lists .main .list ul li span .warp[data-v-406d6c52] {
+  line-height: normal;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  max-height: 38px;
+  overflow: hidden;
+}
+.warehouse-lists .main .list ul li span .warp-three[data-v-406d6c52] {
+  max-height: 57px;
+}
+.warehouse-lists .main .list ul li .narrow[data-v-406d6c52] {
+  width: 9%;
+}
+.warehouse-lists .main .list ul li .handle .detail[data-v-406d6c52] {
+  display: inline-block;
+  padding: 0 5px;
+  line-height: normal;
+  cursor: pointer;
+  vertical-align: middle;
+  color: #27a8e0;
+}
+.warehouse-lists .main .list ul li .handle .detail[data-v-406d6c52]:hover {
+  text-decoration: underline;
+}
+.warehouse-lists .main .list ul .empty[data-v-406d6c52] {
+  line-height: 70px;
+  text-align: center;
+  color: #ccc;
+  font-size: 20px;
+}
+.warehouse-lists .main .page-box[data-v-406d6c52] {
+  text-align: left;
+  margin-top: 20px;
+  padding-bottom: 80px;
+}
+

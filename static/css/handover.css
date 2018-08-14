@@ -1,0 +1,188 @@
+
+.yuChairFix[data-v-9a33ba1c]:after {
+  content: '';
+  height: 0;
+  display: block;
+  clear: both;
+}
+#orHandOver[data-v-9a33ba1c] {
+  margin-top: 20px;
+  position: relative;
+}
+#orHandOver .pageBox[data-v-9a33ba1c] {
+  padding-top: 20px;
+}
+#orHandOver .orMaReMainList li[data-v-9a33ba1c]:first-of-type,
+#orHandOver .orMaReMainList li[data-v-9a33ba1c]:last-of-type {
+  background: #e6e6e6;
+}
+#orHandOver .orMaReMainList li[data-v-9a33ba1c]:nth-of-type(even) {
+  background: #f2f2f2;
+}
+#orHandOver .orMaReMainList li[data-v-9a33ba1c]:nth-of-type(2) {
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+}
+#orHandOver .orMaReMainList li span[data-v-9a33ba1c] {
+  display: block;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  width: 9%;
+  color: #8f8f8f;
+  float: left;
+  position: relative;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#orHandOver .orMaReMainList li span[data-v-9a33ba1c]:nth-of-type(1) {
+  width: 15%;
+}
+#orHandOver .orMaReMainList li span[data-v-9a33ba1c]:nth-of-type(2) {
+  width: 16%;
+}
+#orHandOver .orMaReMainList li span[data-v-9a33ba1c]:nth-of-type(4) {
+  width: 8%;
+}
+#orHandOver .orMaReMainList li span[data-v-9a33ba1c]:nth-of-type(7) {
+  width: 7%;
+}
+#orHandOver .orMaReMainList li span a[data-v-9a33ba1c] {
+  width: 100% !important;
+  color: #fff;
+  font-size: 12px;
+  height: 49px;
+  margin-top: 1px;
+  margin-left: 1px;
+  display: block;
+  float: right;
+}
+#orHandOver .orHandOverTime[data-v-9a33ba1c] {
+  padding-bottom: 25px;
+}
+#orHandOver .order-order-searchA[data-v-9a33ba1c],
+#orHandOver .order-order-search[data-v-9a33ba1c],
+#orHandOver .order-order-inquire[data-v-9a33ba1c] {
+  display: inline-block;
+  float: left;
+  height: 40px;
+  width: 40px;
+  background-color: #29a7e1;
+  cursor: pointer;
+}
+#orHandOver .order-order-search[data-v-9a33ba1c] {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM3Q0IyMDNCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM3Q0IyMDRCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzdDQjIwMUJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzdDQjIwMkJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pr9ucPQAAAFaSURBVHjarNQ7LARBHMfx2ROF9/tc4gqJREGhUduLgkYjUUmUOlEqlCqJRojCoxMVtYIoKBUaOc8gItGcZ0Mj1neSWTln/mtu3T/5JLc3s7/Mzvx3vSAIlKVSGEA79IRL7CGnHCpRcJ3GFo4xiDKUYxhnWEfyz1S9UqMXd5hGRd7/oRrM4grdlvFv4Y823GMoarIxhms0SXM8s6cbOMeMcqt5VGFcevw0HlDpsMpQI15RbxvXB9WPXbwp93rCIfqk09dtk1XFl+6QDin0E16M0ITpYevADXpihOp7LqSDSuERtUUcVCteTO+KLbVmNn/KcZWreMdk1BvVgluMOqxyAidRT5Z/0WVewTk0WCYnsYwsjuC7hGrNWMEztrGIJeyYfV9AHTLIScGe8OmrRgadpm1OcVDwgujxTYxgX/pKxeHbVvzfUGtwKUJ/BZcq9EewdFBxy8fHlwADAMK7/x/UqqS7AAAAAElFTkSuQmCC) center center no-repeat;
+}
+#orHandOver .orMaRetBox:last-of-type .order-order-searchA[data-v-9a33ba1c]:hover {
+  background-color: #1878a5;
+  -webkit-transition: background-color ease-in-out 0.2s;
+  transition: background-color ease-in-out 0.2s;
+}
+#orHandOver .orMaRetBox:last-of-type .order-order-searchA[data-v-9a33ba1c]:active {
+  background-color: #154961;
+}
+#orHandOver .deepBlue[data-v-9a33ba1c] {
+  background: #2980b9;
+}
+#orHandOver .blue[data-v-9a33ba1c] {
+  background: #00adef;
+}
+#orHandOver .red[data-v-9a33ba1c] {
+  background: #ec1515;
+}
+#orHandOver .orange[data-v-9a33ba1c] {
+  background: #f8931f;
+}
+#orHandOver .detail-btn[data-v-9a33ba1c] {
+  display: block;
+}
+#orHandOver .circle[data-v-9a33ba1c] {
+  width: 26px;
+  height: 26px;
+  border: 1px #c7c7c7 solid;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -13px;
+  margin-top: -13px;
+  background: #fff;
+}
+#orHandOver .orMaReBatch[data-v-9a33ba1c] {
+  position: absolute;
+  top: -60px;
+  right: 100px;
+}
+#orHandOver .orMaReBatch a[data-v-9a33ba1c] {
+  color: #fff;
+  margin-left: 10px;
+}
+#orHandOver .orMaReBatch a.active[data-v-9a33ba1c] {
+  background: #2980b9;
+}
+#orHandOver .orMaReBatch a.disabled[data-v-9a33ba1c] {
+  background: #b3b3b3;
+  cursor: not-allowed;
+}
+#orHandOver .orMaRetBox[data-v-9a33ba1c] {
+  width: 202px;
+  float: left;
+}
+#orHandOver .zhi[data-v-9a33ba1c] {
+  text-align: center;
+  width: 35px;
+  height: 40px;
+  line-height: 40px;
+  display: block;
+  float: left;
+}
+#statHaovDetails[data-v-9a33ba1c] {
+  margin-right: 90px;
+  padding-top: 25px;
+}
+#statHaovDetails .loginTime[data-v-9a33ba1c] {
+  margin-bottom: 20px;
+}
+#statHaovDetails .loginTime span[data-v-9a33ba1c] {
+  font-size: 14px;
+  display: block;
+  width: 50%;
+  float: left;
+}
+#statHaovDetails .deInfo .deInfoBox[data-v-9a33ba1c] {
+  padding-bottom: 1px;
+  margin-bottom: 10px;
+  background: #f2f2f2;
+}
+#statHaovDetails .deInfo .deInfoBox h1[data-v-9a33ba1c] {
+  padding: 11px 0;
+  background: #e6e6e6;
+  margin: 0;
+}
+#statHaovDetails .deInfo .deInfoBox h1 span[data-v-9a33ba1c] {
+  height: 28px;
+  line-height: 28px;
+  padding-left: 23px;
+  display: block;
+  border-left: 2px #f7941d solid;
+}
+#statHaovDetails .deInfo .deInfoBox ul[data-v-9a33ba1c] {
+  height: 100px;
+  padding: 0;
+  margin: 0;
+  padding-left: 25px;
+  padding-top: 20px;
+}
+#statHaovDetails .deInfo .deInfoBox ul li[data-v-9a33ba1c] {
+  padding-bottom: 1px;
+  list-style: none;
+  margin-bottom: 20px;
+}
+#statHaovDetails .deInfo .deInfoBox ul li span[data-v-9a33ba1c] {
+  display: block;
+  width: 25%;
+  float: left;
+}
+

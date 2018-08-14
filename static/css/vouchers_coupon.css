@@ -1,0 +1,224 @@
+
+#breakCoupon[data-v-5fa99fee] {
+	width: 1200px;
+	line-height: 40px;
+	text-align: center;
+	color: #333;
+	overflow: hidden;
+	padding-bottom: 300px;
+	position: relative;
+}
+#breakCoupon .set-line[data-v-5fa99fee] {
+	width: 1000px;
+	height: 28px;
+	line-height: 28px;
+	border-left: 4px solid #28a8e0;
+	margin: 15px 0 35px;
+	position: relative;
+}
+#breakCoupon .set-line .title[data-v-5fa99fee] {
+	float: left;
+	margin-left: 12px;
+	width: 70px;
+	font-size: 16px;
+	text-align: left;
+}
+#breakCoupon .set-line .line[data-v-5fa99fee] {
+	display: inline-block;
+	width: 900px;
+	border-bottom: 1px dashed #d9d9d9;
+	margin-bottom: 5px;
+}
+#breakCoupon .left[data-v-5fa99fee],
+#breakCoupon .right[data-v-5fa99fee] {
+	height: 40px;
+	float: left;
+	margin-bottom: 15px;
+}
+#breakCoupon .left[data-v-5fa99fee] {
+	color: #000000;
+	width: 170px;
+}
+#breakCoupon .right[data-v-5fa99fee] {
+	width: 970px;
+}
+#breakCoupon .right .line[data-v-5fa99fee] {
+	width: 100%;
+	height: 40px;
+	padding-left: 10px;
+}
+#breakCoupon .right .reduceamount[data-v-5fa99fee] {
+	height: 38px;
+	width: 150px;
+	float: left;
+}
+#breakCoupon .right .yuan[data-v-5fa99fee] {
+	border-left: 1px solid #999;
+	width: 48px;
+	float: left;
+	height: 38px;
+}
+#breakCoupon .right .couponinp[data-v-5fa99fee] {
+	height: 30px;
+	width: 60px;
+	border: 1px solid #999
+}
+#breakCoupon .right .fl[data-v-5fa99fee] {
+	padding-left: 10px;
+}
+#breakCoupon .right .creditamount[data-v-5fa99fee] {
+	border: 1px solid #999;
+	width: 200px;
+	height: 40px;
+	padding: 0;
+	margin-left: 10px;
+}
+#breakCoupon .right .fl .inp[data-v-5fa99fee] {
+	border: 1px solid #999;
+	width: 250px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+}
+#breakCoupon .left .text[data-v-5fa99fee] {
+	float: right;
+	height: 100%;
+	padding: 0 10px;
+	text-align: right;
+}
+#breakCoupon .right .buttons[data-v-5fa99fee] {
+	padding: 0 10px 0 40px;
+	background-color: #28a8e0;
+	height: 40px;
+	width: 120px;
+	cursor: pointer;
+	float: left;
+	color: #FFF;
+	position: relative;
+	-webkit-transition: background-color ease-in-out 0.2s;
+	transition: background-color ease-in-out 0.2s;
+}
+#breakCoupon .right .associated[data-v-5fa99fee] {
+	float: left;
+	width: 600px;
+	text-align: left;
+	padding-left: 15px;
+}
+#breakCoupon .right .buttons[data-v-5fa99fee]:hover {
+	background-color: #2a80b9;
+}
+#breakCoupon .right .buttons img[data-v-5fa99fee] {
+	position: absolute;
+	top: 11px;
+	left: 15px;
+}
+#breakCoupon .right .reduce span[data-v-5fa99fee] {
+	float: left;
+	display: block;
+	width: 98px;
+	height: 38px;
+	border: 1px solid #999;
+	/* margin-right: 15px; */
+	text-align: center;
+	line-height: 38px;
+	cursor: pointer;
+	background: #fff;
+}
+#breakCoupon .right .reduce .sign[data-v-5fa99fee] {
+	background: #FFF3E5;
+	border: 1px solid #F8931F;
+	color: #F9911E;
+}
+#breakCoupon .right .cleander[data-v-5fa99fee] {
+	width: 310px;
+	height: 40px;
+	border: 1px solid #999;
+	float: left;
+}
+#breakCoupon .right .cleander_o[data-v-5fa99fee] {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	cursor: pointer;
+}
+#breakCoupon .right .cleander_t[data-v-5fa99fee] {
+	float: left;
+	width: 40%;
+	height: 40px;
+}
+#breakCoupon .right .cleander_f[data-v-5fa99fee] {
+	float: left;
+	width: 20%;
+	height: 40px;
+}
+#breakCoupon .right .denomination[data-v-5fa99fee] {
+	height: 38px;
+	width: 191px;
+	float: left;
+	border: 1px solid #999;
+	margin-right: 10px;
+}
+#breakCoupon .right .cleander_s[data-v-5fa99fee] {
+	float: left;
+	width: 40%;
+	height: 40px;
+}
+#breakCoupon .right .triangle[data-v-5fa99fee] {
+	border: 1px solid #999;
+	width: 40px;
+	float: left;
+	height: 40px;
+	border-left: none;
+	cursor: pointer;
+}
+#breakCoupon .right .foday[data-v-5fa99fee] {
+	width: 80px;
+	float: left;
+	height: 40px;
+	font-size: 12px;
+	text-align: left;
+	color: #00A1E9;
+	padding-left: 10px;
+}
+#breakCoupon .right .note[data-v-5fa99fee] {
+	border: 1px solid #999;
+	width: 352px;
+	height: 40px;
+	padding: 0;
+	margin-left: 10px;
+}
+#breakCoupon .right .note input[data-v-5fa99fee] {
+	height: 38px;
+	width: 350px;
+	float: left;
+}
+#breakCoupon .right .useinformation[data-v-5fa99fee] {
+	border: 1px solid #999;
+	width: 382px;
+	height: 180px;
+	padding: 0px;
+	margin-left: 10px;
+}
+#breakCoupon .right .useinformation .describe[data-v-5fa99fee] {
+	width: 360px;
+	height: 158px;
+}
+#breakCoupon .right .useinformation .describetip[data-v-5fa99fee] {
+	width: 100%;
+	height: 18px;
+	line-height: 18px;
+	vertical-align: middle;
+	padding: 8px;
+	margin-top: 8px;
+}
+#breakCoupon .right .useinformation .describetip .tips[data-v-5fa99fee] {
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+}
+#breakCoupon .save-coupon[data-v-5fa99fee] {
+	position: absolute;
+	bottom: 60px;
+	left: 180px;
+}
+

@@ -1,0 +1,117 @@
+
+@media only screen and (max-width: 1360px) {
+.setSpeen[data-v-3f9268f4] {
+    margin-top: 10px;
+    display: block !important;
+}
+}
+.setSpeen[data-v-3f9268f4] {
+  display: inline-block;
+}
+.homeTitle[data-v-3f9268f4] {
+  background: #e6e6e6;
+  overflow: hidden;
+  line-height: 50px;
+}
+.homeList[data-v-3f9268f4] {
+  line-height: 50px;
+  color: #7F7F7F;
+}
+.homeList ol[data-v-3f9268f4] {
+  overflow: hidden;
+  border-bottom: 1px solid #f2f2f2;
+}
+.homeList ol[data-v-3f9268f4]:last-child {
+  border-bottom: none;
+}
+.homeList ol li[data-v-3f9268f4] {
+  overflow: hidden;
+  float: left;
+  width: 8%;
+  height: 50px;
+  text-align: center;
+  font-size: 12px;
+}
+.homeTitle ul li[data-v-3f9268f4] {
+  overflow: hidden;
+  float: left;
+  width: 8%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 12px;
+}
+li[data-v-3f9268f4] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.batchTitle ol li[data-v-3f9268f4],
+.batchTitle ul li[data-v-3f9268f4] {
+  width: 14%;
+}
+.infoDetail[data-v-3f9268f4] {
+  display: inline-block;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  text-align: center;
+}
+.tebBox[data-v-3f9268f4] {
+  display: inline-block;
+  border: 1px orange solid;
+  color: orange;
+  cursor: pointer;
+}
+.tebBox li[data-v-3f9268f4] {
+  display: inline-block;
+  padding: 10px 30px;
+}
+.tebBox .active[data-v-3f9268f4] {
+  background-color: orange;
+  color: #ffffff;
+}
+.listBox[data-v-3f9268f4] {
+  border: 1px #ccc solid;
+}
+.listBox .listTitle[data-v-3f9268f4] {
+  padding: 15px 20px;
+}
+.listBox .listTitle p span[data-v-3f9268f4] {
+  display: inline-block;
+  padding: 0 10px;
+  font-size: 30px;
+  line-height: 0px;
+  position: relative;
+  top: 5px;
+}
+.listBox .listTitle p strong[data-v-3f9268f4] {
+  color: red;
+}
+.serBox h1[data-v-3f9268f4] {
+  display: inline-block;
+  line-height: 42px;
+}
+.serBox .timer[data-v-3f9268f4] {
+  display: inline-block;
+  width: 200px;
+  margin-left: 10px;
+}
+.serBox .search-input[data-v-3f9268f4] {
+  height: 40px;
+  color: #a5a5a5;
+  font-size: 14px;
+  line-height: 40px;
+  text-indent: 15px;
+  padding: 0;
+  outline: none;
+  margin-right: 15px;
+}
+#emptyData[data-v-3f9268f4] {
+  margin: 0 auto;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  color: orange;
+}
+

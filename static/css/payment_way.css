@@ -1,0 +1,57 @@
+
+.paymentWayContent[data-v-af4b7aca] {
+	text-align: center;
+}
+.commonLi ul li[data-v-af4b7aca] {
+	width: 25%;
+	float: left;
+}
+.paymentWayContent[data-v-af4b7aca]:nth-of-type(odd) {
+	background: #f2f2f2;
+}
+.paymentWayContent[data-v-af4b7aca] {
+	height: 50px;
+	line-height: 50px;
+}
+.editInfo[data-v-af4b7aca] {
+	width: 100%;
+	display: block;
+	color: #fff;
+}
+.paymentWayTittle[data-v-af4b7aca] {
+	background: #e6e6e6;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+}
+.topBox[data-v-af4b7aca] {
+	height: 50px;
+	line-height: 50px;
+	padding-left: 20px;
+	display: inline-block;
+}
+.topBox span[data-v-af4b7aca] {
+	font-size: 16px;
+	margin: 10px 20px;
+}
+.topBox span:nth-child(1) i[data-v-af4b7aca] {
+	background: #f8931f;
+}
+.topBox span:last-child i[data-v-af4b7aca] {
+	background: #2ea7e0;
+}
+.topBox i[data-v-af4b7aca] {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	margin-right: 10px;
+	vertical-align: middle;
+}
+.isBrandColor[data-v-af4b7aca] {
+	color: #2ea7e0;
+}
+.isShopColor[data-v-af4b7aca] {
+	color: #f8931f;
+}
+

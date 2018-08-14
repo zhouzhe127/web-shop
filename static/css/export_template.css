@@ -1,0 +1,195 @@
+
+.clear[data-v-05874e74] {
+  content: "";
+  display: block;
+  line-height: 0;
+  visibility: hidden;
+  clear: both;
+}
+.text-ellipsis[data-v-05874e74] {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#export-template .select-item[data-v-05874e74] {
+  color: #ff8d01 !important;
+  border: 1px solid #ff8d01 !important;
+}
+#export-template .head[data-v-05874e74] {
+  height: 23px;
+  border-left: 2px solid #29a8e0;
+  padding-left: 10px;
+  line-height: 23px;
+  color: #333;
+  font-size: 16px;
+}
+#export-template .head[data-v-05874e74]:after {
+  content: "";
+  display: inline-block;
+  width: 538px;
+  height: 5px;
+  border: none;
+  border-top: 2px dashed #ccc;
+  margin-left: 5px;
+}
+#export-template .body[data-v-05874e74] {
+  padding-left: 20px;
+}
+#export-template .body .body-title[data-v-05874e74] {
+  color: #333;
+  font-size: 14px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+#export-template .body .body-title img[data-v-05874e74] {
+  vertical-align: sub;
+  margin-left: 15px;
+  cursor: pointer;
+}
+#export-template .body .template-list[data-v-05874e74] {
+  max-width: 870px;
+}
+#export-template .body .template-list[data-v-05874e74]:after {
+  content: "";
+  display: block;
+  line-height: 0;
+  visibility: hidden;
+  clear: both;
+}
+#export-template .body .template-list .template-common[data-v-05874e74] {
+  min-width: 100px;
+  padding: 0 10px;
+  line-height: 40px;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+}
+#export-template .body .template-list .list[data-v-05874e74] {
+  min-width: 100px;
+  padding: 0 10px;
+  line-height: 40px;
+  font-size: 14px;
+  text-align: center;
+  color: #333;
+  float: left;
+  list-style: none;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background-color: #f2f2f2;
+}
+#export-template .body .template-list .list .word[data-v-05874e74] {
+  width: 80px;
+  height: 100%;
+  border: none;
+}
+#export-template .body .template-list .list .delete[data-v-05874e74] {
+  float: right;
+  margin-top: -50px;
+  margin-right: -20px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  line-height: 20px;
+  color: #fff;
+  font-size: 15px;
+  background-color: #ff3d04;
+  text-align: center;
+  border-radius: 50%;
+}
+#export-template .body .template-list .bgdark[data-v-05874e74] {
+  background-color: #b3b3b3;
+}
+#export-template .body .template-list .add-template[data-v-05874e74] {
+  min-width: 100px;
+  padding: 0 10px;
+  line-height: 40px;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+  display: inline-block;
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+#export-template .body .template-list .add-template img[data-v-05874e74] {
+  float: left;
+  margin-top: 12px;
+}
+#export-template .body .template-content[data-v-05874e74] {
+  border: 1px solid #b3b3b3;
+  max-width: 870px;
+  min-height: 414px;
+  padding: 25px;
+  position: relative;
+}
+#export-template .body .template-content .content-title[data-v-05874e74] {
+  padding-bottom: 15px;
+}
+#export-template .body .template-content .list-container[data-v-05874e74] {
+  padding-bottom: 50px;
+}
+#export-template .body .template-content .list-container[data-v-05874e74]:after {
+  content: "";
+  display: block;
+  line-height: 0;
+  visibility: hidden;
+  clear: both;
+}
+#export-template .body .template-content .item[data-v-05874e74] {
+  list-style: none;
+  min-width: 150px;
+  height: 40px;
+  text-align: center;
+  line-height: 38px;
+  color: #333, 38px, 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  float: left;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+#export-template .body .template-content .data-bottom[data-v-05874e74] {
+  padding-bottom: 20px;
+  position: absolute;
+  width: calc(100% - 50px);
+  bottom: 0;
+}
+#export-template .body .template-content .data-bottom span[data-v-05874e74] {
+  width: 80px;
+  height: 26px;
+  border: 1px solid #b3b3b3;
+  text-align: center;
+  line-height: 24px;
+  color: #9fa0a0;
+  font-size: 14px;
+  display: inline-block;
+  margin-right: 10px;
+  cursor: pointer;
+}
+#export-template .body .template-content .data-bottom i[data-v-05874e74] {
+  color: #ff8d01;
+  float: right;
+  line-height: 26px;
+}
+#export-template .footer[data-v-05874e74] {
+  padding-left: 20px;
+  padding-top: 50px;
+}
+#export-template .footer div[data-v-05874e74] {
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  margin-right: 10px;
+  border: none;
+  cursor: pointer;
+}
+#export-template .footer .save[data-v-05874e74] {
+  color: #ff8d01 !important;
+  border: 1px solid #ff8d01 !important;
+}
+

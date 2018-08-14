@@ -1,0 +1,94 @@
+
+.supplies[data-v-5738e800] {
+  padding-bottom: 50px;
+}
+.supplies .list[data-v-5738e800] {
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ddd;
+}
+.supplies .list .head[data-v-5738e800] {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+.supplies .list .head em[data-v-5738e800] {
+  color: #ff3c04;
+  font-size: inherit;
+}
+.supplies .list .title[data-v-5738e800] {
+  background: #e6e6e6;
+  overflow: hidden;
+}
+.supplies .list .title span[data-v-5738e800] {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  width: 11%;
+}
+.supplies .list .title span[data-v-5738e800]:first-child {
+  width: 20%;
+}
+.supplies .list ul li[data-v-5738e800] {
+  overflow: hidden;
+  border-bottom: 2px solid #ddd;
+}
+.supplies .list ul li[data-v-5738e800]:last-child {
+  border-bottom: 0;
+}
+.supplies .list ul li span[data-v-5738e800] {
+  float: left;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  width: 11%;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.supplies .list ul li .infoDetail[data-v-5738e800] {
+  width: 20%;
+  float: left;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-around;
+          justify-content: space-around;
+}
+.supplies .list ul li .infoDetail a[data-v-5738e800] {
+  display: inline-block;
+  text-align: center;
+}
+.supplies .list ul li .handle em[data-v-5738e800] {
+  display: inline-block;
+  padding: 0 20px;
+  height: 18px;
+  line-height: normal;
+  cursor: pointer;
+}
+.supplies .list ul li .handle em[data-v-5738e800]:hover {
+  text-decoration: underline;
+}
+.supplies .list ul li .handle .edit[data-v-5738e800] {
+  color: #ff8d00;
+  border-right: 1px solid #ddd;
+}
+.supplies .list ul li .handle .detail[data-v-5738e800] {
+  color: #27a8e0;
+}
+.supplies .page-box[data-v-5738e800] {
+  margin-top: 10px;
+}
+.supplies #emptyData[data-v-5738e800] {
+  margin: 0 auto;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  color: orange;
+}
+

@@ -1,0 +1,37 @@
+
+.selectbtns[data-v-09ef9eb0] {
+	width: auto;
+}
+.selectbtns span[data-v-09ef9eb0] {
+	background-color: #fff;
+}
+.selectbtns span[data-v-09ef9eb0]:hover {
+	background-color: #fff;
+}
+.relatedForm[data-v-09ef9eb0] {
+	width: 980px;
+	height: 500px;
+	padding: 30px;
+}
+.comList[data-v-09ef9eb0] {
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	margin-bottom: 30px;
+}
+.comList .selectbtns[data-v-09ef9eb0] {
+	width: 100%;
+}
+.comList .selectbtns span[data-v-09ef9eb0],
+.packageList span[data-v-09ef9eb0] {
+	background-color: #f1f1f1;
+}
+.comList .selectbtns span[data-v-09ef9eb0]:hover,
+.packageList span[data-v-09ef9eb0]:hover {
+	background-color: #f1f1f1;
+}
+.loading[data-v-09ef9eb0] {
+	width: 128px;
+	margin: 200px auto;
+}
+

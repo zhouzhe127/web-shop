@@ -1,0 +1,39 @@
+
+#record .tebBox[data-v-052c4eb0] {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+}
+#record .tebBox li[data-v-052c4eb0] {
+  border: 1px orange solid;
+  display: inline-block;
+  width: 130px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+}
+#record .tebBox .active[data-v-052c4eb0] {
+  background-color: orange;
+  color: #ffffff;
+}
+#record .infoDetail[data-v-052c4eb0] {
+  width: 100%;
+  float: left;
+  text-align: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-around;
+          justify-content: space-around;
+}
+#record .infoDetail a[data-v-052c4eb0] {
+  display: inline-block;
+  text-align: center;
+}
+#record .infoDetail a[data-v-052c4eb0]:nth-child(1) {
+  color: #5ebee8;
+}
+#record .infoDetail a[data-v-052c4eb0]:nth-child(3) {
+  color: red;
+}
+

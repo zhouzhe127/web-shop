@@ -1,0 +1,27 @@
+
+.list .load[data-v-68242a90] {
+  width: 128px;
+  margin: 200px auto;
+}
+.list .top .title[data-v-68242a90] {
+  display: inline-block;
+  width: 300px;
+  margin-bottom: 10px;
+}
+.list .top .title input[data-v-68242a90] {
+  width: 200px;
+  height: 40px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+.list .top a[data-v-68242a90] {
+  width: 100px;
+  height: 39px;
+  line-height: 39px;
+  margin-right: 5px;
+}
+.list .btn .edit[data-v-68242a90] {
+  cursor: pointer;
+  color: #FE8D2C;
+}
+

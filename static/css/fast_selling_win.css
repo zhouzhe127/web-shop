@@ -1,0 +1,30 @@
+
+.jobWin[data-v-05cde2f5] {
+  width: 480px;
+  height: auto;
+  min-height: 480px;
+  padding-top: 20px;
+  background-color: #f2f2f2;
+}
+.jobWin .tag[data-v-05cde2f5] {
+  float: left;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+}
+.jobWin .mes[data-v-05cde2f5] {
+  float: left;
+  width: 300px;
+  padding-left: 15px;
+  text-indent: 0;
+  line-height: 0;
+}
+.jobWin .clear[data-v-05cde2f5] {
+  clear: both;
+  font-size: 0;
+  line-height: 0;
+  height: 15px;
+  width: 100%;
+}
+

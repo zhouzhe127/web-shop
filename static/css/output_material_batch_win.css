@@ -1,0 +1,171 @@
+
+#tan[data-v-7fa738e0] {
+  height: 100%;
+  background: #F7F7F7;
+  padding: 19px;
+}
+#tan .title[data-v-7fa738e0] {
+  width: 100%;
+  overflow: hidden;
+}
+#tan .title div[data-v-7fa738e0] {
+  float: left;
+  width: 25%;
+}
+#tan .title div span[data-v-7fa738e0] {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+}
+#tan .title div .clear[data-v-7fa738e0] {
+  float: right;
+  height: 40px;
+  line-height: 40px;
+  width: 100px;
+  text-align: center;
+  color: #fff;
+  background: #fe8d01;
+  cursor: pointer;
+}
+#tan .menu[data-v-7fa738e0] {
+  margin-bottom: 20px;
+}
+#tan .menu input[data-v-7fa738e0] {
+  width: 140px;
+  height: 40px;
+  padding-left: 7px;
+}
+#tan .menu .btn[data-v-7fa738e0] {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  vertical-align: middle;
+}
+#tan .menu .canMulti[data-v-7fa738e0] {
+  display: inline-block;
+  vertical-align: middle;
+  background: #fff;
+  height: 40px;
+}
+#tan .menu .canMulti .timeBox[data-v-7fa738e0] {
+  position: relative;
+  width: 350px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  border: 1px solid #CECDCD;
+}
+#tan .menu .canMulti .timeBox .down[data-v-7fa738e0] {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid #b3b3b3;
+  position: absolute;
+  top: 15px;
+  right: 17px;
+}
+#tan .menu .canMulti .time[data-v-7fa738e0] {
+  float: left;
+  width: 140px;
+  height: 39px;
+  line-height: 39px;
+  text-align: center;
+}
+#tan .content[data-v-7fa738e0] {
+  background: #F7F7F7;
+}
+#tan .content .top ul[data-v-7fa738e0] {
+  padding: 10px 0;
+  overflow: hidden;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+#tan .content .top ul li[data-v-7fa738e0] {
+  height: 40px;
+  line-height: 40px;
+  float: left;
+  text-align: center;
+  width: 15%;
+  border-right: 1px solid #ccc;
+}
+#tan .content .top ul li[data-v-7fa738e0]:first-child {
+  width: 10%;
+}
+#tan .content .top ul li[data-v-7fa738e0]:last-child {
+  border-right: 0;
+}
+#tan .content .scroll-box[data-v-7fa738e0] {
+  height: 332px;
+  overflow: auto;
+}
+#tan .content .list[data-v-7fa738e0] {
+  border-bottom: 1px solid #ccc;
+}
+#tan .content .list input[data-v-7fa738e0] {
+  width: 65px;
+  height: 39px;
+  padding-left: 7px;
+  border: 1px solid #ccc;
+  float: left;
+}
+#tan .content .list i[data-v-7fa738e0] {
+  width: 40px;
+  height: 39px;
+  border: 1px solid #ccc;
+  float: left;
+  line-height: 39px;
+  background: #fff;
+  border-left: none;
+}
+#tan .content .list ul[data-v-7fa738e0] {
+  overflow: hidden;
+}
+#tan .content .list ul li[data-v-7fa738e0] {
+  height: 60px;
+  line-height: 60px;
+  width: 15%;
+  float: left;
+  text-align: center;
+}
+#tan .content .list ul li i[data-v-7fa738e0] {
+  text-align: center;
+}
+#tan .content .list ul li[data-v-7fa738e0]:first-child {
+  width: 10%;
+}
+#tan .content .list[data-v-7fa738e0]:last-child {
+  border-bottom: 1px solid #ccc;
+}
+#tan .content .empty[data-v-7fa738e0] {
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  color: #999;
+  font-size: 20px;
+}
+#tan .list li[data-v-7fa738e0],
+#tan .list i[data-v-7fa738e0],
+#tan .hide[data-v-7fa738e0] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#tan .unit-box[data-v-7fa738e0] {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: middle;
+}
+#emptyData[data-v-7fa738e0] {
+  margin: 0 auto;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  color: orange;
+}
+

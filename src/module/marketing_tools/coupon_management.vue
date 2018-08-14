@@ -1,0 +1,466 @@
+<template>
+	<div>
+		<section v-if="couponType == 0" id="management">
+			<div id='test'>
+				<div class="oClickBox" style="" @click="showCalendar">
+					<span class="oSpan" style="">{{start}}&nbsp;----&nbsp;{{end}}</span>
+					<span class="down"></span>
+				</div>
+				<a style="background-color: #29A7E1;margin-left: -4px;" @click="seachData" href="javascript:void(0)">
+					<span class="search"></span>
+				</a>
+				<can-multi @castTime="getAddAlltime" @closeCan="()=>{isShowCa=false}" v-if="isShowCa" :apartDays="days" :sideStart="atime" :sideEnd="btime"></can-multi>
+			</div>
+			<section @click="closeDate" style="width:100%;height:100%;">
+				<div class="" style="width:100%;height:50px;">
+					<section v-for="(item,index) in bannerList" class="diel" :class="{'on':indexOn == index }" :key="index" @click="()=>{inte(index);page=1}">{{item.name}}</section>
+				</div>
+				<com-table :listHeight='60' :showHand="false" :listName="'优惠券列表'" :showTitle='2' :listWidth="1300" :introData="couponList" :titleData="titleList">
+					<div slot="con-0" slot-scope="props">{{returnTime(props.data.createTime)}}</div>
+					<div slot="con-2" slot-scope="props">{{getEndTime(props.data)}}</div>
+					<div slot="con-3" slot-scope="props">
+						{{couponTypeList[props.data.type]}}
+					</div>
+					<div slot="con-4" slot-scope="props">
+						<div class="align_item" v-if="ischain == 1 || ischain == 2">
+							<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
+						</div>
+						<div class="align_item" v-else>
+							<section @click="unbundlingCoupon(props.data)" style="border-bottom: 1px solid #fff;background-color: #28A8E0;color: #fff;">同步</section>
+							<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
+							<section @click="modfycoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #858585;color: #fff;">修改</section>
+							<section @click="deletecoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #A7A7A7;color: #fff;">删除</section>
+						</div>
+					</div>
+				</com-table>
+				<footer class="worker_staff_footer">
+					<page v-if="total>1" :page="page" @pageNum="pageChange" :total="total" :len="10"></page>
+				</footer>
+			</section>
+		</section>
+		<breakCoupon v-if="couponType == 1 || couponType == 2" :couponDetail='couponDetail' @changeMnage='getcouponResult'></breakCoupon>
+		<discountCoupon v-if="couponType == 3 || couponType == 4" :couponDetail='couponDetail' @changeMnage='getcouponResult'></discountCoupon>
+		<giveCoupon v-if="couponType == 5" :couponDetail='couponDetail' @changeMnage='getcouponResult'></giveCoupon>
+		<vouchersCoupon v-if="couponType == 6" :couponDetail='couponDetail' @changeMnage='getcouponResult'></vouchersCoupon>
+		<intergralcardCoupon v-if="couponType == 7" :couponDetail='couponDetail' @changeMnage='getcouponResult'></intergralcardCoupon>
+		<coupon-manage-win @changeCoupon="toEditCoupon" v-if="showCoupon" v-bind="couponInfo"></coupon-manage-win>
+		<!-- 解绑弹窗 -->
+		<maunBundling v-if='unbindWin' @getAppliedWin='getResult'></maunBundling>
+	</div>
+</template>
+<script>
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+export default {
+	data() {
+		return {
+			ischain: '', //店铺id 品牌店/单店
+			couponList: [], //优惠券列表
+			page: 1, //当前页的数据
+			total: '',
+			index: null,
+			pageNum: 10, //一版页码处理多少数据
+			pageCount: 0, //总条数
+			atime: utils.getTime({
+				time: new Date()
+			}).start,
+			btime: utils.getTime({
+				time: new Date()
+			}).end,
+			days: 0, //一共的天数
+			indexOn: 0,
+			bannerList: [{
+				index: 0,
+				name: '未关联'
+			},
+			{
+				index: 1,
+				name: '已关联'
+			},
+			{
+				index: -1,
+				name: '已过期'
+			}
+			], //
+			isShowCa: false, //  是否展示时间选择组件
+			changeMnage: true, //  是否显示修改优惠券页面
+			showCoupon: false, //  是否显示优惠券弹框
+			couponInfo: '', //  优惠券信息
+			titleList: [{
+				titleName: '创建时间',
+				titleStyle: {
+					width: '200px',
+					flex: 'none',
+					fontSize: 16 + 'px'
+				},
+				dataName: 'createTime'
+			},
+			{
+				titleName: '优惠券名称',
+				dataName: 'name',
+				titleStyle: {
+					fontSize: 16 + 'px'
+				},
+			},
+			{
+				titleName: '到期时间',
+				titleStyle: {
+					fontSize: 16 + 'px'
+				},
+			},
+			{
+				titleName: '类型',
+				dataName: 'type',
+				titleStyle: {
+					fontSize: 16 + 'px'
+				},
+			},
+			{
+				titleName: '操作',
+				titleStyle: {
+					fontSize: 16 + 'px'
+				},
+			}
+			],
+			allTotal: 100,
+			pageTotal: 10,
+			couponType: 0, //优惠券的标识
+			couponDetail: Object, //优惠券的详情
+			couponTypeList: {
+				1: '单品减免',
+				2: '整单减免',
+				3: '单品打折',
+				4: '整单打折',
+				5: '赠菜',
+				6: '代金券',
+				7: '积分卡券'
+			},
+			unbindWin: false, //同步优惠券的弹窗
+			asyncId: '' //同步优惠券的id
+		};
+	},
+	computed: {
+		start: {
+			get() {
+				return utils.format(new Date(this.atime), 'yyyy-MM-dd');
+			}
+		},
+		end: {
+			get() {
+				return utils.format(new Date(this.btime), 'yyyy-MM-dd');
+			}
+		},
+		day: {
+			get() {
+				return Math.floor((this.btime - this.atime) / (24 * 3600 * 1000));
+			}
+		}
+	},
+	methods: {
+		pageChange(obj) {
+			this.page = obj.page;
+			this.inte(this.indexOn);
+		},
+		toEditCoupon(str) {
+			if (str == 'nochange') {
+				this.showCoupon = false;
+			} else {
+				this.showCoupon = false;
+				this.couponDetail = str;
+				this.couponType = str.type;
+			}
+		},
+		returnTime(time) {
+			time -= 0;
+			time = time * 1000;
+			return utils.format(new Date(time), 'yyyy-MM-dd');
+		},
+		getEndTime(item) {
+			let item1 = utils.deepCopy(item);
+			if (item1.validityType == 0) {
+				return '领券后' + item1.relativeTime + '天过期';
+			} else if (item1.validityType == 1) {
+				item1.endTime -= 0;
+				item1.endTime = item1.endTime * 1000;
+				return utils.format(new Date(item1.endTime), 'yyyy-MM-dd') + '过期';
+			}
+		},
+		async inte(index) {
+			this.indexOn = index;
+			let res = await http.getCouponList({
+				data: {
+					page: this.page,
+					num: this.pageNum,
+					status: this.indexOn,
+					fromDate: parseInt(this.atime / 1000),
+					toDate: parseInt(this.btime / 1000)
+				}
+			});
+			this.couponList = res.list;
+			this.allTotal = res.list.length;
+			this.total = res.total;
+			this.pageCount = res.list.length;
+		},
+		//
+		showCalendar() {
+			this.isShowCa = !this.isShowCa;
+		},
+		//关闭日期框
+		closeDate() {
+			this.isShowCa = false;
+		},
+		//查询日期搜索
+		seachData() {
+			this.inte(this.indexOn);
+		},
+		//修改优惠券信息
+		modfycoupons(item) {
+			if (this.indexOn == '2') {
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					winType: 'alert',
+					content: '过期优惠券无法编辑'
+				});
+				return false;
+			}
+			this.$store.commit('setWin', {
+				winType: 'confirm',
+				title: '提示信息',
+				content: '确认修改吗？',
+				callback: str => {
+					if (str == 'ok') {
+						this.changeCoupon(item);
+					}
+				}
+			});
+		},
+		async changeCoupon(item) {
+			let res = await http.getCouponById({
+				data: {
+					couponId: item.id
+				}
+			});
+			this.couponDetail = res; //单张优惠券的详情
+			this.couponType = res.type;
+			this.changeMnage = false;
+		},
+		async delCoupon(item) {
+			await http.deleteCoupon({
+				data: {
+					couponId: item.id
+				}
+			});
+			this.inte(this.indexOn);
+		},
+		//删除优惠券信息
+		deletecoupons(item) {
+			this.$store.commit('setWin', {
+				winType: 'confirm',
+				title: '提示信息',
+				content: '确认要删除吗？',
+				callback: str => {
+					if (str == 'ok') {
+						this.delCoupon(item);
+					}
+				}
+			});
+		},
+		//查看优惠券信息
+		opencoupons(index, item) {
+			this.showCoupon = true;
+			this.couponInfo = {
+				index,
+				item
+			};
+			// openWin(index, item);
+		},
+		getAddAlltime(time) {
+			this.atime = time.startTime;
+			this.btime = time.endTime;
+			this.days = time.days;
+			this.isShowCa = false;
+		},
+		getcouponResult: function() {
+			this.couponType = 0;
+			this.inte(this.indexOn); //重新刷新一下列表
+		},
+		async syncCoupon() { //优惠券同步
+			let data = await http.syncCoupon({
+				data: {
+					couponId: this.asyncId //优惠券的id
+				}
+			});
+			if (data) {
+				this.$store.commit('setWin', {
+					content: '同步成功',
+					title: '操作提示',
+					winType: 'alert'
+				});
+			}
+		},
+		unbundlingCoupon: function(item) { //打开同步优惠券的弹窗
+			this.asyncId = item.id;
+			this.unbindWin = true;
+		},
+		getResult: function(res) { //弹床的回掉
+			if (res == 'ok') {
+				this.syncCoupon();
+			}
+			this.unbindWin = false;
+		}
+	},
+	mounted() {
+		this.inte(this.indexOn);
+		this.ischain = storage.session('userShop').currentShop.ischain;
+	},
+	components: {
+		'can-multi': () =>
+			import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+		breakCoupon: () =>
+			import ( /*webpackChunkName: 'breaks_coupon'*/ './new_coupons/breaks_coupon'),
+		discountCoupon: () =>
+			import ( /*webpackChunkName: 'discount_coupon'*/ './new_coupons/discount_coupon'),
+		giveCoupon: () =>
+			import ( /*webpackChunkName: 'give_coupon'*/ './new_coupons/give_coupon'),
+		vouchersCoupon: () =>
+			import ( /*webpackChunkName: 'vouchers_coupon'*/ './new_coupons/vouchers_coupon'),
+		intergralcardCoupon: () =>
+			import ( /*webpackChunkName: 'integralcard_coupon'*/ './new_coupons/integralcard_coupon'),
+		'coupon-manage-win': () =>
+			import ( /* webpackChunkName:'coupon_manage_win' */ './coupon_manage_win'),
+		page: () =>
+			import ( /* webpackChunkName: 'page_element' */ 'src/components/page_element'),
+		comTable: () =>
+			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+		maunBundling: () =>
+			import ( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
+	}
+};
+</script>
+<style type="text/css" scoped>
+.list {
+	min-width: 1230px;
+	min-height: 400px;
+}
+
+.list .oUl {
+	width: 100%;
+	height: 50px;
+	height: 50px;
+	background-color: #e6e6e6;
+}
+
+.list .oUl li {
+	width: 20%;
+	height: 50px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	float: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.list .oUl li a {
+	float: left;
+}
+
+.list .oUl li section {
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	float: left;
+	cursor: pointer;
+	color: #808080;
+}
+
+#test {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	width: 400px;
+	height: 40px;
+	margin: 20px 0;
+}
+
+#test .oClickBox {
+	display: inline-block;
+	border: 1px solid #b3b3b3;
+	width: 300px;
+	height: 40px;
+	line-height: 40px;
+	cursor: pointer;
+}
+
+.oClickBox .oSpan {
+	border-right: 1px solid #b3b3b3;
+	display: inline-block;
+	float: left;
+	text-align: center;
+	width: 255px;
+	height: 40px;
+}
+
+#test .down {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 10px solid #b3b3b3;
+	position: absolute;
+	right: 118px;
+	top: 17px;
+}
+
+.search {
+	display: inline-block;
+	float: left;
+	width: 44px;
+	height: 40px;
+	background-color: #29a7e1;
+	cursor: pointer;
+}
+
+.search {
+	background: url(../../res/images/search.png) center center no-repeat;
+}
+
+.diel {
+	display: inline-block;
+	width: 120px;
+	height: 40px;
+	font-size: 16px;
+	background: #f2f2f2;
+	border-radius: 3px;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+.on {
+	background: #28a8e0;
+	color: #fff;
+}
+
+.worker_staff_footer {
+	text-align: left;
+	margin-top: 36px;
+}
+
+.align_item {
+	height: 80px;
+	align-items: center;
+	display: flex;
+}
+
+.align_item section {
+	border-bottom: 1px solid rgb(255, 255, 255);
+	background-color: rgb(255, 152, 0);
+	color: rgb(255, 255, 255);
+	height: 80px;
+	flex: 1;
+}
+</style>

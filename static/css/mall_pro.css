@@ -1,0 +1,114 @@
+
+.mall-box[data-v-3add4114] {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.gooodsTable[data-v-3add4114],
+.gooodsContent[data-v-3add4114] {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+.goodsTitle[data-v-3add4114],
+.useManage[data-v-3add4114] {
+  background-color: #e6e6e6;
+  height: 50px;
+  line-height: 50px;
+  min-width: 920px;
+}
+.goodsTitle span[data-v-3add4114],
+.gooodsContent span[data-v-3add4114] {
+  float: left;
+  width: 20%;
+  min-width: 90px;
+  text-align: center;
+  overflow: hidden;
+}
+.goodsTitle span[data-v-3add4114]:last-child,
+.gooodsContent span[data-v-3add4114]:last-child {
+  width: 40%;
+}
+.useManage span[data-v-3add4114],
+.useConcent span[data-v-3add4114] {
+  float: left;
+  width: 12.5%;
+  text-align: center;
+}
+.gooodsContent .concent[data-v-3add4114],
+.useConcent .concent[data-v-3add4114] {
+  width: 100%;
+  overflow: hidden;
+}
+.gooodsContent span[data-v-3add4114],
+.useConcent span[data-v-3add4114] {
+  height: 55px;
+  line-height: 55px;
+}
+.gooodsContent span.notConsume[data-v-3add4114],
+.useConcent span.notConsume[data-v-3add4114] {
+  color: #08a019;
+}
+.gooodsContent span.aConsume[data-v-3add4114],
+.useConcent span.aConsume[data-v-3add4114] {
+  color: #ec1415;
+}
+.tips[data-v-3add4114] {
+  text-align: center;
+  height: 55px;
+  line-height: 55px;
+  color: #e7e7e7;
+  font-size: 24px;
+}
+.operate[data-v-3add4114] {
+  padding: 5px 0;
+  box-sizing: border-box;
+  height: 80px;
+  line-height: 80px;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.operate a[data-v-3add4114] {
+  display: inline-block;
+  width: 33.33%;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  color: #fff;
+}
+.linkImgs[data-v-3add4114] {
+  width: 300px;
+  height: 500px;
+  z-index: 19999;
+}
+.linkImgs img[data-v-3add4114] {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.gooodsContent .concent[data-v-3add4114]:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+.gooodsContent .concent[data-v-3add4114]:nth-child(even) {
+  background-color: #ffffff;
+}
+@media screen and (min-width: 1024px) and (max-width: 1440px) {
+.linkImgs[data-v-3add4114] {
+    width: 180px;
+    height: 300px;
+    z-index: 19999;
+    position: absolute;
+    right: 60px;
+    top: 18%;
+}
+.linkImgs img[data-v-3add4114] {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+}
+

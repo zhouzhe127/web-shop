@@ -1,0 +1,71 @@
+
+#detail[data-v-1ff69374] {
+	margin: 20px;
+}
+.top_search[data-v-1ff69374] {
+	margin-bottom: 10px;
+}
+/*日期组件*/
+.chooseTime[data-v-1ff69374] {
+	line-height: 40px;
+	text-align: center;
+	color: #333;
+	position: relative;
+	display: inline-block;
+}
+.gaiTime[data-v-1ff69374] {
+	/* display: inline-block; */
+	width: 100px;
+	font-size: 16px;
+	float: left;
+}
+.input-box[data-v-1ff69374] {
+	width: 200px;
+	float: left;
+}
+.input-word[data-v-1ff69374] {
+	padding: 0 5px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+}
+/*搜索重置=================*/
+.statisticsList[data-v-1ff69374] {
+	float: right;
+}
+.statisticsList .reset[data-v-1ff69374] {
+	color: #00adef;
+}
+.statisticsList a[data-v-1ff69374] {
+	width: 90px;
+	height: 40px;
+	border: 1px solid #00adef;
+	line-height: 40px;
+}
+/*列表*/
+.box .content-box ul[data-v-1ff69374] {
+	width: 100%;
+	height: 40px;
+	border-bottom: 1px solid #b3b3b3;
+}
+.box .content-box ul li[data-v-1ff69374] {
+	/* display: inline-block; */
+	width: 32%;
+	height: 100%;
+	line-height: 40px;
+	text-align: center;
+	float: left;
+}
+.gaiTimeLi[data-v-1ff69374] {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	color: orange;
+}
+.box[data-v-1ff69374] {
+	width: 100%;
+	min-width: 1000px;
+	border: 1px solid #b3b3b3;
+}
+

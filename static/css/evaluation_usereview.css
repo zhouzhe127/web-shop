@@ -1,0 +1,62 @@
+
+#usereview .return[data-v-104ef88b] {
+	width: 100%;
+	height: 40px;
+}
+#usereview .return a[data-v-104ef88b] {
+	display: block;
+	width: 100px;
+	height: 38px;
+	text-align: center;
+	line-height: 38px;
+	font-size: 16px;
+	color: #fff;
+	float: right;
+	background: #29abe2;
+}
+#usereview .list[data-v-104ef88b] {
+	width: 1436px;
+}
+#usereview .list .user_img[data-v-104ef88b] {
+	height: 70px;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	        justify-content: center;
+}
+#usereview .list .user_img .user[data-v-104ef88b] {
+	width: 49px;
+	height: 49px;
+	border-radius: 50%;
+}
+#usereview .list .list_title[data-v-104ef88b] {
+	width: 1426px;
+	height: 50px;
+}
+#usereview .list .list_title span[data-v-104ef88b] {
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+}
+#usereview .list .list_title span[data-v-104ef88b]:first-child {
+	margin-right: 11px;
+}
+#usereview .list .list_title span[data-v-104ef88b]:nth-child(2) {
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #000;
+	margin-right: 11px;
+	vertical-align: middle;
+}
+#usereview .list .list_title span:last-child a[data-v-104ef88b] {
+	font-size: 16px;
+	color: #ff3c05;
+}
+

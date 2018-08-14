@@ -1,0 +1,123 @@
+
+#people_del .ic-title[data-v-d3022a5a] {
+  width: 650px;
+  height: 30px;
+  line-height: 30px;
+  position: relative;
+}
+#people_del .ic-title .text[data-v-d3022a5a] {
+  font-size: 16px;
+  width: 120px;
+  height: 20px;
+  line-height: 20px;
+  text-indent: 10px;
+  position: absolute;
+  left: 0;
+  top: 10px;
+  border-left: 2px solid #28a8e0;
+}
+#people_del .ic-title .dashed[data-v-d3022a5a] {
+  width: 535px;
+  height: 10px;
+  border-top: 1px dashed #e4e5e6;
+  position: absolute;
+  right: 0;
+  top: 20px;
+}
+#people_del .ic-contern[data-v-d3022a5a] {
+  margin-left: 50px;
+  margin-top: 20px;
+  min-width: 780px;
+}
+#people_del .ic-contern .all-contern[data-v-d3022a5a] {
+  margin-bottom: 20px;
+  color: #333333;
+  font-size: 16px;
+}
+#people_del .ic-contern .all-contern .span_contern[data-v-d3022a5a] {
+  font-size: 16px;
+  margin-right: 50px;
+}
+#people_del .list_num[data-v-d3022a5a] {
+  min-width: 780px;
+  border: 1px solid #D2D2D2;
+}
+#people_del .list_num .totle[data-v-d3022a5a] {
+  background-color: #FFFFFF;
+}
+#people_del .list_num .totle .head[data-v-d3022a5a] {
+  height: 50px;
+  line-height: 50px;
+  font-size: 16px;
+  padding-left: 20px;
+  color: #333333;
+}
+#people_del .list_num .totle .head .wen_zi[data-v-d3022a5a] {
+  color: #F8931F;
+  padding: 0 3px;
+  font-size: inherit;
+}
+#people_del .list_num .totle .head .changeList[data-v-d3022a5a] {
+  color: #28A8E0;
+  font-size: 16px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+#people_del .list_num .totle .oUl[data-v-d3022a5a] {
+  width: 100%;
+  color: #333333;
+  border-bottom: 3px solid #f7f7f7;
+}
+#people_del .list_num .totle .oUl li[data-v-d3022a5a] {
+  text-align: center;
+  float: left;
+}
+#people_del .list_num .totle .oulFirst[data-v-d3022a5a] {
+  background-color: #F2F2F2;
+  width: 100%;
+  height: 40px;
+}
+#people_del .list_num .totle .oulFirst li[data-v-d3022a5a] {
+  font-size: 16px;
+  color: #43414A;
+  width: 16.6%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  float: left;
+}
+#people_del .list_num .totle .oulSecond[data-v-d3022a5a] {
+  width: 100%;
+  height: 70px;
+}
+#people_del .list_num .totle .oulSecond li[data-v-d3022a5a] {
+  font-size: 14px;
+  color: #666666;
+  width: 16.6%;
+  height: 70px;
+  line-height: 70px;
+  float: left;
+}
+#people_del .list_num .totle .oulThd[data-v-d3022a5a] {
+  width: 100%;
+  height: 30px;
+  overflow: hidden;
+}
+#people_del .list_num .totle .oulThd li[data-v-d3022a5a] {
+  color: #999999;
+  font-size: 14px;
+  width: 14.2%;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  float: left;
+}
+#people_del .list_num .totle .font16 li[data-v-d3022a5a] {
+  font-size: 16px;
+}
+#people_del .list_num .totle .over_hide[data-v-d3022a5a] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

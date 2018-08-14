@@ -1,0 +1,68 @@
+
+.content[data-v-b9a00f9c] {
+  background: #f7f7f7;
+}
+.content .overflow-hidden[data-v-b9a00f9c] {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.content .block[data-v-b9a00f9c] {
+  width: 100%;
+  min-height: 400px;
+  padding: 20px 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+.content .block span[data-v-b9a00f9c] {
+  height: 40px;
+  line-height: 38px;
+  border: 1px solid #ccc;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  margin: 5px;
+  padding: 0 15px;
+  background-color: #fff;
+}
+.content .block .box[data-v-b9a00f9c] {
+  padding: 0 15px;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+          align-items: stretch;
+}
+.content .block .list[data-v-b9a00f9c] {
+  width: 55%;
+  border-right: 1px dashed #ccc;
+}
+.content .block .sort[data-v-b9a00f9c] {
+  width: 45%;
+  padding-left: 30px;
+  max-height: 360px;
+  overflow: auto;
+}
+.content .block .sort .title[data-v-b9a00f9c] {
+  padding-bottom: 10px;
+  margin-left: -20px;
+}
+.content .block .sort .item[data-v-b9a00f9c] {
+  width: 100%;
+  position: relative;
+}
+.content .block .sort .item em[data-v-b9a00f9c] {
+  position: absolute;
+  left: -20px;
+  top: 18px;
+  font-size: 16px;
+  display: inline-block;
+}
+.content .block .sort span[data-v-b9a00f9c] {
+  color: #f8931f;
+  border: 1px solid #f8931f;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+

@@ -1,0 +1,93 @@
+
+#shipment .topBox .title[data-v-084af08f] {
+  width: 98%;
+  height: 40px;
+  margin: 10px;
+  line-height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+#shipment .topBox .title i[data-v-084af08f] {
+  width: 2px;
+  height: 28px;
+  position: absolute;
+  top: 6px;
+  left: 0;
+  background-color: #28a8e0;
+}
+#shipment .topBox .title h3[data-v-084af08f] {
+  width: 70px;
+  height: 40px;
+  margin-left: 10px;
+  float: left;
+  font-size: 16px;
+  font-family: "\5FAE\8F6F\96C5\9ED1";
+}
+#shipment .topBox .innerBox[data-v-084af08f] {
+  padding-left: 50px;
+}
+#shipment .topBox .innerBox ul[data-v-084af08f] {
+  display: inline-block;
+  width: 32%;
+  vertical-align: top;
+}
+#shipment .topBox .innerBox ul li[data-v-084af08f] {
+  margin-bottom: 20px;
+}
+#shipment .topBox .innerBox ul li span[data-v-084af08f] {
+  display: inline-block;
+  max-width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+}
+#shipment .topBox .innerBox ul li img[data-v-084af08f] {
+  cursor: pointer;
+}
+#shipment .topBox .dian[data-v-084af08f] {
+  width: 10px;
+  height: 1px;
+  border-top: 1px solid #e1e1e1;
+  margin: 20px 5px;
+  float: left;
+}
+#shipment .page-box[data-v-084af08f] {
+  margin-top: 10px;
+}
+#shipment .tebBox[data-v-084af08f] {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+}
+#shipment .tebBox li[data-v-084af08f] {
+  width: 120px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  border: 1px orange solid;
+  display: inline-block;
+}
+#shipment .tebBox .active[data-v-084af08f] {
+  background-color: orange;
+  color: #ffffff;
+}
+#shipment .typeBox[data-v-084af08f] {
+  margin-top: 15px;
+}
+#shipment .typeBox li[data-v-084af08f] {
+  width: 100px;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  display: inline-block;
+  margin-right: 10px;
+  cursor: pointer;
+  background-color: #eeeeee;
+  border-radius: 5px;
+}
+#shipment .typeBox .active[data-v-084af08f] {
+  background-color: #5ebee8;
+  color: #ffffff;
+}
+

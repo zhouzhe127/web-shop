@@ -1,0 +1,27 @@
+
+#joblist .jobTop[data-v-d10a905c] {
+	width: 600px;
+	height: 40px;
+}
+#joblist .allList[data-v-d10a905c] {
+	min-width: 710px;
+	background-color: #ffffff;
+	font-size: 16px;
+	min-height: 400px;
+	padding-bottom: 50px;
+}
+#joblist .input[data-v-d10a905c] {
+	border: 1px solid #ccc;
+	float: left;
+}
+#joblist .gray[data-v-d10a905c],
+#joblist .blue[data-v-d10a905c] {
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	text-align: center;
+	color: #fff;
+	margin-left: 20px;
+}
+

@@ -1,0 +1,14 @@
+
+#print-queue .clearbtn[data-v-6b97d481] {
+	position: absolute;
+	top: -60px;
+	right: 0;
+	width: 150px;
+}
+#print-queue-tan .oDetial[data-v-6b97d481] {
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+}
+

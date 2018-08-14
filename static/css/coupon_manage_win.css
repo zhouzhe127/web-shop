@@ -1,0 +1,28 @@
+
+#tanmanagement .showBefore[data-v-f1b1c712] {
+	font-size: 16px;
+	width: 140px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	text-align: right;
+	color: #333;
+	margin-right: 15px;
+}
+#tanmanagement .shopAfter[data-v-f1b1c712] {
+	font-size: 16px;
+	width: 370px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	text-align: left;
+	color: #333;
+	margin-right: 10px;
+}
+#tanmanagement .cList[data-v-f1b1c712] {
+	font-size: 16px;
+	overflow: hidden;
+	width: 550px;
+	margin-left: 30px;
+}
+

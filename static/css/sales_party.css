@@ -1,0 +1,31 @@
+
+#sales .enquiries[data-v-c204befc] {
+  display: inline-block;
+}
+#sales .enquiries .numbering[data-v-c204befc] {
+  width: 200px;
+  height: 40px;
+  border: 1px solid #b3b3b3;
+  text-indent: 25px;
+  display: inline-block;
+  outline: none;
+  margin-right: 10px;
+}
+#sales .enquiries a[data-v-c204befc] {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  margin-left: 10px;
+}
+#sales .clear[data-v-c204befc] {
+  clear: both;
+  height: 20px;
+}
+#sales .load[data-v-c204befc] {
+  width: 128px;
+  margin: 200px auto;
+}
+

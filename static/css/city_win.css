@@ -1,0 +1,50 @@
+
+#tan[data-v-08daa060] {
+	padding: 40px;
+}
+
+
+#tan[data-v-69368e48] {
+	padding: 60px;
+}
+#tan .online-box[data-v-69368e48] {
+	width: 100%;
+	height: auto;
+	min-height: 40px;
+	margin-bottom: 29px;
+}
+#tan .online-box .inp[data-v-69368e48] {
+	width: 208px;
+	height: 40px;
+	text-indent: 10px;
+}
+#tan .online-box .online-sub[data-v-69368e48] {
+	display: block;
+	font-size: 16px;
+	width: 150px;
+	height: 40px;
+	line-height: 40px;
+	color: #333;
+	text-align: right;
+	margin-right: 14px;
+}
+#tan .tip img[data-v-69368e48] {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+}
+#tan .tip span[data-v-69368e48] {
+	font-size: 14px;
+	color: #a5a5a5;
+	line-height: 20px;
+}
+#tan .clearfix[data-v-69368e48]::before,
+#tan .clearfix[data-v-69368e48]::after {
+	display: table;
+	content: “”;
+}
+#tan .clearfix[data-v-69368e48]::after {
+	clear: both;
+}
+

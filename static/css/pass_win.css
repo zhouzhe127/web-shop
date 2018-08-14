@@ -1,0 +1,30 @@
+
+#tan[data-v-13c3de2d] {
+  height: 100%;
+  padding: 10px 60px;
+  background-color: #eeeeee;
+}
+#tan .conBox[data-v-13c3de2d] {
+  margin-top: 20px;
+  margin: 0 auto;
+  width: 300px;
+}
+#tan .conBox .reason[data-v-13c3de2d] {
+  margin-bottom: 15px;
+}
+#tan .conBox .reason input[data-v-13c3de2d] {
+  width: 200px;
+  height: 40px;
+  text-indent: 10px;
+  display: inline-block;
+  border: none;
+}
+#tan .conBox .reason textarea[data-v-13c3de2d] {
+  width: 200px;
+  height: 100px;
+  text-indent: 10px;
+  resize: none;
+  border: none;
+  vertical-align: top;
+}
+

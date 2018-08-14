@@ -1,0 +1,68 @@
+
+#marker_add[data-v-0f3b8b24] {
+  margin-top: 20px;
+  margin-left: 10px;
+  font-size: 15px;
+}
+#marker_add .addGoods[data-v-0f3b8b24] {
+  width: 170px;
+  height: 35px;
+  background-color: #29A7E1;
+  cursor: pointer;
+  float: left;
+  margin-left: 8px;
+}
+#marker_add .addGoods img[data-v-0f3b8b24] {
+  width: 22px;
+  height: 22px;
+  margin-top: 7px;
+  margin-left: 30px;
+  float: left;
+}
+#marker_add .addGoods h3[data-v-0f3b8b24] {
+  width: 100px;
+  height: 35px;
+  line-height: 35px;
+  color: #fff;
+  text-align: center;
+  float: left;
+}
+#marker_add .title[data-v-0f3b8b24] {
+  border-left: 3px solid #F1801A;
+}
+#marker_add .title .base-info[data-v-0f3b8b24] {
+  font-size: 19px;
+  margin-left: 20px;
+}
+#marker_add .title .split-line[data-v-0f3b8b24] {
+  width: 430px;
+  border: 0.1px dashed #949494;
+  display: inline-block;
+  vertical-align: middle;
+}
+#marker_add .tagName[data-v-0f3b8b24] {
+  margin-top: 30px;
+  margin-left: 25px;
+}
+#marker_add .tag-num[data-v-0f3b8b24] {
+  margin-top: 20px;
+  margin-left: 25px;
+}
+#marker_add .tag-num .img[data-v-0f3b8b24] {
+  vertical-align: middle;
+}
+#marker_add .relative-good[data-v-0f3b8b24] {
+  margin-top: 30px;
+  margin-left: 25px;
+}
+#marker_add .relative-good .goods[data-v-0f3b8b24] {
+  float: left;
+  font-size: 16px;
+  margin-top: 5px;
+}
+#marker_add .relative-good .info[data-v-0f3b8b24] {
+  float: left;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+

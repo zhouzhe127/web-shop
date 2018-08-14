@@ -1,0 +1,342 @@
+
+#cardType .solutionCard[data-v-a3cc0b50] {
+	width: 680px;
+}
+#cardType .headLine[data-v-a3cc0b50] {
+	width: 580px;
+	border-left: 3px #28A8E0 solid;
+	padding-left: 9px;
+	font-size: 16px;
+	position: relative;
+	margin-bottom: 20px;
+}
+#cardType .headLine .borderLine[data-v-a3cc0b50] {
+	border-top: 2px #B3B3B3 dashed;
+	display: block;
+	width: 476px;
+	position: absolute;
+	top: 50%;
+	right: 0;
+}
+#cardType .setBox[data-v-a3cc0b50] {
+	width: 680px;
+	margin-bottom: 52px;
+}
+#cardType .setBox .setItem[data-v-a3cc0b50] {
+	width: 100%;
+	margin-bottom: 15px;
+	/*height: 40px;*/
+	line-height: 40px;
+	display: table;
+	position: relative;
+}
+#cardType .setBox .setItem .setinp input[data-v-a3cc0b50] {
+	outline: none;
+	height: 38px;
+	background-color: #fff;
+	padding-left: 20px;
+	color: #333;
+	width: 160px;
+}
+#cardType .setBox .setItem .colon[data-v-a3cc0b50] {
+	display: block;
+	height: 40px;
+	width: 20px;
+	line-height: 40px;
+	text-align: center;
+	font-weight: bold;
+}
+#cardType .inp[data-v-a3cc0b50] {
+	width: 211px;
+	height: 38px;
+	text-indent: 10px;
+}
+#cardType .inp[data-v-a3cc0b50]::-webkit-input-placeholder {
+	font-size: 14px;
+	color: #A5A5A5;
+	outline: none;
+}
+#cardType .setBox .setItem .itemLeft[data-v-a3cc0b50] {
+	width: 25%;
+	display: table-cell;
+	padding-right: 18px;
+	text-align: end;
+	vertical-align: top;
+}
+#cardType .setBox .setItem .storeType span[data-v-a3cc0b50] {
+	display: inline-block;
+	width: 100px;
+	height: 41px;
+	border: 1px #D2D2D2 solid;
+	text-align: center;
+	line-height: 41px;
+}
+#cardType .setBox .setItem .storeType span[data-v-a3cc0b50]:nth-of-type(2) {
+	margin: 0 10px;
+}
+#cardType .setBox .setItem .storeType span.active[data-v-a3cc0b50] {
+	border: 1px #FF9200 solid;
+	background: #FFEDD3;
+	color: #FF9200;
+}
+#cardType .setBox .setItem .tips[data-v-a3cc0b50] {
+	width: 90px;
+	display: inline-block;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MkRGMUU4RTkxRTZBMTFFN0I5QzE5OURBRDRBNUNBMDQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MkRGMUU4RUExRTZBMTFFN0I5QzE5OURBRDRBNUNBMDQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyREYxRThFNzFFNkExMUU3QjlDMTk5REFENEE1Q0EwNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyREYxRThFODFFNkExMUU3QjlDMTk5REFENEE1Q0EwNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvmW/yEAAAGXSURBVHjajJRNKERRFMfnTWNIPooFGxYPNZpENlIyYcpGKfnIxkYpC2VlJbGyUhR7GwvERpHPmrBRMthIvZckGx9JESXjf/R/9Vz3vZlTv+7pnnv/79x7zzuGZVkBjbWCPo7lnLsFB2AF7DsLTdP8HUOKQAQsggaNeCUZAknQD66cYNC1MAbOPERUqwPn3PNHSDLZBDk+mydBFwXEwmDbtu2IczQDLIFcH5EjMEU/CyzTzwbrEItKRm2gPs1RmkA3Mx9TYtUgLhn1+gi8gQ3wAEZAs8e60RCfWGe74JR3d8i5R1CsWdsoRyvTBO5YM8OglHN5vB+dFYrQpyZQBKbBMVjl3Cwo8LoDEbrXzDsvOMCxBAz63OWrCJ14BOfAE/35NK96EWQNqfYBJui38OkXwIuH0IwI7YBLJbAm6dJ/B+P08zUitpSIPH+KtZRkpYpVgQreYRT0gFqNyBfoQAdIGa42EmN24UBmJiJxiCTUvz/Br15nIHIDarjnXxsJsL/I/9QOtsAz+ObXpar3QKf0M3cvEvsRYAC5I1K3pGPeDQAAAABJRU5ErkJggg==) left center no-repeat;
+	margin: 0 12px;
+	padding-left: 30px;
+	color: #A5A5A5;
+}
+#cardType .setBox .setItem .applyStore span[data-v-a3cc0b50]:nth-of-type(1) {
+	display: inline-block;
+	width: 100px;
+	height: 41px;
+	border: 1px #D2D2D2 solid;
+	text-align: center;
+	line-height: 41px;
+}
+#cardType .setBox .setItem .applyStore span:nth-of-type(1).active[data-v-a3cc0b50] {
+	border: 1px #FF9200 solid;
+	background: #FFEDD3;
+	color: #FF9200;
+}
+#cardType .increase[data-v-a3cc0b50] {
+	width: 210px;
+	height: 40px;
+	background-position: 40px 10px;
+	line-height: 40px;
+	text-indent: 23px;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+	background-color: #2FA8DC;
+	cursor: pointer;
+	margin: 0px 21px 0px 14px;
+}
+#cardType .btnList[data-v-a3cc0b50] {
+	width: 100%;
+	margin-left: 6%;
+}
+#cardType .btnList .operate[data-v-a3cc0b50] {
+	width: 200px;
+	height: 51px;
+	text-align: center;
+	line-height: 51px;
+	font-size: 16px;
+	cursor: pointer;
+}
+#cardType .btnList .operate[data-v-a3cc0b50]:nth-of-type(1) {
+	background: #B3B3B3;
+	color: #fff;
+}
+#cardType .btnList .operate[data-v-a3cc0b50]:nth-of-type(2) {
+	background: #f78800;
+	color: #fff;
+	margin: 0 10px;
+}
+#cardType .btnList .operate[data-v-a3cc0b50]:nth-of-type(3) {
+	border: 1px #FF9200 solid;
+	color: #FF9200;
+}
+.activity_scope .check[data-v-a3cc0b50] {
+	background: #ff9701;
+	text-indent: 0;
+}
+.activity_scope .unselect[data-v-a3cc0b50] {
+	background: #cacaca;
+	text-indent: 0;
+}
+.activity_scope .shopName span[data-v-a3cc0b50] {
+	width: auto;
+	height: 41px;
+	border: 1px #D2D2D2 solid;
+	text-align: center;
+	line-height: 41px;
+	color: #333;
+	display: inline-block;
+	padding: 0 10px;
+}
+.activity_scope .shopName span.active[data-v-a3cc0b50] {
+	border: 1px #FF9200 solid;
+	background: #FFEDD3;
+	color: #FF9200;
+}
+#cardType .clearfix[data-v-a3cc0b50]::before,
+#cardType .clearfix[data-v-a3cc0b50]::after {
+	display: table;
+	content: “”;
+}
+#cardType .clearfix[data-v-a3cc0b50]::after {
+	clear: both;
+}
+#cardType .setBox .setItem .sinp[data-v-a3cc0b50] {
+	width: 190px;
+	height: 38px;
+	border: 1px solid #CECDCD;
+	margin-right: 16px;
+	float: left;
+}
+#cardType .setBox .setItem .sinp .cumulative[data-v-a3cc0b50] {
+	width: 150px;
+	height: 36px;
+	border: 1px solid #eaeaea;
+	float: left;
+	outline: none;
+	text-indent: 17px;
+}
+#cardType .setBox .setItem .sinp span[data-v-a3cc0b50] {
+	display: block;
+	float: left;
+	width: 37px;
+	height: 36px;
+	text-align: center;
+	line-height: 38px;
+	border-left: 1px solid #CECDCD;
+	background: #fff;
+}
+#cardType .setBox .setItem .handle-tips[data-v-a3cc0b50] {
+	height: 40px;
+	line-height: 40px;
+	text-indent: 25px;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MkRGMUU4RTkxRTZBMTFFN0I5QzE5OURBRDRBNUNBMDQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MkRGMUU4RUExRTZBMTFFN0I5QzE5OURBRDRBNUNBMDQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyREYxRThFNzFFNkExMUU3QjlDMTk5REFENEE1Q0EwNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyREYxRThFODFFNkExMUU3QjlDMTk5REFENEE1Q0EwNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvmW/yEAAAGXSURBVHjajJRNKERRFMfnTWNIPooFGxYPNZpENlIyYcpGKfnIxkYpC2VlJbGyUhR7GwvERpHPmrBRMthIvZckGx9JESXjf/R/9Vz3vZlTv+7pnnv/79x7zzuGZVkBjbWCPo7lnLsFB2AF7DsLTdP8HUOKQAQsggaNeCUZAknQD66cYNC1MAbOPERUqwPn3PNHSDLZBDk+mydBFwXEwmDbtu2IczQDLIFcH5EjMEU/CyzTzwbrEItKRm2gPs1RmkA3Mx9TYtUgLhn1+gi8gQ3wAEZAs8e60RCfWGe74JR3d8i5R1CsWdsoRyvTBO5YM8OglHN5vB+dFYrQpyZQBKbBMVjl3Cwo8LoDEbrXzDsvOMCxBAz63OWrCJ14BOfAE/35NK96EWQNqfYBJui38OkXwIuH0IwI7YBLJbAm6dJ/B+P08zUitpSIPH+KtZRkpYpVgQreYRT0gFqNyBfoQAdIGa42EmN24UBmJiJxiCTUvz/Br15nIHIDarjnXxsJsL/I/9QOtsAz+ObXpar3QKf0M3cvEvsRYAC5I1K3pGPeDQAAAABJRU5ErkJggg==) 0 center no-repeat;
+	color: #999999;
+}
+#cardType .setBox .setItem .therules[data-v-a3cc0b50] {
+	width: auto;
+	height: auto;
+}
+#cardType .setBox .setItem .therules .rulebox[data-v-a3cc0b50] {
+	min-height: 40px;
+	padding: 0;
+	position: relative;
+	cursor: pointer;
+}
+#cardType .setBox .setItem .therules .rulebox input[data-v-a3cc0b50] {
+	width: 320px;
+	height: 36px;
+	padding: 0;
+	border-color: #999;
+	text-indent: 12px;
+}
+#cardType .setBox .setItem .therules .rulebox .bg[data-v-a3cc0b50] {
+	border: 1px solid #999;
+	width: 68px;
+	float: left;
+	height: 36px;
+	border-left: none;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAANCAYAAABPeYUaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1OTgyNCwgMjAxNi8wOS8xNC0wMTowOTowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTcgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NUUyRTNBN0QwQkJBMTFFN0E2NTc5MTBCNzc5QTI5N0MiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NUUyRTNBN0UwQkJBMTFFN0E2NTc5MTBCNzc5QTI5N0MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1RTJFM0E3QjBCQkExMUU3QTY1NzkxMEI3NzlBMjk3QyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1RTJFM0E3QzBCQkExMUU3QTY1NzkxMEI3NzlBMjk3QyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PjspjBAAAACHSURBVHjaYvw+WY6BTFAPpRtZKDCgAcZhotQAILBgotCAHUAcwESpAUD8kwlJQT05BoA4LFgUNJJiACxgLZAUNKC5iKABMJeABDcAsQeSQQxY2FgNgBnyEyq5Hog9sWjGawByOgFJBgLxdixq8BqAnthgBu0gxQCYdxjQDIJ5jZEYA0AAIMAARNkrEMCy+bUAAAAASUVORK5CYII=) #fff center no-repeat;
+}
+#cardType .setBox .setItem .therules .rlues[data-v-a3cc0b50] {
+	width: 390px;
+	height: 36px;
+	border: 1px solid #999;
+	text-align: center;
+	line-height: 36px;
+	position: relative;
+	font-size: 12px;
+	background-color: #fff;
+	margin-bottom: 25px;
+}
+#cardType .setBox .setItem .therules .del[data-v-a3cc0b50] {
+	position: absolute;
+	right: -12px;
+	top: -12px;
+	display: none;
+	width: 25px;
+	height: 25px;
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkQzMjY5NkEyNTcxRjExRTc5NzVDRTYyRTBBQUI4MDE0IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkQzMjY5NkEzNTcxRjExRTc5NzVDRTYyRTBBQUI4MDE0Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RDMyNjk2QTA1NzFGMTFFNzk3NUNFNjJFMEFBQjgwMTQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RDMyNjk2QTE1NzFGMTFFNzk3NUNFNjJFMEFBQjgwMTQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4e48fGAAABd0lEQVR42pzUTStEURzH8XNvvIAZdp42FqKoURYibDxGHkqZrLwFspmFoiwUyUKWymQlxMZCeQobjSxGkaUImTRhYQrfM52rM6d7pjH/+jRzzzn9uufpOj+BgPCpdvShFkF84h772MDz38hEIv3jGEF1WESrsNc7ZjBnC+rFjsi9NjHkBbnam/wnRNYg1rwHL2jXGPSaZVop7XlUBINdXlAYZVpnDMWIGCFJlKDbaF/ygsaMjiK1W7OYV23yLapUWNgYX8lbtRXwJ2R0VOAKLZjAl5r6I/bQ4TPlRrlrcmChZU0GsK3+x1FtGbcqp+ZYOr/xpD3Hs+xgyrXsUFJtwDm2MIJhLFiCbmTQmdmoFvxBrUk/1tGMcUz6BB3IoGWfKZUiaizsMepxZ4w/5XTHvCtygiaRX4UIunS14/6RR0hEhuhX5AUN6lORa02rQ5tx12Rdq3OyotbJVhfowZTe6Fg+bOXoRE36Cgjxhlsc4TBjpPqM/AowAFxJWvl/2EZDAAAAAElFTkSuQmCC);
+	background-position: center center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+#cardType .setBox .setItem .therules .rlues:hover i[data-v-a3cc0b50] {
+	display: block;
+}
+#cardType .setBox .setItem .uploadImgs[data-v-a3cc0b50] {
+	position: relative;
+}
+#cardType .setBox .setItem .uploadImgs input[data-v-a3cc0b50] {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+}
+#cardType .setBox .setItem .uploadImg[data-v-a3cc0b50] {
+	width: 375px;
+	height: 255px;
+	border: 1px solid #b0b0b0;
+	overflow: hidden;
+	margin-right: 10px;
+	border-radius: 20px;
+	position: relative;
+}
+#cardType .setBox .setItem .uploadImg img[data-v-a3cc0b50],
+#cardType .setBox .setItem .uploadImg .defaultImg[data-v-a3cc0b50] {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+#cardType .setBox .setItem .uploadImg .defaultImg[data-v-a3cc0b50] {
+	background: #f8c8c9;
+}
+#cardType .setBox .setItem .uploadImg .logo[data-v-a3cc0b50] {
+	width: 85px;
+	height: 22px;
+	font-family: PingFang-SC-Heavy;
+	font-size: 28px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 28px;
+	letter-spacing: 0px;
+	color: #303030;
+	position: absolute;
+	top: 25px;
+	left: 27px;
+}
+#cardType .setBox .setItem .uploadImg .nox[data-v-a3cc0b50],
+#cardType .setBox .setItem .uploadImg .balance[data-v-a3cc0b50] {
+	font-family: PingFang-SC-Bold;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 18px;
+	letter-spacing: 0px;
+	color: #303030;
+	position: absolute;
+}
+#cardType .setBox .setItem .uploadImg .nox[data-v-a3cc0b50] {
+	width: 162px;
+	height: 15px;
+	top: 78px;
+	left: 25px;
+}
+#cardType .setBox .setItem .uploadImg .cardtype[data-v-a3cc0b50] {
+	width: 150px;
+	height: 48px;
+	font-family: PingFang-SC-Bold;
+	font-size: 50px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 50px;
+	letter-spacing: 0px;
+	color: rgba(255, 255, 255, 0.4);
+	position: absolute;
+	left: 26px;
+	bottom: 19px;
+}
+#cardType .setBox .setItem .uploadImg .balance[data-v-a3cc0b50] {
+	width: 94px;
+	height: 17px;
+	bottom: 27px;
+	right: 33px;
+}
+#cardType .setBox .setItem .uploadImg .qrcode[data-v-a3cc0b50] {
+	width: 34px;
+	height: 34px;
+	position: absolute;
+	top: 25px;
+	right: 28px;
+}
+

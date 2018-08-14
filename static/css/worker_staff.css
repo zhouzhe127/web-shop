@@ -1,0 +1,160 @@
+
+#worker_staff[data-v-5072e71a] {
+  position: relative;
+}
+#worker_staff .operate_worker span[data-v-5072e71a]:nth-child(1) {
+  color: #ff8d00;
+  padding: 0 25px;
+  border-right: 1px solid #cecece;
+  cursor: pointer;
+}
+#worker_staff .operate_worker span[data-v-5072e71a]:nth-child(2) {
+  color: #ff3d04;
+  padding: 0 25px;
+  cursor: pointer;
+}
+#worker_staff .worker_staff_new_worker button[data-v-5072e71a] {
+  position: absolute;
+  top: -40px;
+  right: 87px;
+  width: 102px;
+  height: 42px;
+  border: none;
+  background: #28a8e0;
+  font-size: 16px;
+  color: #fff;
+}
+#worker_staff .worker_staff_belongs span[data-v-5072e71a] {
+  font-size: 16px;
+  color: #333333;
+  margin-right: 19px;
+}
+#worker_staff .worker_staff_belongs > input[data-v-5072e71a] {
+  width: 184px;
+  height: 42px;
+  border: 1px solid #b3b3b3;
+  margin-left: 19px;
+  padding: 0 17px;
+}
+#worker_staff .worker_staff_belongs button[data-v-5072e71a] {
+  width: 101px;
+  height: 42px;
+  margin-left: 19px;
+}
+#worker_staff .worker_staff_belongs .shop_selects[data-v-5072e71a] {
+  background: #28a8e0;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+}
+#worker_staff .worker_staff_belongs .shop_resert[data-v-5072e71a] {
+  background: #b3b3b3;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+}
+#worker_staff .worker_staff_content[data-v-5072e71a] {
+  border: 1px solid #d2d2d2;
+  width: 1437px;
+  margin-top: 19px;
+}
+#worker_staff .worker_staff_content .worker_header[data-v-5072e71a] {
+  font-weight: bold;
+  width: 100%;
+  height: 53px;
+  padding-left: 46px;
+  line-height: 52px;
+  font-size: 16px;
+}
+#worker_staff .worker_staff_content .worker_header .point[data-v-5072e71a] {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin: 3px 10px;
+  background: #000;
+  display: inline-block;
+}
+#worker_staff .worker_staff_content .worker_header span[data-v-5072e71a] {
+  color: #ff3c04;
+}
+#worker_staff .worker_staff_content .worker_nav ul[data-v-5072e71a] {
+  background: #f2f2f2;
+  height: 42px;
+  color: #43414a;
+  font-size: 16px;
+}
+#worker_staff .worker_staff_content .worker_nav ul li[data-v-5072e71a] {
+  width: 159px;
+  text-align: center;
+  font-weight: bold;
+}
+#worker_staff .worker_staff_content .worker_content ul[data-v-5072e71a] {
+  border-top: 1px solid #f7f7f7;
+  height: 63px;
+}
+#worker_staff .worker_staff_content .worker_content ul li[data-v-5072e71a] {
+  width: 159px;
+  text-align: center;
+}
+#worker_staff .worker_staff_content .worker_content ul .operate_worker span[data-v-5072e71a]:nth-child(1) {
+  color: #ff8d00;
+  padding: 0 25px;
+  border-right: 1px solid #cecece;
+  cursor: pointer;
+}
+#worker_staff .worker_staff_content .worker_content ul .operate_worker span[data-v-5072e71a]:nth-child(2) {
+  color: #ff3d04;
+  padding: 0 25px;
+  cursor: pointer;
+}
+#worker_staff .worker_staff_content .worker_content ul .user_img img[data-v-5072e71a] {
+  width: 49px;
+  height: 49px;
+  border-radius: 50%;
+}
+#worker_staff .worker_staff_content .worker_content ul .worker_detail_belong[data-v-5072e71a] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#worker_staff .worker_staff_content .worker_content p[data-v-5072e71a] {
+  text-align: center;
+  height: 42px;
+  line-height: 41px;
+}
+#worker_staff .turn-page[data-v-5072e71a] {
+  margin: 10px 0 30px 0;
+}
+#worker_staff .worker_detail[data-v-5072e71a] {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-justify-content: space-around;
+          justify-content: space-around;
+}
+.imgStyle[data-v-5072e71a] {
+  height: 80px;
+  margin: 0 auto;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  text-align: center;
+  width: 80px;
+}
+.imgStyle img[data-v-5072e71a] {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  margin: 0 auto;
+}
+

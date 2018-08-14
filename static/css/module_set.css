@@ -1,0 +1,66 @@
+
+#msnmodel .concent[data-v-33aeab22] {
+  width: 300px;
+  height: 170px;
+  background-color: #eeeeee;
+  line-height: 60px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  float: left;
+  margin-right: 10px;
+  margin-top: 14px;
+}
+#msnmodel .concent .con-title[data-v-33aeab22] {
+  width: 200px;
+  height: 60px;
+  text-align: left;
+  text-indent: 10px;
+  float: left;
+  color: #636162;
+  font-size: 20px;
+  overflow: hidden;
+  /*自动隐藏文字*/
+  text-overflow: ellipsis;
+  /*文字隐藏后添加省略号*/
+  white-space: nowrap;
+  /*强制不换行*/
+}
+#msnmodel .concent .con-num[data-v-33aeab22],
+#msnmodel .concent .static[data-v-33aeab22] {
+  width: 100px;
+  float: right;
+  font-size: 48px;
+  color: #dedede;
+}
+#msnmodel .concent .con-border-yellow[data-v-33aeab22],
+#msnmodel .concent .con-border-gray[data-v-33aeab22] {
+  width: 2px;
+  height: 60px;
+  background-color: #f8931f;
+  position: absolute;
+  top: 0;
+  left: -2px;
+}
+#msnmodel .concent .static img[data-v-33aeab22] {
+  float: right;
+  width: 120px;
+  height: 60px;
+  margin-right: 40px;
+}
+#msnmodel .concent .con-gray[data-v-33aeab22],
+#msnmodel .concent .con-yellow[data-v-33aeab22] {
+  width: 300px;
+  height: 40px;
+  position: absolute;
+  left: 0;
+  background-color: #f8931f;
+  bottom: 0px;
+  line-height: 40px;
+  color: #ffffff;
+}
+#msnmodel .concent .con-border-gray[data-v-33aeab22],
+#msnmodel .concent .con-gray[data-v-33aeab22] {
+  background-color: #dddddd;
+}
+

@@ -1,0 +1,99 @@
+
+@media only screen and (max-width: 1460px) {
+.enquiries[data-v-f16d5b1e] {
+    margin-top: 10px;
+}
+}
+#pickingRecord .div_wai[data-v-f16d5b1e] {
+  border: 1px solid #F8941F;
+  display: inline-block;
+  cursor: pointer;
+}
+#pickingRecord .div_wai .span_type[data-v-f16d5b1e] {
+  display: inline-block;
+  height: 40px;
+  width: 130px;
+  line-height: 40px;
+  text-align: center;
+}
+#pickingRecord .div_wai .sel_true[data-v-f16d5b1e] {
+  background-color: #F8941F;
+  color: white;
+}
+#pickingRecord .div_wai .sel_false[data-v-f16d5b1e] {
+  background-color: white;
+  color: #F8941F;
+}
+#pickingRecord .filter[data-v-f16d5b1e] {
+  margin-top: 10px;
+  /*min-width: 1300px;*/
+}
+#pickingRecord .filter .wenZi[data-v-f16d5b1e] {
+  display: inline-block;
+  font-size: 16px;
+  color: #333333;
+  height: 40px;
+  line-height: 40px;
+}
+#pickingRecord .filter .input-box[data-v-f16d5b1e] {
+  width: 200px;
+  display: inline-block;
+}
+#pickingRecord .filter .input-word[data-v-f16d5b1e] {
+  padding: 0 5px;
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+}
+#pickingRecord .filter .order-order-searchA[data-v-f16d5b1e],
+#pickingRecord .filter .order-order-search[data-v-f16d5b1e] {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: #29A7E1;
+  cursor: pointer;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+#pickingRecord .filter .order-order-searchA[data-v-f16d5b1e]:hover {
+  background-color: #1878a5;
+  -webkit-transition: background-color ease-in-out 0.2s;
+  transition: background-color ease-in-out 0.2s;
+}
+#pickingRecord .filter .order-order-searchA[data-v-f16d5b1e]:active {
+  background-color: #154961;
+}
+#pickingRecord .filter .order-order-search[data-v-f16d5b1e] {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QUM3Q0IyMDNCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QUM3Q0IyMDRCREYxMTFFNkJCMjBCMDk4RUE1RkFBOUEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBQzdDQjIwMUJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBQzdDQjIwMkJERjExMUU2QkIyMEIwOThFQTVGQUE5QSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pr9ucPQAAAFaSURBVHjarNQ7LARBHMfx2ROF9/tc4gqJREGhUduLgkYjUUmUOlEqlCqJRojCoxMVtYIoKBUaOc8gItGcZ0Mj1neSWTln/mtu3T/5JLc3s7/Mzvx3vSAIlKVSGEA79IRL7CGnHCpRcJ3GFo4xiDKUYxhnWEfyz1S9UqMXd5hGRd7/oRrM4grdlvFv4Y823GMoarIxhms0SXM8s6cbOMeMcqt5VGFcevw0HlDpsMpQI15RbxvXB9WPXbwp93rCIfqk09dtk1XFl+6QDin0E16M0ITpYevADXpihOp7LqSDSuERtUUcVCteTO+KLbVmNn/KcZWreMdk1BvVgluMOqxyAidRT5Z/0WVewTk0WCYnsYwsjuC7hGrNWMEztrGIJeyYfV9AHTLIScGe8OmrRgadpm1OcVDwgujxTYxgX/pKxeHbVvzfUGtwKUJ/BZcq9EewdFBxy8fHlwADAMK7/x/UqqS7AAAAAElFTkSuQmCC) center center no-repeat;
+}
+#pickingRecord .filter .top-box[data-v-f16d5b1e] {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+}
+#pickingRecord .filter .numbering[data-v-f16d5b1e] {
+  width: 211px;
+  height: 40px;
+  border: 1px solid #B3B3B3;
+  text-indent: 25px;
+  display: inline-block;
+  outline: none;
+}
+#pickingRecord .filter .enquiries[data-v-f16d5b1e] {
+  display: inline-block;
+}
+#pickingRecord .filter .enquiries a[data-v-f16d5b1e] {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 16px;
+  color: #fff;
+  margin-left: 10px;
+}
+#pickingRecord .clear[data-v-f16d5b1e] {
+  clear: both;
+  height: 20px;
+}
+

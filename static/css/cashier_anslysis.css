@@ -1,0 +1,279 @@
+
+#report .sign[data-v-e95fc04e] {
+	border: 1px solid #FF9800 !important;
+}
+.sign .selectbtns[data-v-e95fc04e] {
+	display: inline;
+}
+#report .selectbtns[data-v-e95fc04e] {
+	display: inline;
+}
+#report .selectbtns span[data-v-e95fc04e] {
+	background-color: #45404b;
+	border: 1px solid #e6e6e7;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	display: inline-block;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 18px;
+	padding-right: 18px;
+	text-align: center;
+	cursor: pointer;
+}
+#report .yuChairFix .top-box .detLi[data-v-e95fc04e] {
+	margin: 0
+}
+
+
+#report .yuChairFix[data-v-e95fc04e] {
+  position: relative;
+  margin-top: 10px;
+}
+#report .yuChairFix .line[data-v-e95fc04e] {
+  float: left;
+  width: 25px;
+  line-height: 40px;
+  text-align: center;
+}
+#report .yuChairFix .detLi[data-v-e95fc04e] {
+  position: relative;
+  cursor: pointer;
+  margin: 0 20px;
+}
+#report .yuChairFix .detLi .tableListInp[data-v-e95fc04e] {
+  height: 40px;
+  color: #666666;
+  border: #b3b3b3 solid 1px;
+  cursor: pointer;
+}
+#report .yuChairFix .detLi .tableListInp .overdian[data-v-e95fc04e] {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  height: 39px;
+  line-height: 40px;
+  width: 200px;
+  display: block;
+  float: left;
+  text-align: center;
+  border-right: 1px #B3B3B3 solid;
+}
+#report .yuChairFix .detLi .tableListInp div[data-v-e95fc04e] {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  z-index: 5;
+}
+#report .yuChairFix .detLi .tableListInp div i[data-v-e95fc04e] {
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -5px;
+  border-top: 10px solid #b3b3b3;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  box-sizing: border-box;
+}
+#report .yuChairFix .detLi .shopBox[data-v-e95fc04e] {
+  left: -250px;
+}
+#report .yuChairFix .detLi .formHead[data-v-e95fc04e] {
+  right: 0;
+}
+#report .yuChairFix .detLi .detDiv[data-v-e95fc04e] {
+  display: inline-block;
+  width: 300px;
+  background: #45404b;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  box-shadow: 3px 2px 10px #ccc;
+  z-index: 5;
+  width: 600px;
+  top: 52px;
+}
+#report .yuChairFix .detLi .detDiv .detI[data-v-e95fc04e] {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  top: -10px;
+  right: 30%;
+  left: 400px;
+  border-width: 10px;
+  border-top: 0px;
+  border-style: solid;
+  border-color: #F7F7F7 #F7F7F7 #45404b #F7F7F7;
+}
+#report .yuChairFix .detLi .detDiv .detLiBtn[data-v-e95fc04e] {
+  overflow: hidden;
+  float: left;
+  width: 100%;
+}
+#report .yuChairFix .detLi .detDiv .detLiBtn span[data-v-e95fc04e] {
+  float: left;
+  color: #fff;
+  width: 50%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+#report .yuChairFix .detLi .detDiv .detLiBtn .sure[data-v-e95fc04e] {
+  background: #f8941f;
+}
+#report .yuChairFix .detLi .detDiv .detH3[data-v-e95fc04e] {
+  line-height: 30px;
+  color: #e6e6e7;
+  text-align: center;
+  text-align: left;
+  max-height: 500px;
+  overflow: auto;
+}
+#report .yuChairFix .detLi .detDiv .detH3 .all[data-v-e95fc04e] {
+  display: inline-block;
+  width: 100px;
+  margin-left: 1px;
+  margin-right: 20px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 1px solid #e6e6e7;
+  margin-bottom: 5px;
+  float: left;
+}
+#report .yuChairFix .detLi .detDiv .detH3 .btn span[data-v-e95fc04e] {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  border: 1px solid #FF9800;
+  margin-right: 20px;
+  color: #FF9800;
+  text-align: center;
+}
+#report .yuChairFix .top-box[data-v-e95fc04e] {
+  position: relative;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+#report .yuChairFix .top-box .searchs[data-v-e95fc04e],
+#report .yuChairFix .top-box .gray[data-v-e95fc04e] {
+  width: 90px;
+  height: 40px;
+  line-height: 40px;
+}
+#report .yuChairFix .top-box .yellow[data-v-e95fc04e],
+#report .yuChairFix .top-box .out[data-v-e95fc04e] {
+  width: 90px;
+  height: 40px;
+  line-height: 40px;
+  position: absolute;
+  top: -50px;
+}
+#report .yuChairFix .top-box .back[data-v-e95fc04e] {
+  width: 90px;
+  height: 40px;
+  line-height: 40px;
+  position: absolute;
+  top: -50px;
+  left: -100px;
+  color: #B3B3B3;
+  border: 1px solid #B3B3B3;
+}
+#report .yuChairFix .top-box .out[data-v-e95fc04e] {
+  right: 0;
+}
+#report .yuChairFix .top-box .wordSize[data-v-e95fc04e] {
+  font-size: 16px;
+}
+#report .yuChairFix .top-box .cala[data-v-e95fc04e] {
+  height: 40px;
+  color: #666666;
+  cursor: pointer;
+}
+#report .yuChairFix .top-box .cala .data-box[data-v-e95fc04e] {
+  width: 200px;
+}
+#report .yuChairFix .top-box .cala input[data-v-e95fc04e] {
+  position: relative;
+  background: none;
+  z-index: 2;
+  display: block;
+  float: left;
+  height: 41px;
+  width: 158px;
+  outline: none;
+  border: 0;
+}
+#report .yuChairFix .top-box ul[data-v-e95fc04e] {
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: 10;
+  background: #fff;
+  max-height: 300px;
+  border: 1px solid #ccc;
+  overflow: auto;
+  border-top: 0;
+}
+#report .yuChairFix .top-box ul li[data-v-e95fc04e] {
+  text-align: center;
+  height: 41px;
+  border: 1px #ccc solid;
+  background: #fff;
+  cursor: pointer;
+  border-right: 0 !important;
+  border-left: 0 !important;
+  border-bottom: 0 !important;
+}
+#report .nav .formType[data-v-e95fc04e] {
+  margin-right: 10px;
+}
+#report .nav .formType .typeTotal[data-v-e95fc04e] {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+  border: 1px solid #f8941f;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+}
+#report .nav .formType .typeOn[data-v-e95fc04e] {
+  background: #f8941f;
+  color: #fff;
+}
+#report .nav .light[data-v-e95fc04e] {
+  margin-bottom: 20px;
+  display: inline-block;
+}
+#report .nav .light .sel[data-v-e95fc04e] {
+  display: inline-block;
+  width: 135px;
+  height: 40px;
+  font-size: 16px;
+  background: #f2f2f2;
+  border-radius: 3px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+#report .nav .light .on[data-v-e95fc04e] {
+  background: #28a8e0;
+  color: #fff;
+}
+#report .nav .selectName[data-v-e95fc04e] {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+#report .nav .selectName span[data-v-e95fc04e] {
+  font-size: 16px;
+}
+

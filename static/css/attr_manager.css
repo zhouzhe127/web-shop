@@ -1,0 +1,116 @@
+
+#attr_manager[data-v-79f11534] {
+  padding-top: 30px;
+  position: relative;
+}
+#attr_manager .media-div[data-v-79f11534] {
+  width: 20%;
+  float: left;
+  max-width: 310px;
+  padding: 0 10px 20px 0;
+}
+@media screen and (max-width: 1400px) {
+#attr_manager .media-div[data-v-79f11534] {
+    width: 25%;
+}
+}
+@media screen and (max-width: 1200px) {
+#attr_manager .media-div[data-v-79f11534] {
+    width: 33.33%;
+}
+}
+@media screen and (max-width: 1024px) {
+#attr_manager .media-div[data-v-79f11534] {
+    width: 50%;
+}
+}
+#attr_manager ul.tas-variety[data-v-79f11534]:after {
+  content: '';
+  display: block;
+  visibility: hidden;
+  line-height: 0;
+  clear: both;
+}
+#attr_manager ul.tas-variety .list-common[data-v-79f11534] {
+  width: 100%;
+  background-color: #efefef;
+  cursor: pointer;
+}
+#attr_manager ul.tas-variety .first-list[data-v-79f11534] {
+  width: 100%;
+  background-color: #efefef;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  padding-top: 20%;
+}
+#attr_manager ul.tas-variety .first-list span[data-v-79f11534] {
+  display: block;
+  margin-bottom: 10px;
+}
+#attr_manager ul.tas-variety .first-list .taste-i[data-v-79f11534] {
+  font-size: 20px;
+  color: #898989;
+}
+#attr_manager ul.tas-variety .taste-list[data-v-79f11534] {
+  width: 100%;
+  background-color: #efefef;
+  cursor: pointer;
+  position: relative;
+}
+#attr_manager ul.tas-variety .taste-list .split-line[data-v-79f11534] {
+  background-color: #00a0e9;
+  height: 10px;
+  opacity: 0.7;
+  position: relative;
+}
+#attr_manager ul.tas-variety .taste-list .attr-name[data-v-79f11534] {
+  color: #353535;
+  display: block;
+  font-size: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 70%;
+}
+#attr_manager ul.tas-variety .taste-list .attr-container[data-v-79f11534] {
+  padding: 7% 5% 5%;
+}
+#attr_manager ul.tas-variety .taste-list .attr-num[data-v-79f11534] {
+  position: absolute;
+  top: 8%;
+  right: 0;
+  padding-right: 5%;
+  font-size: 72px;
+  color: #008ed6;
+  opacity: 0.2;
+}
+#attr_manager ul.tas-variety .taste-list .attr-details[data-v-79f11534] {
+  position: absolute;
+  bottom: 0;
+  width: 90%;
+  padding-bottom: 5%;
+}
+#attr_manager ul.tas-variety .taste-list .attr-details .attr-options[data-v-79f11534] {
+  float: left;
+  font-size: 16px;
+  width: 50%;
+  border-right: 1px solid #7a7a7a;
+}
+#attr_manager ul.tas-variety .taste-list .attr-details .attr-options-num[data-v-79f11534] {
+  margin-top: 5px;
+}
+#attr_manager ul.tas-variety .taste-list .attr-details .attr-relative[data-v-79f11534] {
+  float: right;
+}
+#attr_manager .shopTag[data-v-79f11534] {
+  position: absolute;
+  top: 50%;
+}
+#attr_manager .shopTag span[data-v-79f11534] {
+  background: rgba(127, 127, 127, 0.6);
+  border-radius: 30px;
+  padding: 7px 11px;
+  display: inline-block;
+}
+
