@@ -1,0 +1,22 @@
+/* {
+  "presets": [
+    "es2015",
+    "stage-0"
+  ],
+  "compact": true
+} */
+
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 5 versions", "ie>8"]
+      },
+      "modules": false,
+      "useBuiltIns": "usage"
+    }],"stage-0"
+  ],
+  "compact": true
+}
+
+
