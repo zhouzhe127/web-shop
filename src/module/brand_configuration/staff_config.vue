@@ -33,33 +33,36 @@
 					</div>
 				</div>
 			</section>
-			<section class="detLi">
-				<div class="select-body-btn select-btn" @click.stop @click="jobOrShop('shop')">
-					<span>{{selectedShop}}</span>
-					<em>
-						<i></i>
-					</em>
-				</div>
-				<div v-if="showJob == 'shop'" class="detDiv" style="width: 600px;top: 52px;left: -215px;">
-					<i class="detI" style="left: 370px;"></i>
-					<div class="detH3" @click.stop style="text-align: left;max-height: 500px;overflow: auto;">
-						<div class="jobBtn">
-							<a href="javascript:void(0)" @click="chooseShop('all')" class="job" :class="{'selectbtn' : shopType == 'all'}">全部</a>
-							<a href="javascript:void(0)" @click="chooseShop('brand')" class="job" :class="{'selectbtn' : shopType == 'brand'}">直营店</a>
-							<a href="javascript:void(0)" @click="chooseShop('shop')" class="job" :class="{'selectbtn' : shopType == 'shop'}">加盟店</a>
-						</div>
-						<ul>
-							<li class="all" @click="selJob('shop')" :class="{'active': allShop}">全部</li>
-							<li @click="selJob('shop',item)" :class="{'active': item.selected}" v-for="(item,index) in showShopList" :key="index">{{item.shopName}}</li>
-						</ul>
-					</div>
-					<div class="detLiBtn">
-						<span class="gray" @click="cancel('shop')">取消</span>
-						<span class="yellow" @click="ensure('shop')">确定</span>
-					</div>
-				</div>
-			</section>
-			<input class="jobName" type="text" placeholder="请输入员工名称/手机号码" v-model="staffOrJob">
+			<!--<section class="detLi">-->
+			<!--<div class="select-body-btn select-btn" @click.stop @click="jobOrShop('shop')">-->
+			<!--<span>{{selectedShop}}</span>-->
+			<!--<em>-->
+			<!--<i></i>-->
+			<!--</em>-->
+			<!--</div>-->
+			<!--<div v-if="showJob == 'shop'" class="detDiv" style="width: 600px;top: 52px;left: -215px;">-->
+			<!--<i class="detI" style="left: 370px;"></i>-->
+			<!--<div class="detH3" @click.stop style="text-align: left;max-height: 500px;overflow: auto;">-->
+			<!--<div class="jobBtn">-->
+			<!--<a href="javascript:void(0)" @click="chooseShop('all')" class="job" :class="{'selectbtn' : shopType == 'all'}">全部</a>-->
+			<!--<a href="javascript:void(0)" @click="chooseShop('brand')" class="job" :class="{'selectbtn' : shopType == 'brand'}">直营店</a>-->
+			<!--<a href="javascript:void(0)" @click="chooseShop('shop')" class="job" :class="{'selectbtn' : shopType == 'shop'}">加盟店</a>-->
+			<!--</div>-->
+			<!--<ul>-->
+			<!--<li class="all" @click="selJob('shop')" :class="{'active': allShop}">全部</li>-->
+			<!--<li @click="selJob('shop',item)" :class="{'active': item.selected}" v-for="(item,index) in showShopList" :key="index">{{item.shopName}}</li>-->
+			<!--</ul>-->
+			<!--</div>-->
+			<!--<div class="detLiBtn">-->
+			<!--<span class="gray" @click="cancel('shop')">取消</span>-->
+			<!--<span class="yellow" @click="ensure('shop')">确定</span>-->
+			<!--</div>-->
+			<!--</div>-->
+			<!--</section>-->
+			<elShopList :shopIds="shopIds" @chooseShop="backShopId"></elShopList>
+
+			<el-input v-model="staffOrJob" clearable placeholder="请输入员工名称/手机号码" style="width:210px;"></el-input>
+			<!--<input class="jobName" type="text" placeholder="请输入员工名称/手机号码" v-model="staffOrJob">-->
 			<a @click="search" href="javascript:void(0);" class="blue btn">筛选</a>
 			<a @click="reset" href="javascript:void(0);" class="gray btn">重置</a>
 		</section>
@@ -105,9 +108,9 @@
 				<template slot-scope="scope">
 					<span style="cursor:pointer" v-if="scope.row.shopRole.length != 0">
 						<el-popover
-							placement="top"
-							width="400"
-							trigger="click">
+								placement="top"
+								width="400"
+								trigger="click">
 							<div>
 								<i v-for="(info,i) in scope.row.shopRole" :key="i+'-'">
 									<i :class="{'brand': info.roleId >= 100000,'shop': info.roleId < 100000}">{{info.roleName}}</i>
@@ -370,27 +373,29 @@
 			//选择职位/门店
 			selJob(type, item) {
 				let index = 0;
-				if (type == 'shop' && !item) { //门店全部选择
-					if (this.isAll(this.showShopList)) {
-						for (let i = 0; i < this.showShopList.length; i++) {
-							this.showShopList[i].selected = false;
-							this.allShop = false;
-						}
-					} else {
-						for (let i = 0; i < this.showShopList.length; i++) {
-							this.showShopList[i].selected = true;
-							this.allShop = true;
-						}
-					}
-				} else if (type == 'shop' && item) { //点击单个门店选择
-					item.selected = !item.selected;
-					for (let i = 0; i < this.showShopList.length; i++) {
-						if (this.showShopList[i].selected) {
-							index++;
-						}
-					}
-					index == this.showShopList.length ? this.allShop = true : this.allShop = false;
-				} else if (type == 'job' && !item) { //职位全部选择
+//				if (type == 'shop' && !item) { //门店全部选择
+//					if (this.isAll(this.showShopList)) {
+//						for (let i = 0; i < this.showShopList.length; i++) {
+//							this.showShopList[i].selected = false;
+//							this.allShop = false;
+//						}
+//					} else {
+//						for (let i = 0; i < this.showShopList.length; i++) {
+//							this.showShopList[i].selected = true;
+//							this.allShop = true;
+//						}
+//					}
+//				} else if (type == 'shop' && item) { //点击单个门店选择
+//					item.selected = !item.selected;
+//					for (let i = 0; i < this.showShopList.length; i++) {
+//						if (this.showShopList[i].selected) {
+//							index++;
+//						}
+//					}
+//					index == this.showShopList.length ? this.allShop = true : this.allShop = false;
+//				}
+//				else
+				if (type == 'job' && !item) { //职位全部选择
 					if (this.isAll(this.showJobList)) {
 						for (let i = 0; i < this.showJobList.length; i++) {
 							this.showJobList[i].selected = false;
@@ -402,7 +407,8 @@
 							this.allJob = true;
 						}
 					}
-				} else if (type == 'job' && item) {
+				}
+				else if (type == 'job' && item) {
 					item.selected = !item.selected;
 					for (let i = 0; i < this.showJobList.length; i++) {
 						if (this.showJobList[i].selected) {
@@ -417,21 +423,24 @@
 				this.showJob = type;
 				if (type == 'job' && this.jobList.length == 0) {
 					this.newGetJobInfoList();
-				} else if (type == 'shop' && !this.shopList) {
-					let res = storage.session('shopList');
-					for (let i = 0; i < res.length; i++) {
-						res[i].selected = false;
-					}
-					this.shopList = res;
-					this.showShopList = res;
-				} else if (type == 'job' && this.jobList.length != 0) {
+				}
+//				else if (type == 'shop' && !this.shopList) {
+//					let res = storage.session('shopList');
+//					for (let i = 0; i < res.length; i++) {
+//						res[i].selected = false;
+//					}
+//					this.shopList = res;
+//					this.showShopList = res;
+//				}
+				else if (type == 'job' && this.jobList.length != 0) {
 					let jobIds = this.jobIds.brand.concat(this.jobIds.shop);
 					this.isSelected(jobIds, this.jobList);
 					this.isAll(this.showJobList) ? this.allJob = true : this.allJob = false;
-				} else if (type == 'shop' && this.shopList.length != 0) {
-					this.isSelected(this.shopIds, this.shopList);
-					this.isAll(this.showShopList) ? this.allShop = true : this.allShop = false;
 				}
+//				else if (type == 'shop' && this.shopList.length != 0) {
+//					this.isSelected(this.shopIds, this.shopList);
+//					this.isAll(this.showShopList) ? this.allShop = true : this.allShop = false;
+//				}
 			},
 			//职位切换
 			chooseJob(type) {
@@ -446,27 +455,32 @@
 				}
 				this.isAll(this.showJobList) ? this.allJob = true : this.allJob = false;
 			},
-			//门店选择切换
-			chooseShop(type) {
-				this.shopType = type;
-				this.showShopList = [];
-				if (type === 'all') { //全部
-					this.showShopList = this.shopList;
-				} else if (type === 'brand') { //直营店
-					for (let i = 0; i < this.shopList.length; i++) {
-						if (this.shopList[i].ischain == '1') {
-							this.showShopList.push(this.shopList[i]);
-						}
-					}
-				} else if (type === 'shop') { //加盟店
-					for (let i = 0; i < this.shopList.length; i++) {
-						if (this.shopList[i].ischain == '2') {
-							this.showShopList.push(this.shopList[i]);
-						}
-					}
-				}
-				this.isAll(this.showShopList) ? this.allShop = true : this.allShop = false;
+			//组件返回店铺Id
+			backShopId(id){
+				console.log(id);
+				this.shopIds=id;
 			},
+			//门店选择切换
+//			chooseShop(type) {
+//				this.shopType = type;
+//				this.showShopList = [];
+//				if (type === 'all') { //全部
+//					this.showShopList = this.shopList;
+//				} else if (type === 'brand') { //直营店
+//					for (let i = 0; i < this.shopList.length; i++) {
+//						if (this.shopList[i].ischain == '1') {
+//							this.showShopList.push(this.shopList[i]);
+//						}
+//					}
+//				} else if (type === 'shop') { //加盟店
+//					for (let i = 0; i < this.shopList.length; i++) {
+//						if (this.shopList[i].ischain == '2') {
+//							this.showShopList.push(this.shopList[i]);
+//						}
+//					}
+//				}
+//				this.isAll(this.showShopList) ? this.allShop = true : this.allShop = false;
+//			},
 			//职位/门店选择确定
 			ensure(type) {
 				this.showJob = null;
@@ -486,18 +500,19 @@
 					}
 					this.selectedJob = this.selectedJob.slice(0, this.selectedJob.length - 1);
 					if (!this.selectedJob) this.selectedJob = '全部职位';
-				} else if (type == 'shop') {
-					this.selectedShop = '';
-					this.shopIds = [];
-					for (let i = 0; i < this.shopList.length; i++) {
-						if (this.shopList[i].selected) {
-							this.selectedShop += this.shopList[i].shopName + ',';
-							this.shopIds.push(this.shopList[i].id);
-						}
-					}
-					this.selectedShop = this.selectedShop.slice(0, this.selectedShop.length - 1);
-					if (!this.selectedShop) this.selectedShop = '全部门店';
 				}
+//				else if (type == 'shop') {
+//					this.selectedShop = '';
+//					this.shopIds = [];
+//					for (let i = 0; i < this.shopList.length; i++) {
+//						if (this.shopList[i].selected) {
+//							this.selectedShop += this.shopList[i].shopName + ',';
+//							this.shopIds.push(this.shopList[i].id);
+//						}
+//					}
+//					this.selectedShop = this.selectedShop.slice(0, this.selectedShop.length - 1);
+//					if (!this.selectedShop) this.selectedShop = '全部门店';
+//				}
 			},
 			//职位/门店选择取消
 			cancel() {
@@ -725,7 +740,9 @@
 			addjob: () =>
 				import ( /*webpackChunkName: 'addjob_win'*/ './addjob_win'),
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table')
+				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		},
 	};
 </script>
@@ -741,7 +758,7 @@
 		display: inline-block;
 		width: 300px;
 		background: #45404b;
-		;
+	;
 		position: absolute;
 		top: 45px;
 		right: 0;
@@ -816,17 +833,17 @@
 	}
 
 	.top .select-btn {
-		margin-right: 20px;
+		/*margin-right: 20px;*/
 	}
 
-	.top .jobName {
-		width: 200px;
-		height: 40px;
-		vertical-align: middle;
-		padding-left: 10px;
-		border: 1px solid #B3B3B3;
-		margin-right: 20px;
-	}
+	/*.top .jobName {*/
+	/*width: 200px;*/
+	/*height: 40px;*/
+	/*vertical-align: middle;*/
+	/*padding-left: 10px;*/
+	/*border: 1px solid #B3B3B3;*/
+	/*margin-right: 20px;*/
+	/*}*/
 
 	.select-body-btn {
 		height: 40px;
