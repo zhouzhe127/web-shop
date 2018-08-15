@@ -895,5 +895,14 @@ export default {
         url: b + 'material/getWidByMid', //通过物料id获取仓库id
         method: 'get'
     },
+    /* 批量审核日志 */
+    "dispatchGetDispatchAuditLogList":{
+        method:'get',
+        url:b+"dispatch/getDispatchAuditLogList"
+    },
+    "dispatchGetDispatchAuditLogDetailList":{
+        method:'get',
+        url:b+"dispatch/getDispatchAuditLogDetailList"                  //获取日志详情列表
+    }
     
 }
