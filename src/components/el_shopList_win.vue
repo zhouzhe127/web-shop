@@ -1,8 +1,6 @@
 /**
  * @Author: zhengu.jiang 
- * @Date: 2018-08-13 11:29:22 
- * @Last Modified by: zhengu.jiang
- * @Last Modified time: 2018-08-13 13:44:45
+ *
  * @Module: 品牌下选择门店弹窗
  */
 
@@ -75,6 +73,7 @@ export default {
 	props: ['shopIds'],
 	mounted(){
 		this.storeareaGetAllArea();
+		console.log(this.shopIds);
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
@@ -94,14 +93,11 @@ export default {
 			let res = storage.session('shopList');
 			let index = 0;
 			for (let i = 0; i < res.length; i++) {
-				for(let j = 0; j < this.shopIds.length; j++){
-					if(this.shopIds[j] == res[i].id){
-						res[i].selected = true;
-					}else{
-						res[i].selected = false;
-					}
+				this.$set(res[i], 'selected', false);
+				if(this.shopIds.includes(res[i].id)){
+					res[i].selected = true;
 				}
-				if(res[i].storeAreaId === 0){
+				if(res[i].storeAreaId==0){
 					index++;
 				}
 			}
