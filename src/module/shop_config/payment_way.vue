@@ -33,7 +33,7 @@
 						<section v-else>
 							<div v-if="scope.row.paymentName == '会员支付'">不可操作</div>
 							<div v-else class="btn">
-								<template v-if="scope.row.paymentName == '微信' || scope.row.paymentName == '支付宝' || scope.row.paymentName == '中信银行'|| scope.row.paymentName == '中信银行(上海)'|| scope.row.paymentName == '点佰趣'|| scope.row.paymentName == '农行支付'|| scope.row.paymentName == '网易严选支付'" class="editInfo">
+								<template v-if="scope.row.paymentName == '微信' || scope.row.paymentName == '支付宝' || scope.row.paymentName == '中信银行'|| scope.row.paymentName == '中信银行(上海)'|| scope.row.paymentName == '点佰趣'|| scope.row.paymentName == '农行支付'|| scope.row.paymentName == '网易严选支付'|| scope.row.paymentName == '旺POS支付'" class="editInfo">
 									<span @click="modifyBtn(scope.$index,scope.row)" class="isBrandColor">编辑</span>
 									<span v-if="scope.row.isOpen == 0" class="line isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">开启</span>
 									<span v-if="scope.row.isOpen == 1" class="line isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">关闭</span>
@@ -208,7 +208,12 @@ export default {
 						obj.privateRsaKey = detial.payConfig.privateRsaKey;//客户私钥
 						obj.publicRsaKey = detial.payConfig.publicRsaKey;//中信公钥
 						this.editPayConfig(obj);
-					} else {
+					}else if (detial.paymentName == '旺POS支付' && this.index == 10) {
+						obj.mcode = detial.payConfig.mcode; //旺POS门店编号
+						obj.appKey = detial.payConfig.appKey; //
+						obj.appSecret = detial.payConfig.appSecret; //
+						this.editPayConfig(obj);
+					}  else {
 						obj.sort = detial.sort;
 						obj.isBill = detial.isBill ? 1 : 0;
 						if (this.types == 'add') {
@@ -381,6 +386,22 @@ export default {
 					}
 				}
 				this.types = 'SHzxBand';
+			} else if (bill.paymentName == '旺POS支付' && index == 10) {
+				//获取支付方式详情
+				this.detial = await http.getWeixinAlipay({ data: data });
+				if (
+					!this.detial.payConfig ||
+					this.detial.payConfig.length == 0
+				) {
+					this.detial.payConfig = {};
+					// obj.mcode = detial.payConfig.mcode; //旺POS门店编号
+					// 	obj.appKey = detial.payConfig.appKey; //
+					// 	obj.appSecret = detial.payConfig.appSecret; //
+					this.detial.payConfig.mcode = ''; 
+					this.detial.payConfig.appKey = '';
+					this.detial.payConfig.appSecret = '';
+				}
+				this.types = 'wPos';
 			}else{
 				this.detial=await http.getPaymentById({data:data});
 				this.types = 'edit';
@@ -562,6 +583,10 @@ export default {
 				if (!global.checkData({ mchId: '商户号不能为空' },detial.payConfig))return false;
 				if(!global.checkData({privateRsaKey:'客户私钥不能为空'},detial.payConfig))return false;
 				if(!global.checkData({publicRsaKey:'中信公钥不能为空'},detial.payConfig))return false;
+			}else if (detial.paymentName == '旺POS支付' && this.index == 10) {
+				if (!global.checkData({ mcode: '旺POS门店编号不能为空' },detial.payConfig))return false;
+				if(!global.checkData({appKey:'appKey不能为空'},detial.payConfig))return false;
+				if(!global.checkData({appSecret:'appSecret不能为空'},detial.payConfig))return false;
 			} else {
 				if (
 					!global.checkData(
