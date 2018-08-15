@@ -82,13 +82,14 @@ export default {
 			index: 1,
 			shopName: '', //搜索店铺名
 			visible: false,
-//			selShop: [], //选中的店铺id集合
+
+			allShop:[],//通过接口获取的所有门店
 		};
 	},
 	props: ['shopIds'],
 	created(){
+		this.getShopList();
 //		this.selShop = this.shopIds;
-		this.storeareaGetAllArea();
 	},
 //	watch: {
 //		visible: function(){
@@ -117,11 +118,16 @@ export default {
 	},
 	methods: {
 		//获取店铺列表
-		init(type) {
+		async getShopList(){
+			this.allShop=await http.getShopList({
+				data:{}
+			});
+			this.storeareaGetAllArea();
+		},
+		async init(type) {
 			console.log(this.shopIds);
-			let res = storage.session('shopList');
-			console.log(res);
-
+//			let res = storage.session('shopList');
+			let res=utils.deepCopy(this.allShop);
 			let index = 0;
 			for (let i = 0; i < res.length; i++) {
 				this.$set(res[i], 'selected', false);
