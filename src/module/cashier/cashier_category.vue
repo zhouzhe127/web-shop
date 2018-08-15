@@ -27,7 +27,8 @@
 			<section style="display:inline-block">
 				<!--品牌店铺选择-->
 				<section class="top-box fl" style="height:42px">
-					<selectstore @returnShop="getShop" :reset="reset" :show="hide" :showNum=true></selectstore>
+					<!--<selectstore @returnShop="getShop" :reset="reset" :show="hide" :showNum=true></selectstore>-->
+					<elShopList :shopIds="selShopid" @chooseShop="getShop"></elShopList>
 				</section>
 				<section class="top-box fl detLi " style="height: 55px;">
 					<a @click="search" href="javascript:void(0);" class="blue searchs">搜索</a>
@@ -295,12 +296,31 @@
 					this.shopName = '请选择店铺';
 				}
 			},
-			getShop(id, name, shopList) {
-				this.chooseShopList = shopList;
-				if (id || name) {
-					this.selShopid = id;
-					this.shopName = name;
+//			getShop(id, name, shopList) {
+//				console.log(shopList);
+//				console.log(this.shopList);
+//				this.chooseShopList = shopList;
+//				if (id || name) {
+//					this.selShopid = id;
+//					this.shopName = name;
+//				}
+//				this.getShopname();
+//			},
+			//选择店铺返回
+			getShop(res) {
+				this.shopName='';
+				let arr=[];
+				let arrOne=utils.deepCopy(this.shopList);
+				for(let i=0;i<arrOne.length;i++){
+					if(res.includes(arrOne[i].id)){
+						this.shopName=this.shopName+arrOne[i].shopName+'、 ';
+						arrOne[i].selected=true;
+						arr.push(arrOne[i]);
+					}
 				}
+				this.chooseShopList=arr;
+				console.log(arr);
+				this.selShopid=res;
 				this.getShopname();
 			},
 			//查询
@@ -403,7 +423,9 @@
 			loading: () =>
 				import ( /*webpackChunkName: 'category_loading'*/ './category_loading'),
 			formShop: () =>
-				import ( /*webpackChunkName: 'form_shop'*/ './form_shop')
+				import ( /*webpackChunkName: 'form_shop'*/ './form_shop'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		},
 		destroyed() {
 			clearInterval(window.timer);
