@@ -647,7 +647,6 @@ export default {
 				this.leftWidth = 0;
 				this.areaIndex2 = 0;
 			}
-			// console.log(this.leftWidth);
 		},
 		changeArea(res){
 			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
@@ -675,7 +674,6 @@ export default {
 						res.splice(i,1);
 						i--;
 					}
-
 				}
 				let shopIds = '';//全部的ids
 				for(let j=0;j<this.shopsIn.direct.length;j++){
@@ -702,8 +700,6 @@ export default {
 				res.unshift({name: '全部', areaShopIds: shopIds});
 				res.push({id: 0,name: '无区域', areaShopIds: noArea});
 				// console.log(noArea);
-			}else{
-				// this.init();
 			}
 			this.newAreaList = res;
 			if(this.newAreaList.length > 0){
