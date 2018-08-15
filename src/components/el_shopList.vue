@@ -1,8 +1,11 @@
 /**
  * @Author: zhengu.jiang
- *
+ * @Date: 2018-08-13 11:04:36 
+ * @Last Modified by: zhengu.jiang
+ * @Last Modified time: 2018-08-13 14:47:20
  * @Module: 品牌下选择门店下拉
  */
+
 <template>
 	<div id="elShop">
 		<el-popover
@@ -30,6 +33,7 @@
 				</div>
 				<div class="detH3" style="text-align: left;max-height: 500px;overflow: auto;">
 					<el-tabs v-model="activeName">
+						
 						<div class="area" v-if="areaList.list.length > 0">
 							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
 							<div class="areabox">
@@ -86,7 +90,7 @@ export default {
 			shopName: '', //搜索店铺名
 			visible: false,
 			selShop: [], //选中的店铺id集合
-		};
+		}
 	},
 	props: ['shopIds'],
 	created(){
@@ -118,7 +122,6 @@ export default {
 			let res = storage.session('shopList');
 			let index = 0;
 			for (let i = 0; i < res.length; i++) {
-				this.$set(res[i], 'selected', false);
 				for(let j = 0; j < this.shopIds.length; j++){
 					if(this.shopIds[j] == res[i].id){
 						res[i].selected = true;
@@ -194,11 +197,10 @@ export default {
 				if(e.shopName.indexOf(this.shopName) != -1){
 					return e;
 				}
-			});
+			})
 		},
 		//选择全部
 		selectAll(){
-			console.log('jjjjjj');
 			this.selCommon(true);
 		},
 		//取消全部
@@ -255,7 +257,7 @@ export default {
 <style>
 .elshop .searchbox{
 	width: 200px;
-	height:40px;
+	height: 35px;
 	position: absolute;
 	right: 5px;
 	z-index: 10;
@@ -313,7 +315,7 @@ export default {
 			cursor: pointer;
 			display: inline-block;
 			width: 200px;
-			height: 40px;
+			height: 38px;
 			border: 1px solid #dcdfe6;
 			border-radius: 4px;
 			line-height: 40px;
