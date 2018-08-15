@@ -46,7 +46,7 @@
 			</div>
 		</com-table> -->
 		<div class="page-box">
-			<el-pagination background @current-change="pageChange" @size-change="sizeChange" :current-page="page" :page-sizes="[10, 20, 50]" layout="sizes, total, prev, pager, next, jumper" :total="total"></el-pagination>
+			<el-pagination background @current-change="pageChange" @size-change="sizeChange" :current-page="page" :page-sizes="[10, 20, 50]" layout="sizes, total, prev, pager, next, jumper" :total="count"></el-pagination>
 		</div>
     </div>
 </template>
@@ -76,7 +76,7 @@ import utils from 'src/verdor/utils';
 					}
 				});
 				this.allList = data.list;
-				this.count = data.count;
+				this.count = Number(data.count);
 				this.total = data.total;
 			},
 			searchList(){
