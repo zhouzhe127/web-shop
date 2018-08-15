@@ -26,7 +26,8 @@
 				</li>
 				<div style="display:inline-block;">
 					<li>
-						<selectstore @emit="getSelectShopList" :sorts="postSelectShopList" :tipName="selectName"></selectstore>
+						<!--<selectstore @emit="getSelectShopList" :sorts="postSelectShopList" :tipName="selectName"></selectstore>-->
+						<elShopList @chooseShop="getSelectShopList" :shopIds="transmitId"></elShopList>
 					</li>
 					<a class="fl yellow" v-on:click="sreachOrderInDays()" href="javascript:void(0)" style="width: 80px;height: 40px;line-height: 40px;margin-left: 10px;">搜索</a>
 					<a class="fl gray" v-on:click="resetting()" href="javascript:void(0)" style="width: 80px;height: 40px;line-height: 40px;margin-left: 10px;">重置</a>
@@ -279,13 +280,12 @@ export default {
 			repeat: true, //防止多次搜索 重复轮询
 			countList: [{ name: 10 }, { name: 50 }],
 			paginationList: [],
-			// page: 1,
 			num: 10, //每页显示数
 			currentPage: 1, //第几页
-			// total: 1,
 			preferentialBounced: false, //优惠弹框
 			startObj: {},
-			endObj: {}
+			endObj: {},
+			transmitId:[]  //传递给选择店铺页面的id
 		};
 	},
 	computed: {
@@ -297,6 +297,105 @@ export default {
 			let endIndex = this.currentPage * this.num;
 			return this.orderListInDays.slice(startIndex, endIndex);
 		}
+	},
+	mounted() {
+		this.initBtn();
+		let dataDetial = storage.session('brandorderDetial'); //获取时间戳和营业时间按钮，为从多日返回到品牌
+		let orderTakeaway = storage.session('orderBrand');
+		this.userData = storage.session('userShop');
+		if (this.userData.currentShop.ischain !== '3') {
+			this.$router.push({
+				path: '/admin/orderStatistics/orderMore',
+				query: this.$route.query
+			});
+			return;
+		}
+		let selectShopList = storage.session('shopList');
+		// console.log(selectShopList)
+		for (let i = 0; i < selectShopList.length; i++) {
+			selectShopList[i].selected = true;
+		}
+		let shopIds = '';   //选中的店铺id
+		let selectName = ''; //选中的店铺名称
+		//对选择的店铺进行操作，如果从返回后得到数据和刚开始进入处理结果不同
+		if (dataDetial) {
+			selectShopList = dataDetial.selectShopList;
+		}
+		let postSelectShopList = [];
+
+		selectShopList.forEach(item => {
+			let obj = {
+				id: item.id,
+				name: item.shopName,
+				selected: item.selected
+			};
+			postSelectShopList.push(obj);
+		});
+		this.postSelectShopList=postSelectShopList;
+		this.transmitId=selectShopList.map((v)=>{//传递给选择店铺页面的id
+			return v.id
+		});
+		//选择的店铺id转化为字符串
+		for (let i = 0; i < selectShopList.length; i++) {
+			if (selectShopList[i].selected == true) {
+				shopIds = shopIds + selectShopList[i].id + ',';
+				selectName = selectName + selectShopList[i].shopName + ',';
+			}
+		}
+		//切割拼接店铺id的字符串
+		let end = shopIds.split('').length;
+		if (shopIds !== '') {
+			shopIds = shopIds.substring(0, end - 1);
+		}
+		this.shopIds = shopIds;
+		this.selectName = selectName == '' ? '请选择店铺' : selectName;
+
+		this.startTime = dataDetial
+			? dataDetial.startTime
+			: orderTakeaway
+				? orderTakeaway.startTime
+				: new Date().setHours(0, 0, 0, 0);
+		this.endTime = dataDetial
+			? dataDetial.endTime
+			: orderTakeaway
+				? orderTakeaway.endTime
+				: new Date().setHours(23, 59, 59, 999);
+		this.newStartTime = dataDetial
+			? dataDetial.startTime
+			: orderTakeaway
+				? orderTakeaway.startTime
+				: new Date().setHours(0, 0, 0, 0);
+		this.newEndTime = dataDetial
+			? dataDetial.endTime
+			: orderTakeaway
+				? orderTakeaway.endTime
+				: new Date().setHours(23, 59, 59, 999);
+		this.isOpenTime = dataDetial
+			? dataDetial.isOpenTime
+			: orderTakeaway ? orderTakeaway.isOpenTime : true;
+		this.isBrand = this.userData.currentShop.ischain == '3' ? true : false;
+		this.selectShopList = dataDetial
+			? dataDetial.selectShopList
+			: selectShopList;
+
+
+
+		this.startObj = { time: this.startTime };
+		this.endObj = { time: this.endTime };
+
+		if (this.selectShopList.length == 0) {
+			this.$store.commit('setWin', {
+				title: '操作提示',
+				content: '没有可选店铺'
+			});
+			return;
+		}
+		this.init();
+		document.onclick = () => {
+			this.shopListBtn = false;
+		};
+		sessionStorage.removeItem('brandorderDetial');
+		sessionStorage.removeItem('orderBrand');
 	},
 	methods: {
 		initBtn() {
@@ -389,12 +488,21 @@ export default {
 			this.startObj = { time: this.startTime };
 			this.endObj = { time: this.endTime };
 			this.isOpenTime = true;
-			this.selectName = '';
+			this.selectName='';
+			this.shopIds='';
 			for (let i = 0; i < this.selectShopList.length; i++) {
 				this.selectShopList[i].selected = true;
-				this.selectName =
-					this.selectName + this.selectShopList[i].shopName + ',';
+				this.selectName = this.selectName + this.selectShopList[i].shopName + ',';
+				this.shopIds = this.shopIds + this.selectShopList[i].id + ',';
 			}
+			//切割拼接店铺id的字符串
+			let end = this.shopIds.split('').length;
+			if (this.shopIds !== '') {
+				this.shopIds = this.shopIds.substring(0, end - 1);
+			}
+			this.transmitId=this.selectShopList.map((v)=>{
+				return v.id
+			});
 			this.getOrderListInDays();
 		},
 		//对支付金额为0的支付方式做处理
@@ -491,6 +599,9 @@ export default {
 				}
 			}
 		},
+
+
+
 		async getrrrrrr(taskId) {
 			let res = await http.reportGet({
 				data: {
@@ -669,117 +780,55 @@ export default {
 				this.preferentialBounced = false;
 			}
 		},
+//		getSelectShopList: function(res) {
+//			this.postSelectShopList = res;
+//			let shopIdsStr = '';
+//			let selectNameStr = '';
+//			for (let i = 0; i < res.length; i++) {
+//				if (res[i].selected == true) {
+//					shopIdsStr = shopIdsStr + res[i].id + ',';
+//					selectNameStr = selectNameStr + res[i].name + ',';
+//				}
+//			}
+//			let shopIdsStrEnd = shopIdsStr.split('').length;
+//			if (shopIdsStr !== '') {
+//				shopIdsStr = shopIdsStr.substring(0, shopIdsStrEnd - 1);
+//			}
+//			this.shopIds = shopIdsStr;
+//			this.selectName =
+//				selectNameStr == '' ? '请选择店铺' : selectNameStr;
+//		},
+		//选择店铺返回
 		getSelectShopList: function(res) {
-			this.postSelectShopList = res;
-			let shopIdsStr = '';
+			console.log(this.postSelectShopList);
+			this.transmitId=res;
 			let selectNameStr = '';
-			for (let i = 0; i < res.length; i++) {
-				if (res[i].selected == true) {
-					shopIdsStr = shopIdsStr + res[i].id + ',';
-					selectNameStr = selectNameStr + res[i].name + ',';
+			for(let i=0;i<this.postSelectShopList.length;i++){
+				if(this.transmitId.includes(this.postSelectShopList[i].id)){
+					this.postSelectShopList[i].selected=true;
+					selectNameStr = selectNameStr + this.postSelectShopList[i].name + ',';
+				}else {
+					this.postSelectShopList[i].selected=false;
 				}
 			}
-			let shopIdsStrEnd = shopIdsStr.split('').length;
-			if (shopIdsStr !== '') {
-				shopIdsStr = shopIdsStr.substring(0, shopIdsStrEnd - 1);
-			}
-			this.shopIds = shopIdsStr;
-			this.selectName =
-				selectNameStr == '' ? '请选择店铺' : selectNameStr;
-		}
+//			this.postSelectShopList = res;
+
+//			for (let i = 0; i < this.postSelectShopList.length; i++) {
+//				if (res[i].selected == true) {
+//					shopIdsStr = shopIdsStr + res[i].id + ',';
+//					selectNameStr = selectNameStr + res[i].name + ',';
+//				}
+//			}
+//			let shopIdsStrEnd = shopIdsStr.split('').length;
+//			if (shopIdsStr !== '') {
+//				shopIdsStr = shopIdsStr.substring(0, shopIdsStrEnd - 1);
+//			}
+			this.shopIds=res.join(',');
+			this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
+		},
 	},
 	destroyed() {
 		clearInterval(window.timer);
-	},
-	mounted() {
-		this.initBtn();
-		let dataDetial = storage.session('brandorderDetial'); //获取时间戳和营业时间按钮，为从多日返回到品牌
-		let orderTakeaway = storage.session('orderBrand');
-		this.userData = storage.session('userShop');
-		if (this.userData.currentShop.ischain !== '3') {
-			this.$router.push({
-				path: '/admin/orderStatistics/orderMore',
-				query: this.$route.query
-			});
-			return;
-		}
-		let selectShopList = storage.session('shopList');
-		// console.log(selectShopList)
-		for (let i = 0; i < selectShopList.length; i++) {
-			selectShopList[i].selected = true;
-		}
-		let shopIds = '';
-		let selectName = '';
-		//对选择的店铺进行操作，如果从返回后得到数据和刚开始进入处理结果不同
-		if (dataDetial) {
-			selectShopList = dataDetial.selectShopList;
-		}
-		let postSelectShopList = [];
-		selectShopList.forEach(item => {
-			let obj = {
-				id: item.id,
-				name: item.shopName,
-				selected: item.selected
-			};
-			postSelectShopList.push(obj);
-		});
-		//选择的店铺id转化为字符串
-		for (let i = 0; i < selectShopList.length; i++) {
-			if (selectShopList[i].selected == true) {
-				shopIds = shopIds + selectShopList[i].id + ',';
-				selectName = selectName + selectShopList[i].shopName + ',';
-			}
-		}
-		//切割拼接店铺id的字符串
-		let end = shopIds.split('').length;
-		if (shopIds !== '') {
-			shopIds = shopIds.substring(0, end - 1);
-		}
-		this.startTime = dataDetial
-			? dataDetial.startTime
-			: orderTakeaway
-				? orderTakeaway.startTime
-				: new Date().setHours(0, 0, 0, 0);
-		this.endTime = dataDetial
-			? dataDetial.endTime
-			: orderTakeaway
-				? orderTakeaway.endTime
-				: new Date().setHours(23, 59, 59, 999);
-		this.newStartTime = dataDetial
-			? dataDetial.startTime
-			: orderTakeaway
-				? orderTakeaway.startTime
-				: new Date().setHours(0, 0, 0, 0);
-		this.newEndTime = dataDetial
-			? dataDetial.endTime
-			: orderTakeaway
-				? orderTakeaway.endTime
-				: new Date().setHours(23, 59, 59, 999);
-		this.isOpenTime = dataDetial
-			? dataDetial.isOpenTime
-			: orderTakeaway ? orderTakeaway.isOpenTime : true;
-		this.isBrand = this.userData.currentShop.ischain == '3' ? true : false;
-		this.selectShopList = dataDetial
-			? dataDetial.selectShopList
-			: selectShopList;
-		this.postSelectShopList = postSelectShopList;
-		this.selectName = selectName == '' ? '请选择店铺' : selectName;
-		this.startObj = { time: this.startTime };
-		this.endObj = { time: this.endTime };
-		this.shopIds = shopIds;
-		if (this.selectShopList.length == 0) {
-			this.$store.commit('setWin', {
-				title: '操作提示',
-				content: '没有可选店铺'
-			});
-			return;
-		}
-		this.init();
-		document.onclick = () => {
-			this.shopListBtn = false;
-		};
-		sessionStorage.removeItem('brandorderDetial');
-		sessionStorage.removeItem('orderBrand');
 	},
 	components: {
 		calendar: () =>
@@ -793,7 +842,9 @@ export default {
 		detailsDes: () =>
 			import(/*webpackChunkName: "details_des"*/ 'src/components/details_des'),
 		pageElement: () =>
-			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element')
+			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+		elShopList: () =>
+			import(/*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList')
 	}
 };
 </script>

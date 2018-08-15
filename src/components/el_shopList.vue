@@ -5,19 +5,14 @@
  */
 <template>
 	<div id="elShop">
-		<el-popover
-			placement="bottom"
-			width="500"
-			trigger="click"
-			@show="show"
-			v-model="visible">
+		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible">
 			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
-				<span v-if="selShop.length == 0" style="color:#c0c4cc">
+				<span v-if="shopIds.length == 0" style="color:#c0c4cc">
 					<i class="name">{{title}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 				<span v-else>
-					<i class="name">已选择{{selShop.length}}家门店</i>
+					<i class="name">已选择{{shopIds.length}}家门店</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 			</span>
@@ -42,7 +37,9 @@
 							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
 						</div>
 						<el-tab-pane label="全部" name="first">
-							<el-checkbox v-if="(item.storeAreaId == areaList.flag) || areaList.flag == -1" v-for="(item,index) in showShopList" :key="index" v-model="item.selected" :label="item.shopName" border size="medium"></el-checkbox>
+							<el-checkbox v-if="(item.storeAreaId == areaList.flag) || areaList.flag == -1" v-for="(item,index) in showShopList"
+										 :key="index" v-model="item.selected" :label="item.shopName" border size="medium">
+							</el-checkbox>
 						</el-tab-pane>
 						<el-tab-pane label="直营店" name="second">
 							<el-checkbox v-if="item.ischain == 1 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index" v-model="item.selected" :label="item.shopName" border size="medium"></el-checkbox>
@@ -85,76 +82,94 @@ export default {
 			index: 1,
 			shopName: '', //搜索店铺名
 			visible: false,
-			selShop: [], //选中的店铺id集合
+//			selShop: [], //选中的店铺id集合
 		};
 	},
 	props: ['shopIds'],
 	created(){
-		this.selShop = this.shopIds;
-	},
-	mounted(){
+//		this.selShop = this.shopIds;
 		this.storeareaGetAllArea();
 	},
-	watch: {
-		visible: function(){
-			if(this.visible){
-				this.selShop = this.shopIds;
-				let res = this.showShopList;
-				for (let i = 0; i < res.length; i++) {
-					for(let j = 0; j < this.shopIds.length; j++){
-						if(this.shopIds[j] == res[i].id){
-							res[i].selected = true;
-						}else{
-							res[i].selected = false;
-						}
-					}
-				}
+//	watch: {
+//		visible: function(){
+//			if(this.visible){
+//				this.selShop = this.shopIds;
+//				let res = this.showShopList;
+//				for (let i = 0; i < res.length; i++) {
+//					for(let j = 0; j < this.shopIds.length; j++){
+//						if(this.shopIds[j] == res[i].id){
+//							res[i].selected = true;
+//						}else{
+//							res[i].selected = false;
+//						}
+//					}
+//				}
+//			}
+//		}
+//	},
+	watch:{
+		'shopIds':{
+			deep:true,
+			handler: function () {
+				this.init(false);
 			}
 		}
 	},
 	methods: {
 		//获取店铺列表
 		init(type) {
+			console.log(this.shopIds);
 			let res = storage.session('shopList');
+			console.log(res);
+
 			let index = 0;
 			for (let i = 0; i < res.length; i++) {
 				this.$set(res[i], 'selected', false);
-				for(let j = 0; j < this.shopIds.length; j++){
-					if(this.shopIds[j] == res[i].id){
-						res[i].selected = true;
-					}else{
-						res[i].selected = false;
-					}
+				if(this.shopIds.includes(res[i].id)){
+					res[i].selected = true;
 				}
+//				for(let j = 0; j < this.shopIds.length; j++){
+//					if(this.shopIds[j] == res[i].id){
+//						res[i].selected = true;
+//					}else{
+//						res[i].selected = false;
+//					}
+//				}
 				if(res[i].storeAreaId === 0){
 					index++;
 				}
 			}
-			if(index != 0 && type){
+			if(index!=0&&type){
 				this.areaList.list.push({id: 0,name: '无区域'});
 			}
-			this.showShopList = res;
+			this.showShopList = utils.deepCopy(res);
 			this.shopList = utils.deepCopy(res);
+
+			console.log(this.showShopList)
 		},
 		async storeareaGetAllArea(){
 			let res = await http.storeareaGetAllArea();
 			if(res.length > 0){
 				res.unshift({name: '全部', id: '-1'});
 				this.areaList.list = res;
-				this.init('area');
+				this.init(true);
 			}else{
-				this.init();
+				this.init(false);
 			}
 		},
 		changeArea(res){
+			console.log(res);
 			if(res == '全部') {
 				this.areaList.flag = '-1';
 			}
 			this.areaList.list.forEach(e => {
+				console.log(e);
 				if(e.name == res){
 					this.areaList.flag = e.id;
 				}
 			});
+
+			console.log(this.showShopList);
 		},
 		slideLeft(){
 			if (this.contentWidth > 400) {
@@ -198,7 +213,6 @@ export default {
 		},
 		//选择全部
 		selectAll(){
-			console.log('jjjjjj');
 			this.selCommon(true);
 		},
 		//取消全部
@@ -243,11 +257,13 @@ export default {
 					shopIds.push(this.showShopList[i].id);
 				}
 			}
-			this.selShop = shopIds;
+//			this.selShop = shopIds;
 			this.$emit('chooseShop',shopIds);
 		},
 		cancel(){
 			this.visible = false;
+			//取消之后，再次打开弹窗恢复初始状态
+			this.init(false);
 		}
 	}
 }
