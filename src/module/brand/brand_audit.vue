@@ -647,20 +647,10 @@ export default {
 				this.leftWidth = 0;
 				this.areaIndex2 = 0;
 			}
-			console.log(this.leftWidth);
 		},
 		changeArea(res){
-			// console.log(this.areaIndex);
-			// if(res == '全部') {
-			// 	this.newAreaList.flag = '-1';
-			// }
-			// this.newAreaList.forEach(e => {
-			// 	if(e.name == res){
-			// 		this.newAreaList.flag = e.id;
-			// 	}
-			// });
 			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
-			console.log(this.shopIds);
+			// console.log(this.shopIds);
 			this.openBrandDeail(this.shopsIn,this.isJoinShop);
 		},
 		async storeareaGetAllArea(shopId){
@@ -711,8 +701,6 @@ export default {
 				res.unshift({name: '全部', areaShopIds: shopIds});
 				res.push({id: 0,name: '无区域', areaShopIds: noArea});
 				// console.log(noArea);
-			}else{
-				// this.init();
 			}
 			this.newAreaList = res;
 			if(this.newAreaList.length > 0){
@@ -817,7 +805,6 @@ export default {
 							obj.areaTag.splice(0, 1);
 						}
 					}
-					console.log(this.shopIds);
 					if(this.areaIndex == 0){
 					// 	continue;
 					}else{

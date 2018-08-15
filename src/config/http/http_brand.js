@@ -102,7 +102,7 @@ export default {
         method: "get"
     },
     "storeareaGetAllArea": { //获取品牌下门店区域列表
-        url: s + "Storearea/getAllArea",
+        url: s + "Entry/getAllArea",
         method: "get"
     },
 }
