@@ -21,7 +21,8 @@
 					<span>按营业时间</span>
 				</div>
 				<div class="block">
-					<selectStore @emit="getDrop" :sorts="shopList" :tipName="dropName"></selectStore>
+					<!--<selectStore @emit="getDrop" :sorts="shopList" :tipName="dropName"></selectStore>-->
+					<elShopList @chooseShop="getDrop" :shopIds="shopList"></elShopList>
 				</div>
 				<!-- <div class="block">
 					<selectBtn @emit="getType" :sorts="accountTypeList" :width="150"></selectBtn>
@@ -32,7 +33,7 @@
 				</div>
 				<div class="shops">
 					<i>已选择店铺：</i>
-					<span v-for="(item,index) in shopList" :key="index" v-if="item.selected">{{item.name}}，</span>
+					<span v-for="(item,index) in shopNameB" :key="index">{{item.name}}，</span>
 				</div>
 			</div>
 			<div v-if="!loadShow" class="main">
@@ -104,13 +105,16 @@ export default {
 			timer: null,
 			shopName: '',
 			sId: '', //传入单店
+
+			shopNameB:[],//已选择的店铺名称
 		};
 	},
 	components:{
 		calendar: () => import(/*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
 		selectStore: () => import(/*webpackChunkName: "select_store"*/ 'src/components/select_store'),
 		selectBtn: () => import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
-		orderBill: () => import(/*webpackChunkName: "order_bill_list"*/ './order_bill_list')
+		orderBill: () => import(/*webpackChunkName: "order_bill_list"*/ './order_bill_list'),
+		elShopList: () =>import(/*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList')
 	},
 	created() {
 		this.userData = storage.session('userShop');
@@ -140,7 +144,14 @@ export default {
 			//店铺默认全部选中
 			this.userShopList[i].selected = true;
 		}
-		this.shopList = this.userShopList; //店铺列表
+
+
+		this.shopNameB=utils.deepCopy(this.userShopList);
+		this.shopList = this.userShopList.map((v)=>{
+			return v.id
+		});
+
+
 		this.storeName =
 			this.userShopList.length > 0
 				? this.userShopList[0].name
@@ -167,19 +178,32 @@ export default {
 		timeCheck(){
 			this.isOpenTime == 1 ? this.isOpenTime = 0 : this.isOpenTime = 1;
 		},
-		getDrop(res){//获取选中的店铺id
-			this.shopList = res;
-			let shopIds = [];
-			res.forEach(item => {
-				if(item.selected){
-					shopIds.push(item.id);
+//		getDrop(res){//获取选中的店铺id
+//			this.shopList = res;
+//			let shopIds = [];
+//			res.forEach(item => {
+//				if(item.selected){
+//					shopIds.push(item.id);
+//				}
+//			});
+//			this.shopIds = shopIds.join(',');
+//		},
+		//选店返回
+		getDrop(arr) {
+			console.log(arr);
+			this.shopList = arr;
+			this.shopIds = this.shopList.join(',');
+			this.shopNameB=utils.deepCopy(this.userShopList);
+			for(let i=0;i<this.shopNameB.length;i++){
+				if(!this.shopList.includes(this.shopNameB[i].id)){
+					this.shopNameB.splice(i,1);
+					i--
 				}
-			});
-			this.shopIds = shopIds.join(',');
+			}
+			console.log(this.shopNameB);
 		},
-		// getType(res){//获取挂账类型
-		// 	this.operateTime = res;
-		// },
+
+
 		getTimeType(res){ //获取挂账时间类型
 			this.operateTime = res;
 		},
@@ -197,14 +221,20 @@ export default {
 			this.timeTypeList =['挂账时间','结算时间'];
 			this.startTime = '';
 			this.endTime = '';
-			let list = utils.deepCopy(this.shopList);
-			let shopIds = [];
-			list.forEach(item => {
-				item.selected = true;
-				shopIds.push(item.id);
+//			let list = utils.deepCopy(this.shopList);
+//			let shopIds = [];
+//			list.forEach(item => {
+//				item.selected = true;
+//				shopIds.push(item.id);
+//			});
+//			this.shopList = list;
+//			this.shopIds = shopIds.join(',');
+
+			this.shopList=this.userShopList.map((v)=>{
+				return v.id;
 			});
-			this.shopList = list;
-			this.shopIds = shopIds.join(',');
+			this.shopIds=this.shopList.join(',');
+			this.shopNameB=utils.deepCopy(this.userShopList);
 		},
 		getReturn(){
 			this.brand = true;

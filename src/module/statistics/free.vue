@@ -48,7 +48,8 @@
 					<div class="block">
 						<!--选择店铺按钮-->
 						<div class="search-box" v-if="isBrand && showStep == 1">
-							<select-store @emit="getDrop" :sorts="shopList" :tipName="dropName"></select-store>
+							<!--<select-store @emit="getDrop" :sorts="shopList" :tipName="dropName"></select-store>-->
+							<elShopList @chooseShop="getDrop" :shopIds="shopList"></elShopList>
 						</div>
 						<!--搜索 重置-->
 						<div class="search-box" v-if="showStep != 2">
@@ -59,7 +60,7 @@
 					<!--显示已选中的店铺-->
 					<div class="store-show" v-if="isBrand && showStep == 1 || showStep == 2">
 						<i>已选择店铺：</i>
-						<span v-for="(item,index) in shopList" :key="index" :data-id="item.id" v-if="item.selected">{{item.name}}，</span>
+						<span v-for="(item,index) in shopNameB" :key="index">{{item.name}}，</span>
 						<span class="time-span" v-if="showStep == 2">{{formatTime(timeObj.startTime)}} ~ {{formatTime(timeObj.endTime)}}</span>
 					</div>
 				</template>
@@ -127,7 +128,8 @@ export default {
 			taskId: '', //传给后台请求数据的一个字段
 			timerId: '', //计时器id
 			loading: false, //加载动画
-			dropName: '请选择店铺'
+			dropName: '请选择店铺',
+			shopNameB:[],//已选择的店铺名称
 		};
 	},
 	watch: {
@@ -143,7 +145,9 @@ export default {
 		freeStore: () =>
 			import(/*webpackChunkName: "free_store"*/ './free_store'),
 		selectStore: () =>
-			import(/*webpackChunkName: "select_store"*/ 'src/components/select_store')
+			import(/*webpackChunkName: "select_store"*/ 'src/components/select_store'),
+		elShopList: () =>
+			import(/*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList')
 	},
 	created() {
 		this.userData = storage.session('userShop');
@@ -171,7 +175,14 @@ export default {
 			//店铺默认全部选中
 			this.userShopList[i].selected = true;
 		}
-		this.shopList = this.userShopList; //店铺列表
+
+
+		this.shopNameB=utils.deepCopy(this.userShopList);
+		this.shopList = this.userShopList.map((v)=>{
+			return v.id
+		});
+
+
 		this.storeName =
 			this.userShopList.length > 0
 				? this.userShopList[0].name
@@ -518,18 +529,33 @@ export default {
 		setIsOneStore(selectNum) {
 			this.isOneStore = selectNum == 1 ? true : false; //判断是否只选择一家店铺 == 1 ? true : false; //判断是否只选择一家店铺
 		},
+//		getDrop(arr) {
+//			this.shopList = arr;
+//			let idArr = [],
+//				selectNum = 0;
+//			this.shopList.forEach((item) => {
+//				if (item.selected == true) {
+//					idArr.push(item.id);
+//					selectNum++;
+//				}
+//			});
+//			this.shopIds = idArr.join(',');
+//			this.setIsOneStore(selectNum);
+//		},
+		//选店返回
 		getDrop(arr) {
+			console.log(arr);
 			this.shopList = arr;
-			let idArr = [],
-				selectNum = 0;
-			this.shopList.forEach((item) => {
-				if (item.selected == true) {
-					idArr.push(item.id);
-					selectNum++;
+			this.shopIds = this.shopList.join(',');
+			this.setIsOneStore(this.shopList.length);
+			this.shopNameB=utils.deepCopy(this.userShopList);
+			for(let i=0;i<this.shopNameB.length;i++){
+				if(!this.shopList.includes(this.shopNameB[i].id)){
+					this.shopNameB.splice(i,1);
+					i--
 				}
-			});
-			this.shopIds = idArr.join(',');
-			this.setIsOneStore(selectNum);
+			}
+			console.log(this.shopNameB);
 		},
 		searchOrder() {
 			//根据订单号搜索 进入订单详情
@@ -589,14 +615,17 @@ export default {
 				this.timeObj.startTime = current;
 				this.timeObj.endTime = current;
 				if (this.isBrand) {
-					let list = utils.deepCopy(this.shopList);
-					let idArr = [];
-					list.forEach(item => {
-						item.selected = true;
-						idArr.push(item.id);
+//					let list = utils.deepCopy(this.shopList);
+//					let idArr = [];
+//					list.forEach(item => {
+//						item.selected = true;
+//						idArr.push(item.id);
+//					});
+					this.shopList=this.userShopList.map((v)=>{
+						return v.id;
 					});
-					this.shopList = list;
-					this.shopIds = idArr.join(',');
+					this.shopIds=this.shopList.join(',');
+					this.shopNameB=utils.deepCopy(this.userShopList);
 					this.setIsOneStore(this.shopList.length);
 				}
 				this.search();

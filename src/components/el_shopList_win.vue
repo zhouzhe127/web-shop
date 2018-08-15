@@ -68,11 +68,13 @@ export default {
 			leftWidth: 0,
 			index: 1,
 			shopName: '', //搜索店铺名
+
+			allShop:[],//通过接口获取的所有门店
 		}
 	},
 	props: ['shopIds'],
 	mounted(){
-		this.storeareaGetAllArea();
+		this.getShopList();
 		console.log(this.shopIds);
 	},
 	components: {
@@ -89,8 +91,14 @@ export default {
 			this.$emit('chooseShop',res,shopIds);
 		},
 		//获取店铺列表
+		async getShopList(){
+			this.allShop=await http.getShopList({
+				data:{}
+			});
+			this.storeareaGetAllArea();
+		},
 		init(type) {
-			let res = storage.session('shopList');
+			let res=utils.deepCopy(this.allShop);
 			let index = 0;
 			for (let i = 0; i < res.length; i++) {
 				this.$set(res[i], 'selected', false);
@@ -104,7 +112,7 @@ export default {
 			if(index != 0 && type){
 				this.areaList.list.push({id: 0,name: '无区域'});
 			}
-			this.showShopList = res;
+			this.showShopList = utils.deepCopy(res);
 			this.shopList = utils.deepCopy(res);
 		},
 		async storeareaGetAllArea(){

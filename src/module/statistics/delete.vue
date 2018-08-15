@@ -171,15 +171,16 @@ export default {
 			//店铺默认全部选中
 			item.selected = true;
 		}
+
+
 		console.log(this.userShopList);
-
 		this.shopNameB=utils.deepCopy(this.userShopList);
-
-
 		this.shopList = this.userShopList.map((v)=>{
 			return v.id
 		});
 		console.log(this.shopList);
+
+
 		this.storeName =
 			this.userShopList.length > 0
 				? this.userShopList[0].name
