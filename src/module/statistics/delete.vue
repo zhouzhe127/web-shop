@@ -172,13 +172,14 @@ export default {
 			item.selected = true;
 		}
 
-
-		console.log(this.userShopList);
-		this.shopNameB=utils.deepCopy(this.userShopList);
-		this.shopList = this.userShopList.map((v)=>{
-			return v.id
-		});
-		console.log(this.shopList);
+		if (this.isBrand) {
+			console.log(this.userShopList);
+			this.shopNameB = utils.deepCopy(this.userShopList);
+			this.shopList = this.userShopList.map((v) => {
+				return v.id
+			});
+			console.log(this.shopList);
+		}
 
 
 		this.storeName =

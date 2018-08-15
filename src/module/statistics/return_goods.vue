@@ -177,18 +177,17 @@ export default {
 		this.brandId = this.userData.currentShop.id; //品牌id,单店下用不到这个字段
 		this.shopId = this.userData.currentShop.id; //单店id;用于单店查询 和 品牌下多店铺查询
 		this.shopIds = this.userShopIdStr;
-
-
 		for (let i in this.userShopList) {
 			//店铺默认全部选中
 			this.userShopList[i].selected = true;
 		}
-		this.shopNameB=utils.deepCopy(this.userShopList);
 
-
-		this.shopList = this.userShopList.map((v)=>{
-			return v.id
-		});
+		if(this.isBrand){
+			this.shopNameB=utils.deepCopy(this.userShopList);
+			this.shopList = this.userShopList.map((v)=>{
+				return v.id
+			});
+		}
 
 
 		this.storeName =
