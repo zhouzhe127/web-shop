@@ -650,7 +650,6 @@ export default {
 		},
 		changeArea(res){
 			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
-			// console.log(this.shopIds);
 			this.openBrandDeail(this.shopsIn,this.isJoinShop);
 		},
 		async storeareaGetAllArea(shopId){
