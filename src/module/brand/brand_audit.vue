@@ -762,7 +762,6 @@ export default {
 							obj.areaTag.splice(0, 1);
 						}
 					}
-					// console.log(this.shopIds);
 					if(this.areaIndex == 0){
 					// 	continue;
 					}else{
