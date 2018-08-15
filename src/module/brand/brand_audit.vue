@@ -654,7 +654,7 @@ export default {
 			this.openBrandDeail(this.shopsIn,this.isJoinShop);
 		},
 		async storeareaGetAllArea(shopId){
-			let res = await http.storeareaGetAllArea({
+			let res = await http.getAllArea({
 				data: {
 						shopId: shopId,
 					}});
@@ -805,7 +805,7 @@ export default {
 						}
 					}
 					if(this.areaIndex == 0){
-						
+
 					}else{
 						if(this.shopIds.indexOf(obj.id)==-1 ){
 							continue;
