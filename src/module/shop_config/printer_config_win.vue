@@ -16,7 +16,7 @@
 						<el-form-item label="单据数据"  required>
 							<el-radio-group v-model="orderTypeIndex">
 								<div style="margin-bottom:2px;">
-									<el-radio class="labItem" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
+									<el-radio class="labItem" @change="changeIndex(i)" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
 								</div>
 							</el-radio-group>
 						</el-form-item>
@@ -396,7 +396,8 @@ export default {
 			} else if (
 				this.orderTypeIndex == 9 ||
 				this.orderTypeIndex == 2 ||
-				this.orderTypeIndex == 19
+				this.orderTypeIndex == 19 ||
+				this.orderTypeIndex == 22
 			) {
 				this.status = '4';
 			} else if (this.orderTypeIndex == 3 || this.orderTypeIndex == 11) {
@@ -479,8 +480,11 @@ export default {
 			} else if (this.printDetial.orderType == '24') {
 				//扫码支付对账单
 				this.orderTypeIndex = 21;
+			}else if (this.printDetial.orderType == '25') {
+				//扫码支付对账单
+				this.orderTypeIndex = 22;
 			}
-			// console.log(this.orderTypeIndex);
+			console.log(this.orderTypeIndex);
 			this.isWait = this.printDetial.isPrintWait == 1 ? true : false; //是否开启等叫打印单
 			this.orderName = this.docType[this.orderTypeIndex].name;
 			this.footerContent = this.printDetial.footerContent;
@@ -582,7 +586,7 @@ export default {
 						});
 						return false;
 					}
-				} else if (this.orderType == 9 || this.orderType == 2 ||this.orderType == 22) {
+				} else if (this.orderType == 9 || this.orderType == 2 ||this.orderType == 22 || this.orderType == 25) {
 					if (
 						this.goodsIds.length == 0 &&
 						this.goodsIds == '' &&

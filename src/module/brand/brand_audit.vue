@@ -221,7 +221,7 @@
 					</section> -->
 					<!--加盟店明细-->
 					<section v-if='isJoinShop' style="width:100%;height:100%;">
-						<div class="area" v-if="newAreaList.length > 0" style="position:relative;">
+						<div class="area" ref="contentBox" v-if="newAreaList.length > 0" style="position:relative;">
 							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
 							<div class="areabox">
 								<div class="box" ref="content" :style="{left: leftWidth +'px'}">
@@ -441,6 +441,7 @@ export default {
 			nowShopId:'',//当前显示的品牌id
 			areaIndex2:0,
 			contentWidth:'',
+			contentBoxWidth:''
 			
 		};
 	},
@@ -621,10 +622,11 @@ export default {
 			});
 		},
 		slideLeft(){
-			if (this.contentWidth > 400) {
-				this.leftWidth = this.index++ * -200;
-				if (this.leftWidth * -1 + 400 >= this.contentWidth) {
-					this.leftWidth = -(this.contentWidth - 400);
+			if (this.contentWidth > this.contentBoxWidth) {
+				this.areaIndex2++;
+				this.leftWidth = this.areaIndex2 * -200;
+				if (this.leftWidth * -1 + this.contentBoxWidth >= this.contentWidth) {
+					this.leftWidth = -(this.contentWidth - this.contentBoxWidth+60);
 					return false;
 				}
 			}
@@ -635,10 +637,10 @@ export default {
 				return false;
 			}
 			this.leftWidth = this.leftWidth + 200;
-			this.index--;
+			this.areaIndex2--;
 			if (this.leftWidth >= 0) {
 				this.leftWidth = 0;
-				this.index = 1;
+				this.areaIndex2 = 0;
 			}
 			console.log(this.leftWidth);
 		},
@@ -697,6 +699,8 @@ export default {
 			if(this.newAreaList.length > 0){
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
+					this.contentBoxWidth = this.$refs.contentBox.clientWidth;
+					
 				});
 			}
 			// this.openBrandDeail(this.shopsIn,this.isJoinShop);
