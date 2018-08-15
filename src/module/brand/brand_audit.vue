@@ -158,7 +158,12 @@
 					<section class="top_section">
 						<h3 class="top_h3">{{isJoinShop?'所有加盟店明细':'所有直营店明细'}}</h3>
 						<a v-on:click="returnList" href="javascript:void(0);">返回</a>
-						<input type="text" maxlength="30" class="input fr" v-model="searchName" placeholder="请输入需要检索的店铺名称">
+						<section style="width:210px;float:right;margin-right:20px;">
+							<el-input placeholder="请输入店铺名称" v-model="searchName" clearable class="input-with-select" >
+								<el-button slot="append" icon="el-icon-search" @click="newSearchName"></el-button>
+							</el-input>
+						</section>
+						<!-- <input type="text" maxlength="30" class="input fr" v-model="searchName" placeholder="请输入需要检索的店铺名称"> -->
 					</section>
 					<!-- <section style="width:100%;height:100%;">
 						<div class="area" v-if="areaList.length > 0">
@@ -642,20 +647,11 @@ export default {
 				this.leftWidth = 0;
 				this.areaIndex2 = 0;
 			}
-			console.log(this.leftWidth);
+			// console.log(this.leftWidth);
 		},
 		changeArea(res){
-			// console.log(this.areaIndex);
-			// if(res == '全部') {
-			// 	this.newAreaList.flag = '-1';
-			// }
-			// this.newAreaList.forEach(e => {
-			// 	if(e.name == res){
-			// 		this.newAreaList.flag = e.id;
-			// 	}
-			// });
 			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
-			console.log(this.shopIds);
+			// console.log(this.shopIds);
 			this.openBrandDeail(this.shopsIn,this.isJoinShop);
 		},
 		async storeareaGetAllArea(shopId){
@@ -667,8 +663,21 @@ export default {
 				let str = '';
 				for(let i=0;i<res.length;i++){
 					str +=res[i].areaShopIds+',';
+					let isEmpty = false;
+					let shids =  res[i].areaShopIds;
+					for(let j=0;j<this.shopList.length;j++){
+						if(shids.indexOf(this.shopList[j].id) >=0){
+							isEmpty = true;
+							break;
+						}
+					}
+					if(!isEmpty){
+						res.splice(i,1);
+						i--;
+					}
+
 				}
-				let shopIds = '';
+				let shopIds = '';//全部的ids
 				for(let j=0;j<this.shopsIn.direct.length;j++){
 					shopIds+=this.shopsIn.direct[j].id+",";
 				}
@@ -677,6 +686,7 @@ export default {
 				}
 				let newstr = str.split(',');
 				let newshopIds = shopIds.split(',');
+				//根据区域筛选
 				for(let i=0;i<newstr.length;i++){
 					for(let j=0;j<newshopIds.length;j++){
 						if(newstr[i]==newshopIds[j]){
@@ -685,7 +695,7 @@ export default {
 						}
 					}
 				}
-				let noArea = '';
+				let noArea = '';//无区域的shopids
 				for(let i=0;i<newshopIds.length;i++){
 					noArea +=  newshopIds[i]+',';
 				}
@@ -710,11 +720,11 @@ export default {
 			// this.shopIds = '';
 			// this.areaIndex = '0';
 			// console.log(item);
-			// if(bool){
-			// 	this.shopList = item.franchise;
-			// }else{
-			// 	this.shopList = item.direct;
-			// }
+			if(bool){
+				this.shopList = item.franchise;
+			}else{
+				this.shopList = item.direct;
+			}
 			this.nowShopId = item.id;
 			this.isBranDeail = true;
 			this.isJoinShop = bool;
@@ -798,7 +808,7 @@ export default {
 							obj.areaTag.splice(0, 1);
 						}
 					}
-					console.log(this.shopIds);
+					// console.log(this.shopIds);
 					if(this.areaIndex == 0){
 					// 	continue;
 					}else{
