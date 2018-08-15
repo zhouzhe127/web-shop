@@ -1,6 +1,7 @@
 /* * @file * *
 新建员工
-* * @author zhengu.jiang */
+* * @author zhengu.jiang
+*/
 <template>
 	<div>
 		<win @winEvent="getWin" :align="'right'" :width="780" :height="520" :ok="okStyle" style="background: red">

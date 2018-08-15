@@ -1,6 +1,7 @@
 /* * @file * *
 选择品牌/门店职位弹窗
-* * @author zhengu.jiang */
+* * @author zhengu.jiang
+*/
 <template>
 	<div>
 		<win @winEvent="getWin" :align="'center'" :width="700" :height="400" :ok="okStyle">

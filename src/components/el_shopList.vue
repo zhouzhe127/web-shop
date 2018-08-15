@@ -1,10 +1,8 @@
 /**
  * @Author: zhengu.jiang
- * @Date: 2018-08-13 11:04:36 
- * @Last Modified by: zhengu.jiang
+ *
  * @Module: 品牌下选择门店下拉
  */
-
 <template>
 	<div id="elShop">
 		<el-popover

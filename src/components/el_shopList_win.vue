@@ -1,8 +1,6 @@
 /**
  * @Author: zhengu.jiang 
- * @Date: 2018-08-13 11:29:22 
- * @Last Modified by: zhengu.jiang
- * @Last Modified time: 2018-08-13 13:44:45
+ *
  * @Module: 品牌下选择门店弹窗
  */
 
