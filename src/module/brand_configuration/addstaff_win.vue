@@ -1,7 +1,4 @@
-/* * @file * *
-新建员工
-* * @author zhengu.jiang
-*/
+/* * @file * * 新建员工 * * @author zhengu.jiang */
 <template>
 	<div>
 		<win @winEvent="getWin" :align="'right'" :width="780" :height="520" :ok="okStyle" style="background: red">
@@ -293,7 +290,6 @@
 			editInfo(type, info) {
 				this.isJob = true;
 				this.editJob = info;
-				console.log(type,info);
 				type == 'brand' ? this.type = 'brand' : this.type = 'shop';
 			},
 			del(type, index) {
