@@ -1,82 +1,68 @@
+/**
+ * @Author: zhigang.li 
+ * @Date: 2018-08-06 15:51:59 
+ * @Last Modified by: zhigang.li
+ * @Last Modified time: 2018-08-06 16:34:29
+ * @Module:  建立无品牌门店 --reset
+ */
 <template>
 	<div class="creatStores" v-cloak>
 		<div class="title">
 			<h3 class="titleName">建立门店</h3>
 			<h3 class="titleDashed"></h3>
 		</div>
-		<section class="oLeft">
-			<el-form :model="xx" :rules="rules" label-position="right" label-width="90px">
+		<el-form :model="formData" :rules="rules" label-position="right" label-width="110px">
+			<section class="oLeft">
 				<el-form-item label="店铺类型" required>
-					<el-radio-group v-model="index" required>
-						<el-radio-button  label="1">直营店</el-radio-button>
-						<el-radio-button  label="2">加盟店</el-radio-button>
-						<el-radio-button  label="0">无品牌</el-radio-button>
+					<el-radio-group v-model="formData.shopType" required>
+						<el-radio-button label="1">直营店</el-radio-button>
+						<el-radio-button label="2">加盟店</el-radio-button>
+						<el-radio-button label="0" v-if="!brandEntry">无品牌</el-radio-button>
 					</el-radio-group>
 				</el-form-item>
-				<el-form-item label="选择品牌" required>
-					<el-select v-model="brandId" placeholder="请选择">
-						<el-option v-for="item in areaList1" :key="item.id" :label="item.name" :value="item.id">
+				<el-form-item label="选择品牌" :required="formData.shopType!=0 &&brandList &&brandList.length>0">
+					<el-select v-model="formData.selectBrandName" placeholder="请选择" :disabled="formData.shopType == 0|| !brandList ||brandList.length==0">
+						<el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id" >
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="店铺名称"  prop="yy">
-					<el-input
-						placeholder="请输入内容"
-						v-model="xx.yy"
-						clearable>
+				<el-form-item label="店铺名称" prop="shopName">
+					<el-input placeholder="请输入内容" v-model="formData.shopName" clearable>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="行业分类" required>
-						<el-radio-group v-model="typeIndex">
-							<el-radio label="0" border>餐饮</el-radio>
-							<el-radio label="1" border>零售</el-radio>
-						</el-radio-group>
+					<el-radio-group v-model="formData.typeIndex">
+						<el-radio label="0" border>餐饮</el-radio>
+						<el-radio label="1" border>零售</el-radio>
+					</el-radio-group>
 				</el-form-item>
 				<el-form-item label="店铺地址" required>
-					<el-input
-						placeholder="请输入内容"
-						v-model="createShopAddress"
-						clearable>
+					<el-input placeholder="请输入内容" v-model="formData.shopAddress" clearable>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="标签">
-					<el-input placeholder="请输入内容" v-model="labelName" class="input-add-tag">
+					<el-input placeholder="请输入内容" v-model="formData.labelName" class="input-add-tag">
 						<el-button slot="append" icon="el-icon-check" @click="addlabel"></el-button>
 					</el-input>
 					<el-tag type="success" v-for="(v,i) in labelNameList" :key="i" style="margin-left:10px" closable>{{v}}</el-tag>
 					<div v-if="!isNobrand">
 						<el-checkbox v-model="v.select" :label="v.name" border size="medium" v-for="(v,i) in tagList" :key="i"></el-checkbox>
 					</div>
-					<el-alert class="sd-alert" v-if="labelNameList.length>=3"
-						title="最多添加三个标签"
-						type="warning"
-						center
-						show-icon>
+					<el-alert class="sd-alert" v-if="labelNameList.length>=3" title="最多添加三个标签" type="warning" center show-icon>
 					</el-alert>
 				</el-form-item>
-			</el-form>
-		</section>
-		<section class="oLeft">
-			<el-form :rules="rules" label-position="right" label-width="110px">
+			</section>
+			<section class="oLeft">
 				<el-form-item label="店铺负责人">
-					<el-input
-						placeholder="请输入店铺负责人"
-						v-model="creatShopPeople"
-						clearable>
+					<el-input placeholder="请输入店铺负责人" v-model="formData.createrName" clearable>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="联系方式">
-					<el-input
-						placeholder="请输入店铺联系方式"
-						v-model="creatShopPhone"
-						clearable>
+					<el-input placeholder="请输入店铺联系方式" v-model="formData.createrPhone" clearable>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="营业执照编号">
-					<el-input
-						placeholder="请输入营业执照号"
-						v-model="businessLicenseNum"
-						clearable>
+					<el-input placeholder="请输入营业执照号" v-model="formData.businessLicenseNum" clearable>
 					</el-input>
 				</el-form-item>
 				<el-form-item label="上传营业执照">
@@ -92,11 +78,11 @@
 									<span> )</span>
 								</div>
 							</section>
-						</form>		
+						</form>
 					</form>
 				</el-form-item>
-				<el-form-item label="卫生许可证" v-if="typeIndex == 0">
-					<form v-show="typeIndex == 0" class="fr" style="width: 100%;" id="imageUpForm2" enctype="multipart/form-data">
+				<el-form-item label="卫生许可证" v-if="formData.typeIndex === 0">
+					<form v-show="formData.typeIndex === 0" class="fr" style="width: 100%;" id="imageUpForm2" enctype="multipart/form-data">
 						<section class="obox" style="position: relative;">
 							<el-button type="success">立刻上传</el-button>
 							<input type="file" @change="imgUpload2" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" style="cursor: pointer;display: block;position: absolute;left: 110px;top:-5px;width:120px;height:40px; opacity: 0;background:red;" />
@@ -109,21 +95,17 @@
 					</form>
 				</el-form-item>
 				<el-form-item label="详细介绍">
-					<el-input
-						type="textarea"
-						:autosize="{ minRows: 2, maxRows: 4}"
-						placeholder="请输入内容"
-						v-model="description">
+					<el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容" v-model="formData.description">
 					</el-input>
 				</el-form-item>
-			</el-form>
-		</section>
-		<section style="width:100%;clear:both;">
-			<div class="footerSubmit">
-				<el-button @click="returnList" type="info">返回</el-button>
-				<el-button @click="creatStoresSubmit" type="primary">提交</el-button>
-			</div>
-		</section>
+			</section>
+			<section style="width:100%;clear:both;">
+				<div class="footerSubmit">
+					<el-button @click="returnList" type="info">返回</el-button>
+					<el-button @click="creatStoresSubmit" type="primary">提交</el-button>
+				</div>
+			</section>
+		</el-form>
 
 	</div>
 </template>
@@ -135,55 +117,20 @@ let userData = storage.session('userShop');
 export default {
 	data() {
 		return {
-			xx:{yy:''},
-			isNobrand: false, //如果选择无品牌时，遮罩起作用
-			iscrBrandDetial: false, //创建品牌门店是从哪方进入，默认false：无品牌时进入
-			selectBrandName: '', //创建门店时的选择品牌
-			allArea1: '请选择品牌', // 分类名所显示
-			areaBtn1: false, // 品牌列表点击显示隐藏
-			areaList1: storage.session('shopList'), // 品牌列表
-			createShopName: '', //创建的门店名
-			createShopAddress: '', //创建的门店地址
-			labelNameList: [], //创建的标签名列表
-			creatShopPeople: '', //新创建的店铺联系人
-			creatShopPhone: '', //新创建的店铺手机号
-			businessLicenseNum: '', //新创建的店铺的营业执照编号
-			businessLicenseimg: '', // 营业执照图片地址
-			healthLicense: '', // 营业执照图片地址
-			description: '', //新创建的店铺的营业执照图片地址
-			labelName: '', //创建标签名
-			index: 2, //店铺类型下标，默认单店
-			tagList: [],
-			indexList: [],
-			// list: [
-			// 	{
-			// 		id: 1,
-			// 		name: '直营店'
-			// 	},
-			// 	{
-			// 		id: 2,
-			// 		name: '加盟店'
-			// 	},
-			// 	{
-			// 		id: 0,
-			// 		name: '无品牌'
-			// 	}
-			// ],
-			typeList: [
-				{
-					type: 0,
-					name: '餐饮'
-				},
-				{
-					type: 1,
-					name: '零售'
-				}
-			],
-			typeIndex: -1, //行业分类下标
-			item: '',
-			imglogo1: '',
-			imglogo2: '',
-			brandId: null,
+			formData: { 
+				// 左
+				shopType: 2, // 店铺类型
+				selectBrandName: '', //创建门店时的选择品牌
+				shopName: '',
+				typeIndex: '', //行业分类下标 0 餐饮 1 零售
+				shopAddress: '', //创建的门店地址
+				labelName: '', //创建标签名
+				// 右
+				createrName: '', // 创建人 名称
+				createrPhone: '', // 创建人 手机号
+				businessLicenseNum: '', //新创建的店铺的营业执照编号
+				description: '', // 详细介绍
+			},
 			rules: {
 				shopType: [
 					{
@@ -192,30 +139,48 @@ export default {
 						trigger: 'change'
 					}
 				],
-				yy: [
-					{ required: true, message: '请输入店铺名称', trigger: 'blur' },
-					{ min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
+				shopName: [
+					{
+						required: true,
+						message: '请输入店铺名称',
+						trigger: 'blur'
+					},
+					{
+						min: 2,
+						max: 15,
+						message: '长度在 2 到 15 个字符',
+						trigger: 'blur'
+					}
 				]
-			}
+			},
+			brandList: storage.session('shopList'), // 品牌列表
+			// isNobrand: false, //如果选择无品牌时，遮罩起作用
+			// iscrBrandDetial: false, //创建品牌门店是从哪方进入，默认false：无品牌时进入
+			brandEntry: false, // 从无品牌进入
+			// areaBtn1: false, // 品牌列表点击显示隐藏
+			// createShopName: '', //创建的门店名
+			labelNameList: [], //创建的标签名列表
+			businessLicenseimg: '', // 营业执照 图片地址
+			healthLicense: '', // 卫生许可证 图片地址
+			// index: 2, //店铺类型下标，默认单店
+			tagList: [], // 品牌的标签列表
+			// indexList: [],
+			// item: '',
+			imglogo1: '',
+			imglogo2: '',
+			brandId: null,
 		};
 	},
+	computed: {
+		isNobrand() {
+			return this.formData.shopType == 2;
+		}
+	},
 	methods: {
-		//选择店铺类型点击
-		getVipRadio: function(index) {
-			if (index == 2) {
-				this.allArea1 = '不选择';
-				this.isNobrand = true;
-				this.labelNameList = [];
-			} else {
-				this.allArea1 = '请选择品牌';
-				this.isNobrand = false;
-			}
-			this.index = index;
-		},
 		//选择店铺业态点击
-		typeRadio: function(index) {
-			this.typeIndex = index;
-		},
+		// typeRadio: function(index) {
+		// 	this.typeIndex = index;
+		// },
 		lsitRadio: function(index) {
 			if (index) {
 				this.labelNameList = index;
@@ -256,10 +221,20 @@ export default {
 			this.healthLicense = e.target.value;
 			this.imglogo2 = data;
 		},
-		alert: function(title, con) {
-			this.$store.commit('setWin', {
-				title: title,
-				content: con
+		alert: function(title,content) {
+			// this.$store.commit('setWin', {
+				// 	title: title,
+			// 	content: con
+			// });
+			this.$alert(content, title, {
+				confirmButtonText: '确定',
+				// callback:
+			});
+		},
+		msg(type, con){
+			this.$message({
+				type,
+				message: con
 			});
 		},
 		//显示品牌列表
@@ -283,17 +258,14 @@ export default {
 		//增加标签按钮点击
 		addlabel: function() {
 			if (this.labelName.length > 5) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: '标签长度最长5位'
-				});
+				// this.$store.commit('setWin', {
+				// 	title: '操作提示',
+				// 	co ntent: '标签长度最长5位'				// });
+				this.msg('error','标签长度最长5位')
 				return false;
 			}
 			if (this.labelName == '') {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: '标签名不能为空'
-				});
+				this.msg('error','标签名不能为空')
 				return false;
 			}
 			let labelNum = this.labelNameList.length + 1;
@@ -355,29 +327,24 @@ export default {
 			if (
 				this.list[this.index].id != 0 &&
 				this.allArea1 == '请选择品牌' &&
-				!this.iscrBrandDetial
+				!this.brandEntry
 			) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: '请选择品牌！'
-				});
+				this.msg('warn','请选择品牌！')
+				// this.$store.commit('setWin', {
+					// 	title: '操作提示',
+				// 	content: '请选择品牌！'
+				// });
 				return false;
 			} else if (
 				this.list[this.index].id != 0 &&
 				this.selectBrandName == '' &&
-				this.iscrBrandDetial
+				this.brandEntry
 			) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: '1请选择品牌！'
-				});
+				this.msg('warn','请选择品牌！')
 				return false;
 			}
 			if (this.typeIndex < 0) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: '店铺行业分类不能为空！'
-				});
+				this.msg('warn','店铺行业分类不能为空！')
 				return false;
 			}
 
@@ -385,7 +352,7 @@ export default {
 				!global.checkData(
 					{
 						createShopName: '店铺名称不能为空！',
-						createShopAddress: '店铺地址不能为空！',
+						shopAddress: '店铺地址不能为空！',
 						creatShopPeople: '店铺负责人不能为空！',
 						creatShopPhone: {
 							reg: /^1[\d]{10,10}$/,
@@ -412,7 +379,7 @@ export default {
 					ischain: this.list[this.index].id, //店铺类型 0.单店 1.直营店 2.加盟店
 					brandId: this.list[this.index].id == 0 ? '' : this.brandId, //所属品牌id
 					shopName: this.createShopName, //新创建的店铺名
-					address: this.createShopAddress, //新创建的店铺地址
+					address: this.shopAddress, //新创建的店铺地址
 					areaTag: str, //新创建的店铺标签可以为空
 					contactMan: this.creatShopPeople, //新创建的店铺联系人
 					telephone: this.creatShopPhone, //新创建的店铺手机号
@@ -425,7 +392,7 @@ export default {
 			});
 			let obj = {
 				name: this.createShopName,
-				address: this.createShopAddress,
+				address: this.shopAddress,
 				telephone: this.creatShopPhone,
 				contactMan: this.creatShopPeople,
 				status: 1
@@ -458,23 +425,22 @@ export default {
 	},
 	mounted: function() {
 		storage.session('shopList', null);
-		if (storage.session('shopIn')) {
-			this.item = storage.session('shopIn');
-			this.iscrBrandDetial = true;
-			this.selectBrandName = this.item.name;
-			this.brandId = this.item.id;
+		let shopIn = storage.session('shopIn');
+		if (shopIn) {
+			this.brandEntry = true;
+			this.selectBrandName =shopIn.name;
+			this.brandId = shopIn.id;
 			this.index = 0;
-			this.list.pop();
 		}
 		this.getTagList();
 	}
 };
 </script>
 <style type="text/css" scoped>
-.sd-alert{
+.sd-alert {
 	height: 40px;
 }
-.footerSubmit{
+.footerSubmit {
 	width: 166px;
 	margin: 0 auto;
 }
