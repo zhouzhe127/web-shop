@@ -14,12 +14,8 @@
             <ul>
                 <li>
                     <span>配货方式：</span>
-                    <el-select v-model="value" placeholder="请选择">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                    <el-select v-model="allot" placeholder="请选择">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </li>
@@ -28,37 +24,122 @@
         <ul class="typeBox">
 			<li v-for="(item,index) in typeData" :class="{active:typeactive==index}" @click="typeBox(index)" :key="index">{{item}}</li>
 		</ul>
-        <component :is="'batchSupplies'"></component>
+        <component :is="showList" :proData="proData" v-if="proData.data"></component>
+        <add-store :pObj="comObj" v-if="addShow" @throwWin="throwWin"></add-store>
     </div>
 </template>
 <script>
+import http from 'src/manager/http';
 export default {
     data () {
         return {
             addShow:false,
             typeData: ['商品', '物料'],
-            
             typeactive:0,
             options: [{
-            value: '选项1',
-            label: '黄金糕'
-            }, {
-            value: '选项2',
-            label: '双皮奶'
+                value: 1,
+                label: '按申请单比例分配'
+                }, {
+                value: 2,
+                label: '按申请单平均分配'
+                }, {
+                value: 3,
+                label: '按需求分配（不足下次补充）'
+                }, {
+                value: 4,
+                label: '按需求分配（库存可为负）'
+                }, {
+                value: 5,
+                label: '优先按需分配，不足执行按比例分配'
+                }, {
+                value: 6,
+                label: '优先按需分配，不足执行按平均分配'
             }],
-            value: ''
+            allot: 5,
+            showList:'batchGoods',
+            goodsList:'',//商品数据
+            materialList:'',//物料数据
+            proData:{
+                data:''
+            }//给组件的数据
         };
     },
     methods: {
+        async init(){
+            let data = await http.invgetMultiApplicationMatchList({data:{
+
+            }});
+            this.goodsList = data.goodsList;
+            this.materialList = data.materialList;
+            this.typeBox(this.typeactive);
+            console.log(data);
+        },
         typeBox(index) {
             this.typeactive = index;
+            switch(index){
+                case 0:
+                    this.showList = 'batchGoods';
+                    this.proData.data = this.goodsList;
+                    break;
+                case 1:
+                    this.showList = 'batchSupplies';
+                    break;
+            }
         },
-        
+        throwWin(str, res) {
+            this.addShow = false;
+            if (str == 'ok') {
+                // if (res.id == this.detailData.wid) {
+                //     this.alert('出货仓库不能与入货仓库重复,请重新选择');
+                //     this.addShow = true;
+                // } else {
+                //     this.comObj.owner = res;
+                //     this.outWare = res;
+                //     this.init();
+                // }
+            }
+        },
+        async getWarehouse() {
+            //获取仓库列表
+            let data = await http.warehouseList();
+            let arr = [];
+            if (data) {
+                for (let item of data) {
+                    // let shopId = item.owner.split(',')[1];
+                    let obj = {
+                        id: item.id,
+                        name: item.name
+                        // shopId:this.ischain==3? item.brandId:item.shopId==0? item.brandId:item.shopId
+                    };
+                    if (item.shopId != 0) { //单店
+                        obj.ischain = 0;
+                        obj.shopId = item.shopId;
+                    } else { //品牌
+                        obj.ischain = 1;
+                        obj.shopId = item.brandId;
+                    }
+                    // if(Number(obj.shopId)===Number(this.shopId)){
+                    //   }
+                    arr.push(obj);
+                }
+                this.comObj = {
+                    allList: arr,
+                };
+            }
+        }
     },
-    // mounted(){},
+    mounted(){
+        this.init();
+        this.getWarehouse();
+    },
     components: {
         batchSupplies: () =>
-				import ( /*webpackChunkName: 'batch_supplies'*/ './batch_supplies'),
+                import ( /*webpackChunkName: 'batch_supplies'*/ './batch_supplies'),
+        batchGoods: () =>
+                import ( /*webpackChunkName: 'batch_goods'*/ './batch_goods'),     
+        addStore: () =>
+				import ( /*webpackChunkName:'choose_warehouse__win'*/
+					'src/module/invoicing_system/warehouse_manage/choose_warehouse_win'),           
     },
     // computed: {},
 }
@@ -130,7 +211,7 @@ export default {
             border-radius: 5px;
         }
         .active {
-            background-color: #5ebee8;
+            background-color: #E1BB4A;
             color: #ffffff;
         }
     }
