@@ -805,7 +805,7 @@ export default {
 						}
 					}
 					if(this.areaIndex == 0){
-					// 	continue;
+						
 					}else{
 						if(this.shopIds.indexOf(obj.id)==-1 ){
 							continue;
