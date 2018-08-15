@@ -1,5 +1,7 @@
 <!--废单统计-->
+
 <!--黄一帆-->
+
 <template>
 	<div class="delete">
 		<template v-if="!detailShow">

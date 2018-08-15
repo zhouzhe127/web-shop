@@ -1,4 +1,5 @@
 <template>
+
 	<div id="sta-ban" style="padding-top:20px;" v-cloak>
 		<div class="button">
 			<a href="javascript:void(0);" class="select">堂吃</a>
