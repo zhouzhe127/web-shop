@@ -4,7 +4,7 @@
  * @Module: 品牌下选择门店下拉
  */
 <template>
-	<div id="elShop">
+	<div id="elShop" >
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible">
 			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
 				<span v-if="isSingle" style="color:#c0c4cc">
@@ -115,10 +115,15 @@ export default {
 	/*
 	 shopIds选中的 商品id   eg:['12','23']
 	 isSingle是否单选   默认为false
-	 delShopId展示需要过滤的店铺id
+	 delShopId展示店铺id(过滤了部分的)
 	* */
 	created(){
 		this.getShopList();
+	},
+	mounted(){
+		document.onclick = () => {
+			this.init(false);
+		};
 	},
 	watch:{
 		'shopIds':{
@@ -131,9 +136,13 @@ export default {
 	methods: {
 		//获取店铺列表
 		async getShopList(){
-			this.allShop=await http.getShopList({
-				data:{}
-			});
+			if(this.isSingle){
+				this.allShop=this.delShopId
+			}else {
+				this.allShop=await http.getShopList({
+					data:{}
+				});
+			}
 			this.storeareaGetAllArea();
 		},
 		//获取所有区域
@@ -149,7 +158,7 @@ export default {
 		},
 		//处理数据
 		init(type) {
-			console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj');
+			console.log(this.shopIds);
 			this.title=this.shopIds.length>0?`已选择${this.shopIds.length}家门店`:'请选择店铺';
 			let res=utils.deepCopy(this.allShop);
 			let index = 0;
@@ -269,7 +278,7 @@ export default {
 		},
 		ensure(){
 			this.visible = false;
-			if(this.isSimple){//单选
+			if(this.isSingle){//单选
 				this.$emit('chooseShop',this.singleId);
 			}else {//多选
 				let shopIds = [];
