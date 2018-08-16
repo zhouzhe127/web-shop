@@ -22,7 +22,7 @@
 					<el-table-column label="序号" align="center" prop="index"></el-table-column>
 					<el-table-column label="出货仓库" align="center" prop="index"></el-table-column>
 					<el-table-column label="操作人" align="center" prop="index"></el-table-column>
-					<el-table-column label="申请时间" align="center" prop="index"></el-table-column>
+					<el-table-column label="操作时间" align="center" prop="index"></el-table-column>
 				</el-table>
 
 				<el-table :data="tableData" style="width: 100%" stripe v-if="tab == 2">
@@ -31,10 +31,10 @@
 							<span class="view-detail">查看详情</span>
 						</template>						
 					</el-table-column>
-					<el-table-column label="序号" align="center" prop="index"></el-table-column>
-					<el-table-column label="操作类型" align="center" prop="index"></el-table-column>
-					<el-table-column label="操作人" align="center" prop="index"></el-table-column>
-					<el-table-column label="申请时间" align="center" prop="index"></el-table-column>
+					<el-table-column label="序号" align="center" prop="itemIndex"></el-table-column>
+					<el-table-column label="操作类型" align="center" prop="type"></el-table-column>
+					<el-table-column label="操作人" align="center" prop="createUName"></el-table-column>
+					<el-table-column label="申请时间" align="center" prop="zh_createTime"></el-table-column>
 				</el-table>
 			</div>
         </div>
@@ -67,18 +67,13 @@ import utils from 'src/verdor/utils';
 export default {
 	data () {
 		return {
-			tableTitle:[],
-            tableData:[
-				{a:'操作',b:'1',c:'仓库一',d:'张飞',e:'2018-12-23'},
-				{a:'操作',b:'1',c:'仓库一',d:'张飞',e:'2018-12-23'},
-				{a:'操作',b:'1',c:'仓库一',d:'张飞',e:'2018-12-23'},
-				{a:'操作',b:'1',c:'仓库一',d:'张飞',e:'2018-12-23'},
-			],
+            tableData:[],
             tabList:[],             
 			pageObj:{
-				total:1000,				//总记录数
+				total:0,				//总记录数
 				pageSize:10,			//每页显示的记录数
 				pagerCount:11,			//每页显示的按钮数
+				currentPage:1,
 			},
 			logId:'',				//记录id
 		};
@@ -89,41 +84,17 @@ export default {
 			default:2		
 		}
 	},
-	mounted(){
-        this.initTabList();
-        this.initTableTitle();
+	async mounted(){
+		this.initTabList();
+		this.getList();
     },
     watch:{
         tab:function(){
             this.initTabList();
-            // this.initTableTitle();
+			this.getList();
         }
     },
 	methods: {
-        initTableTitle(){
-            let tableTitle = [];
-            switch(this.tab+''){
-                case '1':
-                    tableTitle = [
-                        {label:'操作',prop:'a','cellClass':'view-detail'},
-                        {label:'序号',prop:'b',},
-                        {label:'出货仓库',prop:'c'},
-                        {label:'操作人',prop:'d'},
-                        {label:'申请时间',prop:'e'},
-                    ];
-                    break;
-                    tableTitle = [
-                        {label:'操作',prop:'itemIndex'},
-                        {label:'序号',prop:'itemName'},
-                        {label:'操作类型',prop:'barCode'},
-                        {label:'操作人',prop:'storeName'},
-                        {label:'申请时间',prop:'after'},
-                    ];
-                    break;
-            }
-            this.tableTitle = tableTitle;
-        },
-
         initTabList(){
             let arr = [
                 {tab:1,list:[{label:'批量调度',class:'primary'},{label:'批量审核',class:''}]},
@@ -142,30 +113,79 @@ export default {
 		},
 		funGetPage(flag,res){
 			//获取页码值
-			console.log(flag);
-			console.log(res);
+			if(flag == 'size-change'){
+				this.pageObj.pageSize = res;				
+			}else{
+				this.pageObj.currentPage = res;
+			}
+			this.getList();
 		},
 		async getList(){
-			let res = await this.getHttp('dispatchGetDispatchAuditLogList');
+			let obj = {};
+			switch(this.tab+''){
+				case '1':
+
+					break;
+				case '2':
+					obj = await this.getHttp('dispatchGetDispatchAuditLogList',{
+						page:this.pageObj.currentPage,
+						size:this.pageObj.pageSize
+					});
+					if(this.isObject(obj)){
+						this.pageObj.total = obj.count;
+						this.tableData = obj.list;
+
+						this.tableData = this.tableData.map((ele,index)=>{
+							let itemIndex = (this.pageObj.currentPage - 1) * this.pageObj.pageSize + index + 1;
+							ele.itemIndex = itemIndex > 9 ? itemIndex : '0' + itemIndex;
+
+							let date = this.generatorDate(ele.createTime * 1000);
+							ele.zh_createTime = date.str;	
+							return ele;						
+						});
+					}
+					break;				
+			}
 			
 		},
 
 
 
-		addItemIndex(list) {
-			//给列表添加序号
-			for(let i = 0; i < list.length; i++) {
-				let itemIndex = (this.pageObj.currentPage - 1) * this.pageObj.num + 1 + i;
-				list[i].itemIndex = itemIndex >= 10 ? itemIndex : '0' + itemIndex;
-			}
-			return list;
-		},
 		async getHttp(url,obj={}){
 			let res = await http[url]({data:obj});
 			return res;
 		},
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
+		},
+		isObject(value){
+			return (value && typeof value == 'object');
+		},
+		generatorDate(time){
+			//生成日期对象
+			let date = {};
+			if(!time){
+				time = new Date();
+			}else if(typeof time == 'number' || typeof time == 'string'){
+				time = Number(time);
+				time = new Date(time);
+			}
+			date = {
+				year: time.getFullYear(),
+				month: time.getMonth(),
+				day: time.getDate(),
+				hour: time.getHours(),
+				minute: time.getMinutes(),
+				second:time.getSeconds(),
+				week:0,
+				str:''          
+			}
+			let {year,month,day,hour,minute} = date;
+			month += 1;
+			hour = hour > 10 ? hour : '0'+hour;
+			minute = minute > 10 ? minute : '0'+minute;
+			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
+			return date;
 		},
 	},
 	components: {
