@@ -177,6 +177,7 @@
 								<li class="width100 detLi">优惠总额
 									<detailsDes :title="'该日所有的优惠金额总计'"></detailsDes>
 								</li>
+								<li class="width100">代金券</li>
 								<li class="width100">利润</li>
 								<template v-if='payLsZero'>
 									<template v-for='item in allPayList'>
@@ -210,6 +211,7 @@
 										<li class="width70">{{item.returnNum}}</li>
 										<li class="width100">{{parseFloat(item.returnPrice).toFixed(2)}}</li>
 										<li class="width100">{{parseFloat(item.discount).toFixed(2)}}</li>
+										<li class="width100" :title="parseFloat(item.cashCoupon.price).toFixed(2) +'('+item.cashCoupon.num+'张)'" style="cursor: pointer;vertical-align: middle;text-overflow: ellipsis; white-space: nowrap;overflow: hidden;">{{parseFloat(item.cashCoupon.price).toFixed(2) +'('+item.cashCoupon.num+'张)'}}</li>
 										<li class="width100">{{parseFloat(item.profit).toFixed(2)}}</li>
 										<template v-if='payLsZero'>
 											<template v-for='pay in item.paymentList'>
@@ -278,7 +280,7 @@ export default {
 			orderNumber: null, //订单号
 			payTotalNum: {}, //当天或者多天的数据总和
 			orderListInDays: [], //时间段内每天的订单列表
-			showWidth: 2040, //长度
+			showWidth: 2140, //长度
 
 			payLsZero: false, //所有的支付方式是否显示
 			status: 4, //订单状态(3:未结账，4 ： 已结账， 6 ： 挂账)
@@ -514,7 +516,7 @@ export default {
 				}
 				this.isZeroPays = ArrZero;
 				this.allPayList = ArrNoZero;
-				this.showWidth = ArrNoZero.length * 100 + 1520;
+				this.showWidth = ArrNoZero.length * 100 + 1620;
 			}
 		},
 		//对支付金额为0的支付方式做处理
