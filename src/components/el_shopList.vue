@@ -7,12 +7,12 @@
 	<div id="elShop">
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible">
 			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
-				<span v-if="shopIds.length == 0" style="color:#c0c4cc">
-					<i class="name">{{title}}</i>
+				<span v-if="isSingle" style="color:#c0c4cc">
+					<i class="name">{{singleName}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 				<span v-else>
-					<i class="name">已选择{{shopIds.length}}家门店</i>
+					<i class="name">{{title}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 			</span>
@@ -36,20 +36,42 @@
 							</div>
 							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
 						</div>
-						<el-tab-pane label="全部" name="first">
-							<el-checkbox v-if="(item.storeAreaId == areaList.flag) || areaList.flag == -1" v-for="(item,index) in showShopList"
-										 :key="index" v-model="item.selected" :label="item.shopName" border size="medium">
-							</el-checkbox>
-						</el-tab-pane>
-						<el-tab-pane label="直营店" name="second">
-							<el-checkbox v-if="item.ischain == 1 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index" v-model="item.selected" :label="item.shopName" border size="medium"></el-checkbox>
-						</el-tab-pane>
-						<el-tab-pane label="加盟店" name="third">
-							<el-checkbox v-if="item.ischain == 2 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index" v-model="item.selected" :label="item.shopName" border size="medium"></el-checkbox>
-						</el-tab-pane>
+						<template v-if="!isSingle">
+							<el-tab-pane label="全部" name="first">
+								<el-checkbox v-if="(item.storeAreaId == areaList.flag) || areaList.flag == -1" v-for="(item,index) in showShopList"
+											 :key="index" v-model="item.selected" :label="item.shopName" border size="medium">
+								</el-checkbox>
+							</el-tab-pane>
+							<el-tab-pane label="直营店" name="second">
+								<el-checkbox v-if="item.ischain == 1 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index" v-model="item.selected" :label="item.shopName" border size="medium"></el-checkbox>
+							</el-tab-pane>
+							<el-tab-pane label="加盟店" name="third">
+								<el-checkbox v-if="item.ischain == 2 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index" v-model="item.selected" :label="item.shopName" border size="medium"></el-checkbox>
+							</el-tab-pane>
+						</template>
+						<template v-if="isSingle">
+							<el-tab-pane label="全部" name="first">
+								<el-radio-group v-model="singleName" size="medium">
+									<el-radio v-if="(item.storeAreaId == areaList.flag) || areaList.flag == -1" v-for="(item,index) in showShopList" :key="index"
+											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item.id)"></el-radio>
+								</el-radio-group>
+							</el-tab-pane>
+							<el-tab-pane label="直营店" name="second">
+								<el-radio-group v-model="singleName" size="medium">
+									<el-radio v-if="item.ischain == 1 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index"
+											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item.id)"></el-radio>
+								</el-radio-group>
+							</el-tab-pane>
+							<el-tab-pane label="加盟店" name="third">
+								<el-radio-group v-model="singleName" size="medium">
+									<el-radio v-if="item.ischain == 2 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index"
+											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item.id)"></el-radio>
+								</el-radio-group>
+							</el-tab-pane>
+						</template>
 					</el-tabs>
 				</div>
-				<div style="text-align: left; margin-top: 10px">
+				<div style="text-align: left; margin-top: 10px" v-if="!isSingle">
 					<el-button size="mini" type="info" @click="cancelAll()">取消全部</el-button>
 					<el-button size="mini" type="primary" @click="selectAll()">选择全部</el-button>
 				</div>
@@ -68,7 +90,7 @@ import http from 'src/manager/http';
 export default {
 	data(){
 		return {
-			title: '请选择店铺',
+			title: '',
 			shopType: 'all',
 			activeName: 'first',
 			showShopList: [],
@@ -84,30 +106,20 @@ export default {
 			visible: false,
 
 			allShop:[],//通过接口获取的所有门店
+
+			singleName:"",//单选选中的店铺名称
+			singleId:[],//单选选中的id
 		};
 	},
-	props: ['shopIds'],
+	props: ['shopIds','isSingle','delShopId'],
+	/*
+	 shopIds选中的 商品id   eg:['12','23']
+	 isSingle是否单选   默认为false
+	 delShopId展示需要过滤的店铺id
+	* */
 	created(){
 		this.getShopList();
-//		this.selShop = this.shopIds;
 	},
-//	watch: {
-//		visible: function(){
-//			if(this.visible){
-//				this.selShop = this.shopIds;
-//				let res = this.showShopList;
-//				for (let i = 0; i < res.length; i++) {
-//					for(let j = 0; j < this.shopIds.length; j++){
-//						if(this.shopIds[j] == res[i].id){
-//							res[i].selected = true;
-//						}else{
-//							res[i].selected = false;
-//						}
-//					}
-//				}
-//			}
-//		}
-//	},
 	watch:{
 		'shopIds':{
 			deep:true,
@@ -124,35 +136,7 @@ export default {
 			});
 			this.storeareaGetAllArea();
 		},
-		async init(type) {
-			console.log(this.shopIds);
-//			let res = storage.session('shopList');
-			let res=utils.deepCopy(this.allShop);
-			let index = 0;
-			for (let i = 0; i < res.length; i++) {
-				this.$set(res[i], 'selected', false);
-				if(this.shopIds.includes(res[i].id)){
-					res[i].selected = true;
-				}
-//				for(let j = 0; j < this.shopIds.length; j++){
-//					if(this.shopIds[j] == res[i].id){
-//						res[i].selected = true;
-//					}else{
-//						res[i].selected = false;
-//					}
-//				}
-				if(res[i].storeAreaId === 0){
-					index++;
-				}
-			}
-			if(index!=0&&type){
-				this.areaList.list.push({id: 0,name: '无区域'});
-			}
-			this.showShopList = utils.deepCopy(res);
-			this.shopList = utils.deepCopy(res);
-
-			console.log(this.showShopList)
-		},
+		//获取所有区域
 		async storeareaGetAllArea(){
 			let res = await http.storeareaGetAllArea();
 			if(res.length > 0){
@@ -163,12 +147,43 @@ export default {
 				this.init(false);
 			}
 		},
+		//处理数据
+		init(type) {
+			console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj');
+			this.title=this.shopIds.length>0?`已选择${this.shopIds.length}家门店`:'请选择店铺';
+			let res=utils.deepCopy(this.allShop);
+			let index = 0;
+			for (let i = 0; i < res.length; i++) {
+				this.$set(res[i], 'selected', false);
+				if(this.shopIds.includes(res[i].id)){
+					res[i].selected = true;
+				}
+				if(res[i].storeAreaId === 0){
+					index++;
+				}
+			}
+			if(index!=0&&type){
+				this.areaList.list.push({id: 0,name: '无区域'});
+			}
+			this.showShopList = utils.deepCopy(res);
+			this.shopList = utils.deepCopy(res);
+			if(this.isSingle){//初始化单选选中的店铺名称
+				this.singleId=this.shopIds;
+				if(this.shopIds.length>0){
+					for(let i=0;i<res.length;i++){
+						if(this.shopIds.includes(res[i].id)){
+							this.singleName=res[i].name;
+						}
+					}
+				}
+			}
+		},
+        //选择区域
 		changeArea(res){
 			if(res == '全部') {
 				this.areaList.flag = '-1';
 			}
 			this.areaList.list.forEach(e => {
-				console.log(e);
 				if(e.name == res){
 					this.areaList.flag = e.id;
 				}
@@ -196,7 +211,6 @@ export default {
 			}
 		},
 		show(){
-			console.log(this.$refs.content);
 			if(this.areaList.list.length > 0){
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
@@ -255,19 +269,29 @@ export default {
 		},
 		ensure(){
 			this.visible = false;
-			let shopIds = [];
-			for(let i = 0; i < this.showShopList.length; i++){
-				if(this.showShopList[i].selected){
-					shopIds.push(this.showShopList[i].id);
+			if(this.isSimple){//单选
+				this.$emit('chooseShop',this.singleId);
+			}else {//多选
+				let shopIds = [];
+				for(let i = 0; i < this.showShopList.length; i++){
+					if(this.showShopList[i].selected){
+						shopIds.push(this.showShopList[i].id);
+					}
 				}
+				this.$emit('chooseShop',shopIds);
 			}
-//			this.selShop = shopIds;
-			this.$emit('chooseShop',shopIds);
 		},
 		cancel(){
 			this.visible = false;
 			//取消之后，再次打开弹窗恢复初始状态
 			this.init(false);
+		},
+		//单选选中的店铺id
+		toSingle(id){
+			this.singleId=[];
+			this.singleId.push(id);
+			console.log(id);
+			console.log(this.singleName);
 		}
 	}
 }
@@ -325,7 +349,6 @@ export default {
 	top: 0px;
 }
 </style>
-
 <style lang="less" scoped>
 	#elShop{
 		display: inline-block;

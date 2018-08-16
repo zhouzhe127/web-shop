@@ -134,7 +134,7 @@
 			</el-table-column>
 		</el-table>
 		<div class="page-box">
-			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="activityList.length"></el-pagination>
+			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
 		</div>
 		<!--添加编辑一级弹窗-->
 		<addstaffWin v-if="isStaff" @getStaff="getStaff" :edit="edit" :jobInfo="info"></addstaffWin>
@@ -174,7 +174,7 @@
 				showShopList: '', //展示的门店列表
 				allShop: false, //门店全部选择
 				isBatch: false, //是否为批量管理
-				total: 0, // 总页数
+				total: 0, //列表总条数
 				num: 10, // 当前每页展示数量
 				page: 1, //当前第几页
 				showBatch: false, //批量管理职位编辑弹窗
@@ -277,7 +277,8 @@
 				for (let i = 0; i < res.length; i++) {
 					res[i].selected = false;
 				}
-				this.total = Math.ceil(res.length / this.num);
+//				this.total = Math.ceil(res.length / this.num);
+				this.total = res.length;
 				this.activityList = res;
 				this.activityPageList = res.slice((this.page - 1) * this.num, (this.page - 1) * this.num + this.num);
 				this.search();
@@ -712,7 +713,8 @@
 					}
 				}
 				this.newList = list;
-				this.total = Math.ceil(list.length / this.num);
+//				this.total = Math.ceil(list.length / this.num);
+				this.total = list.length;
 				this.activityPageList = list.slice(0 * this.num, 0 * this.num + this.num);
 			},
 			//重置

@@ -164,6 +164,8 @@ export default {
 		}
 	},
 	mounted() {
+		this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
+
 		this.brandId = this.userData.currentShop.id; //品牌id,单店下用不到这个字段
 		this.shopId = this.userData.currentShop.id; //单店id;用于单店查询 和 品牌下多店铺查询
 		this.shopIds = this.userShopIdStr;
@@ -182,11 +184,8 @@ export default {
 		}
 
 
-		this.storeName =
-			this.userShopList.length > 0
-				? this.userShopList[0].name
-				: '选择店铺'; //选中店铺按钮 显示,
-		this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
+		this.storeName = this.userShopList.length > 0 ? this.userShopList[0].name : '选择店铺'; //选中店铺按钮 显示,
+
 		this.resetDate(); //设置当前时间
 		if (this.isBrand == 0) {
 			//非品牌自动获取区域，桌台列表
