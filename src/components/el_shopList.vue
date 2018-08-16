@@ -79,7 +79,7 @@ export default {
 			}, //区域列表
 			contentWidth: '', //滑块的宽度
 			leftWidth: 0,
-			index: 1,
+			index: 1,//区域移动
 			shopName: '', //搜索店铺名
 			visible: false,
 
@@ -164,7 +164,6 @@ export default {
 			}
 		},
 		changeArea(res){
-			console.log(res);
 			if(res == '全部') {
 				this.areaList.flag = '-1';
 			}
@@ -174,8 +173,6 @@ export default {
 					this.areaList.flag = e.id;
 				}
 			});
-
-			console.log(this.showShopList);
 		},
 		slideLeft(){
 			if (this.contentWidth > 400) {
@@ -199,6 +196,7 @@ export default {
 			}
 		},
 		show(){
+			console.log(this.$refs.content);
 			if(this.areaList.list.length > 0){
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;

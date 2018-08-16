@@ -1,5 +1,5 @@
 /* * @file * *
-选择品牌/门店职位弹窗
+选择职位及门店（二级弹窗）
 * * @author zhengu.jiang
 */
 <template>
@@ -18,7 +18,7 @@
 				</div>
 				<!--选择门店-->
 				<div v-else>
-					<elShopListWin :shopIds="editJob.shopIds" @chooseShop="backShopId"></elShopListWin>
+					<elShopListWin :shopIds="editJob?editJob.shopIds:[]" @chooseShop="backShopId"></elShopListWin>
 				</div>
 				<!--<div v-else class="shop">-->
 					<!--<div style="width:100%;height: 50px;overflow:hidden;margin-top:20px;margin-left:20px">-->
@@ -71,14 +71,12 @@
 					shopIds: []
 				}, //选择的职位
 				onIndex: -1,
-
-
-
-
 			};
 		},
 		props: ['type', 'editJob', 'batch'],
 		mounted() {
+			//	editJob为null即为添加，否则为编辑
+			console.log(this.editJob);
 			if (this.type == 'brand') {
 				this.editJob ? this.title = '修改品牌职位' : this.title = '选择品牌职位';
 				this.isBrand = true;

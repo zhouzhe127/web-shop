@@ -114,6 +114,10 @@ export default {
 			}
 			this.showShopList = utils.deepCopy(res);
 			this.shopList = utils.deepCopy(res);
+
+			if(this.contentWidth==''){
+				this.show();
+			}
 		},
 		async storeareaGetAllArea(){
 			let res = await http.storeareaGetAllArea();
@@ -136,6 +140,7 @@ export default {
 			});
 		},
 		slideLeft(){
+			console.log('left');
 			if (this.contentWidth > 400) {
 				this.leftWidth = this.index++ * -200;
 				if (this.leftWidth * -1 + 400 >= this.contentWidth) {
@@ -145,6 +150,7 @@ export default {
 			}
 		},
 		slideRight(){
+			console.log('right');
 			if (this.leftWidth >= 0) {
 				this.leftWidth = 0;
 				return false;
@@ -157,6 +163,8 @@ export default {
 			}
 		},
 		show(){
+			console.log('jjjjjjjjjjjj');
+			console.log()
 			if(this.areaList.list.length > 0){
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
