@@ -879,9 +879,9 @@ export default {
         url: b + 'Processbom/getProcessList', //获取加工时加工bom单列表
         method: 'get'
     },
-    "MaterIalMachiningMachiningBegin":{
-        url:b+'MaterIalMachining/MachiningBegin',                   //开始加工
-        method:'post'
+    "MaterIalMachiningMachiningBegin": {
+        url: b + 'MaterIalMachining/MachiningBegin', //开始加工
+        method: 'post'
     },
     "ProcessbomDeleteProcessBom": {
         url: b + 'Processbom/deleteProcessBom', //删除加工BOM单
@@ -895,14 +895,18 @@ export default {
         url: b + 'material/getWidByMid', //通过物料id获取仓库id
         method: 'get'
     },
-    /* 批量审核日志 */
-    "dispatchGetDispatchAuditLogList":{
-        method:'get',
-        url:b+"dispatch/getDispatchAuditLogList"
+    "invgetMultiApplicationMatchList": {
+        url: b + 'Dispatch/getMultiApplicationMatchList', //批量匹配商品和物料
+        method: 'get',
+        fake: true
     },
-    "dispatchGetDispatchAuditLogDetailList":{
-        method:'get',
-        url:b+"dispatch/getDispatchAuditLogDetailList"                  //获取日志详情列表
+    /* 批量审核日志 */
+    "dispatchGetDispatchAuditLogList": {
+        method: 'get',
+        url: b + "dispatch/getDispatchAuditLogList"
+    },
+    "dispatchGetDispatchAuditLogDetailList": {
+        method: 'get',
+        url: b + "dispatch/getDispatchAuditLogDetailList" //获取日志详情列表
     }
-    
 }

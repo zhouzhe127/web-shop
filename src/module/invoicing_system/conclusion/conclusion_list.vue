@@ -275,10 +275,32 @@
 						return item.name;
 					}
 				}
-			}
+			},
+			addEduce() {
+				this.$store.commit('setPageTools', [{
+					name: '批量审核',
+					className: 'primary',
+					fn: async () => {
+						// this.$router.push({
+						// 	path: '/admin/processbomList/create'
+						// });
+					},
+					type:4
+				},{
+					name: '批量调度',
+					className: 'primary',
+					fn: async () => {
+						// this.$router.push({
+						// 	path: '/admin/processbomList/create'
+						// });
+					},
+					type:4
+				}]);
+			},
 		},
 		mounted() {
 			this.getWare();
+			this.addEduce();
 		},
 		updated() {
 			if (this.$refs.auditstart && this.auditStartTime === 0) this.$refs.auditstart.timestr = '--';
