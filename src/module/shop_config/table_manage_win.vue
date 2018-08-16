@@ -283,7 +283,7 @@ export default {
 					});
 					return false;
 				}
-				if (this.getOneTable.id.trim().length==0) {
+				if (this.getOneTable.id.trim().length==0&&!this.isAdd) {
 					this.$store.commit('setWin', {
 						title: '操作提示',
 						winType: 'alter',
@@ -293,7 +293,7 @@ export default {
 				}
 				let regNormalSeat = info.normalSeat - 0;
 				let regNum = /^[0-9]+$/;
-				if (!regNum.test(Number(this.getOneTable.id))) {
+				if (!regNum.test(Number(this.getOneTable.id))&&!this.isAdd) {
 					this.$store.commit('setWin', {
 						title: '操作提示',
 						winType: 'alter',
