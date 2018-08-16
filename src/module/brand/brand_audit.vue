@@ -626,6 +626,7 @@ export default {
 				}
 			});
 		},
+		//左滑
 		slideLeft(){
 			if (this.contentWidth > this.contentBoxWidth) {
 				this.areaIndex2++;
@@ -636,6 +637,7 @@ export default {
 				}
 			}
 		},
+		//右滑
 		slideRight(){
 			if (this.leftWidth >= 0) {
 				this.leftWidth = 0;
@@ -648,9 +650,10 @@ export default {
 				this.areaIndex2 = 0;
 			}
 		},
+		//切换区域
 		changeArea(res){
 			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
-			this.openBrandDeail(this.shopsIn,this.isJoinShop);
+			this.screenShop(this.shopsIn,this.isJoinShop);
 		},
 		async storeareaGetAllArea(shopId){
 			let res = await http.getAllArea({
@@ -661,6 +664,7 @@ export default {
 				let str = '';
 				for(let i=0;i<res.length;i++){
 					str +=res[i].areaShopIds+',';
+					//删除加盟或直营内存在为店铺空的区域
 					let isEmpty = false;
 					let shids =  res[i].areaShopIds;
 					for(let j=0;j<this.shopList.length;j++){
@@ -709,7 +713,6 @@ export default {
 					
 				});
 			}
-			// this.openBrandDeail(this.shopsIn,this.isJoinShop);
 		},
 		//查看品牌直营店加盟店点击
 		openBrandDeail: function(item, bool) {
@@ -726,6 +729,10 @@ export default {
 			this.isJoinShop = bool;
 			this.shopsIn = item;
 			this.storeareaGetAllArea(item.id);
+			this.screenShop(item, bool);
+		},
+		//筛选店铺
+		screenShop(item, bool){
 			this.brandListDirectly = [];
 			this.examineDirectlying = [];
 			this.examineDirectlyFail = [];
