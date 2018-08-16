@@ -1,5 +1,5 @@
 /* * @file * *
-新建员工
+新建/编辑员工（一级弹窗）
 * * @author zhengu.jiang
 */
 <template>

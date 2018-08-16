@@ -136,7 +136,9 @@
 		<div class="page-box">
 			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="activityList.length"></el-pagination>
 		</div>
-		<addWin v-if="isStaff" @getStaff="getStaff" :edit="edit" :jobInfo="info"></addWin>
+		<!--添加编辑一级弹窗-->
+		<addstaffWin v-if="isStaff" @getStaff="getStaff" :edit="edit" :jobInfo="info"></addstaffWin>
+		<!--批量修改选择职位二级弹窗-->
 		<addjob @addJob="getJob" v-if="showBatch" :batch="true"></addjob>
 	</section>
 </template>
@@ -732,7 +734,7 @@
 			}
 		},
 		components: {
-			addWin: () =>
+			addstaffWin: () =>
 				import ( /*webpackChunkName: 'addstaff_win'*/ './addstaff_win'),
 			page: () =>
 				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
