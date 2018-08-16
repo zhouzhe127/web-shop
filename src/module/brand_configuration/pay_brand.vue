@@ -38,12 +38,13 @@
 			@payZXSHWin="getZXSHResult"
 			:detial='detial' 
 		></payZXSHWin>
-		<shopsWin
-			v-if="showShop"
-			@shopsSelect="getShopResult"
-			:shopIds="''" 
-			:isTitle = "'选择指派门店'"
-		></shopsWin>
+		<!--<shopsWin-->
+			<!--v-if="showShop"-->
+			<!--@shopsSelect="getShopResult"-->
+			<!--:shopIds="''" -->
+			<!--:isTitle = "'选择指派门店'"-->
+		<!--&gt;</shopsWin>-->
+		<elShopListWin :shopIds="[]" @chooseShop="getShopResult" v-if="showShop"></elShopListWin>
 	</section>
 </template>
 <script>
@@ -76,7 +77,8 @@
 			comTable: () => import(/*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 			payWayWin: ()=> import( /* webpackChunkName:'pay_way_win' */ 'src/module/shop_config/pay_way_win'),
 			payZXSHWin: ()=> import( /* webpackChunkName:'pay_zxsh_win' */ './pay_zxsh_win'),
-			shopsWin: ()=> import( /* webpackChunkName:'shops_select' */ 'src/components/shops_select'),
+//			shopsWin: ()=> import( /* webpackChunkName:'shops_select' */ 'src/components/shops_select'),
+			elShopListWin: ()=> import( /* webpackChunkName:'el_shopList_win' */ 'src/components/el_shopList_win'),
 		},
 		methods:{
 			//修改添加支付方式返回
@@ -151,15 +153,30 @@
 				}
 			},
 			//指派店铺返回
+//			async getShopResult(res,selectIds){
+//				console.log(selectIds);
+//				if(res == 'ok'){
+//					if(selectIds ==''){
+//						this.$store.commit('setWin',{title:'温馨提示', winType:'alter', content:'请选择要指派的店铺'});
+//						return;
+//					}
+//					let arr=await http.paymentAssign({data:{shopIds:selectIds,paymentName:this.detial.paymentName}});
+//					if(arr){
+//						this.$store.commit('setWin',{title:'温馨提示', winType:'alter', content:'指派成功'});
+//					}
+//				}
+//				this.showShop = false;
+//			},
 			async getShopResult(res,selectIds){
+				console.log(selectIds);
 				if(res == 'ok'){
-					if(selectIds ==''){
+					if(selectIds.length==0){
 						this.$store.commit('setWin',{title:'温馨提示', winType:'alter', content:'请选择要指派的店铺'});
 						return;
 					}
-					let arr=await http.paymentAssign({data:{shopIds:selectIds,paymentName:this.detial.paymentName}});
+					let arr=await http.paymentAssign({data:{shopIds:selectIds.join(','),paymentName:this.detial.paymentName}});
 					if(arr){
-						this.$store.commit('setWin',{title:'温馨提示', winType:'alter', content:'指派成功'});                
+						this.$store.commit('setWin',{title:'温馨提示', winType:'alter', content:'指派成功'});
 					}
 				}
 				this.showShop = false;

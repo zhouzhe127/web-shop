@@ -94,7 +94,8 @@
 			<!-- <pageElement @pageNum="pageClick" :page="currentPage" :total="totalNum" :num='num' :isNoJump='true'></pageElement> -->
 		</div>
 		<add-receivable-man @winResult="doResult" v-if="showMan" :manDetial="manDetial" :isAdd="isAdd"></add-receivable-man>
-		<shopsSelect v-if="showShop" @shopsSelect="shopResult" :shopIds="''"></shopsSelect>
+		<!--<shopsSelect v-if="showShop" @shopsSelect="shopResult" :shopIds="''"></shopsSelect>-->
+		<elShopListWin :shopIds="[]" @chooseShop="shopResult" v-if="showShop"></elShopListWin>
 		<clearingReceivable @clearResult="clearingResult" v-if="showClearing" :manDetial="manDetial" :isAClearing="isAClearing"></clearingReceivable>
 	</div>
 </template>
@@ -150,8 +151,9 @@ export default {
 		// 	import(/*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 		// pageElement: () =>
 		// 	import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
-		shopsSelect: () =>
-			import(/*webpackChunkName: "shops_select"*/ 'src/components/shops_select')
+//		shopsSelect: () =>
+//			import(/*webpackChunkName: "shops_select"*/ 'src/components/shops_select'),
+		elShopListWin: ()=> import( /* webpackChunkName:'el_shopList_win' */ 'src/components/el_shopList_win'),
 	},
 	created() {
 		let userData = storage.session('userShop');
@@ -358,9 +360,28 @@ export default {
 			}
 		},
 		//选择店铺后返回
+//		shopResult(res, it) {
+//			console.log(it);
+//			if (res == 'ok') {
+//				if (it == '') {
+//					this.$store.commit('setWin', {
+//						winType: 'alert',
+//						content: '请选择要指派的店铺！'
+//					});
+//					return false;
+//				}
+//				let item = {};
+//				item.billId = this.manDetial.id;
+//				item.shopIds = it;
+//				console.log(item);
+//				this.selectShop(item);
+//			}
+//			this.showShop = false;
+//		},
 		shopResult(res, it) {
+			console.log(it);
 			if (res == 'ok') {
-				if (it == '') {
+				if (it.length==0) {
 					this.$store.commit('setWin', {
 						winType: 'alert',
 						content: '请选择要指派的店铺！'
@@ -369,7 +390,7 @@ export default {
 				}
 				let item = {};
 				item.billId = this.manDetial.id;
-				item.shopIds = it;
+				item.shopIds=it.join(',');
 				console.log(item);
 				this.selectShop(item);
 			}
