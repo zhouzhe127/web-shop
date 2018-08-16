@@ -1,5 +1,5 @@
 <template>
-    <div class="batch-log-print">
+    <div class="batch-log-print" id="print-webpage">
         <div class="page-head">
             <div class="print-type">
                 <span class="fl type-name">批量调度</span>
@@ -141,16 +141,45 @@
                 </div>
             </div>
         </div>
+
+        <div id="print-webpage-btn"  >
+            <el-button type="primary" @click="printPage">打印</el-button>        
+            <el-button type="info" @click="linkPage">返回</el-button>        
+        </div>
     </div>
 </template>
 <script>
 export default {
     data () {
         return {
+
         };
     },
     methods: {
+        printPage(){
+            let oApp = document.querySelector('#app');
+            let oProcess = document.querySelector('#print-webpage');
+            let oParent = oProcess.parentNode;
+            let oBody = document.querySelector('body');
+            let oBtn = oProcess.querySelector('#print-webpage-btn');
+            oApp.style['display'] = 'none';
+            oBtn.style['display'] = 'none';
+            oBody.appendChild(oProcess);
 
+            let promise = new Promise((resolve,reject)=>{
+                resolve(window.print());
+            });
+            promise.then((res)=>{
+                oApp.style['display'] = 'block';
+                oBtn.style['display'] = 'block';
+                oParent.appendChild(oProcess); 
+                console.log('打印结束:'+res);
+            });
+
+        },
+        linkPage(){
+            this.$router.push({path:'/admin/processMaterial',query:this.$route.query});
+        },
     },
     components: {
 
@@ -165,7 +194,6 @@ export default {
 
 .batch-log-print * {
     font-family:Arial,Verdana,Sans-serif;
-
 }
 .inline-middle{
     display: inline-block;
@@ -177,6 +205,7 @@ export default {
 }
 li{
     list-style: none;
+    word-break: break-all;
 }
 .title{
     font-size:16px;
@@ -391,6 +420,12 @@ li{
                 }
             }
         }                   
+    }
+
+    #print-webpage-btn{
+        position: absolute;
+        right: 20px;
+        top:12px;
     }
 }
 </style>

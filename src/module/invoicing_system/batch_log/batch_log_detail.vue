@@ -5,28 +5,23 @@
 		<div class="info">
 			<li v-for="(item,index) in info" :key="index">{{item.label}}&nbsp;:&nbsp;{{item.value}}</li>
 		</div>	
+
 		<div class="table">
-			<table-com
-				:showHand="false" 
-				:titleHeight='50' 
-				:showTitle="1" 
-				:titleData="tableTitle" 
-				:fixed="2" 
-				:widthType="true" 
-				:introData="tableData" 
-				:listWidth="1200"
-				:bannerStyle="{color:'#333','fontSize':'16px'}"
-				:mainBox="{color:'#666'}"
-				:listHeight="70"
-			>
-			<div slot-scope="{data,index}" slot="con-0">
-                <span class="view-detail" @click="linkUrl('detail',item)">查看详情</span>
-			</div>
-			</table-com>
+			<el-table :data="tableData" style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column label="操作" align="center">
+					<template slot-scope="props">
+						<span class="view-detail">查看详情</span>
+					</template>						
+				</el-table-column>
+				<el-table-column label="序号" align="center" prop="itemIndex"></el-table-column>
+				<el-table-column label="申请单号" align="center" prop="applicationCode"></el-table-column>
+				<el-table-column label="申请店铺/品牌" align="center" prop="applicationShop"></el-table-column>
+				<el-table-column label="申请人" align="center" prop="applicant"></el-table-column>
+				<el-table-column label="申请时间" align="center" prop="zh_applicationTime"></el-table-column>
+			</el-table>
 		</div>
 
 		<div class="bottom">
-			<page @pageNum="funGetPageNum" :page="pageObj.currentPage" :total="pageObj.totalNum" :num='pageObj.num' :isNoPaging='true'></page>
 		</div>
 	</div>
 </template>
@@ -45,7 +40,6 @@ import utils from 'src/verdor/utils';
 export default {
 	data () {
 		return {
-			tableTitle:[],
 			tableData:[],
 			pageObj:{
 				num: 10, 			// 每页展示的数量
@@ -63,57 +57,60 @@ export default {
 			default:1		
 		}
 	},
-	mounted(){
+	async mounted(){
         this.initBtn();
-        this.initInfo();
-        this.initTable();
+		let res = await this.getHttp('dispatchGetDispatchAuditLogDetailList',{logId:1});
+		if(this.isObject(res)){
+			this.initInfo(res);		
+			this.tableData = this.addItemIndex(res.list,this.initTableDataEle);
+		}
+
 	},
 	methods: {
-        initInfo(){
-            let arr = [
-                {tab:1,list:[{label:'操作类型',value:'批量审核并出货'},{label:'操作人',value:'--'},{label:'操作时间',value:'--'}]},
-            ];
-            arr.some((ele)=>{
-                if(ele.tab == this.tab){
-                    this.info = ele.list;
-                    return true;
-                }
-            });
-        },
-        initTable(){
-            let tableTitle = [];
-            switch(this.tab+''){
-                case '1':
-                    tableTitle = [
-                        {titleName:'操作',dataName:'itemIndex'},
-                        {titleName:'序号',dataName:'itemName'},
-                        {titleName:'申请单号',dataName:'barCode'},
-                        {titleName:'申请店铺/品牌',dataName:'storeName'},
-                        {titleName:'申请人',dataName:'before'},
-                        {titleName:'申请时间',dataName:'after'},
-                    ];
-                    break;
-            }
-            this.tableTitle = tableTitle;
+        initInfo(res){
+			let obj = {};
+			switch(this.tab+''){
+				case '1':
+					obj.type = res.type;
+					obj.userName = res.createUName;
+					obj.createTime = this.generatorDate(res.createTime * 1000);
+					obj.createTime = obj.createTime.str;
+					obj.list = [{label:'操作类型',value:obj.type},{label:'操作人',value:obj.userName},{label:'操作时间',value:obj.createTime}];
+					break;
+			}
+            this.info = obj.list;
         },
         linkUrl(flag,item){
 
-        },
+		},
+		initTableDataEle(ele){
+			//初始化数组里面的元素
+			let date = this.generatorDate(ele.applicationTime * 1000);
+			ele.zh_applicationTime = date.str;
+		},
+		initBtn(){
+			this.$store.commit('setPageTools',[
+				{
+					name: '返回',
+					style:{height:'40px','border':'1px solid #ccc','background-color':'#fff','color':'#999'},
+					fn:()=>{
+						this.$router.go(-1);
+					}
+				}
+			]);
+		},
 
 
 
-		addItemIndex(list) {
+		addItemIndex(list,fn) {
+			if(!Array.isArray(list)) list = [];
 			//给列表添加序号
 			for(let i = 0; i < list.length; i++) {
-				let itemIndex = (this.pageObj.currentPage - 1) * this.pageObj.num + 1 + i;
-				list[i].itemIndex = itemIndex >= 10 ? itemIndex : '0' + itemIndex;
+				// let itemIndex = (this.pageObj.currentPage - 1) * this.pageObj.num + 1 + i;
+				// list[i].itemIndex = itemIndex >= 10 ? itemIndex : '0' + itemIndex;
+				fn(list[i]);
 			}
-			return list;
-		},
-		funGetPageNum(obj){
-			this.pageObj.num = obj.num;
-			this.pageObj.currentPage = obj.page;
-
+			return [...list];
 		},
 		async getHttp(url,obj={}){
 			let res = await http[url]({data:obj});
@@ -121,6 +118,9 @@ export default {
 		},
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
+		},
+		isObject(value){
+			return (value && typeof value == 'object');
 		},
 		generatorDate(time){
 			//生成日期对象
@@ -138,25 +138,19 @@ export default {
 				hour: time.getHours(),
 				minute: time.getMinutes(),
 				second:time.getSeconds(),
-				week:0            
-			};
+				week:0,
+				str:''          
+			}
+			let {year,month,day,hour,minute} = date;
+			month += 1;
+			hour = hour > 10 ? hour : '0'+hour;
+			minute = minute > 10 ? minute : '0'+minute;
+			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
 			return date;
 		},
-		initBtn(){
-			this.$store.commit('setPageTools',[
-				{
-					name: '返回',
-					style:{height:'40px','border':'1px solid #ccc','background-color':'#fff','color':'#999'},
-					fn:()=>{
-						this.$router.go(-1);
-					}
-				}
-			]);
-		}
 	},
 	components: {
 		tableCom:()=>import (/*webpackChunkName:'com_table'*/'src/components/com_table'),
-		page: () =>import(/*webpackChunkName: "page_element"*/ 'src/components/page_element'),
 	},
 };
 </script>
@@ -166,40 +160,36 @@ export default {
 	.page-head{
 		.split-div(80%);
 	}
+	.view-detail{
+		color:@b;
+		cursor: pointer;
+	}
+	li{
+		list-style: none;
+	}
+	@table-border:1px solid #ebeef5;
 
 	.info{
-		padding:30px 0 30px 40px;
+		padding-top:30px;
+		padding-left:40px;
+		padding-bottom:10px;
+		display: flex;
 		li{
-			list-style: none;
-			width:30%;
-            display: inline-block;
-            padding-bottom:15px;
-			.lfc(#333,16px,16px);				
+			.whb(30%,40px,none);
+			color:#333;
+			font-size:16px;
 		}	
-    }
+	}
+	
     .table{
-        .view-detail{
-            color:@b;
-        }
+		border:@table-border;
+		border-bottom:none;
+		border-radius:4px;
+		width:90%;
     }
 	.bottom{
 		padding-top:10px;
 		padding-bottom: 15px;
     }
-
-    /*
-        .arrow{
-            display: inline-block;
-            height: 16px;
-            width: 8px;
-            vertical-align: middle;
-        }
-        .arrow-up{
-            background: url('../../../res/images/arrow-up.png') no-repeat;
-        }
-        .arrow-down{
-            background: url('../../../res/images/arrow-down.png') no-repeat;		
-        }
-    */
 }
 </style>
