@@ -312,12 +312,11 @@
 				return list;
 			},
 			reset() { //重置
-				let arr = ['goodsName','barCode','wid','areaId'];
-				for(let item of arr){
-					this[item] = '';
-				}
+				this.userName = '';
 				this.page = 1;
-				this.pageShow = 10;
+				this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
+				this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
+				this.endTime = new Date().setHours(0, 0, 0, 0);
 				this.getData();
 			},
 			pageChange(page) { //分页 获取页数
