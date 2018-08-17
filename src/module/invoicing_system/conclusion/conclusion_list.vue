@@ -282,7 +282,7 @@
 					className: 'primary',
 					fn: () => {
 						this.$router.push({
-							path: '/admin/multipleExamine'
+							path: '/admin/conclusionList/multipleExamine'
 						});
 					},
 					type:4
@@ -291,7 +291,7 @@
 					className: 'primary',
 					fn: () => {
 						this.$router.push({
-							path: '/admin/selectDispatch'
+							path: '/admin/conclusionList/selectDispatch'
 						});
 					},
 					type:4
