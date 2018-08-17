@@ -369,6 +369,10 @@
 					data: obj
 				});
 				if (data) {
+					storage.session("batch_schedule",data);
+					this.$router.push({
+						path: '/admin/conclusionList/multipleExamine'
+					});
 					this.$message({
 						message: '调度成功',
 						type: 'success'
@@ -380,20 +384,18 @@
 					name: '确认调度',
 					className: 'primary',
 					fn: () => {
-						this.setoutputData();
-						// this.$confirm('确定批量调度?', '提示', {
-						// 	confirmButtonText: '确定',
-						// 	cancelButtonText: '取消',
-						// 	type: 'warning'
-						// }).then(() => {
-						// 	console.log(222222222)
-						// 	this.setoutputData();
-						// }).catch(() => {
-						// 	this.$message({
-						// 		type: 'info',
-						// 		message: '已取消'
-						// 	});  
-						// });
+						this.$confirm('确定批量调度?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							this.setoutputData();
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消'
+							});  
+						});
 					},
 					type: 4
 				}, {
