@@ -154,7 +154,9 @@ const conclusionList = (resolve) =>
 const shipmentVerify = (resolve) =>
     import ( /* webpackChunkName:"shipment_verify" */ 'src/module/invoicing_system/conclusion/shipment_verify'); //审核详情   
 const newSchedule = (resolve) =>
-    import ( /* webpackChunkName:"new_schedule" */ 'src/module/invoicing_system/conclusion/new_schedule'); //新建调度    
+    import ( /* webpackChunkName:"new_schedule" */ 'src/module/invoicing_system/conclusion/new_schedule'); //新建调度
+const multipleExamine = (resolve) =>
+    import ( /* webpackChunkName:"multiple_examine" */ 'src/module/invoicing_system/conclusion/multiple_examine'); //批量审核
 const select_dispatch = (resolve) =>
     import ( /* webpackChunkName:"select_dispatch" */ 'src/module/invoicing_system/warehouse_manage/select_dispatch'); //批量调度-选择调度单
 const brandAssign = (resolve) =>
@@ -1089,6 +1091,12 @@ export default [{
                     path: 'selectDispatch', //批量调度-选择调度单
                     components: {
                         details_con: select_dispatch
+                    },
+                },
+                {
+                    path: 'multipleExamine ', //批量审核
+                    components: {
+                        details_con: multipleExamine
                     },
                 },
                 {

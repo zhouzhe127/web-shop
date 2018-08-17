@@ -903,6 +903,10 @@ export default {
     "dispatchGetDispatchAuditLogDetailList":{
         method:'get',
         url:b+"dispatch/getDispatchAuditLogDetailList"                  //获取日志详情列表
-    }
+    },
+	"DispatchGetMultiApplicationMatchList":{
+		url:b+"Dispatch/getMultiApplicationMatchList",                  //批量调度-批量匹配商品和物料
+		method:'get',
+   	},
     
 }
