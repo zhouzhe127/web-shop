@@ -47,13 +47,6 @@
 				:page-count="pageTotal">
 			</el-pagination>
 		</div>
-		<div>
-			<component
-                :is="showCom"
-                :pObj="comObj"
-                @throwWin="winWarehouse"
-            ></component>
-		</div>
 	</div>
 </template>
 
@@ -64,9 +57,6 @@
 	export default {
 		data() {
 			return {
-				showCom:null,
-				comObj:{},
-				alrWareObj:{},
 				startTime:'',
 				endTime:'',
 				timeDate:[],
@@ -115,6 +105,7 @@
 					7:'已完成（异常）',
 					8:'配货完成',
 				},
+				isLog:false,//是否显示进入日志 默认不显示
 			};
 		},
 		components: {
@@ -122,19 +113,30 @@
 				import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 			comTable: () =>
 				import ( /*webpackChunkName: 'table'*/ 'src/components/com_table'),
-			selWarehouse: () =>
-				import( /*webpackChunkName:'choose_warehouse_win'*/ 'src/module/invoicing_system/warehouse_manage/choose_warehouse_win'),
 		},
 		created() {
 			this.userData = storage.session('userShop');
 			this.shopId = this.userData.currentShop.id;
 			this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
 		},
+		beforeRouteEnter (to, from, next) {
+			//if(from.path=='/admin/inventoryManagement/publicDetails'){
+//				next(function(self){
+//					self.isLog = true;
+//				});
+			//}else{
+				next();	
+			//}
+		},
 		mounted() {
 			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
 			this.initBtn();
 			this.getShopList();//店铺列表
-			this.getData();//请求数据
+			if(this.isLog){
+				
+			}else{
+				this.getData();//请求数据
+			}
 		},
 		methods: {
 			initBtn() {
@@ -151,12 +153,12 @@
 					},
 					{name: '全部审核',className: 'success',type:4,
 						fn: () => {
-							
+							this.examine(0);
 						}
 					},
 					{name: '全部审核并出货',className: 'success',type:4,
 						fn: () => {
-							
+							this.examine(1);
 						}
 					},
 					{name: '返回',className:'info',type:4,
@@ -165,6 +167,9 @@
 						}
 					},
 				];
+				if(!this.isLog){
+					arr.splice(1,1);
+				}
 				this.$store.commit('setPageTools', arr);
 			},
 			timeChange(res){
@@ -185,6 +190,21 @@
 				this.page = 1;
 				this.getData();
 			},
+			async examine(isPass){//审核通过
+				let ids = [];
+				for(let key in this.selectItem){
+					if(key!='length'){
+						ids.push(key);
+					}
+				}
+				let data = await http.dispatchApproveApplications({data:{
+					ids:ids.join(','),
+					isPass:isPass,
+				}});
+				if(data){
+					this.$message({message: '选择完毕!',type: 'success'});
+				}
+			},
 			async getShopList() {//获取店铺列表
 				let data = await http.invoicing_getOwners();
 				this.shopList = data;
@@ -194,6 +214,7 @@
 					page: this.page,
 					num: this.pageShow,
 					type: 1,
+					uName:this.userName,
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
 					auditStatus:'1', //审核状态：1审核中
@@ -202,32 +223,6 @@
 				this.list = this.setAlready(data.list);
 				this.listLength = data.num;
 				this.pageTotal = data.total;
-			},
-			openWarehouse(){//打开仓库弹窗
-				this.comObj.owner = this.alrWareObj;
-				this.comObj.title = '选择出货仓库';
-				this.showCom = 'selWarehouse';
-			},
-			winWarehouse(res,obj){//关闭仓库弹窗
-				if(res=='ok'){
-					this.alrWareObj = obj;
-					this.submitFunc();
-				}
-				this.showCom = null;
-			},
-			async submitFunc(){
-				let list = [];
-				for(let key in this.selectItem){
-					if(key!='length'){
-						list.push({applyId:key,distributionId:this.selectItem[key].disId});
-					}
-				}
-				let obj = {
-					param:list,
-					wid:this.alrWareObj.id,
-				};
-				storage.session('mulSelectDispatch',obj);
-				this.$message({message: '选择完毕!',type: 'success'});
 			},
 			setAlready(list){//设置已经选中过的数据
 				for(let item of list){

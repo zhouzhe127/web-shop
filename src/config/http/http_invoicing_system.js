@@ -921,5 +921,9 @@ export default {
 		url:b+"Dispatch/getMultiApplicationMatchList",                  //批量调度-批量匹配商品和物料
 		method:'get',
    	},
+   	"dispatchApproveApplications":{
+		url:b+"dispatch/approveApplications",                  //批量审核-审核通过
+		method:'post',
+   	},
     
 }

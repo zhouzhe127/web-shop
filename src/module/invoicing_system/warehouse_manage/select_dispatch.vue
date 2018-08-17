@@ -225,6 +225,7 @@
 					page: this.page,
 					num: this.pageShow,
 					type: 1,
+					uName:this.userName,
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
 					auditStatus:'1', //审核状态：1审核中
@@ -277,9 +278,11 @@
 				let obj = {
 					param:list,
 					wid:this.alrWareObj.id,
+					wName:this.alrWareObj.name,
 				};
 				storage.session('mulSelectDispatch',obj);
 				this.$message({message: '选择完毕!',type: 'success'});
+				this.$router.push({path: '/admin/batchSchedule',query: this.$route.query});
 			},
 			setAlready(list){//设置已经选中过的数据
 				for(let item of list){

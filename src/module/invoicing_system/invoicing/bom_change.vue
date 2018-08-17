@@ -202,9 +202,7 @@
 				import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
 			onOff: () =>
 				import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
-			addMaterial: () =>
-				import ( /*webpackChunkName: 'output_select_supplies'*/
-					'src/module/invoicing_system/warehouse_manage/output_select_supplies'),
+			addMaterial: () =>import ( /*webpackChunkName: 'output_select_supplies'*/ 'src/module/invoicing_system/warehouse_manage/output_select_supplies'),
 			warehouseSort: () =>
 				import ( /*webpackChunkName: 'bom_create_sort'*/ 'src/module/invoicing_system/invoicing/bom_create_sort'),
 			goodsPackage: () =>
