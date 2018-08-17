@@ -1373,12 +1373,7 @@ export default [{
                         }
                     ]
                 },
-                {
-                    path: 'batchSchedule',
-                    components: {
-                        details_con: batchSchedule
-                    }
-                },
+
                 {
                     path: 'conclusionList', //审核列表
                     components: {
@@ -1394,6 +1389,12 @@ export default [{
                             path: 'shipmentVerify', //审核详情确认
                             components: {
                                 details_con: shipmentVerify
+                            }
+                        },
+                        {
+                            path: 'batchSchedule',
+                            components: {
+                                details_con: batchSchedule
                             }
                         },
                         {

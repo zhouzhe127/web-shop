@@ -322,7 +322,7 @@
 						applyNum: res.num,
 						distributionPrice: res.piceValue, //分销价格
 						distributionUnit: res.isPurchase == 1 ? unit.name : '',
-						isPurchase: isBrand? res.isPurchase:1, //是否为进价
+						isPurchase: this.isBrand? res.isPurchase:1, //是否为进价
 						isSuccess: res.isSuccess
 					}
 					arr.push(obj);
