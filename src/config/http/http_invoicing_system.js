@@ -900,6 +900,14 @@ export default {
         method: 'get',
         fake: true
     },
+    "invgetAllocationType": {
+        url: b + 'Dispatchrecord/getAllocationType', //获取配货方式
+        method: 'get'
+    },
+    "invaddMultDispatchRecord": {
+        url: b + 'Dispatchrecord/addMultDispatchRecord', //新建批量调度
+        method: 'get'
+    },
     /* 批量审核日志 */
     "dispatchGetDispatchAuditLogList": {
         method: 'get',

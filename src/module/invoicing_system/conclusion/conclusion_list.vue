@@ -110,7 +110,7 @@
 				auditStatus: ['全部', '审核中', '已取消', '审核未通过', '审核通过'],
 				user: '', //所有员工
 				auditType: 0, //审核状态
-				dispatchStatus: ['全部', '未调度', '调度中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', ],
+				dispatchStatus: ['全部', '未调度', '调度中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
 				dispatchType: 0, //调度状态
 				wareIds: '', //权限下的所有仓库id
 				introData: '', //列表数据
@@ -280,7 +280,7 @@
 				this.$store.commit('setPageTools', [{
 					name: '批量审核',
 					className: 'primary',
-					fn: async () => {
+					fn: () => {
 						// this.$router.push({
 						// 	path: '/admin/processbomList/create'
 						// });
@@ -289,7 +289,7 @@
 				},{
 					name: '批量调度',
 					className: 'primary',
-					fn: async () => {
+					fn: () => {
 						// this.$router.push({
 						// 	path: '/admin/processbomList/create'
 						// });

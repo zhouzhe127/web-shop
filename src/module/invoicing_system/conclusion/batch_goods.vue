@@ -25,13 +25,13 @@
 					<span>{{item.cil}}</span>
 					<span>{{item.surplus}}</span>
 					<span>
-						<el-input placeholder="请输入内容" v-model="item.grossOutnum">
+						<el-input placeholder="请输入内容" @change="grosschange(item)" v-model="item.grossOutnum">
 							<template slot="append">{{item.unit}}</template>
 						</el-input>
 					</span>
 					<span style="width: 20%;">
-						<el-select v-model="item.allot" placeholder="请选择">
-							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+						<el-select v-model="item.allot" @change="allotChang(item)" placeholder="请选择">
+							<el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
 					</span>
@@ -60,7 +60,7 @@
 								<span>{{list.average}}</span>
 								<span>{{list.applyScale}}</span>
 								<span>
-									<el-input placeholder="请输入内容">
+									<el-input placeholder="请输入内容" v-model="list.outNum" @change="singleChang(item)">
 										<template slot="append">{{item.unit}}</template>
 									</el-input>
 								</span>
@@ -84,7 +84,8 @@
 			};
 		},
 		props: {
-			proData: Object
+			proData: Array,
+			allot: Number
 		},
 		methods: {
 			openAll() { //全部展开
@@ -97,7 +98,6 @@
 				}
 			},
 			openSingle(item) {
-				// item.showList = !item.showList;
 				this.$set(item, 'showList', !item.showList);
 				this.goodsList = utils.deepCopy(this.goodsList);
 			},
@@ -107,84 +107,126 @@
 				});
 			},
 			setList() {
-
 				this.goodsList.map(v => {
-					v.allot = this.$parent.allot;
-					v = this.arithmetic(v, 'surplus', 'list', 'num');
-					v=this.cargo(v.allot,v,'num');
+					v = this.cargo(v.allot, v, 'num');
 				});
 				this.goodsList = utils.deepCopy(this.goodsList);
-				console.log(this.goodsList);
-			},
-			arithmetic(obj, total, arr, key) { //key为申请数键名
-				let success = [];
-				let worry = [];
-				let allnum = obj[total];
-				let applyNum = 0;
-				let applyAverage = 0;
-				let cil = 0;
-				obj[arr].map(v => {
-					if (v.isSuccess == 1) {
-						applyNum += v[key];
-						cil++;
-					}
-
-				})
-				obj[arr].map(v => {
-					if (v.isSuccess == 1) {
-						// v.applyScale = Math.floor((v[key]/applyNum)*allnum);//按比例
-						// v.average = Math.floor(allnum/cil);//平均分配量
-						success.push(v);
-						v.applyScale = 0; //按比例
-						v.average = 0; //平均分配量
-					} else {
-						worry.push(v);
-					}
-				})
-				obj[arr] = [...success, ...worry];
-				obj.applyAverage = Math.floor(applyNum / cil) || 0; //平均申请量
-				obj.applyAll = applyNum;
-				obj.cil = cil;
-				obj.grossOutnum = applyNum > allnum ? allnum : applyNum;
-				return obj;
 			},
 			cargo(type, item, key) { //key为申请数键名
+				let redsend = Number(item.grossOutnum);
 				item.list.map(v => {
 					if (v.isSuccess == 1) {
 						v.applyScale = Math.floor((v[key] / item.applyAll) * item.grossOutnum); //按比例
 						v.average = Math.floor(item.grossOutnum / item.cil); //平均分配量
 						switch (type) {
+							case 1:
+								v.outNum = v.applyScale;
+								break;
+							case 2:
+								v.outNum = v.average;
+								break;
+							case 3:
+								let sdv = redsend;
+								redsend -= v[key];
+								v.outNum = redsend > 0 ? v[key] : sdv > 0 ? sdv : 0;
+								break;
+							case 4:
+								v.outNum = v[key];
+								break;
 							case 5:
-								v.outNum = item.applyAll>item.surplus? v.applyScale:v[key];
+								v.outNum = item.grossOutnum <= item.applyAll ? v.applyScale : v[key];
+								break;
+							case 6:
+								v.outNum = item.grossOutnum <= item.applyAll ? v.average : v[key];
 								break;
 						}
 					}
-
 				});
-
+				if (type == 4) this.singleChang(item);
+				return item;
+			},
+			allotChang(item) {
+				this.cargo(item.allot, item, 'num');
+			},
+			grosschange(item) { //总量改变
+				if (!this.checkNum(item.grossOutnum)) {
+					item.grossOutnum = 0;
+				}
+				this.checkoutNum(item);
+				item.grossOutnum = this.getcheckNum(item.type, item.grossOutnum)
+				item = this.cargo(item.allot, item, 'num');
+			},
+			getcheckNum(type, num) {
+				if (type == 0) { //普通商品取整
+					return parseInt(num);
+				} else {
+					if (num.toString().includes('.')) {
+						return parseInt(item.outNum * 100) / 100;
+					}
+				}
+				return num;
+			},
+			checkoutNum(item) {
+				if (item.allot != 4) {
+					if (Number(item.grossOutnum) > Number(item.surplus)) {
+						this.$message.error('出货总量应小于库存总量');
+						item.grossOutnum = item.surplus;
+						return false;
+					}
+				}
+				return true;
+			},
+			singleChang(item) { //单个店出货量改变
+				let allNum = 0;
+				item.list.map(v => {
+					if (!this.checkNum(v.outNum)) {
+						v.outNum = 0;
+					} else {
+						console.log(this.getcheckNum(item.type, v.outNum))
+						v.outNum = this.getcheckNum(item.type, v.outNum);
+					}
+					allNum += Number(v.outNum);
+				})
+				item.grossOutnum = allNum;
+				this.checkoutNum(item) ? this.cargo(0, item, 'num') : this.cargo(item.allot, item, 'num');
+			},
+			checkNum(num) { //验证数字
+				let reg = /^([+-]?)\d*\.?\d+$/;
+				if (!reg.test(num)) {
+					this.$message({
+						message: '请输入正确数字！',
+						type: 'warning'
+					});
+					return false;
+				}
+				return true
 			}
 		},
 		mounted() {
-			console.log(this.proData);
 			this.options = this.$parent.options;
-			this.goodsList = this.proData.data;
-			this.setmassage(true);
+			this.goodsList = this.proData;
 			this.setList();
 		},
 		watch: {
+			allot(news) {
+				this.goodsList.map(v => {
+					v.allot = news;
+					v = this.cargo(v.allot, v, 'num');
+				});
+				this.goodsList = utils.deepCopy(this.goodsList);
+			},
 			proData() {
-				console.log(this.proData);
-				this.goodsList = this.proData.data;
+				this.goodsList = this.proData;
+				this.setList();
 			}
-		},
-		components: {},
-		computed: {},
+		}
 	}
 </script>
 <style lang='less' scoped>
 	.list-box {
 		margin-top: 20px;
 		overflow: auto;
+		max-height: 6.3rem;
 		border: 1px solid #ccc;
 		.title {
 			overflow: hidden;
