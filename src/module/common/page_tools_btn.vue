@@ -28,6 +28,9 @@
 				<template v-if="v.type == 4">
 					<el-button @click="v.fn" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
 				</template>
+				<template v-if="v.type == 5">
+					<el-button @click="v.fn" :type="v.className" :key="i+keyRan" plain>{{v.name}}</el-button>
+				</template>
 			</template>
 		</section>
 	</div>

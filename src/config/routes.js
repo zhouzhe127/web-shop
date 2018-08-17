@@ -1094,7 +1094,7 @@ export default [{
                     },
                 },
                 {
-                    path: 'multipleExamine ', //批量审核
+                    path: 'multipleExamine', //批量审核
                     components: {
                         details_con: multipleExamine
                     },
