@@ -1090,18 +1090,6 @@ export default [{
                     ]
                 },
                 {
-                    path: 'selectDispatch', //批量调度-选择调度单
-                    components: {
-                        details_con: select_dispatch
-                    },
-                },
-                {
-                    path: 'multipleExamine', //批量审核
-                    components: {
-                        details_con: multipleExamine
-                    },
-                },
-                {
                     path: 'pickingList', //领料列表
                     components: {
                         details_con: details_con
@@ -1402,7 +1390,19 @@ export default [{
                             components: {
                                 details_con: newSchedule
                             }
-                        }
+                        },
+                        {
+		                    path: 'selectDispatch', //批量调度-选择调度单
+		                    components: {
+		                        details_con: select_dispatch
+		                    },
+		                },
+		                {
+		                    path: 'multipleExamine', //批量审核
+		                    components: {
+		                        details_con: multipleExamine
+		                    },
+		                },
                     ]
                 },
                 {

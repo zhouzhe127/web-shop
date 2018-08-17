@@ -152,7 +152,7 @@
 					{name: '进入日志',className: 'success',type:4,
 						fn: () => {
 							this.$route.query.id = this.logId;
-							this.$router.push({path: '/batchLog/batchLogDispatchDetail',query: this.$route.query});
+							this.$router.push({path: '/admin/batchLog/batchLogDispatchDetail',query: this.$route.query});
 						}
 					},
 					{name: '全部审核',className: 'success',type:4,
@@ -167,7 +167,7 @@
 					},
 					{name: '返回',className:'info',type:4,
 						fn: () => {
-							window.history.go(-1);
+							this.$router.push({path: '/admin/batchLog/batchLogDispatchDetail',query: this.$route.query});
 						}
 					},
 				];

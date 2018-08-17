@@ -282,7 +282,7 @@
 				};
 				storage.session('mulSelectDispatch',obj);
 				this.$message({message: '选择完毕!',type: 'success'});
-				this.$router.push({path: '/admin/batchSchedule',query: this.$route.query});
+				this.$router.push({path: '/admin/conclusionList/batchSchedule',query: this.$route.query});
 			},
 			setAlready(list){//设置已经选中过的数据
 				for(let item of list){
