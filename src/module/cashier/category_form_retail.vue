@@ -20,20 +20,21 @@
 						@click="showDataChoose(index)">{{item.name}}</span>
 				</div>
 			</section>
-			<categorycharts v-if="industry != 1 && chartList.flag === 1" :formData="classification" :changeCharts="changeCharts" :shopList="shopList" :buttonFlag="dataList.flag" :headList="headList" :shopName="shopName"
-			    :flag="buttonList.flag" :chooseShopList="chooseShopList"></categorycharts>
-			<!-- <div class="mbot" style="margin-left: 0;">
-				<span class="sel" v-for="(item, index) in buttonList.list" :key="index" v-bind:class="{'on': buttonList.flag == index}" @click="light(index)">{{item.name}}</span>
-			</div> -->
-			<section v-show="chartList.flag === 0">
+			<!--图表-->
+			<categorycharts v-if="industry!=1&&chartList.flag=== 1" :formData="classification" :changeCharts="changeCharts" :shopList="shopList"
+                            :buttonFlag="dataList.flag" :headList="headList" :shopName="shopName" :flag="buttonList.flag" :chooseShopList="chooseShopList">
+            </categorycharts>
+			<!--数据-->
+			<section v-show="chartList.flag=== 0">
 				<section class="nav">
 					<span @click="chooseShop('total')" :style="{'font-weight': selShopForm.id == '-1' ? 600 : 400}" :class="{'selected': selShopForm.id == '-1'}" class="totalName">合计</span>
-					<div @click="chooseShop"  @click.stop :class="{'selected': selShopForm.id != '-1'}" class="shopName">
-						<span :style="{'font-weight': selShopForm.id!== '-1' ? 600 : 400}">{{selShopForm.shopName}}</span>
-						<i :style="{'border-top': selShopForm.id != '-1' ? '10px solid #f0f0f0' : '10px solid #45404b'}"></i>
-					</div>
+					<!--<div @click="chooseShop"  @click.stop :class="{'selected': selShopForm.id != '-1'}" class="shopName">-->
+						<!--<span :style="{'font-weight': selShopForm.id!== '-1' ? 600 : 400}">{{selShopForm.shopName}}</span>-->
+						<!--<i :style="{'border-top': selShopForm.id != '-1' ? '10px solid #f0f0f0' : '10px solid #45404b'}"></i>-->
+					<!--</div>-->
+					<elShopList :shopIds="selShopForm.id==-1?[]:selShopForm.id.split(',')" :isSingle="true" :delShopId="chooseShopList" @chooseShop="formShop"></elShopList>
 					<div class="shopBox">
-						<formShop v-if="showFormShop" @chooseShop="formShop" :shopId="selShopForm.id" :shopList="chooseShopList.filter(v=>v.selected)"></formShop>
+						<!--<formShop v-if="showFormShop" @chooseShop="formShop" :shopId="selShopForm.id" :shopList="chooseShopList.filter(v=>v.selected)"></formShop>-->
 					</div>
 				</section>
 				<section style="line-height: 28px;margin-bottom: 10px;">
@@ -542,6 +543,7 @@
 			'selectedType', //对应循序  0:日, 1:周, 2:月, 3:季度, 4:年
 		],
 		mounted() {
+			console.log(this.chooseShopList);
 			let userData = storage.session('userShop');
 			this.shopId = userData.currentShop.id;
 			this.industry = userData.currentShop.industry; //当industry为1时 为零售店，图表不显示
@@ -622,10 +624,16 @@
 				}
 			},
 			//选择查看列表数据显示的是哪家店铺
+//			formShop(item){
+//				this.showFormShop = false;
+//				this.selShopForm.id = item.id;
+//				this.selShopForm.shopName = item.shopName;
+//				this.haveData();
+//			},
+            //选选择店铺返回
 			formShop(item){
-				this.showFormShop = false;
-				this.selShopForm.id = item.id;
-				this.selShopForm.shopName = item.shopName;
+				console.log(item);
+				this.selShopForm.id=item.join(',');
 				this.haveData();
 			},
 			toLength(data){
@@ -1079,7 +1087,9 @@
 			page: () =>
 				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 			formShop: () =>
-				import ( /*webpackChunkName: 'form_shop'*/ './form_shop')
+				import ( /*webpackChunkName: 'form_shop'*/ './form_shop'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		}
 
 	};

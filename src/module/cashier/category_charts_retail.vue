@@ -29,49 +29,53 @@
 				</div> -->
 				<div>
 					<div class="shops_list" v-if="ChartShopName.length >= 1">
-						<div class="shopBox">
-							<formShop v-if="showFormShop == 'yellow'" @chooseShop="getYellow" :isChart=true :shopId="yellow.id" :shopList="yellowShopList"></formShop>
-						</div>
+						<!--<div class="shopBox">-->
+							<!--<formShop v-if="showFormShop == 'yellow'" @chooseShop="getYellow" :isChart=true :shopId="yellow.id" :shopList="yellowShopList"></formShop>-->
+						<!--</div>-->
 						<span class="yellowSign shops_sign"></span>
-						<div class="select-body" @click="showShop('yellow')" @click.stop>
-							<div class="select-body-btn">
-								<span :title="yellow.name" class="text-ellipsis">{{yellow.name}}</span>
-								<em><i></i></em>
-							</div>
-						</div>
-						<!-- <span @click="showShop('yellow')" @click.stop style="display:inline-block;width:150px;height:30px;border:1px solid #ccc"></span> -->
-						<!-- <selectBtn @emit="getYellow" :name="yellow.name" :sorts="yellowShopList.map(v=>v.name)"></selectBtn> -->
+
+						<elShopList :shopIds="yellow.id.split(',')" :isSingle="true" :delShopId="yellowShopList" @chooseShop="getYellow"></elShopList>
+						<!--<div class="select-body" @click="showShop('yellow')" @click.stop>-->
+							<!--<div class="select-body-btn">-->
+								<!--<span :title="yellow.name" class="text-ellipsis">{{yellow.name}}</span>-->
+								<!--<em><i></i></em>-->
+							<!--</div>-->
+						<!--</div>-->
+
 					</div>
 					<div class="shops_list" v-if="ChartShopName.length >= 2">
 						<span class="blueSign shops_sign"></span>
-						<div class="select-body" @click="showShop('blue')" @click.stop>
-							<div class="select-body-btn">
-								<span :title="blue.name" class="text-ellipsis">{{blue.name}}</span>
-								<em><i></i></em>
-							</div>
-						</div>
+						<elShopList :shopIds="blue.id.split(',')" :isSingle="true" :delShopId="blueShopList" @chooseShop="getBlue"></elShopList>
+						<!--<div class="select-body" @click="showShop('blue')" @click.stop>-->
+							<!--<div class="select-body-btn">-->
+								<!--<span :title="blue.name" class="text-ellipsis">{{blue.name}}</span>-->
+								<!--<em><i></i></em>-->
+							<!--</div>-->
+						<!--</div>-->
 						<!-- <selectBtn @emit="getBlue" :name="blueName" :sorts="blueShopList.map(v=>v.name)"></selectBtn> -->
-						<div class="shopBox">
-							<formShop v-if="showFormShop == 'blue'" @chooseShop="getBlue" :isChart=true :shopId="blue.id" :shopList="blueShopList"></formShop>
-						</div>
+						<!--<div class="shopBox">-->
+							<!--<formShop v-if="showFormShop == 'blue'" @chooseShop="getBlue" :isChart=true :shopId="blue.id" :shopList="blueShopList"></formShop>-->
+						<!--</div>-->
 					</div>
 					<div class="shops_list" v-if="ChartShopName.length >= 3">
 						<span class="greenSign shops_sign"></span>
-						<div class="select-body">
-							<div class="select-body-btn" @click="showShop('green')" @click.stop>
-								<span :title="green.name" class="text-ellipsis">{{green.name}}</span>
-								<em><i></i></em>
-							</div>
-						</div>
+						<elShopList :shopIds="green.id.split(',')" :isSingle="true" :delShopId="greenShopList" @chooseShop="getGreen"></elShopList>
+						<!--<div class="select-body">-->
+							<!--<div class="select-body-btn" @click="showShop('green')" @click.stop>-->
+								<!--<span :title="green.name" class="text-ellipsis">{{green.name}}</span>-->
+								<!--<em><i></i></em>-->
+							<!--</div>-->
+						<!--</div>-->
 						<!-- <selectBtn @emit="getGreen" :name="greenName" :sorts="greenShopList.map(v=>v.name)"></selectBtn> -->
-						<div class="shopBox">
-							<formShop v-if="showFormShop == 'green'" @chooseShop="getGreen" :isChart=true :shopId="green.id" :shopList="greenShopList"></formShop>
-						</div>
+						<!--<div class="shopBox">-->
+							<!--<formShop v-if="showFormShop == 'green'" @chooseShop="getGreen" :isChart=true :shopId="green.id" :shopList="greenShopList"></formShop>-->
+						<!--</div>-->
 					</div>
 					<!-- <select-btn v-if="ChartShopName.length >= 1"></select-btn> -->
 				</div>
 			</div>
 		</section>
+		<!--选择样本数据弹窗-->
 		<addwin v-if="goods" @choose="getWin" :goods="selGood" :shop="shopList" :chooseShopList="chooseShopList"></addwin>
 	</div>
 </template>
@@ -82,21 +86,25 @@
 	export default {
 		data() {
 			return {
+				goods: false, //选择样本数据弹框
+				classification: [],
 				selGood: {
 					id: '',
 					type: '',
 					name: '',
 					shopList: []
 				}, //选中样本数据
+
 				chartsTitle: {
 					flag: 0,
 					list: []
 				}, //图表数据导航列表
+
 				series: [], //图表折线数据
 				ChartShopName: [], //选中的店铺
 				ChartSelShop: [], //默认选中的三家店铺
-				goods: false, //选择样本数据弹框
-				classification: [],
+
+
 				yellowShopList: [],
 				blueShopList: [],
 				greenShopList: [],
@@ -112,7 +120,7 @@
 					id: '',
 					name: ''
 				},
-				showFormShop: '',//店铺选择弹窗
+//				showFormShop: '',//店铺选择弹窗
 			};
 		},
 		props: [
@@ -144,7 +152,7 @@
 			echarts = await
 			import ( /*webpackChunkName: 'echarts'*/ 'src/verdor/echarts');
 			this.init();
-			document.addEventListener('click', this.show);
+//			document.addEventListener('click', this.show);
 			//图表默认显示品牌店下第一个分类的数据
 			// let oneData = utils.deepCopy(this.classification[0].shop[0].category);
 			let oneData = utils.deepCopy(this.classification[0].shop[0]);
@@ -163,9 +171,9 @@
 			this.changeTitlechart(this.chartsTitle.flag, this.headList[this.chartsTitle.flag]);
 		},
 		methods: {
-			show(){
-				this.showFormShop = '';
-			},
+//			show(){
+//				this.showFormShop = '';
+//			},
 			init(){ 
 				let obj = {'shopId': 'a','shopName': 'b','goodsNum':'c','num':'d','attrPrice':'e','freeNum':'f','freePrice':'g','returnNum': 'h','returnPrice':'i','discountPrice':'j','price':'k','totalPrice':'l','barCode':'m','secBarCode':'n','specifications':'o','unitPrice':'p','child':'q','goods':'r','categoryName':'t','categoryId':'u','gid': 'v','goodName': 'w'};
 				this.classification = utils.deepCopy(this.formData);
@@ -219,81 +227,158 @@
 			chooseGoods() {
 				this.goods = !this.goods;
 			},
-			showShop(type){
-				this.showFormShop = type;
-			},
+//			showShop(type){
+//				this.showFormShop = type;
+//			},
 			getShopList(){
 				this.yellowShopList = this.ChartShopName.filter(v=>v.className != 'chblue' && v.className != 'chgreen');
 				this.blueShopList = this.ChartShopName.filter(v=>v.className != 'chyellow' && v.className != 'chgreen');
 				this.greenShopList = this.ChartShopName.filter(v=>v.className != 'chblue' && v.className != 'chyellow');
 			},
-			getYellow(res){ 
+//			getYellow(res){
+//				console.log(res);
+//				this.yellowShopList.forEach(v => {
+//					v.className = '';
+//					if(v.name == res.name){
+//						v.className = 'chyellow';
+//					}
+//				});
+//				this.yellow.name = res.name;
+//				this.yellow.id = res.id;
+//				this.getShopList();
+//				this.chartShops(res);
+//				this.showFormShop = '';
+//			},
+			getYellow(res){
+				let obj={};
+				for(let i=0;i<this.chooseShopList.length;i++){
+					if(res.includes(this.chooseShopList[i].id)){
+						obj.name=this.chooseShopList[i].shopName;
+						obj.id=this.chooseShopList[i].id;
+						obj.className= "chyellow";
+						break;
+					}
+				}
 				this.yellowShopList.forEach(v => {
 					v.className = '';
-					if(v.name == res.name){
+					if(v.name == obj.name){
 						v.className = 'chyellow';
 					}
 				});
-				this.yellow.name = res.name;
-				this.yellow.id = res.id;
+				this.yellow.name = obj.name;
+				this.yellow.id = obj.id;
 				this.getShopList();
-				this.chartShops(res);
-				this.showFormShop = '';
+				this.chartShops(obj,'chyellow');
+//				this.showFormShop = '';
 			},
 			getBlue(res){
+				let obj={};
+				for(let i=0;i<this.chooseShopList.length;i++){
+					if(res.includes(this.chooseShopList[i].id)){
+						obj.name=this.chooseShopList[i].shopName;
+						obj.id=this.chooseShopList[i].id;
+						obj.className= "chblue";
+						break;
+					}
+				}
 				this.blueShopList.forEach(v => {
 					v.className = '';
-					if(v.name == res.name){
+					if(v.name == obj.name){
 						v.className = 'chblue';
 					}
 				});
-				this.blue.name = res.name;
-				this.blue.id = res.id;
+				this.blue.name = obj.name;
+				this.blue.id = obj.id;
 				this.getShopList();
-				this.chartShops(res);
-				this.showFormShop = '';
+				this.chartShops(obj,'chblue');
+//				this.showFormShop = '';
 			},
+//			getBlue(res){
+//				console.log(res);
+//				this.blueShopList.forEach(v => {
+//					v.className = '';
+//					if(v.name == res.name){
+//						v.className = 'chblue';
+//					}
+//				});
+//				this.blue.name = res.name;
+//				this.blue.id = res.id;
+//				this.getShopList();
+//				this.chartShops(res);
+//				this.showFormShop = '';
+//			},
 			getGreen(res){
+				let obj={};
+				for(let i=0;i<this.chooseShopList.length;i++){
+					if(res.includes(this.chooseShopList[i].id)){
+						obj.name=this.chooseShopList[i].shopName;
+						obj.id=this.chooseShopList[i].id;
+						obj.className= "chgreen";
+						break;
+					}
+				}
 				this.greenShopList.forEach(v => {
 					v.className = '';
-					if(v.name == res.name){
+					if(v.name == obj.name){
 						v.className = 'chgreen';
 					}
 				});
-				this.green.name = res.name;
-				this.green.id = res.id;
+				this.green.name = obj.name;
+				this.green.id = obj.id;
 				this.getShopList();
-				this.chartShops(res);
-				this.showFormShop = '';
+				this.chartShops(obj,'chgreen');
+//				this.showFormShop = '';
+			},
+//			getGreen(res){
+//				this.greenShopList.forEach(v => {
+//					v.className = '';
+//					if(v.name == res.name){
+//						v.className = 'chgreen';
+//					}
+//				});
+//				this.green.name = res.name;
+//				this.green.id = res.id;
+//				this.getShopList();
+//				this.chartShops(res);
+//				this.showFormShop = '';
+//			},
+			chartShops(item,type){
+				console.log(type);
+				for(let i=0;i<this.ChartSelShop.length;i++){ //删除一家店铺
+					if(this.ChartSelShop[i].className==type||this.ChartSelShop[i].className==''){
+						this.ChartSelShop.splice(i,1);
+					}
+				}
+				//添加新的店铺
+				this.ChartSelShop.push(item);
+				console.log(this.ChartSelShop)
+				this.selSeries = [];
+				for (let i = 0; i < this.ChartSelShop.length; i++) {
+					for (let j = 0; j < this.series.length; j++) {
+						if (this.ChartSelShop[i].name == this.series[j].name) {
+							this.selSeries.push(this.series[j]);
+						}
+					}
+				}
+				if (this.flag === 0) {
+					this.showEchart();
+				} else {
+					this.showPercent();
+				}
 			},
 			//获取店铺名
 			getShopname: function () {
+				console.log(this.shopName);
+				console.log(this.chooseShopList);
 				if (this.shopName != '请选择店铺') {
-					// this.shopName = this.shopName.substring(0,this.shopName.length-1);
-					// let list = this.shopName.split(',');
 					let arr = [];
-					// for (let i = 0; i < list.length; i++) {
-					// 	let obj = {};
-					// 	if (i === 0) {
-					// 		obj.className = 'chyellow';
-					// 		obj.name = list[i];
-					// 	} else if (i === 1) {
-					// 		obj.className = 'chblue';
-					// 		obj.name = list[i];
-					// 	} else if (i === 2) {
-					// 		obj.className = 'chgreen';
-					// 		obj.name = list[i];
-					// 	} else {
-					// 		obj.className = '';
-					// 		obj.name = list[i];
-					// 	}
-					// 	arr.push(obj);
-					// }
 					for (let i = 0; i < this.chooseShopList.length; i++) {
 						let obj = {};
-						obj.name = this.chooseShopList[i].shopName;
-						obj.id = this.chooseShopList[i].id;
+						obj.name =this.chooseShopList[i].shopName;
+						obj.id=this.chooseShopList[i].id;
 						obj.ischain = this.chooseShopList[i].ischain;
+						obj.storeAreaId=this.chooseShopList[i].storeAreaId;//区域id
+						obj.shopName=this.chooseShopList[i].shopName;//区域门店弹窗用shopName这个字段
 						if (i === 0) {
 							obj.className = 'chyellow';
 							this.yellow.name = this.chooseShopList[i].shopName;
@@ -344,25 +429,7 @@
 					}
 				}
 			},
-			chartShops(item){
-				this.ChartSelShop.forEach((v,index) => {
-					if(v.className == '') this.ChartSelShop.splice(index,1);
-				});
-				this.ChartSelShop.push(item);
-				this.selSeries = [];
-				for (let i = 0; i < this.ChartSelShop.length; i++) {
-					for (let j = 0; j < this.series.length; j++) {
-						if (this.ChartSelShop[i].name == this.series[j].name) {
-							this.selSeries.push(this.series[j]);
-						}
-					}
-				}
-				if (this.flag === 0) {
-					this.showEchart();
-				} else {
-					this.showPercent();
-				}
-			},
+
 			//图表选择店铺
 			chartShop: function (item) {
 				if (item.className) {
@@ -553,6 +620,9 @@
 			},
 			//设置图表显示的颜色
 			changeColor: function () {
+				console.log(this.selSeries);
+				console.log(this.ChartSelShop);
+
 				for (let j = 0; j < this.selSeries.length; j++) {
 					let itemStyle = {
 						normal: {
@@ -562,6 +632,7 @@
 						}
 					};
 					this.selSeries[j].itemStyle = itemStyle;
+
 					for (let i = 0; i < this.ChartShopName.length; i++) {
 						if (this.selSeries[j].name == this.ChartShopName[i].name) {
 							if (this.ChartShopName[i].className == 'chyellow') {
@@ -602,20 +673,6 @@
 						textStyle: {
 							align: 'left'
 						}
-						// formatter: function (params) {
-						// 	let relVal = params[0].name + '<br/>';
-						// 	if (params.length == 1) {
-						// 		relVal += params[0].seriesName + ' : ' + params[0].value;
-						// 	} else if (params.length == 2) {
-						// 		relVal += params[0].seriesName + ' : ' + params[0].value + '<br/>';
-						// 		relVal += params[1].seriesName + ' : ' + params[1].value;
-						// 	} else {
-						// 		relVal += params[0].seriesName + ' : ' + params[0].value + '<br/>';
-						// 		relVal += params[1].seriesName + ' : ' + params[1].value + '<br/>';
-						// 		relVal += params[2].seriesName + ' : ' + params[2].value;
-						// 	}
-						// 	return relVal;
-						// },
 					},
 					legend: {
 						selected: selected
@@ -737,15 +794,17 @@
 			}
 		},
 		destroyed(){
-			document.removeEventListener('click', this.show);
+//			document.removeEventListener('click', this.show);
 		},
 		components: {
 			addwin: () =>
 				import ( /*webpackChunkName: 'category_win'*/ './category_win'),
 			selectBtn: () =>
 				import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
-			formShop: () =>
-				import ( /*webpackChunkName: 'form_shop'*/ './form_shop')
+//			formShop: () =>
+//				import ( /*webpackChunkName: 'form_shop'*/ './form_shop'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		}
 	};
 </script>
@@ -761,13 +820,13 @@
 				margin-right: 20px;
 				vertical-align: middle;
 				position: relative;
-				.shopBox{
-					height: 0;
-					margin-left: -350px;
-					position: absolute;
-					left: 100px;
-					top: -350px;
-				}
+				/*.shopBox{*/
+					/*height: 0;*/
+					/*margin-left: -350px;*/
+					/*position: absolute;*/
+					/*left: 100px;*/
+					/*top: -350px;*/
+				/*}*/
 				.shops_sign{
 					display: inline-block;
 					width: 10px;
@@ -784,21 +843,21 @@
 				.greenSign{
 					background: #5eb71c;
 				}
-				.select-body{
-					position: relative;display: inline-block;line-height: normal;
-					.select-body-btn {
-						vertical-align: middle;display: inline-block;border: #b3b3b3 solid 1px;overflow: hidden;cursor: pointer;
-						em{width: 40px;height: 38px;float: right;text-align: center;line-height: 38px;border-left: 1px solid #ccc;
-							i {height: 10px;width: 10px;display: inline-block;
-								border-top: 10px solid #b3b3b3;border-left: 5px solid transparent;border-right: 5px solid transparent;box-sizing: border-box;
-							}
-						}
-						span {
-							width: 150px;height: 38px;line-height: 38px;
-							text-align: center;color: #666666;float: left;
-						}
-					}
-				}
+				/*.select-body{*/
+					/*position: relative;display: inline-block;line-height: normal;*/
+					/*.select-body-btn {*/
+						/*vertical-align: middle;display: inline-block;border: #b3b3b3 solid 1px;overflow: hidden;cursor: pointer;*/
+						/*em{width: 40px;height: 38px;float: right;text-align: center;line-height: 38px;border-left: 1px solid #ccc;*/
+							/*i {height: 10px;width: 10px;display: inline-block;*/
+								/*border-top: 10px solid #b3b3b3;border-left: 5px solid transparent;border-right: 5px solid transparent;box-sizing: border-box;*/
+							/*}*/
+						/*}*/
+						/*span {*/
+							/*width: 150px;height: 38px;line-height: 38px;*/
+							/*text-align: center;color: #666666;float: left;*/
+						/*}*/
+					/*}*/
+				/*}*/
 			}
 		}
 		.titleChart {
