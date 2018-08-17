@@ -9,8 +9,8 @@
 		<div class="table">
 			<el-table :data="tableData" style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
 				<el-table-column label="操作" align="center">
-					<template slot-scope="props">
-						<span class="view-detail">查看详情</span>
+					<template slot-scope="{row,column,index}">
+						<span class="view-detail" @click="linkUrl(row)">查看详情</span>
 					</template>						
 				</el-table-column>
 				<el-table-column label="序号" align="center" prop="itemIndex"></el-table-column>
@@ -34,8 +34,6 @@
 	
 */
 import http from 'src/manager/http';
-import global from 'src/manager/global';
-import utils from 'src/verdor/utils';
 
 export default {
 	data () {
@@ -55,16 +53,29 @@ export default {
 		tab:{
 			type:[String,Number],			//1:展示商品详情,0:展示物料详情
 			default:1		
-		}
+		},
 	},
 	async mounted(){
-        this.initBtn();
-		let res = await this.getHttp('dispatchGetDispatchAuditLogDetailList',{logId:1});
-		if(this.isObject(res)){
-			this.initInfo(res);		
-			this.tableData = this.addItemIndex(res.list,this.initTableDataEle);
+		this.logId = this.$route.query.logId;
+		this.logId = 1;
+		this.initBtn();
+		if(this.logId){
+			let res = await this.getHttp('dispatchGetDispatchAuditLogDetailList',{logId:this.logId});
+			if(this.toRaw(res,'Object')){
+				this.initInfo(res);	
+				if(Array.isArray(res.list)){
+					this.tableData = res.list.map((ele,index)=>{
+						ele.itemIndex = index + 1;
+						if(ele.itemIndex < 10){
+							ele.itemIndex = '0'+ele.itemIndex;
+						}
+						let date = this.generatorDate(ele.applicationTime * 1000);
+						ele.zh_applicationTime = date.str;
+						return ele;
+					});
+				}	
+			}
 		}
-
 	},
 	methods: {
         initInfo(res){
@@ -80,13 +91,10 @@ export default {
 			}
             this.info = obj.list;
         },
-        linkUrl(flag,item){
-
-		},
-		initTableDataEle(ele){
-			//初始化数组里面的元素
-			let date = this.generatorDate(ele.applicationTime * 1000);
-			ele.zh_applicationTime = date.str;
+        linkUrl(item){
+			let {query} = this.$route;
+			query.id = item.aapplicationId;
+			this.$router.push({path:'',query});
 		},
 		initBtn(){
 			this.$store.commit('setPageTools',[
@@ -101,17 +109,6 @@ export default {
 		},
 
 
-
-		addItemIndex(list,fn) {
-			if(!Array.isArray(list)) list = [];
-			//给列表添加序号
-			for(let i = 0; i < list.length; i++) {
-				// let itemIndex = (this.pageObj.currentPage - 1) * this.pageObj.num + 1 + i;
-				// list[i].itemIndex = itemIndex >= 10 ? itemIndex : '0' + itemIndex;
-				fn(list[i]);
-			}
-			return [...list];
-		},
 		async getHttp(url,obj={}){
 			let res = await http[url]({data:obj});
 			return res;
@@ -119,8 +116,8 @@ export default {
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
 		},
-		isObject(value){
-			return (value && typeof value == 'object');
+		toRaw(obj,type){
+			return Object.prototype.toString.call(obj).slice(8,-1) == type;
 		},
 		generatorDate(time){
 			//生成日期对象

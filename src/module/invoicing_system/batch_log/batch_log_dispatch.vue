@@ -10,25 +10,25 @@
         <div class="main">
 			<div class="table">
 				<div class="table-head">
-					批量调度日志<i class="circle"></i>共 <span class="num">70</span> 个条目
+					批量调度日志<i class="circle"></i>共 <span class="num">{{pageObj.total}}</span> 个条目
 				</div>
 
 				<el-table :data="tableData" style="width: 100%" stripe v-if="tab == 1">
 					<el-table-column label="操作" align="center">
-						<template slot-scope="props">
-							<span class="view-detail">查看详情</span>
+						<template slot-scope="{row,column,index}">
+							<span class="view-detail" @click="goToUrl(row,column,index)">查看详情</span>
 						</template>						
 					</el-table-column>
-					<el-table-column label="序号" align="center" prop="index"></el-table-column>
-					<el-table-column label="出货仓库" align="center" prop="index"></el-table-column>
-					<el-table-column label="操作人" align="center" prop="index"></el-table-column>
-					<el-table-column label="操作时间" align="center" prop="index"></el-table-column>
+					<el-table-column label="序号" align="center" prop="itemIndex"></el-table-column>
+					<el-table-column label="出货仓库" align="center" prop="wName"></el-table-column>
+					<el-table-column label="操作人" align="center" prop="createUName"></el-table-column>
+					<el-table-column label="操作时间" align="center" prop="zh_createTime"></el-table-column>
 				</el-table>
 
 				<el-table :data="tableData" style="width: 100%" stripe v-if="tab == 2">
 					<el-table-column label="操作" align="center">
-						<template slot-scope="props">
-							<span class="view-detail">查看详情</span>
+						<template slot-scope="{row,column,index}">
+							<span class="view-detail" @click="goToUrl(row,column,index)">查看详情</span>
 						</template>						
 					</el-table-column>
 					<el-table-column label="序号" align="center" prop="itemIndex"></el-table-column>
@@ -56,7 +56,8 @@
 <script>
 /*
 	请求:
-		dispatchGetDispatchAuditLogList			//获取审核日志
+		dispatchGetDispatchAuditLogList			//获取批量审核日志
+		DispatchGetDispatchLogList				//获取批量调度日志
 	注意:
 	
 */
@@ -69,27 +70,25 @@ export default {
 		return {
             tableData:[],
             tabList:[],             
-			pageObj:{
-				total:0,				//总记录数
-				pageSize:10,			//每页显示的记录数
-				pagerCount:11,			//每页显示的按钮数
-				currentPage:1,
-			},
+			pageObj:{},
 			logId:'',				//记录id
 		};
 	},
 	props:{
 		tab:{
 			type:[String,Number],			//1:展示商品详情,0:展示物料详情
-			default:2		
+			default:1		
 		}
 	},
 	async mounted(){
+		this.initPageObj();
 		this.initTabList();
 		this.getList();
     },
     watch:{
         tab:function(){
+			this.tableData = [];
+			this.initPageObj();
             this.initTabList();
 			this.getList();
         }
@@ -97,8 +96,8 @@ export default {
 	methods: {
         initTabList(){
             let arr = [
-                {tab:1,list:[{label:'批量调度',class:'primary'},{label:'批量审核',class:''}]},
-                {tab:2,list:[{label:'批量调度',class:''},{label:'批量审核',class:'primary'}]},
+                {tab:1,list:[{label:'批量调度',class:'primary',id:1},{label:'批量审核',class:'',id:2}]},
+                {tab:2,list:[{label:'批量调度',class:'',id:1},{label:'批量审核',class:'primary',id:2}]},
             ];
             for(let ele of arr){
                 if(ele.tab == this.tab){
@@ -106,10 +105,38 @@ export default {
                     break;
                 }
             }
-        },
-
+		},
+		initPageObj(){
+			this.pageObj = {
+				total:0,				//总记录数
+				pageSize:10,			//每页显示的记录数
+				pagerCount:11,			//每页显示的按钮数
+				currentPage:1,
+			};
+		},
 		linkPage(item){
 			//tab切换
+			switch(this.tab+''){
+				case '1':
+					if(item.id == 2) this.$router.push({path:'/admin/batchLog/batchLogAudit'});
+					break;
+				case '2':
+					if(item.id == 1) this.$router.push({path:'/admin/batchLog/'});
+					break;
+			}
+		},
+		goToUrl(row){
+			let query = this.$route.query;
+			switch(this.tab+''){
+				case '1':
+					query.logId = row.logId;
+					this.$router.push({path:'/admin/batchLog/batchLogDispatchDetail',query});
+					break;
+				case "2":
+					query.logId = row.logId;
+					this.$router.push({path:'/admin/batchLog/batchLogDetail',query});
+					break;
+			}
 		},
 		funGetPage(flag,res){
 			//获取页码值
@@ -120,18 +147,20 @@ export default {
 			}
 			this.getList();
 		},
+
 		async getList(){
-			let obj = {};
+			let obj = {},
+				url = '';
 			switch(this.tab+''){
 				case '1':
-
-					break;
 				case '2':
-					obj = await this.getHttp('dispatchGetDispatchAuditLogList',{
+					url = this.tab == 1 ? 'DispatchGetDispatchLogList' : 'dispatchGetDispatchAuditLogList'
+					obj = await this.getHttp(url,{
 						page:this.pageObj.currentPage,
 						size:this.pageObj.pageSize
 					});
-					if(this.isObject(obj)){
+
+					if(this.toRawType(obj,'Object')){
 						this.pageObj.total = obj.count;
 						this.tableData = obj.list;
 
@@ -158,8 +187,8 @@ export default {
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
 		},
-		isObject(value){
-			return (value && typeof value == 'object');
+		toRawType (value,type) {
+			return Object.prototype.toString.call(value).slice(8, -1) == type;
 		},
 		generatorDate(time){
 			//生成日期对象
