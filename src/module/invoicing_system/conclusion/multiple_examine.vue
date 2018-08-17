@@ -106,6 +106,7 @@
 					8:'配货完成',
 				},
 				isLog:false,//是否显示进入日志 默认不显示
+				logId:'',//日志id
 			};
 		},
 		components: {
@@ -120,20 +121,22 @@
 			this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
 		},
 		beforeRouteEnter (to, from, next) {
-			//if(from.path=='/admin/inventoryManagement/publicDetails'){
-//				next(function(self){
-//					self.isLog = true;
-//				});
-			//}else{
+			if(from.path=='/admin/batchSchedule'){
+				next(function(self){
+					self.isLog = true;
+				});
+			}else{
 				next();	
-			//}
+			}
 		},
 		mounted() {
 			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
 			this.initBtn();
 			this.getShopList();//店铺列表
 			if(this.isLog){
-				
+				let logObj = storage.session('userShop');
+				this.logId = logObj.logId;
+				this.list = logObj.list;
 			}else{
 				this.getData();//请求数据
 			}
@@ -148,7 +151,8 @@
 					},
 					{name: '进入日志',className: 'success',type:4,
 						fn: () => {
-							
+							this.$route.query.id = this.logId;
+							this.$router.push({path: '/batchLog/batchLogDispatchDetail',query: this.$route.query});
 						}
 					},
 					{name: '全部审核',className: 'success',type:4,
@@ -249,12 +253,11 @@
 				return list;
 			},
 			reset() { //重置
-				let arr = ['goodsName','barCode','wid','areaId'];
-				for(let item of arr){
-					this[item] = '';
-				}
+				this.userName = '';
 				this.page = 1;
-				this.pageShow = 10;
+				this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
+				this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
+				this.endTime = new Date().setHours(0, 0, 0, 0);
 				this.getData();
 			},
 			pageChange(page) { //分页 获取页数
