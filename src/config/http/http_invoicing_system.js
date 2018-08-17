@@ -897,8 +897,7 @@ export default {
     },
     "invgetMultiApplicationMatchList": {
         url: b + 'Dispatch/getMultiApplicationMatchList', //批量匹配商品和物料
-        method: 'get',
-        fake: true
+        method: 'get'
     },
     "invgetAllocationType": {
         url: b + 'Dispatchrecord/getAllocationType', //获取配货方式
@@ -906,15 +905,36 @@ export default {
     },
     "invaddMultDispatchRecord": {
         url: b + 'Dispatchrecord/addMultDispatchRecord', //新建批量调度
-        method: 'get'
+        method: 'post'
     },
     /* 批量审核日志 */
     "dispatchGetDispatchAuditLogList": {
         method: 'get',
-        url: b + "dispatch/getDispatchAuditLogList"
+        url: b + "dispatch/getDispatchAuditLogList" //获取批量调度审核日志列表
     },
     "dispatchGetDispatchAuditLogDetailList": {
         method: 'get',
-        url: b + "dispatch/getDispatchAuditLogDetailList" //获取日志详情列表
-    }
+        url: b + "dispatch/getDispatchAuditLogDetailList" //获取批量审核日志详情
+    },
+    "dispatchGetDispatchLogDetailList": {
+        method: 'get',
+        // fake:true,
+        url: b + "dispatch/getDispatchLogDetailList" //获取批量调度日志详情
+    },
+    "DispatchGetDispatchLogList": {
+        method: 'get',
+        url: b + "Dispatch/getDispatchLogList" //获取批量调度日志列表
+    },
+    "DispatchrecordGetAllocationType": {
+        method: 'get',
+        url: b + "Dispatchrecord/getAllocationType" //获取配置方式
+    },
+    "DispatchGetMultiApplicationMatchList": {
+        url: b + "Dispatch/getMultiApplicationMatchList", //批量调度-批量匹配商品和物料
+        method: 'get',
+    },
+    "dispatchApproveApplications": {
+        url: b + "dispatch/approveApplications", //批量审核-审核通过
+        method: 'post',
+    },
 }

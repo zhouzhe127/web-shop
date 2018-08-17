@@ -49,8 +49,8 @@
 							<span>平均量</span>
 							<span>按比例量</span>
 							<span>实际出货量</span>
-							<span>分销价格</span>
-							<span>价格单位</span>
+							<span v-if="isBrand">分销价格</span>
+							<span v-if="isBrand">价格单位</span>
 						</div>
 						<div class="list-two" v-for="(list,i) in item.list" :key="i" :class="{'full':list.isSuccess==0}">
 							<span class="fail">
@@ -68,7 +68,7 @@
 										<template slot="append">{{list.unitName}}</template>
 									</el-input>
 								</span>
-								<span>
+								<span v-if="isBrand">
 									<div class="dispice">
 										<strong v-if="list.piceValue&&list.distributionId>=0">{{list.piceValue}}</strong>
 										<div class="input-num" v-if="list.distributionId==-2">
@@ -81,7 +81,7 @@
 										</div>
 									</div>
 								</span>
-								<span>
+								<span v-if="isBrand">
 									<el-select v-model="list.piceUnitid" :disabled="list.piceUnitid == '等于进价'" placeholder="单位">
 										<el-option v-for="(bc,s) in item.unit" :key="s" :label="bc.name" :value="bc.muId"></el-option>
 									</el-select>
@@ -97,6 +97,7 @@
 </template>
 <script>
 	import utils from 'src/verdor/utils';
+	import storage from 'src/verdor/storage';
 	export default {
 		data() {
 			return {
@@ -104,6 +105,7 @@
 				options: [],
 				value: '',
 				materialList: [],
+				isBrand:false,
 				typeName: ['成品', '半成品', '普通物料']
 			};
 		},
@@ -252,6 +254,7 @@
 		},
 		mounted() {
 			this.options = this.$parent.options;
+			this.isBrand = storage.session('userShop').currentShop.ischain == '3'? true : false;
 			this.materialList = this.proData;
 			this.setList();
 		},

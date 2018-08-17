@@ -281,18 +281,18 @@
 					name: '批量审核',
 					className: 'primary',
 					fn: () => {
-						// this.$router.push({
-						// 	path: '/admin/processbomList/create'
-						// });
+						this.$router.push({
+							path: '/admin/multipleExamine'
+						});
 					},
 					type:4
 				},{
 					name: '批量调度',
 					className: 'primary',
 					fn: () => {
-						// this.$router.push({
-						// 	path: '/admin/processbomList/create'
-						// });
+						this.$router.push({
+							path: '/admin/selectDispatch'
+						});
 					},
 					type:4
 				}]);

@@ -44,7 +44,8 @@
 				goodsList: [], //商品数据
 				materialList: [], //物料数据
 				wName: '',
-				getData: {}
+				getData: {},
+				isBrand:false
 			};
 		},
 		methods: {
@@ -85,7 +86,7 @@
 								outNum: 0 //出货量
 							});
 							if (Number(v.isSuccess) == 1) {
-								applyNum += v.num;
+								applyNum += Number(v.num);
 								cil++;
 							}
 							arr.push(obj)
@@ -126,7 +127,7 @@
 						unitId: ''
 					}, {
 						distributionId: -2,
-						value: '',
+						value: 0,
 						distributionName: '自定义价格',
 						unitId: ''
 					}]);
@@ -157,7 +158,7 @@
 								outNum: 0 //出货量
 							});
 							if (Number(v.isSuccess) == 1) {
-								applyNum += v.num;
+								applyNum += Number(v.num);
 								cil++;
 							}
 							arr.push(obj);
@@ -321,7 +322,7 @@
 						applyNum: res.num,
 						distributionPrice: res.piceValue, //分销价格
 						distributionUnit: res.isPurchase == 1 ? unit.name : '',
-						isPurchase: res.isPurchase, //是否为进价
+						isPurchase: isBrand? res.isPurchase:1, //是否为进价
 						isSuccess: res.isSuccess
 					}
 					arr.push(obj);
@@ -329,8 +330,8 @@
 				return arr;
 			},
 			setoutputData() { //处理给后台的数据
-				let goodsData = this.$refs.goods;
-				let suppliesData = this.$refs.supplies;
+				let goodsData = this.$refs.goods.goodsList;
+				let suppliesData = this.$refs.supplies.materialList;
 				let sendGoods = [];
 				let sendsupplies = [];
 				for (let item of goodsData) {
@@ -351,7 +352,7 @@
 						invenNum: item.surplus,
 						allocationType: item.allot,
 						selectUnitName: item.unitName,
-						detail: this.surplusshopSet(item.list)
+						detail: this.surplusshopSet(item)
 					}
 					sendsupplies.push(objSupplies);
 				}
@@ -360,6 +361,7 @@
 					goodsDetail: sendGoods,
 					materialDetail: sendsupplies
 				}
+				console.log(111);
 				this.confirms(obj);
 			},
 			async confirms(obj) {
@@ -378,15 +380,20 @@
 					name: '确认调度',
 					className: 'primary',
 					fn: () => {
-						this.$confirm('确定批量调度?', '提示', {
-							confirmButtonText: '确定',
-							cancelButtonText: '取消',
-							type: 'warning'
-						}).then(() => {
-							this.setoutputData();
-						}).catch(() => {
-
-						});
+						this.setoutputData();
+						// this.$confirm('确定批量调度?', '提示', {
+						// 	confirmButtonText: '确定',
+						// 	cancelButtonText: '取消',
+						// 	type: 'warning'
+						// }).then(() => {
+						// 	console.log(222222222)
+						// 	this.setoutputData();
+						// }).catch(() => {
+						// 	this.$message({
+						// 		type: 'info',
+						// 		message: '已取消'
+						// 	});  
+						// });
 					},
 					type: 4
 				}, {
@@ -401,7 +408,8 @@
 		},
 		mounted() {
 			let needStor = storage.session('mulSelectDispatch');
-			this.needStor = needStor.wName;
+			this.isBrand = storage.session('userShop').currentShop.ischain == '3'? true : false;
+			this.wName = needStor.wName;
 			Object.assign(this.getData, {
 				wid: needStor.wid,
 				param: needStor.param

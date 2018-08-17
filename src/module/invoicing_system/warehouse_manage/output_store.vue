@@ -297,7 +297,7 @@
 			materialBatch: () =>
 				import( /*webpackChunkName: 'output_material_batch_win'*/ './output_material_batch_win'), //物料批次选择
 			addStore: () =>
-				import( /*webpackChunkName:'choose_warehouse__win'*/ './choose_warehouse_win'),
+				import( /*webpackChunkName:'choose_warehouse_win'*/ './choose_warehouse_win'),
 			selectBtn: () =>
 				import( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
 			selectGoods: () =>

@@ -129,11 +129,7 @@ export default {
 		setBtnClass(arr, id) {
 			let tempArr = utils.deepCopy(arr);
 			for(let item of tempArr) {
-				if(item.id == id) {
-					item.selected = true;
-				} else {
-					item.selected = false;
-				}
+				item.selected = item.id == id;
 			}
 			return tempArr;
 		},
