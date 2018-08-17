@@ -898,11 +898,24 @@ export default {
     /* 批量审核日志 */
     "dispatchGetDispatchAuditLogList":{
         method:'get',
-        url:b+"dispatch/getDispatchAuditLogList"
+        url:b+"dispatch/getDispatchAuditLogList"                       //获取批量调度审核日志列表
     },
     "dispatchGetDispatchAuditLogDetailList":{
         method:'get',
-        url:b+"dispatch/getDispatchAuditLogDetailList"                  //获取日志详情列表
+        url:b+"dispatch/getDispatchAuditLogDetailList"                  //获取批量审核日志详情
+    },
+    "dispatchGetDispatchLogDetailList":{
+        method:'get',
+        // fake:true,
+        url:b+"dispatch/getDispatchLogDetailList"                       //获取批量调度日志详情
+    },
+    "DispatchGetDispatchLogList":{
+        method:'get',
+        url:b+"Dispatch/getDispatchLogList"                             //获取批量调度日志列表
+    },
+    "DispatchrecordGetAllocationType":{
+        method:'get',
+        url:b+"Dispatchrecord/getAllocationType"                        //获取配置方式
     }
     
 }
