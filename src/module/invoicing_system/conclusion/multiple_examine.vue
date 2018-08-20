@@ -66,6 +66,7 @@
 				page: 1, //当前页
 				pageShow: 10, //每页显示多少天数据
 				pageTotal: 1, //数据总页数
+				allList:[],//总列表数据-前端筛选时用
 				list: [], //数据列表
 				listLength: 0, //数据条数
 				userData: '', //用户数据
@@ -123,30 +124,24 @@
 		destroyed(){
 			storage.session('batch_schedule',null);
 		},
-		beforeRouteEnter (to, from, next) {
-			if(from.path=='/admin/conclusionList/batchSchedule'){
-				next(function(self){
-					self.isLog = true;
-				});
-			}else{
-				next();	
-			}
-		},
 		mounted() {
 			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
-			this.initBtn();
 			this.getShopList();//店铺列表
-			if(this.isLog){
-				let obj = storage.session('batch_schedule');
+			let obj = storage.session('batch_schedule');
+			if(obj){
+				this.isLog = true;
 				this.logId = obj.logId;
 				for(let item of obj.applyList){
 					this.setSelectId(item,true);
 				}
-				this.list = this.setAlready(obj.applyList)
+				this.allList = this.setAlready(obj.applyList);
+				this.list = this.setAlready(obj.applyList);
+				this.listLength = this.list.length;
 				this.pageTotal = 1;
 			}else{
 				this.getData();//请求数据
 			}
+			this.initBtn();
 		},
 		methods: {
 			initBtn() {
@@ -164,17 +159,17 @@
 					},
 					{name: '全部审核',className: 'success',type:4,
 						fn: () => {
-							this.examine(0);
+							this.confirmSubmit(0,'全部审核');
 						}
 					},
 					{name: '全部审核并出货',className: 'success',type:4,
 						fn: () => {
-							this.examine(1);
+							this.confirmSubmit(1,'全部审核并出货');
 						}
 					},
 					{name: '返回',className:'info',type:4,
 						fn: () => {
-							this.$router.push({path: '/admin/conclusionList',query: this.$route.query});
+							this.$router.push({path: '/admin/conclusionList'});
 						}
 					},
 				];
@@ -187,21 +182,23 @@
 				this.startTime = Date.parse(res[0]);
 				this.endTime = new Date(res[1]).setHours(23,59,59,0);
 			},
-			confirmClick(){//确认选中
-				if(!this.selectItem.length){
-					this.$message({message: '请选择商品!',type: 'error'});
-					return;
-				}
-				this.openWarehouse();
-			},
 			formatTime(time) {
 				return utils.format(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss');
 			},
-			filter() { //筛选 时间搜索公用
-				this.page = 1;
-				this.getData();
+			confirmSubmit(isPass,str){
+				if(!this.selectItem.length){
+					this.$message({message: '请选择要审核的内容!',type: 'error'});
+					return;
+				}
+				this.$confirm(`确认${str}?`, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.examine(isPass,str);
+				}).catch(()=>{});
 			},
-			async examine(isPass){//审核通过
+			async examine(isPass,str){//审核通过
 				let ids = [];
 				for(let key in this.selectItem){
 					if(key!='length'){
@@ -213,7 +210,8 @@
 					isPass:isPass,
 				}});
 				if(data){
-					this.$message({message: '选择完毕!',type: 'success'});
+					this.$message({message: str+'成功！',type: 'success'});
+					this.$router.push({path: '/admin/conclusionList'});
 				}
 			},
 			async getShopList() {//获取店铺列表
@@ -235,7 +233,8 @@
 				this.listLength = data.num;
 				this.pageTotal = data.total;
 			},
-			setAlready(list){//设置已经选中过的数据
+			setAlready(dataList){//设置已经选中过的数据
+				let list = utils.deepCopy(dataList);
 				for(let item of list){
 					for(let shop of this.shopList){//店铺名称
 						if(shop.shopId==item.shopId){
@@ -253,11 +252,24 @@
 						this.selected = true;
 					}
 				}
-				this.selNum = this.list.filter((res)=>{
+				this.selNum = list.filter((res)=>{
 					return res.selected;
 				}).length;
-				this.pageAll = this.selNum==this.list.length;
+				this.pageAll = this.selNum==list.length;
 				return list;
+			},
+			filter() { //筛选 时间搜索公用
+				if(this.isLog){
+					let obj={
+						createName:this.userName,
+						startTime:this.startTime,
+						endTime:this.endTime,
+					};
+					this.condition(obj);
+				}else{
+					this.page = 1;
+					this.getData();
+				}
 			},
 			reset() { //重置
 				this.userName = '';
@@ -265,7 +277,34 @@
 				this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
 				this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
 				this.endTime = new Date().setHours(0, 0, 0, 0);
-				this.getData();
+				if(this.isLog){
+					this.list = utils.deepCopy(this.allList);
+				}else{
+					this.getData();
+				}
+			},
+			condition(obj) { //筛选条件匹配
+				let list = utils.deepCopy(this.allList);
+				for(let key in obj) { //遍历筛选条件
+					let newList = [];
+					if(obj[key] != '') {
+						if(key == 'startTime' || key == 'endTime') { //日期匹配
+							for(let item of list) {
+								//条件匹配 推进新数组
+								if(obj.startTime <= item.createTime*1000 && obj.endTime >= item.createTime*1000){
+									newList.push(item);
+								}
+							}
+						} else {
+							for(let item of list) {
+								//模糊匹配 丢进新数组
+								if(item[key].includes(obj[key])) newList.push(item);
+							}
+						}
+						list = newList;
+					}
+				}
+				this.list = list;
 			},
 			pageChange(page) { //分页 获取页数
 				this.page = Number(page);
