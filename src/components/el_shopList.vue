@@ -8,7 +8,7 @@
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible">
 			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
 				<span v-if="isSingle" style="color:#c0c4cc">
-					<i class="name">{{singleName}}</i>
+					<i class="name">{{singleName | divide}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 				<span v-else>
@@ -53,19 +53,19 @@
 							<el-tab-pane label="全部" name="first">
 								<el-radio-group v-model="singleName" size="medium">
 									<el-radio v-if="(item.storeAreaId == areaList.flag) || areaList.flag == -1" v-for="(item,index) in showShopList" :key="index"
-											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item.id)"></el-radio>
+											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item)"></el-radio>
 								</el-radio-group>
 							</el-tab-pane>
 							<el-tab-pane label="直营店" name="second">
 								<el-radio-group v-model="singleName" size="medium">
 									<el-radio v-if="item.ischain == 1 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index"
-											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item.id)"></el-radio>
+											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item)"></el-radio>
 								</el-radio-group>
 							</el-tab-pane>
 							<el-tab-pane label="加盟店" name="third">
 								<el-radio-group v-model="singleName" size="medium">
 									<el-radio v-if="item.ischain == 2 && (item.storeAreaId == areaList.flag || areaList.flag == -1)" v-for="(item,index) in showShopList" :key="index"
-											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item.id)"></el-radio>
+											  :label="item.shopName" border style="margin-bottom: 10px" @change="toSingle(item)"></el-radio>
 								</el-radio-group>
 							</el-tab-pane>
 						</template>
@@ -113,7 +113,7 @@ export default {
 	},
 	props: ['shopIds','isSingle','delShopId'],
 	/*
-	 shopIds选中的 商品id   eg:['12','23']
+	 shopIds选中的店铺id   eg:['12','23']
 	 isSingle是否单选   默认为false
 	 delShopId展示店铺id(过滤了部分的)
 	* */
@@ -122,14 +122,25 @@ export default {
 	},
 	mounted(){
 		document.onclick = () => {
-			this.init(false);
+			this.init();
 		};
 	},
 	watch:{
 		'shopIds':{
 			deep:true,
 			handler: function () {
-				this.init(false);
+				if(!this.isSingle){
+					this.init();
+                }
+			}
+		},
+	},
+	filters:{
+		divide(str){
+			if(str.length<10){
+				return str;
+			}else{
+				return str.substr(0,10)+"...";
 			}
 		}
 	},
@@ -151,41 +162,51 @@ export default {
 			if(res.length > 0){
 				res.unshift({name: '全部', id: '-1'});
 				this.areaList.list = res;
-				this.init(true);
+				this.init();
 			}else{
-				this.init(false);
+				this.init();
 			}
 		},
 		//处理数据
-		init(type) {
-			console.log(this.shopIds);
-			this.title=this.shopIds.length>0?`已选择${this.shopIds.length}家门店`:'请选择店铺';
+		init() {
+			let showNo=false;//是否添加无区域
 			let res=utils.deepCopy(this.allShop);
-			let index = 0;
-			for (let i = 0; i < res.length; i++) {
-				this.$set(res[i], 'selected', false);
-				if(this.shopIds.includes(res[i].id)){
-					res[i].selected = true;
+			if(this.isSingle){//单选
+				this.singleId=this.shopIds;
+				console.log(res);
+				if(this.singleId.length>0){
+					for(let i=0;i<this.allShop.length;i++){
+						if(this.singleId.includes(this.allShop[i].id)){
+							this.singleName=this.allShop[i].shopName;
+							break;
+						}
+					}
+				}else {
+					this.singleName='请选择店铺'
 				}
-				if(res[i].storeAreaId === 0){
-					index++;
+				for (let i = 0;i<this.allShop.length;i++) {
+					if(this.allShop[i].storeAreaId === 0){
+						showNo=true;
+						break;
+					}
 				}
-			}
-			if(index!=0&&type){
+			}else {//多选
+				for (let i = 0; i < res.length; i++) {
+					this.$set(res[i], 'selected', false);
+					if(this.shopIds.includes(res[i].id)){
+						res[i].selected = true;
+					}
+					if(res[i].storeAreaId === 0){
+						showNo=true;
+					}
+				}
+				this.title=this.shopIds.length>0?`已选择${this.shopIds.length}家门店`:'请选择店铺';
+            }
+			if(showNo&&this.areaList.list[this.areaList.list.length-1].id!=0){
 				this.areaList.list.push({id: 0,name: '无区域'});
 			}
 			this.showShopList = utils.deepCopy(res);
 			this.shopList = utils.deepCopy(res);
-			if(this.isSingle){//初始化单选选中的店铺名称
-				this.singleId=this.shopIds;
-				if(this.shopIds.length>0){
-					for(let i=0;i<res.length;i++){
-						if(this.shopIds.includes(res[i].id)){
-							this.singleName=res[i].name;
-						}
-					}
-				}
-			}
 		},
         //选择区域
 		changeArea(res){
@@ -225,6 +246,12 @@ export default {
 					this.contentWidth = this.$refs.content.clientWidth;
 				});
 			}
+			if(this.isSingle){
+				this.allShop=this.delShopId;
+				this.areaList.flag='-1';
+				this.areaList.name='全部';
+				this.init();
+            }
 		},
 		//搜索店铺
 		searchShop(){
@@ -256,7 +283,7 @@ export default {
 							this.showShopList[i].selected = type;
 						}
 					}
-					
+
 				}else if(this.activeName == 'second'){
 					if(this.areaList.flag == '-1' && this.showShopList[i].ischain == 1){
 						this.showShopList[i].selected = type;
@@ -293,14 +320,13 @@ export default {
 		cancel(){
 			this.visible = false;
 			//取消之后，再次打开弹窗恢复初始状态
-			this.init(false);
+			this.init();
 		},
 		//单选选中的店铺id
-		toSingle(id){
+		toSingle(item){
 			this.singleId=[];
-			this.singleId.push(id);
-			console.log(id);
-			console.log(this.singleName);
+			this.singleId.push(item.id);
+			this.singleName=item.shopName;
 		}
 	}
 }
