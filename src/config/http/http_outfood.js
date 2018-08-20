@@ -158,4 +158,8 @@ export default {
         url: w + 'Dada/bindShopCoding', //修改店铺编码
         method: 'post'
     },
+    "outfoodmakeUpOrder": {
+        url: b + 'eleme/makeUpOrder', //饿了么一键补单
+        method: 'post'
+    },
 }
