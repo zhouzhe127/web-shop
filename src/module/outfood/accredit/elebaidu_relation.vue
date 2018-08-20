@@ -75,6 +75,7 @@ export default {
 		this.bandtype = storage.session('waimai');
 		console.log(this.bandtype);
 		this.userData = storage.session('userShop');
+		document.querySelector('#warrant').style.height = 100+'%';
 		this.brandId =
 			this.userData.currentShop.ischain == 0
 				? 0
@@ -432,9 +433,10 @@ export default {
 	width: 100%;
 	height: 100%;
 	z-index: 100;
+	overflow: auto;
 }
 #warrant #jumpShop .shopBox {
-	width: 1438px;
+	width: 1441px;
 	/*height: 796px;*/
 	margin: 0 auto;
 	margin-top: 60px;

@@ -1,5 +1,5 @@
 <template>
-	<section id="warrant">
+	<section id="warrant" style="height:100%">
 		<section>
 			<div class="loading" v-if="boxList.length==0">
 				<img src="../../../res/images/preloader.gif" />
@@ -219,7 +219,10 @@ export default {
 	}
 };
 </script>
-<style type="text/css" scoped>
+<style type="text/css" lang="less" scoped>
+#warrant{
+	height: 100%;
+}
 #warrant .box {
 	display: inline-block;
 	width: 340px;

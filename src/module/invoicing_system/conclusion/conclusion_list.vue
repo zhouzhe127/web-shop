@@ -337,7 +337,6 @@
 			},
 		},
 		mounted() {
-			console.log(page);
 			this.auditEndTime = auditEndTime;
 			this.auditStartTime = auditStartTime;
 			this.startTime = startTime;
