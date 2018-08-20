@@ -305,10 +305,10 @@
 						this.selected = true;
 					}
 				}
-				this.selNum = this.list.filter((res)=>{
+				this.selNum = list.filter((res)=>{
 					return res.selected;
 				}).length;
-				this.pageAll = this.selNum==this.list.length;
+				this.pageAll = this.selNum==list.length;
 				return list;
 			},
 			reset() { //重置

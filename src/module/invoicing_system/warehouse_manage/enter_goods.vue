@@ -329,8 +329,12 @@ export default {
 		this.initBtn();
 		this.dispatchId = this.$route.query.id;
 		this.init();
-		this.getGoods();
-		this.getMaterial();
+		let goodsPromise = this.getGoods();
+		let matPromise = this.getMaterial();
+		//商品列表为空，而物料列表有数据 直接切换到物料列表
+		Promise.all([goodsPromise,matPromise]).then(()=>{
+			this.initTabIndex();
+		});
 	},
 	methods: {
 		initBtn() {
@@ -346,6 +350,14 @@ export default {
 				}
 			}];
 			this.$store.commit('setPageTools', this.btnArr);
+		},
+		initTabIndex(){//设置初始化选项卡位置
+			let isGoods = this.enterGoods.error.length>0 || this.enterGoods.success.list.length>0;
+			let isMaterial = this.enterMaterial.error.length>0 || this.enterMaterial.success.list.length>0;
+			console.log(this.enterMaterial.error.length,this.enterMaterial.success.list.length);
+			if(!isGoods && isMaterial){
+				this.tabIndex = 1;
+			}
 		},
 		openWareWin(wid) {
 			this.wareId = wid;
@@ -562,62 +574,64 @@ export default {
 			this.outWareId = res.outWarehouse;
 			this.getWareDetail(this.details.intoWarehouse);
 		},
-		async getGoods() { //获取商品列表
-			let data = await http.DispatchrecordGetGoodsList({
+		getGoods() { //获取商品列表
+			return http.DispatchrecordGetGoodsList({
 				data: {
 					id: this.dispatchId, //调度id
 				}
-			});
-			for(let item of data.success.list) {
-				item.intoNum = '';
-				item.consumeNum = '';
-				for(let batch of item.batchInfo) {
-					batch.numShow = batch.num;
-					batch.intoNum = '';
-					batch.consumeNum = '';
-				}
-				let surplusNum = item.outNum - item.overIntoNum - item.overConsumeNum; //剩余数量
-				if(surplusNum > 0) { //还有剩余数量
-					item.isSurplus = true;
-				} else {
-					item.isSurplus = false;
-				}
-			}
-			this.enterGoods = data;
-			if(data.success.exportShopId) this.exportShopId = data.success.exportShopId;
-		},
-		async getMaterial() { //获取物料列表
-			let data = await http.DispatchrecordGetMaterialList({
-				data: {
-					id: this.dispatchId, //调度id
-				}
-			});
-			for(let item of data.success.list) {
-				item.outNumShow = this.setUnit(item.outNum, item.unit, item.unitData);
-				item.overIntoNumShow = this.setUnit(item.overIntoNum, item.unit, item.unitData);
-				item.overConsumeNumShow = this.setUnit(item.overConsumeNum, item.unit, item.unitData);
-				item.intoNum = '';
-				item.consumeNum = '';
-				for(let batch of item.batchInfo) {
-					batch.numShow = this.setUnit(batch.num, item.unit, item.unitData);
-					batch.intoNum = '';
-					batch.consumeNum = '';
-				}
-				for(let unit of item.unitData) {
-					if(item.unit == unit.name) {
-						item.unitValue = Number(unit.value);
-						break;
+			}).then((data)=>{
+				for(let item of data.success.list) {
+					item.intoNum = '';
+					item.consumeNum = '';
+					for(let batch of item.batchInfo) {
+						batch.numShow = batch.num;
+						batch.intoNum = '';
+						batch.consumeNum = '';
+					}
+					let surplusNum = item.outNum - item.overIntoNum - item.overConsumeNum; //剩余数量
+					if(surplusNum > 0) { //还有剩余数量
+						item.isSurplus = true;
+					} else {
+						item.isSurplus = false;
 					}
 				}
-				let surplusNum = item.outNum - item.overIntoNum - item.overConsumeNum; //剩余数量
-				if(surplusNum > 0) { //还有剩余数量
-					item.isSurplus = true;
-				} else {
-					item.isSurplus = false;
+				this.enterGoods = data;
+				if(data.success.exportShopId) this.exportShopId = data.success.exportShopId;
+			});
+		},
+		getMaterial() { //获取物料列表
+			return http.DispatchrecordGetMaterialList({
+				data: {
+					id: this.dispatchId, //调度id
 				}
-			}
-			this.enterMaterial = data;
-			if(data.success.exportShopId) this.exportShopId = data.success.exportShopId;
+			}).then((data)=>{
+				for(let item of data.success.list) {
+					item.outNumShow = this.setUnit(item.outNum, item.unit, item.unitData);
+					item.overIntoNumShow = this.setUnit(item.overIntoNum, item.unit, item.unitData);
+					item.overConsumeNumShow = this.setUnit(item.overConsumeNum, item.unit, item.unitData);
+					item.intoNum = '';
+					item.consumeNum = '';
+					for(let batch of item.batchInfo) {
+						batch.numShow = this.setUnit(batch.num, item.unit, item.unitData);
+						batch.intoNum = '';
+						batch.consumeNum = '';
+					}
+					for(let unit of item.unitData) {
+						if(item.unit == unit.name) {
+							item.unitValue = Number(unit.value);
+							break;
+						}
+					}
+					let surplusNum = item.outNum - item.overIntoNum - item.overConsumeNum; //剩余数量
+					if(surplusNum > 0) { //还有剩余数量
+						item.isSurplus = true;
+					} else {
+						item.isSurplus = false;
+					}
+				}
+				this.enterMaterial = data;
+				if(data.success.exportShopId) this.exportShopId = data.success.exportShopId;
+			});
 		},
 		async getWareDetail(id) { //获取仓库详情-得到仓库所属
 			let data = await http.warehouseGetWarehouse({

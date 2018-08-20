@@ -120,8 +120,11 @@
 			this.shopId = this.userData.currentShop.id;
 			this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
 		},
+		destroyed(){
+			storage.session('batch_schedule',null);
+		},
 		beforeRouteEnter (to, from, next) {
-			if(from.path=='/admin/batchSchedule'){
+			if(from.path=='/admin/conclusionList/batchSchedule'){
 				next(function(self){
 					self.isLog = true;
 				});
@@ -134,9 +137,13 @@
 			this.initBtn();
 			this.getShopList();//店铺列表
 			if(this.isLog){
-				let logObj = storage.session('userShop');
-				this.logId = logObj.logId;
-				this.list = logObj.list;
+				let obj = storage.session('batch_schedule');
+				this.logId = obj.logId;
+				for(let item of obj.applyList){
+					this.setSelectId(item,true);
+				}
+				this.list = this.setAlready(obj.applyList)
+				this.pageTotal = 1;
 			}else{
 				this.getData();//请求数据
 			}
@@ -167,7 +174,7 @@
 					},
 					{name: '返回',className:'info',type:4,
 						fn: () => {
-							this.$router.push({path: '/admin/batchLog/batchLogDispatchDetail',query: this.$route.query});
+							this.$router.push({path: '/admin/conclusionList',query: this.$route.query});
 						}
 					},
 				];
@@ -222,7 +229,7 @@
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
 					auditStatus:'1', //审核状态：1审核中
-					dispatchStatus:'1,2',//调度状态：1未调度,2调度中
+					dispatchStatus:'1,2,8',//调度状态：1未调度,2调度中
 				}});
 				this.list = this.setAlready(data.list);
 				this.listLength = data.num;
