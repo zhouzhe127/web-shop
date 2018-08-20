@@ -1758,6 +1758,9 @@ export default [{
                             path: 'batchLogPrint',
                             components: {
                                 details_con: batchLogPrint //批量审核详情打印
+                            },
+                            meta:{
+                                comName:'batchLogPrint'
                             }
                         },
                         {
@@ -1770,6 +1773,9 @@ export default [{
                             path: 'batchLogDispatchDetail',
                             components: {
                                 details_con: batchLogDispatchDetail //批量调度日志详情
+                            },
+                            meta:{
+                                comName:'batchLogDispatchDetail'
                             }
                         },
                     ]
