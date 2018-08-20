@@ -8,7 +8,7 @@
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible">
 			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
 				<span v-if="isSingle" style="color:#c0c4cc">
-					<i class="name">{{singleName}}</i>
+					<i class="name">{{singleName | divide}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 				<span v-else>
@@ -134,6 +134,15 @@ export default {
                 }
 			}
 		},
+	},
+	filters:{
+		divide(str){
+			if(str.length<10){
+				return str;
+			}else{
+				return str.substr(0,10)+"...";
+			}
+		}
 	},
 	methods: {
 		//获取店铺列表
