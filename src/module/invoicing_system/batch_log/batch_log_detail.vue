@@ -57,7 +57,7 @@ export default {
 	},
 	async mounted(){
 		this.logId = this.$route.query.logId;
-		this.logId = 1;
+		this.logId = Number(this.logId);
 		this.initBtn();
 		if(this.logId){
 			let res = await this.getHttp('dispatchGetDispatchAuditLogDetailList',{logId:this.logId});
@@ -112,9 +112,6 @@ export default {
 		async getHttp(url,obj={}){
 			let res = await http[url]({data:obj});
 			return res;
-		},
-		isPrimitive (value) {
-			return ( typeof value === 'string' || typeof value === 'number');
 		},
 		toRaw(obj,type){
 			return Object.prototype.toString.call(obj).slice(8,-1) == type;

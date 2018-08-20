@@ -77,6 +77,7 @@
 
                         </div>
                     </div>
+                    <div class="empty-div" v-if="goods.length == 0">-暂无条目-</div>
                 </div>
             </div>
 
@@ -144,6 +145,7 @@
 
                         </div>
                     </div>
+                    <div class="empty-div" v-if="material.length == 0">-暂无条目-</div>
                 </div>
             </div>
 
@@ -180,6 +182,7 @@
 
 */
 import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
 
 export default {
     data () {
@@ -224,7 +227,7 @@ export default {
             dispatchApplication:[],
             allocationTypes:[],         //获取配货方式          
             info:{},                    //头部信息
-            logId:'1',
+            logId:'',
             showDetails:{
                 material:true,
                 goods:true,
@@ -232,8 +235,12 @@ export default {
         };
     },
     methods: {
-        linkUrl(){
-
+        linkUrl(flag,item){
+            let query = this.$route.query;
+            if(flag == 'detail'){
+                query.id = item.applicationId;
+                this.$router.push({path:'/admin/operation/operationDetail',query});
+            }
         },
         toggleTabs(btn){
             this.selectTabs = btn.id;
@@ -248,6 +255,7 @@ export default {
             this.$forceUpdate();
         },
         async getDetail(){
+            if(!this.logId) return;
             let res = await this.getHttp('dispatchGetDispatchLogDetailList',{logId:this.logId});
             if(this.toRaw(res,'Object')){
                 let {createTime,createUName,wName,dispatchApplication=[],goods=[],material=[]} = res;
@@ -420,10 +428,25 @@ export default {
 			return date;
 		},
     },
+    beforeRouteLeave(to,from,next){
+        if(to.meta.comName == 'batchLogPrint'){
+            let obj = {
+                goods:this.goods,
+                material:this.material,
+                dispatchApplication:this.dispatchApplication,
+                info:this.info
+            };
+            storage.session('batchLogPrint',obj);
+        }
+        next();
+    },
     components: {
 		tableCom:()=>import (/*webpackChunkName:'com_table'*/'src/components/com_table'),
     },
     async mounted(){
+		this.logId = this.$route.query.logId;
+        this.logId = Number(this.logId);
+        
         this.initBtn();
         let allocationTypes = await this.getHttp('DispatchrecordGetAllocationType');
         if(Array.isArray(allocationTypes)){
@@ -646,6 +669,12 @@ export default {
             max-width: 1438px;
             border:1px solid #ccc;
             overflow-x: auto;
+        }
+        .empty-div{
+            height:80px;
+            line-height: 80px;
+            .fc(#999,20px);
+            text-align: center;
         }
     }
 
