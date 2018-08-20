@@ -39,13 +39,16 @@
 				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 1">审核</span>
 				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 2">继续审核</span>
 				<span class="detailsBtn" v-if="props.data.auditStatus != 1 || props.data.dispatchStatus > 2">查看详情</span>
+				<span class="detailsBtn" v-if="props.data.dispatchStatus == 2" @click="tooutshop(props.data.id)">|&nbsp;确认出货</span>
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 			<span slot="con-2" slot-scope="props">{{auditStatus[props.data.auditStatus]}}</span>
 			<span slot="con-3" slot-scope="props">{{dispatchStatus[props.data.dispatchStatus]}}</span>
 			<span slot="con-5" slot-scope="props">{{shopName(props.data.shopId)}}</span>
+			<span slot="con-7" slot-scope="props">{{getTime(props.data.createTime)}}</span>
 			<span slot="con-6" slot-scope="props">{{getUserName(props.data.createUid)}}</span>
 			<span slot="con-8" slot-scope="props">{{getUserName(props.data.auditUid)}}</span>
+			<span slot="con-9" slot-scope="props">{{getTime(props.data.auditTime)}}</span>
 		</com-table>
 		<div class="page-box">
 			<page-turn @pageNum="pageChange" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn>
@@ -58,6 +61,15 @@
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
 	let shopList = storage.session('userShop').shopList;
+	let auditStartTime = 0;
+	let auditEndTime = 0;
+	let startTime = utils.getTime({
+		time: new Date()
+	}).start - global.timeConst.ONEMONTH;
+	let endTime = utils.getTime({
+		time: new Date()
+	}).end;
+	let page = 1;
 	export default {
 		data() {
 			return {
@@ -75,38 +87,41 @@
 				page: 1,
 				pageTotal: 0,
 				titleList: [{
-					titleName: '操作'
-				},
-				{
-					titleName: '序号'
-				},
-				{
-					titleName: '审核状态'
-				},
-				{
-					titleName: '调度状态'
-				},
-				{
-					titleName: '申请单号',
-					dataName: 'code'
-				},
-				{
-					titleName: '申请店铺/品牌'
-				},
-				{
-					titleName: '申请人'
-				},
-				{
-					titleName: '申请时间',
-					dataName: 'createTime'
-				},
-				{
-					titleName: '审核人'
-				},
-				{
-					titleName: '审批时间',
-					dataName: 'auditTime'
-				}],
+						titleName: '操作',
+						titleStyle: {
+							width: '150px'
+						}
+					},
+					{
+						titleName: '序号'
+					},
+					{
+						titleName: '审核状态'
+					},
+					{
+						titleName: '调度状态'
+					},
+					{
+						titleName: '申请单号',
+						dataName: 'code'
+					},
+					{
+						titleName: '申请店铺/品牌'
+					},
+					{
+						titleName: '申请人'
+					},
+					{
+						titleName: '申请时间'
+					},
+					{
+						titleName: '审核人'
+					},
+					{
+						titleName: '审批时间',
+						dataName: 'auditTime'
+					}
+				],
 				auditStatus: ['全部', '审核中', '已取消', '审核未通过', '审核通过'],
 				user: '', //所有员工
 				auditType: 0, //审核状态
@@ -129,16 +144,19 @@
 					data: {
 						applyStartTime: parseInt(this.startTime / 1000),
 						applyEndTime: parseInt(this.endTime / 1000),
-						auditStartTime: parseInt(this.auditStartTime / 1000),
-						auditEndTime: parseInt(this.auditEndTime / 1000),
+						auditTimeStart: parseInt(this.auditStartTime / 1000),
+						auditTimeEnd: parseInt(this.auditEndTime / 1000),
 						auditStatus: this.auditType,
 						dispatchStatus: this.dispatchType,
-						createUid: this.getUserId(this.upUser),
-						auditUid: this.getUserId(this.checkUser),
+						uName: this.upUser,
+						auditor: this.checkUser,
 						code: this.bathcode,
 						wids: this.wareIds,
 						page: this.page,
-						num: 10
+						type: 1,
+						num: 10,
+						isAuditor: 1
+
 					}
 				});
 				this.introData = data.list;
@@ -180,25 +198,35 @@
 					return '';
 				}
 			},
+			getTime(time) {
+				if(!time||Number(time)==0){
+					return '--'
+				}
+				return utils.format(parseInt(time) * 1000, 'yyyy-MM-dd');
+			},
 			startTimeChange(time) {
 				this.startTime = utils.getTime({
 					time: time
 				}).start;
+				startTime = this.startTime;
 			},
 			endTimeChange(time) {
 				this.endTime = utils.getTime({
 					time: time
 				}).end;
+				endTime = this.endTime;
 			},
 			auditStartTimeChange(time) {
 				this.auditStartTime = utils.getTime({
 					time: time
 				}).start;
+				auditStartTime = this.auditStartTime;
 			},
 			auditEndTimeChange(time) {
 				this.auditEndTime = utils.getTime({
 					time: time
 				}).end;
+				auditEndTime = this.auditEndTime;
 			},
 			changeBtn(type) {
 				this.auditType = type;
@@ -245,8 +273,18 @@
 					query: this.$route.query
 				});
 			},
+			tooutshop(id) {
+				this.$router.push({
+					path: 'operation/operationDetail',
+					query: {
+						id: id
+					}
+				});
+			},
 			pageChange(page) {
 				this.page = page.page;
+				page = this.page;
+				console.log(page);
 				this.init();
 			},
 			shopName(id) {
@@ -285,8 +323,8 @@
 							path: '/admin/conclusionList/multipleExamine'
 						});
 					},
-					type:4
-				},{
+					type: 4
+				}, {
 					name: '批量调度',
 					className: 'primary',
 					fn: () => {
@@ -294,11 +332,17 @@
 							path: '/admin/conclusionList/selectDispatch'
 						});
 					},
-					type:4
+					type: 4
 				}]);
 			},
 		},
 		mounted() {
+			console.log(page);
+			this.auditEndTime = auditEndTime;
+			this.auditStartTime = auditStartTime;
+			this.startTime = startTime;
+			this.endTime = endTime
+			this.page = page;
 			this.getWare();
 			this.addEduce();
 		},
@@ -343,6 +387,7 @@
 	}
 
 	#waredeliver {
+		margin-top: 10px;
 		.serBox {
 			h1 {
 				display: inline-block;

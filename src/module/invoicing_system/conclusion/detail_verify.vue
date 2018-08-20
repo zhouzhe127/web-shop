@@ -1,7 +1,3 @@
-<!--*
- * @Author: zhouzhe 
- * @Date: 2018-05-14 10:35:48 
- *-->
 
 <template>
 	<div id="shipment">
@@ -77,7 +73,7 @@
 			<div slot="con-0" slot-scope="props">
 				<span class="selDetail" @click="detailBtn(props.data.id)">查看详情</span>
 				<!-- <span class="middleLine" v-if="!(this.detailData && this.detailData.auditStatus==4)">|</span> -->
-				<span class="inGoods" v-if="props.data && props.data.dynamic==2&&type!=1" @click="insertGoods(props.data.id)">
+				<span class="inGoods" v-if="props.data && props.data.dynamic==2" @click="insertGoods(props.data.id)">
 					<i>|</i>入货</span>
 				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4" @click="delList(props.data.id)">
 					<i>|</i>删除</span>
@@ -255,19 +251,17 @@
 			},
 			// 物料商品接口
 			async searItem(type) {
-				if (this.tabactive == 0) {
-					let goodsData = await http.invoic_getApplicationDetail({
-						data: {
-							applyId: this.applyId,
-							page: this.page,
-							num: 100,
-							choose: type == 0 ? 1 : 2
-						}
-					});
-					this.introData = goodsData.list;
-					this.listNum = this.introData.length;
-					this.pageTotal = goodsData.total;
-				}
+				let goodsData = await http.invoic_getApplicationDetail({
+					data: {
+						applyId: this.applyId,
+						page: this.page,
+						num: 100,
+						choose: type == 0 ? 1 : 2
+					}
+				});
+				this.introData = goodsData.list;
+				this.listNum = this.introData.length;
+				this.pageTotal = goodsData.total;
 			},
 			// 总单接口
 			async searAll() {
@@ -373,7 +367,12 @@
 		mounted() {
 			this.user = storage.session('user') ? storage.session('user') : [];
 			this.applyId = this.$route.query.id;
+			console.log(this.type);
 			this.init();
+			if(this.type) {
+				this.tabactive = 1;
+				this.tebClick(1);
+			}
 		},
 		computed: {
 			

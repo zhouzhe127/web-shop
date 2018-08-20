@@ -543,7 +543,7 @@ export default {
         method: 'post'
     },
     "invoic_getAuditList": {
-        url: b + "dispatch/getAuditList", //获取审核申请列表
+        url: b + "dispatch/searchApplications", //获取审核申请列表
         method: "get"
     },
     "addApplicationTemplate": {
@@ -557,10 +557,6 @@ export default {
     "submitApplication": {
         url: b + "dispatch/submitApplication", //新建进货申请    
         method: 'post'
-    },
-    "invoic_getAuditList": {
-        url: b + "dispatch/getAuditList", //获取审核申请列表
-        method: "get"
     },
     "invoic_getApplication": {
         url: b + "dispatch/getApplication", //获取申请详情

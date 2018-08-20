@@ -160,7 +160,7 @@ export default {
 			setTimeout(function() {
 				sessionStorage.removeItem('hello');
 			}, 1000);
-			let url = window.location.href.split(/\?/g)[0] + '/relation';
+			let url = window.location.href.split(/authorization/g)[0] + 'authorization/relation';
 			window.open(url);
 		},
 		hidden: function(show) {
