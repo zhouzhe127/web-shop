@@ -120,6 +120,9 @@
 			this.shopId = this.userData.currentShop.id;
 			this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
 		},
+		destroyed(){
+			storage.session('batch_schedule',null);
+		},
 		beforeRouteEnter (to, from, next) {
 			if(from.path=='/admin/conclusionList/batchSchedule'){
 				next(function(self){
@@ -134,12 +137,12 @@
 			this.initBtn();
 			this.getShopList();//店铺列表
 			if(this.isLog){
-				let logObj = storage.session('batch_schedule');
-				this.logId = logObj.logId;
-				for(let item of logObj.applyList){
+				let obj = storage.session('batch_schedule');
+				this.logId = obj.logId;
+				for(let item of obj.applyList){
 					this.setSelectId(item,true);
 				}
-				this.list = this.setAlready(logObj.applyList)
+				this.list = this.setAlready(obj.applyList)
 				this.pageTotal = 1;
 			}else{
 				this.getData();//请求数据
