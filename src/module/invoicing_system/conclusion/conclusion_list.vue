@@ -24,7 +24,7 @@
 		<div class="inpBox">
 			<selectBtn :sorts="auditStatus" @selOn="changeBtn" :name="'审核状态'" style="margin-right:10px" ref="select1"></selectBtn>
 			<selectBtn :sorts="dispatchStatus" @selOn="dispatchBtn" :name="'调度状态'" ref="select2"></selectBtn>
-			<input type="text" class="search-input" v-model="upUser" maxlength="10" placeholder="请输入申请交人">
+			<input type="text" class="search-input" v-model="upUser" maxlength="10" placeholder="请输入申请人">
 			<input type="text" class="search-input" v-model="checkUser" maxlength="10" placeholder="请输入审核人">
 		</div>
 		<div class="sleBox">
@@ -55,21 +55,12 @@
 		</div>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
 	let shopList = storage.session('userShop').shopList;
-	let auditStartTime = 0;
-	let auditEndTime = 0;
-	let startTime = utils.getTime({
-		time: new Date()
-	}).start - global.timeConst.ONEMONTH;
-	let endTime = utils.getTime({
-		time: new Date()
-	}).end;
-	let page = 1;
 	export default {
 		data() {
 			return {
@@ -125,7 +116,7 @@
 				auditStatus: ['全部', '审核中', '已取消', '审核未通过', '审核通过'],
 				user: '', //所有员工
 				auditType: 0, //审核状态
-				dispatchStatus: ['全部', '未调度', '调度中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
+				dispatchStatus: ['全部', '未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
 				dispatchType: 0, //调度状态
 				wareIds: '', //权限下的所有仓库id
 				introData: '', //列表数据
@@ -161,7 +152,7 @@
 				});
 				this.introData = data.list;
 				this.pageTotal = data.total;
-				this.count = data.count;
+				this.count = data.rows;
 			},
 			async getWare() { //获取有权限的仓库与员工
 				let data = await http.warehouseList();
@@ -208,25 +199,21 @@
 				this.startTime = utils.getTime({
 					time: time
 				}).start;
-				startTime = this.startTime;
 			},
 			endTimeChange(time) {
 				this.endTime = utils.getTime({
 					time: time
 				}).end;
-				endTime = this.endTime;
 			},
 			auditStartTimeChange(time) {
 				this.auditStartTime = utils.getTime({
 					time: time
 				}).start;
-				auditStartTime = this.auditStartTime;
 			},
 			auditEndTimeChange(time) {
 				this.auditEndTime = utils.getTime({
 					time: time
 				}).end;
-				auditEndTime = this.auditEndTime;
 			},
 			changeBtn(type) {
 				this.auditType = type;
@@ -283,8 +270,6 @@
 			},
 			pageChange(page) {
 				this.page = page.page;
-				page = this.page;
-				console.log(page);
 				this.init();
 			},
 			shopName(id) {
@@ -337,13 +322,10 @@
 			},
 		},
 		mounted() {
-			this.auditEndTime = auditEndTime;
-			this.auditStartTime = auditStartTime;
-			this.startTime = startTime;
-			this.endTime = endTime
-			this.page = page;
-			this.getWare();
-			this.addEduce();
+			if(this.$route.path=='/admin/conclusionList'){
+				this.getWare();
+				this.addEduce();
+			}
 		},
 		updated() {
 			if (this.$refs.auditstart && this.auditStartTime === 0) this.$refs.auditstart.timestr = '--';
@@ -354,6 +336,11 @@
 				let reg = /[\u4e00-\u9fa5]/g;
 				if (reg.test(news)) {
 					this.bathcode = '';
+				}
+			},
+			$route(){
+				if(this.$route.path=='/admin/conclusionList'){
+					this.addEduce();
 				}
 			}
 		},
