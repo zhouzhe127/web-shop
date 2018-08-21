@@ -933,4 +933,10 @@ export default {
         url: b + "dispatch/approveApplications", //批量审核-审核通过
         method: 'post',
     },
+    "DispatchrecordEexportBills": {
+        url: b + "Dispatchrecord/exportBills", //批量审核-导出
+        method: 'get',
+        type:'file',
+    },
+    
 }

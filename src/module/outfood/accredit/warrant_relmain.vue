@@ -19,15 +19,17 @@ export default {
 <style lang= "less" scoped>
 #jumpShop {
 	background: #ededed;
-	position: absolute;
+	/* position: absolute;
 	top: 0;
-	left: 0;
+	left: 0; */
+	padding-top: 1px;
 	width: 100%;
 	height: 100%;
 	z-index: 100;
+	overflow: auto;
 }
 #warrant #jumpShop .shopBox {
-	width: 1438px;
+	width: 1441px;
 	/*height: 796px;*/
 	margin: 0 auto;
 	margin-top: 60px;

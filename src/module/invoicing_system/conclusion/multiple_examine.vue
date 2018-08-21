@@ -148,7 +148,7 @@
 				let arr = [
 					{name: '批量导出出货单',className: 'success',type:5,
 						fn: () => {
-							
+							this.exportFile();
 						}
 					},
 					{name: '进入日志',className: 'success',type:4,
@@ -184,6 +184,21 @@
 			},
 			formatTime(time) {
 				return utils.format(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss');
+			},
+			exportFile(){//导出文件
+				if(!this.selectItem.length){
+					this.$message({message: '请选择要导出的内容!',type: 'error'});
+					return;
+				}
+				let ids = [];
+				for(let key in this.selectItem){
+					if(key!='length'){
+						ids.push(key);
+					}
+				}
+				http.DispatchrecordEexportBills({data:{
+					ids:ids.join(','),
+				}});
 			},
 			confirmSubmit(isPass,str){
 				if(!this.selectItem.length){
@@ -227,7 +242,7 @@
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
 					auditStatus:'1', //审核状态：1审核中
-					dispatchStatus:'1,2,8',//调度状态：1未调度,2调度中
+					dispatchStatus:'2,8',//调度状态：1未调度,2调度中
 				}});
 				this.list = this.setAlready(data.list);
 				this.listLength = data.num;

@@ -382,6 +382,7 @@ export default {
 		}
 	},
 	mounted() {
+		document.querySelector('#warrant').style.height = 100+'%';
 		this.init();
 	},
 	components: {
