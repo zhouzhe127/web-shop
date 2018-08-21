@@ -122,6 +122,7 @@ export default {
 	 delShopId展示店铺id(过滤了部分的)
 	* */
 	created(){
+		console.log(this.shopIds);
 		this.getShopList();
 	},
 	filters:{
@@ -132,6 +133,9 @@ export default {
 				return str.substr(0,10)+"...";
 			}
 		}
+	},
+	watch:{
+		'shopIds':'init'
 	},
 	methods: {
 		//获取店铺列表
@@ -158,6 +162,7 @@ export default {
 		},
 		//处理数据
 		init() {
+			console.log(this.shopIds);
 			let showNo=false;//是否添加无区域
 			let res=utils.deepCopy(this.allShop);
 			if(this.isSingle){//单选
