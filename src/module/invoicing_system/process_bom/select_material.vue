@@ -39,7 +39,7 @@
 					:current-page="page"
 					background
 					layout="prev, pager, next"
-					:total="10">
+					:page-count="pageTotal">
 				</el-pagination>
 			</div>
 			<div class="bottom">
