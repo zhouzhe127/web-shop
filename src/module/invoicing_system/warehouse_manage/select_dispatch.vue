@@ -88,8 +88,8 @@
 				showCom:null,
 				comObj:{},
 				alrWareObj:{},
-				startTime:'',
-				endTime:'',
+				startTime:new Date().setHours(0, 0, 0, 0)-30*3600*24*1000,
+				endTime:new Date().setHours(0, 0, 0, 0),
 				timeDate:[],
 				userName: '', //用户名
 				shopId:'',//店铺id
@@ -161,8 +161,10 @@
 			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
 			this.initBtn();
 			this.getPriceList();//分销价列表
-			this.getShopList();//店铺列表
-			this.getData();//请求数据
+			let shopPromise = this.getShopList();//店铺列表
+			shopPromise.then(()=>{
+				this.getData();//请求数据
+			});
 			this.getWarehouse();//仓库列表
 		},
 		methods: {
@@ -216,9 +218,10 @@
 				this.priceList.unshift({value:-1,label:'等于进价'});
 				this.priceList.unshift({value:-2,label:'自定义价格'});
 			},
-			async getShopList() {//获取商品列表
-				let data = await http.invoicing_getOwners();
-				this.shopList = data;
+			getShopList() {//获取商品列表
+				return http.invoicing_getOwners().then((data)=>{
+					this.shopList = data;
+				});
 			},
 			async getData() {//获取商品列表
 				let data = await http.dispatchSearchApplications({data:{

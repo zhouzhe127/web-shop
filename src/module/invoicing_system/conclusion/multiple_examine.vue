@@ -57,8 +57,8 @@
 	export default {
 		data() {
 			return {
-				startTime:'',
-				endTime:'',
+				startTime:new Date().setHours(0, 0, 0, 0)-30*3600*24*1000,
+				endTime:new Date().setHours(0, 0, 0, 0),
 				timeDate:[],
 				userName: '', //用户名
 				shopId:'',//店铺id
@@ -126,21 +126,23 @@
 		},
 		mounted() {
 			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
-			this.getShopList();//店铺列表
+			let shopPromise = this.getShopList();//店铺列表
 			let obj = storage.session('batch_schedule');
-			if(obj){
-				this.isLog = true;
-				this.logId = obj.logId;
-				for(let item of obj.applyList){
-					this.setSelectId(item,true);
+			shopPromise.then(()=>{
+				if(obj){
+					this.isLog = true;
+					this.logId = obj.logId;
+					for(let item of obj.applyList){
+						this.setSelectId(item,true);
+					}
+					this.allList = this.setAlready(obj.applyList);
+					this.list = this.setAlready(obj.applyList);
+					this.listLength = this.list.length;
+					this.pageTotal = 1;
+				}else{
+					this.getData();//请求数据
 				}
-				this.allList = this.setAlready(obj.applyList);
-				this.list = this.setAlready(obj.applyList);
-				this.listLength = this.list.length;
-				this.pageTotal = 1;
-			}else{
-				this.getData();//请求数据
-			}
+			});
 			this.initBtn();
 		},
 		methods: {
@@ -229,9 +231,10 @@
 					this.$router.push({path: '/admin/conclusionList'});
 				}
 			},
-			async getShopList() {//获取店铺列表
-				let data = await http.invoicing_getOwners();
-				this.shopList = data;
+			getShopList() {//获取店铺列表
+				return http.invoicing_getOwners().then((data)=>{
+					this.shopList = data;
+				})
 			},
 			async getData() {//获取商品列表
 				let data = await http.dispatchSearchApplications({data:{
