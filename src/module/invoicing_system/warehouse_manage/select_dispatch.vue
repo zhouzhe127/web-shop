@@ -88,8 +88,8 @@
 				showCom:null,
 				comObj:{},
 				alrWareObj:{},
-				startTime:'',
-				endTime:'',
+				startTime:new Date().setHours(0,0,0,0)-30*3600*24*1000,
+				endTime:new Date().setHours(23,59,59,0),
 				timeDate:[],
 				userName: '', //用户名
 				shopId:'',//店铺id
@@ -161,8 +161,10 @@
 			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
 			this.initBtn();
 			this.getPriceList();//分销价列表
-			this.getShopList();//店铺列表
-			this.getData();//请求数据
+			let shopPromise = this.getShopList();//店铺列表
+			shopPromise.then(()=>{
+				this.getData();//请求数据
+			});
 			this.getWarehouse();//仓库列表
 		},
 		methods: {
@@ -216,9 +218,10 @@
 				this.priceList.unshift({value:-1,label:'等于进价'});
 				this.priceList.unshift({value:-2,label:'自定义价格'});
 			},
-			async getShopList() {//获取商品列表
-				let data = await http.invoicing_getOwners();
-				this.shopList = data;
+			getShopList() {//获取商品列表
+				return http.invoicing_getOwners().then((data)=>{
+					this.shopList = data;
+				});
 			},
 			async getData() {//获取商品列表
 				let data = await http.dispatchSearchApplications({data:{
@@ -228,6 +231,7 @@
 					uName:this.userName,
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
+					isAuditor:1,
 					auditStatus:'1', //审核状态：1审核中
 					dispatchStatus:'1,2',//调度状态：1未调度,2调度中
 				}});
@@ -281,7 +285,7 @@
 					wName:this.alrWareObj.name,
 				};
 				storage.session('mulSelectDispatch',obj);
-				this.$message({message: '选择完毕!',type: 'success'});
+				this.$message({message: '选择完毕，出入货仓库相同的申请单已被剔除',type: 'success'});
 				this.$router.push({path: '/admin/conclusionList/batchSchedule',query: this.$route.query});
 			},
 			setAlready(dataList){//设置已经选中过的数据
@@ -316,8 +320,8 @@
 				this.userName = '';
 				this.page = 1;
 				this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
-				this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
-				this.endTime = new Date().setHours(0, 0, 0, 0);
+				this.startTime = new Date().setHours(0,0,0,0)-30*3600*24*1000;
+				this.endTime = new Date().setHours(23,59,59,0);
 				this.getData();
 			},
 			pageChange(page) { //分页 获取页数

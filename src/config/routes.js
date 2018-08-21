@@ -1371,6 +1371,9 @@ export default [{
                             path: '',
                             components: {
                                 details_con: conclusionList
+                            },
+                            meta: {
+                                keepAlive: true
                             }
                         },
                         {
@@ -1392,17 +1395,17 @@ export default [{
                             }
                         },
                         {
-		                    path: 'selectDispatch', //批量调度-选择调度单
-		                    components: {
-		                        details_con: select_dispatch
-		                    },
-		                },
-		                {
-		                    path: 'multipleExamine', //批量审核
-		                    components: {
-		                        details_con: multipleExamine
-		                    },
-		                },
+                            path: 'selectDispatch', //批量调度-选择调度单
+                            components: {
+                                details_con: select_dispatch
+                            },
+                        },
+                        {
+                            path: 'multipleExamine', //批量审核
+                            components: {
+                                details_con: multipleExamine
+                            },
+                        },
                     ]
                 },
                 {
@@ -1759,8 +1762,8 @@ export default [{
                             components: {
                                 details_con: batchLogPrint //批量审核详情打印
                             },
-                            meta:{
-                                comName:'batchLogPrint'
+                            meta: {
+                                comName: 'batchLogPrint'
                             }
                         },
                         {
@@ -1774,8 +1777,8 @@ export default [{
                             components: {
                                 details_con: batchLogDispatchDetail //批量调度日志详情
                             },
-                            meta:{
-                                comName:'batchLogDispatchDetail'
+                            meta: {
+                                comName: 'batchLogDispatchDetail'
                             }
                         },
                     ]
