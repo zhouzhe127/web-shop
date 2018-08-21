@@ -192,7 +192,7 @@ export default {
 				}
 				this.title=this.shopIds.length>0?`已选择${this.shopIds.length}家门店`:'请选择店铺';
             }
-			if(showNo&&this.areaList.list[this.areaList.list.length-1].id!=0){
+			if(showNo&&this.areaList.list.length>0&&this.areaList.list[this.areaList.list.length-1].id!=0){
 				this.areaList.list.push({id: 0,name: '无区域'});
 			}
 			this.showShopList = utils.deepCopy(res);
