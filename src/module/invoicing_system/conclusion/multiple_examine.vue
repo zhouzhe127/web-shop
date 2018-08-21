@@ -57,8 +57,8 @@
 	export default {
 		data() {
 			return {
-				startTime:new Date().setHours(0, 0, 0, 0)-30*3600*24*1000,
-				endTime:new Date().setHours(0, 0, 0, 0),
+				startTime:new Date().setHours(0,0,0,0)-30*3600*24*1000,
+				endTime:new Date().setHours(23,59,59,0),
 				timeDate:[],
 				userName: '', //用户名
 				shopId:'',//店铺id
@@ -294,8 +294,8 @@
 				this.userName = '';
 				this.page = 1;
 				this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
-				this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
-				this.endTime = new Date().setHours(0, 0, 0, 0);
+				this.startTime = new Date().setHours(0,0,0,0)-30*3600*24*1000;
+				this.endTime = new Date().setHours(23,59,59,0);
 				if(this.isLog){
 					this.list = utils.deepCopy(this.allList);
 				}else{
