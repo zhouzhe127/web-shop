@@ -231,6 +231,7 @@
 					uName:this.userName,
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
+					isAuditor:1,
 					auditStatus:'1', //审核状态：1审核中
 					dispatchStatus:'1,2',//调度状态：1未调度,2调度中
 				}});
@@ -284,7 +285,7 @@
 					wName:this.alrWareObj.name,
 				};
 				storage.session('mulSelectDispatch',obj);
-				this.$message({message: '选择完毕!',type: 'success'});
+				this.$message({message: '选择完毕，出入货仓库相同的申请单已被剔除',type: 'success'});
 				this.$router.push({path: '/admin/conclusionList/batchSchedule',query: this.$route.query});
 			},
 			setAlready(dataList){//设置已经选中过的数据

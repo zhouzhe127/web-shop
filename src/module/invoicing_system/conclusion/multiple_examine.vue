@@ -244,6 +244,7 @@
 					uName:this.userName,
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
+					isAuditor:1,
 					auditStatus:'1', //审核状态：1审核中
 					dispatchStatus:'2,8',//调度状态：1未调度,2调度中
 				}});

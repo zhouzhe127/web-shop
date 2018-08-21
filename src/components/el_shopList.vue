@@ -1,8 +1,11 @@
 /**
  * @Author: zhengu.jiang
- *
+ * @Date: 2018-08-13 11:04:36 
+ * @Last Modified by: zhigang.li
+ * @Last Modified time: 2018-08-21 15:07:50
  * @Module: 品牌下选择门店下拉
  */
+
 <template>
 	<div id="elShop" >
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible" @hide="hide">
@@ -25,6 +28,7 @@
 				</div>
 				<div class="detH3" style="text-align: left;max-height: 500px;overflow: auto;">
 					<el-tabs v-model="activeName">
+						
 						<div class="area" v-if="areaList.list.length > 0">
 							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
 							<div class="areabox">
@@ -188,7 +192,7 @@ export default {
 				}
 				this.title=this.shopIds.length>0?`已选择${this.shopIds.length}家门店`:'请选择店铺';
             }
-			if(showNo&&this.areaList.list[this.areaList.list.length-1].id!=0){
+			if(showNo&&this.areaList.list.length>0&&this.areaList.list[this.areaList.list.length-1].id!=0){
 				this.areaList.list.push({id: 0,name: '无区域'});
 			}
 			this.showShopList = utils.deepCopy(res);
@@ -236,7 +240,7 @@ export default {
 				if(e.shopName.indexOf(this.shopName) != -1){
 					return e;
 				}
-			});
+			})
 		},
 		//选择全部
 		selectAll(){
@@ -326,7 +330,7 @@ export default {
 <style>
 .elshop .searchbox{
 	width: 200px;
-	height:40px;
+	height: 35px;
 	position: absolute;
 	right: 5px;
 	z-index: 10;
@@ -383,7 +387,7 @@ export default {
 			cursor: pointer;
 			display: inline-block;
 			width: 200px;
-			height: 40px;
+			height: 38px;
 			border: 1px solid #dcdfe6;
 			border-radius: 4px;
 			line-height: 40px;
