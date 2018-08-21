@@ -75,7 +75,6 @@ export default {
 	props: ['shopIds'],
 	mounted(){
 		this.getShopList();
-		console.log(this.shopIds);
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
@@ -163,8 +162,6 @@ export default {
 			}
 		},
 		show(){
-			console.log('jjjjjjjjjjjj');
-			console.log()
 			if(this.areaList.list.length > 0){
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
