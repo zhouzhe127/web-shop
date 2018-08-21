@@ -173,6 +173,13 @@ export default {
 			});
 		},
 		next: function() {
+			if(this.selShopid === ''){
+				this.$message({
+					message: '请选择店铺！',
+					type: 'warning'
+				});
+				return false;
+			}
 			if (this.bandtype == 2) {
 				this.$router.push({
 					path: 'relation/config'
