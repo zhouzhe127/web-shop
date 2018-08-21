@@ -648,8 +648,8 @@
 			 * child => q
 			 * goods => r
 			 * shop => s
-			 * categoryName => t
-			 * categoryId => u
+			 * categoryName => t  分类名称
+			 * categoryId => u  分类id
 			 * good => v
 			 * goodsName => w
 			 * 

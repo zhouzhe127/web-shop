@@ -422,9 +422,14 @@
 				this.shopName='';
 				for(let i=0;i<this.shopList.length;i++){
 					if(res.includes(this.shopList[i].id)){
-						this.shopName=this.shopName+this.shopList[i].shopName+'、 ';
+						if(this.shopName==''){
+							this.shopName=this.shopName+this.shopList[i].shopName;
+						}else {
+							this.shopName=this.shopName+','+this.shopList[i].shopName;
+						}
 					}
 				}
+				console.log(this.shopName);
 				this.selShopid=res;
 				this.getShopname();
 			},
