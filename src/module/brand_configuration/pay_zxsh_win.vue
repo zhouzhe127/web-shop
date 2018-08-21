@@ -63,7 +63,7 @@
 			</div>
 			<div class="content-box">
 				<section style="width:235px;margin-bottom: 10px;">
-					<el-input placeholder="请输入店铺名称" @change="secShop" v-model="inSe" clearable class="input-with-select" >
+					<el-input placeholder="请输入店铺名称" v-model="inSe" @click="secShop" clearable class="input-with-select" >
 						<el-button slot="append" icon="el-icon-search" @click="secShop"></el-button>
 					</el-input>
 				</section>
@@ -180,19 +180,22 @@ export default {
 				newList.push(list[i]);
 			}
 			this.shopsList = newList;
-			this.getShopDetial(this.shopsList[0],0);
+			// if(newList.length>0){
+				this.getShopDetial(this.shopsList[0],0);
+			// }
 		},
 		//获取店铺配置的信息
 		getShopDetial(item,index){
+			console.log(item);
 			this.onIndex = index;
 			this.shopDetial = {
-				subShopId: item.id,
+				subShopId: '',
 				recAccountNo: '',
 				recAccountName: '',
 				recOpenBankCode: ''
 			}
 			for(let j=0;j<this.payConfigList.length;j++){
-				if(item.id == this.payConfigList[j].shopId){
+				if(item && item.id == this.payConfigList[j].shopId){
 					this.shopDetial = this.payConfigList[j];
 					this.shopDetial.subShopId = item.id;
 					return;
