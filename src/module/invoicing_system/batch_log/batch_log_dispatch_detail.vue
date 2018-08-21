@@ -446,7 +446,7 @@ export default {
     async mounted(){
 		this.logId = this.$route.query.logId;
         this.logId = Number(this.logId);
-        // this.logId = 1;
+        
         this.initBtn();
         let allocationTypes = await this.getHttp('DispatchrecordGetAllocationType');
         if(Array.isArray(allocationTypes)){
