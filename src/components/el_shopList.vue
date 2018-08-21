@@ -5,7 +5,7 @@
  */
 <template>
 	<div id="elShop" >
-		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible">
+		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible" @hide="hide">
 			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
 				<span v-if="isSingle" style="color:#c0c4cc">
 					<i class="name">{{singleName | divide}}</i>
@@ -120,21 +120,6 @@ export default {
 	created(){
 		this.getShopList();
 	},
-	mounted(){
-		document.onclick = () => {
-			this.init();
-		};
-	},
-	watch:{
-		'shopIds':{
-			deep:true,
-			handler: function () {
-				if(!this.isSingle){
-					this.init();
-                }
-			}
-		},
-	},
 	filters:{
 		divide(str){
 			if(str.length<10){
@@ -172,8 +157,8 @@ export default {
 			let showNo=false;//是否添加无区域
 			let res=utils.deepCopy(this.allShop);
 			if(this.isSingle){//单选
+				console.log('单选');
 				this.singleId=this.shopIds;
-				console.log(res);
 				if(this.singleId.length>0){
 					for(let i=0;i<this.allShop.length;i++){
 						if(this.singleId.includes(this.allShop[i].id)){
@@ -191,6 +176,7 @@ export default {
 					}
 				}
 			}else {//多选
+				console.log('多选');
 				for (let i = 0; i < res.length; i++) {
 					this.$set(res[i], 'selected', false);
 					if(this.shopIds.includes(res[i].id)){
@@ -239,19 +225,6 @@ export default {
 				this.leftWidth = 0;
 				this.index = 1;
 			}
-		},
-		show(){
-			if(this.areaList.list.length > 0){
-				this.$nextTick(() => {
-					this.contentWidth = this.$refs.content.clientWidth;
-				});
-			}
-			if(this.isSingle){
-				this.allShop=this.delShopId;
-				this.areaList.flag='-1';
-				this.areaList.name='全部';
-				this.init();
-            }
 		},
 		//搜索店铺
 		searchShop(){
@@ -320,6 +293,25 @@ export default {
 		cancel(){
 			this.visible = false;
 			//取消之后，再次打开弹窗恢复初始状态
+			this.init();
+		},
+		//展开时显示
+		show(){
+			if(this.areaList.list.length > 0){
+				this.$nextTick(() => {
+					this.contentWidth = this.$refs.content.clientWidth;
+				});
+			}
+			this.areaList.flag='-1';
+			this.areaList.name='全部';
+			this.activeName= 'first';
+			if(this.isSingle){
+				this.allShop=this.delShopId;
+				this.init();
+			}
+		},
+		//隐藏时显示
+		hide(){
 			this.init();
 		},
 		//单选选中的店铺id
