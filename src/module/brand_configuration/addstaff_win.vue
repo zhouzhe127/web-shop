@@ -1,4 +1,9 @@
-/* * @file * * 新建员工 * * @author zhengu.jiang */
+/**
+ * @Author: jiang.hu 
+ * @Date: 2018-08-06 15:51:59 
+ * @Last Modified by: jiang.hu
+ * @Module:  新建/编辑员工（一级弹窗）
+ */
 <template>
 	<div>
 		<win @winEvent="getWin" :align="'right'" :width="780" :height="520" :ok="okStyle" style="background: red">

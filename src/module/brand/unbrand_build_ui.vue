@@ -1,3 +1,10 @@
+/**
+ * @Author: zhigang.li 
+ * @Date: 2018-08-06 15:51:59 
+ * @Last Modified by: zhigang.li
+ * @Last Modified time: 2018-08-21 15:07:12
+ * @Module:  建立无品牌门店 --reset
+ */
 <template>
 	<div class="creatStores" v-cloak>
 		<div class="title">

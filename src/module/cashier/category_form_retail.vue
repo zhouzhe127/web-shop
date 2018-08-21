@@ -8,7 +8,6 @@
 
 <template>
 	<div id="report_category">
-		<!-- <section v-show="loading && classification.length > 0"> -->
 		<section>
 			<section>
 				<div class="formType light">
@@ -20,21 +19,16 @@
 						@click="showDataChoose(index)">{{item.name}}</span>
 				</div>
 			</section>
-			<categorycharts v-if="industry != 1 && chartList.flag === 1" :formData="classification" :changeCharts="changeCharts" :shopList="shopList" :buttonFlag="dataList.flag" :headList="headList" :shopName="shopName"
-			    :flag="buttonList.flag" :chooseShopList="chooseShopList"></categorycharts>
-			<!-- <div class="mbot" style="margin-left: 0;">
-				<span class="sel" v-for="(item, index) in buttonList.list" :key="index" v-bind:class="{'on': buttonList.flag == index}" @click="light(index)">{{item.name}}</span>
-			</div> -->
-			<section v-show="chartList.flag === 0">
+			<!--图表-->
+			<categorycharts v-if="industry!=1&&chartList.flag=== 1" :formData="classification" :changeCharts="changeCharts" :shopList="shopList"
+                            :buttonFlag="dataList.flag" :headList="headList" :shopName="shopName" :flag="buttonList.flag" :chooseShopList="chooseShopList">
+            </categorycharts>
+			<!--数据-->
+			<section v-show="chartList.flag=== 0">
 				<section class="nav">
-					<span @click="chooseShop('total')" :style="{'font-weight': selShopForm.id == '-1' ? 600 : 400}" :class="{'selected': selShopForm.id == '-1'}" class="totalName">合计</span>
-					<div @click="chooseShop"  @click.stop :class="{'selected': selShopForm.id != '-1'}" class="shopName">
-						<span :style="{'font-weight': selShopForm.id!== '-1' ? 600 : 400}">{{selShopForm.shopName}}</span>
-						<i :style="{'border-top': selShopForm.id != '-1' ? '10px solid #f0f0f0' : '10px solid #45404b'}"></i>
-					</div>
-					<div class="shopBox">
-						<formShop v-if="showFormShop" @chooseShop="formShop" :shopId="selShopForm.id" :shopList="chooseShopList.filter(v=>v.selected)"></formShop>
-					</div>
+					<span @click="allNum" :style="{'font-weight': selShopForm.id == '-1' ? 600 : 400}" :class="{'selected': selShopForm.id == '-1'}"
+						  class="totalName">合计</span>
+					<elShopList :shopIds="selShopForm.id==-1?[]:selShopForm.id.split(',')" :isSingle="true" :delShopId="chooseShopList" @chooseShop="formShop"></elShopList>
 				</section>
 				<section style="line-height: 28px;margin-bottom: 10px;">
 					<span style="font-size: 18px;">分类总览</span>
@@ -42,6 +36,7 @@
 				<section style="text-align: center;">
 					<section class="chairFix" style="margin-bottom: 50px;">
 						<section class="main clearfix" :class="{'max': (chartWidth*1+600*1)>1350}" style="height: auto;position: relative;margin-bottom: 10px;max-width:100%">
+							<!--门店合计------------------------------------------------------------------------------->
 								<div class="aLeft" :style="{'width': (headList.length*100+200*1  - 59) + 'px'}">
 									<section class="orMaRetreatMain">
 										<ul class="titleTop titleTopColor"></ul>
@@ -57,7 +52,6 @@
 											</li>
 										</ul>
 										<ul class="orMaReMainList listLeft rightTotal">
-											
 											<li v-for="(item,key,oneIndex) in formList" :key="oneIndex" class="chairFix" style="background-color: rgb(255, 255, 255);display: table;border-bottom: 1px solid #ccc;">
 												<span @click="getDetailsOne(key,item)" v-if="item.click" class="point width70">
 													<i class="fi fi-double-angle-up fi-2x" style="color:#ff9800"></i>
@@ -187,6 +181,7 @@
 								</div>
 								<!-- <div :style="{'padding-left': (headList.length*100+200*1 + 2*1 -60) + 'px'}" class="aRight" style="height: auto;overflow: auto;">
 									<div :style="{'width': (headList.length*100 + 2*1)*(allShopIndex) + 'px'}"> -->
+							<!--单天门店--------------------------------------------------------------->
 								<div v-show="isHaveData" class="aRight" style="height: auto;overflow: auto;">
 									<div :style="{'width': (headList.length*100 + 2*1) + 'px'}">
 										<section v-for="(time,index) in orderPageList" :key="index + '*'" style="display: inline-block;" :style="{'width': (headList.length*100 + 2*1)*(time.shop.length)*1 + 'px'}" class="orMaRetreatMain">
@@ -521,11 +516,8 @@
 				changeCharts: 0, //图表监听数据变化
 				industry: 1, //判断是否为零售店 1为零售店
 				shopId: '',
-				selShopId: '', //选中的表格店铺id
-				showFormShop: false, //显示表格店铺选择
 				selShopForm: {
-					id: '-1',
-					shopName: '请选择店铺'
+					id: '-1'
 				}, //选择显示列表的店铺
 				showCharts: false,
 				isHaveData: true, //判断该时间段下该店铺是否有数据
@@ -542,26 +534,20 @@
 			'selectedType', //对应循序  0:日, 1:周, 2:月, 3:季度, 4:年
 		],
 		mounted() {
+			console.log(this.chooseShopList);
 			let userData = storage.session('userShop');
 			this.shopId = userData.currentShop.id;
 			this.industry = userData.currentShop.industry; //当industry为1时 为零售店，图表不显示
 			this.dataHandle();
-			document.addEventListener('click', this.show);
 			this.initBtn();
 		},
 		watch: {
 			orderList: function () {
 				this.dataHandle();
 			},
-			selShopForm: {
-				handler: function(val){
-					this.selShopId = val.id;
-				},
-				deep: true
-			},
 		},
 		methods: {
-			//初始化右上角按钮
+			//初始化右上角按钮，导出
 			initBtn() {
 				let arr = [{
 					name: '导出',
@@ -595,9 +581,6 @@
 				}];
 				this.$store.commit('setPageTools', arr);
 			},
-			show(){
-				this.showFormShop = false;
-			},
 			//判断该时间段下是否有该店铺数据
 			haveData(){
 				let shopList = this.orderPageList[0].shop;
@@ -611,26 +594,41 @@
 			changeChart(index) {
 				this.chartList.flag = index;
 			},
-			//选择列表显示店铺
-			chooseShop(type){
-				if(type == 'total'){
-					this.selShopForm.id = '-1';
-					this.selShopForm.shopName = '请选择店铺';
-					this.haveData();
-				}else{
-					this.showFormShop = true;
+			//数据查看切换
+			showDataChoose(index) {
+				this.dataList.buttonTop = index;
+				setTimeout(() => {
+					//页面渲染卡顿 延迟执行
+					this.dataList.flag = index;
+				});
+				// this.chartsTitle.flag = 0
+				if (index == 0) {
+					this.headList = [{type: 'goodsNum',name: '商品总数'}, {type: 'totalPrice',name: '消费金额'}, {type: 'num',name: '销量'}];
+					let obj = {type: 'attrPrice',name: '口味金额'};
+					if(this.industry != 1){
+						this.headList.splice(1,0,obj);
+					}
+				} else if (index == 1) {
+					this.headList = [{type: 'freeNum',name: '赠品数量'}, {type: 'freePrice',name: '赠品金额'}, {type: 'discountPrice',name: '商品优惠金额'}, {type: 'price',name: '商品实收金额'}];
+				} else if (index == 2) {
+					this.headList = [{type: 'returnNum',name: '退品数量'}, {type: 'returnPrice',name: '退品金额'}, {type: 'totalPrice',name: '消费金额'}];
 				}
+				// this.changeTitlechart(this.chartsTitle.flag,this.headList[this.chartsTitle.flag])
 			},
-			//选择查看列表数据显示的是哪家店铺
-			formShop(item){
-				this.showFormShop = false;
-				this.selShopForm.id = item.id;
-				this.selShopForm.shopName = item.shopName;
+			//展示合计
+			allNum(){
+				this.selShopForm.id = '-1';
 				this.haveData();
 			},
-			toLength(data){
-				return Object.keys(data).length;
+            //选选择店铺返回
+			formShop(item){
+				console.log(item);
+				this.selShopForm.id=item.join(',');
+				this.haveData();
 			},
+//			toLength(data){
+//				return Object.keys(data).length;
+//			},
 			/**
 			 * shopId => a;
 			 * shopName => b,
@@ -650,8 +648,8 @@
 			 * child => q
 			 * goods => r
 			 * shop => s
-			 * categoryName => t
-			 * categoryId => u
+			 * categoryName => t  分类名称
+			 * categoryId => u  分类id
 			 * good => v
 			 * goodsName => w
 			 * 
@@ -763,27 +761,7 @@
 				this.chartWidth = this.allShopIndex * (this.headList.length * 1) * 100;
 				this.haveData();
 			},
-			//数据查看切换
-			showDataChoose(index) {
-				this.dataList.buttonTop = index;
-				setTimeout(() => {
-					//页面渲染卡顿 延迟执行
-					this.dataList.flag = index;
-				});
-				// this.chartsTitle.flag = 0
-				if (index == 0) {
-					this.headList = [{type: 'goodsNum',name: '商品总数'}, {type: 'totalPrice',name: '消费金额'}, {type: 'num',name: '销量'}];
-					let obj = {type: 'attrPrice',name: '口味金额'};
-					if(this.industry != 1){
-						this.headList.splice(1,0,obj);
-					}
-				} else if (index == 1) {
-					this.headList = [{type: 'freeNum',name: '赠品数量'}, {type: 'freePrice',name: '赠品金额'}, {type: 'discountPrice',name: '商品优惠金额'}, {type: 'price',name: '商品实收金额'}];
-				} else if (index == 2) {
-					this.headList = [{type: 'returnNum',name: '退品数量'}, {type: 'returnPrice',name: '退品金额'}, {type: 'totalPrice',name: '消费金额'}];
-				}
-				// this.changeTitlechart(this.chartsTitle.flag,this.headList[this.chartsTitle.flag])
-			},
+
 			// 分类全部选中
 			allSelectedOne: function () {
 				let cate = this.classificationTotal;
@@ -1070,16 +1048,15 @@
 				return arr[day];
 			},
 		},
-		destroyed() {
-			document.removeEventListener('click',this.show);
-		},
 		components: {
 			categorycharts: () =>
 				import ( /*webpackChunkName: 'category_charts'*/ './category_charts_retail'),
 			page: () =>
 				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 			formShop: () =>
-				import ( /*webpackChunkName: 'form_shop'*/ './form_shop')
+				import ( /*webpackChunkName: 'form_shop'*/ './form_shop'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		}
 
 	};
@@ -1185,7 +1162,7 @@
 				background: #f2f2f2;
 				border-radius: 5px;
 				vertical-align: middle;
-				text-align: center;
+				cursor: pointer;
 			}
 			.shopName{
 				display: inline-block;

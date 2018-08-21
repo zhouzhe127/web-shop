@@ -67,7 +67,12 @@
 											<img v-if="items.logoImage != ''" class="cname" :src="imgHost + items.logoImage" style="height:100%;" />
 											<img v-if="!items.logoImage || items.logoImage == ''" class="cname" src="../../res/food/test.jpg" style="height:100%;" />
 										</li>
-										<li style="width:15%;">{{getIndustryDetial(items.industry)}}</li>
+										<li style="width:15%;">
+											<!-- {{getIndustryDetial(items.industry)}} -->
+											<span v-if="items.industry == '0'">餐饮</span>
+											<span v-if="items.industry == '1'">零售</span>
+											<span v-if="items.industry == '2'">餐饮+零售</span>
+										</li>
 										<!--<li v-on:click = "openBrandDeail(item,'1',false)" style="color: #28A6E0;cursor: pointer;">{{shopNum1[index]}}</li>
 																				<li v-on:click = "openBrandDeail(item,'2',true)" style="color: #28A6E0;cursor: pointer;">{{shopNum2[index]}}</li>-->
 										<li v-on:click="openBrandDeail(items,false)" style="color: #28A6E0;cursor: pointer;">
@@ -153,10 +158,86 @@
 					<section class="top_section">
 						<h3 class="top_h3">{{isJoinShop?'所有加盟店明细':'所有直营店明细'}}</h3>
 						<a v-on:click="returnList" href="javascript:void(0);">返回</a>
-						<input type="text" maxlength="30" class="input fr" v-model="searchName" placeholder="请输入需要检索的店铺名称">
+						<section style="width:210px;float:right;margin-right:20px;">
+							<el-input placeholder="请输入店铺名称" v-model="searchName" clearable class="input-with-select" >
+								<el-button slot="append" icon="el-icon-search" @click="newSearchName"></el-button>
+							</el-input>
+						</section>
+						<!-- <input type="text" maxlength="30" class="input fr" v-model="searchName" placeholder="请输入需要检索的店铺名称"> -->
 					</section>
+					<!-- <section style="width:100%;height:100%;">
+						<div class="area" v-if="areaList.length > 0">
+							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
+							<div class="areabox">
+								<div class="box" ref="content" :style="{left: leftWidth +'px'}">
+									<el-radio-group v-model="areaList.name" @change="changeArea" size="medium">
+										<el-radio-button v-for="(item,index) in areaList" :key="index" :label="item.name"></el-radio-button>
+									</el-radio-group>
+								</div>
+							</div>
+							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
+						</div>
+						
+						<section style="width:100%;height:100%;overflow: auto;background-color: #fff;" v-cloak>
+							<section class="shoplist" style="overflow: auto;margin-top:1px;">
+								<el-table
+									ref="multipleTable" stripe
+									:header-cell-style = "{'background-color':'#f5f7fa'}"
+									:data="shopList"
+									border
+									style="width: 100%">
+									<el-table-column align="center" min-width = "100" label="序号">
+										<template slot-scope="scope">
+											<span>{{scope.$index+1}}</span>
+										</template>
+									</el-table-column>
+									<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="name" label="店铺名称">
+										<template slot-scope="scope">
+											<div class="areaTagList">
+												<span v-for="itemDetial in scope.row.areaTag" class="areaTag" :key="itemDetial+''">{{itemDetial}}</span>
+											</div>
+										</template>
+									</el-table-column>
+									<el-table-column show-overflow-tooltip min-width = "120" prop="address" align="center" label="店铺地址" > </el-table-column>
+									<el-table-column prop="contactMan" min-width = "120" align="center" label="负责人" > </el-table-column>
+									<el-table-column prop="telephone" min-width = "120" align="center" label="联系方式" > </el-table-column>
+									<el-table-column min-width = "120" align="center" label="管理门店" >
+										<template slot-scope="scope">
+											<section class="oBox" v-if="scope.row.status =='0'">
+												<span v-on:click="closeShop(scope.row,scope.$index)" style="width:50%;color: #28a6e0;">关闭门店</span>
+												<span v-on:click="joinShop(scope.row)" style="width:50%;color: #28a6e0;margin-left:15px;">进入门店</span>
+											</section>
+											<section class="oBox" v-if="scope.row.status =='5'">
+												<span v-on:click="closeShop(scope.row,indexs)" style="width:50%;color: #28a6e0;">开启门店</span>
+												<span v-on:click="joinShop(scope.row)" style="width:50%;color: #28a6e0;margin-left:15px;">进入门店</span>
+											</section>
+											<section class="oBox" v-if="scope.row.status =='1'">
+												<img style="margin-top:20px;" src="../../res/images/audit.png" />
+											</section>
+											<section class="oBox" v-if="scope.row.status =='2'">
+												<div style="width:50%;"><img style="margin-top:20px;" src="../../res/images/nopass.png" /></div>
+												<div v-on:click="openShopDetial(scope.$index,scope.row)" style="width:50%;">查看详情</div>
+											</section>
+										</template>
+									</el-table-column>
+								</el-table>
+							</section>
+						</section>
+					</section> -->
 					<!--加盟店明细-->
 					<section v-if='isJoinShop' style="width:100%;height:100%;">
+						<div class="area" ref="contentBox" v-if="newAreaList.length > 0" style="position:relative;">
+							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
+							<div class="areabox">
+								<div class="box" ref="content" :style="{left: leftWidth +'px'}">
+									<el-radio-group v-model="areaIndex" @change="changeArea" size="medium">
+										<el-radio-button v-for="(item,index) in newAreaList" :key="index" :label="index">{{item.name}}</el-radio-button>
+									</el-radio-group>
+								</div>
+							</div>
+							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
+						</div>
+						
 						<section style="width:100%;height:100%;overflow: auto;background-color: #fff;" v-cloak>
 							<section class="shoplist" style="overflow: auto;margin-top:1px;">
 								<ul style="background: #f2f2f2;font-weight: bold;height:50px;">
@@ -213,6 +294,18 @@
 					</section>
 					<!--直营店明细-->
 					<section v-if='!isJoinShop' style="width:100%;height:100%;">
+						<div class="area" v-if="newAreaList.length > 0" style="position:relative;">
+							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
+							<div class="areabox">
+								<div class="box" ref="content" :style="{left: leftWidth +'px'}">
+									<el-radio-group v-model="areaIndex" @change="changeArea" size="medium">
+										<el-radio-button v-for="(item,index) in newAreaList" :key="index" :label="index">{{item.name}}</el-radio-button>
+									</el-radio-group>
+								</div>
+							</div>
+							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
+						</div>
+						
 						<section style="width:100%;height:100%;overflow: auto;background-color: #fff;" v-cloak>
 							<section class="shoplist" style="overflow: auto;margin-top:1px;">
 								<ul style="background: #f2f2f2;font-weight: bold;height:50px;">
@@ -344,7 +437,17 @@ export default {
 
 			searchName: '', //搜索名称
 			copyFranchiseesTotal: [], //直营店用于店铺名称搜索
-			copyDirectlyTotal: [] //加盟店用于店铺名称搜索
+			copyDirectlyTotal: [], //加盟店用于店铺名称搜索
+			newAreaList:[],//区域列表
+			leftWidth: 0,
+			areaIndex:0,//区域滑块下标
+			shopList:[],//所要显示的店铺
+			shopIds:'',//要显示的shopIs
+			nowShopId:'',//当前显示的品牌id
+			areaIndex2:0,
+			contentWidth:'',
+			contentBoxWidth:''
+			
 		};
 	},
 	methods: {
@@ -523,11 +626,106 @@ export default {
 				}
 			});
 		},
+		slideLeft(){
+			if (this.contentWidth > this.contentBoxWidth) {
+				this.areaIndex2++;
+				this.leftWidth = this.areaIndex2 * -200;
+				if (this.leftWidth * -1 + this.contentBoxWidth >= this.contentWidth) {
+					this.leftWidth = -(this.contentWidth - this.contentBoxWidth+60);
+					return false;
+				}
+			}
+		},
+		slideRight(){
+			if (this.leftWidth >= 0) {
+				this.leftWidth = 0;
+				return false;
+			}
+			this.leftWidth = this.leftWidth + 200;
+			this.areaIndex2--;
+			if (this.leftWidth >= 0) {
+				this.leftWidth = 0;
+				this.areaIndex2 = 0;
+			}
+		},
+		changeArea(res){
+			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
+			this.openBrandDeail(this.shopsIn,this.isJoinShop);
+		},
+		async storeareaGetAllArea(shopId){
+			let res = await http.getAllArea({
+				data: {
+						shopId: shopId,
+					}});
+			if(res.length > 0){
+				let str = '';
+				for(let i=0;i<res.length;i++){
+					str +=res[i].areaShopIds+',';
+					let isEmpty = false;
+					let shids =  res[i].areaShopIds;
+					for(let j=0;j<this.shopList.length;j++){
+						if(shids.indexOf(this.shopList[j].id) >=0){
+							isEmpty = true;
+							break;
+						}
+					}
+					if(!isEmpty){
+						res.splice(i,1);
+						i--;
+					}
+
+				}
+				let shopIds = '';//全部的ids
+				for(let j=0;j<this.shopsIn.direct.length;j++){
+					shopIds+=this.shopsIn.direct[j].id+",";
+				}
+				for(let j=0;j<this.shopsIn.franchise.length;j++){
+					shopIds+=this.shopsIn.franchise[j].id+",";
+				}
+				let newstr = str.split(',');
+				let newshopIds = shopIds.split(',');
+				//根据区域筛选
+				for(let i=0;i<newstr.length;i++){
+					for(let j=0;j<newshopIds.length;j++){
+						if(newstr[i]==newshopIds[j]){
+							newshopIds.splice(j,1);
+							j--;
+						}
+					}
+				}
+				let noArea = '';//无区域的shopids
+				for(let i=0;i<newshopIds.length;i++){
+					noArea +=  newshopIds[i]+',';
+				}
+				res.unshift({name: '全部', areaShopIds: shopIds});
+				res.push({id: 0,name: '无区域', areaShopIds: noArea});
+				// console.log(noArea);
+			}
+			this.newAreaList = res;
+			if(this.newAreaList.length > 0){
+				this.$nextTick(() => {
+					this.contentWidth = this.$refs.content.clientWidth;
+					this.contentBoxWidth = this.$refs.contentBox.clientWidth;
+					
+				});
+			}
+			// this.openBrandDeail(this.shopsIn,this.isJoinShop);
+		},
 		//查看品牌直营店加盟店点击
 		openBrandDeail: function(item, bool) {
+			// this.shopIds = '';
+			// this.areaIndex = '0';
+			// console.log(item);
+			if(bool){
+				this.shopList = item.franchise;
+			}else{
+				this.shopList = item.direct;
+			}
+			this.nowShopId = item.id;
 			this.isBranDeail = true;
 			this.isJoinShop = bool;
 			this.shopsIn = item;
+			this.storeareaGetAllArea(item.id);
 			this.brandListDirectly = [];
 			this.examineDirectlying = [];
 			this.examineDirectlyFail = [];
@@ -561,6 +759,13 @@ export default {
 						obj.areaTag = obj.areaTag.split(',');
 						if (obj.areaTag[0] == '') {
 							obj.areaTag.splice(0, 1);
+						}
+					}
+					if(this.areaIndex == 0){
+					// 	continue;
+					}else{
+						if(this.shopIds.indexOf(obj.id)==-1 ){
+							continue;
 						}
 					}
 					if (obj.ischain == 1) {
@@ -598,6 +803,13 @@ export default {
 							obj.areaTag.splice(0, 1);
 						}
 					}
+					if(this.areaIndex == 0){
+
+					}else{
+						if(this.shopIds.indexOf(obj.id)==-1 ){
+							continue;
+						}
+					}
 					//审核通过的加盟店
 					if (obj.ischain == 2 && obj.status == 0) {
 						this.brandListFranchisees.push(obj);
@@ -633,6 +845,8 @@ export default {
 			this.isBranDeail = false;
 			this.iscreatStores = false;
 			this.shopsIn = null;
+			this.shopIds = '';
+			this.areaIndex = '0';
 			setTimeout(() => {
 				this.getLogoImg();
 			}, 10);
@@ -865,6 +1079,7 @@ export default {
 		// 初始化懒加载配置
 		this.getLogoImg();
 		document.body.style.backgroundColor = '#F8F8F8';
+		// this.storeareaGetAllArea(this.nowShopId);
 	},
 	components: {
 		brandAuditWin: () =>
@@ -1354,5 +1569,39 @@ export default {
 			}
 		}
 	}
+}
+
+.area{
+	height: 50px;
+	padding: 0 30px;
+}
+.area .icon{
+	display: inline-block;
+	width: 20px;
+	height: 40px;
+	line-height: 40px;
+	cursor: pointer;
+	font-size: 20px;
+}
+.area .left{
+	position: absolute;
+	left: 0;
+	top: 0px;
+}
+.area .right{
+	position: absolute;
+	right: 0;
+	top: 0px;
+}
+.areabox{
+	position: relative;
+	width: 100%;
+	height: 50px;
+	overflow: hidden;
+}
+.areabox .box{
+	position: absolute;
+	transition: 0.5s;
+	white-space:nowrap;
 }
 </style>

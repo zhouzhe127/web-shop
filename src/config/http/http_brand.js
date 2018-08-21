@@ -105,4 +105,8 @@ export default {
         url: s + "Storearea/getAllArea",
         method: "get"
     },
+    "getAllArea": { //获取品牌下门店区域列表
+        url: s + "Entry/getAllArea",
+        method: "get"
+    },
 }

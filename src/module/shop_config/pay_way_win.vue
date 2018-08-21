@@ -58,15 +58,15 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">支付宝公钥</h3>
-						<el-input v-model="detial.payConfig.alipayrsaPublicKey" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.alipayrsaPublicKey" placeholder = "请输入支付宝公钥" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">RSA私钥</h3>
-						<el-input v-model="detial.payConfig.rsaPrivateKey" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.rsaPrivateKey" placeholder = "请输入RSA私钥" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">支付宝应用ID</h3>
-						<el-input v-model="detial.payConfig.appId" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.appId" placeholder = "请输入支付宝应用ID" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore" style='float:left;'>商户类型</h3>
@@ -84,11 +84,11 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户编号</h3>
-						<el-input v-model="detial.payConfig.businessNum" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.businessNum" placeholder = "请输入商户编号" class="inputWidth"></el-input>
 					</div>
 					<!-- <div class="payShowList">
 						<h3 class="showListBefore">组织编号</h3>
-						<input type="text" maxlength="50" v-model="detial.payConfig.organizationNum" class="input"/>
+						<input type="text" v-model="detial.payConfig.organizationNum" class="input"/>
 					</div> -->
 				</section>
 				<section v-if="types == 'wyyx'">
@@ -99,15 +99,15 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">产品appId</h3>
-						<el-input v-model="detial.payConfig.appId" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.appId" placeholder = "请输入产品appId" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">产品号</h3>
-						<el-input v-model="detial.payConfig.productId" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.productId" placeholder = "请输入产品号" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">产品密钥key</h3>
-						<el-input v-model="detial.payConfig.key" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.key" placeholder = "请输入产品密钥key" class="inputWidth"></el-input>
 					</div>
 				</section>
 				<section v-if="types == 'SHzxBand'">
@@ -117,15 +117,15 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户号</h3>
-						<input type="text" v-model="detial.payConfig.mchId" class="input" />
+						<input type="text" v-model="detial.payConfig.mchId" placeholder = "请输入商户号" class="input" />
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户私钥</h3>
-						<input type="text" v-model="detial.payConfig.privateRsaKey" class="input" />
+						<input type="text" v-model="detial.payConfig.privateRsaKey" placeholder = "请输入商户私钥" class="input" />
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">中信公钥</h3>
-						<input type="text" v-model="detial.payConfig.publicRsaKey" class="input" />
+						<input type="text" v-model="detial.payConfig.publicRsaKey" placeholder = "请输入中信公钥" class="input" />
 					</div>
 					<!-- <div class="payShowList">
 						<h3 class="showListBefore">key</h3>
@@ -140,27 +140,27 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户号(mid)</h3>
-						<el-input v-model="detial.payConfig.mid" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.mid" placeholder = "请输入商户号(mid)" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">终端号(tid)</h3>
-						<el-input v-model="detial.payConfig.tid" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.tid" placeholder = "请输入终端号(tid)" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">机构商户号</h3>
-						<el-input v-model="detial.payConfig.instMid" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.instMid" placeholder = "请输入机构商户号" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">消息来源</h3>
-						<el-input v-model="detial.payConfig.msgSrc" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.msgSrc" placeholder = "请输入消息来源" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">来源编号</h3>
-						<el-input v-model="detial.payConfig.msgSrcId" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.msgSrcId" placeholder = "请输入来源编号" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">MD5密钥</h3>
-						<el-input v-model="detial.payConfig.md5Key" class="inputWidth" maxlength="50"></el-input>
+						<el-input v-model="detial.payConfig.md5Key" placeholder = "请输入MD5密钥" class="inputWidth"></el-input>
 					</div>
 				</section>
 				<section v-if="types == 'wx'">
@@ -170,23 +170,23 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">微信APPID</h3>
-						<el-input v-model="detial.payConfig.appid" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.appid" placeholder = "请输入微信APPID" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="" style="float: left;margin-right: 23px;line-height: 40px;">微信小程序APPID</h3>
-						<el-input v-model="detial.payConfig.minAppId" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.minAppId" placeholder = "请输入微信小程序APPID" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户号</h3>
-						<el-input v-model="detial.payConfig.mchid" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.mchid" placeholder = "请输入商户号" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户支付秘钥</h3>
-						<el-input v-model="detial.payConfig.key" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.key" placeholder = "请输入商户支付秘钥" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">appSecret</h3>
-						<el-input v-model="detial.payConfig.appSecret" class="inputWidth"></el-input>
+						<el-input v-model="detial.payConfig.appSecret" placeholder = "请输入appSecret" class="inputWidth"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">证书(cert)</h3>
@@ -206,6 +206,24 @@
 						<span style="line-height:45px;padding-left:10px;" v-show="apiclient_key&&apiclient_key!=''"> 已上传 {{keyName}} </span>
 						<!-- <label v-if = "detial.payConfig.vxkey != ''" for="uploadFile" style="position: absolute;left: 270px;top:12px;">已上传 </label> -->
 						<!-- <label for="uploadFile" style="position: absolute;left: 320px;top:12px;">{{spliceFileName(detial.payConfig.downloadFile)}} </label> -->
+					</div>
+				</section>
+				<section v-if="types == 'wPos'">
+					<div class="payShowList">
+						<h3 class="showListBefore">支付方式名称</h3>
+						<el-input v-model="detial.paymentName" class="inputWidth" :disabled="true"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">旺POS门店编号</h3>
+						<el-input v-model="detial.payConfig.mcode" class="inputWidth" placeholder = "请输入旺POS门店编号"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">appKey</h3>
+						<el-input v-model="detial.payConfig.appKey" class="inputWidth" placeholder = "请输入appKey"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">appSecret</h3>
+						<el-input v-model="detial.payConfig.appSecret" class="inputWidth" placeholder = "请输入appSecret"></el-input>
 					</div>
 				</section>
 			</section>

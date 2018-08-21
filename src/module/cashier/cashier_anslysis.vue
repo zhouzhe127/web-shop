@@ -27,7 +27,8 @@
 			<section style="display:inline-block">
 				<!--品牌店铺选择-->
 				<section class="top-box fl" style="height:42px">
-					<selectstore @returnShop="getShop" :show="hide" :reset="reset"></selectstore>
+					<!--<selectstore @returnShop="getShop" :show="hide" :reset="reset"></selectstore>-->
+					<elShopList :shopIds="selShopid" @chooseShop="getShop"></elShopList>
 				</section>
 				<section class="top-box fl detLi" style="margin-left: 10px;">
 					<a @click="search" href="javascript:void(0);" class="blue searchs">搜索</a>
@@ -109,7 +110,6 @@
 				selects: [], //选中的店铺
 				reset: 1, //用于店铺重置
 				shopName: '请选择店铺', //选中的店铺名称
-				selShopid: [], //传给后台的 选中的店铺id
 				backList: false, //选择固定对比后 返回按钮
 				isBack: false, //子组件判断是否返回
 				formHead: false, //表头设置是否展开
@@ -199,7 +199,9 @@
 				taskCountTotal: 1, //本次查询总任务数
 				taskCount: 0, //剩余任务数
 				totalCount: 1, //用于进度条
-				num: 0
+				num: 0,
+
+				selShopid: [], //传给后台的 选中的店铺id//传给选择店铺页面
 			};
 		},
 		mounted() {
@@ -405,11 +407,30 @@
 					this.shopName = '请选择店铺';
 				}
 			},
-			getShop(id, name) {
-				if (id || name) {
-					this.selShopid = id;
-					this.shopName = name;
+//			getShop(id, name) {
+//				console.log(this.shopList);
+//				console.log(id);
+//				console.log(name);
+//				if (id || name) {
+//					this.selShopid = id;
+//					this.shopName = name;
+//				}
+//				this.getShopname();
+//			},
+			//选择店铺返回
+			getShop(res) {
+				this.shopName='';
+				for(let i=0;i<this.shopList.length;i++){
+					if(res.includes(this.shopList[i].id)){
+						if(this.shopName==''){
+							this.shopName=this.shopName+this.shopList[i].shopName;
+						}else {
+							this.shopName=this.shopName+','+this.shopList[i].shopName;
+						}
+					}
 				}
+				console.log(this.shopName);
+				this.selShopid=res;
 				this.getShopname();
 			},
 			//查询
@@ -629,6 +650,8 @@
 				import ( /*webpackChunkName: 'select_shop'*/ './select_shop'),
 			loading: () =>
 				import ( /*webpackChunkName: 'category_loading'*/ './category_loading'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		},
 		destroyed() {
 			clearInterval(window.timer);

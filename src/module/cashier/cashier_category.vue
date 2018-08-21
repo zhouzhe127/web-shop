@@ -4,30 +4,34 @@
 	<div id="report-cate">
 		<section class="yuChairFix clearfix">
 			<!-- 时间类型选择 -->
-			<section @click="fadeAway" class="top-box fl">
+			<section  class="top-box fl">
 				<span class="wordSize">时间类型：</span>
-				<selectBtn @emit="selectType" :sorts.sync="options" :name.sync="selectedName" class="select-btn"></selectBtn>
+				<el-select v-model="selectedType">
+					<el-option v-for="(item,i) in options" :key="i" :label="item" :value="i"></el-option>
+				</el-select>
+				<!--<selectBtn @emit="selectType" :sorts.sync="options" :name.sync="selectedName" class="select-btn"></selectBtn>-->
 			</section>
-			<section @click="fadeAway" class="top-box fl" style="margin-right: 0">
+			<section  class="top-box fl" style="margin-right: 0">
 				<section class="cala chairFix">
 					<calendar :time="startTime" :type="selectedType" class="data-box" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar>
 				</section>
 			</section>
 			<span class="line">-</span>
-			<section @click="fadeAway" class="top-box fl">
+			<section  class="top-box fl">
 				<section class="cala chairFix">
 					<calendar :time="endTime" :type="selectedType" class="data-box" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar>
 				</section>
 			</section>
 			<!-- 时间段筛选 -->
-			<section @click="fadeAway" class="top-box fl">
+			<section  class="top-box fl">
 				<span class="wordSize">时间段筛选：</span>
 				<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>
 			</section>
 			<section style="display:inline-block">
 				<!--品牌店铺选择-->
 				<section class="top-box fl" style="height:42px">
-					<selectstore @returnShop="getShop" :reset="reset" :show="hide" :showNum=true></selectstore>
+					<!--<selectstore @returnShop="getShop" :reset="reset" :show="hide" :showNum=true></selectstore>-->
+					<elShopList :shopIds="selShopid" @chooseShop="getShop"></elShopList>
 				</section>
 				<section class="top-box fl detLi " style="height: 55px;">
 					<a @click="search" href="javascript:void(0);" class="blue searchs">搜索</a>
@@ -82,7 +86,7 @@
 				shopList: [], //所有店铺列表
 				selects: [], //选中的店铺
 				shopName: '请选择店铺', //选中的店铺名称
-				showShoplist: false, //是否展开店铺列表
+//				showShoplist: false, //是否展开店铺列表
 				selShopid: [], //传给后台的 选中的店铺id
 				chooseShopList: [], //选择的门店列表
 				buttonList: {
@@ -116,9 +120,6 @@
 				repeat: false, //用于判断查询是否结束
 				list: [],
 				ChartShopName: [], //选中的店铺
-				typeFlag: -1, //传给组件的日期类型
-				hide: 1,
-				reset: 1,
 				industry: '', //判断是否为零售店  1为零售 否则为餐饮
 				taskCountTotal: 1, //本次查询总任务数
 				taskCount: 0, //剩余任务数
@@ -133,10 +134,10 @@
 			this.getShopList();
 		},
 		methods: {
-			show(){
-				this.showShoplist = false;
-				this.formHead = false;
-			},
+//			show(){
+//				this.showShoplist = false;
+//				this.formHead = false;
+//			},
 			//获取品牌下的店铺
 			async getShopList() {
 				let res = await http.getShopList({
@@ -226,26 +227,29 @@
 					this.loading = true;
 				});
 			}, 
-			fadeAway() {
-				this.hide++;
-			},
-			selectType(index) {
-				this.selectedType = index;
-				// this.startTimeChange();
-				// this.endTimeChange();
-			},
+//			fadeAway() {
+//				this.hide++;
+//			},
+//			selectType(index) {
+//				console.log(index);
+//				this.selectedType = index;
+//				// this.startTimeChange();
+//				// this.endTimeChange();
+//			},
 			startTimeChange(time, timer) { //开始时间
 				this.startTime = time;
 				if(this.selectedType == 2){// 月报表时间
 					this.timeStart = new Date(time).getFullYear() + '年' + (new Date(time).getMonth()+1);
 				}else{//周、季度、年报表时间
 					this.timeStart = timer;
+					console.log(timer);
 					this.timeStart = this.timeStart.substring(0, this.timeStart.length - 1);
 					if (this.selectedType == 3) {
 						this.timeStart = this.timeStart.substring(0, this.timeStart.length - 1);
 					}
 					this.timeStart = this.timeStart.replace(/\s/g, '');
 				}
+				console.log(this.timeStart)
 			},
 			endTimeChange(time, timer) { //结束时间
 				this.endTime = time;
@@ -259,6 +263,7 @@
 					}
 					this.timeEnd = this.timeEnd.replace(/\s/g, '');
 				}
+				console.log(this.timeEnd)
 			},
 			//获取时间段时间
 			getTime(time) {
@@ -295,12 +300,31 @@
 					this.shopName = '请选择店铺';
 				}
 			},
-			getShop(id, name, shopList) {
-				this.chooseShopList = shopList;
-				if (id || name) {
-					this.selShopid = id;
-					this.shopName = name;
+//			getShop(id, name, shopList) {
+//				console.log(shopList);
+//				console.log(this.shopList);
+//				this.chooseShopList = shopList;
+//				if (id || name) {
+//					this.selShopid = id;
+//					this.shopName = name;
+//				}
+//				this.getShopname();
+//			},
+			//选择店铺返回
+			getShop(res) {
+				this.shopName='';
+				let arr=[];
+				let arrOne=utils.deepCopy(this.shopList);
+				for(let i=0;i<arrOne.length;i++){
+					if(res.includes(arrOne[i].id)){
+						this.shopName=this.shopName+arrOne[i].shopName+'、 ';
+						arrOne[i].selected=true;
+						arr.push(arrOne[i]);
+					}
 				}
+				this.chooseShopList=arr;
+				console.log(arr);
+				this.selShopid=res;
 				this.getShopname();
 			},
 			//查询
@@ -346,7 +370,7 @@
 				//时间段
 				let timeBetween = this.start.hour + ':' + this.start.minute + '-' + this.end.hour + ':' + this.end.minute;
 				this.classifiedReport(timeBetween);
-				this.typeFlag = this.selectedType;
+//				this.typeFlag = this.selectedType;
 			},
 			//接收图表组件点击查询
 			chartSearch(index) {
@@ -357,7 +381,7 @@
 			resetAll() {
 				this.options = ['日报表', '周报表', '月报表', '季度报表', '年报表'];
 				this.shopName = '请选择店铺';
-				this.reset++;
+//				this.reset++;
 				this.selects = [];
 				this.selectedType = 0;
 				this.startTime = new Date().setHours(0, 0, 0, 0);
@@ -374,10 +398,10 @@
 				this.selShopid = [];
 			},
 			//展开表头设置
-			showHead() {
-				this.formHead = !this.formHead;
-				this.headList = utils.deepCopy(this.selHead);
-			},
+//			showHead() {
+//				this.formHead = !this.formHead;
+//				this.headList = utils.deepCopy(this.selHead);
+//			},
 			//表格类型选择
 			light(index) {
 				this.buttonList.flag = index;
@@ -398,12 +422,14 @@
 			// 	import ( /*webpackChunkName: 'category_form'*/ './category_form'), //餐饮数据
 			categoryRetail: () =>
 				import ( /*webpackChunkName: 'category_form'*/ './category_form_retail'), //零售数据
-			selectstore: () =>
-				import ( /*webpackChunkName: 'select_shop'*/ './select_shop'),
+//			selectstore: () =>
+//				import ( /*webpackChunkName: 'select_shop'*/ './select_shop'),
 			loading: () =>
 				import ( /*webpackChunkName: 'category_loading'*/ './category_loading'),
 			formShop: () =>
-				import ( /*webpackChunkName: 'form_shop'*/ './form_shop')
+				import ( /*webpackChunkName: 'form_shop'*/ './form_shop'),
+			elShopList: () =>
+				import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
 		},
 		destroyed() {
 			clearInterval(window.timer);

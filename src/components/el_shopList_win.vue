@@ -1,8 +1,6 @@
 /**
  * @Author: zhengu.jiang 
- * @Date: 2018-08-13 11:29:22 
- * @Last Modified by: zhengu.jiang
- * @Last Modified time: 2018-08-13 13:44:45
+ *
  * @Module: 品牌下选择门店弹窗
  */
 
@@ -70,11 +68,14 @@ export default {
 			leftWidth: 0,
 			index: 1,
 			shopName: '', //搜索店铺名
+
+			allShop:[],//通过接口获取的所有门店
 		}
 	},
 	props: ['shopIds'],
 	mounted(){
-		this.storeareaGetAllArea();
+		this.getShopList();
+		console.log(this.shopIds);
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
@@ -90,26 +91,33 @@ export default {
 			this.$emit('chooseShop',res,shopIds);
 		},
 		//获取店铺列表
+		async getShopList(){
+			this.allShop=await http.getShopList({
+				data:{}
+			});
+			this.storeareaGetAllArea();
+		},
 		init(type) {
-			let res = storage.session('shopList');
+			let res=utils.deepCopy(this.allShop);
 			let index = 0;
 			for (let i = 0; i < res.length; i++) {
-				for(let j = 0; j < this.shopIds.length; j++){
-					if(this.shopIds[j] == res[i].id){
-						res[i].selected = true;
-					}else{
-						res[i].selected = false;
-					}
+				this.$set(res[i], 'selected', false);
+				if(this.shopIds.includes(res[i].id)){
+					res[i].selected = true;
 				}
-				if(res[i].storeAreaId === 0){
+				if(res[i].storeAreaId==0){
 					index++;
 				}
 			}
 			if(index != 0 && type){
 				this.areaList.list.push({id: 0,name: '无区域'});
 			}
-			this.showShopList = res;
+			this.showShopList = utils.deepCopy(res);
 			this.shopList = utils.deepCopy(res);
+
+			if(this.contentWidth==''){
+				this.show();
+			}
 		},
 		async storeareaGetAllArea(){
 			let res = await http.storeareaGetAllArea();
@@ -132,6 +140,7 @@ export default {
 			});
 		},
 		slideLeft(){
+			console.log('left');
 			if (this.contentWidth > 400) {
 				this.leftWidth = this.index++ * -200;
 				if (this.leftWidth * -1 + 400 >= this.contentWidth) {
@@ -141,6 +150,7 @@ export default {
 			}
 		},
 		slideRight(){
+			console.log('right');
 			if (this.leftWidth >= 0) {
 				this.leftWidth = 0;
 				return false;
@@ -153,6 +163,8 @@ export default {
 			}
 		},
 		show(){
+			console.log('jjjjjjjjjjjj');
+			console.log()
 			if(this.areaList.list.length > 0){
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
