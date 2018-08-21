@@ -1,6 +1,6 @@
 <template>
     <div class="batch-log-print" id="print-webpage">
-        <div style="border:1px solid #ff0000;" v-if="toggle">
+        <div style="border:1px solid #fff;" v-if="toggle" id="container">
             <div class="page-head">
                 <div class="print-type">
                     <span class="fl type-name">批量调度</span>
@@ -15,7 +15,7 @@
 
             <div class="table-application">
                 <div class="table-head">
-                    申请单列表<i class="circle"></i>共 <span class="num">70</span> 个条目
+                    申请单列表<i class="circle"></i>共 <span class="num">{{dispatchApplication.length}}</span> 个条目
                 </div>
                 <div class="table-title" id="table-title" style="width:712px">
                     <li class="li-1">序号</li>
@@ -25,19 +25,19 @@
                     <li class="li-5">申请时间</li>
                 </div>
                 <div class="table-body">
-                    <div class="table-row" v-for="i in 4" :key="i">
-                        <li contenteditable="true" class="li-1">序号</li>
-                        <li contenteditable="true" class="li-2">申请单号</li>
-                        <li class="li-3" contenteditable="true">申请店铺/品牌</li>
-                        <li contenteditable="true" class="li-4">申请人</li>
-                        <li class="li-5" contenteditable="true">申请时间</li>
+                    <div class="table-row" :id="t.uniqueId" v-for="(t,ti) in dispatchApplication" :key="ti">
+                        <li contenteditable="true" class="li-1">{{t.itemIndex}}</li>
+                        <li contenteditable="true" class="li-2">{{t.applicationCode}}</li>
+                        <li class="li-3" contenteditable="true">{{t.applicationShop}}</li>
+                        <li contenteditable="true" class="li-4">{{t.applicant}}</li>
+                        <li class="li-5" contenteditable="true">{{t.applicationTime}}</li>
                     </div>
                 </div>
             </div>
 
             <div class="table-goods">
                 <div class="table-head">
-                    商品列表<i class="circle"></i>共 <span class="num">70</span> 个条目(全部展开)
+                    商品列表<i class="circle"></i>共 <span class="num">{{goods.length}}</span> 个条目(全部展开)
                 </div>
                 <div class="table-title">
                     <li class="li-1">商品名称</li>
@@ -50,19 +50,19 @@
                     <li class="li-1">配货方式</li>
                 </div>
                 <div class="table-body">
-                    <div class="table-row">
+                    <div class="table-row" v-for="(t,ti) in goods" :key="ti" :id="t.uniqueId" >
                         <div class="row">
-                            <li class="li-1" contenteditable="true">商品名称</li>
-                            <li class="li-2" contenteditable="true">申请单位</li>
-                            <li class="li-2" contenteditable="true">申请总量</li>
-                            <li class="li-2">平均申请量</li>
-                            <li class="li-2">申请单数</li>
-                            <li class="li-2">库存总量</li>
-                            <li class="li-2">出货总量</li>
-                            <li class="li-1">配货方式</li>
+                            <li class="li-1" contenteditable="true">{{t.name}}</li>
+                            <li class="li-2" contenteditable="true">{{t.selectUnitName}}</li>
+                            <li class="li-2" contenteditable="true">{{t.applySum}}</li>
+                            <li class="li-2">{{t.applyAverage}}</li>
+                            <li class="li-2">{{t.applyListNum}}</li>
+                            <li class="li-2">{{t.invenNum}}</li>
+                            <li class="li-2">{{t.outputNum}}</li>
+                            <li class="li-1">{{t.allocationTypeName}}</li>
                         </div>
 
-                        <div class="row-detail">
+                        <div class="row-detail" v-if="t.showDetails">
                             <div class="detail-title">
                                 <li class="r-li-2">仓库名称</li>
                                 <li class="r-li-2">仓库所属</li>
@@ -72,13 +72,13 @@
                                 <li class="r-li-1">实际出货量</li>
                             </div>
                             <div class="detail-body">
-                                <div class="detail-row" v-for="i in 4" :key="i">
-                                    <li class="r-li-2">杭州二胆码</li>
-                                    <li class="r-li-2">拉馋们</li>
-                                    <li class="r-li-1">8000</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
+                                <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId">
+                                    <li class="r-li-2">{{j.intoWarehouseName}}</li>
+                                    <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
+                                    <li class="r-li-1">{{j.applyNum}}</li>
+                                    <li class="r-li-1">{{j.averageNum}}</li>
+                                    <li class="r-li-1">{{j.byPercentageNum}}</li>
+                                    <li class="r-li-1">{{j.num}}</li>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
 
             <div class="table-material" >
                 <div class="table-head">
-                    物料列表<i class="circle"></i>共 <span class="num">70</span> 个条目(全部展开)
+                    物料列表<i class="circle"></i>共 <span class="num">{{material.length}}</span> 个条目(全部展开)
                 </div>
 
                 <div class="table-title">
@@ -104,20 +104,20 @@
                 </div>
 
                 <div class="table-body">
-                    <div class="table-row" v-for="i in 10" :key="i">
+                    <div class="table-row" v-for="(t,ti) in material" :key="ti" :id="t.uniqueId">
                         <div class="row">
-                            <li class="li-1" contenteditable="true">物料名称</li>
-                            <li class="li-1" contenteditable="true">物料类型</li>
-                            <li class="li-1" contenteditable="true">申请单位</li>
-                            <li class="li-1" contenteditable="true">申请总量</li>
-                            <li class="li-1">平均申请量</li>
-                            <li class="li-1">申请单数</li>
-                            <li class="li-1">库存总量</li>
-                            <li class="li-1">出货总量</li>
-                            <li class="li-1">配货方式</li>
+                            <li class="li-1" contenteditable="true">{{t.name}}</li>
+                            <li class="li-1" contenteditable="true">{{t.typeName}}</li>
+                            <li class="li-1" contenteditable="true">{{t.selectUnitName}}</li>
+                            <li class="li-1" contenteditable="true">{{t.applySum}}</li>
+                            <li class="li-1">{{t.applyAverage}}</li>
+                            <li class="li-1">{{t.applyListNum}}</li>
+                            <li class="li-1">{{t.invenNum}}</li>
+                            <li class="li-1">{{t.outputNum}}</li>
+                            <li class="li-1">{{t.allocationTypeName}}</li>
                         </div>
 
-                        <div class="row-detail">
+                        <div class="row-detail" v-if="t.showDetails">
                             <div class="detail-title">
                                 <li class="r-li-2">仓库名称</li>
                                 <li class="r-li-2">仓库所属</li>
@@ -127,15 +127,15 @@
                                 <li class="r-li-1">实际出货量</li>
                                 <li class="r-li-1">分销价格</li>
                             </div>
-                            <div class="detail-body">
-                                <div class="detail-row" v-for="i in 5" :key="i">
-                                    <li class="r-li-2">杭州二胆码</li>
-                                    <li class="r-li-2">拉馋们</li>
-                                    <li class="r-li-1">8000</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">分销价格</li>                            
+                            <div class="detail-body" >
+                                <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId">
+                                    <li class="r-li-2">{{j.intoWarehouseName}}</li>
+                                    <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
+                                    <li class="r-li-1">{{j.applyNum}}</li>
+                                    <li class="r-li-1">{{j.averageNum}}</li>
+                                    <li class="r-li-1">{{j.byPercentageNum}}</li>
+                                    <li class="r-li-1">{{j.num}}</li>
+                                    <li class="r-li-1">{{j.distributionUnit}}</li>                            
                                 </div>
                             </div>
                         </div>
@@ -143,6 +143,7 @@
                 </div>
             </div>
         </div>
+
         <div style="border:1px solid #ff0000;" v-if="!toggle">
             <div class="page-head">
                 <div class="print-type">
@@ -334,6 +335,18 @@ container:[
         ],                                             
     }
 ]
+container:[
+    第一页:{
+        info:当前页的一些信息,如第1页,第2页,
+        arr:[
+            {
+                name:'申请单一',
+                id:1,
+                height:20px
+            }
+        ],                                                                                        
+    }
+]
 
 
 
@@ -359,10 +372,39 @@ export default {
         };
     },
     methods: {
-        addItemIndex(item){
-            //给每一个元素添加唯一标识
+        markList(){
+            //标记列表中的元素
+            let obj = this.addItemIndex(this.dispatchApplication,0);
+            this.dispatchApplication = [...obj.list];
+
+            obj = this.addItemIndex(this.goods,obj.count);
+            this.goods = [...obj.list];
+
+            obj = this.addItemIndex(this.material,obj.count);
+            this.material = [...obj.list];
 
         },
+        addItemIndex(list,count){
+            //给每一个元素添加唯一标识
+            for(let ele of list){
+                count += 1;
+                ele.uniqueId = count;
+                if(Array.isArray(ele.detail)){
+                    for(let e of ele.detail){
+                        count += 1;
+                        e.uniqueId = count;
+                    }
+                }
+            }
+            return {
+                count,
+                list
+            };
+        },
+        getListHeight(){
+
+        },
+
         printPage(){
             let oApp = document.querySelector('#app');
             let oProcess = document.querySelector('#print-webpage');
@@ -406,15 +448,29 @@ export default {
     },
     created(){
         this.getData();
+        this.markList();
+        console.log(this.dispatchApplication);
+        console.log(this.goods);
+        console.log(this.material);
     },
     mounted(){
-        var oDiv = document.querySelector('#print-webpage-btn');
-        console.log(oDiv.offsetHeight);
+        setTimeout(()=>{
+            console.log(this.dispatchApplication);
+        },5000);
     },
     beforeRouteLeave(to,from,next){
         storage.session('batchLogPrint',null);
         next();
     },
+    directives:{
+        'height':{
+            inserted: function (el, binding, vnode) {
+                binding.height = el.offsetHeight;
+                // console.log(el.offsetHeight);
+                console.log(binding.height);
+            }            
+        }
+    }
 };
 </script>
 <style lang='less' scoped>
@@ -437,8 +493,8 @@ li{
 }
 .title{
     font-size:16px;
-    height:40px;
-    line-height: 40px;
+    height:38px;
+    line-height: 38px;
     text-align: center;
 }
 .row-li{
@@ -546,6 +602,7 @@ li{
                 .flex-align;
                 li{
                     .row-li;
+                    padding:5px;
                 }
             }
         }
@@ -568,7 +625,7 @@ li{
                     &>li{
                         .row-li;
                         color:#000;
-                        padding:15px 0;
+                        padding:10px 5px;
                     }  
                 }
                 .row-detail{
@@ -591,7 +648,7 @@ li{
                         .flex-align;
                         &>li{
                             .row-li;
-                            padding:10px 0;
+                            padding:10px px;
                         } 
                     }
                 }
@@ -617,7 +674,7 @@ li{
                     &>li{
                         .row-li;
                         color:#000;
-                        padding:15px 0;
+                        padding:10px 5px;
                     }  
                 }
                 .row-detail{
@@ -640,7 +697,7 @@ li{
                         .flex-align;
                         &>li{
                             .row-li;
-                            padding:10px 0;
+                            padding:10px 5px;
                         } 
                     }
                 }
