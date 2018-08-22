@@ -205,10 +205,17 @@
 				for(let item of this.list){
 					item.priceType = res;
 				}
+				for(let key in this.selectItem){//同时改变选中分销价id
+					if(key!='length'){
+						this.selectItem[key].disId = res;
+					}
+				}
 			},
 			priceFunc(res,item){//单个选择
 				item.priceType = res;
-				this.selectItem[item.id].disId = res;
+				if(this.selectItem[item.id]){//同时改变选中分销价id
+					this.selectItem[item.id].disId = res;
+				}
 			},
 			async getPriceList() {//获取分销价列表
 				let data = await http.invoicingGetDistributionConfig();
