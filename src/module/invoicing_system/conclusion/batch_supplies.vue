@@ -125,7 +125,7 @@
 			},
 			calevalue(num, value) {
 				if (value) {
-					return parseInt(num / value * 100) / 100;
+					return parseInt(num / value * 1000) / 1000;
 				} else {
 					return num;
 				}
@@ -195,7 +195,7 @@
 			},
 			getcheckNum(num) {
 				if (num.toString().includes('.')) {
-					return parseInt(num * 100) / 100;
+					return parseInt(num * 1000) / 1000;
 				}
 				return num;
 			},

@@ -161,7 +161,7 @@
 					return parseInt(num);
 				} else {
 					if (num.toString().includes('.')) {
-						return parseInt(item.outNum * 100) / 100;
+						return parseInt(item.outNum * 1000) / 1000;
 					}
 				}
 				return num;
