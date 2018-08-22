@@ -248,7 +248,7 @@
 					dispatchStatus:'2,8',//调度状态：1未调度,2调度中
 				}});
 				this.list = this.setAlready(data.list);
-				this.listLength = data.num;
+				this.listLength = data.rows;
 				this.pageTotal = data.total;
 			},
 			setAlready(dataList){//设置已经选中过的数据
