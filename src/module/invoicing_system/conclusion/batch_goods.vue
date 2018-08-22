@@ -116,8 +116,8 @@
 				let redsend = Number(item.grossOutnum);
 				item.list.map(v => {
 					if (v.isSuccess == 1) {
-						v.applyScale = Math.floor((v[key] / item.applyAll) * item.grossOutnum); //按比例
-						v.average = Math.floor(item.grossOutnum / item.cil); //平均分配量
+						v.applyScale = this.getcheckNum(item.type,(v[key] / item.applyAll) * item.grossOutnum); //按比例
+						v.average = this.getcheckNum(item.type,item.grossOutnum / item.cil); //平均分配量
 						switch (type) {
 							case 1:
 								v.outNum = v.applyScale;

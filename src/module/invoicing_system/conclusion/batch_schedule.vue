@@ -86,13 +86,14 @@
 								outNum: 0 //出货量
 							});
 							if (Number(v.isSuccess) == 1) {
-								applyNum += Number(v.num);
+								applyNum += parseInt(v.num*1000);
 								cil++;
 							}
 							arr.push(obj)
 						});
 						arr.sort(this.sortSuccess)
 					}
+					applyNum = applyNum/1000;
 					Object.assign(listArr, {
 						itemName: item.itemName,
 						id: item.itemId,
@@ -137,6 +138,7 @@
 							let obj = {};
 							let applyUnit = this.applyUnit(v.unitName, item.unit, 1);
 							let setdistrid = this.setdistrid(v.distributionId, item.distribution);
+							let piceUnitid = this.applyUnit(setdistrid, item.unit);
 							Object.assign(obj, {
 								shopName: v.shopName,
 								warehouse: v.warehouse,
@@ -146,11 +148,11 @@
 								unit: v.unit,
 								unitName: applyUnit.name,
 								unitValue: applyUnit.value,
-								piceUnitid: setdistrid.unitId,
+								piceUnitid: piceUnitid.muId,
 								isPurchase: 0, //是否为进价
 								num: v.num || 0,
 								distrId: v.distributionId,
-								distributionId: setdistrid.distributionId,
+								distributionId: Number(setdistrid.distributionId),
 								piceValue: setdistrid.value,
 								isSuccess: v.isSuccess,
 								applyScale: 0, //按比例
@@ -322,7 +324,7 @@
 						intoWarehouseOwner: res.shopName,
 						applyNum: res.num,
 						distributionPrice: res.piceValue, //分销价格
-						distributionUnit: res.isPurchase == 1 ? unit.name : '',
+						distributionUnit: res.isPurchase == 1 ?  0:unit.muId||0,
 						isPurchase: this.isBrand? res.isPurchase:1, //是否为进价
 						isSuccess: res.isSuccess
 					}
