@@ -323,9 +323,11 @@
 		},
 		mounted() {
 			if(this.$route.path=='/admin/conclusionList'){
-				this.getWare();
 				this.addEduce();
 			}
+		},
+		activated(){
+			this.getWare();
 		},
 		updated() {
 			if (this.$refs.auditstart && this.auditStartTime === 0) this.$refs.auditstart.timestr = '--';

@@ -86,13 +86,14 @@
 								outNum: 0 //出货量
 							});
 							if (Number(v.isSuccess) == 1) {
-								applyNum += Number(v.num);
+								applyNum += parseInt(v.num*1000);
 								cil++;
 							}
 							arr.push(obj)
 						});
 						arr.sort(this.sortSuccess)
 					}
+					applyNum = applyNum/1000;
 					Object.assign(listArr, {
 						itemName: item.itemName,
 						id: item.itemId,

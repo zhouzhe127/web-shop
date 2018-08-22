@@ -125,6 +125,7 @@
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
+	let user = storage.session('user') ? storage.session('user') : [];
 	export default {
 		props: ['type'],
 		data() {
@@ -141,7 +142,6 @@
 				auditStatus: ['审核中', '已取消', '审核未通过', '审核通过'],
 				dispatchStatus: ['未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
 				listStatus: ['未出货', '待入货', '配货中', '已取消', '已完成', '已完成（异常）', '配货完成'],
-				user: [], //员工列表
 				introData: [], //商品物料列表所有数据
 				goodsDetails: '', //调度单列表所有数据
 				totalNum: 0, //调度单条目数
@@ -314,9 +314,9 @@
 				}
 			},
 			getUserName(id) {
-				for (let item of this.user) {
+				for (let item of user) {
 					if (item.userId == id) {
-						return item.name;
+						return item.userName;
 					}
 				}
 				return '--';
@@ -365,17 +365,12 @@
 			},
 		},
 		mounted() {
-			this.user = storage.session('user') ? storage.session('user') : [];
 			this.applyId = this.$route.query.id;
-			console.log(this.type);
 			this.init();
 			if(this.type) {
 				this.tabactive = 1;
 				this.tebClick(1);
 			}
-		},
-		computed: {
-			
 		},
 		components: {
 			comTable: () =>
