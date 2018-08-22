@@ -208,6 +208,7 @@
 			},
 			priceFunc(res,item){//单个选择
 				item.priceType = res;
+				this.selectItem[item.id].disId = res;
 			},
 			async getPriceList() {//获取分销价列表
 				let data = await http.invoicingGetDistributionConfig();
