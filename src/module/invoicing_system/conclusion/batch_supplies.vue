@@ -143,9 +143,9 @@
 				let redsend = Number(item.grossOutnum * item.unitValue);
 				item.list.map(v => {
 					if (v.isSuccess == 1) {
-						v.applyScale = this.calevalue((v[key] / item.applyAll) * item.grossOutnum * item.unitValue,
+						v.applyScale = this.calevalue((v[key] / item.applyAll) * item.surplus * item.unitValue,
 							v.unitValue); //按比例
-						v.average = this.calevalue((item.grossOutnum * item.unitValue) / item.cil, v.unitValue); //平均分配量
+						v.average = this.calevalue((item.surplus * item.unitValue) / item.cil, v.unitValue); //平均分配量
 						switch (type) {
 							case 1:
 								v.outNum = v.applyScale;
