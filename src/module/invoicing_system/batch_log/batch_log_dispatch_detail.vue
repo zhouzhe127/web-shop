@@ -239,7 +239,7 @@ export default {
             let query = this.$route.query;
             if(flag == 'detail'){
                 query.id = item.applicationId;
-                this.$router.push({path:'/admin/operation/operationDetail',query});
+                this.$router.push({path:'/admin/schedulingApplication/purchaseRequisitionDetail',query});
             }
         },
         toggleTabs(btn){
@@ -411,16 +411,16 @@ export default {
 			this.$store.commit('setPageTools',[
 				{
 					name: '返回',
-                    style,
-                    className:['el-button--default','el-button'],
+                    type:5,
+                    className:'default',
 					fn:()=>{
 						this.$router.go(-1);
 					}
 				},
 				{
 					name: '打印',
-                    style,
-                    className:['el-button--info','el-button'],
+                    type:4,
+                    className:'info',
 					fn:()=>{
                         query.logId = this.logId;
 						this.$router.push({path:'/admin/batchLog/batchLogPrint',query});
