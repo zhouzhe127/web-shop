@@ -32,7 +32,7 @@
 						</el-input>
 					</span>
 					<span style="width: 20%;">
-						<el-select v-model="item.allot" placeholder="请选择" @change="allotChang(item)">
+						<el-select v-model="item.allot" placeholder="请选择" @change="grosschange(item)">
 							<el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
@@ -136,9 +136,9 @@
 				});
 				this.goodsList = utils.deepCopy(this.goodsList);
 			},
-			allotChang(item) {
-				this.cargo(item.allot, item, 'num');
-			},
+			// allotChang(item) {
+			// 	this.cargo(item.allot, item, 'num');
+			// },
 			cargo(type, item, key) { //key为申请数键名
 				let redsend = Number(item.grossOutnum * item.unitValue);
 				item.list.map(v => {
