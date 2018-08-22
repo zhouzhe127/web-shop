@@ -39,48 +39,6 @@
 						<el-input type="textarea" maxlength='50' style="width:400px;" v-model="getOneTable.description" ></el-input>
 					</el-form-item>
 				</el-form>
-				<!-- <div class="table-window-show">
-					<ul>
-						<li>
-							<p class="required table-area fl">区域</p>
-							<span class="table-span">
-								<radioBtn @selOn="doThrowWinResult" :list="Area" :index="oIndex" :name='"areaName"'></radioBtn>
-							</span>
-						</li>
-						<li>
-							<p class="required table-area fl">桌号名称</p>
-							<input type="text" class="input" style="width: 410px;" placeholder="输入桌台名称(创建多个桌台请以逗号隔开)" v-model='getOneTable.tableName' maxlength="40">
-						</li>
-						<li v-if="!isAdd">
-							<p class="required table-area fl">桌号编号</p>
-							<input type="text" class="input" style="width: 410px;" placeholder="输入桌台编号(数字)" v-model='getOneTable.id' maxlength="9">
-						</li>
-						<li>
-							<p class="required table-area fl">标准席位</p>
-							<span class="table-span">
-								<subadd :bindnum="getOneTable.normalSeat" :maxnum="1000" :minnum="1" :sign='false' @toClick="changeOne"></subadd>
-							</span>
-						</li>
-						<li>
-							<p class="table-area required fl">容纳人数</p>
-							<span class="table-span">
-								<subadd :bindnum="minSeat" :maxnum="1000" :minnum="1" :sign='false' @toClick="changeTwo"></subadd>
-								<p class="table-area fl" style="width: 60px;text-align: center;">至</p>
-								<subadd :bindnum="maxSeat" :maxnum="1000" :minnum="1" :sign='false' @toClick="changeThree"></subadd>
-							</span>
-						</li>
-						<li>
-							<p class="table-area required fl">排序</p>
-							<span class="table-span">
-								<subadd :bindnum="sort" :maxnum="255" :minnum="1" :sign='false' @toClick="changeFour"></subadd>
-							</span>
-						</li>
-						<li>
-							<p class="table-area fl">描述</p>
-							<textarea class="describe" maxlength='50' v-model='getOneTable.description'></textarea>
-						</li>
-					</ul>
-				</div> -->
 			</div>
 		</div>
 	</win>
@@ -411,39 +369,5 @@ export default {
 		margin-left: 0!important;
 		margin-right: 10px;
 	}
-	// .table-window-show {
-	// 	width: 540px;
-	// 	height: 400px;
-	// 	display: inline-block;
-	// 	margin-top: 20px;
-	// 	font-size: 0;
-	// 	ul li {
-	// 		margin-bottom: 14px;
-	// 		p {
-	// 			width: 80px;
-	// 			height: 40px;
-	// 			line-height: 40px;
-	// 			text-align: right;
-	// 			font-size: 14px;
-	// 		}
-	// 		span.table-span {
-	// 			display: inline-block;
-	// 			width: 420px;
-	// 			text-align: left;
-	// 			height: 40px;
-	// 		}
-	// 		.input {
-	// 			background-color: #ffffff;
-	// 			margin-left: -8px;
-	// 		}
-	// 		.describe {
-	// 			width: 400px;
-	// 			padding: 10px;
-	// 			font-size: 14px;
-	// 			background-color: #fff;
-	// 			margin-left: -20px;
-	// 		}
-	// 	}
-	// }
 }
 </style>

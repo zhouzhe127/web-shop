@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-08-09 13:58:22
+ * @Last Modified time: 2018-08-16 15:05:57
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
@@ -106,84 +106,14 @@
 								</div>
 							</el-radio-group>
 						</el-form-item>
-						<el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
+						<!-- <el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
 							<el-switch
 								v-model="isQrcode"
 								active-color="#E1BB4A"
 								inactive-color="#e6e6e6">
 							</el-switch>
-						</el-form-item>
+						</el-form-item> -->
 					</el-form>
-					<!-- <div class="configOne">
-						<label class="fl" v-if="status==1 || status == 6">
-							<span class="fl required pNmae">页脚内容</span>
-							<input type="text" class="pInput" v-model="footerContent" placeholder="请输入页脚内容" />
-						</label>
-						<label class="fl">
-							<span class="fl required pNmae">打印机</span>
-							<section style="width: 410px;float: left;">
-								<radioBtn @selOn="changePrintIndex" :list="printerList" :index="printerIndex" :name='"printerName"'></radioBtn>
-							</section>
-						</label>
-						<label class="fl" v-if="status==1 || status==3 || status==5">
-							<span class="fl required pNmae">区域</span>
-							<section style="width: 410px;float: left;">
-								<selectBtns @selOn="areaIndexChange" :list="areaIdsList" :selects="areaIndex" :name='"areaName"' :keys='"id"'></selectBtns>
-							</section>
-						</label>
-						<template v-if="!printerList[printerIndex] || (status == '7' && printerList[printerIndex].type == '4')|| orderTypeIndex == 19">
-							<label class="fl">
-								<span class="fl required pNmae">宽度</span>
-								<input type="text" v-model='orderWidth' maxlength="2" class="input" style="width: 140px; " placeholder="请输入宽度(10~80)">
-								<span>毫米(mm)</span>
-							</label>
-							<label class="fl">
-								<span class="fl required pNmae">高度</span>
-								<input type="text" v-model='orderHeight' maxlength="2" class="input" style="width: 140px; " placeholder="请输入高度(10~80)">
-								<span>毫米(mm)</span>
-							</label>
-							<label class="fl">
-								<span class="fl required pNmae">间距</span>
-								<input type="text" v-model='orderSpacing' maxlength="2" class="input" style="width: 140px; " placeholder="请输入间距(1~10)">
-								<span>毫米(mm)</span>
-							</label>
-						</template>
-						<label v-if="status==3 || status== 4 || status== 5" class="fl">
-							<span class="fl pNmae">头部留白</span>
-							<input type="text" v-model='blankLine' maxlength="2" class="input" style="width: 140px; " placeholder="请输入空白行数(1~10)">
-							<span>行</span>
-						</label>
-						<label class="fl" v-if="status==3 || status== 4" style="line-height:40px;">
-							<span class="fl required pNmae">选择菜品</span>
-							<span class="fl spanCom" style="margin-right:15px;" v-if="goodsLength!==null">已选择菜品：{{goodsLength}}道</span>
-							<span class="fl spanCom" v-if="packagesLength!==null && !isOnlyGoods">已选择套餐：{{packagesLength}}个</span>
-							<a href="javascript:void(0);" @click="openGood" class="addclassify fl">添加关联菜品</a>
-						</label>
-						<label v-if="!printerList[printerIndex] || printerList[printerIndex].type !== '4'" class="fl">
-							<span class="fl required pNmae">打印次数</span>
-							<div class="fl" style="width: 185px;">
-								<subaddBtn :minnum='1' :bindnum="printTimes" :maxnum="10" @toClick="changeNum" :sign='false'></subaddBtn>
-							</div>
-							<span class="fl pNmae">蜂鸣</span>
-							<onOff @statusChange="changeOnOff" :status='isAlam' :onoff="isAlam"></onOff>
-						</label>
-						<label v-if="orderTypeIndex ==2" class="fl">
-							<span class="fl pNmae">打印等叫单</span>
-							<onOff @statusChange="waitOnOff" :status='isWait' :onoff="isWait"></onOff>
-							<div style="margin-top: 10px" class="fl">
-								<span class="fl pNmae">打印套餐子菜</span>
-								<onOff @statusChange="sonOnOff" :status='isSon' :onoff="isSon"></onOff>
-							</div>
-						</label>
-						<label v-if="orderTypeIndex ==19" class="fl">
-							<span class="fl pNmae">底部标语</span>
-							<input type="text" v-model='footerContent' maxlength="30" class="input fl" style="width: 340px; " placeholder="请输入底部标语">
-							<div style="margin-top: 10px" class="fl">
-								<span class="fl pNmae">显示店铺名称</span>
-								<onOff @statusChange="isShowOnOff" :status='isShowName' :onoff="isSon"></onOff>
-							</div>
-						</label>
-					</div> -->
 				</section>
 			</div>
 		</win>
@@ -333,7 +263,7 @@ export default {
 					item.isPackageGoods = Number(this.isSon);
 					item.isShopName = Number(this.isShowName);
 					item.isLogo = Number(this.isShowLogo?this.isLocal:this.isShowLogo);
-					item.isQrcode = Number(this.isQrcode);
+					item.isQrcode = Number(this.isQrcode);//这个迭代暂时不用（16迭代）
 					item.width =
 						(this.orderType == 17 || this.orderType == 22) &&
 						this.printerList[this.printerIndex].type == 4
