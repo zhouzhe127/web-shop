@@ -1,6 +1,7 @@
 <template>
-    <div class="batch-log-print" id="print-webpage">
-        <div style="border:1px solid #fff;" v-if="toggle" id="container">
+    <div class="batch-log-print" id="print-webpage" style="padding-bottom:0px !important;">
+
+        <div style="border:1px solid #0000ff;height:1036px" v-show="toggle" >
             <div class="page-head">
                 <div class="print-type">
                     <span class="fl type-name">批量调度</span>
@@ -25,7 +26,7 @@
                     <li class="li-5">申请时间</li>
                 </div>
                 <div class="table-body">
-                    <div class="table-row" :id="t.uniqueId" v-for="(t,ti) in dispatchApplication" :key="ti">
+                    <div class="table-row" :id="t.uniqueId" v-height="t.uniqueId" v-for="(t,ti) in dispatchApplication" :key="ti" >
                         <li contenteditable="true" class="li-1">{{t.itemIndex}}</li>
                         <li contenteditable="true" class="li-2">{{t.applicationCode}}</li>
                         <li class="li-3" contenteditable="true">{{t.applicationShop}}</li>
@@ -51,7 +52,7 @@
                 </div>
                 <div class="table-body">
                     <div class="table-row" v-for="(t,ti) in goods" :key="ti" :id="t.uniqueId" >
-                        <div class="row">
+                        <div class="row" v-height="t.uniqueId">
                             <li class="li-1" contenteditable="true">{{t.name}}</li>
                             <li class="li-2" contenteditable="true">{{t.selectUnitName}}</li>
                             <li class="li-2" contenteditable="true">{{t.applySum}}</li>
@@ -72,7 +73,7 @@
                                 <li class="r-li-1">实际出货量</li>
                             </div>
                             <div class="detail-body">
-                                <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId">
+                                <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
                                     <li class="r-li-2">{{j.intoWarehouseName}}</li>
                                     <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
                                     <li class="r-li-1">{{j.applyNum}}</li>
@@ -104,8 +105,8 @@
                 </div>
 
                 <div class="table-body">
-                    <div class="table-row" v-for="(t,ti) in material" :key="ti" :id="t.uniqueId">
-                        <div class="row">
+                    <div class="table-row" v-for="(t,ti) in material" :key="ti" :id="t.uniqueId" >
+                        <div class="row" v-height="t.uniqueId">
                             <li class="li-1" contenteditable="true">{{t.name}}</li>
                             <li class="li-1" contenteditable="true">{{t.typeName}}</li>
                             <li class="li-1" contenteditable="true">{{t.selectUnitName}}</li>
@@ -128,7 +129,7 @@
                                 <li class="r-li-1">分销价格</li>
                             </div>
                             <div class="detail-body" >
-                                <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId">
+                                <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
                                     <li class="r-li-2">{{j.intoWarehouseName}}</li>
                                     <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
                                     <li class="r-li-1">{{j.applyNum}}</li>
@@ -144,142 +145,144 @@
             </div>
         </div>
 
-        <div style="border:1px solid #ff0000;" v-if="!toggle">
-            <div class="page-head">
-                <div class="print-type">
-                    <span class="fl type-name">批量调度</span>
-                    <span class="fr page-num">第1页,共1页</span>
-                </div>
-                <div class="info">
-                    <li style="width:44%;">出货仓库:{{info.wName}}</li>
-                    <li >操作人:{{info.createUName}}</li>
-                    <li>操作时间:{{info.zh_createTime}}</li>
-                </div>
-            </div>
-
-            <div class="table-application">
-                <div class="table-head">
-                    申请单列表<i class="circle"></i>共 <span class="num">70</span> 个条目
-                </div>
-                <div class="table-title" id="table-title" style="width:712px">
-                    <li class="li-1">序号</li>
-                    <li class="li-2">申请单号</li>
-                    <li class="li-3">申请店铺/品牌</li>
-                    <li class="li-4">申请人</li>
-                    <li class="li-5">申请时间</li>
-                </div>
-                <div class="table-body">
-                    <div class="table-row" v-for="i in 4" :key="i">
-                        <li contenteditable="true" class="li-1">序号</li>
-                        <li contenteditable="true" class="li-2">申请单号</li>
-                        <li class="li-3" contenteditable="true">申请店铺/品牌</li>
-                        <li contenteditable="true" class="li-4">申请人</li>
-                        <li class="li-5" contenteditable="true">申请时间</li>
+        <div v-show="!toggle">
+            <div class="box"  v-for="(p,pi) in container" :key="pi" >
+                <div class="page-head">
+                    <div class="print-type">
+                        <span class="fl type-name" v-if="pi == 0">批量调度</span>
+                        <span class="fr page-num">第{{pi+1}}页,共{{container.length}}页</span>
+                    </div>
+                    <div class="info" v-if="pi == 0">
+                        <li style="width:44%;">出货仓库:{{info.wName}}</li>
+                        <li >操作人:{{info.createUName}}</li>
+                        <li>操作时间:{{info.zh_createTime}}</li>
                     </div>
                 </div>
-            </div>
 
-            <div class="table-goods">
-                <div class="table-head">
-                    商品列表<i class="circle"></i>共 <span class="num">70</span> 个条目(全部展开)
-                </div>
-                <div class="table-title">
-                    <li class="li-1">商品名称</li>
-                    <li class="li-2">申请单位</li>
-                    <li class="li-2">申请总量</li>
-                    <li class="li-2">平均申请量</li>
-                    <li class="li-2">申请单数</li>
-                    <li class="li-2">库存总量</li>
-                    <li class="li-2">出货总量</li>
-                    <li class="li-1">配货方式</li>
-                </div>
-                <div class="table-body">
-                    <div class="table-row">
-                        <div class="row">
-                            <li class="li-1" contenteditable="true">商品名称</li>
-                            <li class="li-2" contenteditable="true">申请单位</li>
-                            <li class="li-2" contenteditable="true">申请总量</li>
-                            <li class="li-2">平均申请量</li>
-                            <li class="li-2">申请单数</li>
-                            <li class="li-2">库存总量</li>
-                            <li class="li-2">出货总量</li>
-                            <li class="li-1">配货方式</li>
+                <div class="table-application" v-if="p.type =='application'">
+                    <div class="table-head" v-if="p.showHead">
+                        申请单列表<i class="circle"></i>共 <span class="num">{{dispatchApplication.length}}</span> 个条目
+                    </div>
+                    <div class="table-title" id="table-title" style="width:712px">
+                        <li class="li-1">序号</li>
+                        <li class="li-2">申请单号</li>
+                        <li class="li-3">申请店铺/品牌</li>
+                        <li class="li-4">申请人</li>
+                        <li class="li-5">申请时间</li>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row" :id="t.uniqueId"  v-for="(t,ti) in p.arr" :key="ti" >
+                            <li contenteditable="true" class="li-1">{{t.itemIndex}}</li>
+                            <li contenteditable="true" class="li-2">{{t.applicationCode}}</li>
+                            <li class="li-3" contenteditable="true">{{t.applicationShop}}</li>
+                            <li contenteditable="true" class="li-4">{{t.applicant}}</li>
+                            <li class="li-5" contenteditable="true">{{t.applicationTime}}</li>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="row-detail">
-                            <div class="detail-title">
-                                <li class="r-li-2">仓库名称</li>
-                                <li class="r-li-2">仓库所属</li>
-                                <li class="r-li-1">申请量</li>
-                                <li class="r-li-1">平均量</li>
-                                <li class="r-li-1">按比例量</li>
-                                <li class="r-li-1">实际出货量</li>
+                <div class="table-goods" v-if="p.type =='goods'">
+                    <div class="table-head" v-if="p.showHead">
+                        商品列表<i class="circle"></i>共 <span class="num">{{goods.length}}</span> 个条目
+                    </div>
+                    <div class="table-title">
+                        <li class="li-1">商品名称</li>
+                        <li class="li-2">申请单位</li>
+                        <li class="li-2">申请总量</li>
+                        <li class="li-2">平均申请量</li>
+                        <li class="li-2">申请单数</li>
+                        <li class="li-2">库存总量</li>
+                        <li class="li-2">出货总量</li>
+                        <li class="li-1">配货方式</li>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row" v-for="(t,ti) in p.arr" :key="ti">
+                            <div class="row" v-height="t.uniqueId" :id="t.uniqueId">
+                                <li class="li-1" contenteditable="true">{{t.name}}</li>
+                                <li class="li-2" contenteditable="true">{{t.selectUnitName}}</li>
+                                <li class="li-2" contenteditable="true">{{t.applySum}}</li>
+                                <li class="li-2">{{t.applyAverage}}</li>
+                                <li class="li-2">{{t.applyListNum}}</li>
+                                <li class="li-2">{{t.invenNum}}</li>
+                                <li class="li-2">{{t.outputNum}}</li>
+                                <li class="li-1">{{t.allocationTypeName}}</li>
                             </div>
-                            <div class="detail-body">
-                                <div class="detail-row" v-for="i in 4" :key="i">
-                                    <li class="r-li-2">杭州二胆码</li>
-                                    <li class="r-li-2">拉馋们</li>
-                                    <li class="r-li-1">8000</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
+
+                            <div class="row-detail" v-if="t.showDetails">
+                                <div class="detail-title">
+                                    <li class="r-li-2">仓库名称</li>
+                                    <li class="r-li-2">仓库所属</li>
+                                    <li class="r-li-1">申请量</li>
+                                    <li class="r-li-1">平均量</li>
+                                    <li class="r-li-1">按比例量</li>
+                                    <li class="r-li-1">实际出货量</li>
+                                </div>
+                                <div class="detail-body">
+                                    <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
+                                        <li class="r-li-2">{{j.intoWarehouseName}}</li>
+                                        <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
+                                        <li class="r-li-1">{{j.applyNum}}</li>
+                                        <li class="r-li-1">{{j.averageNum}}</li>
+                                        <li class="r-li-1">{{j.byPercentageNum}}</li>
+                                        <li class="r-li-1">{{j.num}}</li>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="table-material" >
-                <div class="table-head">
-                    物料列表<i class="circle"></i>共 <span class="num">70</span> 个条目(全部展开)
-                </div>
+                <div class="table-material" v-if="p.type =='material'">
+                    <div class="table-head" v-if="p.showHead">
+                        物料列表<i class="circle"></i>共 <span class="num">{{material.length}}</span> 个条目
+                    </div>
 
-                <div class="table-title">
-                    <li >物料名称</li>
-                    <li >物料类型</li>
-                    <li >申请单位</li>
-                    <li >申请总量</li>
-                    <li class="li-1">平均申请量</li>
-                    <li >申请单数</li>
-                    <li >库存总量</li>
-                    <li >出货总量</li>
-                    <li >配货方式</li>
-                </div>
+                    <div class="table-title">
+                        <li >物料名称</li>
+                        <li >物料类型</li>
+                        <li >申请单位</li>
+                        <li >申请总量</li>
+                        <li class="li-1">平均申请量</li>
+                        <li >申请单数</li>
+                        <li >库存总量</li>
+                        <li >出货总量</li>
+                        <li >配货方式</li>
+                    </div>
 
-                <div class="table-body">
-                    <div class="table-row" v-for="i in 10" :key="i">
-                        <div class="row">
-                            <li class="li-1" contenteditable="true">物料名称</li>
-                            <li class="li-1" contenteditable="true">物料类型</li>
-                            <li class="li-1" contenteditable="true">申请单位</li>
-                            <li class="li-1" contenteditable="true">申请总量</li>
-                            <li class="li-1">平均申请量</li>
-                            <li class="li-1">申请单数</li>
-                            <li class="li-1">库存总量</li>
-                            <li class="li-1">出货总量</li>
-                            <li class="li-1">配货方式</li>
-                        </div>
-
-                        <div class="row-detail">
-                            <div class="detail-title">
-                                <li class="r-li-2">仓库名称</li>
-                                <li class="r-li-2">仓库所属</li>
-                                <li class="r-li-1">申请量</li>
-                                <li class="r-li-1">平均量</li>
-                                <li class="r-li-1">按比例量</li>
-                                <li class="r-li-1">实际出货量</li>
-                                <li class="r-li-1">分销价格</li>
+                    <div class="table-body">
+                        <div class="table-row" v-for="(t,ti) in p.arr" :key="ti">
+                            <div class="row" v-height="t.uniqueId" :id="t.uniqueId">
+                                <li class="li-1" contenteditable="true">{{t.name}}</li>
+                                <li class="li-1" contenteditable="true">{{t.typeName}}</li>
+                                <li class="li-1" contenteditable="true">{{t.selectUnitName}}</li>
+                                <li class="li-1" contenteditable="true">{{t.applySum}}</li>
+                                <li class="li-1">{{t.applyAverage}}</li>
+                                <li class="li-1">{{t.applyListNum}}</li>
+                                <li class="li-1">{{t.invenNum}}</li>
+                                <li class="li-1">{{t.outputNum}}</li>
+                                <li class="li-1">{{t.allocationTypeName}}</li>
                             </div>
-                            <div class="detail-body">
-                                <div class="detail-row" v-for="i in 5" :key="i">
-                                    <li class="r-li-2">杭州二胆码</li>
-                                    <li class="r-li-2">拉馋们</li>
-                                    <li class="r-li-1">8000</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">8888</li>
-                                    <li class="r-li-1">分销价格</li>                            
+
+                            <div class="row-detail" v-if="t.showDetails">
+                                <div class="detail-title">
+                                    <li class="r-li-2">仓库名称</li>
+                                    <li class="r-li-2">仓库所属</li>
+                                    <li class="r-li-1">申请量</li>
+                                    <li class="r-li-1">平均量</li>
+                                    <li class="r-li-1">按比例量</li>
+                                    <li class="r-li-1">实际出货量</li>
+                                    <li class="r-li-1">分销价格</li>
+                                </div>
+                                <div class="detail-body" >
+                                    <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
+                                        <li class="r-li-2">{{j.intoWarehouseName}}</li>
+                                        <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
+                                        <li class="r-li-1">{{j.applyNum}}</li>
+                                        <li class="r-li-1">{{j.averageNum}}</li>
+                                        <li class="r-li-1">{{j.byPercentageNum}}</li>
+                                        <li class="r-li-1">{{j.num}}</li>
+                                        <li class="r-li-1">{{j.distributionInfo}}</li>                            
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -338,12 +341,18 @@ container:[
 container:[
     第一页:{
         info:当前页的一些信息,如第1页,第2页,
+        type:'goods',
         arr:[
             {
                 name:'申请单一',
-                id:1,
-                height:20px
-            }
+                uniqueId:1
+                showDetails:true
+            },
+            {
+                name:'申请单二',
+                uniqueId:2,
+                showDetails:true
+            }   
         ],                                                                                        
     }
 ]
@@ -353,6 +362,7 @@ container:[
 */
 import storage from 'src/verdor/storage';
 
+let listHeight = {};            //存储表格每一行的高
 export default {
     data () {
         return {
@@ -363,12 +373,13 @@ export default {
             pageInfo:{
                 head:40,                        //表头    
                 title:40,                       //标题    
-                bottom:30,                      //表格之间的垂直距离 30
-                type:120,                       //第一页抬头的高
-                pager:80,                       //第二页开始抬头的高        
-                dTitle:38                       //详情表头的高
+                type:100,                       //第一页抬头的高
+                pager:60,                       //第二页开始抬头的高        
+                dTitle:38,                      //详情表头的高
+                height:1036                     //每一张纸的高    
             },
             toggle:true,                        //展示原始表格,展示处理之后的表格
+            container:[],                       //总页数                
         };
     },
     methods: {
@@ -401,9 +412,149 @@ export default {
                 list
             };
         },
-        getListHeight(){
 
+
+        splictList(list=[],type='application'){
+            //分割申请单
+            let firstPage = this.pageInfo.height - this.pageInfo.type - this.pageInfo.head - this.pageInfo.title;   //第一页可利用的空间
+            let secondPage = this.pageInfo.height - this.pageInfo.pager - this.pageInfo.title;                      //第二页可利用的空间
+
+            // console.log(firstPage,secondPage);
+            
+            let container = [];
+            let count = 0;      //累计高度
+            let page = {
+                arr:[],
+                type,
+            };
+
+            for(let i = 0; i < list.length;i++){
+                let ele = list[i];
+                let height = listHeight[ele.uniqueId+''];        
+
+                if(count + height >= firstPage){
+                    container.push(page);
+
+                    page = {
+                        arr:[],
+                        type
+                    };
+                    count = 0;
+                    firstPage = secondPage;
+                    page.arr.push(ele);
+                    count += height;
+                }else{
+                    page.arr.push(ele);
+                    count += height;
+
+                }
+                if(i == list.length -1 && page.arr.length >0){
+                    container.push(page);
+                }
+            }
+            return [...container];
         },
+        splitStack(list=[],type){
+            //切割商品,物料
+            let firstPage = this.pageInfo.height - this.pageInfo.pager - this.pageInfo.head - this.pageInfo.title;       //第一页可利用的空间
+            let secondPage = this.pageInfo.height - this.pageInfo.pager - this.pageInfo.title;                           //第二页可用的空间
+
+            let container = [];
+            let count = 0;                          //累计高度
+            let part = {detail:[]};
+            let page = {
+                arr:[
+                    /*
+                        {
+                            name:'总单1',
+                            uniqueId:'1',
+                            showDetails:true,
+                            detail:[
+                                {
+                                    name:'详情单1',
+                                    uniqueId:'3'
+                                },
+                                {
+                                    name:'详情单1',
+                                    uniqueId:'3'
+                                },
+                            ]
+                        },
+                    */
+                ],
+                type,
+            };
+
+            for(let i = 0;i < list.length ;i++){
+                let ele = list[i];
+                let pHeight = listHeight[ele.uniqueId+''];
+
+                let firstChild = ele.detail[0];
+                let firstChildHeight = listHeight[firstChild.uniqueId+''];
+
+                part = {...ele};
+                part.detail = []; 
+
+                if(ele.showDetails){
+                    if(count + pHeight + this.pageInfo.dTitle + firstChildHeight >= firstPage){
+                        container.push(page);
+                        page = {
+                            arr:[],
+                            type,
+                        };
+                        count = 0;
+                        firstPage = secondPage;
+                    }else{
+                        count += pHeight + this.pageInfo.dTitle; 
+                        
+                        for(let j = 0 ;j< ele.detail.length;j++){
+                            let childEle = ele.detail[j];
+                            let cHeight = listHeight[childEle.uniqueId+''];
+
+                            if(count + cHeight > firstPage){
+                                page.arr.push(part);
+                                container.push(page);
+
+                                page = {
+                                    arr:[],
+                                    type,
+                                };
+                                count = 0;
+                                firstPage = secondPage;
+
+                                count += pHeight + this.pageInfo.dTitle + cHeight;
+                                part = {...ele};
+                                part.detail = [];      
+                                part.detail.push(childEle);
+                            }else{
+                                part.detail.push(childEle);
+                                count += cHeight;
+                            }
+                        }
+                        page.arr.push(part);
+                    }
+                }else{
+                    if(count + pHeight >= firstPage){
+                        container.push(page);
+                        page = {
+                            arr:[],
+                            type,
+                        };
+                        count = 0;
+                        firstPage = secondPage;
+                    }
+                    page.arr.push(part);
+                    count += pHeight;
+                }
+
+                if(i == list.length -1 && page.arr.length > 0){
+                    container.push(page);
+                }
+            }
+
+            return [...container];
+        },
+
 
         printPage(){
             let oApp = document.querySelector('#app');
@@ -430,6 +581,7 @@ export default {
             this.$router.go(-1);
         },
         getData(){
+            //获取列表
             let res = storage.session('batchLogPrint');
             if(this.toRaw(res,'Object')){
                 this.goods = res.goods;
@@ -437,26 +589,35 @@ export default {
                 this.dispatchApplication = res.dispatchApplication;
                 this.info = res.info;
             }
-            console.log(res);
         },
         toRaw(value,type){
             return Object.prototype.toString.call(value).slice(8,-1) == type;
         },
     },
-    components: {
-
-    },
     created(){
         this.getData();
         this.markList();
-        console.log(this.dispatchApplication);
-        console.log(this.goods);
-        console.log(this.material);
     },
     mounted(){
-        setTimeout(()=>{
-            console.log(this.dispatchApplication);
-        },5000);
+        let temp = this.splictList(this.dispatchApplication);
+        if(temp[0]){
+            temp[0].showHead = true;
+        }
+        this.container.push(...temp);
+
+        temp = this.splitStack(this.goods,'goods');
+        if(temp[0]){
+            temp[0].showHead = true;
+        }
+        this.container.push(...temp);
+
+        temp = this.splitStack(this.material,'material');
+        if(temp[0]){
+            temp[0].showHead = true;
+        }
+        this.container.push(...temp);
+        
+        this.toggle = false;
     },
     beforeRouteLeave(to,from,next){
         storage.session('batchLogPrint',null);
@@ -465,9 +626,8 @@ export default {
     directives:{
         'height':{
             inserted: function (el, binding, vnode) {
-                binding.height = el.offsetHeight;
-                // console.log(el.offsetHeight);
-                console.log(binding.height);
+                let id = binding.value+'';
+                listHeight[id] = el.offsetHeight;
             }            
         }
     }
@@ -506,14 +666,23 @@ li{
 
 @tb-border:1px solid #000;
 
-.batch-log-print{
-    .whb(714px,1036px,none);
 
+.batch-log-print{
+    padding-bottom: 0 !important;
+
+    width:714px;
+    .box{
+        .whb(714px,1036px,1px solid #000);
+        margin-bottom:30px;
+        &:last-child{
+            margin-bottom:0; 
+        }
+    }
     .page-head{
         padding:0 20px;
         .print-type{
             font-size:24px;
-            line-height: 80px;
+            line-height: 60px;
             .page-num{
                 font-size:16px;
             }
@@ -539,7 +708,9 @@ li{
     .table-head{
         height:40px;
         padding-left:20px;
-        .lfc(#333,40px,16px);
+        border-bottom:@tb-border;
+        
+        .lfc(#333,38px,16px);
         .circle{
             .inline-middle;
             .whb(5px,5px,none);
@@ -558,21 +729,10 @@ li{
         }
         display: flex;
         flex-flow:row nowrap;
-        border-top:@tb-border;
         border-bottom:@tb-border;
     }  
-    .table-goods,.table-material{
-        .table-row{
-            border-bottom:1px dashed #000;
-            &:last-child{
-                border-bottom:none;
-            }
-    
-        }
-    }
-
     .table-application{
-        border:@tb-border;
+        border-top:@tb-border;
         .li-1{
             width:13.725%;
         }
@@ -594,7 +754,6 @@ li{
             }
             display: flex;
             flex-flow:row nowrap;
-            border-top:@tb-border;
             border-bottom:@tb-border;
         }
         .table-body{
@@ -602,15 +761,13 @@ li{
                 .flex-align;
                 li{
                     .row-li;
-                    padding:5px;
+                    padding:10px 5px;
                 }
             }
         }
     }
     
     .table-goods{
-        margin-top:30px;
-        margin-bottom:30px;
         border:@tb-border;
         .li-1{
             width:14%;
@@ -659,8 +816,6 @@ li{
 
     .table-material{
         border:@tb-border;
-        margin-top:30px;
-        margin-bottom:30px;
         li{
             width:11.111%;
         }
@@ -703,6 +858,18 @@ li{
                 }
             }
         }                   
+    }
+
+    .table-goods,.table-material{
+        border:0;
+        border-top:@tb-border;
+        .table-row{
+            border-bottom:1px dashed #000;
+            &:last-child{
+                border-bottom:none;
+            }
+    
+        }
     }
 
     #print-webpage-btn{

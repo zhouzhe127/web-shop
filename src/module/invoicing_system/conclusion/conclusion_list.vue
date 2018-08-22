@@ -256,7 +256,7 @@
 			detailBtn(data) {
 				this.$route.query.id = data.id;
 				this.$router.push({
-					path: 'conclusionList/shipmentVerify',
+					path: '/admin/conclusionList/shipmentVerify',
 					query: this.$route.query
 				});
 			},

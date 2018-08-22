@@ -88,8 +88,8 @@
 				showCom:null,
 				comObj:{},
 				alrWareObj:{},
-				startTime:new Date().setHours(0, 0, 0, 0)-30*3600*24*1000,
-				endTime:new Date().setHours(0, 0, 0, 0),
+				startTime:new Date().setHours(0,0,0,0)-30*3600*24*1000,
+				endTime:new Date().setHours(23,59,59,0),
 				timeDate:[],
 				userName: '', //用户名
 				shopId:'',//店铺id
@@ -129,7 +129,7 @@
 				},
 				dispHash:{
 					1:'未调度',
-					2:'调度中',
+					2:'配货中',
 					3:'未出货',
 					4:'全部取消',
 					5:'待入货',
@@ -231,6 +231,7 @@
 					uName:this.userName,
 					applyStartTime: parseInt(this.startTime/1000),
 					applyEndTime: parseInt(this.endTime/1000),
+					isAuditor:1,
 					auditStatus:'1', //审核状态：1审核中
 					dispatchStatus:'1,2',//调度状态：1未调度,2调度中
 				}});
@@ -284,7 +285,7 @@
 					wName:this.alrWareObj.name,
 				};
 				storage.session('mulSelectDispatch',obj);
-				this.$message({message: '选择完毕!',type: 'success'});
+				this.$message({message: '选择完毕，出入货仓库相同的申请单已被剔除',type: 'success'});
 				this.$router.push({path: '/admin/conclusionList/batchSchedule',query: this.$route.query});
 			},
 			setAlready(dataList){//设置已经选中过的数据
@@ -319,8 +320,8 @@
 				this.userName = '';
 				this.page = 1;
 				this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
-				this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
-				this.endTime = new Date().setHours(0, 0, 0, 0);
+				this.startTime = new Date().setHours(0,0,0,0)-30*3600*24*1000;
+				this.endTime = new Date().setHours(23,59,59,0);
 				this.getData();
 			},
 			pageChange(page) { //分页 获取页数
