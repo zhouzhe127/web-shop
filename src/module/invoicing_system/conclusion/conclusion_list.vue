@@ -35,11 +35,11 @@
 			</div>
 		</div>
 		<com-table :listName="'调度审核列表'" :titleData="titleList" :allTotal="count" :introData="introData" :listWidth="1200">
-			<div slot="con-0" slot-scope="props" @click="detailBtn(props.data)">
-				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 1">审核</span>
-				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 2">继续审核</span>
-				<span class="detailsBtn" v-if="props.data.auditStatus != 1 || props.data.dispatchStatus > 2">查看详情</span>
-				<span class="detailsBtn" v-if="props.data.dispatchStatus == 2" @click="tooutshop(props.data.id)">|&nbsp;确认出货</span>
+			<div slot="con-0" slot-scope="props">
+				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 1" @click="detailBtn(props.data)">审核</span>
+				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 2" @click="detailBtn(props.data)">继续审核</span>
+				<span class="detailsBtn" v-if="props.data.auditStatus != 1 || props.data.dispatchStatus > 2" @click="detailBtn(props.data)">查看详情</span>
+				<span class="detailsBtn" v-if="props.data.dispatchStatus == 3" @click="tooutshop(props.data.id)">|&nbsp;确认出货</span>
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 			<span slot="con-2" slot-scope="props">{{auditStatus[props.data.auditStatus]}}</span>
@@ -262,7 +262,7 @@
 			},
 			tooutshop(id) {
 				this.$router.push({
-					path: 'operation/operationDetail',
+					path: './operation/operationDetail',
 					query: {
 						id: id
 					}

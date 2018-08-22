@@ -55,7 +55,7 @@
 				});
 				this.setgoodsKey(data.goodsList);
 				this.setSuppliesKey(data.materialList);
-				if (this.goodsList.length <= 0) this.typeactive = 1;
+				if (this.goodsList.length <= 0 && this.materialList.length > 0) this.typeactive = 1;
 				console.log(data);
 			},
 			async getType() {
