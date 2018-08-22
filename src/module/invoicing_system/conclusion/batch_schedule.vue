@@ -135,7 +135,7 @@
 						item.list.map(v => {
 
 							let obj = {};
-							let applyUnit = this.applyUnit(v.unit, item.unit);
+							let applyUnit = this.applyUnit(v.unitName, item.unit, 1);
 							let setdistrid = this.setdistrid(v.distributionId, item.distribution);
 							Object.assign(obj, {
 								shopName: v.shopName,
@@ -176,7 +176,7 @@
 					if (checkisDefault) {
 						topUnit = this.applyUnit(false, item.unit);
 					} else {
-						topUnit = this.applyUnit(item.list[0].unit, item.unit);
+						topUnit = this.applyUnit(item.list[0].unitName, item.unit,1);
 					}
 					Object.assign(listArr, {
 						itemName: item.itemName,
@@ -201,7 +201,7 @@
 			},
 			calevalue(num, value) {
 				if (value) {
-					return parseInt(num / value * 100) / 100;
+					return parseInt(num / value * 1000) / 1000;
 				} else {
 					return num;
 				}
@@ -218,13 +218,14 @@
 				if (check) obj = arr[arr.length - 1];
 				return obj;
 			},
-			applyUnit(id, unit) {
+			applyUnit(id, unit, type) {
 				let res = '';
 				let df = ''; //默认单位
 				let check = false;
 				for (let item of unit) {
 					if (id || id === 0) {
-						if (id == item.muId) {
+						let cf = type==1?item.name:item.muId
+						if (id == cf) {
 							res = item;
 							check = true;
 						}
@@ -361,7 +362,6 @@
 					goodsDetail: sendGoods,
 					materialDetail: sendsupplies
 				}
-				console.log(111);
 				this.confirms(obj);
 			},
 			async confirms(obj) {

@@ -477,10 +477,8 @@
 							pro = '请输入1-9位的数字,最多可含三位小数!';
 						}
 					} else if(str == 'selectMaterial') {
-						if(ele.type == 0) {
-							reg = /((^[1-9]\d{0,8})|^0)(\.\d{1,3})?$/;
-							pro = '请输入1-9位的数字,最多可含三位小数!';
-						}
+						reg = /((^[1-9]\d{0,8})|^0)(\.\d{1,3})?$/;
+						pro = '请输入1-9位的数字,最多可含三位小数!';
 					}
 					if(!global.checkData({
 						needsNum: {
@@ -490,6 +488,7 @@
 						this.checkTips(ele, true, str);
 						return;
 					}
+
 					if(Number(ele.needsNum) <= 0) {
 						this.alert('请填写调度数量!');
 						this.checkTips(ele, true, str);
@@ -924,7 +923,7 @@
         height:70px;
         text-align: center;
         &:after{
-            content:'未选择条目';
+            content:'';
             display: inline-block;
             line-height: 70px;
             color: #666;

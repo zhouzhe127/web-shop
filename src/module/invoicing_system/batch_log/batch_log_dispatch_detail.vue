@@ -44,7 +44,7 @@
 
                                 <div class="row-sum" >
                                     <template v-for="(k,ki) in ['name','selectUnitName','applySum','applyAverage','applyListNum','invenNum','outputNum','allocationTypeName']">
-                                        <li  :key="ki" >{{g[k]}}</li>
+                                        <li  :key="ki" :class="{'error':g.isSuccess == 0}">{{g[k]}}</li>
                                     </template>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                                 </div>
                                 <div class="row-sum" >
                                     <template v-for="(k,ki) in ['name','typeName','selectUnitName','applySum','applyAverage','applyListNum','invenNum','outputNum','allocationTypeName']">
-                                        <li  :key="ki" >{{g[k]}}</li>
+                                        <li  :key="ki" :class="{'error':g.isSuccess == 0}">{{g[k]}}</li>
                                     </template>
                                 </div>
                             </div>
@@ -239,7 +239,7 @@ export default {
             let query = this.$route.query;
             if(flag == 'detail'){
                 query.id = item.applicationId;
-                this.$router.push({path:'/admin/operation/operationDetail',query});
+                this.$router.push({path:'/admin/schedulingApplication/purchaseRequisitionDetail',query});
             }
         },
         toggleTabs(btn){
@@ -286,19 +286,31 @@ export default {
         initGoods(){
             this.goods = this.goods.map((ele)=>{
                 let detail = ele.detail;        
-    
+                
+                ele.isSuccess = this.judgeIsSuccess(detail,'isSuccess');
                 ele.showDetails = true;                                     //是否展示详情
                 ele.applySum = this.calcSum(detail);                        //申请总量
                 ele.applyListNum = detail.length;                           //申请单数
                 ele.applyAverage = ele.applySum / detail.length;            //平均申请量
                 ele.applyAverage = ele.applyAverage.toFixed(3);
-                ele.outputNum = this.calcSum(detail,'num');                  //出货总量
-                ele.allocationTypeName = this.mapName(this.allocationTypes,ele.allocationType);     //配货方式
+
+                if(ele.isSuccess == 0){
+                    ele.outputNum = '';
+                    ele.allocationTypeName = '';
+                    ele.invenNum = '';
+                }else{
+                    ele.outputNum = this.calcSum(detail,'num');                  //出货总量
+                    ele.allocationTypeName = this.mapName(this.allocationTypes,ele.allocationType);     //配货方式
+                }
 
                 ele.detail = ele.detail.map((e)=>{
-                    e.averageNum =  ele.applyAverage;
-                    e.byPercentageNum = e.applyNum / ele.applySum *  ele.outputNum;
-                    e.byPercentageNum = e.byPercentageNum.toFixed(3);
+                    if(e.isSuccess == 0){
+                        e.num = '';
+                    }else{
+                        e.averageNum =  ele.applyAverage;
+                        e.byPercentageNum = e.applyNum / ele.applySum *  ele.outputNum;
+                        e.byPercentageNum = e.byPercentageNum.toFixed(3);
+                    }
                     return e;
                 });
                 return ele;
@@ -310,6 +322,7 @@ export default {
             this.material = this.material.map((ele)=>{
                 let detail = ele.detail;        
                 
+                ele.isSuccess = this.judgeIsSuccess(detail,'isSuccess');
                 ele.showDetails = true;
                 ele.type = Number(ele.type);
                 ele.typeName = materialType[ele.type];                                      //物料类型
@@ -317,18 +330,29 @@ export default {
                 ele.applyListNum = detail.length;                                           //申请单数
                 ele.applyAverage = ele.applySum / detail.length;                            //平均申请量
                 ele.applyAverage = ele.applyAverage.toFixed(3);
-                ele.outputNum = this.calcSum(detail,'num');                  //出货总量
-                ele.allocationTypeName = this.mapName(this.allocationTypes,ele.allocationType);     //配货方式
+
+                if(ele.isSuccess == 0){
+                    ele.outputNum = '';
+                    ele.allocationTypeName = '';
+                    ele.invenNum = '';
+                }else{
+                    ele.outputNum = this.calcSum(detail,'num');                                         //出货总量
+                    ele.allocationTypeName = this.mapName(this.allocationTypes,ele.allocationType);     //配货方式
+                }
 
                 ele.detail = ele.detail.map((e)=>{
-                    e.averageNum =  ele.applyAverage;
-                    e.byPercentageNum = e.applyNum / ele.applySum *  ele.outputNum;
-                    e.byPercentageNum = e.byPercentageNum.toFixed(3);
-
                     if(e.isPurchase == 1){
                         e.distributionInfo = '等于进价';
                     }else{
                         e.distributionInfo = `${e.distributionPrice} 元 / ${e.distributionUnit}`;                        
+                    }
+                    if(e.isSuccess == 0){
+                        e.num = '';
+                        e.distributionInfo = '';
+                    }else{
+                        e.averageNum =  ele.applyAverage;
+                        e.byPercentageNum = e.applyNum / ele.applySum *  ele.outputNum;
+                        e.byPercentageNum = e.byPercentageNum.toFixed(3);
                     }
                     return e;
                 });
@@ -361,6 +385,16 @@ export default {
             }
             return sum;
         },
+        judgeIsSuccess(list=[],attr='isSuccess'){
+            //判断总的匹配状态是成功还是失败
+            if(!Array.isArray(list)) list = [];
+            let flag = true;
+            flag = list.every((ele)=>{
+                return ele[attr] == 0;
+            });
+            flag = flag ? 0 : 1;
+            return flag;
+        },
         addItemIndex(list,fn){
             list = list.map((ele,index)=>{
                 index += 1;
@@ -377,16 +411,16 @@ export default {
 			this.$store.commit('setPageTools',[
 				{
 					name: '返回',
-                    style,
-                    className:['el-button--default','el-button'],
+                    type:5,
+                    className:'default',
 					fn:()=>{
 						this.$router.go(-1);
 					}
 				},
 				{
 					name: '打印',
-                    style,
-                    className:['el-button--info','el-button'],
+                    type:4,
+                    className:'info',
 					fn:()=>{
                         query.logId = this.logId;
 						this.$router.push({path:'/admin/batchLog/batchLogPrint',query});
@@ -448,10 +482,12 @@ export default {
         this.logId = Number(this.logId);
         
         this.initBtn();
+
         let allocationTypes = await this.getHttp('DispatchrecordGetAllocationType');
         if(Array.isArray(allocationTypes)){
             this.allocationTypes = allocationTypes;
         }
+
         await this.getDetail();
     },
 };
