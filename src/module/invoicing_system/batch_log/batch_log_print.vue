@@ -27,11 +27,11 @@
                 </div>
                 <div class="table-body">
                     <div class="table-row" :id="t.uniqueId" v-height="t.uniqueId" v-for="(t,ti) in dispatchApplication" :key="ti" >
-                        <li contenteditable="true" class="li-1">{{t.itemIndex}}</li>
-                        <li contenteditable="true" class="li-2">{{t.applicationCode}}</li>
-                        <li class="li-3" contenteditable="true">{{t.applicationShop}}</li>
-                        <li contenteditable="true" class="li-4">{{t.applicant}}</li>
-                        <li class="li-5" contenteditable="true">{{t.applicationTime}}</li>
+                        <li  class="li-1">{{t.itemIndex}}</li>
+                        <li  class="li-2">{{t.applicationCode}}</li>
+                        <li class="li-3" >{{t.applicationShop}}</li>
+                        <li  class="li-4">{{t.applicant}}</li>
+                        <li class="li-5" >{{t.applicationTime}}</li>
                     </div>
                 </div>
             </div>
@@ -53,9 +53,9 @@
                 <div class="table-body">
                     <div class="table-row" v-for="(t,ti) in goods" :key="ti" :id="t.uniqueId" >
                         <div class="row" v-height="t.uniqueId">
-                            <li class="li-1" contenteditable="true">{{t.name}}</li>
-                            <li class="li-2" contenteditable="true">{{t.selectUnitName}}</li>
-                            <li class="li-2" contenteditable="true">{{t.applySum}}</li>
+                            <li class="li-1" >{{t.name}}</li>
+                            <li class="li-2" >{{t.selectUnitName}}</li>
+                            <li class="li-2" >{{t.applySum}}</li>
                             <li class="li-2">{{t.applyAverage}}</li>
                             <li class="li-2">{{t.applyListNum}}</li>
                             <li class="li-2">{{t.invenNum}}</li>
@@ -107,10 +107,10 @@
                 <div class="table-body">
                     <div class="table-row" v-for="(t,ti) in material" :key="ti" :id="t.uniqueId" >
                         <div class="row" v-height="t.uniqueId">
-                            <li class="li-1" contenteditable="true">{{t.name}}</li>
-                            <li class="li-1" contenteditable="true">{{t.typeName}}</li>
-                            <li class="li-1" contenteditable="true">{{t.selectUnitName}}</li>
-                            <li class="li-1" contenteditable="true">{{t.applySum}}</li>
+                            <li class="li-1" >{{t.name}}</li>
+                            <li class="li-1" >{{t.typeName}}</li>
+                            <li class="li-1" >{{t.selectUnitName}}</li>
+                            <li class="li-1" >{{t.applySum}}</li>
                             <li class="li-1">{{t.applyAverage}}</li>
                             <li class="li-1">{{t.applyListNum}}</li>
                             <li class="li-1">{{t.invenNum}}</li>
@@ -172,11 +172,11 @@
                     </div>
                     <div class="table-body">
                         <div class="table-row" :id="t.uniqueId"  v-for="(t,ti) in p.arr" :key="ti" >
-                            <li contenteditable="true" class="li-1">{{t.itemIndex}}</li>
-                            <li contenteditable="true" class="li-2">{{t.applicationCode}}</li>
-                            <li class="li-3" contenteditable="true">{{t.applicationShop}}</li>
-                            <li contenteditable="true" class="li-4">{{t.applicant}}</li>
-                            <li class="li-5" contenteditable="true">{{t.applicationTime}}</li>
+                            <li  class="li-1">{{t.itemIndex}}</li>
+                            <li  class="li-2">{{t.applicationCode}}</li>
+                            <li class="li-3" >{{t.applicationShop}}</li>
+                            <li  class="li-4">{{t.applicant}}</li>
+                            <li class="li-5" >{{t.applicationTime}}</li>
                         </div>
                     </div>
                 </div>
@@ -197,13 +197,21 @@
                     </div>
                     <div class="table-body">
                         <div class="table-row" v-for="(t,ti) in p.arr" :key="ti">
-                            <div class="row" v-height="t.uniqueId" :id="t.uniqueId">
-                                <li class="li-1" contenteditable="true">{{t.name}}</li>
-                                <li class="li-2" contenteditable="true">{{t.selectUnitName}}</li>
-                                <li class="li-2" contenteditable="true">{{t.applySum}}</li>
+                            <div class="row" :class="{'error':t.isSuccess == 0}" v-height="t.uniqueId" :id="t.uniqueId">
+                                <li class="li-1" >{{t.name}}</li>
+                                <li class="li-2" >{{t.selectUnitName}}</li>
+                                <li class="li-2" >{{t.applySum}}</li>
                                 <li class="li-2">{{t.applyAverage}}</li>
                                 <li class="li-2">{{t.applyListNum}}</li>
-                                <li class="li-2">{{t.invenNum}}</li>
+                                <li class="li-2">
+                                    <template v-if="t.isSuccess == 0">
+                                        <i class="el-icon-warning error"></i>
+                                        <span class="error">匹配失败</span>
+                                    </template>
+                                    <template v-else>
+                                        {{t.invenNum}}
+                                    </template>                                    
+                                </li>
                                 <li class="li-2">{{t.outputNum}}</li>
                                 <li class="li-1">{{t.allocationTypeName}}</li>
                             </div>
@@ -218,11 +226,19 @@
                                     <li class="r-li-1">实际出货量</li>
                                 </div>
                                 <div class="detail-body">
-                                    <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
+                                    <div class="detail-row" :class="{'error':j.isSuccess == 0}" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
                                         <li class="r-li-2">{{j.intoWarehouseName}}</li>
                                         <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
                                         <li class="r-li-1">{{j.applyNum}}</li>
-                                        <li class="r-li-1">{{j.averageNum}}</li>
+                                        <li class="r-li-1">
+                                            <template v-if="j.isSuccess == 0">
+                                                <i class="el-icon-warning error"></i>
+                                                <span class="error">匹配失败</span>
+                                            </template>
+                                            <template v-else>
+                                                {{j.averageNum}}
+                                            </template>
+                                        </li>
                                         <li class="r-li-1">{{j.byPercentageNum}}</li>
                                         <li class="r-li-1">{{j.num}}</li>
                                     </div>
@@ -251,14 +267,22 @@
 
                     <div class="table-body">
                         <div class="table-row" v-for="(t,ti) in p.arr" :key="ti">
-                            <div class="row" v-height="t.uniqueId" :id="t.uniqueId">
-                                <li class="li-1" contenteditable="true">{{t.name}}</li>
-                                <li class="li-1" contenteditable="true">{{t.typeName}}</li>
-                                <li class="li-1" contenteditable="true">{{t.selectUnitName}}</li>
-                                <li class="li-1" contenteditable="true">{{t.applySum}}</li>
+                            <div class="row" :class="{'error':t.isSuccess == 0}" v-height="t.uniqueId" :id="t.uniqueId">
+                                <li class="li-1" >{{t.name}}</li>
+                                <li class="li-1" >{{t.typeName}}</li>
+                                <li class="li-1" >{{t.selectUnitName}}</li>
+                                <li class="li-1" >{{t.applySum}}</li>
                                 <li class="li-1">{{t.applyAverage}}</li>
                                 <li class="li-1">{{t.applyListNum}}</li>
-                                <li class="li-1">{{t.invenNum}}</li>
+                                <li class="li-1">
+                                    <template v-if="t.isSuccess == 0">
+                                        <i class="el-icon-warning error"></i>
+                                        <span class="error">匹配失败</span>
+                                    </template>
+                                    <template v-else>
+                                        {{t.invenNum}}
+                                    </template>                                    
+                                </li>
                                 <li class="li-1">{{t.outputNum}}</li>
                                 <li class="li-1">{{t.allocationTypeName}}</li>
                             </div>
@@ -274,11 +298,19 @@
                                     <li class="r-li-1">分销价格</li>
                                 </div>
                                 <div class="detail-body" >
-                                    <div class="detail-row" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
+                                    <div class="detail-row" :class="{'error':j.isSuccess == 0}" v-for="(j,ji) in t.detail" :key="ji" :id="j.uniqueId" v-height="j.uniqueId">
                                         <li class="r-li-2">{{j.intoWarehouseName}}</li>
                                         <li class="r-li-2">{{j.intoWarehouseOwner}}</li>
                                         <li class="r-li-1">{{j.applyNum}}</li>
-                                        <li class="r-li-1">{{j.averageNum}}</li>
+                                        <li class="r-li-1">
+                                            <template v-if="j.isSuccess == 0">
+                                                <i class="el-icon-warning error"></i>
+                                                <span class="error">匹配失败</span>
+                                            </template>
+                                            <template v-else>
+                                                {{j.averageNum}}
+                                            </template>
+                                        </li>
                                         <li class="r-li-1">{{j.byPercentageNum}}</li>
                                         <li class="r-li-1">{{j.num}}</li>
                                         <li class="r-li-1">{{j.distributionInfo}}</li>                            
@@ -635,7 +667,9 @@ export default {
 </script>
 <style lang='less' scoped>
 @import url('../warehouse_manage/z_less.less');
-
+.error{
+    color:@r !important;
+}
 .batch-log-print * {
     font-family:Arial,Verdana,Sans-serif;
 }
@@ -868,7 +902,12 @@ li{
             &:last-child{
                 border-bottom:none;
             }
-    
+            .error>li{
+                .error;
+            }
+        }
+        .error>li{
+            .error;
         }
     }
 
