@@ -59,7 +59,7 @@
 			return {
 				startTime:new Date().setHours(0,0,0,0)-30*3600*24*1000,
 				endTime:new Date().setHours(23,59,59,0),
-				timeDate:[],
+				timeDate:[new Date(Date.parse(new Date())-30*3600*24*1000),new Date()],
 				userName: '', //用户名
 				shopId:'',//店铺id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
@@ -125,7 +125,6 @@
 			storage.session('batch_schedule',null);
 		},
 		mounted() {
-			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
 			let shopPromise = this.getShopList();//店铺列表
 			let obj = storage.session('batch_schedule');
 			shopPromise.then(()=>{
@@ -181,7 +180,7 @@
 				this.$store.commit('setPageTools', arr);
 			},
 			timeChange(res){
-				this.startTime = Date.parse(res[0]);
+				this.startTime = new Date(res[0]).setHours(0,0,0,0);
 				this.endTime = new Date(res[1]).setHours(23,59,59,0);
 			},
 			formatTime(time) {
