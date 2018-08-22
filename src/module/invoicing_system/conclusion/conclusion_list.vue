@@ -256,13 +256,13 @@
 			detailBtn(data) {
 				this.$route.query.id = data.id;
 				this.$router.push({
-					path: 'conclusionList/shipmentVerify',
+					path: '/admin/conclusionList/shipmentVerify',
 					query: this.$route.query
 				});
 			},
 			tooutshop(id) {
 				this.$router.push({
-					path: 'operation/operationDetail',
+					path: '/admin/operation/operationDetail',
 					query: {
 						id: id
 					}
