@@ -5,9 +5,12 @@
 	 -->
 	<div id="scheduling-application-list">
 		<div class="tab-div">
-			<span :class="{'select-tab':toggle}" @click="toggle=true">调度申请</span>
-			<span :class="{'select-tab':!toggle}" @click="toggle=false">模板列表</span>
+			<el-button-group>
+				<el-button :type="toggle ? 'primary' : ''" @click="toggle=true">调度申请</el-button >
+				<el-button  :type="!toggle ? 'primary' : ''" @click="toggle=false">模板列表</el-button >
+			</el-button-group>
 		</div>
+		
 		<div v-show="toggle">
 			<div class="search-div">
 				<span class="submit-time">提交时间&nbsp;:&nbsp;</span>
@@ -20,18 +23,45 @@
 
 			<div class="search-div">
 				<div class="in-block">
-					<select-btn :width="180" :name="tips.auditStatus" :sorts="auditStatusName" @emit="(res)=>{getStatus('auditStatus',res)}"></select-btn>
-					<select-btn :width="180" :name="tips.dispatchStatus "  :sorts="dispatchStatusName" @emit="(res)=>{getStatus('dispatchStatus',res)}" class="marginL-10"></select-btn>
+					<el-select v-model="subObj.auditStatus" placeholder="请选择审核状态" clearable >
+						<el-option
+							v-for="item in auditStatus"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"
+						>
+						</el-option>
+					</el-select>
+					
+					<el-select v-model="subObj.dispatchStatus" placeholder="请选择调度状态" clearable>
+						<el-option
+							v-for="item in dispatchStatus"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"
+						>
+						</el-option>
+					</el-select>
 				</div>
 				<div class="in-block">
-					<input type="text" maxlength="30" class="input-txt" v-model="subObj.uName" placeholder="请输入提交人"><input maxlength="30" type="text" v-model="subObj.code" class="input-txt" placeholder="请输入申请单号">
+					<el-input maxlength="30" style="width:180px;" clearable v-model="subObj.uName" placeholder="请输入提交人"></el-input>
+					<el-input maxlength="30" style="width:180px;" clearable v-model="subObj.code"  placeholder="请输入申请单号"></el-input>
 				</div>
 				<div class="in-block">
 					<span class="font" >入货仓库&nbsp;:&nbsp;</span>
-					<select-btn :width="180" :name="tips.wid" :sorts="warehouseListName" @emit="(res)=>{getWid('wid',res)}" class="marginL-10"></select-btn>
+					<el-select v-model="subObj.wid" clearable placeholder="请选择仓库">
+						<el-option
+							v-for="item in warehouseList"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"
+						>
+						</el-option>
+					</el-select>
 				</div>
 				<div class="in-block">
-					<span class="common-btn blue" @click="clickBtn('filter',true)">筛选</span><span class="common-btn gray" @click="clickBtn('reset')">重置</span>
+					<el-button type="primary" @click="clickBtn('filter',true)">筛选</el-button >
+					<el-button type="info" @click="clickBtn('reset',null)">重置</el-button >
 				</div>
 			</div>
 
@@ -128,33 +158,31 @@ export default {
 				detail:true,            //是否显示精确到时分秒    true:不显示时分秒,false:显示时分秒(默认)
 				width:160               //输入框的宽  默认200px                
 			},
-			applicationType:[{id:'1',name:'入货申请'},{id:'2',name:'出货申请'}],//申请类型
-
+			applicationType:[
+				{id:'1',name:'入货申请'},
+				{id:'2',name:'出货申请'}
+			],								//申请类型
 			auditStatus:[
-				{id:0,name:'全部审核状态'},
 				{id:1,name:'审核中'},
 				{id:2,name:'已取消'},
 				{id:3,name:'审核未通过'},
 				{id:4,name:'审核通过'},
 			],
-			auditStatusName:[],
 			dispatchStatus:[
-				{id:0,name:'全部调度状态'},
 				{id:1,name:'未调度'},
 				{id:2,name:'调度中'},
 				{id:3,name:'未出货'},
 				{id:4,name:'全部取消'},
 				{id:5,name:'待入货'},
 				{id:6,name:'已完成'},
-				{id:7,name:'已完成（异常）'},
+				{id:7,name:'已完成（异常)'},
+				{id:8,name:'配货完成'},
 			],
-			dispatchStatusName:[],      
 			warehouseList:[],            //仓库列表
-			warehouseListName:[],   
-			tips:{},
+			applicationList:[],          //申请列表
+
 			subObj:{},                   //提交的数据
 			toggle:true,                 //列表的切换
-			applicationList:[],          //申请列表
 			showCom:'',                  //展示的组件
 			isBrand:'',
 			shopId:'',              
@@ -166,29 +194,17 @@ export default {
 		//------------event----------
 		//获取时间
 		getTime(flag,time){
-			this.subObj[flag] = parseInt(time/1000);
 			this[flag].time = time;
-		},
-		//获取审核,调度状态状态
-		getStatus(flag,index){
-			this.subObj[flag] = this[flag][index].id;
-			if(this.subObj[flag] == 0) this.subObj[flag] = '';
-			this.tips[flag] = this[flag][index].name;
-		},
-		//获取仓库id
-		getWid(index){
-			this.subObj.wid = this.warehouseList[index].id;
-			this.tips.wid =  this.warehouseList[index].name;
-			if(this.subObj.wid == 0) this.subObj.wid = '';
 		},
 		//点击筛选,重置
 		async clickBtn(flag,bool){
-			if(flag=='filter'){
+			if(flag == 'filter'){
 				if(bool){
 					this.pageObj.page = 1;
-					this.subObj.page = 1;
 				}
-				let {list=[],rows=0} = await this.getHttp('dispatchSearchApplications',this.subObj); 
+				let subObj = this.getSubObj();
+				let {list=[],rows=0} = await this.getHttp('dispatchSearchApplications',subObj); 
+
 				list.forEach((ele,index)=>{
 					ele.opeartionType = this.itera(this.applicationType,ele.type);          //申请类型
 					ele.auditStatusType = this.itera(this.auditStatus,ele.auditStatus);     //审核状态
@@ -202,21 +218,32 @@ export default {
 				this.pageObj.total = Math.ceil(this.pageObj.listNum/this.pageObj.num);
 			}else{
 				this.resetData();
-				this.clickBtn('filter');
+				this.clickBtn('filter',null);
 			}
 		}, 
-
-		//----------- page--------
+		getSubObj(){
+			//获取需要提交的数据
+			let obj = {
+				page:this.pageObj.page,
+				num:this.pageObj.num,
+				applyStartTime: parseInt(this.startTime.time / 1000),
+				applyEndTime: parseInt(this.endTime.time / 1000),
+				auditTimeStart:'',
+				auditTimeEnd:'',
+				isAuditor:'',
+				auditor:'',
+			};
+			let attrs = ['type','isAuditor','auditStatus','dispatchStatus','wid','uName','code'];
+			for(let key of attrs){
+				obj[key] = this.subObj[key];
+			}
+			return obj;
+		},
 		getPageNum(obj){
 			this.pageObj.page = obj.page;
-			if(obj.num != this.pageObj.num){
-				this.pageObj.num = obj.num;
-				this.pageObj.total = Math.ceil(this.pageObj.listNum/this.pageObj.num);
-			}
-
-			this.subObj.num = this.pageObj.num;
-			this.subObj.page = this.pageObj.page;
-			this.clickBtn('filter');
+			this.pageObj.num = obj.num;
+			this.pageObj.total = Math.ceil(this.pageObj.listNum/this.pageObj.num);
+			this.clickBtn('filter',null);
 		},
 		//确认入货与详情页
 		chanageRouter(item){
@@ -226,107 +253,15 @@ export default {
 			query.auditStatus = item.auditStatus;
 			this.$router.push({path:str,query});
 		},
-		//---------utils------
-		itera(arr,type){
-			for(let ele of arr){
-				if(ele.id == type) return ele.name;
-			}
+
+
+		initBtn(){
+			this.setPageTools([{name: '申请入货',style:{color:'#fff'},fn:()=>{
+				let query = this.$route.query;
+				this.$router.push({path:'schedulingApplication/purchaseRequisition',query:query});
+			}}]);
 		},
-		transFormTime(time){
-			time = parseInt(time*1000);
-			let date =new Date(time);
-			return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes();
-		},
-		// ---------------init-----------
-		async getHttp(url,obj={}){
-			let res = await http[url]({data:obj});
-			return res;
-		},  
-		toggleTab(){
-			if(!this.toggle){
-				this.showCom = 'templateList';
-				storage.session('tab',2);
-			}else{
-				this.showCom = '';
-				storage.session('tab',1);
-			}
-		},  
-		storageSubObj(){
-			let subObj = storage.session('subObj');
-			if(subObj){
-				let statusArr = Object.keys(this.tips),obj={};
-
-				this.startTime.time = subObj.sTime;
-				this.endTime.time = subObj.eTime;
-				this.pageObj.page = subObj.page;
-				this.subObj = {...subObj};
-
-				delete this.subObj.sTime;
-				delete this.subObj.eTime;
-				for(let key of statusArr){
-					let status = this.subObj[key];
-					if(!status) status = 0;
-					obj[key] = status;
-				}
-				this.tips={
-					auditStatus : this.itera(this.auditStatus,obj.auditStatus),				
-					dispatchStatus : this.itera(this.dispatchStatus,obj.dispatchStatus),
-					wid : this.itera(this.warehouseList,obj.wid)				
-				};
-			}
-		},
-		filterStore(list,id,str){
-			let arr = list.filter((ele)=>{
-				if(str == 'brandId' && ele.shopId == 0){
-					return ele[str] == id;
-				}else if(str == 'shopId' && ele.shopId !=0 ){
-					return ele[str] == id;
-				}
-
-			});
-			return arr;
-		},
-		mapName(){
-			this.auditStatusName = this.auditStatus.map((ele)=>{return ele.name});
-			this.dispatchStatusName = this.dispatchStatus.map((ele)=>{return ele.name});
-		},
-		//重置数据
-		resetData(){
-			this.subObj = {
-				page:1,
-				num:10,
-				startTime:'',
-				endTime:'',
-				type:1,                 //1进货申请；2出货申请(目前只有进货申请)
-				auditStatus:'',         //审核状态
-				dispatchStatus:'',      //调度状态
-				wid:'',                 //入货仓库id
-				uName:'',               //提交人
-				code:'',                //调度单号                
-				supplierId:'',            //供应商id
-			};
-			
-			this.endTime.time = Date.now();
-			this.startTime.time = this.endTime.time - global.timeConst.ONEMONTH;
-
-			this.subObj.endTime = parseInt(this.endTime.time / 1000);
-			this.subObj.startTime = parseInt(this.startTime.time / 1000);
-
-
-			this.pageObj.page = 1;
-			
-			if(this.brandId){
-				this.subObj.supplierId = this.brandId;
-			}
-
-			this.tips={
-				auditStatus:'全部审核状态',
-				dispatchStatus:'全部调度状态',
-				wid:'全部仓库'                
-			};
-			
-		}, 
-		initData(){
+ 		initData(){
 			let userData  = storage.session('userShop');
 			this.isBrand = userData.currentShop.ischain == 3;
 			this.shopId = userData.currentShop.id;
@@ -342,48 +277,120 @@ export default {
 					break;
 			}
 		},
-		initBtn(){
-			this.setPageTools([{name: '申请入货',style:{color:'#fff'},fn:()=>{
-				let query = this.$route.query;
-				this.$router.push({path:'schedulingApplication/purchaseRequisition',query:query});
-			}}]);
+		toggleTab(){
+			//tab切换
+			if(!this.toggle){
+				this.showCom = 'templateList';
+				storage.session('tab',2);
+			}else{
+				this.showCom = '';
+				storage.session('tab',1);
+			}
+		},  
+		getStorageSubObj(){
+			let subObj = storage.session('subObj');
+			if(subObj){
+				this.startTime.time = subObj.sTime;
+				this.endTime.time = subObj.eTime;
+				this.pageObj.page = subObj.page;
+
+				this.subObj = {...subObj};
+
+				delete this.subObj.sTime;
+				delete this.subObj.eTime;
+			}
 		},
+		filterStore(list,id,str){
+			let arr = list.filter((ele)=>{
+				if(str == 'brandId' && ele.shopId == 0){
+					return ele[str] == id;
+				}else if(str == 'shopId' && ele.shopId !=0 ){
+					return ele[str] == id;
+				}
+
+			});
+			return arr;
+		},
+		//重置数据
+		resetData(){
+			this.subObj = {
+				type:1,      
+				isAuditor:0,				
+				auditStatus:'',         
+				dispatchStatus:'',      
+				wid:'',                 
+				uName:'',               
+				code:'',       
+			};
+			
+			this.endTime.time = Date.now();
+			this.startTime.time = this.endTime.time - global.timeConst.ONEMONTH;
+
+			this.pageObj.page = 1;
+		}, 
+
+
+
+		itera(arr,type){
+			for(let ele of arr){
+				if(ele.id == type) return ele.name;
+			}
+		},
+		transFormTime(time){
+			time = parseInt(time*1000);
+			let date =new Date(time);
+			return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes();
+		},
+		async getHttp(url,obj={}){
+			let res = await http[url]({data:obj});
+			return res;
+		}, 
 	},
 	async mounted() {
-		this.mapName();
 		this.initBtn();
 		this.initData();
+		this.resetData();
 
+		//tab切换
 		if(storage.session('tab') == 2){
 			this.toggle = false;
 			this.toggleTab();
 		}
-		this.resetData();
 
+		//获取仓库
 		this.warehouseList = await this.getHttp('warehouseList');
 		let brand = this.isBrand ? 'brandId' : 'shopId';
 		this.warehouseList = this.filterStore(this.warehouseList,this.shopId,brand);
-		this.warehouseList.unshift({id:0,name:'全部仓库'});
-		this.warehouseListName = this.warehouseList.map((ele)=>{return ele.name});
 
-		this.storageSubObj();
-		this.clickBtn('filter');
+		this.getStorageSubObj();
+		this.clickBtn('filter',null);
 	},
 	watch:{
 		'toggle':function(){
 			this.toggleTab();
 		}
 	},
-	beforeDestroy(){
+	beforeRouteLeave(to,from,next){
 		storage.session('tab',null);
-		if(this.$route.path == '/admin/schedulingApplication/purchaseRequisitionDetail'){
-			let obj = {...this.subObj};
-			obj.sTime = this.startTime.time;
-			obj.eTime = this.endTime.time;
+		if(to.path == '/admin/schedulingApplication/purchaseRequisitionDetail'){
+			let obj = {
+				sTime:this.startTime.time,
+				eTime:this.endTime.time,
+				auditStatus:this.subObj.auditStatus,
+				dispatchStatus:this.subObj.dispatchStatus,
+				uName:this.subObj.uName,
+				code:this.subObj.code,
+				wid:this.subObj.wid,
+				page:this.pageObj.page,
+				num:this.pageObj.num,
+				type:this.subObj.type,      
+				isAuditor:this.subObj.isAuditor,
+			};
 			storage.session('subObj',obj);
 		}else{
 			storage.session('subObj',null);
 		}
+		next();
 	},
 	components: {
 		calendar: () =>import(/*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),

@@ -1,7 +1,3 @@
-<!--*
- * @Author: zhouzhe 
- * @Date: 2018-05-14 10:35:48 
- *-->
 
 <template>
 	<div id="shipment">
@@ -77,10 +73,12 @@
 			<div slot="con-0" slot-scope="props">
 				<span class="selDetail" @click="detailBtn(props.data.id)">查看详情</span>
 				<!-- <span class="middleLine" v-if="!(this.detailData && this.detailData.auditStatus==4)">|</span> -->
-				<span class="inGoods" v-if="props.data && props.data.dynamic==2&&type!=1" @click="insertGoods(props.data.id)">
+				<span class="inGoods" @click="tooutshop(props.data.id)" v-if="props.data.dynamic==1"><i>|</i>确认出货</span>
+				<span class="inGoods" v-if="props.data && props.data.dynamic==2" @click="insertGoods(props.data.id)">
 					<i>|</i>入货</span>
 				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4" @click="delList(props.data.id)">
 					<i>|</i>删除</span>
+				
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 			<span slot="con-3" slot-scope="props">{{listStatus[props.data.dynamic-1]}}</span>
@@ -129,6 +127,7 @@
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
+	let user = storage.session('user') ? storage.session('user') : [];
 	export default {
 		props: ['type'],
 		data() {
@@ -143,9 +142,8 @@
 				waremessage: false,
 				detailData: '',
 				auditStatus: ['审核中', '已取消', '审核未通过', '审核通过'],
-				dispatchStatus: ['未调度', '调度中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', ],
-				listStatus: ['未出货', '待入货', '调度中', '已取消', '已完成', '已完成（异常）'],
-				user: [], //员工列表
+				dispatchStatus: ['未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
+				listStatus: ['未出货', '待入货', '配货中', '已取消', '已完成', '已完成（异常）', '配货完成'],
 				introData: [], //商品物料列表所有数据
 				goodsDetails: '', //调度单列表所有数据
 				totalNum: 0, //调度单条目数
@@ -255,19 +253,17 @@
 			},
 			// 物料商品接口
 			async searItem(type) {
-				if (this.tabactive == 0) {
-					let goodsData = await http.invoic_getApplicationDetail({
-						data: {
-							applyId: this.applyId,
-							page: this.page,
-							num: 100,
-							choose: type == 0 ? 1 : 2
-						}
-					});
-					this.introData = goodsData.list;
-					this.listNum = this.introData.length;
-					this.pageTotal = goodsData.total;
-				}
+				let goodsData = await http.invoic_getApplicationDetail({
+					data: {
+						applyId: this.applyId,
+						page: this.page,
+						num: 100,
+						choose: type == 0 ? 1 : 2
+					}
+				});
+				this.introData = goodsData.list;
+				this.listNum = this.introData.length;
+				this.pageTotal = goodsData.total;
 			},
 			// 总单接口
 			async searAll() {
@@ -283,6 +279,14 @@
 					this.totalNum = this.goodsDetails.length;
 					this.pageTotal = myData.total;
 				}
+			},
+			tooutshop(id) {
+				this.$router.push({
+					path: '/admin/operation/operationDetail',
+					query: {
+						id: id
+					}
+				});
 			},
 			// 总单，调度单按钮
 			tebClick(index) {
@@ -320,9 +324,9 @@
 				}
 			},
 			getUserName(id) {
-				for (let item of this.user) {
+				for (let item of user) {
 					if (item.userId == id) {
-						return item.name;
+						return item.userName;
 					}
 				}
 				return '--';
@@ -371,12 +375,12 @@
 			},
 		},
 		mounted() {
-			this.user = storage.session('user') ? storage.session('user') : [];
 			this.applyId = this.$route.query.id;
 			this.init();
-		},
-		computed: {
-			
+			if(this.type) {
+				this.tabactive = 1;
+				this.tebClick(1);
+			}
 		},
 		components: {
 			comTable: () =>

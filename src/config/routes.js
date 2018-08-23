@@ -80,9 +80,20 @@ const processMatDetail = (resolve) =>
 
 //加工物料
 const processMaterialPrint = (resolve) =>
-    import (/*webpackChunkName:'process_material_print'*/'src/module/invoicing_system/process/process_material_print');     //打印加工物料
+    import ( /*webpackChunkName:'process_material_print'*/ 'src/module/invoicing_system/process/process_material_print'); //打印加工物料
 const processMaterial = (resolve) =>
-    import (/*webpackChunkName:'process_material'*/'src/module/invoicing_system/process/process_material');                 //加工物料
+    import ( /*webpackChunkName:'process_material'*/ 'src/module/invoicing_system/process/process_material'); //加工物料
+
+
+//批量调度加工日志
+const batchLogDispatch = (resolve) =>
+    import ( /*webpackChunkName:'batch_log_dispatch'*/ 'src/module/invoicing_system/batch_log/batch_log_dispatch'); //批量调度,审核日志
+const batchLogDispatchDetail = (resolve) =>
+    import ( /*webpackChunkName:'batch_log_dispatch_detail'*/ 'src/module/invoicing_system/batch_log/batch_log_dispatch_detail'); //批量调度日志详情
+const batchLogDetail = (resolve) =>
+    import ( /*webpackChunkName:'batch_log_detail'*/ 'src/module/invoicing_system/batch_log/batch_log_detail'); //批量调度,审核日志详情
+const batchLogPrint = (resolve) =>
+    import ( /*webpackChunkName:'batch_log_print'*/ 'src/module/invoicing_system/batch_log/batch_log_print'); //批量调度,审核日志详情打印
 
 const suppliesDetail = (resolve) =>
     import ( /* webpackChunkName:"supplies_detail" */ 'src/module/invoicing_system/invoicing/supplies_detail'); //进销存详情物料详情   
@@ -143,11 +154,17 @@ const conclusionList = (resolve) =>
 const shipmentVerify = (resolve) =>
     import ( /* webpackChunkName:"shipment_verify" */ 'src/module/invoicing_system/conclusion/shipment_verify'); //审核详情   
 const newSchedule = (resolve) =>
-    import ( /* webpackChunkName:"new_schedule" */ 'src/module/invoicing_system/conclusion/new_schedule'); //新建调度    
+    import ( /* webpackChunkName:"new_schedule" */ 'src/module/invoicing_system/conclusion/new_schedule'); //新建调度
+const multipleExamine = (resolve) =>
+    import ( /* webpackChunkName:"multiple_examine" */ 'src/module/invoicing_system/conclusion/multiple_examine'); //批量审核
+const select_dispatch = (resolve) =>
+    import ( /* webpackChunkName:"select_dispatch" */ 'src/module/invoicing_system/warehouse_manage/select_dispatch'); //批量调度-选择调度单
 const brandAssign = (resolve) =>
     import ( /* webpackChunkName:"brand_assign_list" */ 'src/module/invoicing_system/brand_assign/brand_assign_list'); //品牌指派
 const createAssign = (resolve) =>
     import ( /* webpackChunkName:"create_assign" */ 'src/module/invoicing_system/brand_assign/create_assign'); //品牌指派
+const batchSchedule = (resolve) =>
+    import ( /* webpackChunkName:"batch_schedule" */ 'src/module/invoicing_system/conclusion/batch_schedule'); //批量调度    
 //仓库管理
 const warehouseList = (resolve) =>
     import ( /* webpackChunkName:"warehouse_list" */ 'src/module/invoicing_system/warehouse_manage/warehouse_list'); //仓库列表
@@ -1344,6 +1361,7 @@ export default [{
                         }
                     ]
                 },
+
                 {
                     path: 'conclusionList', //审核列表
                     components: {
@@ -1353,6 +1371,9 @@ export default [{
                             path: '',
                             components: {
                                 details_con: conclusionList
+                            },
+                            meta: {
+                                keepAlive: true
                             }
                         },
                         {
@@ -1362,11 +1383,29 @@ export default [{
                             }
                         },
                         {
+                            path: 'batchSchedule',
+                            components: {
+                                details_con: batchSchedule
+                            }
+                        },
+                        {
                             path: 'newSchedule', //新建调度
                             components: {
                                 details_con: newSchedule
                             }
-                        }
+                        },
+                        {
+                            path: 'selectDispatch', //批量调度-选择调度单
+                            components: {
+                                details_con: select_dispatch
+                            },
+                        },
+                        {
+                            path: 'multipleExamine', //批量审核
+                            components: {
+                                details_con: multipleExamine
+                            },
+                        },
                     ]
                 },
                 {
@@ -1575,27 +1614,29 @@ export default [{
 
                 },
                 {
-                    path:'processHistory',//物料盘库记录列表
-                    components:{
-                        details_con: details_con      
+                    path: 'processHistory', //物料盘库记录列表
+                    components: {
+                        details_con: details_con
                     },
                     children: [{
                             path: '', //bom单列表
                             components: {
                                 details_con: goodsCountHistory
                             },
-                            props:{
-		                        details_con:(route) => {
-		                            return { tab: 3};
-		                        }
-		                    },
-                       	},
-                       	{
+                            props: {
+                                details_con: (route) => {
+                                    return {
+                                        tab: 3
+                                    };
+                                }
+                            },
+                        },
+                        {
                             path: 'detail', //bom单列表
                             components: {
                                 details_con: processMatDetail
                             }
-                       	},
+                        },
                     ],
                 },
                 {
@@ -1624,13 +1665,15 @@ export default [{
                     }
                 },
                 {
-                    path:'processTemplate',
-                    components:{
-                        details_con: goodsCountTemplate     //物料盘库模板列表
+                    path: 'processTemplate',
+                    components: {
+                        details_con: goodsCountTemplate //物料盘库模板列表
                     },
-                    props:{
-                        details_con:(route) => {
-                            return { tab: 3};
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 3
+                            };
                         }
                     }
                 },
@@ -1665,16 +1708,80 @@ export default [{
                     components: {
                         details_con: goodsCount //商品盘库  
                     }
-                },{
-                    path:'processMaterialPrint',
-                    components:{
+                }, {
+                    path: 'processMaterialPrint', //加工物料打印
+                    components: {
                         details_con: processMaterialPrint
                     }
-                },{
-                    path:'processMaterial',
-                    components:{
-                        details_con: processMaterial
+                },
+                {
+                    path: 'processMaterial',
+                    components: {
+                        details_con: processMaterial //加工物料
                     }
+                },
+                //批量调度日志
+                {
+                    path: 'batchLog',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            redirect: 'batchLogDispatch'
+                        },
+                        {
+                            path: 'batchLogDispatch',
+                            components: {
+                                details_con: batchLogDispatch //批量调度日志列表      
+                            },
+                            alias: '',
+                            props: {
+                                details_con: (route) => {
+                                    return {
+                                        tab: 1
+                                    };
+                                }
+                            }
+                        },
+                        {
+                            path: 'batchLogAudit',
+                            components: {
+                                details_con: batchLogDispatch //批量审核日志列表      
+                            },
+                            props: {
+                                details_con: (route) => {
+                                    return {
+                                        tab: 2
+                                    };
+                                }
+                            }
+                        },
+                        {
+                            path: 'batchLogPrint',
+                            components: {
+                                details_con: batchLogPrint //批量审核详情打印
+                            },
+                            meta: {
+                                comName: 'batchLogPrint'
+                            }
+                        },
+                        {
+                            path: 'batchLogDetail',
+                            components: {
+                                details_con: batchLogDetail //批量审核日志详情
+                            }
+                        },
+                        {
+                            path: 'batchLogDispatchDetail',
+                            components: {
+                                details_con: batchLogDispatchDetail //批量调度日志详情
+                            },
+                            meta: {
+                                comName: 'batchLogDispatchDetail'
+                            }
+                        },
+                    ]
                 },
                 {
                     path: 'materialCount', //批量盘库-物料盘库
@@ -1983,17 +2090,18 @@ export default [{
                                 details_con: details_con
                             },
                             children: [{
-                                path: '',
-                                components: {
-                                    details_con: couponActivity
+                                    path: '',
+                                    components: {
+                                        details_con: couponActivity
+                                    }
+                                },
+                                {
+                                    path: 'coupon',
+                                    components: {
+                                        details_con: activityCoupon
+                                    }
                                 }
-                            },
-                            {
-                                path: 'coupon',
-                                components: {
-                                    details_con: activityCoupon
-                                }
-                            }]
+                            ]
                         },
                     ]
                 },

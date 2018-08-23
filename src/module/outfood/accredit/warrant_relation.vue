@@ -20,17 +20,41 @@
 				</li>
 			</ul>
 		</div>
-		<div>
+		<div class="buttenall">
 			<a href="javascript:void(0);" class="gray" @click="relieve">解除授权</a>
+			<a href="javascript:void(0);" class="border" v-if="bandtype==1" @click="outerVisible = true">补单</a>
 			<a href="javascript:void(0);" class="yellow" @click="next">下一步</a>
 		</div>
 		<meiTuan-warrant v-if="showdel" @show="hidden" :urlData="urlData"></meiTuan-warrant>
+		<el-dialog title="补单" :visible.sync="outerVisible" width="60%">
+			<el-dialog width="40%" title="" :visible.sync="innerVisible" append-to-body>
+				<div class="waring">
+					<i class="el-icon-warning"></i>
+					<span>请注意，补单功能只用于补录未录入的已完成的订单。</span>
+					<p>确定要补录{{getTime(Date.parse(replenTime))}}的订单吗</p>
+				</div>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="innerVisible = false">取 消</el-button>
+					<el-button type="primary" @click="dialogconif">确定</el-button>
+				</div>
+			</el-dialog>
+			<div>
+				<span>请选择补单日期：</span>
+				<el-date-picker v-model="replenTime" @change="replenTimechenge" type="date" placeholder="选择日期"></el-date-picker>
+			</div>
+
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="outerVisible = false">取 消</el-button>
+				<el-button type="primary" @click="replenishment">确定</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <script type="text/javascript">
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import Timer from 'src/verdor/timer';
+import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
@@ -41,7 +65,10 @@ export default {
 			selShopid: '', //选中的店铺id
 			showdel: false,
 			urlData: '',
-			timer: ''
+			timer: '',
+			outerVisible: false,
+			innerVisible: false,
+			replenTime:''//补单时间
 		};
 	},
 	methods: {
@@ -56,6 +83,44 @@ export default {
 		},
 		shopSelect: function(id) {
 			this.selShopid = id;
+		},
+		replenishment(){//补单
+			if(this.replenTime){
+				this.innerVisible = true;
+			}else{
+				this.$message({
+					message: '请选择日期',
+					type: 'warning'
+				});
+			}
+		},
+		replenTimechenge(){
+			let date = new Date();
+			console.log(Date.parse(this.replenTime));
+			let v = 90*24*60*60*1000;
+			if(this.replenTime<date-v){
+				this.$message({
+					message: '请选择90天内的日期',
+					type: 'warning'
+				});
+				this.replenTime = '';
+			}
+		},
+		getTime(time) {
+			return utils.format(parseInt(time), 'yyyy-MM-dd');
+		},
+		async dialogconif(){
+			let data = await http.outfoodmakeUpOrder({data:{
+				date:Date.parse(this.replenTime)/1000
+			}});
+			if(data){
+				this.$message({
+					message: '补单成功！',
+					type: 'success'
+				});
+				this.innerVisible = false;
+				this.outerVisible = false;
+			}
 		},
 		relieve: function() {
 			if (this.selShopid == '') {
@@ -108,6 +173,13 @@ export default {
 			});
 		},
 		next: function() {
+			if(this.selShopid === ''){
+				this.$message({
+					message: '请选择店铺！',
+					type: 'warning'
+				});
+				return false;
+			}
 			if (this.bandtype == 2) {
 				this.$router.push({
 					path: 'relation/config'
@@ -200,6 +272,7 @@ export default {
 	mounted: function() {
 		this.bandtype = storage.session('waimai');
 		this.userData = storage.session('userShop');
+		document.querySelector('#warrant').style.height = 100+'%';
 		this.getGoods();
 		this.brandId =
 			this.userData.currentShop.ischain == 0
@@ -216,7 +289,10 @@ export default {
 	}
 };
 </script>
-<style type="text/css" scoped>
+<style type="text/css" lang="less" scoped>
+#warrant{
+	height: 100%;
+}
 #warrant .box {
 	display: inline-block;
 	width: 340px;
@@ -232,6 +308,19 @@ export default {
 }
 #warrant .box .left {
 	width: 140px;
+}
+.waring {
+	i {
+		color: red;
+		font-size: 20px;
+	}
+	span {
+		font-size: 16px;
+	}
+	p{
+		margin-top: 15px;
+		font-size: 16px;
+	}
 }
 #warrant .box .right {
 	width: 195px;
@@ -284,15 +373,16 @@ export default {
 }
 #jumpShop {
 	background: #ededed;
-	position: absolute;
+	/*position: absolute;
 	top: 0;
-	left: 0;
+	left: 0;*/
+	padding-top: 1px;
 	width: 100%;
 	height: 100%;
 	z-index: 100;
 }
 #warrant #jumpShop .shopBox {
-	width: 1438px;
+	width: 1441px;
 	/*height: 796px;*/
 	margin: 0 auto;
 	margin-top: 60px;
@@ -354,7 +444,21 @@ export default {
 	margin-right: 16px;
 }
 #warrant .gray {
-	margin-left: 540px;
+	// margin-left: 500px;
+	width: 150px;
+}
+.buttenall{
+	width: 600px;
+	margin: 0 auto
+}
+#warrant .border {
+	margin-left: 70px;
+	cursor: pointer;
+	color: #f8931f;
+	height: 49px;
+	line-height: 49px;
+	background-color: #ffffff;
+	border:1px #f8931f solid;
 	width: 150px;
 }
 #warrant .yellow {

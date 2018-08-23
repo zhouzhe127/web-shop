@@ -1,6 +1,6 @@
 <template>
 	<div id="shipment">
-		<detail-verify v-if="hackReset" :type="1" ref="detail" @detailData="detailevt"></detail-verify>
+		<detail-verify v-if="hackReset" :type="null" ref="detail" @detailData="detailevt"></detail-verify>
 		<pass-win v-if="showPass" :width="500" :height="200" :title="'审核不通过'" @winEvent="passEvent"></pass-win>
 		<add-store :pObj="comObj" v-if="addShow" @throwWin="throwWin"></add-store>
 	</div>
@@ -66,7 +66,9 @@
 					this.type = 1;
 				} else if (data.auditStatus == 4 && data.dispatchStatus == 3) {
 					this.type = 2;
-				} else {
+				} else if(data.auditStatus == 4 && data.dispatchStatus == 5){
+					this.type = 3;
+				}else{
 					this.type = '';
 				}
 				this.titleBtn();
@@ -131,6 +133,17 @@
 									this.hackReset = true;
 								});
 							}
+						}
+					});
+				}
+				if(this.type == 3){
+					arr = arr.concat({
+						name: '入货',
+						className: ['wearhouse all'],
+						fn: async () => {
+							this.$router.push({
+								path: '/admin/operation'
+							});
 						}
 					});
 				}

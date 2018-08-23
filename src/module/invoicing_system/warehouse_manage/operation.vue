@@ -9,22 +9,33 @@
     <div class="operation">
         <div class="chooseTime">
             <div class="oprationTime">操作时间：</div> 
-            <div class="box">
-                <calendar class="calendarTime" :time="startTime" :format="'yyyy年MM月dd日'" @emit="getStartTime"></calendar>
-            </div>
-            <span>-</span>
-            <div class="box">
-                <div class="fl">
-                    <calendar class="calendarTime" :time="endTime" :format="'yyyy年MM月dd日'" @emit="getEndTime"></calendar>
-                </div>
-                <span class="search-icon" @click="searchClick"></span>
-            </div>
+            <el-date-picker
+				v-model="timeDate"
+				type="daterange"
+				range-separator="-"
+				start-placeholder="开始日期"
+				end-placeholder="结束日期"
+				@change="timeChange">
+			</el-date-picker>
         </div>
         <div>
             <div class="block-box" >
-            	<selectBtn class="inline-box" @emit="getStatus" :sorts="allStatus" :index="dynamicIndex"></selectBtn>
-                <input class="input inline-box" type="text" placeholder="请输入调度单号" v-model="receiptNumber"/>
-                <input class="input inline-box" type="text" placeholder="请输入操作人" v-model="createName"/>
+            	<div class="inline-box" >
+	            	<el-select v-model="dynamic" placeholder="请选择调度状态" @change="getStatus" style="width:200px;">
+					    <el-option
+							v-for="item in allStatus"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+					    </el-option>
+					</el-select>
+				</div>
+				<div class="inline-box" >
+					<el-input v-model="receiptNumber" placeholder="请输入调度单号" style="width:200px;"></el-input>
+				</div>
+                <div class="inline-box" >
+                	<el-input v-model="createName" placeholder="请输入操作人" style="width:200px;"></el-input>
+                </div>
             </div>
             <div class="block-box" >
 	            <div class="inline-box" >
@@ -38,13 +49,13 @@
                     </select-store>
 	            </div>
 	            <div class="inline-box">
-	                <a @click="searchClick" href="javascript:void(0);" class="blue buttonBox">筛选</a>
-	                <a @click="resetSearch" href="javascript:void(0);" class="gray buttonBox">重置</a>
+	                <el-button @click="searchClick" type="success">筛选</el-button>
+	                <el-button @click="resetSearch" type="info">重置</el-button>
 	            </div>
             </div>
         </div>
         <!--这是用表单组件更改新页面的部分-->
-        <tableCom :listHeight="60" :listName="'调度记录'" :introData="dispatchingRecord" :titleData="titleList" :allTotal="totalPage"
+        <tableCom :listHeight="60" :listName="'调度记录'" :introData="dispatchingRecord" :titleData="titleList" :allTotal="count"
         	:listWidth="1200">
             <div slot="con-0" slot-scope="props" @click="dispatchingDetail" class="table-detail" :data-index="props.index">
                 <em v-if="props.data.dynamic != 1" class="detail">查看详情</em>
@@ -53,13 +64,13 @@
             </div>
             <div slot="con-5" slot-scope="props">{{timeConversion(props.data.createTime)}}</div>
         </tableCom>
-		<pageElement
-            @pageNum="pageClick"
-            :page="page"
-            :total="total"
-            :num="num"
-            :isNoJump = 'true'
-        ></pageElement>
+        <el-pagination @current-change="pageClick" @size-change="sizeChange"
+			:current-page="page"
+			background
+			layout="sizes,total,prev, pager, next"
+			:page-sizes="[10, 20, 50]"
+			:total="count">
+		</el-pagination>
     </div>
 </template>
 
@@ -73,14 +84,21 @@ export default {
 		return {
 			isShop: '', //单店品牌
 			uid: '', //操作人id
+			timeDate:[new Date(Date.parse(new Date())-30*3600*24*1000),new Date()],
 			startTime: new Date().setHours(0, 0, 0, 0)-30*3600*24*1000, //开始时间
 			endTime: new Date().setHours(23, 59, 59, 0), //结束时间
 			receiptNumber: '', //单据编号
 			createName: '', //操作人
-			allStatus: ['全部调度状态', '未出货', '待入货', '调度中', '已取消', '已完成', '已完成(异常)'], //所有状态
-			allStatusList: [0, 1, 2, 3, 4, 5, 6],
-			dynamic: '', //选择状态的id
-			dynamicIndex: 0,
+			allStatus: [
+				{value:0,label:'全部调度状态'},
+				{value:1,label:'未出货'},
+				{value:2,label:'待入货'},
+				{value:3,label:'调度中'},
+				{value:4,label:'已取消'},
+				{value:5,label:'已完成'},
+				{value:6,label:'已完成(异常)'},
+			], //所有状态
+			dynamic: 0, //选择状态的id
 			OutboundWarehouse: '全部', //出货仓库
 			allWarehouse: [], //所有仓库
 			allWarehouseId: '', //所有仓库id
@@ -88,11 +106,10 @@ export default {
 			outWarehouse: '', //出库仓库id
 			intoWarehouse: '', //入库仓库id
 			dispatchingRecord: [], //调度记录列表
-			dispatchingRecordType: null, //调度记录类型
 			page: 1,
 			num: 10,
 			total: 1,
-			totalPage: 0, //仓库总条数
+			count: 0, //仓库总条数
 			titleList: [
 				{titleName: '操作',titleStyle: {width: 160 + 'px',}},
 				{titleName: '调度状态',titleStyle: {width: 150 + 'px',},dataName: 'dispatchingRecordType'},
@@ -131,16 +148,16 @@ export default {
 	},
 	methods: {
 		initBtn() {
-			let arr = [{
-				name: '快速调库',
-				className: ['wearhouse out'],
-				fn: () => {
-					this.$router.push({
-						path: 'warehouseList/outputStore',
-						query: this.$route.query
-					});
+			let arr = [
+				{name: '快速调度',className: 'success',type:5,
+					fn: () => {
+						this.$router.push({
+							path: 'warehouseList/outputStore',
+							query: this.$route.query
+						});
+					}
 				}
-			}, ];
+			];
 			this.$store.commit('setPageTools', arr);
 		},
 		searchClick() { //点击筛选
@@ -148,15 +165,19 @@ export default {
 			this.search();
 		},
 		pageClick(res) {
-			this.num = res.num;
-			this.page = res.page;
+			this.page = res;
 			if(this.allWarehouseData.length) {
 				this.search();
 			}
 		},
-		getStatus(index) {
-			this.dynamic = index > 0 ? this.allStatusList[index] : '';
-			this.dynamicIndex = index;
+		sizeChange(res){
+			this.num = res;
+			if(this.allWarehouseData.length) {
+				this.search();
+			}
+		},
+		getStatus(res) {
+			this.dynamic = res;
 		},
 		getOutId(arr) { //获取出货仓库id
 			this.setWareIdEach(arr, 'outWarehouse');
@@ -200,13 +221,9 @@ export default {
 			this.intoWarehouse = this.allWarehouseId;
 			this.outWarehouse = this.allWarehouseId;
 		},
-		//选择开始时间
-		getStartTime: function(receiveTime) {
-			this.startTime = new Date(receiveTime).setHours(0, 0, 0, 0);
-		},
-		//选择结束时间
-		getEndTime: function(receiveTime) {
-			this.endTime = new Date(receiveTime).setHours(23, 59, 59, 0);
+		timeChange(res){
+			this.startTime = new Date(res[0]).setHours(0,0,0,0);
+			this.endTime = new Date(res[1]).setHours(23,59,59,0);
 		},
 		myAlert(content) {
 			this.$store.commit('setWin', {
@@ -246,14 +263,11 @@ export default {
 				data: this.requestObj
 			});
 			this.dispatchingRecord = res.list;
-			for(let i in this.dispatchingRecord) {
-				this.dispatchingRecordType = this.allStatus[this.dispatchingRecord[i].dynamic];
-				Object.assign(this.dispatchingRecord[i], {
-					dispatchingRecordType: this.dispatchingRecordType
-				});
+			for(let item of this.dispatchingRecord) {
+				item.dispatchingRecordType = this.allStatus[Number(item.dynamic)].label;
 			}
 			this.total = res.totalPage;
-			this.totalPage = res.count;
+			this.count = Number(res.count);
 		},
 		resWareArr() { //重置选择仓库
 			let arr = utils.deepCopy(this.allWarehouse);

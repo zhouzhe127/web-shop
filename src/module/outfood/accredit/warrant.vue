@@ -1,5 +1,5 @@
 <template>
-	<section id="warrant">
+	<section id="warrant" style="height:100%">
 		<section>
 			<div class="loading" v-if="boxList.length==0">
 				<img src="../../../res/images/preloader.gif" />
@@ -160,7 +160,7 @@ export default {
 			setTimeout(function() {
 				sessionStorage.removeItem('hello');
 			}, 1000);
-			let url = window.location.href.split(/\?/g)[0] + '/relation';
+			let url = window.location.href.split(/authorization/g)[0] + 'authorization/relation';
 			window.open(url);
 		},
 		hidden: function(show) {
@@ -219,7 +219,10 @@ export default {
 	}
 };
 </script>
-<style type="text/css" scoped>
+<style type="text/css" lang="less" scoped>
+#warrant{
+	height: 100%;
+}
 #warrant .box {
 	display: inline-block;
 	width: 340px;

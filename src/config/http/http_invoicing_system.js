@@ -543,7 +543,7 @@ export default {
         method: 'post'
     },
     "invoic_getAuditList": {
-        url: b + "dispatch/getAuditList", //获取审核申请列表
+        url: b + "dispatch/searchApplications", //获取审核申请列表
         method: "get"
     },
     "addApplicationTemplate": {
@@ -557,10 +557,6 @@ export default {
     "submitApplication": {
         url: b + "dispatch/submitApplication", //新建进货申请    
         method: 'post'
-    },
-    "invoic_getAuditList": {
-        url: b + "dispatch/getAuditList", //获取审核申请列表
-        method: "get"
     },
     "invoic_getApplication": {
         url: b + "dispatch/getApplication", //获取申请详情
@@ -879,9 +875,9 @@ export default {
         url: b + 'Processbom/getProcessList', //获取加工时加工bom单列表
         method: 'get'
     },
-    "MaterIalMachiningMachiningBegin":{
-        url:b+'MaterIalMachining/MachiningBegin',                   //开始加工
-        method:'post'
+    "MaterIalMachiningMachiningBegin": {
+        url: b + 'MaterIalMachining/MachiningBegin', //开始加工
+        method: 'post'
     },
     "ProcessbomDeleteProcessBom": {
         url: b + 'Processbom/deleteProcessBom', //删除加工BOM单
@@ -894,6 +890,53 @@ export default {
     "materialGetWidByMid": {
         url: b + 'material/getWidByMid', //通过物料id获取仓库id
         method: 'get'
+    },
+    "invgetMultiApplicationMatchList": {
+        url: b + 'Dispatch/getMultiApplicationMatchList', //批量匹配商品和物料
+        method: 'get'
+    },
+    "invgetAllocationType": {
+        url: b + 'Dispatchrecord/getAllocationType', //获取配货方式
+        method: 'get'
+    },
+    "invaddMultDispatchRecord": {
+        url: b + 'Dispatchrecord/addMultDispatchRecord', //新建批量调度
+        method: 'post'
+    },
+    /* 批量审核日志 */
+    "dispatchGetDispatchAuditLogList": {
+        method: 'get',
+        url: b + "dispatch/getDispatchAuditLogList" //获取批量调度审核日志列表
+    },
+    "dispatchGetDispatchAuditLogDetailList": {
+        method: 'get',
+        url: b + "dispatch/getDispatchAuditLogDetailList" //获取批量审核日志详情
+    },
+    "dispatchGetDispatchLogDetailList": {
+        method: 'get',
+        // fake:true,
+        url: b + "dispatch/getDispatchLogDetailList" //获取批量调度日志详情
+    },
+    "DispatchGetDispatchLogList": {
+        method: 'get',
+        url: b + "Dispatch/getDispatchLogList" //获取批量调度日志列表
+    },
+    "DispatchrecordGetAllocationType": {
+        method: 'get',
+        url: b + "Dispatchrecord/getAllocationType" //获取配置方式
+    },
+    "DispatchGetMultiApplicationMatchList": {
+        url: b + "Dispatch/getMultiApplicationMatchList", //批量调度-批量匹配商品和物料
+        method: 'get',
+    },
+    "dispatchApproveApplications": {
+        url: b + "dispatch/approveApplications", //批量审核-审核通过
+        method: 'post',
+    },
+    "DispatchrecordEexportBills": {
+        url: b + "Dispatchrecord/exportBills", //批量审核-导出
+        method: 'get',
+        type:'file',
     },
     
 }

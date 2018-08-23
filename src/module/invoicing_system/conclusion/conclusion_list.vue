@@ -24,7 +24,7 @@
 		<div class="inpBox">
 			<selectBtn :sorts="auditStatus" @selOn="changeBtn" :name="'审核状态'" style="margin-right:10px" ref="select1"></selectBtn>
 			<selectBtn :sorts="dispatchStatus" @selOn="dispatchBtn" :name="'调度状态'" ref="select2"></selectBtn>
-			<input type="text" class="search-input" v-model="upUser" maxlength="10" placeholder="请输入申请交人">
+			<input type="text" class="search-input" v-model="upUser" maxlength="10" placeholder="请输入申请人">
 			<input type="text" class="search-input" v-model="checkUser" maxlength="10" placeholder="请输入审核人">
 		</div>
 		<div class="sleBox">
@@ -35,24 +35,26 @@
 			</div>
 		</div>
 		<com-table :listName="'调度审核列表'" :titleData="titleList" :allTotal="count" :introData="introData" :listWidth="1200">
-			<div slot="con-0" slot-scope="props" @click="detailBtn(props.data)">
-				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 1">审核</span>
-				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 2">继续审核</span>
-				<span class="detailsBtn" v-if="props.data.auditStatus != 1 || props.data.dispatchStatus > 2">查看详情</span>
+			<div slot="con-0" slot-scope="props">
+				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 1" @click="detailBtn(props.data)">审核</span>
+				<span class="orBtn" v-if="props.data.auditStatus == 1 && props.data.dispatchStatus == 2" @click="detailBtn(props.data)">继续审核</span>
+				<span class="detailsBtn" v-if="props.data.auditStatus != 1 || props.data.dispatchStatus > 2" @click="detailBtn(props.data)">查看详情</span>
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 			<span slot="con-2" slot-scope="props">{{auditStatus[props.data.auditStatus]}}</span>
 			<span slot="con-3" slot-scope="props">{{dispatchStatus[props.data.dispatchStatus]}}</span>
 			<span slot="con-5" slot-scope="props">{{shopName(props.data.shopId)}}</span>
+			<span slot="con-7" slot-scope="props">{{getTime(props.data.createTime)}}</span>
 			<span slot="con-6" slot-scope="props">{{getUserName(props.data.createUid)}}</span>
 			<span slot="con-8" slot-scope="props">{{getUserName(props.data.auditUid)}}</span>
+			<span slot="con-9" slot-scope="props">{{getTime(props.data.auditTime)}}</span>
 		</com-table>
 		<div class="page-box">
 			<page-turn @pageNum="pageChange" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn>
 		</div>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
@@ -75,42 +77,45 @@
 				page: 1,
 				pageTotal: 0,
 				titleList: [{
-					titleName: '操作'
-				},
-				{
-					titleName: '序号'
-				},
-				{
-					titleName: '审核状态'
-				},
-				{
-					titleName: '调度状态'
-				},
-				{
-					titleName: '申请单号',
-					dataName: 'code'
-				},
-				{
-					titleName: '申请店铺/品牌'
-				},
-				{
-					titleName: '申请人'
-				},
-				{
-					titleName: '申请时间',
-					dataName: 'createTime'
-				},
-				{
-					titleName: '审核人'
-				},
-				{
-					titleName: '审批时间',
-					dataName: 'auditTime'
-				}],
+						titleName: '操作',
+						titleStyle: {
+							width: '150px'
+						}
+					},
+					{
+						titleName: '序号'
+					},
+					{
+						titleName: '审核状态'
+					},
+					{
+						titleName: '调度状态'
+					},
+					{
+						titleName: '申请单号',
+						dataName: 'code'
+					},
+					{
+						titleName: '申请店铺/品牌'
+					},
+					{
+						titleName: '申请人'
+					},
+					{
+						titleName: '申请时间'
+					},
+					{
+						titleName: '审核人'
+					},
+					{
+						titleName: '审批时间',
+						dataName: 'auditTime'
+					}
+				],
 				auditStatus: ['全部', '审核中', '已取消', '审核未通过', '审核通过'],
 				user: '', //所有员工
 				auditType: 0, //审核状态
-				dispatchStatus: ['全部', '未调度', '调度中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', ],
+				dispatchStatus: ['全部', '未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
 				dispatchType: 0, //调度状态
 				wareIds: '', //权限下的所有仓库id
 				introData: '', //列表数据
@@ -129,21 +134,24 @@
 					data: {
 						applyStartTime: parseInt(this.startTime / 1000),
 						applyEndTime: parseInt(this.endTime / 1000),
-						auditStartTime: parseInt(this.auditStartTime / 1000),
-						auditEndTime: parseInt(this.auditEndTime / 1000),
+						auditTimeStart: parseInt(this.auditStartTime / 1000),
+						auditTimeEnd: parseInt(this.auditEndTime / 1000),
 						auditStatus: this.auditType,
 						dispatchStatus: this.dispatchType,
-						createUid: this.getUserId(this.upUser),
-						auditUid: this.getUserId(this.checkUser),
+						uName: this.upUser,
+						auditor: this.checkUser,
 						code: this.bathcode,
 						wids: this.wareIds,
 						page: this.page,
-						num: 10
+						type: 1,
+						num: 10,
+						isAuditor: 1
+
 					}
 				});
 				this.introData = data.list;
 				this.pageTotal = data.total;
-				this.count = data.count;
+				this.count = data.rows;
 			},
 			async getWare() { //获取有权限的仓库与员工
 				let data = await http.warehouseList();
@@ -179,6 +187,12 @@
 				} else {
 					return '';
 				}
+			},
+			getTime(time) {
+				if(!time||Number(time)==0){
+					return '--'
+				}
+				return utils.format(parseInt(time) * 1000, 'yyyy-MM-dd');
 			},
 			startTimeChange(time) {
 				this.startTime = utils.getTime({
@@ -241,7 +255,7 @@
 			detailBtn(data) {
 				this.$route.query.id = data.id;
 				this.$router.push({
-					path: 'conclusionList/shipmentVerify',
+					path: '/admin/conclusionList/shipmentVerify',
 					query: this.$route.query
 				});
 			},
@@ -275,9 +289,35 @@
 						return item.name;
 					}
 				}
-			}
+			},
+			addEduce() {
+				this.$store.commit('setPageTools', [{
+					name: '批量审核',
+					className: 'primary',
+					fn: () => {
+						this.$router.push({
+							path: '/admin/conclusionList/multipleExamine'
+						});
+					},
+					type: 4
+				}, {
+					name: '批量调度',
+					className: 'primary',
+					fn: () => {
+						this.$router.push({
+							path: '/admin/conclusionList/selectDispatch'
+						});
+					},
+					type: 4
+				}]);
+			},
 		},
 		mounted() {
+			if(this.$route.path=='/admin/conclusionList'){
+				this.addEduce();
+			}
+		},
+		activated(){
 			this.getWare();
 		},
 		updated() {
@@ -289,6 +329,11 @@
 				let reg = /[\u4e00-\u9fa5]/g;
 				if (reg.test(news)) {
 					this.bathcode = '';
+				}
+			},
+			$route(){
+				if(this.$route.path=='/admin/conclusionList'){
+					this.addEduce();
 				}
 			}
 		},
@@ -321,6 +366,7 @@
 	}
 
 	#waredeliver {
+		margin-top: 10px;
 		.serBox {
 			h1 {
 				display: inline-block;

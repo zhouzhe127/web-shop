@@ -404,6 +404,7 @@
 						item.eNum = 0;
 						item.itemId = item.id;
 						item.eliteNum = 0;
+						item.piceValue = 0;
 						let newUnit = [];
 						for (let arrUnit of item.unitArr) { //默认单位放在前面
 							if (arrUnit.isDefault == 1) {
@@ -752,12 +753,12 @@
 				});
 				this.dispiceArr = this.dispiceArr.concat([{
 					distributionId: -1,
-					value: '',
+					value: 0,
 					name: '等于进价',
 					unitId: ''
 				}, {
 					distributionId: -2,
-					value: '',
+					value: 0,
 					name: '自定义价格',
 					unitId: ''
 				}]);
@@ -776,14 +777,14 @@
 				for (let item of data) {
 					item.rela = item.rela.concat([{
 						distributionId: -1,
-						value: '',
+						value: 0,
 						distributionName: '等于进价',
-						unitId: ''
+						unitId: 0
 					}, {
 						distributionId: -2,
-						value: '',
+						value: 0,
 						distributionName: '自定义价格',
-						unitId: ''
+						unitId: 0
 					}]);
 
 					for (let v of this.suppliesArr) {
@@ -797,7 +798,7 @@
 					let check = true;
 					v.distributionId = Number(sle);
 					v.piceUnitid = '';
-					v.piceValue = '';
+					v.piceValue = 0;
 					v.isPurchase = 0;
 					if(sle!=-1){
 						v.rela.map(s => {
@@ -819,7 +820,7 @@
 			},
 			piceChange(data) {
 				data.piceUnitid = '';
-				data.piceValue = '';
+				data.piceValue = 0;
 				data.isPurchase = 0;
 				if (data.distributionId == -1) {
 					data.isPurchase = 1;
@@ -841,7 +842,7 @@
 		async mounted() {
 			this.detailData = storage.session('details');
 			this.isBrand = storage.session('userShop').currentShop.ischain == '3'? true : false;
-			this.getDistr();
+			if(this.isBrand) this.getDistr();
 			this.outWare = this.detailData.outWare;
 			this.comObj = this.detailData.comObj;
 			this.itemList.goods = [];
@@ -880,7 +881,8 @@
 							unitArr: item.unitRelation || [],
 							id: item.itemId,
 							eliteNum: 0,
-							eNum: 0
+							eNum: 0,
+							piceValue:0
 						});
 						let obj = {
 							id: item.itemId,
@@ -900,7 +902,7 @@
 				this.tabactive = 1;
 				if(this.isBrand)this.brandSettitle();
 			}
-			this.getsuppliespice();
+			if(this.isBrand) this.getsuppliespice();
 		},
 		destroyed() {
 			// sessionStorage.removeItem('details');
