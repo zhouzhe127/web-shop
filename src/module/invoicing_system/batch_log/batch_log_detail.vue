@@ -93,7 +93,7 @@ export default {
         },
         linkUrl(item){
 			let {query} = this.$route;
-			query.id = item.aapplicationId;
+			query.id = item.applicationId;
 			this.$router.push({path:'/admin/conclusionList/shipmentVerify',query});
 		},
 		initBtn(){
