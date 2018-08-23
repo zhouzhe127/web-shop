@@ -354,7 +354,6 @@ export default {
 		initTabIndex(){//设置初始化选项卡位置
 			let isGoods = this.enterGoods.error.length>0 || this.enterGoods.success.list.length>0;
 			let isMaterial = this.enterMaterial.error.length>0 || this.enterMaterial.success.list.length>0;
-			console.log(this.enterMaterial.error.length,this.enterMaterial.success.list.length);
 			if(!isGoods && isMaterial){
 				this.tabIndex = 1;
 			}
@@ -382,16 +381,16 @@ export default {
 				let item = arr[i];
 				let surplus = 0;
 				if(type == 'goods') {
-					surplus = Number(item.outNum) - Number(item.overIntoNum) - Number(item.overConsumeNum); //剩余能入库 能耗损数量 
+					surplus = item.outNum*1000 - item.overIntoNum*1000 - item.overConsumeNum*1000; //剩余能入库 能耗损数量 
 				} else if(type == 'mat') {
-					surplus = Number(item.outNumShow) - Number(item.overIntoNumShow) - Number(item.overConsumeNumShow); //剩余能入库 能耗损数量
+					surplus = item.outNumShow*1000 - item.overIntoNumShow*1000 - item.overConsumeNumShow*1000; //剩余能入库 能耗损数量
 				}
 				if(handle == 'into') { //入货-剩余全部
-					item.intoNum = surplus - item.consumeNum;
-					this.autoGoodsBatch(item, item.intoNum, 'intoNum', 'consumeNum');
+					item.intoNum = surplus - item.consumeNum*1000;
+					this.autoGoodsBatch(item, item.intoNum/1000, 'intoNum', 'consumeNum');
 				} else { //耗损-剩余全部
 					item.consumeNum = surplus - item.intoNum;
-					this.autoGoodsBatch(item, item.consumeNum, 'consumeNum', 'intoNum');
+					this.autoGoodsBatch(item, item.consumeNum/1000, 'consumeNum', 'intoNum');
 				}
 			}
 			return arr;
@@ -464,7 +463,7 @@ export default {
 				this.myAlert(`${tipName}（${item.name}）耗损量只能输入小数点后三位`);
 				return false;
 			}
-			if(item.intoNum + item.consumeNum > (item.outNum - item.overIntoNum - item.overConsumeNum)) {
+			if((item.intoNum*1000 + item.consumeNum*1000) > (item.outNum*1000 - item.overIntoNum*1000 - item.overConsumeNum*1000)) {
 				this.myAlert(`${tipName}（${item.name}）可入货数量不足`);
 				return false;
 			}
