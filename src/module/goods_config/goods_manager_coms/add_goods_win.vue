@@ -232,7 +232,7 @@
 						<label class="commodity-name  fl">口味</label>
 						<label class="commodity-type fl" id="attrs" style="width: 600px;">
 							<template >
-								<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(att,index)" class="sign" >{{att.name}}</span>
+								<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(index)" class="sign" >{{att.name}}</span>
 							</template>
 						<a href="javascript:void(0);" class="addclassify fl" v-on:click="openCommonWin('attr')">添加口味</a>
 						</label>
