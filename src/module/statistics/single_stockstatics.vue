@@ -85,29 +85,29 @@
 				<ul class="listData" v-for="(item,index) in discountList" :key="index">
 					<li class="w6 text-ellipsis" :title="item.goodsName">{{item.goodsName}}</li>
 					<li class="w8">{{item.barCode}}</li>
-					<li>{{item.price}}</li>
+					<li :title="item.price">{{item.price}}</li>
 					<li class="w3">{{item.unit}}</li>
 
-					<li style="border-left:2px solid #F7F7F7;">{{item.initialTotal}}</li>
-					<li>{{item.initialShelve}}</li>
-					<li style="border-right:2px solid #F7F7F7;">{{item.initialInven}}</li>
-					<li>{{item.addInventoryNum}}</li>
-					<li style="border-left:2px solid #F7F7F7;">{{item.goodsOnHandTotal}}</li>
-					<li>{{item.goodsOnHandShelve}}</li>
-					<li style="border-right:2px solid #F7F7F7;">{{item.goodsOnHandInven}}</li>
-					<li class="w5" style="border-left:0;">{{item.totalInven}}</li>
-					<li class="w5">{{item.shelveNum}}</li>
-					<li class="w5" style="border-right:2px solid #F7F7F7;">{{item.inventory}}</li>
+					<li style="border-left:2px solid #F7F7F7;" :title="item.initialTotal">{{item.initialTotal}}</li>
+					<li :title="item.initialShelve">{{item.initialShelve}}</li>
+					<li style="border-right:2px solid #F7F7F7;" :title="item.initialInven">{{item.initialInven}}</li>
+					<li :title="item.addInventoryNum">{{item.addInventoryNum}}</li>
+					<li style="border-left:2px solid #F7F7F7;" :title="item.goodsOnHandTotal">{{item.goodsOnHandTotal}}</li>
+					<li :title="item.goodsOnHandShelve">{{item.goodsOnHandShelve}}</li>
+					<li style="border-right:2px solid #F7F7F7;" :title="item.goodsOnHandInven">{{item.goodsOnHandInven}}</li>
+					<li class="w5" style="border-left:0;" :title="item.totalInven">{{item.totalInven}}</li>
+					<li class="w5" :title="item.shelveNum">{{item.shelveNum}}</li>
+					<li class="w5" style="border-right:2px solid #F7F7F7;" :title="item.inventory">{{item.inventory}}</li>
 					<li>{{item.checkNum}}</li>
-					<li :class="Number(item.profitAndLossNum)>0?'w4 tored':'w4 togreen'">{{item.profitAndLossNum}}</li>
-					<li :class="Number(item.profitAndLossPrice)>0?'w4 tored':'w4 togreen'">{{item.profitAndLossPrice}}</li>
-					<li class="w3" style="border-left:2px solid #F7F7F7;">{{item.lossTotalNum}}</li>
-					<li class="w3">{{item.shelflossNum}}</li>
-					<li class="w3" style="border-right:2px solid #F7F7F7;">{{item.warehouseLossNum}}</li>
-					<li class="w3">{{item.salesNum}}</li>
-					<li>{{item.originalPrice}}</li>
-					<li>{{item.discountPrice}}</li>
-					<li>{{item.paidTotalPrice}}</li>
+					<li :class="Number(item.profitAndLossNum)>0?'w4 tored':'w4 togreen'" :title="item.profitAndLossNum">{{item.profitAndLossNum}}</li>
+					<li :class="Number(item.profitAndLossPrice)>0?'w4 tored':'w4 togreen'" :title="item.profitAndLossPrice">{{item.profitAndLossPrice}}</li>
+					<li class="w3" style="border-left:2px solid #F7F7F7;" :title="item.lossTotalNum">{{item.lossTotalNum}}</li>
+					<li class="w3" :title="item.shelflossNum">{{item.shelflossNum}}</li>
+					<li class="w3" style="border-right:2px solid #F7F7F7;" :title="item.warehouseLossNum">{{item.warehouseLossNum}}</li>
+					<li class="w3" :title="item.salesNum">{{item.salesNum}}</li>
+					<li :title="item.originalPrice">{{item.originalPrice}}</li>
+					<li :title="item.discountPrice">{{item.discountPrice}}</li>
+					<li :title="item.paidTotalPrice">{{item.paidTotalPrice}}</li>
 				</ul>
 				<!-- 品牌 -->
 				<!-- <ul v-if="isBrand" class="listData" v-for="(item,index) in discountList" :key="index">
@@ -549,6 +549,7 @@
 					padding: 0 10px;
 					text-overflow: ellipsis;
 					white-space: nowrap;
+					overflow: hidden;
 				}
 				.w3{
 					width: 3%;
