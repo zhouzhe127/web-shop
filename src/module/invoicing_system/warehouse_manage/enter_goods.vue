@@ -401,7 +401,7 @@ export default {
 				batch[mate] = ''; //先清空一波批次数量
 			}
 			for(let batch of item.batchInfo) {
-				let surplus = Number(batch.num) - Number(batch[otherNum]); //剩余能入库 能耗损数量 
+				let surplus = Number(batch.num/item.unitValue) - Number(batch[otherNum]); //剩余能入库 能耗损数量 
 				if(theNum > surplus) { //该批次剩余的出货量不够
 					batch[mate] = surplus;
 					theNum = theNum - surplus;
@@ -550,7 +550,7 @@ export default {
 				this.$message({message: '入货成功',type: 'success'});
 				storage.session('operationRequestDestroy', true);
 				window.history.go(-1);
-			}else{ 
+			}else if(!res.error){
 				this.showWareWin = 'errorWin';
 				this.errorList.goods = res.goodsError;
 				this.errorList.material = res.materialError;
