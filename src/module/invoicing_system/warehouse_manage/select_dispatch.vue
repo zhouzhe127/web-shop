@@ -243,7 +243,7 @@
 					dispatchStatus:'1,2',//调度状态：1未调度,2调度中
 				}});
 				this.list = this.setAlready(data.list);
-				this.listLength = data.num;
+				this.listLength = data.rows;
 				this.pageTotal = data.total;
 			},
 			async getWarehouse() {//获取仓库列表
