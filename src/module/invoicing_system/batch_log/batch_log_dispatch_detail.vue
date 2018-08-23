@@ -487,7 +487,7 @@ export default {
         if(Array.isArray(allocationTypes)){
             this.allocationTypes = allocationTypes;
         }
-
+        
         await this.getDetail();
     },
 };

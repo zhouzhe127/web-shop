@@ -93,8 +93,8 @@ export default {
         },
         linkUrl(item){
 			let {query} = this.$route;
-			query.id = item.aapplicationId;
-			this.$router.push({path:'',query});
+			query.id = item.applicationId;
+			this.$router.push({path:'/admin/conclusionList/shipmentVerify',query});
 		},
 		initBtn(){
 			this.$store.commit('setPageTools',[
@@ -137,8 +137,8 @@ export default {
 			}
 			let {year,month,day,hour,minute} = date;
 			month += 1;
-			hour = hour > 10 ? hour : '0'+hour;
-			minute = minute > 10 ? minute : '0'+minute;
+			hour = hour > 9 ? hour : '0'+hour;
+			minute = minute > 9 ? minute : '0'+minute;
 			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
 			return date;
 		},
