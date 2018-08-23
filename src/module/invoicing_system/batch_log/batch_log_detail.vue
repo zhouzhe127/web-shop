@@ -94,7 +94,7 @@ export default {
         linkUrl(item){
 			let {query} = this.$route;
 			query.id = item.aapplicationId;
-			this.$router.push({path:'',query});
+			this.$router.push({path:'/admin/conclusionList/shipmentVerify',query});
 		},
 		initBtn(){
 			this.$store.commit('setPageTools',[

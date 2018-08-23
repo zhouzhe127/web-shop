@@ -10,7 +10,8 @@
         <div class="main">
 			<div class="table">
 				<div class="table-head">
-					批量调度日志<i class="circle"></i>共 <span class="num">{{pageObj.total}}</span> 个条目
+					{{tab == 1 ? '批量调度日志' : '批量审核日志'}}
+					<i class="circle"></i>共 <span class="num">{{pageObj.total}}</span> 个条目
 				</div>
 
 				<el-table :data="tableData" style="width: 100%" stripe v-if="tab == 1">
