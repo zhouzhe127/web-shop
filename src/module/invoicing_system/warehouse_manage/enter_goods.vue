@@ -386,11 +386,11 @@ export default {
 					surplus = item.outNumShow*1000 - item.overIntoNumShow*1000 - item.overConsumeNumShow*1000; //剩余能入库 能耗损数量
 				}
 				if(handle == 'into') { //入货-剩余全部
-					item.intoNum = surplus - item.consumeNum*1000;
-					this.autoGoodsBatch(item, item.intoNum/1000, 'intoNum', 'consumeNum');
+					item.intoNum = (surplus - item.consumeNum*1000)/1000;
+					this.autoGoodsBatch(item, item.intoNum, 'intoNum', 'consumeNum');
 				} else { //耗损-剩余全部
-					item.consumeNum = surplus - item.intoNum;
-					this.autoGoodsBatch(item, item.consumeNum/1000, 'consumeNum', 'intoNum');
+					item.consumeNum = (surplus - item.intoNum*1000)/1000;
+					this.autoGoodsBatch(item, item.consumeNum, 'consumeNum', 'intoNum');
 				}
 			}
 			return arr;
