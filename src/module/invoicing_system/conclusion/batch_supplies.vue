@@ -62,7 +62,7 @@
 							<span>{{calevalue(list.num,list.unitValue)}}</span>
 							<template v-if="list.isSuccess!=0">
 								<span>{{list.average}}</span>
-								<span>{{list.applyScale,list.unitValue}}</span>
+								<span>{{list.applyScale}}</span>
 								<span>
 									<el-input placeholder="请输入内容" v-model="list.outNum" @change="singleChang(item)">
 										<template slot="append">{{list.unitName}}</template>
@@ -144,9 +144,8 @@
 				let redsend = Number(item.grossOutnum * item.unitValue);
 				item.list.map(v => {
 					if (v.isSuccess == 1) {
-						v.applyScale = this.calevalue((v[key] / item.applyAll) * item.surplus * item.unitValue,
-							v.unitValue); //按比例
-						v.average = this.calevalue((item.surplus * item.unitValue) / item.cil, v.unitValue); //平均分配量
+						v.applyScale = this.calevalue((v[key] / item.applyAll) * item.surplus,v.unitValue); //按比例
+						v.average = this.calevalue(item.surplus / item.cil, v.unitValue); //平均分配量
 						switch (type) {
 							case 1:
 								v.outNum = v.applyScale;
@@ -163,10 +162,10 @@
 								v.outNum = this.calevalue(v[key], v.unitValue);
 								break;
 							case 5:
-								v.outNum = item.applyAll * item.unitValue <= item.surplus ? this.calevalue(v[key], v.unitValue):v.applyScale;
+								v.outNum = item.applyAll <= item.surplus ? this.calevalue(v[key], v.unitValue):v.applyScale;
 								break;
 							case 6:
-								v.outNum = item.applyAll * item.unitValue <= item.surplus ? this.calevalue(v[key], v.unitValue):v.average;
+								v.outNum = item.applyAll <= item.surplus ? this.calevalue(v[key], v.unitValue):v.average;
 								break;
 						}
 					}
