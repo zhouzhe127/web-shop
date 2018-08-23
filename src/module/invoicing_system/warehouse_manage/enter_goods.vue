@@ -550,7 +550,7 @@ export default {
 				this.$message({message: '入货成功',type: 'success'});
 				storage.session('operationRequestDestroy', true);
 				window.history.go(-1);
-			}else if(!res.error){
+			}else if(res){
 				this.showWareWin = 'errorWin';
 				this.errorList.goods = res.goodsError;
 				this.errorList.material = res.materialError;
