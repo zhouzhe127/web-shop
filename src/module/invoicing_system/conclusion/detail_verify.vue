@@ -73,10 +73,12 @@
 			<div slot="con-0" slot-scope="props">
 				<span class="selDetail" @click="detailBtn(props.data.id)">查看详情</span>
 				<!-- <span class="middleLine" v-if="!(this.detailData && this.detailData.auditStatus==4)">|</span> -->
+				<span class="inGoods" @click="tooutshop(props.data.id)" v-if="props.data.dynamic==1"><i>|</i>确认出货</span>
 				<span class="inGoods" v-if="props.data && props.data.dynamic==2" @click="insertGoods(props.data.id)">
 					<i>|</i>入货</span>
 				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4" @click="delList(props.data.id)">
 					<i>|</i>删除</span>
+				
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 			<span slot="con-3" slot-scope="props">{{listStatus[props.data.dynamic-1]}}</span>
@@ -277,6 +279,14 @@
 					this.totalNum = this.goodsDetails.length;
 					this.pageTotal = myData.total;
 				}
+			},
+			tooutshop(id) {
+				this.$router.push({
+					path: '/admin/operation/operationDetail',
+					query: {
+						id: id
+					}
+				});
 			},
 			// 总单，调度单按钮
 			tebClick(index) {

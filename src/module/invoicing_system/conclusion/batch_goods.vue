@@ -30,7 +30,7 @@
 						</el-input>
 					</span>
 					<span style="width: 20%;">
-						<el-select v-model="item.allot" @change="grosschange(item)" placeholder="请选择">
+						<el-select v-model="item.allot" @change="allotChang(item)" placeholder="请选择">
 							<el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
@@ -134,10 +134,10 @@
 								v.outNum = v[key];
 								break;
 							case 5:
-								v.outNum = item.grossOutnum <= item.applyAll ? v.applyScale : v[key];
+								v.outNum = item.applyAll <= item.surplus ? v[key] : v.applyScale;
 								break;
 							case 6:
-								v.outNum = item.grossOutnum <= item.applyAll ? v.average : v[key];
+								v.outNum = item.applyAll <= item.surplus ? v[key] : v.average;
 								break;
 						}
 					}
@@ -145,9 +145,10 @@
 				if (type == 4) this.singleChang(item);
 				return item;
 			},
-			// allotChang(item) {
-			// 	this.cargo(item.allot, item, 'num');
-			// },
+			allotChang(item) {
+				this.cargo(item.allot, item, 'num');
+				this.singleChang(item);
+			},
 			grosschange(item) { //总量改变
 				if (!this.checkNum(item.grossOutnum)) {
 					item.grossOutnum = 0;

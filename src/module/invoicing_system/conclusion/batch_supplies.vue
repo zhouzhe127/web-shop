@@ -32,7 +32,7 @@
 						</el-input>
 					</span>
 					<span style="width: 20%;">
-						<el-select v-model="item.allot" placeholder="请选择" @change="grosschange(item)">
+						<el-select v-model="item.allot" placeholder="请选择" @change="allotChang(item)">
 							<el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id">
 							</el-option>
 						</el-select>
@@ -136,9 +136,10 @@
 				});
 				this.goodsList = utils.deepCopy(this.goodsList);
 			},
-			// allotChang(item) {
-			// 	this.cargo(item.allot, item, 'num');
-			// },
+			allotChang(item) {
+				this.cargo(item.allot, item, 'num');
+				this.singleChang(item);
+			},
 			cargo(type, item, key) { //key为申请数键名
 				let redsend = Number(item.grossOutnum * item.unitValue);
 				item.list.map(v => {
@@ -162,12 +163,10 @@
 								v.outNum = this.calevalue(v[key], v.unitValue);
 								break;
 							case 5:
-								v.outNum = item.grossOutnum * item.unitValue <= item.applyAll ? v.applyScale :
-									this.calevalue(v[key], v.unitValue);
+								v.outNum = item.applyAll * item.unitValue <= item.surplus ? this.calevalue(v[key], v.unitValue):v.applyScale;
 								break;
 							case 6:
-								v.outNum = item.grossOutnum * item.unitValue <= item.applyAll ? v.average :
-									this.calevalue(v[key], v.unitValue);
+								v.outNum = item.applyAll * item.unitValue <= item.surplus ? this.calevalue(v[key], v.unitValue):v.average;
 								break;
 						}
 					}
