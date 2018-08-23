@@ -150,7 +150,7 @@ let global = {
             let proto = window.location.protocol;//判断协议
             
             
-            s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c`;
+            s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c&plugin=AMap.PolyEditor,AMap.CircleEditor`;
 
             document.head.appendChild(s);
 
@@ -188,14 +188,14 @@ let global = {
     win_num: 0,
 
     // 本地时的请求接口地址
-    "host": {
-        "shop": 'http://v5.ishandian.com.cn/shop/',
-        "bc": 'http://bc.api.ishandian.com.cn/Api/',
-        "wx": 'http://zishi.ishandian.com.cn/api/',
-        "pos":"http://v5.ishandian.com.cn/pos/"
-    },
+    // "host": {
+    //     "shop": 'http://v5.ishandian.com.cn/shop/',
+    //     "bc": 'http://bc.api.ishandian.com.cn/Api/',
+    //     "wx": 'http://zishi.ishandian.com.cn/api/',
+    //     "pos":"http://v5.ishandian.com.cn/pos/"
+    // },
     // qa
-    // "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
+     "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
     // pre
     // "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/"},
     // "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/"},
