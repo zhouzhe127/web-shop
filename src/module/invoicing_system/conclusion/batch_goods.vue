@@ -155,14 +155,14 @@
 				}
 				this.checkoutNum(item);
 				item.grossOutnum = this.getcheckNum(item.type, item.grossOutnum)
-				item = this.cargo(item.allot, item, 'num');
+				this.cargo(item.allot, item, 'num');
 			},
 			getcheckNum(type, num) {
 				if (type == 0) { //普通商品取整
 					return parseInt(num);
 				} else {
 					if (num.toString().includes('.')) {
-						return parseInt(item.outNum * 1000) / 1000;
+						return parseInt(num * 1000) / 1000;
 					}
 				}
 				return num;
