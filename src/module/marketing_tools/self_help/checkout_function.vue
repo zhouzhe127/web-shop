@@ -728,44 +728,6 @@ export default {
 				// 当输入框的为''时
 				this.name = this.goodlist[this.type].name;
 			}
-			//使用时段选择周
-			if (this.payType == 1) {
-				let arr = [];
-				if (this.useDate.index == 1) {
-					arr = this.useDate.week;
-				} else if (this.useDate.index == 2) {
-					arr = this.useDate.month;
-				}
-				for (let item of arr) {
-					if (this.useDate.index == 1) {
-						if (item.week.length == 0) {
-							this.valiData('使用时段请选择日期(周)');
-							return false;
-						}
-					} else if (this.useDate.index == 2) {
-						if (item.month.length == 0) {
-							this.valiData('使用时段请选择日期(月)');
-							return false;
-						}
-					}
-					//判断不能为空
-					if (item.startslotH == '' || item.startslotM == '' || item.endslotH == '' || item.endslotM == '') {
-						this.valiData('使用时段的时间不能为空');
-						return false;
-					}
-					//判断格式
-					if (item.startslotH > 23 || item.startslotM > 59 || item.endslotH > 23 || item.endslotM > 59) {
-						this.valiData('请输入正确的使用时间');
-						return false;
-					}
-					if (!item.isNextDay) {
-						if (item.startslotH > item.endslotH || (item.startslotH == item.endslotH && item.startslotM > item.endslotM)) {
-							this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
-							return false;
-						}
-					}
-				}
-			}
 			// 当在关联功能为自助时候
 			if (this.type == '0') {
 				if (this.equipment == '') {
@@ -797,31 +759,82 @@ export default {
 					this.valiData('请输入起送费');
 					return false;
 				}
-				//配送范围判断
-				// for (let item of this.distances) {
-				// 	if (Number(item.distance) <= Number(item.defaultdis)) {
-				// 		this.$store.commit('setWin', {
-				// 			content: '请填写结束距离,并且结束距离应大于起始距离'
-				// 		});
-				// 		return false;
-				// 	}
-				// 	if (item.cost == '' || item.distance == '') {
-				// 		this.$store.commit('setWin', {
-				// 			content: '完善配送范围填写，或删除配送区域'
-				// 		});
-				// 		return false;
-				// 	}
-				// 	if (Number(item.cost) > 999 || Number(item.cost) < 0) {
-				// 		this.$store.commit('setWin', {
-				// 			content: '配送费区间0~999'
-				// 		});
-				// 		return false;
-				// 	}
-				// }
+				//使用时段选择周
+				if (this.payType == 1) {
+					let arr = [];
+					if (this.useDate.index == 1) {
+						arr = this.useDate.week;
+					} else if (this.useDate.index == 2) {
+						arr = this.useDate.month;
+					}
+					for (let item of arr) {
+						if (this.useDate.index == 1) {
+							if (item.week.length == 0) {
+								this.valiData('使用时段请选择日期(周)');
+								return false;
+							}
+						} else if (this.useDate.index == 2) {
+							if (item.month.length == 0) {
+								this.valiData('使用时段请选择日期(月)');
+								return false;
+							}
+						}
+						//判断不能为空
+						if (item.startslotH == '' || item.startslotM == '' || item.endslotH == '' || item.endslotM == '') {
+							this.valiData('使用时段的时间不能为空');
+							return false;
+						}
+						//判断格式
+						if (item.startslotH > 23 || item.startslotM > 59 || item.endslotH > 23 || item.endslotM > 59) {
+							this.valiData('请输入正确的使用时间');
+							return false;
+						}
+						if (!item.isNextDay) {
+							if (item.startslotH > item.endslotH || (item.startslotH == item.endslotH && item.startslotM > item.endslotM)) {
+								this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
+								return false;
+							}
+						}
+					}
+				}
+				// 自动出餐
+				if (this.mealStatus && this.equipment == '') {
+					this.valiData('请填写接单自动出餐');
+					return false;
+				}
 				if (this.estimatedtime == '') {
 					// 当输入框的为''时
 					this.valiData('请输入预计到达时间');
 					return false;
+				}
+				//对商圈的判断
+				for (let item of this.disareaList) {
+					if (item.promotersNum == '') {
+						this.valiData('请填写配送费');
+						return false;
+					}
+				}
+				if(this.circleType == 1){
+					if(this.STD.baseDistance == ''){
+						this.valiData('请填写配送范围公里数');
+						return false;
+					}
+					if(this.STD.baseCost == ''){
+						this.valiData('请填写配送费');
+						return false;
+					}
+					if(this.STD.moreDistance == ''){
+						this.valiData('请填写每增加公里数');
+						return false;
+					}
+					if(this.STD.moreCost == ''){
+						this.valiData('请填写配送费增加');
+						return false;
+					}
+					if(this.STD.moreDistance == 0){
+						this.valiData('每增加公里数须大于0');
+						return false;
+					}
 				}
 			}
 			if (this.type == '3') {
@@ -933,10 +946,8 @@ export default {
 			//1 单独设置外卖时间
 			this.payType = item.openTimeStatus;
 			if (item.openTime.type == 'week') {
-				console.log('1111')
 				this.useDate.index = 1;
 				this.useDate.week = this.changeArrToNeed(item.openTime.list, 'w');
-				console.log(JSON.stringify(this.useDate.week))
 			} else if (item.openTime.type == 'month') {
 				this.useDate.index = 2;
 				this.useDate.month = this.changeArrToNeed(item.openTime.list, 'm');
@@ -945,11 +956,11 @@ export default {
 			if (this.type == 1) {
 				setTimeout(() => {
 					this.init();
-
 				}, 500)
 				setTimeout(() => {
-					this.disareaList =  this.getBusinessCircle(item.scopeDelivery.data);
+					this.disareaList = this.getBusinessCircle(item.scopeDelivery.data);
 				}, 2000)
+				this.circleType = item.scopeDelivery.type - 1;
 				if (item.readyMealTime != '') {
 					this.mealStatus = true;
 					this.equipment = item.readyMealTime; // 备餐时间
@@ -1188,7 +1199,7 @@ export default {
 		},
 		getResult: function(val) { //使用时间段
 			this.useDate = val;
-			console.log(JSON.stringify(this.useDate))
+			//console.log(JSON.stringify(this.useDate))
 			//console.log(JSON.stringify(val))
 		},
 		isShowtips: function(item) {
@@ -1554,9 +1565,13 @@ export default {
 						fillColor: this.colorList[index].name, //填充颜色
 						fillOpacity: 0.35 //填充透明度
 					});
-					let arr = [ //构建多边形经纬度坐标数组
-						item.path
-					]
+					let arr = [] //构建多边形经纬度坐标数组]
+					for (let int of item.path) {
+						let path = [
+							int.lng, int.lat
+						];
+						arr.push(path);
+					}
 					polygon = new AMap.Polygon({
 						map: this.map,
 						path: arr,
@@ -1566,7 +1581,7 @@ export default {
 						fillColor: this.colorList[index].name,
 						fillOpacity: 0.35
 					})
-					circle.setMap(this.map);
+					circle.setMap(this.map)
 				}
 				let obj = {
 					divisionsType: divisionsType,
@@ -1594,6 +1609,7 @@ export default {
 						lat: coordinates.lat
 					}
 					obj.center = info;
+					obj.mileageNum = res.target.getRadius() / 1000;
 					if (obj.divisionsType == 1) {
 						res.target.hide();
 					}
@@ -1618,6 +1634,7 @@ export default {
 						res.target.hide();
 					}
 				});
+				obj.circleEditor.close();
 				obj.polygonEditor.close();
 				business.push(obj);
 				console.log(business)
