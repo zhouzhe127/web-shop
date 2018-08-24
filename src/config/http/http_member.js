@@ -251,7 +251,7 @@ export default {
     "importCardSample": {
         url: w + "MemberCard/importCardSample", //实体卡会员样例表格下载
         type: "file",
-        method: "post"
+        method: "get"
     },
     "getImportCardList": {
         url: w + 'MemberCard/getImportCardList', // 获取历史导入记录

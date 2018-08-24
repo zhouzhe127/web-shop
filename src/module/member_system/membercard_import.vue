@@ -84,7 +84,7 @@
 			</div>
 		</div>
 		<!-- 列表 -->
-		<com-table :listHeight='80' :listName="'实体会员导入'" :showTitle='2' :listWidth="1436" :widthType='true' :introData="formList" :titleData="titleList" :allTotal="allFormList.length">
+		<com-table :listHeight='80' :listName="'会员导入'" :showTitle='2' :listWidth="1436" :widthType='true' :introData="formList" :titleData="titleList" :allTotal="allFormList.length">
 			<div slot="con-0" slot-scope="props" class="imports">
 				<a href="javascript:void(0);" @click="downloadForm(props.data,'1')">已导入表格</a>
 				<a href="javascript:void(0);" @click="downloadForm(props.data,'2')">未导入表格</a>

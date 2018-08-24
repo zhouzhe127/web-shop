@@ -103,13 +103,23 @@
 				</section>
 			</div>
 		</div>
+		<!-- 备餐时间 -->
+		<div class="pay-window-box clearfix" v-if="type == '0'">
+			<span class="fl pay-window-sub required">备餐时间</span>
+			<div class="rightHalf">
+				<section class="fl">
+					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
+					<span>分钟</span>
+				</section>
+			</div>
+		</div>
 		<!-- 接单自动出餐 -->
-		<div class="pay-window-box" v-if="type == '0'">
+		<div class="pay-window-box" v-if="type == '1'">
 			<span class="fl pay-window-sub">接单自动出餐</span>
 			<onOff :key='1' :status="mealStatus" @statusChange="ismealStatus"></onOff>
 		</div>
 		<!-- 备餐时间 -->
-		<div class="pay-window-box clearfix" v-if="type == '0'">
+		<div class="pay-window-box clearfix" v-if="type == '1' && mealStatus">
 			<span class="fl pay-window-sub required">备餐时间</span>
 			<div class="rightHalf">
 				<section class="fl">
@@ -124,7 +134,7 @@
 			<span class="fl pay-window-sub required">快递费用</span>
 			<div class="rightHalf">
 				<section class="fl">
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="equipment" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('equipment')" />
+					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="shippingfee" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('shippingfee')" />
 					<span>元</span>
 				</section>
 				<div class="fl handle-tips">
@@ -260,7 +270,7 @@
 			<div class="line"></div>
 		</div>
 		<!-- 商圈地图 -->
-		<div class="pay-window-box clearfix">
+		<div class="pay-window-box clearfix" v-if="type == '1'">
 			<span class="fl pay-window-sub"></span>
 			<div class="rightHalf">
 				<div class="disc" v-for="(item,index) in circleList" :key="index">
@@ -367,16 +377,20 @@
 								</div>
 							</div>
 							<div class="divisions_r fr clearfix">
-								<span class="fl way">配送范围</span>
+								<span class="fl way">配送范围:</span>
 								<section v-if="it.divisionsType == 0">
 									<input type="text" class="cumulative" placeholder="请输入公里数" maxlength="4" v-model="it.mileageNum" />
 									<span>公里内</span>
 								</section>
+								<div v-if="it.divisionsType == 1" class="stribut">
+									<img src='../../../res/icon/scopes.png' />
+									<span>区域内</span>
+								</div>
 							</div>
 						</div>
 						<!-- 使用方式 -->
 						<div class="help">
-							<img src="../../../res/icon/orderdetial18.png">
+							<img src="../../../res/icon/hellot.png">
 							<span>使用帮助</span>
 						</div>
 					</div>
@@ -859,25 +873,23 @@ export default {
 			this.personStatus = Boolean(Number(item.confineStatus)); //是否开启用餐人数的状态
 			this.mealsNum = item.personConfine; //用餐人数
 			this.type = item.type - 1; // 对应的功能类型
-			this.payType = item.openTimeStatus;
 			if (item.customContent != '') {
 				this.configure = item.customContent.split('!#!'); //获取支付规则
 			}
-			if (item.scopeDelivery != '') {
-				this.distances = [];
-				for (let it of item.scopeDelivery) {
-					this.distances.push({
-						'defaultdis': '0',
-						'distance': it.distance,
-						'cost': it.cost
-					});
-				}
-				for (let i = 1; i < this.distances.length; i++) {
-					this.distances[i].defaultdis = this.distances[i - 1].distance;
-				}
-			}
-			this.mealStatus = Boolean(Number(item.autoOutMealStatus)); //自动出餐
-			this.equipment = item.readyMealTime; // 备餐时间
+			// if (item.scopeDelivery != '') {
+			// 	this.distances = [];
+			// 	for (let it of item.scopeDelivery) {
+			// 		this.distances.push({
+			// 			'defaultdis': '0',
+			// 			'distance': it.distance,
+			// 			'cost': it.cost
+			// 		});
+			// 	}
+			// 	for (let i = 1; i < this.distances.length; i++) {
+			// 		this.distances[i].defaultdis = this.distances[i - 1].distance;
+			// 	}
+			// }
+			//this.mealStatus = Boolean(Number(item.autoOutMealStatus)); //自动出餐
 			this.sendingfee = item.minFee; // 起送费
 			this.shippingfee = item.moveFee; //  配送费
 			this.estimatedtime = item.preArriveTime; // 预计送达时间
@@ -916,7 +928,35 @@ export default {
 					this.userStatus = 1;
 				}
 			}
+			//当外卖的时候 给使用时间段赋值
+			//0 与门店营业时间保持一致
+			//1 单独设置外卖时间
+			this.payType = item.openTimeStatus;
+			if (item.openTime.type == 'week') {
+				console.log('1111')
+				this.useDate.index = 1;
+				this.useDate.week = this.changeArrToNeed(item.openTime.list, 'w');
+				console.log(JSON.stringify(this.useDate.week))
+			} else if (item.openTime.type == 'month') {
+				this.useDate.index = 2;
+				this.useDate.month = this.changeArrToNeed(item.openTime.list, 'm');
+			}
+			//判断自动出餐
+			if (this.type == 1) {
+				setTimeout(() => {
+					this.init();
 
+				}, 500)
+				setTimeout(() => {
+					this.disareaList =  this.getBusinessCircle(item.scopeDelivery.data);
+				}, 2000)
+				if (item.readyMealTime != '') {
+					this.mealStatus = true;
+					this.equipment = item.readyMealTime; // 备餐时间
+				}
+			} else {
+				this.equipment = item.readyMealTime; // 备餐时间
+			}
 		},
 		// 保存修改方法
 		setItem: function() {
@@ -973,8 +1013,16 @@ export default {
 				// 将选中的数组保存下来
 				// square.payList = this.areaSelect;
 			}
-			item.autoOutMealStatus = Number(this.mealStatus); //接单后自动出餐
-			item.readyMealTime = this.equipment; // 备餐时间
+			//item.autoOutMealStatus = Number(this.mealStatus); //接单后自动出餐
+			if (this.type == 1) {
+				if (this.mealStatus) {
+					item.readyMealTime = this.equipment; // 备餐时间
+				} else {
+					item.readyMealTime = '';
+				}
+			} else {
+				item.readyMealTime = this.equipment; // 备餐时间
+			}
 			item.minFee = this.sendingfee; // 起送费
 			item.moveFee = this.shippingfee; //配送费
 			item.preArriveTime = this.estimatedtime; //预计送达时间
@@ -1158,24 +1206,10 @@ export default {
 				center: [this.pointLng, this.pointLat]
 			});
 			this.map = map;
-			this.disareaList = [];
-			// this.polygonList = [];
-			// this.ladderList = [];
-			// this.ladderpolyList = [];
-			this.addcircle();
-			// if (this.circleType == 0) {
-			// 	if (this.divisionsType == 0) {
-			// 		this.addcircle();
-			// 	} else if (this.divisionsType == 1) {
-			// 		this.addpolygon();
-			// 	}
-			// } else if (this.circleType == 1) {
-			// 	if (this.divisionsType == 0) {
-			// 		this.addcircle();
-			// 	} else if (this.divisionsType == 1) {
-			// 		this.addpolygon();
-			// 	}
-			// }
+			if (this.isUpdata != '1') {
+				this.disareaList = [];
+				this.addcircle();
+			}
 			let marker = new AMap.Marker({
 				map: this.map,
 				position: [this.pointLng, this.pointLat],
@@ -1224,7 +1258,7 @@ export default {
 				circle: circle,
 				polygon: polygon,
 				promotersNum: '', //配送费
-				mileageNum:'',//公里数
+				mileageNum: 1, //公里数
 				circleEditor: new AMap.CircleEditor(this.map, circle), //编辑的构造函数
 				polygonEditor: new AMap.PolyEditor(this.map, polygon), //编辑的构造函数
 				center: "", //圆形坐标
@@ -1284,20 +1318,20 @@ export default {
 			item.circle.hide();
 			this.disareaList.splice(index, 1);
 		},
-		Editor: function(item) { //编辑和关闭
-			for (let int of this.disareaList) {
-				if (int.color != item.color) {
-					int.editorStatus = false;
-					int.circleEditor.close();
-				}
-			}
-			item.editorStatus = !item.editorStatus;
-			if (item.editorStatus) {
-				item.circleEditor.open();
-			} else {
-				item.circleEditor.close();
-			}
-		},
+		// Editor: function(item) { //编辑和关闭
+		// 	for (let int of this.disareaList) {
+		// 		if (int.color != item.color) {
+		// 			int.editorStatus = false;
+		// 			int.circleEditor.close();
+		// 		}
+		// 	}
+		// 	item.editorStatus = !item.editorStatus;
+		// 	if (item.editorStatus) {
+		// 		item.circleEditor.open();
+		// 	} else {
+		// 		item.circleEditor.close();
+		// 	}
+		// },
 		getDetailoreditor: function(item, index) { //点击并修改
 			this.ruleIndex = index;
 			for (let it of this.disareaList) { //先把所有的编辑关掉
@@ -1317,142 +1351,279 @@ export default {
 
 
 
-		addpolygon: function() { //新增多边形的商圈
-			if (this.polygonList.length >= 5) {
-				this.$store.commit('setWin', {
-					content: '配送区域最多添加5条!'
-				});
-				return false;
-			}
-			let arr = [ //构建多边形经纬度坐标数组
-				[this.pointLng - 0.001, this.pointLat + 0.001],
-				[this.pointLng + 0.001, this.pointLat + 0.001],
-				[this.pointLng + 0.001, this.pointLat - 0.001],
-				[this.pointLng - 0.001, this.pointLat - 0.001]
-			]
-			let polygon = new AMap.Polygon({
-				map: this.map,
-				path: arr,
-				strokeColor: this.colorList[this.polygonList.length].name,
-				strokeOpacity: 1,
-				strokeWeight: 3,
-				fillColor: this.colorList[this.polygonList.length].name,
-				fillOpacity: 0.35
-			})
-			let obj = {
-				color: this.colorList[this.polygonList.length].name,
-				editorStatus: true,
-				polygon: polygon,
-				promotersNum: '', //配送费
-				polygonEditor: new AMap.PolyEditor(this.map, polygon), //编辑的构造函数
-				path: [] // 多点路径
-			}
-			obj.polygonEditor.open();
-			//监听多边形的点的坐标
-			AMap.event.addListener(obj.polygonEditor, 'end', function(res) {
-				//console.log(JSON.stringify(res.target.getPath()))
-				let pathdisc = res.target.getPath();
-				let arr = [];
-				for (let item of pathdisc) {
-					let pathobj = {
-						lng: item.lng,
-						lat: item.lat
-					}
-					arr.push(pathobj);
-				}
-				obj.path = arr;
-			});
-			if (this.circleType == 0 && this.divisionsType == 1) {
-				this.polygonList.push(obj);
-			} else if (this.circleType == 1 && this.divisionsType == 1) {
-				this.ladderpolyList.push(obj);
-			}
-			this.map.setFitView();
-		},
-		delpolygon: function(item, index) { //删除多边形商圈
-			if (this.polygonList.length <= 1) {
-				this.$store.commit('setWin', {
-					content: '最少保留一条配送范围!'
-				});
-				return false;
-			}
-			item.polygonEditor.close(); //先关闭编辑
-			item.polygon.hide();
-			this.polygonList.splice(index, 1);
-		},
-		Edipolygon: function(item) {
-			item.editorStatus = !item.editorStatus;
-			if (item.editorStatus) {
-				item.polygonEditor.open();
-			} else {
-				item.polygonEditor.close();
-				//console.log(JSON.stringify(item.path));
-			}
-		},
+		// addpolygon: function() { //新增多边形的商圈
+		// 	if (this.polygonList.length >= 5) {
+		// 		this.$store.commit('setWin', {
+		// 			content: '配送区域最多添加5条!'
+		// 		});
+		// 		return false;
+		// 	}
+		// 	let arr = [ //构建多边形经纬度坐标数组
+		// 		[this.pointLng - 0.001, this.pointLat + 0.001],
+		// 		[this.pointLng + 0.001, this.pointLat + 0.001],
+		// 		[this.pointLng + 0.001, this.pointLat - 0.001],
+		// 		[this.pointLng - 0.001, this.pointLat - 0.001]
+		// 	]
+		// 	let polygon = new AMap.Polygon({
+		// 		map: this.map,
+		// 		path: arr,
+		// 		strokeColor: this.colorList[this.polygonList.length].name,
+		// 		strokeOpacity: 1,
+		// 		strokeWeight: 3,
+		// 		fillColor: this.colorList[this.polygonList.length].name,
+		// 		fillOpacity: 0.35
+		// 	})
+		// 	let obj = {
+		// 		color: this.colorList[this.polygonList.length].name,
+		// 		editorStatus: true,
+		// 		polygon: polygon,
+		// 		promotersNum: '', //配送费
+		// 		polygonEditor: new AMap.PolyEditor(this.map, polygon), //编辑的构造函数
+		// 		path: [] // 多点路径
+		// 	}
+		// 	obj.polygonEditor.open();
+		// 	//监听多边形的点的坐标
+		// 	AMap.event.addListener(obj.polygonEditor, 'end', function(res) {
+		// 		//console.log(JSON.stringify(res.target.getPath()))
+		// 		let pathdisc = res.target.getPath();
+		// 		let arr = [];
+		// 		for (let item of pathdisc) {
+		// 			let pathobj = {
+		// 				lng: item.lng,
+		// 				lat: item.lat
+		// 			}
+		// 			arr.push(pathobj);
+		// 		}
+		// 		obj.path = arr;
+		// 	});
+		// 	if (this.circleType == 0 && this.divisionsType == 1) {
+		// 		this.polygonList.push(obj);
+		// 	} else if (this.circleType == 1 && this.divisionsType == 1) {
+		// 		this.ladderpolyList.push(obj);
+		// 	}
+		// 	this.map.setFitView();
+		// },
+		// delpolygon: function(item, index) { //删除多边形商圈
+		// 	if (this.polygonList.length <= 1) {
+		// 		this.$store.commit('setWin', {
+		// 			content: '最少保留一条配送范围!'
+		// 		});
+		// 		return false;
+		// 	}
+		// 	item.polygonEditor.close(); //先关闭编辑
+		// 	item.polygon.hide();
+		// 	this.polygonList.splice(index, 1);
+		// },
+		// Edipolygon: function(item) {
+		// 	item.editorStatus = !item.editorStatus;
+		// 	if (item.editorStatus) {
+		// 		item.polygonEditor.open();
+		// 	} else {
+		// 		item.polygonEditor.close();
+		// 		//console.log(JSON.stringify(item.path));
+		// 	}
+		// },
 		restructuring: function() { //重组商圈数据
 			let scopeDelivery = {
 				type: this.circleType + 1, // 1 按范围  2 按距离阶梯
-				data: {
-					type: this.divisionsType == 0 ? 'circle' : 'polygon',
-					area: []
-				}
+				data: []
 			}
+			let arr = [];
+			for (let item of this.disareaList) {
+				item.circleEditor.close();
+				item.polygonEditor.close();
+				let obj = {
+					type: item.divisionsType == 0 ? 'circle' : 'polygon',
+					cost: item.promotersNum, //配送费
+				}
+				if (item.divisionsType == 0) { //圆圈
+					obj.center = item.center;
+					obj.radius = item.radius;
+				} else if (item.divisionsType == 1) {
+					obj.path = item.path;
+				}
+				if (this.circleType == 1) {
+					obj.baseDistance = this.STD.baseDistance;
+					obj.baseCost = this.STD.baseCost;
+					obj.moreDistance = this.STD.moreDistance;
+					obj.moreCost = this.STD.moreCost;
+				}
+				arr.push(obj);
+			}
+			scopeDelivery.data = arr;
 			//console.log(JSON.stringify(scopeDelivery))
 			//1.按范围  按圆圈画送半径
-			if (this.circleType == 0 && this.divisionsType == 0) {
-				let arr = [];
-				for (let item of this.disareaList) {
-					let obj = {
-						center: item.center, //圆心
-						radius: item.radius, //半径
-						cost: item.promotersNum //配送费
-					}
-					arr.push(obj);
-				}
-				scopeDelivery.data.area = arr; //距离范围
-			}
+			// if (this.circleType == 0 && this.divisionsType == 0) {
+			// 	let arr = [];
+			// 	for (let item of this.disareaList) {
+			// 		let obj = {
+			// 			center: item.center, //圆心
+			// 			radius: item.radius, //半径
+			// 			cost: item.promotersNum //配送费
+			// 		}
+			// 		arr.push(obj);
+			// 	}
+			// 	scopeDelivery.data.area = arr; //距离范围
+			// }
 			//2.按范围 按自定义编辑
-			if (this.circleType == 0 && this.divisionsType == 1) {
-				let arr = [];
-				for (let item of this.polygonList) {
-					let obj = {
-						path: item.path, //路径
-						cost: item.promotersNum //配送费
-					}
-					arr.push(obj);
-				}
-				scopeDelivery.data.area = arr; //距离范围
-			}
-			if (this.circleType == 1) {
-				//3.按阶梯配送 按圆圈 半径
-				if (this.divisionsType == 0) {
-					let arr = [];
-					for (let item of this.ladderList) {
-						let obj = {
-							center: item.center,
-							radius: item.radius
-						}
-						arr.push(obj);
-					}
-					scopeDelivery.data.area = arr; //距离范围
-				}
-				//4. 按阶梯配送  自定义半径
-				if (this.divisionsType == 1) {
-					let arr = [];
-					for (let item of this.ladderpolyList) {
-						let obj = {
-							path: item.path
-						}
-						arr.push(obj);
-					}
-					scopeDelivery.data.area = arr; //距离范围
-				}
-				scopeDelivery.cost = this.STD; //配送费费
-			}
+			// if (this.circleType == 0 && this.divisionsType == 1) {
+			// 	let arr = [];
+			// 	for (let item of this.polygonList) {
+			// 		let obj = {
+			// 			path: item.path, //路径
+			// 			cost: item.promotersNum //配送费
+			// 		}
+			// 		arr.push(obj);
+			// 	}
+			// 	scopeDelivery.data.area = arr; //距离范围
+			// }
+			// if (this.circleType == 1) {
+			// 	//3.按阶梯配送 按圆圈 半径
+			// 	if (this.divisionsType == 0) {
+			// 		let arr = [];
+			// 		for (let item of this.ladderList) {
+			// 			let obj = {
+			// 				center: item.center,
+			// 				radius: item.radius
+			// 			}
+			// 			arr.push(obj);
+			// 		}
+			// 		scopeDelivery.data.area = arr; //距离范围
+			// 	}
+			// 	//4. 按阶梯配送  自定义半径
+			// 	if (this.divisionsType == 1) {
+			// 		let arr = [];
+			// 		for (let item of this.ladderpolyList) {
+			// 			let obj = {
+			// 				path: item.path
+			// 			}
+			// 			arr.push(obj);
+			// 		}
+			// 		scopeDelivery.data.area = arr; //距离范围
+			// 	}
+			// 	scopeDelivery.cost = this.STD; //配送费费
+			// }
 			return scopeDelivery;
 		},
-		formatValue: function(item, type) {
+		formatValue: function(item, type) { //格式化
 			this.STD[item] = utils.toFloatStr(this.STD[item], type);
+		},
+		getBusinessCircle: function(arr) { //获取商圈配置
+			let business = [];
+			let index = 0;
+			let divisionsType = 0;
+			let circle;
+			let polygon;
+			for (let item of arr) {
+				index++;
+				if (item.type == 'circle') { //如果是圆 处理
+					divisionsType = 0;
+					circle = new AMap.Circle({
+						center: [item.center.lng, item.center.lat], // 圆心位置
+						radius: item.radius, //半径
+						strokeColor: this.colorList[index].name, //线颜色
+						strokeOpacity: 1, //线透明度
+						strokeWeight: 3, //线粗细度
+						fillColor: this.colorList[index].name, //填充颜色
+						fillOpacity: 0.35 //填充透明度
+					});
+					let arr = [ //构建多边形经纬度坐标数组
+						[this.pointLng - 0.001, this.pointLat + 0.001],
+						[this.pointLng + 0.001, this.pointLat + 0.001],
+						[this.pointLng + 0.001, this.pointLat - 0.001],
+						[this.pointLng - 0.001, this.pointLat - 0.001]
+					]
+					polygon = new AMap.Polygon({
+						map: this.map,
+						path: arr,
+						strokeColor: this.colorList[index].name,
+						strokeOpacity: 1,
+						strokeWeight: 3,
+						fillColor: this.colorList[index].name,
+						fillOpacity: 0.35
+					})
+					circle.setMap(this.map);
+				} else if (item.type == 'polygon') {
+					divisionsType = 1;
+					circle = new AMap.Circle({
+						center: [this.pointLng, this.pointLat], // 圆心位置
+						radius: 1000, //半径
+						strokeColor: this.colorList[index].name, //线颜色
+						strokeOpacity: 1, //线透明度
+						strokeWeight: 3, //线粗细度
+						fillColor: this.colorList[index].name, //填充颜色
+						fillOpacity: 0.35 //填充透明度
+					});
+					let arr = [ //构建多边形经纬度坐标数组
+						item.path
+					]
+					polygon = new AMap.Polygon({
+						map: this.map,
+						path: arr,
+						strokeColor: this.colorList[index].name,
+						strokeOpacity: 1,
+						strokeWeight: 3,
+						fillColor: this.colorList[index].name,
+						fillOpacity: 0.35
+					})
+					circle.setMap(this.map);
+				}
+				let obj = {
+					divisionsType: divisionsType,
+					color: this.colorList[index].name,
+					editorStatus: true,
+					circle: circle,
+					polygon: polygon,
+					promotersNum: item.cost, //配送费
+					mileageNum: 1, //公里数
+					circleEditor: new AMap.CircleEditor(this.map, circle), //编辑的构造函数
+					polygonEditor: new AMap.PolyEditor(this.map, polygon), //编辑的构造函数
+					center: "", //圆形坐标
+					radius: '', //半径
+					path: [] // 多点路径
+				}
+				obj.circleEditor.open();
+				obj.polygonEditor.open();
+				//监听多边形的点的坐标
+				AMap.event.addListener(obj.circleEditor, 'end', function(res) {
+					//获取圆心点
+					obj.radius = res.target.getRadius();
+					let coordinates = res.target.getCenter();
+					let info = {
+						lng: coordinates.lng,
+						lat: coordinates.lat
+					}
+					obj.center = info;
+					if (obj.divisionsType == 1) {
+						res.target.hide();
+					}
+				});
+				AMap.event.addListener(obj.circleEditor, 'adjust', function(res) {
+					//获取圆心点
+					obj.mileageNum = res.target.getRadius() / 1000;
+				});
+				//监听多边形的点的坐标
+				AMap.event.addListener(obj.polygonEditor, 'end', function(res) {
+					let pathdisc = res.target.getPath();
+					let arr = [];
+					for (let item of pathdisc) {
+						let pathobj = {
+							lng: item.lng,
+							lat: item.lat
+						}
+						arr.push(pathobj);
+					}
+					obj.path = arr;
+					if (obj.divisionsType == 0) {
+						res.target.hide();
+					}
+				});
+				obj.polygonEditor.close();
+				business.push(obj);
+				console.log(business)
+				this.map.setFitView();
+			}
+			return business;
 		},
 		changeArr(arr, type) {
 			let nArr = [];
@@ -1512,7 +1683,7 @@ export default {
 		this.pointLng = this.coordinateInfo.pointLng;
 		this.pointLat = this.coordinateInfo.pointLat;
 		await global.getBaiduMapApi();
-		this.init();
+		//this.init();
 		this.$store.commit('setPageTools', [{
 			name: '返回',
 			className: ['fd-white'],
@@ -2066,6 +2237,20 @@ input {
 	height: 38px;
 	border: 1px solid #CECDCD;
 	margin-left: 16px;
+	float: left;
+}
+
+#pay-window .pay-window-box .divisions_r .stribut {
+	display: inline-block;
+	height: 40px;
+	line-height: 40px;
+}
+
+#pay-window .pay-window-box .divisions_r .stribut img {
+	width: 20px;
+	height: 20px;
+	margin: 10px 10px 0 10px;
+	display: block;
 	float: left;
 }
 

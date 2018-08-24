@@ -13,9 +13,9 @@
 					<section class="titles">享受折扣率为{{grade.discount}}%</section>
 				</section>
 				<section class="fl member-right">
-					<h2 v-if="grade.sortStatus == true">{{i+1}}</h2>
-					<h3 v-if="grade.sortStatus == false && grade.status == '2'">粉丝</h3>
-					<h2 v-if="grade.sortStatus == false && grade.status != '2'">0</h2>
+					<h2 v-if="grade.sortStatus == true && grade.status != '2'">{{i+1}}</h2>
+					<h3 v-if="grade.sortStatus == true && grade.status == '2'">粉丝</h3>
+					<h2 v-if="grade.sortStatus == false">0</h2>
 				</section>
 			</section>
 		</section>
@@ -127,14 +127,16 @@ export default {
 			// 这是没用到的
 			let findNext = function() {
 				for (let i = 0; i < list.length; i++) {
-					//console.log(start)
 					if (start === undefined) {
 						//默认卡的数组
 						for (let j = 0; j < list.length; j++) {
+							if(list[j].status == '2'){
+								arr.push(list[j]);
+								list.splice(j, 1);
+							}
 							if (list[j].status == '1') {
 								start = list[j];
 								arr.push(start);
-								// console.log(JSON.stringify(arr));
 								list.splice(j, 1);
 								return true;
 							}
@@ -156,8 +158,8 @@ export default {
 			while (findNext()) {
 				console.log('111');
 			}
-			// console.log(JSON.stringify(arr));
-			// console.log(JSON.stringify(list));
+			console.log(JSON.stringify(arr));
+			console.log(JSON.stringify(list));
 			if (list.length > 0) {
 				//自己新建的等级
 				for (let i = 0; i < list.length; i++) {

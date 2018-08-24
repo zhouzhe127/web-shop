@@ -207,7 +207,12 @@ export default {
 			this.durationId = 0;
 			this.durationName = '不设限制';
 		}
-
+		this.durationId = this.useDate.index;
+		if(this.durationId == 1){
+			this.durationName = '指定每周使用时段';
+		}else if(this.durationId == 2){
+			this.durationName = '指定每月使用日期和时段';
+		}
 	},
 	methods: {
 		selexpirationTime: function(i) { //使用时限
