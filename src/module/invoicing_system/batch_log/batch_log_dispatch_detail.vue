@@ -228,6 +228,7 @@ export default {
             allocationTypes:[],         //获取配货方式          
             info:{},                    //头部信息
             logId:'',
+            unitList:[],                //单位列表
             showDetails:{
                 material:true,
                 goods:true,
@@ -341,10 +342,11 @@ export default {
                 }
 
                 ele.detail = ele.detail.map((e)=>{
+                    let distributionUnitName = this.mapName(this.unitList,e.distributionUnit);
                     if(e.isPurchase == 1){
                         e.distributionInfo = '等于进价';
                     }else{
-                        e.distributionInfo = `${e.distributionPrice} 元 / ${e.distributionUnit}`;                        
+                        e.distributionInfo = `${e.distributionPrice} 元 / ${distributionUnitName}`;                        
                     }
                     if(e.isSuccess == 0){
                         e.num = '';
@@ -488,6 +490,10 @@ export default {
             this.allocationTypes = allocationTypes;
         }
         
+        let res = await this.getHttp('MaterialGetUnitList');
+        if(Array.isArray(res)){
+            this.unitList = res;
+        }
         await this.getDetail();
     },
 };

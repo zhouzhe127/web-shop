@@ -252,7 +252,7 @@
 			},
 			throwWin(str, res) {
 				this.addShow = false;
-				if (str == 'ok') {
+				if (str == 'ok'&&res) {
 					console.log(res);
 					if (res.id == this.getData.wid) {
 						this.$message({
