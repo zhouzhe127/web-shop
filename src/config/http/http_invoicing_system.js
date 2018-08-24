@@ -938,5 +938,9 @@ export default {
         method: 'get',
         type:'file',
     },
+    "MaterialGetUnitList":{
+        url:b+"Material/getUnitList",                           //获取物料的关联关系
+        method:'get'
+    }
     
 }
