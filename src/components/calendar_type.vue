@@ -200,8 +200,8 @@
         		this.initCalendar();
         	},
 			confirm(event){//确定
+				this.inputShow();
 				this.$emit('emit',this.timeDate.getTime(),this.timestr);
-        		this.inputShow();
         		this.close(event);
         	},
         	inputShow(){//文本框显示

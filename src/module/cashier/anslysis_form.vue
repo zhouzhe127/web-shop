@@ -222,6 +222,7 @@
 			'num'
 		],
 		mounted() {
+			console.log(this.selHead);
 			this.showWidth = this.width;
 			// this.dataList();
 			let reportList = utils.deepCopy(this.reportList.list);
@@ -490,6 +491,8 @@
 			//翻页
 			pageChange(page) {
 				this.orderPageList = this.saveReportList.slice((page - 1) * this.num, (page - 1) * this.num + this.num);
+
+				console.log(this.orderPageList);
 			},
 			//时间戳转日期
 			timeTodate: function (time) {

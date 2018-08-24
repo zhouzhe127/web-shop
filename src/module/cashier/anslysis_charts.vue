@@ -289,6 +289,8 @@
 				this.chartIndex = 0;
 				this.chartsTitle.list = this.getTitle(index);
 				this.changeTitlechart(0, this.chartsTitle.list[0]);
+
+				console.log(this.chartsTitle);
 			},
 			//设置图表显示的颜色
 			changeColor: function () {
