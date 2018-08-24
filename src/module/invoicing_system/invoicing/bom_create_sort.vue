@@ -16,6 +16,7 @@
 					<span class="btn" v-if="!item.selected" v-for="(item,index) in list" :key="index" :data-id="item.id">
 						{{item.name}}
 					</span>
+					<div class="empty" v-if="!list.length">-本店还没有仓库-</div>
 				</div>
 				<div class="box sort" @click="sortClick">
 					<div class="title">已选择：({{sortList.length}})</div>
@@ -40,17 +41,31 @@
 				list: [], //仓库列表
 				sortList: [], //排序好的仓库列表
 				widList: [], //选中仓库id列表
-				banList:false,//禁止选中列表
+				shopId:'',
+				isBrand:'',
 			};
 		},
 		props: [
-			'winOpen', //区域参数
+			'winOpen', //仓库排序参数
 		],
 		mounted() {
 			let obj = utils.deepCopy(this.winOpen);
 			for(let key in obj){
-				if(obj[key]) this[key] = obj[key];
+				if(obj[key] && key!='list') this[key] = obj[key];
 			}
+			let arr=[];
+			for(let item of obj.list){
+				if(this.isBrand){//品牌
+					if(item.brandId==this.shopId && item.shopId=='0'){
+						arr.push(item);
+					}
+				}else{//单店
+					if(item.shopId==this.shopId){
+						arr.push(item);
+					}
+				}
+			}
+			this.list = arr;
 			this.setDefault();
 		},
 		methods: {
@@ -76,27 +91,6 @@
 						item.selected = false;
 					}
 				}
-				//设置禁止选择项
-//				if(this.banList){//有禁用
-//					if(this.banList.length){
-//						for(let ban of this.banList){
-//							for(let item of this.list){
-//								if(ban==item.id){
-//									item.canSel = true;
-//									break;
-//								}
-//							}
-//						}
-//					}else{//有禁用，但是可选仓库为空，则全部禁用
-//						for(let item of this.list){
-//							item.canSel = false;
-//						}
-//					}
-//				}else{//不传禁用列表，则全部可选
-//					for(let item of this.list){
-//						item.canSel = true;
-//					}
-//				}
 			},
 			listClick(event) { //点击仓库 排序
 				let target = event.target;
@@ -172,6 +166,7 @@
 			.list {
 				width: 55%;
 				border-right: 1px dashed #ccc;
+				.empty{width: 100%;padding: 30px 0;text-align: center;font-size: 16px;color: #999;}
 			}
 			.sort {
 				width: 45%;

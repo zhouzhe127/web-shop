@@ -179,6 +179,8 @@
 				bidArr: [], //删除的物料
 				isClick: false, //是否已经点击提交，防止重复点击
 				isGoBack:false,//修改成功以后，是否原路返回
+				shopId:'',
+				isBrand:'',
 			};
 		},
 		created() {
@@ -210,6 +212,8 @@
 		},
 		methods: {
 			initData() {
+				this.shopId = this.userData.currentShop.id;
+				this.isBrand = this.userData.currentShop.ischain == '3' ? true : false; //是否为品牌
 				let bomId = this.$route.query.id;
 				this.bomId = bomId;
 				this.getBomDetail(); //获取bom单详情
@@ -569,6 +573,8 @@
 					this.sortSend = {
 						list: this.warehouse,
 						widList: this.wlListEach[this.index].wids,
+						shopId:this.shopId,
+						isBrand:this.isBrand,
 					};
 				}
 			},
