@@ -301,17 +301,14 @@ export default {
 				this.matObj.list = this.matList;//原料列表
 			}).catch(()=>{});
 		},
-		async wareSort(index){//打开弹框-仓库消耗排序
+		wareSort(index){//打开弹框-仓库消耗排序
 			this.handleIndex = index;
 			let item = this.matList[index];
-//			let data = await http.materialGetWidByMid({data:{
-//				mid:item.id,
-//			}});
-//			let banList = utils.unique(data.wid);
 			this.wareObj = {
 				list:this.warehouse,
 				widList:item.wids?item.wids:[],
-//				banList:banList,
+				isBrand:this.isBrand,
+				shopId:this.shopId,
 			}
 			this.showWin = 'warehouseSort';
 		},
