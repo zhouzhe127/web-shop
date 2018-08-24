@@ -164,7 +164,7 @@ export default {
 			let objId = this.owner.id;
 			if(obj.ischain == 1) { //选中的是品牌仓库
 				for(let i in this.brandBtn) {
-					let item = this.brandBtn;
+					let item = this.brandBtn[i];
 					if(objId == item.id) {
 						item.selected = true;
 						index = i;

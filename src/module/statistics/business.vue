@@ -22,18 +22,18 @@
 				</div>
 				<!--选择店铺按钮-->
 				<div class="input-box input-start">
-					<select-store @chooseShop="getDrop" :shopIds="shopIds" v-if="isBrand"></select-store>
+					<select-store @emit="getDrop" :sorts="shopList" :tipName="dropName" v-if="isBrand"></select-store>
 				</div>
 				<div class="search-box">
-					<el-button type="success" @click="search">搜索</el-button>
-					<el-button type="info" @click="resetInput">重置</el-button>
+					<span class="search-btn yellow" @click="search">搜索</span>
+					<span class="reset-btn gray" @click="resetInput">重置</span>
 				</div>
 			</div>
 			<div class="store-show" v-if="isBrand" :style="{'height':storeShowH}">
 				<i>已选择店铺：</i>
 				<div class="store-block" ref="storeBlock">
 					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
-					<span v-for="(item,index) in shopList" :key="index" :data-id="item.id" v-if="item.selected">{{item.shopName}}，</span>
+					<span v-for="(item,index) in shopList" :key="index" :data-id="item.id" v-if="item.selected">{{item.name}}，</span>
 				</div>
 			</div>
 		</div>
@@ -70,9 +70,8 @@ export default {
 			reqEndTime: '',
 			openTime: 1, //是否按营业时间统计
 			shopList: [], //店铺列表
-			shopIdArr: '',//总店铺id
-			shopIds: '',//店铺id-选中
 			shopId:'',//单店id
+			shopIds: '',
 			shopSelectStr: '', //选中店铺名称拼接
 			storeName: '', //选中店铺按钮 显示,
 			isBrand: '', //是否为品牌,
@@ -102,6 +101,8 @@ export default {
 			helpIconDom: null,
 			echarts: null,
 			userData: '',
+			userShopList: [],
+			userShopIdStr: '',
 			dropList: [], //店铺列表 传入
 			dropName: '请选择店铺',
 			repeat: true, //防止重复轮询
@@ -117,7 +118,7 @@ export default {
 		calendar: () =>
 			import(/*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 		selectStore: () =>
-			import(/*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList'),
+			import(/*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
 		specific: () =>
 			import(/*webpackChunkName: 'business_specific'*/ './business_specific'),
 		pieChart: () =>
@@ -130,38 +131,45 @@ export default {
 	created() {
 		this.userData = storage.session('userShop');//获取店铺数据
 		this.shopId = this.userData.currentShop.id;
-		let shopIdArr = [],shopList = [];
+		let shopIdArr = [],
+			shopListArr = [];
 		if (this.userData.currentShop.ischain == '3') {
-			this.shopList = storage.session('shopList');
-			for(let item of this.shopList){//组合店铺列表
+			this.userShopList = storage.session('shopList');
+			for(let item of this.userShopList){//组合店铺列表
 				shopIdArr.push(item.id);
-				this.$set(item,'selected',true);
+				let obj = {
+					id: item.id,
+					name: item.shopName
+				};
+				shopListArr.push(obj);
 			}
-			this.shopIdArr = shopIdArr; //品牌下店铺id拼接
-		}else{
-			this.shopIdArr = [this.userData.currentShop.id];
+			this.userShopIdStr = shopIdArr.join('-'); //品牌下店铺id拼接
+			this.userShopList = shopListArr;
 		}
 	},
 	mounted() {
 		//设置字段
 		this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
-		this.shopIds = this.shopIdArr;
-		for (let i in this.shopList) {
+		this.shopIds = this.isBrand
+			? this.userShopIdStr
+			: this.userData.currentShop.id;
+		for (let i in this.userShopList) {
 			//店铺默认全部选中
-			this.shopList[i].selected = true;
+			this.userShopList[i].selected = true;
 		}
+		this.shopList = this.userShopList; //店铺列表
 		this.storeName =
-			this.shopList.length > 0
-				? this.shopList[0].name
+			this.userShopList.length > 0
+				? this.userShopList[0].name
 				: '选择店铺'; //选中店铺按钮 显示,
-		this.isOneStore = this.shopList.length <= 1 ? true : false; //是否单店 用于判断
-		this.isOneShow = this.shopList.length <= 1 ? true : false; //是否单店 用于显示
+		this.isOneStore = this.userShopList.length <= 1 ? true : false; //是否单店 用于判断
+		this.isOneShow = this.userShopList.length <= 1 ? true : false; //是否单店 用于显示
 
 		//获取当前时间
 		this.startTime = new Date().setHours(0, 0, 0, 0);
 		this.endTime = new Date().setHours(0, 0, 0, 0);
 		//单店 或者 品牌且有直营店
-		if (this.isBrand == 0 || this.shopList.length > 0) {
+		if (this.isBrand == 0 || this.userShopList.length > 0) {
 			this.search();
 		}
 		this.getEcharts();
@@ -199,19 +207,16 @@ export default {
 		},
 		//获取选中的店铺 遍历
 		getDrop(arr) {
-			this.shopIds = arr;
-			let selectNum = 0;
+			this.shopList = arr;
+			let idArr = [],
+				selectNum = 0;
 			for (let item of this.shopList) {
-				for(let shop of this.shopIds){
-					if (item.id == shop) {
-						selectNum++;
-						item.selected = true;
-						break;
-					}else{
-						item.selected = false;
-					}
+				if (item.selected == true) {
+					idArr.push(item.id);
+					selectNum++;
 				}
 			}
+			this.shopIds = idArr.join('-');
 			this.setIsOneStore(selectNum);
 		},
 		//异步加载echarts插件
@@ -228,7 +233,7 @@ export default {
 					endTime: this.reqEndTime,
 					dateType: this.selectedType + 1,
 					isOpenTime: this.openTime,
-					shopId:$shopId.join('-'),
+					shopId:$shopId,
 				}
 			});
 			this.sales = data.sales;
@@ -243,7 +248,7 @@ export default {
 					startTime: this.reqStartTime,
 					endTime: this.reqEndTime,
 					dateType: this.selectedType + 1,
-					shopIds: this.shopIds.join('-'),
+					shopIds: this.shopIds,
 					isOpenTime: this.openTime,
 				}
 			});
@@ -274,7 +279,7 @@ export default {
 					startTime: this.reqStartTime,
 					endTime: this.reqEndTime,
 					dateType: this.selectedType + 1,
-					shopIds: this.shopIds.join('-'),
+					shopIds: this.shopIds,
 					isOpenTime: this.openTime,
 				}
 			}).then(data => {
@@ -290,7 +295,7 @@ export default {
 								this.getDataBrand();
 							} else if (data.status == 2) {
 								//失败
-								this.stopRepeat();
+								this.clearTimerId();
 								//失败
 								this.$store.commit('setWin', {
 									title: '提示信息',
@@ -299,7 +304,7 @@ export default {
 							}
 						});
 				},1000,600,false,() => {
-					this.stopRepeat();
+					this.clearTimerId();
 					this.$store.commit('setWin', {
 						title: '提示信息',
 						content: '请求超时，请重试！'
@@ -307,6 +312,11 @@ export default {
 				}
 				);
 			});
+		},
+		clearTimerId(){
+			Timer.clear(this.timerId);
+			this.coverShow = false; //停止加载动画
+			this.repeat = true; //轮询完成 可继续查询
 		},
 		validate() {
 			//日期验证
@@ -320,7 +330,7 @@ export default {
 				});
 				isPass = false;
 			}
-			if (this.isBrand && !this.shopIds.length) {
+			if (this.isBrand && this.shopIds == '') {
 				this.$store.commit('setWin', {
 					title: '提示信息',
 					content: '没有可选店铺'
@@ -401,24 +411,21 @@ export default {
 			}
 			
 		},
-		stopRepeat(){//停止轮询
-			Timer.clear(this.timerId);
-			this.coverShow = false; //停止加载动画
-			this.repeat = true; //轮询完成 可继续查询
-		},
 		resetInput() {//重置数据
-			this.stopRepeat();
+			this.clearTimerId();
 			this.openTime = 1;
 			this.selectedType = 0;
 			this.startTime = new Date().setHours(0, 0, 0, 0);
 			this.endTime = new Date().setHours(0, 0, 0, 0);
 			if (this.isBrand) {
+				let list = utils.deepCopy(this.shopList);
 				let idArr = [];
-				for (let item of this.shopList) {
+				for (let item of list) {
 					item.selected = true;
 					idArr.push(item.id);
 				}
-				this.shopIds = idArr;
+				this.shopList = list;
+				this.shopIds = idArr.join('-');
 				this.setIsOneStore(this.shopList.length);
 			}
 			this.search();
