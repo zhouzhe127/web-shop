@@ -178,7 +178,7 @@
 					groupId: id,
 					isOwer: true
 				};
-				this.$router.push('Assistantfans?i=8&o=0&s=4');
+				this.$router.push('/admin/Assistantfans');
 			},
 			editUserInfo(item, index) {
 				if (item.id <= 2) {

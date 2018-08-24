@@ -53,7 +53,7 @@
 						<span class="push_l required fl">
 							推送标题
 						</span>
-						<input class="inp fl" type="text" placeholder="请输入推送标题" v-model="item.title">
+						<input class="inp fl" type="text" placeholder="请输入推送标题" v-model="item.title" maxlength="20">
 						<div class="fl handle-tips">
 							<i></i> 限20字
 						</div>
@@ -95,7 +95,7 @@
 								<span class="push_l required fl">
 							推送标题
 						</span>
-								<input class="inp fl" type="text" placeholder="请输入推送标题" v-model="int.title">
+								<input class="inp fl" type="text" placeholder="请输入推送标题" v-model="int.title" maxlength="20">
 								<div class="fl handle-tips">
 									<i></i> 限20字
 								</div>

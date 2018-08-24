@@ -354,7 +354,7 @@ export default {
             name: '导出',
             className: ['fd-blue'],
             fn: () => {
-                // this.Export();
+                this.Export();
             }
         }]);
         this.adjustRecord();
