@@ -536,35 +536,34 @@ export default {
                         };
                         count = 0;
                         firstPage = secondPage;
-                    }else{
-                        count += pHeight + this.pageInfo.dTitle; 
-                        
-                        for(let j = 0 ;j< ele.detail.length;j++){
-                            let childEle = ele.detail[j];
-                            let cHeight = listHeight[childEle.uniqueId+''];
-
-                            if(count + cHeight > firstPage){
-                                page.arr.push(part);
-                                container.push(page);
-
-                                page = {
-                                    arr:[],
-                                    type,
-                                };
-                                count = 0;
-                                firstPage = secondPage;
-
-                                count += pHeight + this.pageInfo.dTitle + cHeight;
-                                part = {...ele};
-                                part.detail = [];      
-                                part.detail.push(childEle);
-                            }else{
-                                part.detail.push(childEle);
-                                count += cHeight;
-                            }
-                        }
-                        page.arr.push(part);
                     }
+                    count += pHeight + this.pageInfo.dTitle; 
+                    
+                    for(let j = 0 ;j< ele.detail.length;j++){
+                        let childEle = ele.detail[j];
+                        let cHeight = listHeight[childEle.uniqueId+''];
+
+                        if(count + cHeight > firstPage){
+                            page.arr.push(part);
+                            container.push(page);
+
+                            page = {
+                                arr:[],
+                                type,
+                            };
+                            count = 0;
+                            firstPage = secondPage;
+
+                            count += pHeight + this.pageInfo.dTitle + cHeight;
+                            part = {...ele};
+                            part.detail = [];      
+                            part.detail.push(childEle);
+                        }else{
+                            part.detail.push(childEle);
+                            count += cHeight;
+                        }
+                    }
+                    page.arr.push(part);
                 }else{
                     if(count + pHeight >= firstPage){
                         container.push(page);
