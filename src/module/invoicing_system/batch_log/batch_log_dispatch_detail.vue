@@ -259,7 +259,7 @@ export default {
             if(!this.logId) return;
             let res = await this.getHttp('dispatchGetDispatchLogDetailList',{logId:this.logId});
             if(this.toRaw(res,'Object')){
-                let {createTime,createUName,wName,dispatchApplication=[],goods=[],material=[]} = res;
+                let {createTime,createUName,wName,dispatchApplication=[],goods=[],material=[],outShopId=''} = res;
                 createTime *= 1000;
                 let date = this.generatorDate(createTime);
                 this.info = {
@@ -267,7 +267,12 @@ export default {
                     createUName,
                     zh_createTime:date.str,
                 };
-                
+
+                this.unitList = await this.getHttp('MaterialGetUnitList',{shopId:outShopId});
+                if(!Array.isArray(this.unitList)){
+                    this.unitList = [];
+                }
+
                 this.goods = [...goods];
                 this.material = [...material];
                 this.dispatchApplication = [...dispatchApplication];
@@ -343,6 +348,7 @@ export default {
 
                 ele.detail = ele.detail.map((e)=>{
                     let distributionUnitName = this.mapName(this.unitList,e.distributionUnit);
+                    if(!distributionUnitName) distributionUnitName = '';
                     if(e.isPurchase == 1){
                         e.distributionInfo = '等于进价';
                     }else{
@@ -490,10 +496,6 @@ export default {
             this.allocationTypes = allocationTypes;
         }
         
-        let res = await this.getHttp('MaterialGetUnitList');
-        if(Array.isArray(res)){
-            this.unitList = res;
-        }
         await this.getDetail();
     },
 };
