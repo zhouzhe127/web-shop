@@ -199,7 +199,8 @@
         		this.timeDate = new Date(new Date().setHours(0,0,0,0));
         		this.initCalendar();
         	},
-			confirm(event){//确定
+			//确定
+			confirm(event){
 				this.inputShow();
 				this.$emit('emit',this.timeDate.getTime(),this.timestr);
         		this.close(event);
