@@ -67,7 +67,7 @@
 							</div>
 						</li>
 					</ul>
-					<div class="isPackages">
+					<div v-if="isPackage" class="isPackages">
 						<a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
 						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);">固定套餐</a>
 						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);">可选套餐</a>

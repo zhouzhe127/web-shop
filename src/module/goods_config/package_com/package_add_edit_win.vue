@@ -198,7 +198,6 @@
 					});
 
 				}
-				console.log(obj);
 				if (flag == 'add') {
 					let temp = {
 						tagName: obj.tagName,

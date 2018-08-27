@@ -31,8 +31,11 @@
 					<li>
 						<elShopList @chooseShop="getSelectShopList" :shopIds="transmitId"></elShopList>
 					</li>
-					<a class="fl yellow" v-on:click="sreachOrderInDays()" href="javascript:void(0)" style="width: 80px;height: 40px;line-height: 40px;margin-left: 10px;">搜索</a>
-					<a class="fl gray" v-on:click="resetting()" href="javascript:void(0)" style="width: 80px;height: 40px;line-height: 40px;margin-left: 10px;">重置</a>
+					
+					<el-button v-on:click="sreachOrderInDays()" type="primary">搜索</el-button>
+					<el-button v-on:click="resetting()" type="info">重置</el-button>
+					<!-- <a class="fl yellow" v-on:click="sreachOrderInDays()" href="javascript:void(0)" style="width: 80px;height: 40px;line-height: 40px;margin-left: 10px;">搜索</a>
+					<a class="fl gray" v-on:click="resetting()" href="javascript:void(0)" style="width: 80px;height: 40px;line-height: 40px;margin-left: 10px;">重置</a> -->
 				</div>
 			</ul>
 		</div>

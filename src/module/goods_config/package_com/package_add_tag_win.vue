@@ -35,7 +35,6 @@
 								</section>
 								<div v-if="oneArea.oneAreaBtn" class="detDiv">
 									<i class="detI"></i>
-
 									<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">
 										<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
 									</div>
