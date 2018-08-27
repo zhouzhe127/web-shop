@@ -32,34 +32,7 @@
 					</div>
 				</div>
 			</section>
-			<!--<section class="detLi">-->
-			<!--<div class="select-body-btn select-btn" @click.stop @click="jobOrShop('shop')">-->
-			<!--<span>{{selectedShop}}</span>-->
-			<!--<em>-->
-			<!--<i></i>-->
-			<!--</em>-->
-			<!--</div>-->
-			<!--<div v-if="showJob == 'shop'" class="detDiv" style="width: 600px;top: 52px;left: -215px;">-->
-			<!--<i class="detI" style="left: 370px;"></i>-->
-			<!--<div class="detH3" @click.stop style="text-align: left;max-height: 500px;overflow: auto;">-->
-			<!--<div class="jobBtn">-->
-			<!--<a href="javascript:void(0)" @click="chooseShop('all')" class="job" :class="{'selectbtn' : shopType == 'all'}">全部</a>-->
-			<!--<a href="javascript:void(0)" @click="chooseShop('brand')" class="job" :class="{'selectbtn' : shopType == 'brand'}">直营店</a>-->
-			<!--<a href="javascript:void(0)" @click="chooseShop('shop')" class="job" :class="{'selectbtn' : shopType == 'shop'}">加盟店</a>-->
-			<!--</div>-->
-			<!--<ul>-->
-			<!--<li class="all" @click="selJob('shop')" :class="{'active': allShop}">全部</li>-->
-			<!--<li @click="selJob('shop',item)" :class="{'active': item.selected}" v-for="(item,index) in showShopList" :key="index">{{item.shopName}}</li>-->
-			<!--</ul>-->
-			<!--</div>-->
-			<!--<div class="detLiBtn">-->
-			<!--<span class="gray" @click="cancel('shop')">取消</span>-->
-			<!--<span class="yellow" @click="ensure('shop')">确定</span>-->
-			<!--</div>-->
-			<!--</div>-->
-			<!--</section>-->
 			<elShopList :shopIds="shopIds" @chooseShop="backShopId"></elShopList>
-
 			<el-input v-model="staffOrJob" clearable placeholder="请输入员工名称/手机号码" style="width:210px;"></el-input>
 			<!--<input class="jobName" type="text" placeholder="请输入员工名称/手机号码" v-model="staffOrJob">-->
 			<a @click="search" href="javascript:void(0);" class="blue btn">筛选</a>

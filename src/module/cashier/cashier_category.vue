@@ -25,7 +25,9 @@
 			<!-- 时间段筛选 -->
 			<section  class="top-box fl">
 				<span class="wordSize">时间段筛选：</span>
-				<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>
+				<!--<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>-->
+				<el-time-picker  style="width: 200px;" is-range :clearable="false" v-model="hourMinute" value-format="HH-mm">
+				</el-time-picker>
 			</section>
 			<section style="display:inline-block">
 				<!--品牌店铺选择-->
@@ -74,15 +76,18 @@
 				timeStart: '', // 周 月 季度 年 开始时间
 				timeEnd: '', // 周 月 季度 年 结束时间
 				endTime: '',
-				start: {
-					hour: '00',
-					minute: '00'
-				},
-				end: {
-					hour: '23',
-					minute: '59'
-				},
+
+//				start: {
+//					hour: '00',
+//					minute: '00'
+//				},
+//				end: {
+//					hour: '23',
+//					minute: '59'
+//				},
+				hourMinute:["00-00", "23-59"], //时分
 				index: 0, //用于时间段筛选的重置
+
 				shopList: [], //所有店铺列表
 				selects: [], //选中的店铺
 				shopName: '请选择店铺', //选中的店铺名称
@@ -266,12 +271,12 @@
 				console.log(this.timeEnd)
 			},
 			//获取时间段时间
-			getTime(time) {
-				this.start.hour = time.start.hour;
-				this.start.minute = time.start.minute;
-				this.end.hour = time.end.hour;
-				this.end.minute = time.end.minute;
-			},
+//			getTime(time) {
+//				this.start.hour = time.start.hour;
+//				this.start.minute = time.start.minute;
+//				this.end.hour = time.end.hour;
+//				this.end.minute = time.end.minute;
+//			},
 			//根据店铺id匹配店铺名
 			getShopname: function () {
 				if (this.shopName != '请选择店铺') {
@@ -368,7 +373,9 @@
 						break;
 				}
 				//时间段
-				let timeBetween = this.start.hour + ':' + this.start.minute + '-' + this.end.hour + ':' + this.end.minute;
+//				let timeBetween = this.start.hour + ':' + this.start.minute + '-' + this.end.hour + ':' + this.end.minute;
+				let timeBetween = this.hourMinute[0].substring(0,2)+':'+this.hourMinute[0].substring(3,5)+ '-' +
+					this.hourMinute[1].substring(0,2) + ':' + this.hourMinute[1].substring(3,5);
 				this.classifiedReport(timeBetween);
 //				this.typeFlag = this.selectedType;
 			},
@@ -387,14 +394,15 @@
 				this.startTime = new Date().setHours(0, 0, 0, 0);
 				this.endTime = new Date().setHours(0, 0, 0, 0);
 				this.index++;
-				this.start = {
-					hour: '00',
-					minute: '00'
-				};
-				this.end = {
-					hour: '23',
-					minute: '59'
-				};
+//				this.start = {
+//					hour: '00',
+//					minute: '00'
+//				};
+//				this.end = {
+//					hour: '23',
+//					minute: '59'
+//				};
+				this.hourMinute=["00-00", "23-59"]; //时分
 				this.selShopid = [];
 			},
 			//展开表头设置
