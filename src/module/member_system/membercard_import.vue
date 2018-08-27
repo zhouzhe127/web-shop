@@ -2,15 +2,15 @@
 	<div id="member-import">
 		<!-- 实体会员导入 -->
 		<div class="title">
-			<form class="theForm" enctype="multipart/form-data" id="uploadForm">
+			<form class="theForm" enctype="multipart/form-data" id="uploadmemberForm">
 				<a href="javascript:void(0);" style=" background: #28A8E0;
         color: #fff;">电子会员导入</a>
-				<input type="file" accept="application/vnd.ms-excel,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="imports('1')" id="file" name="file" style="opacity: 0; position: absolute;top:0;left:0;width: 133px;height: 38px;" />
+				<input type="file" accept="application/vnd.ms-excel,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="imports('1','uploadmemberForm')" id="file" name="file" style="opacity: 0; position: absolute;top:0;left:0;width: 133px;height: 38px;" />
 			</form>
-			<form class="theForm" enctype="multipart/form-data" id="uploadForm">
+			<form class="theForm" enctype="multipart/form-data" id="uploadcardForm">
 				<a href="javascript:void(0);" style=" background: #28A8E0;
         color: #fff;">实体会员导入</a>
-				<input type="file" accept="application/vnd.ms-excel,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="imports('0')" id="file" name="file" style="opacity: 0; position: absolute;top:0;left:0;width: 133px;height: 38px;" />
+				<input type="file" accept="application/vnd.ms-excel,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="imports('0','uploadcardForm')" id="file" name="file" style="opacity: 0; position: absolute;top:0;left:0;width: 133px;height: 38px;" />
 			</form>
 			<a href="javascript:void(0);" @click="filterExport('0')">实体卡样例表格下载</a>
 			<a href="javascript:void(0);" @click="filterExport('1')">电子会员样例表格下载</a>
@@ -199,10 +199,10 @@ export default {
 			this.pageBtn = !this.pageBtn;
 		},
 		//导入
-		imports: function(type) {
-			this.importsForm(type);
+		imports: function(type,uploadId) {
+			this.importsForm(type,uploadId);
 		},
-		async importsForm(type) {
+		async importsForm(type,uploadId) {
 			let info = await http.importCard({
 				data: {
 					ischain: userDate.currentShop.ischain,
@@ -210,7 +210,7 @@ export default {
 					type: 1,
 					importType: type
 				},
-				formId: 'uploadForm'
+				formId: uploadId
 			});
 			if (info) {
 				this.$refs.progress.style.opacity = '1';

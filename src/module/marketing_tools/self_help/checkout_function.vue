@@ -24,7 +24,7 @@
 		<div class="pay-window-box">
 			<span class="fl pay-window-sub required">关联功能</span>
 			<template v-for="(item,index) in goodlist">
-				<span :key='index' :class="type == index ? 'signa associated' : 'associated'" v-on:click="tabTypes(index,'1')" v-if="item.type">{{item.name}}</span>
+				<span :key='index' :class="type == index ? 'signa associated' : 'associated'" v-on:click="flag && tabTypes(index,'1')" v-if="item.type">{{item.name}}</span>
 			</template>
 		</div>
 		<!-- 开启关联功能 -->
@@ -289,6 +289,12 @@
 				<div class="map clearfix">
 					<!-- 地图左半部分 -->
 					<div class="mapBox">
+						<!-- 使用帮助 -->
+						<div class="usehelp" v-if="showHelp">
+							<img src="../../../res/images/discs.png">
+							<p>拖拽图形边上的小圆点,调整配送范围</p>
+							<a href="javascript:void(0)" @click="hidehelp">我知道了</a>
+						</div>
 						<!-- 显示地图专用 -->
 						<div id="mapBoxs" class="innermap"></div>
 						<!-- 配送范围 -->
@@ -296,7 +302,7 @@
 							<template v-if="circleType == 1">
 								<div class="distribution">
 									<div class="distribution_t"></div>
-									<div class="distribution_b" @click="Editor()">
+									<div class="distribution_b">
 										<p>配送费:</p>
 										<div class="shipping">
 											<input type="text" v-model="STD.baseDistance" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue('baseDistance',1)" />
@@ -389,7 +395,7 @@
 							</div>
 						</div>
 						<!-- 使用方式 -->
-						<div class="help">
+						<div class="help" @click="hidehelp">
 							<img src="../../../res/icon/hellot.png">
 							<span>使用帮助</span>
 						</div>
@@ -618,7 +624,9 @@ export default {
 			ladderList: [], //阶梯配送的列表圆
 			ladderpolyList: [], //阶梯配送列表多边形
 			ruleIndex: 0, //选中的那一个
-			currentItem: '' //点击选中的商圈
+			currentItem: '', //点击选中的商圈
+			flag: true, //关联功能编辑的时候无法切换
+			showHelp: false //帮助提示
 		};
 	},
 	watch: {
@@ -649,9 +657,10 @@ export default {
 			if (type == '1') {
 				this.type = index;
 				if (this.type == 1) {
+					//初始化地图
 					setTimeout(() => {
 						this.init();
-					}, 500)
+					}, 1000)
 				}
 			} else {
 				this.userStatus = index;
@@ -814,24 +823,24 @@ export default {
 						return false;
 					}
 				}
-				if(this.circleType == 1){
-					if(this.STD.baseDistance == ''){
+				if (this.circleType == 1) {
+					if (this.STD.baseDistance == '') {
 						this.valiData('请填写配送范围公里数');
 						return false;
 					}
-					if(this.STD.baseCost == ''){
+					if (this.STD.baseCost == '') {
 						this.valiData('请填写配送费');
 						return false;
 					}
-					if(this.STD.moreDistance == ''){
+					if (this.STD.moreDistance == '') {
 						this.valiData('请填写每增加公里数');
 						return false;
 					}
-					if(this.STD.moreCost == ''){
+					if (this.STD.moreCost == '') {
 						this.valiData('请填写配送费增加');
 						return false;
 					}
-					if(this.STD.moreDistance == 0){
+					if (this.STD.moreDistance == 0) {
 						this.valiData('每增加公里数须大于0');
 						return false;
 					}
@@ -956,11 +965,18 @@ export default {
 			if (this.type == 1) {
 				setTimeout(() => {
 					this.init();
+					if (item.scopeDelivery.type && item.scopeDelivery.data != '') {
+						this.disareaList = this.getBusinessCircle(item.scopeDelivery.data);
+						//固定配送费 阶梯配送费
+						this.circleType = item.scopeDelivery.type - 1;
+					} else {
+						this.disareaList = [];
+						this.addcircle();
+					}
 				}, 500)
-				setTimeout(() => {
-					this.disareaList = this.getBusinessCircle(item.scopeDelivery.data);
-				}, 2000)
-				this.circleType = item.scopeDelivery.type - 1;
+				// setTimeout(() => {
+				// 	this.disareaList = this.getBusinessCircle(item.scopeDelivery.data);
+				// }, 2000)
 				if (item.readyMealTime != '') {
 					this.mealStatus = true;
 					this.equipment = item.readyMealTime; // 备餐时间
@@ -1217,7 +1233,8 @@ export default {
 				center: [this.pointLng, this.pointLat]
 			});
 			this.map = map;
-			if (this.isUpdata != '1') {
+			//非编辑状态下
+			if (this.flag) {
 				this.disareaList = [];
 				this.addcircle();
 			}
@@ -1355,13 +1372,6 @@ export default {
 				item.polygonEditor.open();
 			}
 		},
-
-
-
-
-
-
-
 		// addpolygon: function() { //新增多边形的商圈
 		// 	if (this.polygonList.length >= 5) {
 		// 		this.$store.commit('setWin', {
@@ -1521,7 +1531,7 @@ export default {
 		},
 		getBusinessCircle: function(arr) { //获取商圈配置
 			let business = [];
-			let index = 0;
+			let index = -1;
 			let divisionsType = 0;
 			let circle;
 			let polygon;
@@ -1637,7 +1647,7 @@ export default {
 				obj.circleEditor.close();
 				obj.polygonEditor.close();
 				business.push(obj);
-				console.log(business)
+				//console.log(business)
 				this.map.setFitView();
 			}
 			return business;
@@ -1683,6 +1693,9 @@ export default {
 			}
 			return na;
 		},
+		hidehelp: function() {
+			this.showHelp = !this.showHelp;
+		},
 	},
 	components: {
 		Win: () =>
@@ -1697,10 +1710,10 @@ export default {
 			import ( /* webpackChunkName:'use_time' */ './use_time'),
 	},
 	async mounted() {
+		//获取店铺的经纬度
 		this.pointLng = this.coordinateInfo.pointLng;
 		this.pointLat = this.coordinateInfo.pointLat;
 		await global.getBaiduMapApi();
-		//this.init();
 		this.$store.commit('setPageTools', [{
 			name: '返回',
 			className: ['fd-white'],
@@ -1710,6 +1723,8 @@ export default {
 		}]);
 		this.getArea();
 		if (this.isUpdata == '1') { //如果修改获取信息
+			//编辑状态 关联功能无法切换
+			this.flag = false;
 			this.getItemInfo();
 		}
 	}
@@ -2060,7 +2075,7 @@ input {
 	left: 45px;
 	padding: 10px;
 	box-shadow: 3px 2px 10px #ccc;
-	z-index: 100;
+	z-index: 1000;
 }
 
 #pay-window .rightHalf .prompting .detDiv .detI {
@@ -2102,6 +2117,49 @@ input {
 	float: left;
 	margin-right: 16px;
 	position: relative;
+}
+
+#pay-window .pay-window-box .rightHalf .mapBox .usehelp {
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	opacity: 0.8;
+	/*兼容IE8及以下版本浏览器*/
+	filter: alpha(opacity=30);
+	/*display: flex;
+	justify-content: center;*/
+	padding-top: 194px;
+}
+
+#pay-window .pay-window-box .rightHalf .mapBox .usehelp img {
+	display: block;
+	width: 295px;
+	height: 295px;
+	margin-bottom: 23px;
+	margin: 0 auto;
+}
+
+#pay-window .pay-window-box .rightHalf .mapBox .usehelp p {
+	font-size: 16px;
+	color: #fff;
+	margin-bottom: 13px;
+	height: 40px;
+	text-align: center;
+}
+
+#pay-window .pay-window-box .rightHalf .mapBox .usehelp a {
+	display: block;
+	width: 100px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	color: #fff;
+	border: 1px solid #fff;
+	margin: 0 auto;
 }
 
 #pay-window .pay-window-box .rightHalf .innermap {
