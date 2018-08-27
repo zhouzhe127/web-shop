@@ -776,6 +776,10 @@ export default {
 					} else if (this.useDate.index == 2) {
 						arr = this.useDate.month;
 					}
+					if (arr.length == 0) {
+						this.valiData('请添加对应的使用时段');
+						return false;
+					}
 					for (let item of arr) {
 						if (this.useDate.index == 1) {
 							if (item.week.length == 0) {
