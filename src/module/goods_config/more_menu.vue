@@ -18,9 +18,9 @@
 				<el-table-column label="操作" width="250">
 					<template slot-scope="scope">
                         <span v-if="status!=-1" style="cursor: pointer">
-								<span style="color: #28A8E0;font-size: 16px" @click="see()">查看详情</span>
+								<span style="color: #28A8E0;" @click="see()">查看详情</span>
 								<span style="padding:0 10px;color: #D2D2D2;">|</span>
-								<span style="color: #FE8D2C;font-size: 16px" @click="edit()">编辑</span>
+								<span style="color: #FE8D2C;" @click="edit()">编辑</span>
 								<span style="padding:0 10px;color: #D2D2D2;">|</span>
 							    <span @click="toOn()">
 									<el-switch v-model="on" active-color="#13ce66" inactive-color="#ff4949" >
