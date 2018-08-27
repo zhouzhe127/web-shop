@@ -32,7 +32,8 @@
 					<img v-if="!item.imageName" src="../../res/food/test.jpg" class="imgClass" />
 
 					<img v-if="item.type == 1" src="../../res/images/selet2.png" width="60" height="60" class="tag" title="可选套餐" alt="可选套餐" />
-					<img v-else src="../../res/images/fix2.png" width="60" height="60" class="tag" title="固定套餐" alt="固定套餐" />
+					<img v-else-if="item.type == 0" src="../../res/images/fix2.png" width="60" height="60" class="tag" title="固定套餐" alt="固定套餐" />
+					<img v-else src="../../res/images/fix3.png" width="60" height="60" class="tag" title="自定义套餐" alt="自定义套餐" />
 				
 					<div class="shopTag">
 						<span v-if="(ischain == 1 || ischain == 2) && item.id < 100000" style="background-color: #fcaa30;color: #fff;border: none;border-radius: 35px;width: 60px;height: 30px;line-height: 30px;margin-right: 5px;">品牌</span>
@@ -175,7 +176,7 @@ export default{
 			this.packageType=flag;
 			// if(typeof index == 'number') this.search='';
 			let temp =null;
-			console.log(flag);
+			// console.log(flag);
 			switch(''+flag){
 				case '-1'://全部套餐
 				case '0'://固定套餐

@@ -140,6 +140,10 @@
 					id: 1,
 					name: '可选套餐'
 				},
+				{
+					id: 2,
+					name: '自定义套餐'
+				},
 				],
 				category: [], //所有的分类
 				child: [], //二级分类         
@@ -713,6 +717,7 @@
 		},
 		mounted() {
 			this.initData();
+			console.log(this.type);
 			document.addEventListener('click', this.domClick, false);
 
 		},
