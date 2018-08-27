@@ -23,9 +23,16 @@
 		<!-- 关联功能 -->
 		<div class="pay-window-box">
 			<span class="fl pay-window-sub required">关联功能</span>
-			<template v-for="(item,index) in goodlist">
-				<span :key='index' :class="type == index ? 'signa associated' : 'associated'" v-on:click="flag && tabTypes(index,'1')" v-if="item.type">{{item.name}}</span>
-			</template>
+			<div class="rightHalf" v-if="flag">
+				<template v-for="(item,index) in goodlist">
+					<span :key='index' :class="type == index ? 'signa associated' : 'associated'" v-on:click="tabTypes(index,'1')" v-if="item.type">{{item.name}}</span>
+				</template>
+			</div>
+			<div class="rightHalf" v-else>
+				<template v-for="(it,ind) in goodlist">
+					<span :key='ind' :class="type == ind ? 'signa unassociated' : 'unassociated'" v-if="it.type">{{it.name}}</span>
+				</template>
+			</div>
 		</div>
 		<!-- 开启关联功能 -->
 		<div class="pay-window-box" v-show="opentheFunction">
@@ -33,7 +40,7 @@
 			<onOff :key='1' :status="payStatus" @statusChange="ispayStatus"></onOff>
 		</div>
 		<!-- 营业时间 -->
-		<div class="pay-window-box clearfix" v-if="type == '1'">
+		<div class="pay-window-box clearfix">
 			<span class="fl pay-window-sub"></span>
 			<div class="rightHalf">
 				<p class="business">营业时间:顾客仅在您设置的时段内,可以在线下单</p>
@@ -555,7 +562,7 @@ export default {
 				},
 				{
 					id: 1,
-					name: '单独设置外卖营业时间'
+					name: '单独设置营业时间'
 				}
 			], //类型
 			payType: 0,
@@ -737,6 +744,48 @@ export default {
 				// 当输入框的为''时
 				this.name = this.goodlist[this.type].name;
 			}
+			//使用时段选择周
+			if (this.payType == 1) {
+				let arr = [];
+				if (this.useDate.index == 1) {
+					arr = this.useDate.week;
+				} else if (this.useDate.index == 2) {
+					arr = this.useDate.month;
+				}
+				if (arr.length == 0) {
+					this.valiData('请添加对应的使用时段');
+					return false;
+				}
+				for (let item of arr) {
+					if (this.useDate.index == 1) {
+						if (item.week.length == 0) {
+							this.valiData('使用时段请选择日期(周)');
+							return false;
+						}
+					} else if (this.useDate.index == 2) {
+						if (item.month.length == 0) {
+							this.valiData('使用时段请选择日期(月)');
+							return false;
+						}
+					}
+					//判断不能为空
+					if (item.startslotH == '' || item.startslotM == '' || item.endslotH == '' || item.endslotM == '') {
+						this.valiData('使用时段的时间不能为空');
+						return false;
+					}
+					//判断格式
+					if (item.startslotH > 23 || item.startslotM > 59 || item.endslotH > 23 || item.endslotM > 59) {
+						this.valiData('请输入正确的使用时间');
+						return false;
+					}
+					if (!item.isNextDay) {
+						if (item.startslotH > item.endslotH || (item.startslotH == item.endslotH && item.startslotM > item.endslotM)) {
+							this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
+							return false;
+						}
+					}
+				}
+			}
 			// 当在关联功能为自助时候
 			if (this.type == '0') {
 				if (this.equipment == '') {
@@ -767,48 +816,6 @@ export default {
 					// 当输入框的为''时
 					this.valiData('请输入起送费');
 					return false;
-				}
-				//使用时段选择周
-				if (this.payType == 1) {
-					let arr = [];
-					if (this.useDate.index == 1) {
-						arr = this.useDate.week;
-					} else if (this.useDate.index == 2) {
-						arr = this.useDate.month;
-					}
-					if (arr.length == 0) {
-						this.valiData('请添加对应的使用时段');
-						return false;
-					}
-					for (let item of arr) {
-						if (this.useDate.index == 1) {
-							if (item.week.length == 0) {
-								this.valiData('使用时段请选择日期(周)');
-								return false;
-							}
-						} else if (this.useDate.index == 2) {
-							if (item.month.length == 0) {
-								this.valiData('使用时段请选择日期(月)');
-								return false;
-							}
-						}
-						//判断不能为空
-						if (item.startslotH == '' || item.startslotM == '' || item.endslotH == '' || item.endslotM == '') {
-							this.valiData('使用时段的时间不能为空');
-							return false;
-						}
-						//判断格式
-						if (item.startslotH > 23 || item.startslotM > 59 || item.endslotH > 23 || item.endslotM > 59) {
-							this.valiData('请输入正确的使用时间');
-							return false;
-						}
-						if (!item.isNextDay) {
-							if (item.startslotH > item.endslotH || (item.startslotH == item.endslotH && item.startslotM > item.endslotM)) {
-								this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
-								return false;
-							}
-						}
-					}
 				}
 				// 自动出餐
 				if (this.mealStatus && this.equipment == '') {
@@ -1098,8 +1105,12 @@ export default {
 			} else {
 				this.checkoutMenu.push(item);
 			}
-			//商圈数据
-			item.scopeDelivery = this.restructuring();
+			if (this.type == '1') {
+				//商圈数据
+				item.scopeDelivery = this.restructuring();
+			}else{
+				item.scopeDelivery = '';
+			}
 		},
 		// 获取关联区域
 		async getArea() {
@@ -1788,7 +1799,8 @@ input {
 	border-color: #999;
 }
 
-#pay-window .pay-window-box .associated {
+#pay-window .pay-window-box .associated,
+#pay-window .pay-window-box .unassociated {
 	float: left;
 	display: block;
 	width: 98px;
@@ -1798,7 +1810,14 @@ input {
 	text-align: center;
 	line-height: 38px;
 	cursor: pointer;
+}
+
+#pay-window .pay-window-box .associated {
 	background: #fff;
+}
+
+#pay-window .pay-window-box .unassociated {
+	background: #777;
 }
 
 #pay-window .pay-window-box .scopes {
