@@ -192,7 +192,7 @@
 	@select="getSleMaterial" 
 	:wid="outWarehouseId" 
 	:addBtn="true" 
-	:getSupplies="sleMaterial"
+	:sleSupplies="sleMaterial"
 	:dstShopId="inShopId"
 	:srcShopId="outShopId"
 	:shopId="outShopId"
@@ -309,6 +309,7 @@
 		methods: {
 			addGoods(type) { //添加商品-物料
 				if(!this.addVeri()) return;
+				console.log(this.sleMaterial);
 				if(type == 'goods') { //添加商品
 					this.showSleGoods = true;
 				} else if(type == 'material') { //添加商品
@@ -456,6 +457,7 @@
 			getSleMaterial(res) { //选择物料后，解析列表
 				this.$store.commit('setPageTools', []);
 				this.selectType = 1;
+				this.sleMaterial = res;
 				this.showSleMaterial = false;
 				this.showMain = true;
 				let arr = [];
