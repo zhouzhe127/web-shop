@@ -151,13 +151,13 @@
 								</div>
 							</li>
 							<li v-if="isBrand">
-								<el-select v-model="item.piceUnitid" :disabled="item.piceUnitid == '等于进价'" placeholder="单位">
+								<el-select v-model="item.piceUnitid" :disabled="item.distributionId != -2" placeholder="单位">
 									<el-option v-for="s in item.unit" :key="s.muId" :label="s.name" :value="s.muId"></el-option>
 								</el-select>
 							</li>
 							<li class="ellipsis">{{item.numberUnit}}</li>
 							<li>{{item.batch}}</li>
-							<li>物料</li>
+							<li>{{typeCate[item.type]}}</li>
 						</div>
 						<div class="empty" v-if='!materialInfo.length'>- 暂无条目 -</div>
 					</div>
@@ -279,7 +279,7 @@
 				selectMaterial: [], //已选中批次
 				clearArr: ['goodsDetails', 'materialInfo', 'sleGoods', 'sleMaterial', 'goodsOut', 'suppliesOut'], //清空字段
 				isClick: false, //是否已经点击提交，防止重复点击
-
+				typeCate:['成品','半成品','普通物料'],//物料类型
 				dispiceArr: [], //分销价
 				isBrand: false,
 				picestyle: '' //选择的分销价

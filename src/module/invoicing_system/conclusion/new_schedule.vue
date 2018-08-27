@@ -113,7 +113,7 @@
 					</div>
 				</div>
 				<div slot="con-6" slot-scope="props" class="boxpice" v-if="isBrand&&tabactive==1">
-					<el-select v-model="props.data.piceUnitid" :disabled="props.data.piceUnitid == '等于进价'" placeholder="单位">
+					<el-select v-model="props.data.piceUnitid" :disabled="props.data.distributionId != -2" placeholder="单位">
 						<el-option v-for="item in props.data.unitArr" :key="item.muId" :label="item.name" :value="item.muId"></el-option>
 					</el-select>
 				</div>
@@ -523,6 +523,7 @@
 						for (let item of resNum) {
 							if (adArr[i].id == item.id) {
 								adArr[i].surplus = item.surplus;
+								if(type!=1) adArr[i].unitArr = item.unitData
 							}
 						}
 					}
@@ -678,7 +679,7 @@
 						if(this.isBrand){
 							Object.assign(goodsObj,{
 								distributionPrice:item.piceValue,
-								distributionUnit:item.piceUnitid== '等于进价'? 0:item.piceUnitid,
+								distributionUnit:item.piceUnitid== '等于进价'? 0:item.piceUnitid||0,
 								isPurchase:item.isPurchase
 							})
 						}
@@ -779,12 +780,12 @@
 						distributionId: -1,
 						value: 0,
 						distributionName: '等于进价',
-						unitId: 0
+						unitId: ''
 					}, {
 						distributionId: -2,
 						value: 0,
 						distributionName: '自定义价格',
-						unitId: 0
+						unitId: ''
 					}]);
 
 					for (let v of this.suppliesArr) {
@@ -835,6 +836,7 @@
 						}
 					})
 				}
+				console.log(data.piceUnitid);
 				this.introData = utils.deepCopy(this.introData);
 				this.suppliesArr = this.introData;
 			}
