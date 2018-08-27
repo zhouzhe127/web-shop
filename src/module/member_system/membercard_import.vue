@@ -217,6 +217,8 @@ export default {
 				this.curN = 0;
 				this.resultShowed = '';
 				let self = this;
+				self.$refs.fill.style.width = 0 + 'px';
+				self.$refs.fill.innerHTML = 0 + '%';
 				timer = setInterval(function() {
 					if (self.curN < 90) {
 						self.curN += Math.floor(Math.random() * 10 + 1);
