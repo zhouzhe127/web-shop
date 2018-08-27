@@ -387,21 +387,26 @@ export default {
 				}
 				if(handle == 'into') { //入货-剩余全部
 					item.intoNum = (surplus - item.consumeNum*1000)/1000;
-					this.autoGoodsBatch(item, item.intoNum, 'intoNum', 'consumeNum');
+					this.autoGoodsBatch(item, item.intoNum, 'intoNum', 'consumeNum',type);
 				} else { //耗损-剩余全部
 					item.consumeNum = (surplus - item.intoNum*1000)/1000;
-					this.autoGoodsBatch(item, item.consumeNum, 'consumeNum', 'intoNum');
+					this.autoGoodsBatch(item, item.consumeNum, 'consumeNum', 'intoNum',type);
 				}
 			}
 			return arr;
 		},
 		autoGoodsBatch(...agrs) { //自动匹配商品批次
-			let [item, theNum, mate, otherNum] = agrs;
+			let [item, theNum, mate, otherNum , type] = agrs;
 			for(let batch of item.batchInfo) {
 				batch[mate] = ''; //先清空一波批次数量
 			}
 			for(let batch of item.batchInfo) {
-				let surplus = Number(batch.num/item.unitValue) - Number(batch[otherNum]); //剩余能入库 能耗损数量 
+				let surplus = 0;
+				if(type=='mat'){
+					surplus = Number(batch.num/item.unitValue) - Number(batch[otherNum]); //剩余能入库 能耗损数量 
+				}else{
+					surplus = Number(batch.num) - Number(batch[otherNum]); //剩余能入库 能耗损数量 
+				}
 				if(theNum > surplus) { //该批次剩余的出货量不够
 					batch[mate] = surplus;
 					theNum = theNum - surplus;

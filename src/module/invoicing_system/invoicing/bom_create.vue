@@ -188,6 +188,8 @@
 				isSearch: false, //是否处于搜索状态
 				saveObj: {}, //保存一个搜索状态下的对象
 				isClick: false, //是否已经点击提交，防止重复点击
+				shopId:'',
+				isBrand:'',
 			};
 		},
 		created() {
@@ -216,6 +218,8 @@
 			initData() {
 				this.createUid = this.userData.user.id;
 				this.createName = this.userData.user.name;
+				this.shopId = this.userData.currentShop.id;
+				this.isBrand = this.userData.currentShop.ischain == '3' ? true : false; //是否为品牌
 			},
 			async getWarehouseList() { //请求仓库列表
 				let data = await http.warehouseWarehouseList();
@@ -506,6 +510,8 @@
 					this.sortSend = {
 						list: this.warehouse,
 						widList: this.wlListEach[this.index].wids,
+						shopId:this.shopId,
+						isBrand:this.isBrand,
 					};
 				}
 			},

@@ -70,6 +70,7 @@ export default {
 		addWarrant: function(id) {
 			//饿了么授权
 			//弹出空白窗口，防止浏览器拦截
+			clearInterval(this.timer);
 			let eleme;
 			if (id != 2) {
 				storage.session('waimai', id);

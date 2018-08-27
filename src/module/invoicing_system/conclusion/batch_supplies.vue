@@ -82,7 +82,7 @@
 									</div>
 								</span>
 								<span v-if="isBrand">
-									<el-select v-model="list.piceUnitid" :disabled="list.piceUnitid == '等于进价'" placeholder="单位">
+									<el-select v-model="list.piceUnitid" :disabled="list.distributionId != -2" placeholder="单位">
 										<el-option v-for="(bc,s) in item.unit" :key="s" :label="bc.name" :value="bc.muId"></el-option>
 									</el-select>
 								</span>
