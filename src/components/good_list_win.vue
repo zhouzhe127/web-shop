@@ -314,7 +314,6 @@ export default {
 				res = false;
 				storage.session('httpGoodVersion', this.version);
 			}
-			// console.log(res)
 			//如果存在保存的商品数据
 			if (goodLists && res) {
 				goodList = goodLists;
