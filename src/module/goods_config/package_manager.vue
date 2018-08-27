@@ -6,10 +6,13 @@
 <div id="package_container">
 	<!-- 显示列表 -->
 	<div id="package-list" v-cloak>
-		<div>
-			<div class="place fl" style="height:auto;margin-top:25px;">
+		<div style="margin:20px 0;">
+			<el-radio-group v-model="packageType" @change = "changePackageType">
+				<el-radio-button v-for="item in packageMenu" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
+			</el-radio-group>
+			<!-- <div class="place fl" style="height:auto;margin-top:25px;">
 				<span v-for="(item,index) in packageMenu" :key="index" v-bind:class='{"on":packageType==item.id}'  v-on:click="changePackageType(item.id,index)">{{item.name}}</span>
-			</div>
+			</div> -->
 		</div>
 
 		<div class="meal-container" >
@@ -94,7 +97,8 @@ export default{
 				{id:-1,name:'全部分类'},
 				{id:1,name:'可选套餐'},
 				{id:0,name:'固定套餐'},
-				{id:2,name:'下架套餐'},
+				{id:2,name:'自定义套餐'},
+				{id:3,name:'下架套餐'},
 			],
 			packageType:-1,     //选中的套餐类型   
 
@@ -138,14 +142,16 @@ export default{
 					status:item.status,
 					packageId:item.id,
 					goodsList:goods,
-					title:'编辑套餐'
+					title:'编辑套餐',
+					isAddPack:false
 				};
 			}else{
 				this.comObj={
 					status:null,
 					packageId:null,
 					goodsList:goods, 
-					title:'添加套餐'
+					title:'添加套餐',
+					isAddPack:true
 				};                   
 			}
 			this.showCom='addEdit';
@@ -165,10 +171,11 @@ export default{
 		},
 		//----事件---------
 		//套餐分类的切换
-		changePackageType(flag,index){
+		changePackageType(flag){
 			this.packageType=flag;
-			if(typeof index == 'number') this.search='';
+			// if(typeof index == 'number') this.search='';
 			let temp =null;
+			console.log(flag);
 			switch(''+flag){
 				case '-1'://全部套餐
 				case '0'://固定套餐
@@ -178,10 +185,18 @@ export default{
 						return ele.status!=2;
 					});
 					break;
-				case '2'://下架
+				case '2'://自定义
+					temp = this.filterPackageListByType(flag,this.packageList);
+					this.copyPackages=temp.filter((ele)=>{
+						return ele.status!=2;
+					});
+					break;
+				case '3'://下架
+					// console.log(flag);
 					this.copyPackages = this.packageList.filter((ele)=>{
 						return ele.status==2;
 					});
+				
 			}
 			this.nowPackages=this.copyPackages;
 		},
@@ -425,7 +440,8 @@ export default{
 				height: 82px;
 				color: #fff;
 				padding: 10px;
-				background: url(../../res/images/a50.png) repeat; 
+				background-color: rgba(27, 21, 21,.6);
+				// background: url(../../res/images/a50.png) repeat; 
 			}
 			.meal-name {
 				height: 40px;

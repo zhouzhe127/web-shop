@@ -1752,7 +1752,8 @@ export default {
 			no-repeat #ddd;
 		}
 		.good-image-delete {
-			background: url(../../../res/images/a50.png) repeat;
+			background-color: rgba(27, 21, 21,.6);
+			// background: url(../../../res/images/a50.png) repeat;
 			height: 40px;
 			line-height: 40px;
 			position: absolute;
