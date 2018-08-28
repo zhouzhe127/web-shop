@@ -88,7 +88,7 @@ export default {
 				completeBatchOperation: new Btn('完成操作', ['addStaff', 'export-btn']),
 				openCode: new Btn('验证商品劵码', ['btn', 'firstBtn']),
 				setTemplateType: new Btn('模板设置', ['setTemp', 'firstBtn']),
-				addIntegral: new Btn('添加积分商城', ['btn', 'firstBtn']),
+				addIntegral: new Btn('添加积分商品', ['btn', 'firstBtn']),
 				addNewType: new Btn('新建', ['userLabel']),
 				createSpeech: new Btn('新建话术组', ['technique']),
 				newPath: new Btn('新建路径链接', ['technique']),

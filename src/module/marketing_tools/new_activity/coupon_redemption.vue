@@ -36,7 +36,7 @@
 		<!-- 表格 -->
 		<com-table :listWidth="1470" :listHeight='80' :listName="'领券列表'" :key="index" :showTitle='1' :introData="userList" :titleData="titleList" :allTotal="count" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="operate_worker">
-				<span @click="modfycoupons(props.data)">编辑</span>
+				<span v-if="!(props.data.status == '1' && props.data.startTime < now && props.data.endTime > now)" @click="modfycoupons(props.data)">编辑</span>
 				<span v-if="props.data.standStatus" @click="shelves(props.data)">{{props.data.downName}}</span>
 			</div>
 			<div slot="con-1" slot-scope="props" class="download">
@@ -158,7 +158,8 @@ export default {
 			qrcode: '',
 			name: '', //下载图片的名字
 			shortUrlPreFix: '', //二维码前缀
-			activityTitle:'' //活动标题
+			activityTitle:'', //活动标题
+			now: new Date().getTime() / 1000
 		}
 	},
 	created: function() {
@@ -279,13 +280,13 @@ export default {
 			}
 			if (item.status == '1') {
 				if (item.startTime < now && item.endTime > now) {
-					item.standStatus = false;
-					item.downName = '';
+					item.standStatus = true;
+					item.downName = '下架';
 					return '已发布';
 				}
 				if (item.startTime > now && item.endTime > now) {
-					item.standStatus = true;
-					item.downName = '下架';
+					item.standStatus = false;
+					item.downName = '';
 					item.downType = 0;
 					return '发布中'
 				}
@@ -483,7 +484,7 @@ export default {
 	line-height: 40px;
 	font-size: 16px;
 	color: #fff;
-	z-index: 999;
+	z-index: 9;
 }
 
 #redemption .download p {
