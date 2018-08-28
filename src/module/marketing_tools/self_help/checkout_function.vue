@@ -329,6 +329,7 @@
 										</div>
 									</div>
 								</div>
+								<!-- 阶梯配送 -->
 								<div class="distribution" v-for="(item,index) in disareaList">
 									<div class="distribution_t" :class="{'choose':ruleIndex == index}"></div>
 									<div class="distribution_b" @click="getDetailoreditor(item,index)" :class="{'active':ruleIndex == index}">
@@ -359,26 +360,6 @@
 									</div>
 								</div>
 							</div>
-							<!-- <div class="distribution" v-if="circleType == 0 && divisionsType == 1" v-for="(item,index) in polygonList">
-								<div class="distribution_t"></div>
-								<div class="distribution_b" @click="Edipolygon(item)">
-									<div class="scopeOf">
-										<span class="fl" :style="{'background':item.color}"></span>
-										<span class="fl">配送范围{{index + 1}}</span>
-										<span class="fr" @click.stop="delpolygon(item,index)">删除</span>
-									</div>
-									<div class="divisions_r clearfix">
-										<span class="fl way">配送费</span>
-										<section class="fl">
-											<input type="text" class="cumulative" placeholder="请输入配送费" maxlength="4" v-model="item.promotersNum" />
-											<span>元</span>
-										</section>
-									</div>
-									<div class="addistance" @click.stop="addpolygon" v-if="polygonList.length == index + 1">
-										添加配送区域
-									</div>
-								</div>
-							</div> -->
 						</div>
 						<!-- 划分方式 -->
 						<div class="divisions" v-for="(it,i) in disareaList" v-if='ruleIndex == i'>
@@ -631,9 +612,11 @@ export default {
 			ladderList: [], //阶梯配送的列表圆
 			ladderpolyList: [], //阶梯配送列表多边形
 			ruleIndex: 0, //选中的那一个
-			currentItem: '', //点击选中的商圈
+			// currentItem: '', //点击选中的商圈
 			flag: true, //关联功能编辑的时候无法切换
-			showHelp: false //帮助提示
+			showHelp: false, //帮助提示
+			fixed: '',
+			ladder: ''
 		};
 	},
 	watch: {
@@ -667,6 +650,10 @@ export default {
 					//初始化地图
 					setTimeout(() => {
 						this.init();
+						if (this.flag) {
+							this.disareaList = [];
+							this.addcircle();
+						}
 					}, 1000)
 				}
 			} else {
@@ -683,21 +670,34 @@ export default {
 				case '2':
 					this.circleType = id;
 					this.init();
-					break;
-				case '3':
-					this.divisionsType = id;
-					if (this.divisionsType == 1) {
-
-						AMap.event.addListener(this.currentItem.circleEditor, 'end', function(res) {
-							//console.log(res.target.getRadius()) //获取半径
-							//console.log(JSON.stringify(res.target.getCenter()) ) //获取圆心点
-							res.target.hide();
-							//console.log("11111")
-						});
-						this.currentItem.circleEditor.close();
+					if (this.circleType == 1) {
+						//固定配送区域的数据
+						this.fixed = this.restructuring();
+						//console.log(JSON.stringify(fixed))
+						this.disareaList = [];
+						if (this.ladder == '') {
+							this.addcircle();
+						} else {
+							this.disareaList = this.getBusinessCircle(this.ladder.data);
+						}
+					} else {
+						//阶梯数据
+						this.ladder = this.restructuring();
+						this.disareaList = [];
+						//console.log(JSON.stringify(fixed))
+						this.disareaList = this.getBusinessCircle(this.fixed.data);
+						//console.log(this.disareaList)
 					}
-
 					break;
+					// case '3':
+					// 	this.divisionsType = id;
+					// 	if (this.divisionsType == 1) {
+					// 		AMap.event.addListener(this.currentItem.circleEditor, 'end', function(res) {
+					// 			res.target.hide();
+					// 		});
+					// 		this.currentItem.circleEditor.close();
+					// 	}
+					// 	break;
 			}
 		},
 		chooseType: function(it, item) { //选择类型
@@ -1075,7 +1075,7 @@ export default {
 				useTime.list = this.changeArr(this.useDate.month, 'm');
 			}
 			//useTime = JSON.stringify(useTime);
-			item.openTime = this.payType == 1 ? useTime : '';
+			// item.openTime = this.payType == 1 ? useTime : '';
 			// 配送范围
 			// item.scopeDelivery = [];
 			// for (let it of this.distances) {
@@ -1108,7 +1108,7 @@ export default {
 			if (this.type == '1') {
 				//商圈数据
 				item.scopeDelivery = this.restructuring();
-			}else{
+			} else {
 				item.scopeDelivery = '';
 			}
 		},
@@ -1249,10 +1249,10 @@ export default {
 			});
 			this.map = map;
 			//非编辑状态下
-			if (this.flag) {
-				this.disareaList = [];
-				this.addcircle();
-			}
+			// if (this.flag) {
+			// 	this.disareaList = [];
+			// 	this.addcircle();
+			// }
 			let marker = new AMap.Marker({
 				map: this.map,
 				position: [this.pointLng, this.pointLat],
@@ -1487,64 +1487,13 @@ export default {
 				arr.push(obj);
 			}
 			scopeDelivery.data = arr;
-			//console.log(JSON.stringify(scopeDelivery))
-			//1.按范围  按圆圈画送半径
-			// if (this.circleType == 0 && this.divisionsType == 0) {
-			// 	let arr = [];
-			// 	for (let item of this.disareaList) {
-			// 		let obj = {
-			// 			center: item.center, //圆心
-			// 			radius: item.radius, //半径
-			// 			cost: item.promotersNum //配送费
-			// 		}
-			// 		arr.push(obj);
-			// 	}
-			// 	scopeDelivery.data.area = arr; //距离范围
-			// }
-			//2.按范围 按自定义编辑
-			// if (this.circleType == 0 && this.divisionsType == 1) {
-			// 	let arr = [];
-			// 	for (let item of this.polygonList) {
-			// 		let obj = {
-			// 			path: item.path, //路径
-			// 			cost: item.promotersNum //配送费
-			// 		}
-			// 		arr.push(obj);
-			// 	}
-			// 	scopeDelivery.data.area = arr; //距离范围
-			// }
-			// if (this.circleType == 1) {
-			// 	//3.按阶梯配送 按圆圈 半径
-			// 	if (this.divisionsType == 0) {
-			// 		let arr = [];
-			// 		for (let item of this.ladderList) {
-			// 			let obj = {
-			// 				center: item.center,
-			// 				radius: item.radius
-			// 			}
-			// 			arr.push(obj);
-			// 		}
-			// 		scopeDelivery.data.area = arr; //距离范围
-			// 	}
-			// 	//4. 按阶梯配送  自定义半径
-			// 	if (this.divisionsType == 1) {
-			// 		let arr = [];
-			// 		for (let item of this.ladderpolyList) {
-			// 			let obj = {
-			// 				path: item.path
-			// 			}
-			// 			arr.push(obj);
-			// 		}
-			// 		scopeDelivery.data.area = arr; //距离范围
-			// 	}
-			// 	scopeDelivery.cost = this.STD; //配送费费
-			// }
 			return scopeDelivery;
 		},
 		formatValue: function(item, type) { //格式化
 			this.STD[item] = utils.toFloatStr(this.STD[item], type);
 		},
 		getBusinessCircle: function(arr) { //获取商圈配置
+			//console.log(JSON.stringify(arr))
 			let business = [];
 			let index = -1;
 			let divisionsType = 0;
@@ -1608,6 +1557,7 @@ export default {
 					})
 					circle.setMap(this.map)
 				}
+				///og('111111')
 				let obj = {
 					divisionsType: divisionsType,
 					color: this.colorList[index].name,
@@ -1664,6 +1614,11 @@ export default {
 				business.push(obj);
 				//console.log(business)
 				this.map.setFitView();
+			}
+			if (business[this.ruleIndex].divisionsType == 0) {
+				business[this.ruleIndex].circleEditor.open();
+			} else {
+				business[this.ruleIndex].polygonEditor.open();
 			}
 			return business;
 		},

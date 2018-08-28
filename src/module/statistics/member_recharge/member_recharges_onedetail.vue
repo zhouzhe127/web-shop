@@ -23,7 +23,7 @@
 			</section>
 			<section>
 				<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="formList" :listName="'会员充值统计'" :key="index" :showTitle='1' :allTotal="count">
-					<div slot="con-0" slot-scope="props">
+					<div slot="con-0" slot-scope="props" @click="openDetail(props.data)">
 						查看账户
 					</div>
 					<div slot="con-1" slot-scope="props">
