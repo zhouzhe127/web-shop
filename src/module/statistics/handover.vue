@@ -187,6 +187,7 @@
 					this.handoverList = list;
 					this.total = data.total;
 				}
+				console.log(this.handoverList);
 			},
 			//是否按营业时间
 			selectBusinessHours() {
