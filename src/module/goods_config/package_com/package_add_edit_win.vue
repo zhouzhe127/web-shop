@@ -4,7 +4,7 @@
 		<win :height="590" :width="680" :ok="btnOk" :cancel="btnCancel" @winEvent="closeSelfWin" :align="'right'">
 			<span slot="title">{{title}}</span>
 			<div id="bag-win" class="meal-set" v-cloak slot="content">
-				<div class="container" style="overflow: hidden;height: 320px;">
+				<div class="container" style="overflow: hidden;">
 					<section style="width:400px;float:left;">
 						<el-form :model="bag" ref="bag" label-width="80px">
 							<el-form-item required label="类型" prop="type">
@@ -34,7 +34,7 @@
 							<el-form-item required label="排序">
 								<el-input-number v-model="bag.sort" @change="getPackageSort" style="width:150px;" :min="1" :max="255"></el-input-number>
 							</el-form-item>
-							<el-form-item required label="售价" prop="price">
+							<el-form-item v-if="bag.type!=2" required label="售价" prop="price">
 								<el-input v-model="bag.price" maxlength = "10" placeholder = "请输入售价" style = "width:120px;"></el-input>
 								<span>元</span>
 								<span style="margin-left:10px;">成本价</span>
@@ -385,10 +385,10 @@
 						reg: /^[0-9A-Za-z]{0,20}$/g,
 						pro: '简码由由1-20位数字,英文组成!'
 					},
-					price: {
-						reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
-						pro: '请输入正确的售价格式且价格不能大于10万!'
-					},
+					// price: {
+					// 	reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+					// 	pro: '请输入正确的售价格式且价格不能大于10万!'
+					// },
 					description: {
 						cond: '$$.length<=100',
 						pro: '描述内容不能超过50字哦!'
@@ -400,7 +400,13 @@
 				},
 				this.bag
 				)) return;
-
+				let resconfig = /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/;
+				if (!resconfig.test(this.bag.price) && this.bag.type !='2') {
+					this.$store.commit('setWin', {
+						content: '请输入正确的售价格式且价格不能大于10万!!'
+					});
+					return;
+				}
 				if (Number(this.bag.price > 100000)) {
 					this.$store.commit('setWin', {
 						title: '提示信息',
@@ -667,7 +673,7 @@
 	/* 一级弹框样式 */
 
 	#bag-win {
-		background-color: #f1f1f1;
+		// background-color: #f1f1f1;
 		width: 700px;
 		height: auto;
 		min-height: 690px;
@@ -694,12 +700,12 @@
 			padding-bottom: 20px;
 			.tab {
 				height: 40px;
-				width: 146px;
+				width: 130px;
 				margin-bottom: 7px;
 				text-align: center;
 				line-height: 40px;
-				background-color: #e7e7e7;
-				border-right: 14px solid #f1f1f1;
+				background-color: #f2f2f2;
+				// border-right: 14px solid #f1f1f1;
 				cursor: pointer;
 			}
 			.seleted-right {
@@ -707,7 +713,7 @@
 				float: left;
 				height: auto;
 				float: left;
-				background-color: #e7e7e7;
+				background-color: #f2f2f2;
 			}
 			.seleted-center {
 				width: 146px;
@@ -715,7 +721,7 @@
 				height: auto;
 				float: left;
 				.tab-selected {
-					background-color: #d2d2d2;
+					background-color: #dbdbdb;
 				}
 			}
 			.seleted-container {
