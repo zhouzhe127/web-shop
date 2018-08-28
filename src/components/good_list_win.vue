@@ -65,9 +65,12 @@
 						</li>
 					</ul>
 					<div v-if="isPackage" style="width:100%;height: 50px;overflow: hidden;padding-top:10px">
-						<a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
+						<el-radio-group v-model="packBtn" @change = "selectPack">
+							<el-radio-button v-for="item in packageMenu" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
+						</el-radio-group>
+						<!-- <a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
 						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);" style="">固定套餐</a>
-						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);" style="">可选套餐</a>
+						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);" style="">可选套餐</a> -->
 					</div>
 				</section>
 				<ul class="aUl" style="">
@@ -138,7 +141,13 @@ export default {
 			printDetial: null,
 			createUid: '',
 			showTowWin: false, //关联商品的弹窗打开或关闭
-
+			packageMenu:[
+				{id:-1,name:'全部'},
+				{id:1,name:'可选套餐'},
+				{id:0,name:'固定套餐'},
+				{id:2,name:'自定义套餐'},
+				// {id:3,name:'下架套餐'},
+			],
 			oneArea: {
 				oneAreaBtn: false, //一级分类
 				oneAreaName: '请选择一级分类',
@@ -172,6 +181,7 @@ export default {
 		};
 	},
 	mounted() {
+		// console.log(this.goodsIds)
 		if (this.isCashier) {
 			this.reportName = this.reportSetName;
 		}
@@ -304,7 +314,6 @@ export default {
 				res = false;
 				storage.session('httpGoodVersion', this.version);
 			}
-			// console.log(res)
 			//如果存在保存的商品数据
 			if (goodLists && res) {
 				goodList = goodLists;

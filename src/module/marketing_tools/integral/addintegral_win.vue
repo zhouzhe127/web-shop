@@ -469,7 +469,8 @@ export default {
 		bottom: 0;
 		left: 0;
 		right: 0;
-		background: url(../../../res/images/a50.png) repeat;
+		background-color: rgba(27, 21, 21,.6);
+		// background: url(../../../res/images/a50.png) repeat;
 		z-index: 997;
 		opacity: 1;
 	}

@@ -367,7 +367,7 @@ export default {
                     for(let i=0;i<goodList.length;i++){
                         if(goodList[i].groupId==goodList[j].id){
                             goodList[j].myId.push(goodList[i].id);
-                            console.log(goodList[j].myId);
+                            // console.log(goodList[j].myId);
                         }
                     }
 				}
@@ -433,7 +433,7 @@ export default {
 		seeMenu: () =>
 			import(/* webpackChunkName:'see_menu_win' */ './multi_channel/see_menu_win'),
 		editMenu: () =>
-			import(/*webpackChunkName:'good_package_win'*/ './multi_channel/edit_menu_win'),
+			import(/*webpackChunkName:'edit_menu_win'*/ './multi_channel/edit_menu_win'),
 //        onOff: () =>
 //            import(/* webpackChunkName:"on_off" */ 'src/components/on_off'),
 	}

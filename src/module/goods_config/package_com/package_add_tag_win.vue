@@ -15,7 +15,7 @@
 						<label class="required fl" style="width: 50px;height:40px;text-align:center;line-height:40px;">名称</label>
 						<input maxlength="10" v-model="tagName" class="input fl" type="text" style="width: 200px;height:40px; border:1px solid #d7d7d7 ;" placeholder="输入名称">
 						<label class="required fl" style="width: 65px;margin-left:35px;margin-right:10px;height:40px;text-align:center;line-height:40px;">{{packageType == 1 ? '可选数量' :'总数量'}}</label>
-						<sub-add v-if="packageType==1" :bindnum="totalNum" @toClick="getSubAdd"></sub-add>
+						<sub-add v-if="packageType==1 || packageType==2" :bindnum="totalNum" @toClick="getSubAdd"></sub-add>
 						<span style="height:40px;text-align:center;line-height:40px;" v-if="packageType==0">{{totalNum}}</span>
 					</div>
 				</div>
@@ -35,7 +35,6 @@
 								</section>
 								<div v-if="oneArea.oneAreaBtn" class="detDiv">
 									<i class="detI"></i>
-
 									<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">
 										<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
 									</div>
@@ -302,12 +301,12 @@ export default {
 				}
 
 				if (this.pObj.tagName) {
-					if (this.pObj.packageType == 1) {
+					if (this.pObj.packageType*1 >0) {
 						obj.total = this.totalNum;
 					}
 					this.$emit('throwTagWin', 'edit', obj);
 				} else {
-					if (this.pObj.packageType == 1) {
+					if (this.pObj.packageType*1 >0) {
 						obj.total = this.totalNum;
 					}
 					this.$emit('throwTagWin', 'add', obj);
@@ -358,7 +357,6 @@ export default {
 		// },
 		//选取商品
 		funSetIsSelect(item, index) {
-			console.log(index);
 			item.selected = !item.selected;
 			item.selected
 				? (item.packageGoodsNum = '1')

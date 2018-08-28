@@ -1,8 +1,8 @@
 /**
  * @Author: zhengu.jiang
  * @Date: 2018-08-13 11:04:36 
- * @Last Modified by: zhigang.li
- * @Last Modified time: 2018-08-21 15:07:50
+ * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-08-22 11:37:59
  * @Module: 品牌下选择门店下拉
  */
 
@@ -122,7 +122,6 @@ export default {
 	 delShopId展示店铺id(过滤了部分的)
 	* */
 	created(){
-		console.log(this.shopIds);
 		this.getShopList();
 	},
 	filters:{
@@ -162,7 +161,6 @@ export default {
 		},
 		//处理数据
 		init() {
-			console.log(this.shopIds);
 			let showNo=false;//是否添加无区域
 			let res=utils.deepCopy(this.allShop);
 			if(this.isSingle){//单选

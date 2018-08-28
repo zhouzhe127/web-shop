@@ -71,6 +71,7 @@
 						<a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
 						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);">固定套餐</a>
 						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);">可选套餐</a>
+						<a @click="selectPack(2)" class="raduobtn" :class="{'selectbtn' : packBtn == 2}" href="javascript:void(0);">自定义套餐</a>
 					</div>
 				</section>
 				<ul class="aUl">
@@ -177,7 +178,7 @@ export default {
 		this.getOneAreaList(); //获取分类列表
 		//初始化数据
 		this.init();
-		console.log(this.getGoods);
+		// console.log(this.getGoods);
 	},
 	methods: {
 		init() {
