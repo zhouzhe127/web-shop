@@ -73,9 +73,11 @@
 				<ul class="aUl" style="">
 					<section v-if="allGood">
 						<li v-for="(item,index) in goodsCom" :key='index' class="aLi">
-							<span @click="funSetIsSelect(item,index)" style="float:left;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
-							<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
-							<span>{{item.unit}}</span>
+							<span @click="funSetIsSelect(item,index)" style="float:left;background-color: #f1f1f1;padding: 0 10px;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
+							<template v-if="packageType!=2">
+								<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
+								<span>{{item.unit}}</span>
+							</template>
 						</li>
 					</section>
 					<section v-if="!allGood">
@@ -87,9 +89,11 @@
 							<section style="width:600px;float: left;">
 								<!-- <li v-on:click="choseGood(item)" v-for="(item,index) in oneGoodList.goodsList" :key="index" class="aLi" :class="{'shoName-select':item.selected}">{{item.goodsName ? item.goodsName : item.packageName}}</li> -->
 								<li v-for="(item,index) in oneGoodList.goodsList" :key='index' class="aLi">
-									<span @click="funSetIsSelect(item,index)" style="float:left;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
-									<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
-									<span>{{item.unit}}</span>
+									<span @click="funSetIsSelect(item,index)" style="float:left;background-color: #f1f1f1;padding: 0 10px;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
+									<template v-if="packageType!=2">
+										<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
+										<span>{{item.unit}}</span>
+									</template>
 								</li>
 							</section>
 						</div>
@@ -100,9 +104,11 @@
 							</section>
 							<section style="width:600px;float: left;">
 								<li v-for="(item,index) in category.goodsList" :key='index' class="aLi">
-									<span @click="funSetIsSelect(item,index)" style="float:left;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
-									<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
-									<span>{{item.unit}}</span>
+									<span @click="funSetIsSelect(item,index)" style="float:left;background-color: #f1f1f1;padding: 0 10px;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
+									<template v-if="packageType!=2">
+										<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
+										<span>{{item.unit}}</span>
+									</template>
 								</li>
 								<!-- <li v-on:click="choseGood(item)" v-for="(item,index) in category.goodsList" :key="index" class="aLi" :class="{'shoName-select':item.selected}">{{item.goodsName ? item.goodsName : item.packageName}}</li> -->
 							</section>
@@ -550,7 +556,7 @@ export default {
 		width: 100%;
 		border-bottom: 1px solid #ddd;
 		font-size: 14px;
-		background-color: #f2f2f2;
+		// background-color: #f2f2f2;
 	}
 	.meal-space {
 		padding-left: 35px;
@@ -678,7 +684,7 @@ export default {
 		width: 100%;
 		height: 100%;
 		padding: 10px 15px;
-		background-color: #f2f2f2;
+		// background-color: #f2f2f2;
 		min-height: 560px;
 		.aUl {
 			width: 100%;
@@ -686,12 +692,13 @@ export default {
 			overflow: auto;
 			padding: 10px;
 			.aLi {
-				padding: 0 15px;
+				// padding: 0 15px;
 				height: 40px;
 				line-height: 40px;
 				cursor: pointer;
 				text-align: center;
-				margin: 5px 10px;
+				margin-top: 10px;
+				margin-right: 10px;
 				float: left;
 				color: #919191;
 				.shoName-select {
