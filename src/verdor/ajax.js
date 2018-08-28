@@ -48,7 +48,10 @@ function ajax(params) {
 		ajax.checkCrossDomain(obj.url);
 
 		let url = obj.url;
-
+		let isDownFile = false;
+		if (/\/.*\.(\w+)$/.test(url)) {
+			isDownFile = RegExp.$1;
+		}
 		let method = obj.method || "get";
 		let timeout = obj.timeout || 20000;
 		let async = typeof obj.async == "undefined" ? true : obj.async;
@@ -89,20 +92,21 @@ function ajax(params) {
 		xhr._data = obj;
 		ajax.loadQueue[id] = xhr;
 
-		
+
 
 		//xhr2和XDomainRequest
 		if ("onload" in xhr && async) {
 			xhr.onload = function (event) {
 
 				//下载文件
-				if(type == "file"){
+				if (type == "file") {
 					var blob = this.response;
 					var reader = new FileReader();
-					reader.readAsDataURL(blob);    // 转换为base64，可以直接放入a
-					var suf = /^[\w]+\/(.+)/g.exec(blob.type)[1];
+					reader.readAsDataURL(blob); // 转换为base64，可以直接放入a
+					var suf = isDownFile || /^[\w]+\/(.+)/g.exec(blob.type)[1];
+
 					var time = new Date();
-					var fileName = obj.fileName || (time.getFullYear() + ("00" + (time.getMonth()+1) ).slice(-2) + ("00" + time.getDate() ).slice(-2)); 
+					var fileName = obj.fileName || (time.getFullYear() + ("00" + (time.getMonth() + 1)).slice(-2) + ("00" + time.getDate()).slice(-2));
 					reader.onload = function (e) {
 
 						let str = e.target.result;
@@ -110,30 +114,29 @@ function ajax(params) {
 						// data:text/html;base64,eyJlcnJvciI6eyJjb2RlIjoyODE4LCJtZXNzYWdlIjoiXHU2MGE4XHU2Y2ExXHU2NzA5XHU2NzQzXHU5NjUwXHVmZjBjXHU4YmY3XHU4MDU0XHU3Y2ZiXHU3NmY4XHU1MTczXHU0ZWJhXHU1NDU4In19
 
 						if (str.length < 1000) {
-							let strCopy = decode(str.split(",")[1]);//将字符串分离
+							let strCopy = decode(str.split(",")[1]); //将字符串分离
 							let obj = null;
 							try {
 								obj = JSON.parse(strCopy);
 								destroyed({
 									message: obj.error.message
 								});
-							}
-							catch (e) {
+							} catch (e) {
 								downfile(fileName, suf, str);
 							}
-							
+
 						} else {
 							downfile(fileName, suf, str);
 						}
 
-						
-						
-						
+
+
+
 					}
-				}else{
+				} else {
 					parseData(xhr.responseText);
 				}
-				
+
 			};
 			xhr.onerror = function (event) {
 				destroyed({
@@ -155,7 +158,7 @@ function ajax(params) {
 			};
 		}
 
-		function downfile(fileName, suf, str) { 
+		function downfile(fileName, suf, str) {
 			var a = document.createElement('a');
 			a.download = fileName + "." + suf;
 			a.href = str;
@@ -186,7 +189,7 @@ function ajax(params) {
 			} else if (type == "script") {
 				ajax.DOMEval(str);
 				resolve(str);
-			}else if(type == "file"){
+			} else if (type == "file") {
 				resolve({
 					data: "下载成功"
 				});
@@ -216,7 +219,7 @@ function ajax(params) {
 		let sendPam = [method, url, async];
 		xhr.open.apply(xhr, ajax.xDomain ? sendPam : sendPam.slice(0, 2));
 		//如果请求时下载文件
-		if(type == "file") xhr.responseType = "blob";  
+		if (type == "file") xhr.responseType = "blob";
 		!ajax.xDomain && xhr.setRequestHeader("Accept", accepts[type] || "/");
 
 		if (method === "post") {
@@ -433,14 +436,17 @@ function decode(input) {
 	}
 	output = _utf8_decode(output);
 	return output;
-} 
+}
 
 
 // private method for UTF-8 decoding
 function _utf8_decode(utftext) {
 	var string = "";
 	var i = 0;
-	var c = 0,c1 = 0,c2 = 0,c3=undefined;
+	var c = 0,
+		c1 = 0,
+		c2 = 0,
+		c3 = undefined;
 	while (i < utftext.length) {
 		c = utftext.charCodeAt(i);
 		if (c < 128) {
