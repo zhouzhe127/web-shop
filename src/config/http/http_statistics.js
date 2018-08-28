@@ -165,6 +165,14 @@ export default {
 		url: s + "Shiftsstatistics/getShiftsList", // 获取"交接班"的数据列表
 		method: "get"
 	},
+	"getShiftsDetail": {
+		url: s + "Shiftsstatistics/getShiftsDetail", // 获取"交接班"详情
+		method: "get"
+	},
+	"updateDifferPrice": {
+		url: s + "Shiftsstatistics/updateDifferPrice", //差额调整
+		method: "post"
+	},
     // "getBillDelite": {
     //     url: s + "Order/billDelite", // 根据订单号获取挂账的订单详情
     //     method: "post"

@@ -12,7 +12,7 @@
         <!--内容-->
         <div slot="content">
             <section class="line_h">
-                <span>当前班次预计现金收入：</span>
+                <span>当前班次预计现金收入：{{dataWin.cash}}</span>
                 <span></span>
             </section>
             <section class="line_h">
@@ -23,6 +23,7 @@
     </win>
 </template>
 <script>
+import http from 'src/manager/http';
 export default{
 	data(){
 		return{
@@ -32,11 +33,24 @@ export default{
     created(){
 
     },
-	props:['obj'],
+	props:['dataWin'],
     methods:{
+		//差额调整
+		async updateDifferPrice(res){
+			let data=await http.updateDifferPrice({
+				data:{
+					id:this.dataWin.id,
+					nowPrice:this.num,
+					cash:this.dataWin.cash
+				}
+			});
+            if(data){
+				this.$emit('interNum',res,data.differPrice);
+            }
+		},
 		clickResult(res){
 			if(res=='ok'){
-				this.$emit('interNum',res,this.num);
+				this.updateDifferPrice(res);
             }else {
 				this.$emit('interNum',res);
             }
