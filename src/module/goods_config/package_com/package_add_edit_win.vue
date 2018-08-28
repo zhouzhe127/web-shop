@@ -25,7 +25,7 @@
 									</el-radio-group>
 								</template>
 							</el-form-item>
-							<el-form-item required label="名称" prop="packageName">
+							<el-form-item required label="名称">
 								<el-input v-model="bag.packageName" maxlength = "20" placeholder = "请输入套餐名称" style = "width:250px;"></el-input>
 							</el-form-item>
 							<el-form-item label="简码" prop="BC">
@@ -238,6 +238,7 @@
 					title: '添加标识',
 					packageType: this.bag.type,
 					selGoods: [],
+					goodsIds:[],
 					packageTag: this.packageTag,
 				};
 				this.showCom = 'addTag';
@@ -269,6 +270,11 @@
 						}
 					}
 				});
+				let arr =this.packageTag[this.selectTagIndex].packageTagGoods;
+				let goodIdArr = [];
+				for(let i=0;i<arr.length;i++){
+					goodIdArr.push(arr[i].gid);
+				}
 				this.comObj = {
 					goodsList: goods,
 					tagName: tagName,
@@ -276,6 +282,7 @@
 					title: '编辑该标识可选内容',
 					packageType: this.bag.type,
 					selGoods: this.packageTag[this.selectTagIndex].packageTagGoods,
+					goodsIds:goodIdArr,
 					packageTag: this.packageTag,
 
 				};

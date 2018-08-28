@@ -10,15 +10,15 @@
 		<span slot="title">{{title}}</span>
 		<div id="packTan" slot="content">
 			<div class="oBox" style="">
-				<div class="meal-space">
-					<div class="line">
-						<label class="required fl" style="width: 50px;height:40px;text-align:center;line-height:40px;">名称</label>
-						<input maxlength="10" v-model="tagName" class="input fl" type="text" style="width: 200px;height:40px; border:1px solid #d7d7d7 ;" placeholder="输入名称">
-						<label class="required fl" style="width: 65px;margin-left:35px;margin-right:10px;height:40px;text-align:center;line-height:40px;">{{packageType == 1 ? '可选数量' :'总数量'}}</label>
-						<sub-add v-if="packageType==1 || packageType==2" :bindnum="totalNum" @toClick="getSubAdd"></sub-add>
-						<span style="height:40px;text-align:center;line-height:40px;" v-if="packageType==0">{{totalNum}}</span>
-					</div>
-				</div>
+				<el-form label-width="100px" :inline="true">
+					<el-form-item required label="名称">
+						<el-input v-model="tagName" maxlength="10" placeholder = "输入名称" style = "width:200px;"></el-input>
+					</el-form-item>
+					<el-form-item required :label="packageType == 0 ? '总数量' :'可选数量'">
+						<span v-if="packageType==0">{{totalNum}}</span>
+						<el-input-number v-if="packageType==1 || packageType==2" v-model="totalNum" @change="getSubAdd" :min="1"></el-input-number>
+					</el-form-item>
+				</el-form>
 			</div>
 			<!--菜单配置弹窗=========================================================================-->
 			<section class="configBox" style="">
@@ -60,62 +60,65 @@
 						</li>
 						<!--搜索-->
 						<li style="width:180px;margin-left: 20px;float: left;">
-							<div class='search'>
-								<input type="text" placeholder="请输入名称" class="search-input" style="height:40px;" v-model="search" />
-								<a href="javascript:void(0);" class="search-btn" @click="searchGoods()" style="background-color:#29A7E1;height:40px;"></a>
-							</div>
+							<el-input placeholder="请输入名称" v-model="search" clearable class="input-with-select" >
+								<el-button slot="append" icon="el-icon-search" @click="searchGoods"></el-button>
+							</el-input>
 						</li>
 						<li style="width:60px;margin-left: 10px;float: left;">
-							<a href="javascript:void(0);" class="gray" @click="recSearch()" style="width:60px;height:40px;line-height:40px;">重置</a>
+							<el-button v-on:click="recSearch()" type="info">重置</el-button>
 						</li>
 					</ul>
 				</section>
-				<ul class="aUl" style="">
+				<section class="aUl">
 					<section v-if="allGood">
-						<li v-for="(item,index) in goodsCom" :key='index' class="aLi">
-							<span @click="funSetIsSelect(item,index)" style="float:left;background-color: #f1f1f1;padding: 0 10px;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
-							<template v-if="packageType!=2">
-								<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
-								<span>{{item.unit}}</span>
-							</template>
-						</li>
+						<el-checkbox-group v-model="selecIndex">
+							<div style="margin-bottom:2px;display:inline-block;margin-right:10px;" v-for="(item,i) in goodsCom" :key="i">
+								<el-checkbox @change="funSetIsSelect(item,i)" class="labItem" :label="item.id" border>{{item.goodsName}}</el-checkbox>
+								<template v-if="packageType!=2">
+									<el-input v-model="item.packageGoodsNum" maxlength="2" style = "width:40px;"></el-input>
+									<span>{{item.unit}}</span>
+								</template>
+							</div>
+						</el-checkbox-group>
 					</section>
 					<section v-if="!allGood">
-						<div class="onecate" v-if=" oneGoodList.goodsList.length > 0" style="">
-							<section class="onecataTitle" style="">
+						<div class="onecate" v-if=" oneGoodList.goodsList.length > 0">
+							<section class="onecataTitle">
 								<i class="twoI" :class="{'oneI':L2ID == '0'}"></i>
 								<li class="twoTitle " :class="{'oneTitle':L2ID == '0'}">{{oneGoodList.name}}</li>
 							</section>
-							<section style="width:600px;float: left;">
-								<!-- <li v-on:click="choseGood(item)" v-for="(item,index) in oneGoodList.goodsList" :key="index" class="aLi" :class="{'shoName-select':item.selected}">{{item.goodsName ? item.goodsName : item.packageName}}</li> -->
-								<li v-for="(item,index) in oneGoodList.goodsList" :key='index' class="aLi">
-									<span @click="funSetIsSelect(item,index)" style="float:left;background-color: #f1f1f1;padding: 0 10px;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
-									<template v-if="packageType!=2">
-										<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
-										<span>{{item.unit}}</span>
-									</template>
-								</li>
+							<section style="width:600px;margin-left:30px;">
+								<el-checkbox-group v-model="selecIndex">
+									<div style="margin-bottom:2px;display:inline-block;margin-right:10px;" v-for="(item,i) in oneGoodList.goodsList" :key="i">
+										<el-checkbox @change="funSetIsSelect(item,i)" class="labItem" :label="item.id" border>{{item.goodsName}}</el-checkbox>
+										<template v-if="packageType!=2">
+											<el-input v-model="item.packageGoodsNum" maxlength="2" @change="funSetGoodsNum(item,i)" style = "width:40px;"></el-input>
+											<span>{{item.unit}}</span>
+										</template>
+									</div>
+								</el-checkbox-group>
 							</section>
 						</div>
 						<div v-if="category.goodsList.length > 0" class="onecate" v-for="(category,index) in oneGoodList.child" :key="index">
-							<section class="onecataTitle" style="">
-								<i class="twoI" style=""></i>
-								<li class="twoTitle" style="">{{category.name}}</li>
+							<section class="onecataTitle">
+								<i class="twoI"></i>
+								<li class="twoTitle">{{category.name}}</li>
 							</section>
-							<section style="width:600px;float: left;">
-								<li v-for="(item,index) in category.goodsList" :key='index' class="aLi">
-									<span @click="funSetIsSelect(item,index)" style="float:left;background-color: #f1f1f1;padding: 0 10px;" :class="{'shoName-select':item.selected}">{{item.goodsName}}</span>
-									<template v-if="packageType!=2">
-										<input class="input-content" maxlength="3" v-model="item.packageGoodsNum" @keyup="funSetGoodsNum(item,index)">
-										<span>{{item.unit}}</span>
-									</template>
-								</li>
-								<!-- <li v-on:click="choseGood(item)" v-for="(item,index) in category.goodsList" :key="index" class="aLi" :class="{'shoName-select':item.selected}">{{item.goodsName ? item.goodsName : item.packageName}}</li> -->
+							<section style="width:600px;margin-left:30px;">
+								<el-checkbox-group v-model="selecIndex">
+									<div style="margin-bottom:2px;display:inline-block;margin-right:10px;" v-for="(item,i) in category.goodsList" :key="i">
+										<el-checkbox @change="funSetIsSelect(item,i)" class="labItem" :label="item.id" border>{{item.goodsName}}</el-checkbox>
+										<template v-if="packageType!=2">
+											<el-input v-model="item.packageGoodsNum" maxlength="2" @change="funSetGoodsNum(item,i)" style = "width:40px;"></el-input>
+											<span>{{item.unit}}</span>
+										</template>
+									</div>
+								</el-checkbox-group>
 							</section>
 						</div>
 
 					</section>
-				</ul>
+				</section>
 			</section>
 		</div>
 	</win>
@@ -157,7 +160,8 @@ export default {
 			tagName: '', //标识名
 			totalNum: null, //选中的数量
 			btnOk: {},
-			btnCancel: {}
+			btnCancel: {},
+			selecIndex:[]
 		};
 	},
 	mounted() {
@@ -196,6 +200,8 @@ export default {
 			this.packageType = this.pObj.packageType;
 			this.tagName = this.pObj.tagName;
 			this.totalNum = this.pObj.totalNum;
+			this.selecIndex = this.pObj.goodsIds;
+			// console.log(this.pObj);
 			this.title = this.pObj.title;
 			if (this.tagName) {
 				this.btnCancel = {
@@ -357,10 +363,6 @@ export default {
 			this.goodsCom = goodList;
 			this.goodList = goodList;
 		},
-		//选择商品或者套餐
-		// choseGood: function(item) {
-		// 	item.selected = !item.selected;
-		// },
 		//选取商品
 		funSetIsSelect(item, index) {
 			item.selected = !item.selected;
@@ -374,6 +376,8 @@ export default {
 		},
 		//修改商品的数量
 		funSetGoodsNum(item, index) {
+			this.selecIndex.push(item.id);
+			console.log(this.selecIndex);
 			console.log(index);
 			let num = item.packageGoodsNum;
 			let reg = /^[\d]+$/g;
@@ -428,6 +432,7 @@ export default {
 		//选择一级分类
 		selectOneArea: function(index, item) {
 			this.search = '';
+			// console.log(item);
 			//判断选择的是否是全部商品
 			for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
 				this.oneArea.oneAreaList[i].selected = false;
@@ -452,8 +457,8 @@ export default {
 				//初始化二级分类，且让一级分类中的菜品为空
 				this.twoArea.twoAreaList = [{ id: '0', name: '全部二级分类' }];
 				for (let i = 0; i < item.child.length; i++) {
-					this.$set(item.child[i], 'selected', false); //往列表里塞selected，
-					this.$set(item.child[i], 'packageGoodsNum', ''); //往列表里塞packageGoodsNum，
+					// this.$set(item.child[i], 'selected', false); //往列表里塞selected，
+					// this.$set(item.child[i], 'packageGoodsNum', ''); //往列表里塞packageGoodsNum，
 					// item.child[i].selected = false; //让所有的二级分类都处于未选中状态
 					this.twoArea.twoAreaList.push(item.child[i]);
 					item.child[i].goodsList = [];
@@ -552,19 +557,12 @@ export default {
 <style lang="less" type="text/css" scoped>
 #packTan {
 	.oBox {
-		height: 75px;
+		height: 60px;
 		width: 100%;
+		margin-top:15px;
 		border-bottom: 1px solid #ddd;
 		font-size: 14px;
 		// background-color: #f2f2f2;
-	}
-	.meal-space {
-		padding-left: 35px;
-		padding-right: 35px;
-		padding-top: 18px;
-		text-align: left;
-		width: 100%;
-		height: auto;
 	}
 	.oCont {
 		.Box {
@@ -691,35 +689,15 @@ export default {
 			height: auto;
 			overflow: auto;
 			padding: 10px;
-			.aLi {
-				// padding: 0 15px;
-				height: 40px;
-				line-height: 40px;
-				cursor: pointer;
-				text-align: center;
-				margin-top: 10px;
-				margin-right: 10px;
-				float: left;
-				color: #919191;
-				.shoName-select {
-					border-color: #ff9800;
-					background: url(../../../res/images/sign.png) right bottom no-repeat;
-				}
-				.input-content {
-					border: 1px solid #ddd;
-					width: 40px;
-					height: 30px;
-					margin: 5px 12px;
-				}
-			}
+			margin-left: 10px;
 			.onecate {
 				width: 100%;
 				border-bottom: 1px solid #e3e3e3;
 				height: auto;
 				overflow: hidden;
 				.onecataTitle {
-					width: 115px;
-					float: left;
+					// width: 115px;
+					// float: left;
 					overflow: hidden;
 				}
 				.twoI {
@@ -730,16 +708,16 @@ export default {
 					float: left;
 				}
 				.twoTitle {
-					width: 70px;
+					// width: 70px;
 					height: 50px;
 					line-height: 50px;
 					float: left;
 					font-weight: 800;
 					color: #9f9f9f;
-					overflow: hidden;
-					vertical-align: middle;
-					text-overflow: ellipsis;
-					white-space: nowrap;
+					// overflow: hidden;
+					// vertical-align: middle;
+					// text-overflow: ellipsis;
+					// white-space: nowrap;
 				}
 				.oneI {
 					background-color: #049fef;
@@ -749,6 +727,11 @@ export default {
 				}
 			}
 		}
+	}
+	.labItem {
+		margin-bottom: 5px;
+		margin-left: 0!important;
+		// margin-right: 10px;
 	}
 }
 </style>
