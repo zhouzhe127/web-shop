@@ -1,125 +1,227 @@
 <template>
 	<div id="merchants">
-		<!-- 小程序授权步骤 -->
-		<div class="set-line">
-			<div class="titles">小程序授权步骤</div>
-			<div class="line"></div>
-		</div>
-		<!-- 1 -->
-		<div class="first">
-			<span class="round">1</span>
-			<span class="theText">将微信小程序授权给闪店,系统会自动生成店铺小程序,并提交到微信审核;您不需要做复杂操作,即可获得店铺的微信小程序。</span>
-		</div>
-		<!-- 授权微信小程序 -->
-		<div class="verticalBar">
-			<div class="vertical fl">
-				<span></span>
+		<template v-if="!isAuth">
+			<!-- 小程序授权步骤 -->
+			<div class="set-line">
+				<div class="titles">小程序授权步骤</div>
+				<div class="line"></div>
 			</div>
-			<div class="onRight fl clearfix">
-				<a href="javascript:void(0)" class="blue btn fl">授权微信小程序</a>
-				<div class="fl handle-tips">
-					<i></i> 注:你的小程序的主题必须是【企业】,并开通了微信支付,才能具备支付权限。
+			<!-- 1 -->
+			<div class="first">
+				<span class="round">1</span>
+				<span class="theText">将微信小程序授权给闪店,系统会自动生成店铺小程序,并提交到微信审核;您不需要做复杂操作,即可获得店铺的微信小程序。</span>
+			</div>
+			<!-- 授权微信小程序 -->
+			<div class="verticalBar">
+				<div class="vertical fl">
+					<span></span>
+				</div>
+				<div class="onRight fl clearfix">
+					<a href="javascript:void(0)" class="blue btn fl" @click="addWeChat">授权微信小程序</a>
+					<div class="fl handle-tips">
+						<i></i> 注:你的小程序的主题必须是【企业】,并开通了微信支付,才能具备支付权限。
+					</div>
 				</div>
 			</div>
-		</div>
-		<!-- 2 -->
-		<div class="first">
-			<span class="round">2</span>
-			<span class="theText">如果还没有注册微信小程序,点击按钮注册;注册成功后,再授权给闪店即可。
+			<!-- 2 -->
+			<div class="first">
+				<span class="round">2</span>
+				<span class="theText">如果还没有注册微信小程序,点击按钮注册;注册成功后,再授权给闪店即可。
 			</span>
-		</div>
-		<div class="verticalBar">
-			<div class="vertical fl"></div>
-			<div class="onRight fl clearfix">
-				<a href="javascript:void(0)" class="blue btn fl">注册小程序</a>
 			</div>
-		</div>
-		<!-- 设置微信支付 -->
-		<div class="set-line">
-			<div class="titles">设置微信支付</div>
-			<div class="line"></div>
-		</div>
-		<!-- 小程序 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">小程序:</span>
-			<div class="rightHalf">
-				<span class="fl name">小程序的名称</span>
-				<a href="javascript:void(0)" class="blue abtn fl">重新授权</a>
-				<a href="javascript:void(0)" class="gray abtn fl">解除授权</a>
-			</div>
-		</div>
-		<!-- 微信支付 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">微信支付:</span>
-			<div class="rightHalf">
-				<span class="fl name">目前小程序仅支持微信原生支付,你可以在【小程序后台-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
-			</div>
-		</div>
-		<!-- 商户号 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">商户号</span>
-			<div class="rightHalf">
-				<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" />
-				<div class="fl handle-tips">
-					<i></i> 商户号必须为8位或10位数字
+			<div class="verticalBar">
+				<div class="vertical fl"></div>
+				<div class="onRight fl clearfix">
+					<a href="javascript:void(0)" class="blue btn fl" @click="registrationApplet">注册小程序</a>
 				</div>
 			</div>
-		</div>
-		<!-- 商户秘钥 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">商户秘钥</span>
-			<div class="rightHalf">
-				<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" />
-				<div class="fl handle-tips">
-					<i></i> 商户秘钥必须为32位
+		</template>
+		<template v-else>
+			<!-- 设置微信支付 -->
+			<div class="set-line">
+				<div class="titles">设置微信支付</div>
+				<div class="line"></div>
+			</div>
+			<!-- 小程序 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">小程序:</span>
+				<div class="rightHalf">
+					<span class="fl name">小程序的名称</span>
+					<a href="javascript:void(0)" class="blue abtn fl" @click="reauthorization">重新授权</a>
+					<a href="javascript:void(0)" class="gray abtn fl">解除授权</a>
 				</div>
 			</div>
-		</div>
-		<!-- 确认 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl"></span>
-			<div class="businessHours">
-				<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
-				<span>已确认商户号和商户秘钥配置正确(否则将导致微信支付异常,小程序无法通过审核)</span>
+			<!-- 微信支付 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">微信支付:</span>
+				<div class="rightHalf">
+					<span class="fl name">目前小程序仅支持微信原生支付,你可以在【小程序后台-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
+				</div>
 			</div>
-		</div>
-		<div class="online-box clearfix">
-			<span class="online-sub fl"></span>
-			<div class="rightHalf">
-				<a href="javascript:;" class="blue" style="width:200px;" @click="addconfig">提交微信审核</a>
+			<!-- 商户号 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">商户号</span>
+				<div class="rightHalf">
+					<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
+					<div class="fl handle-tips" v-if="numberStatus">
+						<i></i> 商户号必须为8位或10位数字
+					</div>
+					<div class="fl dangerous-tips" v-else>
+						<i></i> 商户号必须为8位或10位数字,请登录微信商户平台核对
+					</div>
+				</div>
 			</div>
-		</div>
+			<!-- 商户秘钥 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">商户秘钥</span>
+				<div class="rightHalf">
+					<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
+					<div class="fl handle-tips" v-if="secretStatus">
+						<i></i> 商户秘钥必须为32位
+					</div>
+					<div class="fl dangerous-tips" v-else>
+						<i></i> 商户秘钥必须为32位,请登录微信商户平台核对
+					</div>
+				</div>
+			</div>
+			<!-- 确认 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl"></span>
+				<div class="businessHours">
+					<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
+					<span>已确认商户号和商户秘钥配置正确(否则将导致微信支付异常,小程序无法通过审核)</span>
+				</div>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
+					<a v-else href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
+				</div>
+			</div> 
+		</template>
 		<!-- 弹窗 -->
-		<!-- <programWin @getAppliedWin='getResult'></programWin> -->
+		<programWin v-if="showWin" @getAppliedWin='getResult'></programWin>
 	</div>
 </template>
 <script>
 import http from 'src/manager/http';
-// import storage from 'src/verdor/storage';
-// import utils from 'src/verdor/utils';
-// import global from 'src/manager/global';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+import global from 'src/manager/global';
 export default {
 	data() {
 		return {
 			number: '', //商户号
 			secret: '', //商户秘钥
+			numberStatus: true,
+			secretStatus: true,
 			isMember: false, //是否确认
+			userData: Object,
+			show: false,
+			auth_code: '', //授权回调码
+			showWin: false,
+			isAuth: true //是否已经授权
 		};
 	},
 	methods: {
 		getResult: function(res, item) {
 			//弹窗回调
+			console.log(res)
 			if (res == 'ok') {
+				// console.log('11111')
 				//this.bussinessselect = item;
+				this.addWeChat();
 			}
-			//this.showWin = false;
+			if (res == 'cancel') {
+				this.setAuth(this.auth_code);
+			}
+			this.showWin = false;
 		},
 		selectBusinessHours: function() {
 			//是否仅会员享受门店折扣
 			this.isMember = !this.isMember;
 		},
-		addconfig:function(){
-			
+		addconfig: function() {
+
+		},
+		registrationApplet: function() { //注册小程序
+			window.open('https://mp.weixin.qq.com');
+		},
+		async addWeChat() { //授权小程序
+			let data = await http.getAuthUrl({
+				data: {
+					shopId: this.userData.currentShop.id,
+					redirect_uri: document.location.toString(),
+					auth_type: 2
+				}
+			})
+			if (data) {
+				window.location.href = data;
+			}
+		},
+		GetQueryString: function(paraName) { //获取url参数
+			let url = document.location.toString();　　　　
+			let arrObj = url.split("?");　　
+			if (arrObj.length > 1) {　　　　　　
+				let arrPara = arrObj[1].split("&");　　　　　　
+				let arr;　　　　　　
+				for (let i = 0; i < arrPara.length; i++) {　　　　　　　　
+					arr = arrPara[i].split("=");
+					if (arr != null && arr[0] == paraName) {　　　　　　　　　　
+						return unescape(arr[1]);　
+					}　　　　　　
+				}　　　　　　
+				return "";　　　　
+			} else {　　　　　　
+				return "";　
+			}
+		},
+		async setAuth(id) { //授权
+			let data = await http.setAuth({
+				data: {
+					auth_code: id
+				}
+			})
+			if (data) {
+				this.isAuth = true;
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '授权成功',
+				});
+			}
+		},
+		reauthorization: function() { //重新授权
+			this.isAuth = false;
+			this.addWeChat();
+		},
+		checkForm: function() {
+			if (this.number == '' || this.number.length != 8 && this.number.length != 10) {
+				this.numberStatus = false;
+			} else {
+				this.numberStatus = true;
+			}
+			if (this.secret == '' || this.secret.length != 32) {
+				this.secretStatus = false;
+			} else {
+				this.secretStatus = true;
+			}
+		},
+		async Auditing() {
+			let data = await http.Auditing({
+				data: {
+					merchantId: this.number,
+					merchantSecret: this.secret
+				}
+			})
+			if (data) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '审核成功',
+				});
+			}
 		}
 	},
 	components: {
@@ -127,6 +229,17 @@ export default {
 			import ( /* webpackChunkName: 'business_win' */ './small_program_win'),
 	},
 	mounted() {
+		this.userData = storage.session('userShop');
+		let auth_code = this.GetQueryString('auth_code');
+		this.auth_code = auth_code;
+		// if(this.auth_code != ''){
+		// 	this.showWin = true;
+		// }
+		console.log(auth_code)
+		if (auth_code && auth_code != null) {
+			this.showWin = true;
+			//this.setAuth(auth_code);
+		}
 		//this.getConfig();
 	}
 };
@@ -286,6 +399,15 @@ export default {
 	text-indent: 45px;
 	background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
 	color: #999999;
+}
+
+.dangerous-tips {
+	height: 40px;
+	line-height: 40px;
+	text-indent: 45px;
+	background: url(../../../res/icon/warning.png) 20px center no-repeat;
+	background-size: 20px 20px;
+	color: #EA3B44;
 }
 
 .active {

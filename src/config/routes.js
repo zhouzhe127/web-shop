@@ -289,7 +289,7 @@ const shopNotice = (resolve) =>
 const boundPublicNumber = (resolve) =>
     import ( /* webpackChunkName:"bound_public_number" */ 'src/module/public_number_configuration/bound_public_number'); //绑定公众号
 const smallProgramBinding = (resolve) =>
-    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/program_config/applet_configuration'); //小程序绑定
+    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/program_config/small_program'); //小程序绑定
 const moduleSet = (resolve) =>
     import ( /* webpackChunkName:"module_set" */ 'src/module/public_number_configuration/module_set'); //模板设置
 const menuSet = (resolve) =>

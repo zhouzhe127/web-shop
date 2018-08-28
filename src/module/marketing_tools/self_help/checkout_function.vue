@@ -1791,7 +1791,7 @@ input {
 }
 
 #pay-window .pay-window-box .unassociated {
-	background: #777;
+	background: #f1f1f1;
 }
 
 #pay-window .pay-window-box .scopes {

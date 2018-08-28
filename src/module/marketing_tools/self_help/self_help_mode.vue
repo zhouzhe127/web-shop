@@ -195,6 +195,10 @@ export default {
 					id: '3'
 				},
 				{
+					name: '支付宝支付',
+					id: '4'
+				},
+				{
 					name: '会员支付',
 					id: '5'
 				}

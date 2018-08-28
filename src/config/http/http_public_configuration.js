@@ -74,5 +74,9 @@ export default {
     "setAuth": { //第三方授权成功
         url: w + 'weixin/setAuth',
         method: 'post'
+    },
+    "Auditing": { //小程序审核
+        url: w + 'weixin/Auditing',
+        method: 'post'
     }
 }
