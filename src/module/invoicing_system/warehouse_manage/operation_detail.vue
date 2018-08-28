@@ -302,6 +302,7 @@ export default {
 			}
 			this.operate.name = item.operateUname;
 			this.operate.time = this.timeConversion(item.operateTime, 1);
+			this.$set(this.details,'operate',this.operate);
 		},
 		async init() {
 			let res = await http.getDispatchRecordDetailList({
@@ -312,6 +313,7 @@ export default {
 			});
 			this.details = res;
 			this.details.isBrand = this.isBrand;
+			this.details.operate = {};
 			this.dynamic = this.details.dynamic;
 			for(let item of res.invoiceList) {
 				if(item.type == 1) {

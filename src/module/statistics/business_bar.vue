@@ -127,7 +127,7 @@ export default {
 				for (let item of this.shopList) {
 					//通过店铺id匹配店铺名称
 					if (item.id == i) {
-						xBar.push(item.name);
+						xBar.push(item.shopName);
 					}
 				}
 				for (let xKey in this.dataBar.xAxis) {

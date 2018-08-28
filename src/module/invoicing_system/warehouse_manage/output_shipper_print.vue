@@ -20,11 +20,13 @@
 					<div class="name">出货单</div>
 					<ul>
 						<li><span>出货原因：</span>{{orderDetail.cause}}</li>
-						<li class="three"><span>操作人：</span>{{orderDetail.createName}}</li>
+						<li v-if="orderDetail.operate"><span>操作人：</span>{{orderDetail.operate.name}}</li>
+						<li v-else class="three"><span>操作人：</span>{{orderDetail.createName}}</li>
 					</ul>
 					<ul>
 						<li><span>出货仓库：</span>{{orderDetail.outWname}}</li>
-						<li><span>创建时间：</span>{{timeFormat(orderDetail.createTime)}}</li>
+						<li v-if="orderDetail.operate"><span>出货时间：</span>{{orderDetail.operate.time}}</li>
+						<li v-else><span>创建时间：</span>{{timeFormat(orderDetail.createTime)}}</li>
 					</ul>
 					<ul>
 						<li><span>入货仓库：</span>{{orderDetail.intoWname}}</li>
@@ -239,8 +241,10 @@ export default {
 		'material', //物料列表
 		'isOpen', //是否展开批次
 	],
-	mounted() {
+	created(){
 		this.orderDetail = utils.deepCopy(this.detail);
+	},
+	mounted() {
 		this.setDomSign();
 		this.open = this.isOpen;
 	},
@@ -320,7 +324,6 @@ export default {
 				if(spliceArr.length > sp0 + 1) spliceArr.splice(sp0);
 			} else { //切割二级列表
 				if(spliceArr.length > sp0) {
-					console.log(sp0);
 					spliceArr.splice(sp0 + 1);
 					spliceArr[sp0].batchInfo.splice(sp1);
 				}
