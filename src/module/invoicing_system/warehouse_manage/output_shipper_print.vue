@@ -320,7 +320,6 @@ export default {
 				if(spliceArr.length > sp0 + 1) spliceArr.splice(sp0);
 			} else { //切割二级列表
 				if(spliceArr.length > sp0) {
-					console.log(sp0);
 					spliceArr.splice(sp0 + 1);
 					spliceArr[sp0].batchInfo.splice(sp1);
 				}

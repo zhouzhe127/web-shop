@@ -18,13 +18,13 @@
 				<div class="page-box">第1页，共{{pageList.length+1}}页</div>
 				<div class="head">
 					<div class="order-num">{{orderDetail.receiptNumber}}</div>
-					<div class="name">出货单</div>
+					<div class="name">入货单</div>
 					<ul>
 						<li><span>入货原因：</span>{{orderDetail.cause}}</li>
 						<li class="three"><span>操作人：</span>{{orderDetail.createName}}</li>
 					</ul>
 					<ul>
-						<li><span>入货仓库：</span>{{orderDetail.outWname}}</li>
+						<li><span>出货仓库：</span>{{orderDetail.outWname}}</li>
 						<li><span>创建时间：</span>{{timeFormat(orderDetail.createTime)}}</li>
 					</ul>
 					<ul>
@@ -76,7 +76,7 @@
 					</div>
 				</div>
 				<!--物料列表-->
-				<div class="main" v-if="materialList.length && !pageList.length">
+				<div class="main" v-if="materialList.length">
 					<div class="head">物料列表·共 {{mLength}} 条 (详细)</div>
 					<div class="title-one">
 						<span class="narrow">序号</span>
