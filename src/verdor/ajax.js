@@ -89,8 +89,6 @@ function ajax(params) {
 		xhr._data = obj;
 		ajax.loadQueue[id] = xhr;
 
-		
-
 		//xhr2和XDomainRequest
 		if ("onload" in xhr && async) {
 			xhr.onload = function (event) {
@@ -358,9 +356,10 @@ ajax.createajax = function () {
 	let i = 0;
 	for (; i < ajax.cacheajax.length; i++) {
 		if (
-			ajax.cacheajax[i].readyState == 0 ||
-			ajax.cacheajax[i].readyState == 4
+			(ajax.cacheajax[i].readyState == 0 ||
+			ajax.cacheajax[i].readyState == 4) && ajax.cacheajax[i].responseType == ""
 		) {
+			
 			return ajax.cacheajax[i];
 		}
 	}
