@@ -676,16 +676,24 @@ export default {
 						//console.log(JSON.stringify(fixed))
 						this.disareaList = [];
 						if (this.ladder == '') {
+							console.log('22222')
 							this.addcircle();
 						} else {
+							//console.log('1111')
+							console.log(JSON.stringify(this.ladder))
 							this.disareaList = this.getBusinessCircle(this.ladder.data);
+							console.log(this.disareaList)
 						}
 					} else {
 						//阶梯数据
 						this.ladder = this.restructuring();
 						this.disareaList = [];
 						//console.log(JSON.stringify(fixed))
-						this.disareaList = this.getBusinessCircle(this.fixed.data);
+						if (this.fixed == '') {
+							this.addcircle();
+						} else {
+							this.disareaList = this.getBusinessCircle(this.fixed.data);
+						}
 						//console.log(this.disareaList)
 					}
 					break;
@@ -828,10 +836,12 @@ export default {
 					return false;
 				}
 				//对商圈的判断
-				for (let item of this.disareaList) {
-					if (item.promotersNum == '') {
-						this.valiData('请填写配送费');
-						return false;
+				if (this.circleType == 0) {
+					for (let item of this.disareaList) {
+						if (item.promotersNum == '') {
+							this.valiData('请填写配送费');
+							return false;
+						}
 					}
 				}
 				if (this.circleType == 1) {
@@ -980,6 +990,13 @@ export default {
 						this.disareaList = this.getBusinessCircle(item.scopeDelivery.data);
 						//固定配送费 阶梯配送费
 						this.circleType = item.scopeDelivery.type - 1;
+						if (this.circleType == 1) {
+							let STD = item.scopeDelivery.data[0];
+							this.STD.baseDistance = STD.baseDistance;
+							this.STD.baseCost = STD.baseCost;
+							this.STD.moreDistance = STD.moreDistance;
+							this.STD.moreCost = STD.moreCost;
+						}
 					} else {
 						this.disareaList = [];
 						this.addcircle();
@@ -1075,7 +1092,7 @@ export default {
 				useTime.list = this.changeArr(this.useDate.month, 'm');
 			}
 			//useTime = JSON.stringify(useTime);
-			// item.openTime = this.payType == 1 ? useTime : '';
+			item.openTime = useTime;
 			// 配送范围
 			// item.scopeDelivery = [];
 			// for (let it of this.distances) {
@@ -1499,6 +1516,7 @@ export default {
 			let divisionsType = 0;
 			let circle;
 			let polygon;
+			this.ruleIndex = 0;
 			for (let item of arr) {
 				index++;
 				if (item.type == 'circle') { //如果是圆 处理
@@ -1620,6 +1638,7 @@ export default {
 			} else {
 				business[this.ruleIndex].polygonEditor.open();
 			}
+			console.log('到了这一步')
 			return business;
 		},
 		changeArr(arr, type) {
