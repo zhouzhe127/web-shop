@@ -150,8 +150,9 @@
 				this.isOpenTime=this.obj.open;
 				this.shopTime=utils.format(new Date(this.obj.time[0]),'yyyy年MM月dd日')+'-'+
 					utils.format(new Date(this.obj.time[1]),'yyyy年MM月dd日');
-            }
-			this.dataWin.shopId=this.obj?this.obj.shopId:this.userdata.currentShop.id;
+				this.dataWin.trueShopId=this.obj.shopId;
+			}
+//			this.dataWin.shopId=this.obj?this.obj.shopId:this.userdata.currentShop.id;
             this.getChangeShiftsList();
 		},
 		methods:{
@@ -166,15 +167,19 @@
                     });
                     return false;
                 }
+                let nowData= {
+//					shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
+					startTime:this.obj?this.obj.time[0]/1000:this.timeShop[0]/1000,
+					endTime:this.obj?this.obj.time[1]/1000:this.timeShop[1]/1000,
+					page: this.page,
+					num: this.num,
+					isOpenTime:Number(this.isOpenTime)
+				};
+                if(this.obj){
+                	nowData.trueShopId=this.obj.shopId
+                }
 				let data = await http.getChangeShiftsList({
-					data: {
-                        shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
-						startTime:this.obj?this.obj.time[0]/1000:this.timeShop[0]/1000,
-						endTime:this.obj?this.obj.time[1]/1000:this.timeShop[1]/1000,
-						page: this.page,
-						num: this.num,
-						isOpenTime:Number(this.isOpenTime)
-					}
+					data:nowData
 				});
 				if (data) {
 					let list = data.list;
@@ -198,11 +203,15 @@
 			},
             //获取详情数据
             async getDetailList(item){
+				let nowData={
+					id:item.id,
+//					shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
+				};
+				if(this.obj){
+					nowData.trueShopId=this.obj.shopId;
+                }
 				let res= await http.getShiftsDetail({
-					data: {
-						id:item.id,
-						shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
-					}
+					data:nowData
 				});
 				//处理支付方式
 				let obj={num:0};  //特殊处理现金
