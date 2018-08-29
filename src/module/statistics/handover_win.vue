@@ -34,17 +34,13 @@ export default{
     methods:{
 		//差额调整
 		async updateDifferPrice(res){
-			let nowData={
-//				shopId:this.dataWin.shopId,
-				id:this.dataWin.id,
-				nowPrice:this.num,
-				cash:this.dataWin.cash
-			};
-			if(this.dataWin.trueShopId){
-				nowData.trueShopId=this.dataWin.trueShopId;
-            }
 			let data=await http.updateDifferPrice({
-				data:nowData
+				data:{
+					id:this.dataWin.id,
+					nowPrice:this.num,
+					cash:this.dataWin.cash,
+					trueShopId:this.dataWin.trueShopId
+                }
 			});
             if(data){
 				this.$emit('interNum',res,data.differPrice);

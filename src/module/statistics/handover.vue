@@ -150,9 +150,8 @@
 				this.isOpenTime=this.obj.open;
 				this.shopTime=utils.format(new Date(this.obj.time[0]),'yyyy年MM月dd日')+'-'+
 					utils.format(new Date(this.obj.time[1]),'yyyy年MM月dd日');
-				this.dataWin.trueShopId=this.obj.shopId;
 			}
-//			this.dataWin.shopId=this.obj?this.obj.shopId:this.userdata.currentShop.id;
+			this.dataWin.trueShopId=this.obj?this.obj.shopId:this.userdata.currentShop.id;
             this.getChangeShiftsList();
 		},
 		methods:{
