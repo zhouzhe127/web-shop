@@ -63,7 +63,7 @@
 				<div class="online-box clearfix">
 					<span class="online-sub fl">商户号</span>
 					<div class="rightHalf">
-						<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
+						<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm('1')" />
 						<div class="fl handle-tips" v-if="numberStatus">
 							<i></i> 商户号必须为8位或10位数字
 						</div>
@@ -76,7 +76,7 @@
 				<div class="online-box clearfix">
 					<span class="online-sub fl">商户秘钥</span>
 					<div class="rightHalf">
-						<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
+						<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm('1')" />
 						<div class="fl handle-tips" v-if="secretStatus">
 							<i></i> 商户秘钥必须为32位
 						</div>
@@ -98,7 +98,7 @@
 					<div class="rightHalf">
 						<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
 						<a v-else href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
-						<a href="javascript:;" class="blue" style="width:200px;">保存</a>
+						<a href="javascript:;" class="blue" style="width:200px;" @click="Auditing('1')">保存</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
 					</div>
 				</div>
@@ -173,14 +173,15 @@ export default {
 			}
 		},
 		GetQueryString: function(paraName) { //获取url参数
-			let url = document.location.toString();　　　　
-			let arrObj = url.split("?");　　
+			let url = document.location.toString();　
+			// let url = 'https://v5.qa.ishandian.com.cn/?branch=zs#/admin/appletBinding?i=5&o=5&s=0&auth_code=queryauthcode%40%40%406UkO46yxE_AO4x2Dx8sBh7F5s-6z_aHySj9FLeofLagoO69SKfiaUJ7luZ8q26jDRVA4ColyTsX4CIdxNj8N4g&expires_in=3600'　;　
+			let arrObj = url.split("?");　
 			if (arrObj.length > 1) {　　　　　　
-				let arrPara = arrObj[1].split("&");　　　　　　
+				let arrPara = arrObj[arrObj.length - 1].split("&");　　　　　　
 				let arr;　　　　　　
 				for (let i = 0; i < arrPara.length; i++) {　　　　　　　　
 					arr = arrPara[i].split("=");
-					if (arr != null && arr[0] == paraName) {　　　　　　　　　　
+					if (arr != null && arr[0] == paraName) {　　　　　　　
 						return unescape(arr[1]);　
 					}　　　　　　
 				}　　　　　　
@@ -208,19 +209,37 @@ export default {
 			this.isAuth = false;
 			this.addWeChat();
 		},
-		checkForm: function() {
+		checkForm: function(type) {
 			if (this.number == '' || this.number.length != 8 && this.number.length != 10) {
 				this.numberStatus = false;
+				if (type) {
+					this.$store.commit('setWin', {
+						title: '温馨提示',
+						winType: 'alter',
+						content: '商户号必须为8位或10位数字',
+					});
+				}
+				return false;
 			} else {
 				this.numberStatus = true;
 			}
 			if (this.secret == '' || this.secret.length != 32) {
 				this.secretStatus = false;
+				if (type) {
+					this.$store.commit('setWin', {
+						title: '温馨提示',
+						winType: 'alter',
+						content: '商户秘钥必须为32位',
+					});
+				}
+				return false;
 			} else {
 				this.secretStatus = true;
 			}
+			return true;
 		},
-		async Auditing() {
+		async Auditing(type) {
+			if (!this.checkForm(type)) return;
 			let data = await http.Auditing({
 				data: {
 					merchantId: this.number,
