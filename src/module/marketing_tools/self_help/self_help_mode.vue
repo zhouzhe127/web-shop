@@ -190,6 +190,7 @@ export default {
 				}
 			], //内容配置数据
 			contenSelect: ['1', '2', '3'], //内容配置选中数组
+			goodsSelect: [], //固定支付方式选中
 			goodsType: [{
 					name: '微信支付',
 					id: '3'
@@ -203,7 +204,6 @@ export default {
 					id: '5'
 				}
 			], //固定支付方式
-			goodsSelect: [], //固定支付方式选中
 			exportUrl: 'javascript:void(0);', //导出二维码链接
 			payList: [], //弹窗里面选中的镜像数组
 			paymentList: [], // 其他支付列表的方式
