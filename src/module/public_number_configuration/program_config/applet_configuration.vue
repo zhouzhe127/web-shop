@@ -2,11 +2,18 @@
 	<div id="applet">
 		<!-- 加载页 主页 -->
 		<div class="compared">
-			<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span>
+			<!-- <span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span> -->
 		</div>
 		<!-- 主体 -->
 		<div class="main_box clearfix">
-			<div class="main_l fl"></div>
+			<div class="main_l fl">
+				<!-- 手机主体内容 -->
+				<div class="main_body">
+					<div class="default">
+						
+					</div>
+				</div>
+			</div>
 			<div class="main_r fl">
 				<template v-if="payType == '0'">
 					<div class="choose clearfix">
@@ -141,8 +148,17 @@ export default {
 	width: 368px;
 	height: 753px;
 	margin-right: 24px;
-	background: url(../../../res/images/iphone.png) center no-repeat;
+	background: url(../../../res/images/phone.png) center no-repeat;
 	background-size: 100% 100%;
+	position: relative;
+}
+#applet .main_box .main_l .main_body{
+	width:320px;
+	height: 569px;
+	background:#333;
+	position: absolute;
+	left:24px;
+	top: 90px;
 }
 
 #applet .main_box .main_r {

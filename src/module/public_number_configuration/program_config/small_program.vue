@@ -37,68 +37,74 @@
 			</div>
 		</template>
 		<template v-else>
-			<!-- 设置微信支付 -->
-			<div class="set-line">
-				<div class="titles">设置微信支付</div>
-				<div class="line"></div>
-			</div>
-			<!-- 小程序 -->
-			<div class="online-box clearfix">
-				<span class="online-sub fl">小程序:</span>
-				<div class="rightHalf">
-					<span class="fl name">小程序的名称</span>
-					<a href="javascript:void(0)" class="blue abtn fl" @click="reauthorization">重新授权</a>
-					<a href="javascript:void(0)" class="gray abtn fl">解除授权</a>
+			<template v-if="showConfig">
+				<!-- 设置微信支付 -->
+				<div class="set-line">
+					<div class="titles">设置微信支付</div>
+					<div class="line"></div>
 				</div>
-			</div>
-			<!-- 微信支付 -->
-			<div class="online-box clearfix">
-				<span class="online-sub fl">微信支付:</span>
-				<div class="rightHalf">
-					<span class="fl name">目前小程序仅支持微信原生支付,你可以在【小程序后台-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
-				</div>
-			</div>
-			<!-- 商户号 -->
-			<div class="online-box clearfix">
-				<span class="online-sub fl">商户号</span>
-				<div class="rightHalf">
-					<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
-					<div class="fl handle-tips" v-if="numberStatus">
-						<i></i> 商户号必须为8位或10位数字
-					</div>
-					<div class="fl dangerous-tips" v-else>
-						<i></i> 商户号必须为8位或10位数字,请登录微信商户平台核对
+				<!-- 小程序 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl">小程序:</span>
+					<div class="rightHalf">
+						<span class="fl name">小程序的名称</span>
+						<a href="javascript:void(0)" class="blue abtn fl" @click="reauthorization">重新授权</a>
+						<a href="javascript:void(0)" class="gray abtn fl">解除授权</a>
 					</div>
 				</div>
-			</div>
-			<!-- 商户秘钥 -->
-			<div class="online-box clearfix">
-				<span class="online-sub fl">商户秘钥</span>
-				<div class="rightHalf">
-					<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
-					<div class="fl handle-tips" v-if="secretStatus">
-						<i></i> 商户秘钥必须为32位
-					</div>
-					<div class="fl dangerous-tips" v-else>
-						<i></i> 商户秘钥必须为32位,请登录微信商户平台核对
+				<!-- 微信支付 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl">微信支付:</span>
+					<div class="rightHalf">
+						<span class="fl name">目前小程序仅支持微信原生支付,你可以在【小程序后台-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
 					</div>
 				</div>
-			</div>
-			<!-- 确认 -->
-			<div class="online-box clearfix">
-				<span class="online-sub fl"></span>
-				<div class="businessHours">
-					<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
-					<span>已确认商户号和商户秘钥配置正确(否则将导致微信支付异常,小程序无法通过审核)</span>
+				<!-- 商户号 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl">商户号</span>
+					<div class="rightHalf">
+						<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
+						<div class="fl handle-tips" v-if="numberStatus">
+							<i></i> 商户号必须为8位或10位数字
+						</div>
+						<div class="fl dangerous-tips" v-else>
+							<i></i> 商户号必须为8位或10位数字,请登录微信商户平台核对
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="online-box clearfix">
-				<span class="online-sub fl"></span>
-				<div class="rightHalf">
-					<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
-					<a v-else href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
+				<!-- 商户秘钥 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl">商户秘钥</span>
+					<div class="rightHalf">
+						<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm" />
+						<div class="fl handle-tips" v-if="secretStatus">
+							<i></i> 商户秘钥必须为32位
+						</div>
+						<div class="fl dangerous-tips" v-else>
+							<i></i> 商户秘钥必须为32位,请登录微信商户平台核对
+						</div>
+					</div>
 				</div>
-			</div> 
+				<!-- 确认 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl"></span>
+					<div class="businessHours">
+						<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
+						<span>已确认商户号和商户秘钥配置正确(否则将导致微信支付异常,小程序无法通过审核)</span>
+					</div>
+				</div>
+				<div class="online-box clearfix">
+					<span class="online-sub fl"></span>
+					<div class="rightHalf">
+						<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
+						<a v-else href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
+						<a href="javascript:;" class="blue" style="width:200px;">保存</a>
+						<a href="javascript:;" class="blue" style="width:200px;">配置小程序</a>
+					</div>
+				</div>
+			</template>
+			<!-- 加载页配置 -->
+			<appletConfig v-else></appletConfig>
 		</template>
 		<!-- 弹窗 -->
 		<programWin v-if="showWin" @getAppliedWin='getResult'></programWin>
@@ -121,7 +127,8 @@ export default {
 			show: false,
 			auth_code: '', //授权回调码
 			showWin: false,
-			isAuth: true //是否已经授权
+			isAuth: true, //是否已经授权
+			showConfig: false //显示配置
 		};
 	},
 	methods: {
@@ -227,6 +234,8 @@ export default {
 	components: {
 		'programWin': () =>
 			import ( /* webpackChunkName: 'business_win' */ './small_program_win'),
+		'appletConfig': () =>
+			import ( /* webpackChunkName: 'applet_configuration' */ './applet_configuration'),
 	},
 	mounted() {
 		this.userData = storage.session('userShop');
