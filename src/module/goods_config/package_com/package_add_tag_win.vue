@@ -1,10 +1,10 @@
-<!--
-	**选择商品列表  套餐和商品
-	* 
-	* 孔伟研
-	* *
-	* 
--->
+/**
+ * @Author: 孔伟研 
+ * @Date: 2018-08-28 18:21:30 
+ * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-08-28 18:22:44
+ * @Module:选择商品列表  套餐和商品
+**/
 <template>
 	<win @winEvent="goodListWin" :align="'center'" :height="560" :width="800" :ok="btnOk" :cancel="btnCancel">
 		<span slot="title">{{title}}</span>
@@ -192,8 +192,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		subAdd: () =>
-			import(/*webpackChunkName:'subadd'*/ 'src/components/subadd')
+		// subAdd: () =>
+		// 	import(/*webpackChunkName:'subadd'*/ 'src/components/subadd')
 	},
 	methods: {
 		initBtn() {
@@ -304,7 +304,7 @@ export default {
 					return false;
 				}
 
-				if (this.packageType == 1 && obj.total < this.totalNum) {
+				if (this.packageType != 0 && obj.total < this.totalNum) {
 					this.$store.commit('setWin', {
 						title: '温馨提示',
 						content: `选中的商品总数量不能小于'可选数量'!`
@@ -377,8 +377,8 @@ export default {
 		//修改商品的数量
 		funSetGoodsNum(item, index) {
 			this.selecIndex.push(item.id);
-			console.log(this.selecIndex);
-			console.log(index);
+			// console.log(this.selecIndex);
+			// console.log(index);
 			let num = item.packageGoodsNum;
 			let reg = /^[\d]+$/g;
 			if (!reg.test(num)) {
