@@ -151,7 +151,8 @@
 				this.shopTime=utils.format(new Date(this.obj.time[0]),'yyyy年MM月dd日')+'-'+
 					utils.format(new Date(this.obj.time[1]),'yyyy年MM月dd日');
             }
-            this.getChangeShiftsList()
+			this.dataWin.shopId=this.obj?this.obj.shopId:this.userdata.currentShop.id;
+            this.getChangeShiftsList();
 		},
 		methods:{
 			//获取列表数据
@@ -190,7 +191,8 @@
             async getDetailList(item){
 				let res= await http.getShiftsDetail({
 					data: {
-						id:item.id
+						id:item.id,
+						shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
 					}
 				});
 				//处理支付方式

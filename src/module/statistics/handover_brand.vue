@@ -36,15 +36,13 @@
                     <el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="currentList" border style="width: 100%">
                         <el-table-column fixed min-width = "120" align="center" label="店铺名称">
                             <template slot-scope="scope">
-                                <span style="color:#2EA8DC;cursor:pointer" @click="toShop(scope.row,scope.$index)">{{scope.row.shopName}}</span>
+                                <span style="color:#2EA8DC;cursor:pointer" @click="toShop(scope.row)">{{scope.row.shopName}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column  min-width = "100" align="center" prop="num" label="班次数"></el-table-column>
-                        <el-table-column show-overflow-tooltip min-width = "120" align="center" prop="mushNum" label="实收金额"></el-table-column>
-                        <el-table-column show-overflow-tooltip min-width = "120" align="center"  prop="openNum" label="开台次数"></el-table-column>
-                        <el-table-column show-overflow-tooltip min-width = "120"  align="center" prop="guaNum" label="挂台次数"> </el-table-column>
-                        <el-table-column  min-width = "120" align="center" prop="guaMoney" label="挂账金额" > </el-table-column>
-                        <el-table-column  min-width = "120" align="center"  prop="money" label="服务费" > </el-table-column>
+                        <el-table-column  min-width = "100" align="center" prop="shiftsNum" label="班次数"></el-table-column>
+                        <el-table-column show-overflow-tooltip min-width = "120" align="center" prop="totalIncome" label="实收金额"></el-table-column>
+                        <el-table-column show-overflow-tooltip min-width = "120" align="center"  prop="allNum" label="开台次数"></el-table-column>
+                        <el-table-column  min-width = "120" align="center"  prop="chargeIncome" label="服务费" > </el-table-column>
                     </el-table>
                 </div>
                 <div style="margin-top: 10px">
@@ -84,7 +82,6 @@
 				loading: false, //加载动画
 			};
 		},
-		props: [],
 		created() {
 			this.userdata = storage.session('userShop');
 			if (this.userdata.currentShop.ischain !== '3') {//单店
@@ -137,9 +134,9 @@
                                         }).then(data => {
                                             this.loading = false; //停止加载动画
                                             this.pageList = data;
+											this.paging(); //分页
                                             console.log(data);
                                         });
-										this.paging(); //分页
                                     }else if(data.status == 2) {
                                         //失败
                                         Timer.clear(this.timerId);
@@ -171,6 +168,14 @@
 					});
 					return false;
                 }
+				let timer = 3 * 31 * 24 * 60 * 60 * 1000;
+				if (this.timeSer[1] - this.timeSer[0]> timer) {
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '最大只能查询三个月时间'
+					});
+					return false;
+				}
                 return true;
             },
 			//是否按营业时间
@@ -180,7 +185,6 @@
 			//选择店铺返回
 			getShop(res) {
 				this.selShopId=res;
-				console.log(res);
 			},
             //搜索
 			search(){
@@ -190,9 +194,9 @@
 			reset(){
 				this.timeSer=[new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)];
 				this.isOpenTime=true;
-				this.selShopId=[];
 				this.page=1;
-				this.paging();
+				this.num=10;
+				this.getStoreOrder();
             },
 			//每页显示多少行
 			numChange(e){
@@ -211,26 +215,20 @@
 				this.currentList = this.pageList.slice((this.page - 1) * this.num, (this.page - 1) * this.num + this.num); //截取当前页数据
 			},
 			//去单店
-			toShop(item ,i){
+			toShop(item){
 				this.obj={
 					time:this.timeSer,
 					open:this.isOpenTime,
-					shopId:item.id,
+					shopId:item.shopId,
 					shopName:item.shopName
                 };
 				this.isShop=true;
-
-				console.log(item)
-				console.log(i)
 			},
             //单店返回
             back(){
 				this.isShop=false;
             }
         },
-		destroyed() {
-
-		},
 		components: {
 			handover: () =>
 				import(/*webpackChunkName: "handover"*/ './handover'),
