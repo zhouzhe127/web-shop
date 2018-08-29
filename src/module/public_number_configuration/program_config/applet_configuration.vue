@@ -9,8 +9,17 @@
 			<div class="main_l fl">
 				<!-- 手机主体内容 -->
 				<div class="main_body">
-					<div class="default">
-						
+					<div class="show">
+						<img v-if="endingImage != ''" alt="logo" v-bind:src="uploadUrl  + endingImage" class="endImage" />
+						<div class="header">
+							<img class="logo" alt="logo" v-bind:src="uploadUrl  + logoImage" />
+							<p>欢迎来到{{shopName}}</p>
+							<div class="disc">
+								<span style="background:#333;"></span>
+								<span style="background:#444;"></span>
+								<span style="background:#555;"></span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -42,6 +51,9 @@
 					</div>
 				</template>
 			</div>
+			<div class="saveConfig">
+				<a href="javascript:;" class="yellow" style="width:200px;" @click="saveConfig">保存</a>
+			</div>
 		</div>
 	</div>
 </template>
@@ -53,7 +65,7 @@ import storage from 'src/verdor/storage';
 export default {
 	data() {
 		return {
-			shopId: storage.session('userShop').currentShop.id, //shopID
+			shopId: '', //shopID
 			payWays: [{
 					id: 0,
 					name: '加载页'
@@ -79,8 +91,17 @@ export default {
 					name: '直接授权'
 				}
 			],
-			authorizedId: 0
+			authorizedId: 0,
+			uploadUrl: '', //图片前缀
+			shopName: '',
+			logoImage: '',
+			endingImage: '' //上传的背景图片
 		};
+	},
+	props:{
+		number:String,//商户id
+		secret:String, //密码
+		authMiniBackground:String
 	},
 	methods: {
 		changeRadio: function(item) {
@@ -91,6 +112,9 @@ export default {
 		},
 		haveIndex(i) { //活动对象选择
 			this.integralOn = i;
+			if (this.integralOn == 0) {
+				this.endingImage = '';
+			}
 			//this.abc();
 		},
 		haveAuthorized(i) {
@@ -105,18 +129,57 @@ export default {
 				},
 				formId: 'endImage',
 			});
+			this.endingImage = res;
 			//this.followerMessage[index].img = this.uploadUrl + res; //图片
 			// this.endingImage = res;//图片传给后台
 			// let bgName = this.endingImage.lastIndexOf('/');
 			// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
 		},
+		returnStore: function() { //返回
+			this.$emit('throwWinResult', false);
+			this.$store.commit('setPageTools', {});
+		},
+		saveConfig: function() { //保存配置
+			this.updateAuthData();
+		},
+		async updateAuthData() {
+			let data = await http.updateAuthData({
+				data: {
+					authMiniBackground: this.endingImage,
+					merchantId: this.number,
+					merchantSecret: this.secret
+				}
+			})
+			if (data) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '保存成功',
+				});
+			}
+		}
 	},
 	components: {
 		'singleSelect': () =>
 			import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 	},
 	mounted() {
-
+		this.$store.commit('setPageTools', [{
+			name: '返回',
+			className: ['fd-blue'],
+			fn: () => {
+				this.returnStore();
+			}
+		}]);
+		let userShop = storage.session('userShop');
+		this.uploadUrl = userShop.uploadUrl;
+		this.shopId = userShop.currentShop.id;
+		this.shopName = userShop.currentShop.name;
+		this.logoImage = userShop.currentShop.logoImage;
+		this.endingImage = this.authMiniBackground;
+		if(this.endingImage != ''){
+			this.integralOn = 1;
+		}
 	}
 };
 </script>
@@ -152,21 +215,80 @@ export default {
 	background-size: 100% 100%;
 	position: relative;
 }
-#applet .main_box .main_l .main_body{
-	width:320px;
+
+#applet .main_box .main_l .main_body {
+	width: 320px;
 	height: 569px;
-	background:#333;
 	position: absolute;
-	left:24px;
+	left: 24px;
 	top: 90px;
+	background: #fff;
+}
+
+#applet .main_box .main_l .main_body .show {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+#applet .main_box .main_l .main_body .show .endImage {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+#applet .main_box .main_l .main_body .show .header {
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 60px;
+}
+
+#applet .main_box .main_l .main_body .show .header .logo {
+	width: 60px;
+	height: 60px;
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 10px;
+}
+
+#applet .main_box .main_l .main_body .show .header p {
+	text-align: center;
+	line-height: 40px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+#applet .main_box .main_l .main_body .show .header .disc {
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+}
+
+#applet .main_box .main_l .main_body .show .header .disc span {
+	display: block;
+	width: 5px;
+	height: 5px;
+	border-radius: 2.5px;
+	background: #999;
+	margin-right: 5px;
+	float: left;
 }
 
 #applet .main_box .main_r {
 	width: 685px;
-	height: 630px;
+	height: 580px;
 	background-color: #F6F6F6;
 	margin-top: 90px;
 	padding: 40px;
+	margin-bottom: 50px;
+}
+
+#applet .main_box .saveConfig {
+	width: 685px;
+	height: 40px;
+	display: flex;
+	justify-content: center;
 }
 
 #applet .main_box .main_r .choose {

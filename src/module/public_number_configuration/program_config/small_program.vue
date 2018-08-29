@@ -37,7 +37,7 @@
 			</div>
 		</template>
 		<template v-else>
-			<template v-if="showConfig">
+			<template v-if="!showConfig">
 				<!-- 设置微信支付 -->
 				<div class="set-line">
 					<div class="titles">设置微信支付</div>
@@ -99,12 +99,12 @@
 						<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
 						<a v-else href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
 						<a href="javascript:;" class="blue" style="width:200px;">保存</a>
-						<a href="javascript:;" class="blue" style="width:200px;">配置小程序</a>
+						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
 					</div>
 				</div>
 			</template>
 			<!-- 加载页配置 -->
-			<appletConfig v-else></appletConfig>
+			<appletConfig v-else @throwWinResult="getConfigs" :number="number" :secret="secret" :authMiniBackground='authMiniBackground'></appletConfig>
 		</template>
 		<!-- 弹窗 -->
 		<programWin v-if="showWin" @getAppliedWin='getResult'></programWin>
@@ -127,14 +127,14 @@ export default {
 			show: false,
 			auth_code: '', //授权回调码
 			showWin: false,
-			isAuth: true, //是否已经授权
-			showConfig: false //显示配置
+			isAuth: false, //是否已经授权
+			showConfig: false, //显示配置
+			authMiniBackground: '' //小程序背景图片
 		};
 	},
 	methods: {
 		getResult: function(res, item) {
 			//弹窗回调
-			console.log(res)
 			if (res == 'ok') {
 				// console.log('11111')
 				//this.bussinessselect = item;
@@ -145,12 +145,17 @@ export default {
 			}
 			this.showWin = false;
 		},
+		getConfigs: function(res) {
+			//console.log(res)
+			this.showConfig = res;
+			//console.log(this.showConfig)
+		},
+		openConfig: function() { //打开配置
+			this.showConfig = true;
+		},
 		selectBusinessHours: function() {
 			//是否仅会员享受门店折扣
 			this.isMember = !this.isMember;
-		},
-		addconfig: function() {
-
 		},
 		registrationApplet: function() { //注册小程序
 			window.open('https://mp.weixin.qq.com');
@@ -229,7 +234,23 @@ export default {
 					content: '审核成功',
 				});
 			}
-		}
+		},
+		// 获取公众号配置
+		async getConfig() {
+			let res = await http.getWechatConfig({
+				data: {
+					shopId: this.userData.currentShop.id
+				}
+			});
+			if (res) {
+				this.number = res.miniAppId;
+				this.secret = res.miniAppSecret;
+				if (res.authMiniAppId != '') {
+					this.isAuth = Boolean(Number(res.isAuth));
+				}
+				this.authMiniBackground = res.authMiniBackground;
+			}
+		},
 	},
 	components: {
 		'programWin': () =>
@@ -239,12 +260,13 @@ export default {
 	},
 	mounted() {
 		this.userData = storage.session('userShop');
+		this.getConfig();
 		let auth_code = this.GetQueryString('auth_code');
 		this.auth_code = auth_code;
 		// if(this.auth_code != ''){
 		// 	this.showWin = true;
 		// }
-		console.log(auth_code)
+		//console.log(auth_code)
 		if (auth_code && auth_code != null) {
 			this.showWin = true;
 			//this.setAuth(auth_code);

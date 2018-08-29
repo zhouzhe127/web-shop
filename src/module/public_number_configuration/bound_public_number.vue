@@ -105,7 +105,9 @@ export default {
 		async addWeChat() { //添加微信公众号
 			let data = await http.getAuthUrl({
 				data: {
-					shopId: this.userData.currentShop.id
+					shopId: this.userData.currentShop.id,
+					redirect_uri: document.location.toString(),
+					auth_type: 1
 				}
 			})
 			if (data) {

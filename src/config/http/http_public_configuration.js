@@ -78,5 +78,10 @@ export default {
     "Auditing": { //小程序审核
         url: w + 'weixin/Auditing',
         method: 'post'
-    }
+    },
+    "updateAuthData": { //授权小程序配置
+        url: w + 'weixin/updateAuthData',
+        method: 'post'
+    },
+
 }
