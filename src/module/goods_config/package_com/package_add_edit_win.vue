@@ -34,7 +34,7 @@
 							<el-form-item required label="排序">
 								<el-input-number v-model="bag.sort" @change="getPackageSort" style="width:150px;" :min="1" :max="255"></el-input-number>
 							</el-form-item>
-							<el-form-item v-if="bag.type!=2" required label="售价" prop="price">
+							<el-form-item v-if="bag.type!=2" required label="售价">
 								<el-input v-model="bag.price" maxlength = "10" placeholder = "请输入售价" style = "width:120px;"></el-input>
 								<span>元</span>
 								<span style="margin-left:10px;">成本价</span>
