@@ -30,9 +30,6 @@ export default{
 			num:''
         }
     },
-    created(){
-
-    },
 	props:['dataWin'],
     methods:{
 		//差额调整

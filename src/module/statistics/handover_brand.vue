@@ -57,7 +57,6 @@
 <script>
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
 	import Timer from 'src/verdor/timer';
 	export default {
 		data() {

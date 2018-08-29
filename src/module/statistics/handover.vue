@@ -157,6 +157,15 @@
 		methods:{
 			//获取列表数据
 			async getChangeShiftsList() {
+				let difference=this.obj?(this.obj.time[1]-this.obj.time[0]):(this.timeShop[1] - this.timeShop[0]);
+                let timer = 3 * 31 * 24 * 60 * 60 * 1000;
+                if (difference> timer) {
+                    this.$store.commit('setWin', {
+                        title: '操作提示',
+                        content: '最大只能查询三个月时间'
+                    });
+                    return false;
+                }
 				let data = await http.getChangeShiftsList({
 					data: {
                         shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
@@ -216,10 +225,7 @@
 //                        break;
 //					}
 //				}
-				console.log(this.detailsTwo);
-				console.log(this.payTypeList);
 				//处理差额调整
-                console.log(res.differPrice);
                 for(let i=0;i<res.differPrice.length;i++){
                 	if(Number(res.differPrice[i].differPrice)>0){
 						res.differPrice[i].differPrice='+'+res.differPrice[i].differPrice;
@@ -287,7 +293,8 @@
 			backWin(res,num){
             	if(res=='ok'){
                     this.modifyList.unshift({differPrice:Number(num)>0?`+${num}`:num,
-                            userName:this.userdata.user.name})
+                            userName:this.userdata.user.name});
+					this.getChangeShiftsList();
                 }
                 this.openWin=false;
             }
