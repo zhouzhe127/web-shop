@@ -39,6 +39,10 @@
 			<input type="text" class="mes" v-model="topData.topName" placeholder="请输入名称" maxlength="6">
 		</div>
 		<div class="line">
+			<span class="warp">自定义套餐首页推荐名称:</span>
+			<input type="text" class="mes" v-model="topData.customPackageName" placeholder="请输入名称" maxlength="8">
+		</div>
+		<div class="line">
 			<span class="warp">置顶推荐区商品:</span>
 			<a class="blue" style="width:100px;height:40px;line-height:40px;" @click="menuConfig">菜单配置</a>
 			<span v-if="topData.topGoods.length != 0 || topData.topPackages.length != 0">已配置
@@ -124,8 +128,9 @@ export default {
 			topData: {
 				topName: '',
 				topGoods: [],
-				topPackages: []
-			}
+				topPackages: [],
+				customPackageName:''//自定义套餐推荐名称
+			},
 		};
 	},
 	mounted() {
@@ -326,7 +331,8 @@ export default {
 					elecMenuVip: this.islogin ? this.loginSel.join() : '', //登录会员
 					topPackages: this.topData.topPackages,
 					topGoods: this.topData.topGoods,
-					topName: this.topData.topName
+					topName: this.topData.topName,
+					customPackageName: this.topData.customPackageName,
 				}
 			});
 			this.$store.commit('setWin', {
