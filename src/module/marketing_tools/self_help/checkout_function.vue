@@ -112,27 +112,43 @@
 		</div>
 		<!-- 备餐时间 -->
 		<div class="pay-window-box clearfix" v-if="type == '0'">
-			<span class="fl pay-window-sub required">备餐时间</span>
+			<span class="fl pay-window-sub required">配餐时间</span>
 			<div class="rightHalf">
 				<section class="fl">
 					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分钟</span>
 				</section>
+				<div class="prompting fl" @click="isPublicNumber('0')">
+					<div class="detDiv" v-if="isPublic['0']">
+						<i class="detI triright"></i>
+						<h3 class="detH3">
+							我们会根据您设置的配餐时间自动呼叫第三方配送,以保证配送的及时性,配餐时间不能超过60分钟哦~
+						</h3>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- 接单自动出餐 -->
 		<div class="pay-window-box" v-if="type == '1'">
-			<span class="fl pay-window-sub">接单自动出餐</span>
+			<span class="fl pay-window-sub">接单后自动出餐</span>
 			<onOff :key='1' :status="mealStatus" @statusChange="ismealStatus"></onOff>
 		</div>
 		<!-- 备餐时间 -->
 		<div class="pay-window-box clearfix" v-if="type == '1' && mealStatus">
-			<span class="fl pay-window-sub required">备餐时间</span>
+			<span class="fl pay-window-sub required">配餐时间</span>
 			<div class="rightHalf">
 				<section class="fl">
 					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分钟</span>
 				</section>
+				<div class="prompting fl" @click="isPublicNumber('0')">
+					<div class="detDiv" v-if="isPublic['0']">
+						<i class="detI triright"></i>
+						<h3 class="detH3">
+							我们会根据您设置的配餐时间自动呼叫第三方配送,以保证配送的及时性,配餐时间不能超过60分钟哦~
+						</h3>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- 快递的支付方式 -->
@@ -533,6 +549,7 @@ export default {
 			}],
 			userStatus: 0, //单用户必点状态
 			isPublic: {
+				'0': false,
 				'1': false,
 				'2': false,
 				'3': false
