@@ -39,6 +39,7 @@ export default{
 		async updateDifferPrice(res){
 			let data=await http.updateDifferPrice({
 				data:{
+					shopId:this.dataWin.shopId,
 					id:this.dataWin.id,
 					nowPrice:this.num,
 					cash:this.dataWin.cash
@@ -50,6 +51,13 @@ export default{
 		},
 		clickResult(res){
 			if(res=='ok'){
+				if(Number(this.num)>999999){
+					this.$store.commit('setWin', {
+						title: '提示信息',
+						content: '请输入小于999999的金额'
+					});
+					return false;
+                }
 				this.updateDifferPrice(res);
             }else {
 				this.$emit('interNum',res);
