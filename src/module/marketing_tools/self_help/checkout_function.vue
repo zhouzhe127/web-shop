@@ -1005,13 +1005,9 @@ export default {
 				// setTimeout(() => {
 				// 	this.disareaList = this.getBusinessCircle(item.scopeDelivery.data);
 				// }, 2000)
-				if (item.readyMealTime != '') {
-					this.mealStatus = true;
-					this.equipment = item.readyMealTime; // 备餐时间
-				}
-			} else {
-				this.equipment = item.readyMealTime; // 备餐时间
+				this.mealStatus = Boolean(Number(item.isAutoOut));
 			}
+			this.equipment = item.readyMealTime; // 备餐时间
 		},
 		// 保存修改方法
 		setItem: function() {
@@ -1069,15 +1065,18 @@ export default {
 				// square.payList = this.areaSelect;
 			}
 			//item.autoOutMealStatus = Number(this.mealStatus); //接单后自动出餐
-			if (this.type == 1) {
-				if (this.mealStatus) {
-					item.readyMealTime = this.equipment; // 备餐时间
-				} else {
-					item.readyMealTime = '';
-				}
-			} else {
-				item.readyMealTime = this.equipment; // 备餐时间
-			}
+			// if (this.type == 1) {
+			// 	item.isAutoOut = 
+			// 	if (this.mealStatus) {
+			// 		item.readyMealTime = this.equipment; // 备餐时间
+			// 	} else {
+			// 		item.readyMealTime = '';
+			// 	}
+			// } else {
+			// 	item.readyMealTime = this.equipment; // 备餐时间
+			// }
+			item.isAutoOut = Number(this.mealStatus); //自动出餐
+			item.readyMealTime = this.equipment; // 备餐时间
 			item.minFee = this.sendingfee; // 起送费
 			item.moveFee = this.shippingfee; //配送费
 			item.preArriveTime = this.estimatedtime; //预计送达时间
