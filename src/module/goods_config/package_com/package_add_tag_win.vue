@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-28 18:21:30 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-08-28 18:22:44
+ * @Last Modified time: 2018-08-29 16:01:49
  * @Module:选择商品列表  套餐和商品
 **/
 <template>
@@ -85,7 +85,7 @@
 						<div class="onecate" v-if=" oneGoodList.goodsList.length > 0">
 							<section class="onecataTitle">
 								<i class="twoI" :class="{'oneI':L2ID == '0'}"></i>
-								<li class="twoTitle " :class="{'oneTitle':L2ID == '0'}">{{oneGoodList.name}}</li>
+								<div class="twoTitle " :class="{'oneTitle':L2ID == '0'}">{{oneGoodList.name}}</div>
 							</section>
 							<section style="width:600px;margin-left:30px;">
 								<el-checkbox-group v-model="selecIndex">
@@ -102,7 +102,7 @@
 						<div v-if="category.goodsList.length > 0" class="onecate" v-for="(category,index) in oneGoodList.child" :key="index">
 							<section class="onecataTitle">
 								<i class="twoI"></i>
-								<li class="twoTitle">{{category.name}}</li>
+								<div class="twoTitle">{{category.name}}</div>
 							</section>
 							<section style="width:600px;margin-left:30px;">
 								<el-checkbox-group v-model="selecIndex">

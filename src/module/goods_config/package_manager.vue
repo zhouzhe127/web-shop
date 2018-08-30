@@ -43,7 +43,7 @@
 
 					<div v-if="item.status != 1" class="mes">
 						<div class="meal-name">{{item.packageName}}</div>
-						<div class="meal-data fl">
+						<div v-if="item.type!=2" class="meal-data fl">
 							<div class="vip fl">
 								<span v-if="item.isVip == '0'">不参与会员</span>
 								<span v-if="item.isVip == '1'">会员价格：{{item.vipPrice}}</span>

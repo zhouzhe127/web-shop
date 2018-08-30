@@ -483,6 +483,8 @@
 				this.isVipShow = res;
 				if(this.isVipShow){
 					this.bag.isVip = '1';
+				}else{
+					this.bag.isVip = '0';
 				}
 			},
 			getVipRadio(res) {
@@ -640,10 +642,9 @@
 					if (!this.bag) this.bag = [];
 					this.bag.isDiscount = Boolean(this.bag.isDiscount*1);
 					this.bag.serviceCharge = Boolean(this.bag.serviceCharge*1);
-					// if(this.bag.status*1>0){
-					// 	this.isStatus = true;
-					// }
-					// this.bag.status = Boolean(this.bag.status*1);
+					if(this.bag.status*1>0){
+						this.isStatus = true;
+					}
 					this.bag.isRecommend = Boolean(this.bag.isRecommend*1);
 					if(this.bag.isVip*1>0){
 						this.isVipShow = true;
