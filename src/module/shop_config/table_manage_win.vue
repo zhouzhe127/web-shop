@@ -91,27 +91,27 @@ export default {
 	},
 	methods: {
 		//选择区域
-		doThrowWinResult(i) {
-			if (this.getOneTable && this.Area) {
-				this.oIndex = i;
-			}
-		},
-		//标准席位
-		changeOne(res) {
-			this.getOneTable.normalSeat = res;
-		},
-		//最小容纳人数
-		changeTwo(res) {
-			this.minSeat = res;
-		},
-		//最大容纳人数
-		changeThree(res) {
-			this.maxSeat = res;
-		},
-		//排序
-		changeFour(res) {
-			this.sort = res;
-		},
+//		doThrowWinResult(i) {
+//			if (this.getOneTable && this.Area) {
+//				this.oIndex = i;
+//			}
+//		},
+//		//标准席位
+//		changeOne(res) {
+//			this.getOneTable.normalSeat = res;
+//		},
+//		//最小容纳人数
+//		changeTwo(res) {
+//			this.minSeat = res;
+//		},
+//		//最大容纳人数
+//		changeThree(res) {
+//			this.maxSeat = res;
+//		},
+//		//排序
+//		changeFour(res) {
+//			this.sort = res;
+//		},
 		//创建桌台
 		async createTable(backRes) {
 			let res = await http.createTable({

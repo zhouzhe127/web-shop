@@ -10,6 +10,8 @@
 			<el-table-column fixed min-width = "100" align="center" label="操作">
 				<template slot-scope="scope">
 					<span style="color: #FE8D2C;cursor:pointer" @click="openAttrWin(scope.row)">编辑</span>
+					<span style="padding:0 5px;color: #D2D2D2">|</span>
+					<span style="color: #FD3F1F;cursor:pointer" @click="del(scope.row)">删除</span>
 				</template>
 			</el-table-column>
 			<el-table-column show-overflow-tooltip min-width = "50" align="center" prop="sort" label="排序"></el-table-column>
@@ -116,6 +118,8 @@
 				num: 10, //一页处理多少数据
 				total: 0, //总页数
 				page: 1, //当前第几页
+
+				userData:{},
 			};
 		},
 		created(){
@@ -131,6 +135,34 @@
 //			window.addEventListener('resize',this.windowResize,false);
 		},
 		methods:{
+			//删除
+			del(item){
+				this.$store.commit('setWin', {
+					title: '操作提示',
+					winType: 'confirm',
+					content: `确认删除该口味？`,
+					callback: delRes => {
+						if (delRes == 'ok') {
+							this.delAttr(item)
+						}
+					}
+				});
+			},
+			async delAttr(item) {
+				let res = await http.delAttr({
+					data: {
+						shopId: this.userData.currentShop.id,
+						brandId: this.userData.currentShop.brandId,
+						id:item.id
+					}
+				});
+				if(res){
+					this.taste=this.taste.filter((ele)=>{
+						return ele.id!=item.id;
+					});
+					this.paging();
+				}
+			},
 			//分页
 			paging() {
 				this.total = Math.ceil(this.taste.length / this.num); //获取总页数
@@ -213,10 +245,10 @@
 			//初始化数据
 			initData(){
 				//获取登录信息
-				let userData = storage.session('userShop');
-				this.shopId=userData.currentShop.id;
-				this.ischain=userData.currentShop.ischain;
-				this.isBrand=(userData.currentShop.ischain =='1' || userData.currentShop.ischain =='2') ? true: false;
+				this.userData = storage.session('userShop');
+				this.shopId=this.userData.currentShop.id;
+				this.ischain=this.userData.currentShop.ischain;
+				this.isBrand=(this.userData.currentShop.ischain =='1' || this.userData.currentShop.ischain =='2') ? true: false;
 
 				if(this.isBrand){
 					this.$store.commit('setPageTools',{

@@ -12,7 +12,9 @@
 			<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="showDataList" border style="width:90%">
 				<el-table-column fixed min-width = "120" align="center" label="操作">
 					<template slot-scope="scope">
-						<span style="color: #FE8D2C;cursor:pointer" @click="edit(scope.row,scope.$index)">编辑</span>
+						<span style="color: #FE8D2C;cursor:pointer" @click="edit(scope.row)">编辑</span>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<span style="color: #FD3F1F;cursor:pointer" @click="del(scope.row)">删除</span>
 					</template>
 				</el-table-column>
 				<el-table-column show-overflow-tooltip min-width = "50"  align="center" prop="sort"  label="排序"> </el-table-column>
@@ -79,7 +81,6 @@ export default {
 			showDataList:[], //展示的区域列表
 
 			areaId: '', //区域id
-			areaIndex: '', //区域列表索引
 
 			num: 10, //一页处理多少数据
 			total: 0, //总页数
@@ -98,6 +99,34 @@ export default {
 		this.$store.commit('setPageTools',arr);
 	},
 	methods: {
+		//删除
+		del(item){
+			this.$store.commit('setWin', {
+				title: '操作提示',
+				winType: 'confirm',
+				content: `确认删除区域${item.areaName}？`,
+				callback: delRes => {
+					if (delRes == 'ok') {
+						this.deleteArea(item)
+					}
+				}
+			});
+		},
+		//删除区域
+		async deleteArea(item) {
+			let res=await http.deleteArea({
+				data: {
+					shopId: this.shopId,
+					id:item.id
+				}
+			});
+			if(res){
+				this.dataList=this.dataList.filter((ele)=>{
+					return ele.id!=item.id;
+				});
+				this.paging();
+			}
+		},
 		//分页
 		paging() {
 			this.total = Math.ceil(this.dataList.length / this.num); //获取总页数
@@ -134,41 +163,15 @@ export default {
 			this.showWin = true;
 		},
 		//编辑
-		edit(item, i) {
-			console.log(item,i);
+		edit(item) {
+			console.log(item);
 			this.isAdd = false;
 			this.areaId = item.id;
-			this.areaIndex = i;
 			this.showWin = true;
 		},
 		//弹窗返回
 		doThrowWinResult(res, data) {
-
-
-//			switch(res){
-//				case 'edit':
-//					this.taste=this.taste.map((ele)=>{
-//						if(ele.id==ret.id){
-//							return ret;
-//						}else{
-//							return ele;
-//						}
-//					});
-//					this.taste=this.sortAttr(this.taste);
-//					break;
-//				case 'add':
-//					this.taste.push(ret);
-//					this.taste=this.sortAttr(this.taste);
-//					break;
-//				case 'delete':
-//					this.taste=this.taste.filter((ele)=>{
-//						return ele.id!=ret;
-//					});
-//			}
-//			this.paging();
-
 			console.log(data);
-
 			//确定
 			if (res == 'ok') {
 				if (this.isAdd) {//添加
@@ -190,7 +193,6 @@ export default {
 			if (res == 'cancel') {
 				if (!this.isAdd) {
 					//删除
-//					this.dataList.splice(this.areaIndex, 1);
 					this.dataList=this.dataList.filter((ele)=>{
 						return ele.id!=data.id;
 					});

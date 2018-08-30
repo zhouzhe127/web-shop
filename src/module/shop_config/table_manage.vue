@@ -9,9 +9,11 @@
 	<div id="table-show">
 		<section>
 			<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="showTableList" border style="width:90%">
-				<el-table-column show-overflow-tooltip min-width = "80" align="center" label="操作">
+				<el-table-column show-overflow-tooltip min-width = "120" align="center" label="操作">
 					<template slot-scope="scope">
 						<span style="color: #FE8D2C;cursor:pointer" @click="edit(scope.row)">编辑</span>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<span style="color: #FD3F1F;cursor:pointer" @click="del(scope.row)">删除</span>
 					</template>
 				</el-table-column>
 				<el-table-column show-overflow-tooltip min-width = "80" align="center" prop="sort" label="排序"></el-table-column>
@@ -116,6 +118,37 @@ export default {
 		this.getArea();
 	},
 	methods: {
+		//删除
+		del(item){
+			this.$store.commit('setWin', {
+				title: '操作提示',
+				winType: 'confirm',
+				content: `确定删除桌台${item.tableName}?`,
+				callback: delRes => {
+					if (delRes == 'ok') {
+						this.deleteTable(item);
+					}
+				}
+			});
+		},
+		//删除桌台
+		async deleteTable(item) {
+			let res = await http.deleteTable({
+				data: {
+					shopId: this.userData.currentShop.id,
+					id:item.id
+				}
+			});
+			if (res) {
+				for(let j=0;j<this.tableList.length;j++){
+					if(this.tableList[j].id==item.id){
+						this.tableList.splice(j,1);
+						break;
+					}
+				}
+				this.paging();
+			}
+		},
 		//分页
 		paging() {
 			this.total = Math.ceil(this.tableList.length / this.num); //获取总页数
@@ -228,113 +261,113 @@ export default {
 <style scoped lang="less">
 #table-show {
 	/*padding-top: 30px;*/
-	ul.tas-variety {
-		li {
-			&:first-child {
-				width: 300px;
-				height: 200px;
-				float: left;
-				margin-right: 15px;
-				text-align: center;
-				margin-bottom: 15px;
-				color: #b3b3b3;
-				cursor: pointer;
-				font-size: 22px;
-				line-height: 16px;
-				border: 1px #b3b3b3 solid;
-				span {
-					display: block;
-					margin-top: 20px;
-					margin-bottom: 10px;
-				}
-			}
-		}
-		.taste-list {
-			width: 300px;
-			height: 200px;
-			background-color: #f2f2f2;
-			float: left;
-			margin-right: 15px;
-			margin-bottom: 15px;
-			color: #333333;
-			cursor: pointer;
-			.divOne {
-				background-color: #6cc2e6;
-				height: 8px;
-			}
-			.divThree {
-				position: relative;
-				margin-left: 20px;
-				.spanName {
-					float: left;
-					margin: 30px 0 30px 0;
-					font-size: 26px;
-					text-overflow: ellipsis;
-					overflow: hidden;
-					white-space: nowrap;
-				}
-				.spanIndex {
-					float: right;
-					margin: 20px 15px 30px 0;
-					font-size: 72px;
-					color: #cbe3ee;
-				}
-				.width180 {
-					width: 180px;
-				}
-				.width140 {
-					width: 135px;
-				}
-				.width200 {
-					width: 220px;
-				}
-			}
-			.divFro {
-				float: left;
-				margin-left: 20px;
-				span {
-					font-size: 17px;
-					color: #333333;
-				}
-			}
-			.divTwo {
-				margin-left: 20px;
-				clear: both;
-				.jobDiv {
-					display: inline-block;
-					font-size: 14px;
-					width: 120px;
-					border-right: 1px solid #d2d2d2;
-				}
-				.telDiv {
-					display: inline-block;
-					margin: 0 15px 0 20px;
-					position: relative;
-					.table-code {
-						width: 30px;
-						height: 30px;
-						float: right;
-						position: absolute;
-						background-image: url(../../res/images/code.png);
-						background-size: 30px 30px;
-						top: 25px;
-						right: -10px;
-						a {
-							width: 100%;
-							height: 100%;
-						}
-						&:hover {
-							background-image: url(../../res/images/downcode.png);
-						}
-					}
-				}
-				.divAll {
-					margin-top: 10px;
-					font-size: 18px;
-				}
-			}
-		}
-	}
+	/*ul.tas-variety {*/
+		/*li {*/
+			/*&:first-child {*/
+				/*width: 300px;*/
+				/*height: 200px;*/
+				/*float: left;*/
+				/*margin-right: 15px;*/
+				/*text-align: center;*/
+				/*margin-bottom: 15px;*/
+				/*color: #b3b3b3;*/
+				/*cursor: pointer;*/
+				/*font-size: 22px;*/
+				/*line-height: 16px;*/
+				/*border: 1px #b3b3b3 solid;*/
+				/*span {*/
+					/*display: block;*/
+					/*margin-top: 20px;*/
+					/*margin-bottom: 10px;*/
+				/*}*/
+			/*}*/
+		/*}*/
+		/*.taste-list {*/
+			/*width: 300px;*/
+			/*height: 200px;*/
+			/*background-color: #f2f2f2;*/
+			/*float: left;*/
+			/*margin-right: 15px;*/
+			/*margin-bottom: 15px;*/
+			/*color: #333333;*/
+			/*cursor: pointer;*/
+			/*.divOne {*/
+				/*background-color: #6cc2e6;*/
+				/*height: 8px;*/
+			/*}*/
+			/*.divThree {*/
+				/*position: relative;*/
+				/*margin-left: 20px;*/
+				/*.spanName {*/
+					/*float: left;*/
+					/*margin: 30px 0 30px 0;*/
+					/*font-size: 26px;*/
+					/*text-overflow: ellipsis;*/
+					/*overflow: hidden;*/
+					/*white-space: nowrap;*/
+				/*}*/
+				/*.spanIndex {*/
+					/*float: right;*/
+					/*margin: 20px 15px 30px 0;*/
+					/*font-size: 72px;*/
+					/*color: #cbe3ee;*/
+				/*}*/
+				/*.width180 {*/
+					/*width: 180px;*/
+				/*}*/
+				/*.width140 {*/
+					/*width: 135px;*/
+				/*}*/
+				/*.width200 {*/
+					/*width: 220px;*/
+				/*}*/
+			/*}*/
+			/*.divFro {*/
+				/*float: left;*/
+				/*margin-left: 20px;*/
+				/*span {*/
+					/*font-size: 17px;*/
+					/*color: #333333;*/
+				/*}*/
+			/*}*/
+			/*.divTwo {*/
+				/*margin-left: 20px;*/
+				/*clear: both;*/
+				/*.jobDiv {*/
+					/*display: inline-block;*/
+					/*font-size: 14px;*/
+					/*width: 120px;*/
+					/*border-right: 1px solid #d2d2d2;*/
+				/*}*/
+				/*.telDiv {*/
+					/*display: inline-block;*/
+					/*margin: 0 15px 0 20px;*/
+					/*position: relative;*/
+					/*.table-code {*/
+						/*width: 30px;*/
+						/*height: 30px;*/
+						/*float: right;*/
+						/*position: absolute;*/
+						/*background-image: url(../../res/images/code.png);*/
+						/*background-size: 30px 30px;*/
+						/*top: 25px;*/
+						/*right: -10px;*/
+						/*a {*/
+							/*width: 100%;*/
+							/*height: 100%;*/
+						/*}*/
+						/*&:hover {*/
+							/*background-image: url(../../res/images/downcode.png);*/
+						/*}*/
+					/*}*/
+				/*}*/
+				/*.divAll {*/
+					/*margin-top: 10px;*/
+					/*font-size: 18px;*/
+				/*}*/
+			/*}*/
+		/*}*/
+	/*}*/
 	.table-code {
 		width: 30px;
 		height: 30px;
