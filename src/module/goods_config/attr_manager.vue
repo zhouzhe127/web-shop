@@ -123,13 +123,20 @@
 			};
 		},
 		created(){
+			//获取登录信息
+			this.userData = storage.session('userShop');
+			this.shopId=this.userData.currentShop.id;
+			this.ischain=this.userData.currentShop.ischain;
+			this.isBrand=(this.userData.currentShop.ischain =='1' || this.userData.currentShop.ischain =='2') ? true: false;
 			let arr = [{name:'新建口味',className:'pick',fn:()=>{
 				this.openAttrWin();
 			}}];
+			if(this.isBrand){
+				arr[1]={name:'同步',className:'pick',fn:()=>{this.showCom='attrAsync'}};
+			}
 			this.$store.commit('setPageTools',arr);
 		},
 		mounted:function(){
-			this.initData();
 			this.funGetAttr();
 //			this.windowResize();
 //			window.addEventListener('resize',this.windowResize,false);
@@ -241,20 +248,6 @@
 					}
 				});
 				return temp;
-			},
-			//初始化数据
-			initData(){
-				//获取登录信息
-				this.userData = storage.session('userShop');
-				this.shopId=this.userData.currentShop.id;
-				this.ischain=this.userData.currentShop.ischain;
-				this.isBrand=(this.userData.currentShop.ischain =='1' || this.userData.currentShop.ischain =='2') ? true: false;
-
-				if(this.isBrand){
-					this.$store.commit('setPageTools',{
-						sync:()=>{this.showCom='attrAsync'}
-					});
-				}
 			},
 			//获取口味列表
 			async funGetAttr(){
