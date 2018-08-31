@@ -8,12 +8,12 @@
 
 		<section id="details_con" v-cloak>
 			<div style="margin:10px 0;">
-				<el-radio-group v-model="selectTab">
-					<el-radio-button label="0">
-						<span><i class="el-icon-picture"></i> 图片</span>
-					</el-radio-button>
+				<el-radio-group v-model="selectTab" @change="typeChange">
 					<el-radio-button label="1">
 						<span><i class="el-icon-tickets"></i> 列表</span>
+					</el-radio-button>
+					<el-radio-button label="0">
+						<span><i class="el-icon-picture"></i> 图片</span>
 					</el-radio-button>
 				</el-radio-group>
 			</div>
@@ -370,7 +370,7 @@ export default {
 			],
 			goodType:0,//商品类型下标
 			typeName:'请选择商品类型',
-			selectTab:0
+			selectTab:1,//默认表格模式
 		};
 	},
 	mounted() {
@@ -378,7 +378,7 @@ export default {
 		this.initSyncBtn();
 		this.syncRequest();
 		document.addEventListener('click', this.domClick, false);
-		this.windowResize();
+		// this.windowResize();
 		window.addEventListener('resize', this.windowResize, false);
 	},
 	components: {
@@ -394,6 +394,12 @@ export default {
 			import(/* webpackChunkName:"select_btn" */ 'src/components/select_btn'), // 下拉
 	},
 	methods: {
+		//切换图片时计算宽度
+		typeChange(res){
+			if(res==0){
+				this.windowResize();
+			}
+		},
 		//上下架
 		updownWin(item){
 			let atr = item.status =='0'?'下架':'上架'
