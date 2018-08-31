@@ -17,7 +17,7 @@
             </section>
             <section class="line_h">
                 <span>当前班次实际现金收入</span>
-                <el-input v-model="num" clearable  style="width:210px;"></el-input>
+                <input type="text" :onkeyup="num=num.replace(/[^\d.]/,'')"  v-model="num" />
             </section>
         </div>
     </win>
@@ -48,13 +48,21 @@ export default{
 		},
 		clickResult(res){
 			if(res=='ok'){
-				if(Number(this.num)>999999){
+				if(Number(this.num)>=1000000){
 					this.$store.commit('setWin', {
 						title: '提示信息',
-						content: '请输入小于999999的金额'
+						content: '请输入小于1000000的金额'
 					});
 					return false;
                 }
+//                let one=/^[1-9]\d{0,5}.?\d+$/;
+//				if(!one.test(this.num)){
+//					this.$store.commit('setWin', {
+//						title: '提示信息',
+//						content: '请输入合理金额'
+//					});
+//					return false;
+//                }
 				this.updateDifferPrice(res);
             }else {
 				this.$emit('interNum',res);
@@ -76,7 +84,11 @@ export default{
             display: inline-block;
         }
         span:first-child{
-            margin-right: 20px;
+            margin-right:5px;
+        }
+        input{
+            width: 210px;
+            height: 40px;
         }
     }
 </style>
