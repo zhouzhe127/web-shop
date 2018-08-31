@@ -47,7 +47,7 @@
 				<div class="online-box clearfix">
 					<span class="online-sub fl">小程序:</span>
 					<div class="rightHalf">
-						<span class="fl name">小程序的名称</span>
+						<span class="fl name">{{authMiniAppName}}</span>
 						<a href="javascript:void(0)" class="blue abtn fl" @click="reauthorization">重新授权</a>
 						<a href="javascript:void(0)" class="gray abtn fl">解除授权</a>
 					</div>
@@ -56,7 +56,7 @@
 				<div class="online-box clearfix">
 					<span class="online-sub fl">微信支付:</span>
 					<div class="rightHalf">
-						<span class="fl name">目前小程序仅支持微信原生支付,你可以在【小程序后台-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
+						<span class="fl name">目前小程序仅支持微信原生支付,你可以在【<span style="color: #29A8E0;font-size: 16px;" @click="registrationApplet">小程序后台</span>-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
 					</div>
 				</div>
 				<!-- 商户号 -->
@@ -129,7 +129,8 @@ export default {
 			showWin: false,
 			isAuth: false, //是否已经授权
 			showConfig: false, //显示配置
-			authMiniBackground: '' //小程序背景图片
+			authMiniBackground: '', //小程序背景图片
+			authMiniAppName:'' //小程序名字
 		};
 	},
 	methods: {
@@ -140,9 +141,9 @@ export default {
 				//this.bussinessselect = item;
 				this.addWeChat();
 			}
-			if (res == 'cancel') {
-				this.setAuth(this.auth_code);
-			}
+			// if (res == 'cancel') {
+			// 	this.setAuth(this.auth_code);
+			// }
 			this.showWin = false;
 		},
 		getConfigs: function(res) {
@@ -265,7 +266,7 @@ export default {
 				this.number = res.miniAppId;
 				this.secret = res.miniAppSecret;
 				if (res.authMiniAppId != '') {
-					this.isAuth = Boolean(Number(res.isAuth));
+					this.isAuth = true;
 				}
 				this.authMiniBackground = res.authMiniBackground;
 			}
@@ -287,6 +288,7 @@ export default {
 		// }
 		//console.log(auth_code)
 		if (auth_code && auth_code != null) {
+			this.setAuth(this.auth_code);
 			this.showWin = true;
 			//this.setAuth(auth_code);
 		}
