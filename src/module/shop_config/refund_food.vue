@@ -185,10 +185,10 @@ export default {
 		}
 		.oulSecond {
 			color: #666666;
-			font-size: 14px;
-			li span span {
-				font-size: 16px;
-			}
+			/*font-size: 14px;*/
+			/*li span span {*/
+				/*font-size: 16px;*/
+			/*}*/
 		}
 		.ul-null li {
 			display: inline-block;
