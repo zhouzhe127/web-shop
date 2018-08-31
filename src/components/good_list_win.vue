@@ -66,7 +66,10 @@
 					</ul>
 					<div v-if="isPackage" style="width:100%;height: 50px;overflow: hidden;padding-top:10px">
 						<el-radio-group v-model="packBtn" @change = "selectPack">
-							<el-radio-button v-for="item in packageMenu" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
+							<el-radio-button label="-1">全部</el-radio-button>
+							<el-radio-button v-if="!isPackType || isPackType.indexOf('0')>-1" label="0">固定套餐</el-radio-button>
+							<el-radio-button v-if="!isPackType || isPackType.indexOf('1')>-1" label="1">可选套餐</el-radio-button>
+							<el-radio-button v-if="!isPackType || isPackType.indexOf('2')>-1" label="2">自定义套餐</el-radio-button>
 						</el-radio-group>
 						<!-- <a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
 						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);" style="">固定套餐</a>
@@ -212,7 +215,8 @@ export default {
 		allGid: Array, //所有配置过起售的商品id,可不传
 		asyncGoods: Array, //用于展示同步的品牌商品，可不传
 		isAllOrOther: Boolean, //是同步品牌商品的所有信息还是部分信息，可不传
-		categoryList: Array //是分类列表，为了同步品牌商品，可不传
+		categoryList: Array, //是分类列表，为了同步品牌商品，可不传
+		isPackType:String,//0:固定，1：可选，2：自定义
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
@@ -387,7 +391,7 @@ export default {
 				goodList = goods;
 			} else if (this.goInName == 'isKitchen') {
 				//过滤下架和多规格主菜   后厨配置用到
-				console.log('后厨配置用到');
+				// console.log('后厨配置用到');
 				let goods = [];
 				for (let i = 0; i < goodList.length; i++) {
 					if (goodList[i].status != '2'&&goodList[i].isGroup != '1') {
@@ -510,12 +514,17 @@ export default {
 				storage.session('packList', packlist);
 			}
 			let obj = {}; //对套餐id做处理，避免多重循环
+			console.log(this.isPackType);
 			for (let i = 0; i < packlist.length; i++) {
 				packlist[i].selected = false;
-				if (packlist[i].status == '2') {
+				if (packlist[i].status == '2'||(this.isPackType && this.isPackType.indexOf(packlist[i].type)==-1)) {
 					packlist.splice(i, 1);
 					i--;
 				}
+				// if(){
+				// 	packlist.splice(i, 1);
+				// 	i--;
+				// }
 			}
 			// console.log(packlist);
 			for (let i = 0; i < packlist.length; i++) {
