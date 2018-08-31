@@ -130,7 +130,7 @@ export default {
 			isAuth: false, //是否已经授权
 			showConfig: false, //显示配置
 			authMiniBackground: '', //小程序背景图片
-			authMiniAppName:'' //小程序名字
+			authMiniAppName: '' //小程序名字
 		};
 	},
 	methods: {
@@ -263,10 +263,10 @@ export default {
 				}
 			});
 			if (res) {
-				this.number = res.miniAppId;
-				this.secret = res.miniAppSecret;
 				if (res.authMiniAppId != '') {
 					this.isAuth = true;
+					this.number = res.miniAppId;
+					this.secret = res.miniAppSecret;
 				}
 				this.authMiniBackground = res.authMiniBackground;
 			}
