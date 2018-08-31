@@ -221,7 +221,7 @@
 							<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 						</el-form-item>
 						<el-form-item label="参与会员 ">
-							<el-switch v-model="isVipShow"  active-value="1" inactive-value="0" @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<el-switch v-model="isVipShow"   @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 							<template v-if="isVipShow">
 								<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border>会员价格</el-radio>
     							<el-radio @click="getVipRadio('2')" v-model="good.isVip" label="2" border>会员折扣</el-radio>
