@@ -7,14 +7,14 @@
 -->
 <template>
 	<div id="weChatBinding">
-		<template v-if ='isAuth'>
+		<template v-if='isAuth'>
 			<div class="wx-showBox">
 				<span>微信公众号</span>
 				<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">重新授权</a>
 			</div>
 			<div class="wx-showBox">
 				<span>公众号昵称</span>
-				<p>闪店科技</p>
+				<p>{{authMiniAppName}}</p>
 			</div>
 		</template>
 		<div class="wx-showBox" v-else>
@@ -41,7 +41,8 @@ export default {
 			appId: '',
 			appSecret: '',
 			userData: Object,
-			isAuth: false //是否已授权
+			isAuth: false, //是否已授权
+			authMiniAppName:''
 		};
 	},
 	mounted() {
@@ -64,7 +65,10 @@ export default {
 			if (res) {
 				this.appId = res.appId;
 				this.appSecret = res.appSecret;
-				this.isAuth = Boolean(res.isAuth);
+				if (res.authMiniAppId != '') {
+					this.isAuth = true;
+					this.authMiniAppName = res.authMiniAppName;
+				}
 			}
 		},
 		// 设置公众号配置
@@ -198,8 +202,7 @@ export default {
 			font-size: 16px;
 		}
 		p {
-			font-size: 24px;
-			font-weight: bold;
+			font-size: 16px;
 		}
 		input {
 			float: left;
