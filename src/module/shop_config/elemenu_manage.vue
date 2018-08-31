@@ -384,107 +384,107 @@ export default {
 };
 </script>
 
- <style scoped>
-#picList .image {
-	vertical-align: middle;
-	margin-left: 10px;
-}
-#picList .typeName {
-	font-size: 16px;
-	padding-left: 10px;
-	padding-right: 10px;
-	display: inline-block;
-	width: 250px;
-	line-height: 30px;
-	color: #808080;
-}
-.pic-list {
-	width: 100%;
-	overflow: hidden;
-	list-style: none;
-}
+<style scoped>
+	#picList .image {
+		vertical-align: middle;
+		margin-left: 10px;
+	}
+	#picList .typeName {
+		font-size: 16px;
+		padding-left: 10px;
+		padding-right: 10px;
+		display: inline-block;
+		width: 250px;
+		line-height: 30px;
+		color: #808080;
+	}
+	.pic-list {
+		width: 100%;
+		overflow: hidden;
+		list-style: none;
+	}
 
-.pic-list li {
-	width: 300px;
-	height: 200px;
-	float: left;
-	margin: 10px;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-}
+	.pic-list li {
+		width: 300px;
+		height: 200px;
+		float: left;
+		margin: 10px;
+		border: 1px solid #ccc;
+		box-sizing: border-box;
+	}
 
-.pic-list .add-pic {
-	position: relative;
-	background: url('../../res/images/busis.png');
-}
+	.pic-list .add-pic {
+		position: relative;
+		background: url('../../res/images/busis.png');
+	}
 
-.pic-list li.li-pic {
-	position: relative;
-	padding: 0;
-}
+	.pic-list li.li-pic {
+		position: relative;
+		padding: 0;
+	}
 
-li.li-pic img {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
+	li.li-pic img {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
 
-li.li-pic h2 {
-	font-size: 38px;
-	color: #c0c0c0;
-}
+	li.li-pic h2 {
+		font-size: 38px;
+		color: #c0c0c0;
+	}
 
-li.li-pic p {
-	width: 298px;
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
-	color: #fff;
-	padding: 0;
-	border: 0;
-	margin: 0;
-	background: rgba(0, 0, 0, 0.5);
-	position: absolute;
-	bottom: 0;
-}
+	li.li-pic p {
+		width: 298px;
+		height: 40px;
+		text-align: center;
+		line-height: 40px;
+		color: #fff;
+		padding: 0;
+		border: 0;
+		margin: 0;
+		background: rgba(0, 0, 0, 0.5);
+		position: absolute;
+		bottom: 0;
+	}
 
-.pic-list h2 {
-	position: absolute;
-	top: 10px;
-	right: 20px;
-	z-index: 2;
-}
-.addTo {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 50px;
-	background: rgba(0, 0, 0, 0.4);
-	text-align: center;
-	cursor: pointer;
-}
-.addTo span {
-	display: inline-block;
-	height: 50px;
-	line-height: 50px;
-	font-size: 16px;
-	color: white;
-	padding-left: 30px;
-	background: url('../../res/images/add.png') no-repeat 0;
-}
-.addTo input {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	height: 50px;
-	opacity: 0;
-	width: 100%;
-	cursor: pointer;
-}
-.addTo span {
-	width: 100px;
-	height: 50px;
-	line-height: 50px;
-}
+	.pic-list h2 {
+		position: absolute;
+		top: 10px;
+		right: 20px;
+		z-index: 2;
+	}
+	.addTo {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: 50px;
+		background: rgba(0, 0, 0, 0.4);
+		text-align: center;
+		cursor: pointer;
+	}
+	.addTo span {
+		display: inline-block;
+		height: 50px;
+		line-height: 50px;
+		font-size: 16px;
+		color: white;
+		padding-left: 30px;
+		background: url('../../res/images/add.png') no-repeat 0;
+	}
+	.addTo input {
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		height: 50px;
+		opacity: 0;
+		width: 100%;
+		cursor: pointer;
+	}
+	.addTo span {
+		width: 100px;
+		height: 50px;
+		line-height: 50px;
+	}
 </style>
  
