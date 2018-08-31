@@ -71,7 +71,7 @@
 						<a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
 						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);">固定套餐</a>
 						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);">可选套餐</a>
-						<a @click="selectPack(2)" class="raduobtn" :class="{'selectbtn' : packBtn == 2}" href="javascript:void(0);">自定义套餐</a>
+						<a @click="selectPack(2)" class="raduobtn" :class="{'selectbtn' : packBtn == 2}" href="javascript:void(0);" v-show="showDefined">自定义套餐</a>
 					</div>
 				</section>
 				<ul class="aUl">
@@ -170,6 +170,8 @@ export default {
 
 			fatherGoods: [],
 			fatherPacks: [],
+
+			showDefined:true,//是否展示自定套餐
 		};
 	},
 	props: ['getGoods', 'getPacks', 'goodCom'],
@@ -209,6 +211,7 @@ export default {
 			this.fuData();
 		},
 		changeType(i) {
+			this.showDefined=(i==2?false:true);
 			this.saveData();
 			this.typeC = i;
 			this.fuData();
@@ -557,7 +560,7 @@ export default {
 				item.selected = true;
 			}
 		},
-		//套餐选择，-1 全部，0：固定，1：可选
+		//套餐选择，-1 全部，0：固定，1：可选，2：自定义
 		selectPack(index) {
 			this.packBtn = index;
 			this.packCom = [];
