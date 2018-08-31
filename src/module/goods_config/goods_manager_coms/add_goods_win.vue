@@ -178,7 +178,7 @@
 								</el-form-item>
 								<el-form-item v-if="good.isInvoicing==1" label="保质期">
 									<el-input v-model="group.validity" maxlength = "3" placeholder = "输入保质期" style = "width:105px;"></el-input>
-									<el-select v-model="group.validityType" style="width:60px" @change="toggleGroup">
+									<el-select v-model="group.validityType" style="width:60px">
 										<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}}</el-option>
 									</el-select>
 									<span v-if="good.isVip =='1'" class="required">会员价格</span>
@@ -221,7 +221,7 @@
 							<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 						</el-form-item>
 						<el-form-item label="参与会员 ">
-							<el-switch v-model="isVipShow"   @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<el-switch v-model="isVipShow"  @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 							<template v-if="isVipShow">
 								<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border>会员价格</el-radio>
     							<el-radio @click="getVipRadio('2')" v-model="good.isVip" label="2" border>会员折扣</el-radio>
@@ -419,12 +419,11 @@ export default {
 		*/
 	},
 	methods: {
-		toggleGroup(e){
-			console.log(e);
-		},
+		// 切换开通会员后，折扣和会员价格
 		getVipRadio(res) {
 			this.good.isVip = res;
 		},
+		//会员开通关闭
 		openVipRadio(res){
 			this.isVipShow = res;
 			if(this.isVipShow){
