@@ -44,19 +44,19 @@
 								</el-form-item>
 								<el-form-item v-if="good.type==0" required label="售价">
 									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:100px;"></el-input>
-									<span>元</span>
+									<span style="color:#606266">元</span>
 									<el-input v-model="good.unit" maxlength = "5" placeholder = "单位" style = "width:80px;"></el-input>
 									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:100px;"></el-input>
-									<span>元</span>
+									<span style="color:#606266">元</span>
 								</el-form-item>
 								<el-form-item v-if="good.type==1" required label="售价">
 									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:100px;"></el-input>
-									<span>元</span>
+									<span style="color:#606266">元</span>
 									<el-select v-model="good.unit" :disabled="good.isCode==1?true:false"  placeholder="选择单位" style="width:100px">
 										<el-option v-for="item in unitArr" :key="item.name" :label="item.name" :value="item.name"> </el-option>
 									</el-select>
 									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:100px;"></el-input>
-									<span>元</span>
+									<span style="color:#606266">元</span>
 								</el-form-item>
 							</template>
 						</el-form>
@@ -100,8 +100,8 @@
 									<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}} </el-option>
 								</el-select>
 							</el-form-item>
-							<el-form-item v-if="good.isGroup =='0'" required label="副条码" style="width:310px;">
-								<el-input v-model="good.secBarCode" maxlength = "13" placeholder = "输入条码" style = "width:200px;">
+							<el-form-item v-if="good.isGroup =='0'" label="副条码" style="width:310px;">
+								<el-input v-model="good.secBarCode" maxlength = "13" placeholder = "输入副条码" style = "width:200px;">
 									<el-button slot="append"  @click="setBarCode('secBarCode',null,null)" style="width:82px;padding:0;">获取副条码</el-button>
 								</el-input>
 							</el-form-item>
@@ -157,13 +157,13 @@
 							<section :key="groupIndex">
 								<el-form-item required  :label="'规格'+(groupIndex+1)">
 									<el-input v-model="group.goodsName" maxlength = "6" placeholder = "规格名称" style = "width:90px;"></el-input>
-									<span class="required">售价</span>
+									<span class="required" style="color:#606266">售价</span>
 									<el-input v-model="group.price" maxlength = "10" placeholder = "售价" style = "width:90px;"></el-input>
-									<span>元</span>
-									<span>成本</span>
+									<span style="color:#606266">元</span>
+									<span style="color:#606266">成本</span>
 									<el-input v-model="group.cost" maxlength = "10" placeholder = "成本" style = "width:90px;"></el-input>
-									<span>元</span>
-									<span class="required">单位</span>
+									<span style="color:#606266">元</span>
+									<span class="required" style="color:#606266">单位</span>
 									<el-input v-model="group.unit" maxlength = "10" placeholder = "单位" style = "width:60px;"></el-input>
 									<el-button @click="deleteGroup(group,groupIndex)" size="mini" round type="primary" style="width:80px;">解除关联</el-button>
 								</el-form-item>
@@ -171,7 +171,7 @@
 									<el-input v-model="group.barCode" maxlength = "13" placeholder = "输入条码" style = "width:200px;">
 										<el-button slot="append"  @click="setBarCode('groupBarCode',group,groupIndex)" style="width:70px;padding:0;">获取条码</el-button>
 									</el-input>
-									<span>副条码</span>
+									<span style="margin-left:10px;color:#606266">副条码</span>
 									<el-input v-model="group.secBarCode" maxlength = "13" placeholder = "输入副条码" style = "width:200px;">
 										<el-button slot="append"  @click="setBarCode('groupSecBarCode',group,groupIndex)" style="width:80px;padding:0;">获取副条码</el-button>
 									</el-input>
@@ -541,28 +541,28 @@ export default {
 			this.selectCategory.splice(index, 1);
 		},
 		//保质期的的选择 (普通菜与称重菜)
-		funGetGoodValidityType(e) {
-			console.log(e);
-			this.good.validityType = e;
-		},
+		// funGetGoodValidityType(e) {
+		// 	console.log(e);
+		// 	this.good.validityType = e;
+		// },
 		//保质期下拉框的显示(多规格)
-		toggleGroupShowValidityTyep(group,index){
-			this.groupData.forEach((ele,eleIndex)=>{
-				if(index==eleIndex){
-					group.showValidity=!group.showValidity;
-				}else{
-					ele.showValidity=false;
-				}
-			});
-			this.groupData.splice(index,1,group);
-		},
+		// toggleGroupShowValidityTyep(group,index){
+		// 	this.groupData.forEach((ele,eleIndex)=>{
+		// 		if(index==eleIndex){
+		// 			group.showValidity=!group.showValidity;
+		// 		}else{
+		// 			ele.showValidity=false;
+		// 		}
+		// 	});
+		// 	this.groupData.splice(index,1,group);
+		// },
 		//保质期的选择(多规格)
-		funSelectValidityType(event, group,index) {
-			let res = event.target.innerHTML;
-			group.validityType = res;
-			group.showValidity = false;
-			this.groupData.splice(index,1,group);
-		},
+		// funSelectValidityType(event, group,index) {
+		// 	let res = event.target.innerHTML;
+		// 	group.validityType = res;
+		// 	group.showValidity = false;
+		// 	this.groupData.splice(index,1,group);
+		// },
 		//添加规格
 		addGroup(len=1) {
 			for(let i=0;i<len;i++){
@@ -615,30 +615,30 @@ export default {
 
 		//--------		称重菜		-----------
 		//单位下拉框的显示
-		funToggleUnit() {
-			if(this.good.type==1 && this.good.isCode==1){
-				this.showUnit=false;
-				this.alertWin('请先选择类别识别码!');
-			}else{
-				this.showUnit = !this.showUnit;
-			}
-		},
+		// funToggleUnit() {
+		// 	if(this.good.type==1 && this.good.isCode==1){
+		// 		this.showUnit=false;
+		// 		this.alertWin('请先选择类别识别码!');
+		// 	}else{
+		// 		this.showUnit = !this.showUnit;
+		// 	}
+		// },
 		//获取单位(称重)
-		funGetUnit(event) {
-			if (this.editGoodsId && this.good.isCode==1)  return ;
-			this.good.unit = event.target.innerHTML;
-			this.showUnit = false;
-		},
+		// funGetUnit(event) {
+		// 	if (this.editGoodsId && this.good.isCode==1)  return ;
+		// 	this.good.unit = event.target.innerHTML;
+		// 	this.showUnit = false;
+		// },
 		//称重商品识别码下拉框的展示
-		funShowList() {
-			this.barList || (this.barList = []);
-			if (this.barList.length == 0) {
-				this.showBarList = false;
-				this.alertWin('类别识别码列表为空，请在进销存管理中称重商品配置中添加');
-				return;
-			}
-			this.showBarList = !this.showBarList;
-		},
+		// funShowList() {
+		// 	this.barList || (this.barList = []);
+		// 	if (this.barList.length == 0) {
+		// 		this.showBarList = false;
+		// 		this.alertWin('类别识别码列表为空，请在进销存管理中称重商品配置中添加');
+		// 		return;
+		// 	}
+		// 	this.showBarList = !this.showBarList;
+		// },
 		//选择称重商品的识别码
 		funSelectList(oneList) {
 			this.identifyName = this.barList[oneList].name;
@@ -924,7 +924,7 @@ export default {
 			}
 
 			//多规格
-						console.log(this.groupData);
+						// console.log(this.groupData);
 			if (this.good.type == 0 && this.good.isGroup == 1) {
 				this.groupData.forEach(ele => {
 					let group = {
@@ -962,8 +962,8 @@ export default {
 						group.secBarCode = ele.secBarCode;
 						group.validity = parseInt(ele.validity);
 						group.validityType = ele.validityType*1;
-						console.log(group.validityType);
-						console.log(ele.validityType);
+						// console.log(group.validityType);
+						// console.log(ele.validityType);
 						// this.validityTypeArr.some((val) => {
 						// 	if (val.id == ele.validityType) {
 						// 		group.validityType = val.id;
@@ -1259,21 +1259,21 @@ export default {
 
 		//----------		开关		---------
 		//多个开关的切换
-		switchFn(res,flag) {
-			switch(flag){
-				case 'sort':				//获取排序值
-					this.good[flag] = parseInt(res);
-					break;				
-				case 'isDiscount':			//是否优惠
-				case 'isRecommend':
-				case 'serviceCharge':
-				case 'isSelf':
-				case 'isSeasonal':
-				case 'isVip':
-					this.good[flag] = res ? 1 : 0;
-					break;
-			}
-		},
+		// switchFn(res,flag) {
+		// 	switch(flag){
+		// 		case 'sort':				//获取排序值
+		// 			this.good[flag] = parseInt(res);
+		// 			break;				
+		// 		case 'isDiscount':			//是否优惠
+		// 		case 'isRecommend':
+		// 		case 'serviceCharge':
+		// 		case 'isSelf':
+		// 		case 'isSeasonal':
+		// 		case 'isVip':
+		// 			this.good[flag] = res ? 1 : 0;
+		// 			break;
+		// 	}
+		// },
 		//是否是多规格
 		toggleIsGroup(res) {
 			console.log(res);
@@ -1528,8 +1528,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName:'win'*/ 'src/components/win'),
-		subAdd: () => import(/*webpackChunkName:'subadd'*/ 'src/components/subadd'),
-		onOff: () => import(/*webpackChunkName:'on_off'*/ 'src/components/on_off'),
+		// subAdd: () => import(/*webpackChunkName:'subadd'*/ 'src/components/subadd'),
+		// onOff: () => import(/*webpackChunkName:'on_off'*/ 'src/components/on_off'),
 		addAttr: () => import(/*webpackChunkName:'add_attr_win'*/ '../goods_manager_coms/add_attr_win'),
 		addCategory: () => import(/*webpackChunkName:'add_category_win'*/ '../goods_manager_coms/add_category_win'),
 		addRelative: () => import(/*webpackChunkName:'good_package_win'*/ '../common/good_package_win')
@@ -1580,39 +1580,6 @@ export default {
 			border-bottom: 1px dashed #ccc;
 		}
 	}
-	.good-type {
-		position: relative;
-		display: inline-block;
-		width: 440px;
-	}
-	.good-sort {
-		display: inline-block;
-		width: auto;
-		label {
-			width: auto;
-			padding-right: 5px;
-		}
-	}
-	.good-price {
-		background-color: #fff;
-		width: 30px;
-		text-align: center;
-		float: left;
-		margin-right: 1px;
-	}
-	.good-cost {
-		background-color: #fff;
-		width: 30px;
-		text-align: center;
-		float: left;
-	}
-	.good-isInvoicing {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		z-index: 10;
-	}
 	.good-image {
 		float: left;
 		width: 225px;
@@ -1657,130 +1624,17 @@ export default {
 			opacity: 0;
 			cursor: pointer;
 		}
-		.good-barCode {
-			margin-top: 0;
-			margin-bottom: 15px;
-			float: left;
-			width: 320px;
-		}
-		.good-getBarCode {
-			width: 80px;
-			height: 40px;
-			line-height: 40px;
-		}
-	}
-	.good-code {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 315px;
-	}
-	.good-invalidity {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 350px;
-		.good-invalidity-input {
-			width: 120px;
-			margin-left: 1px;
-			float: left;
-		}
-	}
-	.good-speci {
-		margin-top: 0;
-		margin-bottom: 15px;
-		width: 320px;
-	}
-	.good-brand {
-		margin-top: 0;
-		margin-bottom: 15px;
-		width: 350px;
-	}
-	.good-group {
-		width: 100%;
-		width: 100%;
-		overflow: hidden;
-		margin-bottom: 10px;
-		.price {
-			background-color: #fff;
-			width: 30px;
-			text-align: center;
-			float: left;
-		}
-		.cost {
-			background-color: #fff;
-			width: 30px;
-			text-align: center;
-			float: left;
-		}
-		.delete-div {
-			width: 25px;
-			height: 25px;
-			display: inline-block;
-			margin: 6px 15px;
-			cursor: pointer;
-		}
-		.release-relative {
-			width: 70px;
-			height: 30px;
-			line-height: 30px;
-			text-align: center;
-			color: #fff;
-			border-radius: 6px;
-		}
-		.relative-div {
-			width: 25px;
-			height: 25px;
-			float: left;
-			margin: 6px 15px;
-		}
-	}
-	.good-group-invoicing {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 280px;
-		.getBarCode {
-			width: 80px;
-			height: 40px;
-			line-height: 40px;
-		}
-	}
-	.good-group-validity {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 170px;
-		.input {
-			width: 30px;
-			margin-left: 1px;
-			float: left;
-		}
-	}
-	.good-group-vipPrice {
-		width: 180px;
-		margin: 10px 0;
-		overflow: hidden;
-		.vip-div {
-			background-color: #fff;
-			width: 30px;
-			text-align: center;
-			float: left;
-		}
-	}
-	.good-add-relative {
-		width: 100%;
-		padding-left: 80px;
-		margin-top: 10px;
-		margin-bottom: 5px;
-		overflow: hidden;
-		.relative-good {
-			float: left;
-			line-height: 40px;
-			font-size: 16px;
-			width: 120px;
-			text-align: center;
-		}
+		// .good-barCode {
+		// 	margin-top: 0;
+		// 	margin-bottom: 15px;
+		// 	float: left;
+		// 	width: 320px;
+		// }
+		// .good-getBarCode {
+		// 	width: 80px;
+		// 	height: 40px;
+		// 	line-height: 40px;
+		// }
 	}
 	.relative-info {
 		width: 100%;
@@ -1808,87 +1662,6 @@ export default {
 			float: left;
 			border-bottom: 1px dashed #ccc;
 		}
-	}
-	.relative-vip {
-		width: 100%;
-		text-align: center;
-		padding-left: 80px;
-		.vip {
-			width: 90px;
-			height: 40px;
-			line-height: 40px;
-			background-color: #fff;
-			margin-right: 1px;
-			cursor: pointer;
-		}
-	}
-	.sList {
-		display: inline-block;
-		position: relative;
-		height: 40px;
-		line-height: 40px;
-		ul {
-			width: 100%;
-			margin: 0;
-			position: absolute;
-			top: 40px;
-			left: 0;
-			z-index: 10;
-			background: #fff;
-			li {
-				text-align: center;
-				height: 41px;
-				border: 1px #b3b3b3 solid;
-				border-top: 0;
-				background: #fff;
-				cursor: pointer;
-			}
-		}
-		input {
-			text-align: center;
-			display: block;
-			float: left;
-			height: 41px;
-			width: 158px;
-			outline: none;
-			border: 0;
-			border-right: 1px #b3b3b3 solid;
-		}
-	}
-	.weight .tableListInp {
-		span {
-			height: 38px;
-			width: 60px;
-			display: block;
-			float: left;
-			text-align: center;
-			border-right: 1px #b3b3b3 solid;
-			color: #636162;
-		}
-		div {
-			width: 40px;
-			height: 38px;
-			position: relative;
-			z-index: 5;
-			i {
-				height: 10px;
-				width: 10px;
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				margin-top: -5px;
-				margin-left: -5px;
-				border-top: 10px solid #b3b3b3;
-				border-left: 5px solid transparent;
-				border-right: 5px solid transparent;
-				box-sizing: border-box;
-			}
-		}
-	}
-	.signa {
-		background: #fff3e5 !important;
-		border: 1px solid #f8931f !important;
-		color: #f9911e !important;
 	}
 
 </style>
