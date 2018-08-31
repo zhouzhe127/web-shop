@@ -136,7 +136,7 @@ export default {
 			// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
 		},
 		returnStore: function() { //返回
-			this.$emit('throwWinResult', false);
+			this.$emit('throwWinResult', false,this.endingImage);
 			this.$store.commit('setPageTools', {});
 		},
 		saveConfig: function() { //保存配置
@@ -151,6 +151,7 @@ export default {
 				}
 			})
 			if (data) {
+				this.endingImage = data.authMiniBackground;
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',

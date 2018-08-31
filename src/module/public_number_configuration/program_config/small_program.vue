@@ -161,9 +161,10 @@ export default {
 			// }
 			this.showWin = false;
 		},
-		getConfigs: function(res) {
+		getConfigs: function(res,item) {
 			//console.log(res)
 			this.showConfig = res;
+			this.authMiniBackground = item;
 			//console.log(this.showConfig)
 		},
 		openConfig: function() { //打开配置
