@@ -53,14 +53,14 @@
 					</div>
 				</div>
 				<!-- 微信支付 -->
-				<div class="online-box clearfix">
+			<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl">微信支付:</span>
 					<div class="rightHalf">
 						<span class="fl name">目前小程序仅支持微信原生支付,你可以在【<span style="color: #29A8E0;font-size: 16px;" @click="registrationApplet">小程序后台</span>-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
 					</div>
-				</div>
+				</div> -->
 				<!-- 商户号 -->
-				<div class="online-box clearfix">
+				<!-- <div class="online-box clearfix">
 					<span class="online-sub fl">商户号</span>
 					<div class="rightHalf">
 						<input type="text" class="merchants fl" placeholder="请输入商户号" v-model='number' maxlength="10" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm('1')" />
@@ -71,9 +71,9 @@
 							<i></i> 商户号必须为8位或10位数字,请登录微信商户平台核对
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<!-- 商户秘钥 -->
-				<div class="online-box clearfix">
+				<!-- <div class="online-box clearfix">
 					<span class="online-sub fl">商户秘钥</span>
 					<div class="rightHalf">
 						<input type="text" class="merchants fl" placeholder="请输入商户秘钥" v-model='secret' maxlength="32" onkeyup="value=value.replace(/[^a-zA-Z\d]/g,'')" @blur="checkForm('1')" />
@@ -84,22 +84,33 @@
 							<i></i> 商户秘钥必须为32位,请登录微信商户平台核对
 						</div>
 					</div>
-				</div>
+				</div> -->
 				<!-- 确认 -->
-				<div class="online-box clearfix">
+			<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl"></span>
 					<div class="businessHours">
 						<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
 						<span>已确认商户号和商户秘钥配置正确(否则将导致微信支付异常,小程序无法通过审核)</span>
 					</div>
-				</div>
-				<div class="online-box clearfix">
+				</div> -->
+			<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl"></span>
 					<div class="rightHalf">
 						<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
 						<a v-else href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="Auditing('1')">保存</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
+						<a href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="getQRcode">小程序体验二维码</a>
+						<a href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
+					</div>
+				</div> -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl"></span>
+					<div class="rightHalf">
+						<a href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
+						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
+						<a href="javascript:;" class="blue" style="width:200px;" @click="getQRcode">小程序体验二维码</a>
+						<a href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
 					</div>
 				</div>
 			</template>
@@ -108,6 +119,7 @@
 		</template>
 		<!-- 弹窗 -->
 		<programWin v-if="showWin" @getAppliedWin='getResult'></programWin>
+		<qrcode v-if="codeWin" @getcodeResult='getcodeResult'></qrcode>
 	</div>
 </template>
 <script>
@@ -130,7 +142,10 @@ export default {
 			isAuth: false, //是否已经授权
 			showConfig: false, //显示配置
 			authMiniBackground: '', //小程序背景图片
-			authMiniAppName: '' //小程序名字
+			authMiniAppName: '', //小程序名字
+			appletQrcode: '', //体验版的小程序二维码 
+			codeWin: false
+
 		};
 	},
 	methods: {
@@ -240,11 +255,13 @@ export default {
 			return true;
 		},
 		async Auditing(type) {
-			if (!this.checkForm(type)) return;
+			//if (!this.checkForm(type)) return;
 			let data = await http.Auditing({
 				data: {
-					merchantId: this.number,
-					merchantSecret: this.secret
+					// merchantId: this.number,
+					// merchantSecret: this.secret
+					merchantId: '',
+					merchantSecret: ''
 				}
 			})
 			if (data) {
@@ -267,16 +284,37 @@ export default {
 					this.isAuth = true;
 					this.number = res.miniAppId;
 					this.secret = res.miniAppSecret;
+					this.authMiniAppName = res.authMiniAppName;
 				}
 				this.authMiniBackground = res.authMiniBackground;
 			}
 		},
+		async getQRcode() {
+			this.codeWin = true;
+		},
+		getcodeResult: function() {
+			this.codeWin = false;
+		},
+		async releaseCode() { //提交到线上
+			let data = await http.release({
+				data: {}
+			})
+			if (data) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '发布成功',
+				});
+			}
+		}
 	},
 	components: {
 		'programWin': () =>
 			import ( /* webpackChunkName: 'business_win' */ './small_program_win'),
 		'appletConfig': () =>
 			import ( /* webpackChunkName: 'applet_configuration' */ './applet_configuration'),
+		'qrcode': () =>
+			import ( /* webpackChunkName: 'qrcode_win' */ './qrcode_win.vue'),
 	},
 	mounted() {
 		this.userData = storage.session('userShop');

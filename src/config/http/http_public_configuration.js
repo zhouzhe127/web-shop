@@ -83,5 +83,12 @@ export default {
         url: w + 'weixin/updateAuthData',
         method: 'post'
     },
-
+     "getQRcode": { //下载微信体验小程序
+        url: w + 'weixin/getQRcode',
+        method: 'get'
+    },
+     "release": { //下载微信体验小程序
+        url: w + 'weixin/release',
+        method: 'get'
+    },
 }
