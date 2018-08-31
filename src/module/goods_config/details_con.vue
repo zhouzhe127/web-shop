@@ -388,8 +388,8 @@ export default {
 			import(/*webpackChunkName:'import_goods_error_win'*/ './goods_manager_coms/import_goods_error_win'),
 		asyncWin: () =>
 			import(/*webpackChunkName:'async_goods_choice'*/ './goods_manager_coms/async_goods_choice'),
-		pageElement: () =>
-			import(/*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+		// pageElement: () =>
+		// 	import(/*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 		selectBtn: () =>
 			import(/* webpackChunkName:"select_btn" */ 'src/components/select_btn'), // 下拉
 	},
@@ -399,6 +399,7 @@ export default {
 			if(res==0){
 				this.windowResize();
 			}
+			this.initSyncBtn();
 		},
 		//上下架
 		updownWin(item){
@@ -850,46 +851,54 @@ export default {
 		},
 		//初始化按钮
 		initSyncBtn() {
-			let obj = {
-				leadIn: () => {
-					this.importGoods().then(res => {
-						if (!res) {
-							this.$store.commit('setWin', {
-								title: '温馨提示',
-								content: '导入商品成功!'
-							});
-							this.showCom = '';
-						} else {
-							this.showCom = 'errorGoods';
-							this.comObj = {
-								errorInfo: res
-							};
-						}
-						this.getGoodsList(true).then(goods => {
-							this.allGoods = goods;
-							this.goodsList = this.initGoodsStock(
-								goods,
-								this.numList
-							);
-							this.goodsList = this.deleteChildGoods(
-								this.goodsList
-							);
-							this.goodsList = this.funSortGood(this.goodsList);
-							this.twoArea.id == -2
-								? this.selectOneArea(this.oneArea,this.oneIndex)
-								: this.selectTwoArea(this.twoArea,this.twoIndex);
-						});
-					});
-				},
-				leadOut: () => {
-					this.exportGoodsList();
-				}
-			};
+			let obj = {};
+			//同步商品
 			if (this.ischain == 1 || this.ischain == 2) {
 				obj.sync = () => {
 					this.showCom = 'asyncWin';
 				};
 			}
+			//添加商品，如果是表格模式，显示添加按钮
+			if(this.selectTab==1){
+				obj.addGood = ()=>{
+					this.openAddWin({});
+				}
+			}
+			//导入
+			obj.leadIn = () => {
+				this.importGoods().then(res => {
+					if (!res) {
+						this.$store.commit('setWin', {
+							title: '温馨提示',
+							content: '导入商品成功!'
+						});
+						this.showCom = '';
+					} else {
+						this.showCom = 'errorGoods';
+						this.comObj = {
+							errorInfo: res
+						};
+					}
+					this.getGoodsList(true).then(goods => {
+						this.allGoods = goods;
+						this.goodsList = this.initGoodsStock(
+							goods,
+							this.numList
+						);
+						this.goodsList = this.deleteChildGoods(
+							this.goodsList
+						);
+						this.goodsList = this.funSortGood(this.goodsList);
+						this.twoArea.id == -2
+							? this.selectOneArea(this.oneArea,this.oneIndex)
+							: this.selectTwoArea(this.twoArea,this.twoIndex);
+					});
+				});
+			}
+			//导出
+			obj.leadOut= () => {
+				this.exportGoodsList();
+			},
 			this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据

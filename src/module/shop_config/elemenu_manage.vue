@@ -76,7 +76,7 @@
 
 		</ul>
 		<el-button @click="save" type="primary" style="width:150px;">保存</el-button>
-		<goodsWin @goodListWin="goGoodList" v-if="showGoods" :goInName="'menuConfig'" :goodsIds="topData.topGoods" :packages="topData.topPackages" :isGoods="true"></goodsWin>
+		<goodsWin @goodListWin="goGoodList" v-if="showGoods" :goInName="'menuConfig'" :goodsIds="topData.topGoods" :packages="topData.topPackages" :isGoods="true" :isPackType="'0,1'"></goodsWin>
 		<shufflingPicWin v-if="showWin" @shufflingPicWin="getResult" :index='index' :detial='detial' :types='types' :status=true :type='buttonList.flag'></shufflingPicWin>
 	</section>
 </template>

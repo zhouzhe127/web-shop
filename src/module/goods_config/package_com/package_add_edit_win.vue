@@ -564,7 +564,10 @@
 				let packTag = [];
 				if(this.bag.type =='2'){
 					packTag.push(packageTag[this.selectTagIndex]);
-				}//如果是先选的是多个标识，再点击自定义套餐则把其他的标识去掉，只允许存在一个
+				}else{
+					packTag = packageTag;
+				}
+				//如果是先选的是多个标识，再点击自定义套餐则把其他的标识去掉，只允许存在一个
 				let res = await http.addPackage({
 					data: {
 						shopId: this.shopId,
