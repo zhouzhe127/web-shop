@@ -187,6 +187,15 @@
 								<el-form-item  v-if="good.isVip =='1' && good.isInvoicing==0" required label="会员价格" style="width:300px;">
 									<el-input v-model="group.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
 								</el-form-item>
+								<el-form-item v-if="!group.id" label="">
+									<el-button @click="openMultipleAddRelativeGoodWin(group,groupIndex)" type="primary" style="width:140px;">添加关联商品</el-button>
+									<span v-if="group.relativeGood.goodsName" style="width:120px;padding:0 10px;">已关联商品：</span>
+									<span v-if="group.relativeGood.goodsName" @click="deleteRelativeGood(group,groupIndex)" class="sign" style="padding:0 10px;">{{group.relativeGood.goodsName}}</span>
+								</el-form-item>
+								<el-form-item  label="">
+									<el-button @click="openMultipleAttrWin(group,groupIndex)" type="primary" style="width:140px;">添加口味</el-button>
+									<span  v-for="(att,attIndex) in group.attr" :key="attIndex" v-on:click="deleteSelectAttrMul(group.attr,attIndex,att)" class="sign" >{{att.name}}</span>
+								</el-form-item>
 							</section>
 						</template>
 						
