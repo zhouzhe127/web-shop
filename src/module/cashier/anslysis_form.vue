@@ -67,7 +67,7 @@
 								<span v-if="flag != 3 && flag != 4">
 									<i>{{f[item.column]}}</i>
 									<i v-if="(flag == 1 || flag == 2) && item.column != 'orderNum' &&  item.column != 'goodsNum' &&
-									item.column != 'originalPrice'&& item.column != 'vouchersCash'&& item.column != 'vouchersNum'&& item.column != 'paidIn'">%</i>
+									item.column != 'originalPrice' && item.column != 'vouchersCash' && item.column != 'vouchersNum' && item.column != 'paidIn'">%</i>
 								</span>
 								<span v-else>
 									<span v-bind:class="{numGreen: f[item.column][1]<0,numRed: f[item.column][1]>0}" style="display: block;height: 10px;line-height: 30px;">{{f[item.column][1]}}</span>
@@ -303,6 +303,7 @@
 					content: content
 				});
 			},
+			//导出
 			exportData(){
 				let index = 0;
 				for(let i = 0; i < this.saveReportList.length; i++){
@@ -327,9 +328,10 @@
 						let shop = exportData[i].list[j];
 						shop['time'] = exportData[i].time
 						if((this.flag == 1 || this.flag == 2)){ //报表为占比数据，添加%导出
-							//订单量 销量 消费金额不需要加%
+							//订单量 销量 消费金额 代金劵金额 代金劵数量 快捷支付实收金额不需要加%
 							for(let key in shop){
-								if(key != 'orderNum' && key != 'goodsNum' && key != 'originalPrice' && key != 'shopName' && key != 'time'){
+								if(key != 'orderNum' && key != 'goodsNum' && key != 'originalPrice' && key != 'shopName' && key != 'time'
+									&&key!= 'vouchersCash'&&key!= 'vouchersNum'&&key!= 'paidIn'){
 									shop[key] = `${shop[key]}%`;
 								}
 							}
@@ -494,6 +496,7 @@
 				this.orderPageList = this.saveReportList.slice((page - 1) * this.num, (page - 1) * this.num + this.num);
 
 				console.log(this.orderPageList);
+				console.log(this.selHead);
 			},
 			//时间戳转日期
 			timeTodate: function (time) {
@@ -554,6 +557,7 @@
 <style>
 	#report-order .el-table .cell{
 		padding: 0;
+		line-height: 40px;
 	}
 	#report-order .el-table td{
 		padding: 0;

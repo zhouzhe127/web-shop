@@ -72,7 +72,7 @@
                                 <span :class="{line: e != scope.row.list.length-1}" class="title" style="height: 50px;line-height:50px;display: inline-block;width: 100%;vertical-align: bottom">
                                     <span v-if="flag != 3 && flag != 4">
                                         <i>{{f[item.column]}}</i>
-                                        <i v-if="(flag == 1 || flag == 2) && item.column != 'orderNum' &&  item.column != 'goodsNum' &&  item.column != 'originalPrice'">%</i>
+                                        <i v-if="(flag == 1 || flag == 2) && item.column != 'orderNum' &&  item.column != 'goodsNum' &&  item.column != 'originalPrice' && item.column != 'vouchersCash' && item.column != 'vouchersNum' && item.column != 'paidIn'">%</i>
                                     </span>
                                     <span v-else>
                                         <span v-bind:class="{numGreen: f[item.column][1]<0,numRed: f[item.column][1]>0}" style="display: block;height: 10px;line-height: 30px;">{{f[item.column][1]}}</span>
@@ -164,6 +164,7 @@
 		watch: {
 			chartFlag(val) {
                 this.changeCtype(val);
+                console.log(this.chartsTitle);
 			},
 			reportList() {
                 this.ChartShopName = this.ChartShop;
@@ -247,7 +248,6 @@
 						.column == 'ali' || list[i].column == 'vip' || list[i].column == 'zxwx' || list[i].column == 'zxali' || list[i].column ==
 						'other' || list[i].column == 'price')) {
                         title.push(list[i]);
-
 					}
                 }
 				return title;
@@ -675,6 +675,7 @@
 <style>
 	#charts-order .el-table .cell{
 		padding: 0;
+        line-height: 40px;
 	}
 	#charts-order .el-table td{
 		padding: 0;
