@@ -91,4 +91,8 @@ export default {
         url: w + 'weixin/release',
         method: 'get'
     },
+     "deleteAuth": { //取消微信体验小程序
+        url: w + 'weixin/deleteAuth',
+        method: 'post'
+    },
 }

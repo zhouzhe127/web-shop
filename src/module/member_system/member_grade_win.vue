@@ -138,7 +138,7 @@ export default {
 			imgHosts: this.imgHost,
 			gradeWin: false, // 是否显示等级弹框
 			index: [-1],
-			gradeLists: this.gradeList,
+			gradeLists: [],
 			ischain: '',
 			content: '', // 规则内容
 			configure: [], // 支付规则
@@ -378,24 +378,24 @@ export default {
 			// 	this.validata('该会员等为默认等级,不可删除');
 			// 	return false;
 			// } else {
-				//console.log('2222')
-				let res = await http.delMemberlevel({
-					data: {
-						id: this.gid
-					}
-				});
-				this.$emit('isChangeEdit', {
-					type: 'splice',
-					payload: {
-						data: res
-					}
-				});
-				this.$store.commit('setWin', {
-					content: '删除成功,1秒后关闭窗口！',
-					title: '提示信息',
-					winType: 'alert',
-					timerPowerOff: 1000
-				});
+			//console.log('2222')
+			let res = await http.delMemberlevel({
+				data: {
+					id: this.gid
+				}
+			});
+			this.$emit('isChangeEdit', {
+				type: 'splice',
+				payload: {
+					data: res
+				}
+			});
+			this.$store.commit('setWin', {
+				content: '删除成功,1秒后关闭窗口！',
+				title: '提示信息',
+				winType: 'alert',
+				timerPowerOff: 1000
+			});
 			// }
 		},
 		async addLevel() {
@@ -509,6 +509,13 @@ export default {
 		openGrade() {
 			//  选出默认被选中的会员等级
 			this.gradeWin = true;
+			this.gradeLists = [];
+			let membergrade = this.gradeList;
+			for (let item of membergrade) {
+				if (item.status != '2') {
+					this.gradeLists.push(item);
+				}
+			}
 			for (let i = 0; i < this.gradeLists.length; i++) {
 				if (this.gradeLists[i].id == this.gradeId) {
 					this.index = [i];

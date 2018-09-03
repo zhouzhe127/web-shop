@@ -49,11 +49,11 @@
 					<div class="rightHalf">
 						<span class="fl name">{{authMiniAppName}}</span>
 						<a href="javascript:void(0)" class="blue abtn fl" @click="reauthorization">重新授权</a>
-						<a href="javascript:void(0)" class="gray abtn fl">解除授权</a>
+						<a href="javascript:void(0)" class="gray abtn fl" @click="deleteAuth">解除授权</a>
 					</div>
 				</div>
 				<!-- 微信支付 -->
-			<!-- 	<div class="online-box clearfix">
+				<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl">微信支付:</span>
 					<div class="rightHalf">
 						<span class="fl name">目前小程序仅支持微信原生支付,你可以在【<span style="color: #29A8E0;font-size: 16px;" @click="registrationApplet">小程序后台</span>-微信支付】页面下申请开通并完成相关配置。小程序的主体必须为企业,才可以申请微信支付;如果你的小程序不是企业主体,请另注册一个新的小程序,重新授权给闪店即可。完成设置后,请填写你的商户号和商户秘钥。</span>
@@ -86,14 +86,14 @@
 					</div>
 				</div> -->
 				<!-- 确认 -->
-			<!-- 	<div class="online-box clearfix">
+				<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl"></span>
 					<div class="businessHours">
 						<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
 						<span>已确认商户号和商户秘钥配置正确(否则将导致微信支付异常,小程序无法通过审核)</span>
 					</div>
 				</div> -->
-			<!-- 	<div class="online-box clearfix">
+				<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl"></span>
 					<div class="rightHalf">
 						<a v-if="number != '' && secret != '' && numberStatus && secretStatus && isMember" href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
@@ -145,7 +145,6 @@ export default {
 			authMiniAppName: '', //小程序名字
 			appletQrcode: '', //体验版的小程序二维码 
 			codeWin: false
-
 		};
 	},
 	methods: {
@@ -161,7 +160,7 @@ export default {
 			// }
 			this.showWin = false;
 		},
-		getConfigs: function(res,item) {
+		getConfigs: function(res, item) {
 			//console.log(res)
 			this.showConfig = res;
 			this.authMiniBackground = item;
@@ -306,6 +305,21 @@ export default {
 					winType: 'alter',
 					content: '发布成功',
 				});
+			}
+		},
+		async deleteAuth() { //取消授权
+			let data = await http.deleteAuth({
+				data: {
+					type: 2
+				}
+			})
+			if (data) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '解除授权成功',
+				});
+				this.getConfig();
 			}
 		}
 	},

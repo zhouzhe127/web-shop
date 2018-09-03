@@ -11,6 +11,7 @@
 			<div class="wx-showBox">
 				<span>微信公众号</span>
 				<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">重新授权</a>
+				<a href="javascript:void(0)" class="gray abtn fl" @click="deleteAuth">解除授权</a>
 			</div>
 			<div class="wx-showBox">
 				<span>公众号昵称</span>
@@ -42,7 +43,7 @@ export default {
 			appSecret: '',
 			userData: Object,
 			isAuth: false, //是否已授权
-			authMiniAppName:''
+			authMiniAppName: ''
 		};
 	},
 	mounted() {
@@ -65,7 +66,7 @@ export default {
 			if (res) {
 				this.appId = res.appId;
 				this.appSecret = res.appSecret;
-				if (res.authMiniAppId != '') {
+				if (res.authorizerAppId != '') {
 					this.isAuth = true;
 					this.authMiniAppName = res.authMiniAppName;
 				}
@@ -149,6 +150,21 @@ export default {
 					winType: 'alter',
 					content: '授权成功',
 				});
+			}
+		},
+		async deleteAuth() { //取消授权
+			let data = await http.deleteAuth({
+				data: {
+					type: 1
+				}
+			})
+			if (data) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '解除授权成功',
+				});
+				this.getConfig();
 			}
 		}
 	},
