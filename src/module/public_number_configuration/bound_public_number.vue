@@ -66,6 +66,7 @@ export default {
 			if (res) {
 				this.appId = res.appId;
 				this.appSecret = res.appSecret;
+				this.isAuth = false;
 				if (res.authorizerAppId != '') {
 					this.isAuth = true;
 					this.authMiniAppName = res.authMiniAppName;

@@ -280,6 +280,7 @@ export default {
 				}
 			});
 			if (res) {
+				this.isAuth = false;
 				if (res.authMiniAppId != '') {
 					this.isAuth = true;
 					this.number = res.miniAppId;
