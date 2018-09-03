@@ -43,20 +43,24 @@
 									<el-input v-model="good.BC" maxlength = "20" placeholder = "请输入商品简码" style = "width:270px;"></el-input>
 								</el-form-item>
 								<el-form-item v-if="good.type==0" required label="售价">
-									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:100px;"></el-input>
-									<span style="color:#606266">元</span>
+									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:120px;">
+										<i slot="suffix">元</i>
+									</el-input>
 									<el-input v-model="good.unit" maxlength = "5" placeholder = "单位" style = "width:80px;"></el-input>
-									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:100px;"></el-input>
-									<span style="color:#606266">元</span>
+									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:110px;">
+										<i slot="suffix">元</i>
+									</el-input>
 								</el-form-item>
 								<el-form-item v-if="good.type==1" required label="售价">
-									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:100px;"></el-input>
-									<span style="color:#606266">元</span>
-									<el-select v-model="good.unit" :disabled="good.isCode==1?true:false"  placeholder="选择单位" style="width:100px">
+									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:120px;">
+										<i slot="suffix">元</i>
+									</el-input>
+									<el-select v-model="good.unit" :disabled="good.isCode==1?true:false"  placeholder="选择单位" style="width:80px">
 										<el-option v-for="item in unitArr" :key="item.name" :label="item.name" :value="item.name"> </el-option>
 									</el-select>
-									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:100px;"></el-input>
-									<span style="color:#606266">元</span>
+									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:110px;">
+										<i slot="suffix">元</i>
+									</el-input>
 								</el-form-item>
 							</template>
 						</el-form>
@@ -72,7 +76,7 @@
 								<img v-if="!!good.imageName"  :src="(good.imageName.indexOf('http')>-1)?good.imageName: imgHost+good.imageName"  width="225" height="150">
 								<img v-else src="../../../res/images/busis.png" width="225" height="150"  alt="商品" />
 								<a  class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
-								<a class="yellow good-image-edit">编辑图片</a>
+								<a class="good-image-edit">编辑图片</a>
 								<form enctype="multipart/form-data" id="img_upload">
 									<input type="file" @change="uploadGoodsImg"  accept="image/jpeg,image/png,image/gif,image/tiff" name="image"  class="good-image-file" />
 								</form>
@@ -143,7 +147,7 @@
 						</el-form-item>
 						<el-form-item v-if="good.id" label="来源">
 							<span v-if="good.id>100000">门店自建</span>
-							<span v-if="good.id>1&&good.id<100000">品牌同步</span>
+							<span v-if="good.id>0&&good.id<100000">品牌同步</span>
 						</el-form-item>
 						<el-form-item v-show="good.isGroup=='0' && good.isCode!=1" label="口味">
 							<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(index)" class="sign" >{{att.name}}</span>
@@ -226,13 +230,13 @@
 						<el-form-item label="识别码" v-if="good.type==1" style="width:200px;">
 							<el-switch v-model="good.isCode" active-value="1" inactive-value="0" @change="toggleIsCode" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 						</el-form-item>
-						<el-form-item label="开启库存" style="width:200px;">
+						<el-form-item v-if="ischain !='3'" label="开启库存" style="width:200px;">
 							<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 						</el-form-item>
 						<el-form-item label="参与会员 ">
 							<el-switch v-model="isVipShow"  @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 							<template v-if="isVipShow">
-								<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border>会员价格</el-radio>
+								<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border style="margin-left:10px;">会员价格</el-radio>
     							<el-radio @click="getVipRadio('2')" v-model="good.isVip" label="2" border>会员折扣</el-radio>
 							</template>
 							<template v-if="good.isVip == '1' && good.isGroup==0">
@@ -1605,6 +1609,7 @@ export default {
 			font-size: 16px;
 		}
 		.good-image-edit {
+			background-color: #E1BB4A;
 			height: 40px;
 			line-height: 40px;
 			position: absolute;
