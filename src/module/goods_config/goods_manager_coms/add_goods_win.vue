@@ -147,7 +147,7 @@
 						</el-form-item>
 						<el-form-item v-if="good.id" label="来源">
 							<span v-if="good.id>100000">门店自建</span>
-							<span v-if="good.id>1&&good.id<100000">品牌同步</span>
+							<span v-if="good.id>0&&good.id<100000">品牌同步</span>
 						</el-form-item>
 						<el-form-item v-show="good.isGroup=='0' && good.isCode!=1" label="口味">
 							<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(index)" class="sign" >{{att.name}}</span>
