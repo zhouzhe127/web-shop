@@ -16,7 +16,7 @@
 						<span>保质期：{{infoList.validity}}{{validityType[infoList.validityType]}}</span>
 					</div>
 					<div>
-						<span>物料单位：{{batchInfo.options.join(',')}}</span>
+						<span>物料单位：{{options.join(',')}}</span>
 						<span>分类：{{infoList.materialCategoryName}}</span>
 					</div>
 					<div>
@@ -34,7 +34,6 @@
 					</div>
 					<span class="blue btn" @click="search">筛选</span>
 					<span class="gray btn" @click="reset">重置</span>
-					<selectbtn style="background:#fff" @selOn="selOn" :sorts="options" :width="180" :name="unitName"></selectbtn>
 				</section>
 				<section class="content">
 					<div class="top">
@@ -45,7 +44,7 @@
 							<li>供应商</li>
 							<li>所属仓库</li>
 							<li>领料数量/重量</li>
-							<li>消耗数量/重量<i style="color:#FF3D04;cursor:pointer" @click="allUse">全部消耗</i></li>
+							<li>剩余数量/重量<i style="color:#FF3D04;cursor:pointer" @click="allUse">{{isSurplus?'全部消耗':'全部剩余'}}</i></li>
 							<li>回库数量/重量<i style="color:#27A8E0;cursor:pointer" @click="allBack">剩余回库</i></li>
 						</ul>
 					</div>
@@ -66,17 +65,23 @@
 								</li>
 								<li :title="comUnit(item.surplus,selUnit.value,selUnit.name,minUnit.name)">{{comUnit(item.surplus,selUnit.value,selUnit.name,minUnit.name)}}</li>
 								<li class="end">
-									<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useNum"><span v-if="selUnit.name" :title="selUnit.name">{{selUnit.name}}</span><span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
+									<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useNum">
+									<span v-if="selUnit.name" :title="selUnit.name">{{selUnit.name}}</span>
+									<span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
 									<em v-if="selUnit.isMin != 1">
 										<i>+</i>
-										<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useWeight"><span :title="infoList.isMin">{{infoList.isMin}}</span>
+										<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useWeight">
+										<span :title="infoList.isMin">{{infoList.isMin}}</span>
 									</em>
 								</li>
 								<li class="end">
-									<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backNum"><span :title="selUnit.name" v-if="selUnit.name">{{selUnit.name}}</span><span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
+									<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backNum">
+									<span :title="selUnit.name" v-if="selUnit.name">{{selUnit.name}}</span>
+									<span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
 									<em v-if="selUnit.isMin != 1">
 										<i>+</i>
-										<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backWeight"><span :title="infoList.isMin">{{infoList.isMin}}</span>
+										<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backWeight">
+										<span :title="infoList.isMin">{{infoList.isMin}}</span>
 									</em>
 								</li>
 							</ul>
@@ -109,8 +114,7 @@
 				isShowCa: false, //日历显示
 				startObj: {time:utils.getTime({time: new Date()}).start,show:false,detail:false,width:150},
 				endObj: {time:utils.getTime({time: new Date()}).end,show:false,detail:false,width:150},
-				unitName: '单位切换',
-				unitList: ['g','kg'],
+				unitList: [],
 				infoList: [], //所有信息
 				batchNum: '', //批次编号
 				supplyer: '', //供应商名称
@@ -124,37 +128,32 @@
 					0: '月',
 					1: '日',
 					2: '年'
-				}
+				},
+				isSurplus:true,//是否全部剩余，默认false
 			};
 		},
-		props: ['batchInfo','unitData'], //type为true为盘库批次分配，false为批次选择
+		props: ['batchInfo'], //type为true为盘库批次分配，false为批次选择
 		mounted(){
 			// this.type ? this.title = '批次分配' : this.title = '批次选择';
 			this.title = '批次分配';
 			this.infoList = utils.deepCopy(this.batchInfo);
 			this.batchList = this.infoList.batch;
 			this.list = utils.deepCopy(this.infoList.batch);
-			this.options = [];
-			//假数据测试
-			// this.infoList.unitList=[{default:0,min:0,name:'kg',value:'8'},{default:0,min:1,name:'g',value:'1'},{default:1,min:0,name:'箱',value:'6'}];
-			this.infoList.unitList = this.infoList.materialUnit;
-			for(let i = 0; i < this.infoList.unitList.length; i++){
-				if(this.infoList.unitList[i].isDefault == 1){ //将默认单位放在第一位
-					this.options.unshift(this.infoList.unitList[i].name);
-					this.infoList.unitList.unshift(this.infoList.unitList[i]);
-					this.infoList.unitList.splice(i+1,1);
-				}else{
-					this.options.push(this.infoList.unitList[i].name);
+			this.options = this.infoList.options.map((res)=>{
+				return res.label;
+			});
+			this.selUnit = this.infoList.selUnit;
+			//批次单位，根据物料单位决定，不需要切换
+			for(let item of this.infoList.materialUnit){
+				if(item.isMin==1){
+					this.infoList.isMin = item.name;
+					this.minUnit = item;
 				}
-				if(this.infoList.unitList[i].isMin == 1){
-					this.infoList.isMin = this.infoList.unitList[i].name;
-					this.minUnit = this.infoList.unitList[i];
-				}
-				if(this.infoList.unitList[i].isDefault == 1){
-					this.infoList.isDefault = this.infoList.unitList[i].name;
+				if(item.isDefault==1){
+					this.infoList.isDefault = item.name;
 				}
 			}
-			this.selOn(0);//数量显示默认单位数量
+			this.selOn();//数量显示默认单位数量
 		},
 		components:{
 			win: ()=> import (/*webpackChunkName: 'win'*/ 'src/components/win'),
@@ -181,7 +180,6 @@
 				this.batchList = res.list;
 				this.infoList = res;
 				this.getMaterialDetail();
-				// this.list = utils.deepCopy(res.list);
 			},
 			//获取物料详情
 			async getMaterialDetail(){
@@ -189,7 +187,6 @@
 					mid: this.batchInfo.materialId
 				}});
 				this.infoList.materialName = res.name;
-				this.infoList.unitList = res.relation;
 				for(let i = 0; i < res.category.length; i++){ //分类
 					this.infoList.materialCategoryName += res.category[i].name + ',';
 				}
@@ -237,53 +234,27 @@
 			getmin(type){
 				for(let i = 0; i < this.batchList.length; i++){
 					if(type == '1'){
-						this.batchList[i].backNum != '' ? this.batchList[i].backNum = (this.batchList[i].backNum+'').replace(/[^\d\.]/g,'') : this.batchList[i].backNum = '';// eslint-disable-line
-						this.batchList[i].backWeight != '' ? this.batchList[i].backWeight = (this.batchList[i].backWeight+'').replace(/[^\d\.]/g,'') : this.batchList[i].backWeight = '';// eslint-disable-line
+						this.batchList[i].backNum !== '' ? this.batchList[i].backNum = (this.batchList[i].backNum+'').replace(/[^\d\.]/g,'') : this.batchList[i].backNum = '';// eslint-disable-line
+						this.batchList[i].backWeight !== '' ? this.batchList[i].backWeight = (this.batchList[i].backWeight+'').replace(/[^\d\.]/g,'') : this.batchList[i].backWeight = '';// eslint-disable-line
 						this.batchList[i].backmin = this.batchList[i].backNum*this.selUnit.value+this.batchList[i].backWeight*1;
 					}else{
-						this.batchList[i].useNum != '' ? this.batchList[i].useNum = (this.batchList[i].useNum+'').replace(/[^\d\.]/g,'') : this.batchList[i].useNum = '';// eslint-disable-line
-						this.batchList[i].useWeight != '' ? this.batchList[i].useWeight = (this.batchList[i].useWeight+'').replace(/[^\d\.]/g,'') : this.batchList[i].useWeight = '';// eslint-disable-line
+						this.batchList[i].useNum !== '' ? this.batchList[i].useNum = (this.batchList[i].useNum+'').replace(/[^\d\.]/g,'') : this.batchList[i].useNum = '';// eslint-disable-line
+						this.batchList[i].useWeight !== '' ? this.batchList[i].useWeight = (this.batchList[i].useWeight+'').replace(/[^\d\.]/g,'') : this.batchList[i].useWeight = '';// eslint-disable-line
 						this.batchList[i].usemin = this.batchList[i].useNum*this.selUnit.value+this.batchList[i].useWeight*1;
 					}
 				}
 			},
 			//单位选择
-			selOn(res){
-				// let list = this.infoList.unitList;
-				for(let i = 0; i < this.infoList.unitList.length; i++){
-					if(res == i){
-						this.selUnit = this.infoList.unitList[i]; //选择的单位
+			selOn(){
+				for(let batchItem of this.batchList){
+					let obj = this.comUnit(batchItem.surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
+					if(this.selUnit.isMin == 1){
+						batchItem.useNum = obj.tNull;
+					}else{
+						batchItem.useNum = obj.oNull;
+						batchItem.useWeight = obj.tNull;
 					}
-				}
-				for(let j = 0; j < this.batchList.length; j++){
-					let objuse = this.comUnit(this.batchList[j].usemin,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-					let objback = this.comUnit(this.batchList[j].backmin,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-					if(this.selUnit.isMin != 1){
-						this.batchList[j].useNum = objuse.oNull;
-						this.batchList[j].useWeight = objuse.tNull;
-						this.batchList[j].backNum =  objback.oNull,
-						this.batchList[j].backWeight = objback.tNull;
-					}else {
-						if(objuse.oNull){
-							this.batchList[j].useNum = objuse.oNull;
-							this.batchList[j].useWeight = objuse.tNull;
-						}else{
-							this.batchList[j].useNum =  objuse.tNull,
-							this.batchList[j].useWeight = '';
-						}
-						if(objback.oNull){
-							this.batchList[j].backNum = objback.oNull;
-							this.batchList[j].backWeight = objback.tNull;
-						}else{
-							this.batchList[j].backNum =  objback.tNull;
-							this.batchList[j].backWeight = '';
-						}
-					}
-					this.batchList[j].useNum == '0.000' ? this.batchList[j].useNum = '' : this.batchList[j].useNum = this.batchList[j].useNum;
-					this.batchList[j].useWeight == '0.000' ? this.batchList[j].useWeight = '' : this.batchList[j].useWeight = this.batchList[j].useWeight;
-					this.batchList[j].backNum == '0.000' ? this.batchList[j].backNum = '' : this.batchList[j].backNum = this.batchList[j].backNum;
-					this.batchList[j].backWeight == '0.000' ? this.batchList[j].backWeight = '' : this.batchList[j].backWeight = this.batchList[j].backWeight;
-
+					batchItem.usemin = 0;//全部剩余，消耗数量为0
 				}
 			},
 			//单位换算
@@ -291,21 +262,44 @@
 				let [number,value,showName,minName,type] = reset;
 				return global.comUnit(number,value,showName,minName,type);
 			},
-			//全部消耗
+			//全部消耗-全部剩余
 			allUse(){
-				for(let i = 0; i < this.batchList.length; i++){
-					let str = this.comUnit(this.batchList[i].surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-					if(this.selUnit.isMin != 1){
-						this.batchList[i].useNum = str.oNull;
-						this.batchList[i].useWeight = str.tNull;
-					}else{
-						this.batchList[i].useNum = str.tNull;
-						this.batchList[i].useWeight = '';
+				if(!this.isSurplus){//全部剩余
+					for(let infoItem of this.batchList){
+						let obj = this.comUnit(infoItem.surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
+						console.log(obj);
+						if(this.selUnit.isMin == 1){
+							infoItem.useNum = obj.tNull;
+						}else{
+							infoItem.useNum = obj.oNull;
+							infoItem.useWeight = obj.tNull;
+						}
+						infoItem.usemin = 0;//全部剩余，消耗数量为0
 					}
-					this.batchList[i].backNum = '';
-					this.batchList[i].backWeight = '';
-					this.batchList[i].usemin = this.batchList[i].useNum * this.selUnit.value + this.batchList[i].useWeight*1; //消耗的最小单位数量
+				}else{
+					for(let infoItem of this.batchList){
+						infoItem.useNum = 0;
+						infoItem.useWeight = 0;
+						infoItem.backNum = '';
+						infoItem.backWeight = '';
+						infoItem.usemin = infoItem.surplus*this.selUnit.value+infoItem.useWeight*1;
+						infoItem.backmin = 0;
+					}
 				}
+				this.isSurplus = !this.isSurplus;
+//				for(let i = 0; i < this.batchList.length; i++){
+//					let str = this.comUnit(this.batchList[i].surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
+//					if(this.selUnit.isMin != 1){
+//						this.batchList[i].useNum = str.oNull;
+//						this.batchList[i].useWeight = str.tNull;
+//					}else{
+//						this.batchList[i].useNum = str.tNull;
+//						this.batchList[i].useWeight = '';
+//					}
+//					this.batchList[i].backNum = '';
+//					this.batchList[i].backWeight = '';
+//					this.batchList[i].usemin = this.batchList[i].useNum * this.selUnit.value + this.batchList[i].useWeight*1; //消耗的最小单位数量
+//				}
 			},
 			//剩余回库
 			allBack(){

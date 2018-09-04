@@ -17,72 +17,79 @@
 		<section class="ic-contern">
 				<span class="span_contern">领料人：{{info.name}}</span>
 				<span class="span_contern">操作人：{{creatName}}</span>
-				<span class="span_contern">备注<input class="remenber" v-model="remark" maxlength="40" type="text" placeholder="请填写备注信息，限四十字以内"/></span>
+				<span class="span_contern">备注：
+					<el-input v-model="remark" type="text" maxlength="14" placeholder="请填写备注信息，限四十字以内" style="width:300px"></el-input>
+				</span>
 		</section>
 		<div class="list_num">
 			<section class="totle" >
 				<div class="head">
 					盘库列表 · 共<span style="color: #F8931F;padding: 0 3px;font-size: inherit;">{{storageInfo.length}}</span>个条目
 				</div>
-				<ul class="oUl oulFirst">
-					<li>操作</li>
-					<li>物料名称</li>
-					<li>领料单位选择</li>
-					<li style="width: 15%">领料数量/重量</li>
-					<li style="width: 20%">消耗数量/重量 <span style="color:#FF3D04;cursor:pointer" @click="allUse">全部消耗</span> </li>
-					<li style="width: 20%">回库数量/重量 <span style="color:#27A8E0;cursor:pointer" @click="allBack">剩余回库</span> </li>
-					<li >分类</li>
-					<li >类型</li>
-				</ul>
-				<ul class="oUl oulSecond" v-for="(item, index) in infoList" :key="index">
-					<li style="cursor:pointer;color:#27A8E0;font-size: 16px;" @click="doThing(item)">
-						批次处理
-					</li>
-					<li :title="item.materialName" class="hide">{{item.materialName}}</li>
-					<li @click="select(item,item.index)">
-						<selectBtn @emit="selectType"  :sorts="item.options" :width="'80'" :index="item.index" :name="item.selUnit.name"></selectBtn>
-					</li>
-					<li style="width: 15%" class="hide" :title="item.unit">
-						<!-- {{item.number}} -->
-						<!-- {{comUnit(item.number,item.selUnit.value,item.selUnit.name,item.minUnit.name)}} -->
-						{{item.unit}}
-					</li>
-					<li style="width: 20%;">
-						<div class="div_float defaultFloat" :class="{defaultFloat : item.selUnit.isMin == 1}">
-							<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useNum" placeholder="请输入数字"/>
-							<span class="span_line" v-if="item.selUnit.name" :title="item.selUnit.name">{{item.selUnit.name}}</span>
-						</div>
-						<i v-if="item.selUnit.isMin != 1" style="display:inline-block;vertical-align:top">
-							<span style="float: left;margin-right:3px;" class="defaultFloat">+</span>
-							<div class="div_float">
-								<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useWeight" placeholder="请输入数字"/>
-								<span class="span_line" :title="item.isMin">{{item.isMin}}</span>
-							</div>
-						</i>
-					</li>
-					<li style="width: 20%">
-						<div class="div_float defaultFloat" :class="{defaultFloat : item.selUnit.isMin == 1}">
-							<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backNum" placeholder="请输入数字"/>
-							<span class="span_line" v-if="item.selUnit.name" :title="item.selUnit.name">{{item.selUnit.name}}</span>
-						</div>
-						<i v-if="item.selUnit.isMin != 1" style="display:inline-block;vertical-align:top">
-							<span style="float: left;margin-right:3px;" class="defaultFloat">+</span>
-							<div class="div_float">
-								<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backWeight" placeholder="请输入数字"/>
-								<span class="span_line" :title="item.isMin">{{item.isMin}}</span>
-							</div>
-						</i>
-					</li>
-					<li class="hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
-					<li class="hide" :title="materType[item.materialType]">{{materType[item.materialType]}}</li>
-				</ul>
+				<div class="scroll-box">
+					<div class="list-box">
+						<ul class="oUl oulFirst">
+							<li>操作</li>
+							<li>物料名称</li>
+							<li>领料单位选择</li>
+							<li style="width: 15%">领料数量/重量</li>
+							<li style="width: 20%">剩余数量/重量 <span @click="allUse">{{isSurplus?'全部消耗':'全部剩余'}}</span></li>
+							<li style="width: 20%">回库数量/重量 <span @click="allBack" style="color:#27A8E0;">剩余回库</span></li>
+							<li >分类</li>
+							<li >类型</li>
+						</ul>
+						<ul class="oUl oulSecond" v-for="(item, index) in infoList" :key="index">
+							<li style="cursor:pointer;color:#27A8E0;" @click="doThing(item)">
+								批次处理
+							</li>
+							<li :title="item.materialName" class="hide">{{item.materialName}}</li>
+							<li>
+								<el-select v-model="item.index" @change="(res)=>{selectType(item,res)}" style="width:100px;">
+								    <el-option
+										v-for="elItem in item.options"
+										:key="elItem.value"
+										:label="elItem.label"
+										:value="elItem.value">
+								    </el-option>
+								</el-select>
+							</li>
+							<li style="width: 15%" class="hide" :title="item.unit">
+								{{item.unit}}
+							</li>
+							<li style="width: 20%;">
+								<div class="div_float">
+									<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useNum" placeholder="请输入"/>
+									<span class="span_line" v-if="item.selUnit.name" :title="item.selUnit.name">{{item.selUnit.name}}</span>
+								</div>
+								<template v-if="item.selUnit.isMin != 1">
+									<span class="div_float add-sign">+</span>
+									<div class="div_float">
+										<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useWeight" placeholder="请输入"/>
+										<span class="span_line" :title="item.isMin">{{item.isMin}}</span>
+									</div>
+								</template>
+							</li>
+							<li style="width: 20%">
+								<div class="div_float">
+									<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backNum" placeholder="请输入"/>
+									<span class="span_line" v-if="item.selUnit.name" :title="item.selUnit.name">{{item.selUnit.name}}</span>
+								</div>
+								<template v-if="item.selUnit.isMin != 1">
+									<span class="div_float add-sign">+</span>
+									<div class="div_float">
+										<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backWeight" placeholder="请输入"/>
+										<span class="span_line" :title="item.isMin">{{item.isMin}}</span>
+									</div>
+								</template>
+							</li>
+							<li class="hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
+							<li class="hide" :title="materType[item.materialType]">{{materType[item.materialType]}}</li>
+						</ul>
+					</div>
+				</div>
 			</section>
 		</div>
-		<div class="right">
-			<span @click="cancel" class="btn huiC">返回</span>
-			<span @click="enter" class="btn yellow">确定</span>
-		</div>
-		<batchwin @getWin="getWin" v-if="showBatch" :batchInfo="batchInfo" :unitData="unitData"></batchwin>
+		<batchwin @getWin="getWin" v-if="showBatch" :batchInfo="batchInfo"></batchwin>
 	</div>
 </template>
 <script>
@@ -103,109 +110,137 @@
 				winInfo: '', //盘库选择的数量
 				item: '',
 				remark: '', //备注
-				unitData: [],
+				selUnit: {},
+				batchUnit:[],
 				creatName: storage.session('userShop').user.name, //操作人
 				storageInfo: '',
 				info: '',
 				materType:{
-					0: '物料'
-				}
+					0: '成品',
+					1: '半成品',
+					2: '普通物料',
+				},
+				isSurplus:true,//是否全部剩余，默认false
 			};
 		},
-		// props: ['storageInfo','info'],
+		destroyed(){
+			storage.session('plateStorage',null);
+		},
 		mounted(){
+			this.initBtn();
 			this.storageInfo = storage.session('plateStorage').storageInfo;
 			this.info = storage.session('plateStorage').info;
-			this.$store.commit('setPageTools',{});
 			this.infoList = utils.deepCopy(this.storageInfo);
-			//假数据测试
-			// this.options = [];
-			// this.infoList.materialUnit=[{default:0,min:1,name:'g',value:'1'},{default:1,min:0,name:'kg',value:'1000'},{default:0,min:0,name:'箱',value:'500'}];
-			for(let j = 0; j < this.infoList.length; j++){
-				// this.infoList[j].materialUnit=[{default:0,min:0,name:'kg',value:'8'},{default:0,min:1,name:'g',value:'1'},{default:1,min:0,name:'箱',value:'6'}];
-				let options = [];
-				for(let i = 0; i < this.infoList[j].materialUnit.length; i++){
-					if(this.infoList[j].materialUnit[i].isDefault == 1){
-						options.unshift(this.infoList[j].materialUnit[i].name);
-						this.infoList[j].materialUnit.unshift(this.infoList[j].materialUnit[i]);
-						this.infoList[j].materialUnit.splice(i+1,1);
-					}else{
-						options.push(this.infoList[j].materialUnit[i].name);
-					}
-					if(this.infoList[j].materialUnit[i].isMin == 1){
-						this.infoList[j].isMin = this.infoList[j].materialUnit[i].name;
-						this.infoList[j].minUnit = this.infoList[j].materialUnit[i];
-					}
-					if(this.infoList[j].materialUnit[i].isDefault == 1){
-						this.infoList[j].isDefault = this.infoList[j].materialUnit[i].name;
-					}
-				}
-				this.infoList[j].options = options;
-			}
-			for(let i = 0; i < this.infoList.length; i++){
-				for(let j = 0; j < this.infoList[i].materialUnit.length; j++){
-					if(j == 0){
-						this.infoList[i].selUnit = this.infoList[i].materialUnit[j];
-						this.infoList[i].unit = this.comUnit(this.infoList[i].surplus,this.infoList[i].selUnit.value,this.infoList[i].selUnit.name,this.infoList[i].minUnit.name);
-					}
-				}
-			}
+			this.setInitData();
 		},
 		methods:{
-			selectType(index){
-				// let list = this.infoList.materialUnit;
-				for(let i = 0; i < this.infoList.length; i++){
-					for(let j = 0; j < this.infoList[i].materialUnit.length; j++){
-						if(this.item.materialId ==  this.infoList[i].materialId){
-							this.infoList[i].selUnit = this.infoList[i].materialUnit[index];
-							this.infoList[i].unit = this.comUnit(this.infoList[i].surplus,this.infoList[i].selUnit.value,this.infoList[i].selUnit.name,this.infoList[i].minUnit.name);
+			initBtn(){
+				let arr=[
+					{name: '确认',className: 'success',type:4,
+						fn: () => {
+							this.enter();
+						}
+					},
+					{name: '返回',className: 'info',type:4,
+						fn: () => {
+							this.cancel();
 						}
 					}
-				}
+				];
+				this.$store.commit('setPageTools', arr);
+			},
+			setInitData(){
 				for(let j = 0; j < this.infoList.length; j++){
-					if(this.item.materialId ==  this.infoList[j].materialId){
-						let obj = this.comUnit(this.infoList[j].usemin,this.infoList[j].selUnit.value,this.infoList[j].selUnit.name,this.infoList[j].minUnit.name,true);
-						let objback = this.comUnit(this.infoList[j].backmin,this.infoList[j].selUnit.value,this.infoList[j].selUnit.name,this.infoList[j].minUnit.name,true);
-						if(this.infoList[j].selUnit.isMin != 1){
-							this.infoList[j].useNum = obj.oNull;
-							obj.tNull == '0.000' ? '' : this.infoList[j].useWeight = obj.tNull;
-							this.infoList[j].backNum = objback.oNull;
-							objback.tNull == '0.000' ? '' : this.infoList[j].backWeight = objback.tNull;
-						}else {
-							if(obj.oNull){
-								this.infoList[j].useNum = obj.oNull;
-								obj.tNull == '0.000' ? '' : this.infoList[j].useWeight = obj.tNull;
-							}else{
-								obj.tNull == 0 ? '' : this.infoList[j].useNum =  obj.tNull;
-								this.infoList[j].useWeight = '';
-							}
-							if(objback.oNull){
-								this.infoList[j].backNum = objback.oNull;
-								objback.tNull == '0.000' ? '' : this.infoList[j].backWeight = objback.tNull;
-							}else{
-								objback.tNull == 0 ? '' : this.infoList[j].backNum =  objback.tNull;
-								this.infoList[j].backWeight = '';
-							}
+					let infoItem = this.infoList[j];
+					let options = [];
+					for(let i = 0; i < infoItem.materialUnit.length; i++){
+						let item = infoItem.materialUnit[i];
+						let obj={
+							value:item.muId,
+							label:item.name,
+						};
+						if(item.isDefault == 1){
+							options.unshift(obj);
+							infoItem.materialUnit.unshift(item);
+							infoItem.materialUnit.splice(i+1,1);
+						}else{
+							options.push(obj);
+						}
+						if(item.isMin == 1){
+							infoItem.isMin = item.name;
+							infoItem.minUnit = item;
+						}
+						if(item.isDefault == 1){
+							infoItem.isDefault = item.name;
+						}
+					}
+					this.$set(infoItem,'options',options);
+					this.$set(infoItem,'index',options[0].value);
+				}
+				for(let infoItem of this.infoList){
+					for(let unitItem of infoItem.materialUnit){
+						this.$set(infoItem,'selUnit',unitItem);
+						infoItem.unit = this.comUnit(infoItem.surplus,unitItem.value,unitItem.name,infoItem.minUnit.name);
+						let obj = this.comUnit(infoItem.surplus,unitItem.value,unitItem.name,infoItem.minUnit.name,true);
+						if(infoItem.selUnit.isMin == 1){
+							infoItem.useNum = obj.tNull;
+						}else{
+							infoItem.useNum = obj.oNull;
+							infoItem.useWeight = obj.tNull;
+						}
+						break;
+					}
+					for(let unitItem of infoItem.materialUnit){
+						if(unitItem.isDefault == 1){
+							this.$set(infoItem,'defUnit',unitItem);
+							break;
 						}
 					}
 				}
 				
-				this.select(this.item,index);
-
 			},
-			select(item,index){
-				this.item = item;
-				item.index = index;
-				this.selIndex = index;
+			selectType(item,unitId){
+				let infoItem = item;
+				for(let unitItem of infoItem.materialUnit){
+					if(unitId ==  unitItem.muId){
+						infoItem.selUnit = unitItem;
+						infoItem.unit = this.comUnit(infoItem.surplus,unitItem.value,unitItem.name,infoItem.minUnit.name);
+						break;
+					}
+				}
+				let obj = this.comUnit(infoItem.usemin,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name,true);
+				let objback = this.comUnit(infoItem.backmin,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name,true);
+				if(infoItem.selUnit.isMin != 1){
+					infoItem.useNum = obj.oNull;
+					obj.tNull == '0.000' ? '' : infoItem.useWeight = obj.tNull;
+					infoItem.backNum = objback.oNull;
+					objback.tNull == '0.000' ? '' : infoItem.backWeight = objback.tNull;
+				}else {
+					if(obj.oNull){
+						infoItem.useNum = obj.oNull;
+						obj.tNull == '0.000' ? '' : infoItem.useWeight = obj.tNull;
+					}else{
+						obj.tNull == 0 ? '' : infoItem.useNum =  obj.tNull;
+						infoItem.useWeight = '';
+					}
+					if(objback.oNull){
+						infoItem.backNum = objback.oNull;
+						objback.tNull == '0.000' ? '' : infoItem.backWeight = objback.tNull;
+					}else{
+						objback.tNull == 0 ? '' : infoItem.backNum =  objback.tNull;
+						infoItem.backWeight = '';
+					}
+				}
+				item.index = unitId;
 			},
 			getmin(item,type){
 				if(type != '1'){
-					item.useNum != '' ? item.useNum = (item.useNum+'').replace(/[^\d.]/g,'') : item.useNum = '';
-					item.useWeight != '' ? item.useWeight = (item.useWeight+'').replace(/[^\d.]/g,'') : item.useWeight = '';
+					item.useNum !== '' ? item.useNum = (item.useNum+'').replace(/[^\d.]/g,'') : item.useNum = '';
+					item.useWeight !== '' ? item.useWeight = (item.useWeight+'').replace(/[^\d.]/g,'') : item.useWeight = '';
 					item.usemin = item.useNum*item.selUnit.value+item.useWeight*1;
 				}else{
-					item.backNum != '' ? item.backNum = (item.backNum+'').replace(/[^\d.]/g,'') : item.backNum = '';
-					item.backWeight != '' ? item.backWeight = (item.backWeight+'').replace(/[^\d.]/g,'') : item.backWeight = '';
+					item.backNum !== '' ? item.backNum = (item.backNum+'').replace(/[^\d.]/g,'') : item.backNum = '';
+					item.backWeight !== '' ? item.backWeight = (item.backWeight+'').replace(/[^\d.]/g,'') : item.backWeight = '';
 					item.backmin = item.backNum*item.selUnit.value+item.backWeight*1;
 				}
 			},
@@ -218,38 +253,39 @@
 			doThing(item){
 				this.showBatch = true;
 				this.batchInfo = item;
-				this.item = item;
-				this.unitData = item.materialUnit;
 			},
-			//全部消耗
+			//全部消耗-全部剩余
 			allUse(){
-				for(let i = 0; i < this.infoList.length; i++){
-					let str = this.comUnit(this.infoList[i].surplus,this.infoList[i].selUnit.value,this.infoList[i].selUnit.name,this.infoList[i].minUnit.name,true);
-					if(this.infoList[i].selUnit.isMin != 1){
-						this.infoList[i].useNum = str.oNull;
-						this.infoList[i].useWeight = str.tNull;
-					}else{
-						this.infoList[i].useNum = str.tNull;
-						this.infoList[i].useWeight = '';
+				if(!this.isSurplus){//全部剩余
+					for(let infoItem of this.infoList){
+						infoItem.unit = this.comUnit(infoItem.surplus,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name);
+						let obj = this.comUnit(infoItem.surplus,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name,true);
+						if(infoItem.selUnit.isMin == 1){
+							infoItem.useNum = obj.tNull;
+						}else{
+							infoItem.useNum = obj.oNull;
+							infoItem.useWeight = obj.tNull;
+						}
+						infoItem.usemin = 0;//全部剩余，消耗数量为0
 					}
-					this.infoList[i].backNum = '';
-					this.infoList[i].backWeight = '';
-					this.infoList[i].usemin = this.infoList[i].useNum * this.infoList[i].selUnit.value + this.infoList[i].useWeight*1; //消耗的最小单位数量
+				}else{//全部消耗，剩余数量清空，回库数量清空
+					for(let infoItem of this.infoList){
+						infoItem.useNum = 0;
+						infoItem.useWeight = 0;
+						infoItem.backNum = '';
+						infoItem.backWeight = '';
+						infoItem.usemin = infoItem.surplus*infoItem.selUnit.value+infoItem.useWeight*1;
+						infoItem.backmin = 0;
+					}
 				}
+				this.isSurplus = !this.isSurplus;
 			},
 			//剩余回库
 			allBack(){
-				for(let i = 0; i < this.infoList.length; i++){
-					let data = this.infoList[i].surplus*1 - this.infoList[i].usemin;
-					let str = this.comUnit(data,this.infoList[i].selUnit.value,this.infoList[i].selUnit.name,this.infoList[i].minUnit.name,true);
-					if(this.infoList[i].selUnit.isMin != 1){
-						this.infoList[i].backNum = str.oNull;
-						this.infoList[i].backWeight = str.tNull;
-					}else{
-						this.infoList[i].backNum = str.tNull;
-						this.infoList[i].backWeight = '';
-					}
-					this.infoList[i].backmin = this.infoList[i].backNum * this.infoList[i].selUnit.value + this.infoList[i].backWeight*1;
+				for(let infoItem of this.infoList){
+					infoItem.backNum = infoItem.useNum?infoItem.useNum:'';
+					infoItem.backWeight = infoItem.useWeight?infoItem.useWeight:'';
+					infoItem.backmin = infoItem.backNum*infoItem.selUnit.value+infoItem.backWeight*1;
 				}
 			},
 			//取消
@@ -271,11 +307,11 @@
 			enter(){
 				for(let i = 0; i < this.infoList.length; i++){
 					if(this.infoList[i].usemin > this.infoList[i].number){ 
-						this.$store.commit('setWin',{winType:'alert',content:'物料：' + this.infoList[i].materialName + ' 消耗数量不能大于领料数量'});
+						this.$store.commit('setWin',{winType:'alert',content:'物料：' + this.infoList[i].materialName + '剩余数量不能大于领料数量'});
 						return false;
 					}
-					if(this.infoList[i].backmin > (this.infoList[i].number*1-this.infoList[i].usemin*1)){
-						this.$store.commit('setWin',{winType:'alert',content:'物料：' + this.infoList[i].materialName + ' 回库数量不足'});
+					if(this.infoList[i].backmin > this.infoList[i].usemin){
+						this.$store.commit('setWin',{winType:'alert',content:'物料：' + this.infoList[i].materialName + '回库数量不足'});
 						return false;
 					}
 				}
@@ -302,8 +338,8 @@
 					};
 					for(let key in obj){
 						obj[key] = this.infoList[i][key];
-						if(key == 'consumeNum'){
-							obj[key] = this.infoList[i].usemin;
+						if(key == 'consumeNum'){//消耗数量=总量-剩余数量
+							obj[key] = this.infoList[i].number-this.infoList[i].usemin;
 						}
 						if(key == 'returnNum'){
 							obj[key] = this.infoList[i].backmin;
@@ -351,9 +387,7 @@
 					this.$store.commit('setWin',{winType:'alert',content:'请填写消耗数量或回库数量'});
 					return false;
 				}
-				
 				this.invoicingCheckMaterial(returnData);
-
 			},
 			//获取批次弹窗
 			getWin(res,info,batch){
@@ -362,7 +396,7 @@
 					for(let i = 0; i < this.infoList.length; i++){
 						for(let j = 0; j < this.infoList[i].materialUnit.length; j++){
 							if(this.infoList[i].materialId == info.materialId && this.infoList[i].materialUnit[j].name == info.selUnit.name){
-								this.selectType(j);
+								this.selectType(this.infoList[i],this.infoList[i].index);
 							}
 						}
 						if(this.infoList[i].materialId == info.materialId){
@@ -411,92 +445,98 @@
 	};
 </script>
 
-<style scoped>
+<style scoped lang="less">
 	.ic-title {
-		width: 920px;
+		width: 100%;
 		height: 30px;
 		line-height: 30px;
 		position: relative;
-	}
-	.ic-title .text {
-		font-size: 16px;
-		width: 120px;
-		height: 20px;
-		line-height: 20px;
-		text-indent: 10px;
-		position: absolute;
-		left: 0;
-		top: 10px;
-		border-left: 2px solid rgba(40,168,224,1);
-	}
-	.ic-title .dashed {
-		width: 835px;
-		height: 10px;
-		border-top: 1px dashed rgb(228,229,230);
-		position: absolute;
-		right: 0;
-		top: 20px;
+		.text {
+			font-size: 16px;
+			width: 100px;
+			height: 20px;
+			line-height: 20px;
+			text-indent: 10px;
+			position: absolute;
+			left: 0;
+			top: 10px;
+			border-left: 2px solid rgba(40,168,224,1);
+		}
+		.dashed {
+			width: 100%;
+			height: 10px;
+			border-top: 2px dashed rgb(228,229,230);
+			position: absolute;
+			left: 100px;
+			top: 20px;
+		}
 	}
 	/*中间文字================================*/
 	.ic-contern{
 		margin-left: 50px;
 		margin-top: 20px;
 		margin-bottom: 30px;
-	}
-	.ic-contern .span_contern{
-		font-size: 16px;
-		margin-right: 120px;
-		display: inline-block;
-		margin-top: 10px;
-	}
-	.ic-contern .remenber{
-		width:420px;
-		height:40px;
-		line-height: 40px;
-		text-align: center;
-		border: 1px solid #A5A5A5;
-		font-size: 14px;
-		margin-left: 15px;
+		.span_contern{
+			font-size: 16px;
+			margin-right: 120px;
+			display: inline-block;
+			margin-top: 10px;
+		}
+		.remenber{
+			width:420px;
+			height:40px;
+			line-height: 40px;
+			text-align: center;
+			border: 1px solid #A5A5A5;
+			font-size: 14px;
+			margin-left: 15px;
+		}
 	}
 	/*列表=====================================*/
 	.totle{
-		width: 1300px;
-		min-width: 1300px;
-		border: 1px solid #D2D2D2;background-color: #FFFFFF;
-	}
-	.totle .head{
-		height: 50px;
-		line-height: 50px;
-		font-size: 16px;
-		padding-left: 20px;
-		color: #333333;
-	}
-	.totle .oulFirst{
-		background-color: #F2F2F2;color:#434149;
-	}
-	.totle .oulFirst li{
-		font-size: 16px;
-	}
-	.totle .oUl{
-		color:#333333;
-		/* overflow: hidden; */
-		height: 60px;
-		border-bottom: 3px solid #f7f7f7;
-	}
-	.totle .oUl li{
-		width:9%;
-		height: 50px;
-		line-height: 50px;
-		text-align: center;
-		float: left;
-	}
-	.totle .oUl .hide{
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	.totle .oulSecond{
-		color: #666666;
+		width: 100%;
+		border: 1px solid #ebeef5;
+		.scroll-box{
+			overflow: auto;
+			.list-box{min-width: 1400px;}
+		}
+		.head{
+			height: 50px;
+			line-height: 50px;
+			font-size: 16px;
+			padding-left: 20px;
+			color: #333333;
+		}
+		.oUl{
+			color:#333333;
+			border-bottom: 1px solid #ebeef5;
+			li{
+				width:9%;
+				height: 70px;
+				line-height: 70px;
+				text-align: center;
+				float: left;
+			}
+			li>*{line-height: normal;}
+			.hide{
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			&:after{content: '';zoom: 1;display: block;clear: both;}
+		}
+		.oulFirst{
+			background-color: #F2F2F2;color:#434149;
+			li{
+				font-size: 16px;
+				height: 50px;
+				line-height: 50px;
+				span{color:#FF3D04;cursor:pointer;}
+			}
+		}
+		.oulSecond{
+			color: #666666;
+		}
 	}
 	/*.totle .oulSecond li span{*/
 		/*font-size: 16px*/
@@ -504,38 +544,42 @@
 	/*==========列表输入框===============================*/
 	.div_float{
 		display: inline-block;
-		float: left;
-		margin-top: 10px;
+		vertical-align: middle;
+		overflow: hidden;
 	}
-	.defaultFloat{
-		float: initial;
+	.add-sign{
+		height: 40px;display: inline-block;line-height: 40px !important;
 	}
 	.searchgoods{
 		float: left;
 		width: 70px;
-		height: 35px;
-		line-height: 35px;
-		text-align: center;
-		border: 1px solid #B3B3B3;
+		height: 40px;
+		line-height: 38px;
+		padding: 0 10px;
+		border: 1px solid #dcdfe6;
 		border-right: 0;
 		outline: 0;
+		border-top-left-radius: 4px;
+		border-bottom-left-radius: 4px;
 	}
 	.span_line{
 		display: inline-block;
-		width: 35px;
-		height: 35px;
-		line-height: 35px;
+		height: 40px;
+		padding: 0 15px;
+		line-height: 38px;
 		text-align: center;
-		border: 1px solid #B3B3B3;
+		border: 1px solid #dcdfe6;
 		float: left;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		background: #f5f7fa;
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
 	}
 	/*====================*/
 	.right{
 		margin-top: 50px;
-		margin-left: 100px;
 	}
 	.btn{
 		display: inline-block;
