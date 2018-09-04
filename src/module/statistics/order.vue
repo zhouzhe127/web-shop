@@ -831,6 +831,7 @@ export default {
 		//每页显示多少条点击
 		numChange(e){
 			this.dayPage.num = e;
+			this.dayPage.page = 1;
 			this.getOrderListInDay(this.dateTime);
 		},
 	},

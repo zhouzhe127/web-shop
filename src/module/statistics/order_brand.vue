@@ -459,6 +459,7 @@ export default {
 		//每页显示多少条点击
 		numChange(e){
 			this.num = e;
+			this.currentPage = 1;
 		},
 		//到外卖界面
 		toTakeout: function() {

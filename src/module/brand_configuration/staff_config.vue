@@ -13,17 +13,17 @@
 				v-model="showJob"
 				trigger="click">
 				<section>
-					<el-radio-group v-model="brandType" @change="chooseJob">
+					<el-radio-group v-model="brandType" size ="small" @change="chooseJob">
 						<el-radio-button :label="'brand'">品牌职位</el-radio-button>
-						<el-radio-button :label="'shop'">门店职位</el-radio-button>
+						<el-radio-button :label="'shop'" >门店职位</el-radio-button>
 					</el-radio-group>
 					<div v-if="brandType=='brand'" style="max-height:170px;overflow-y:auto;margin-top:15px;">
 						<el-button @click="selallJob('brand')" border size="mini" class="labItem" style="height:28px;">全部</el-button>
-						<el-checkbox @change="selJob"  v-model="jobIds.brand" v-for="item in showJobList"  class="labItem" :key="item.id" :label="item.id" border  size="mini">{{item.name}}</el-checkbox>
+						<el-checkbox  v-model="jobIds.brand" v-for="item in showJobList"  class="labItem" :key="item.id" :label="item.id" border  size="mini">{{item.name}}</el-checkbox>
 					</div>
 					<div v-if="brandType=='shop'" style="max-height:170px;overflow-y:auto;margin-top:15px;">
 						<el-button @click="selallJob('shop')" size="mini" class="labItem">全部</el-button>
-						<el-checkbox @change="selJob" v-model="jobIds.shop" v-for="item in showJobList"  class="labItem" :key="item.id" :label="item.id" border  size="mini">{{item.name}}</el-checkbox>
+						<el-checkbox v-model="jobIds.shop" v-for="item in showJobList"  class="labItem" :key="item.id" :label="item.id" border  size="mini">{{item.name}}</el-checkbox>
 					</div>
 					<div style="margin-top:5px;">
 						<el-button  @click="ensure('none')" size="small">取消</el-button>
@@ -92,7 +92,7 @@
 								</i>
 							</div>
 							<span slot="reference" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-								<i v-for="(info,i) in scope.row.shopRole" @click="showNames(scope.$index)" :key="i+'-'">
+								<i v-for="(info,i) in scope.row.shopRole" :key="i+'-'">
 									<i :class="{'brand': info.roleId >= 100000,'shop': info.roleId < 100000}">{{info.roleName}}</i>
 									<i v-if="i != scope.row.shopRole.length-1">、</i>
 								</i>
@@ -155,7 +155,7 @@
 				showBatch: false, //批量管理职位编辑弹窗
 				staffOrJob: '', //筛选填入的门店或职位名称
 				newList: [], //筛选后列表
-				isNames: -1,
+				// isNames: -1,
 			};
 		},
 		mounted() {
@@ -335,7 +335,8 @@
 			},
 			//点击展开显示门店职位
 			showNames(index) {
-				this.isNames = index;
+				console.log(index);
+				// this.isNames = index;
 			},
 			//删除员工
 			delStaff(id) {
@@ -348,69 +349,6 @@
 					}
 				});
 			},
-			//展开职位或门店，已经选择则显示选中
-			// isSelected(list, res) {
-			// 	for (let j = 0; j < res.length; j++) {
-			// 		res[j].selected = false;
-			// 		for (let i = 0; i < list.length; i++) {
-			// 			if (list[i].id == res[j].id && list[i].type == res[j].type) {
-			// 				res[j].selected = true;
-			// 			}
-			// 		}
-			// 	}
-			// },
-			//判断是否全部选中
-			// isAll(data) {
-			// 	for (let i = 0; i < data.length; i++) {
-			// 		if (!data[i].selected) {
-			// 			return false;
-			// 		}
-			// 	}
-			// 	return true;
-			// },
-			//选择职位/门店
-			selJob(type, item) {
-				console.log(type);
-				console.log(this.jobIds.brand);
-				
-				// let index = 0;
-				// if (type == 'job' && !item) { //职位全部选择
-				// 	if (this.isAll(this.showJobList)) {
-				// 		for (let i = 0; i < this.showJobList.length; i++) {
-				// 			this.showJobList[i].selected = false;
-				// 			this.allJob = false;
-				// 		}
-				// 	} else {
-				// 		for (let i = 0; i < this.showJobList.length; i++) {
-				// 			this.showJobList[i].selected = true;
-				// 			this.allJob = true;
-				// 		}
-				// 	}
-				// 	console.log(this.showJobList);
-				// }
-				// else if (type == 'job' && item) {
-				// 	item.selected = !item.selected;
-				// 	for (let i = 0; i < this.showJobList.length; i++) {
-				// 		if (this.showJobList[i].selected) {
-				// 			index++;
-				// 		}
-				// 	}
-				// 	index == this.showJobList.length ? this.allJob = true : this.allJob = false;
-				// }
-				// console.log(this.showJobList);
-			},
-			//选择职位或门店
-			// jobOrShop(type) {
-			// 	// this.showJob = type;
-			// 	if (type == 'job' && this.jobList.length == 0) {
-			// 		this.newGetJobInfoList();
-			// 	}
-			// 	else if (type == 'job' && this.jobList.length != 0) {
-			// 		let jobIds = this.jobIds.brand.concat(this.jobIds.shop);
-			// 		this.isSelected(jobIds, this.jobList);
-			// 		this.isAll(this.showJobList) ? this.allJob = true : this.allJob = false;
-			// 	}
-			// },
 			//职位切换
 			chooseJob(type) {
 				console.log(type);

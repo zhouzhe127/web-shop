@@ -738,7 +738,7 @@ export default {
 		},
 		numChange(res){
 			this.allDayPage.num = res;
-			// this.allDayPage.page = 1;
+			this.allDayPage.page = 1;
 			this.getOrderListInDays();
 		},
 		pageClick(res){

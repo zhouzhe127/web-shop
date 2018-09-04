@@ -258,6 +258,7 @@ export default {
 		//每页显示多少条点击
 		numChange(e){
 			this.num = e;
+			this.currentPage = 1;
 		},
 		//到堂吃订单统计界面
 		toOrder: function() {

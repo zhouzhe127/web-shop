@@ -305,6 +305,7 @@ export default {
 		//每页显示多少行
 		handleSizeChange(p){
 			this.pagenum = p;
+			this.page = 1;
 		},
 		//页码跳转
 		pageChange(p) {
