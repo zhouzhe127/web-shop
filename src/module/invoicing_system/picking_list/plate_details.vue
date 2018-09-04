@@ -27,63 +27,74 @@
 					所领物料 · 共<span  class="wen_zi">{{detailList.length}}</span>个条目
 					<span class="changeList" @click="changeList()">{{isChangeList?'简洁':'详细'}}</span>
 				</div>
-				<ul class="oUl oulFirst">
-					<li >序号</li>
-					<li>物料名</li>
-					<li>分类</li>
-					<li>类型</li>
-					<li >领料单位选择</li>
-					<li >领料消耗</li>
-					<li >领料回库</li>
-					<li >领料人盘库前</li>
-					<li >领料人盘库后</li>
-				</ul>
-				<ul v-if="detailList.length==0" class="no_record">
-					<li>无记录</li>
-				</ul>
-				<section v-if="detailList.length!=0"  v-for="(item,j) in detailList" :key="j" style="clear: both">
-					<ul class="oUl oulSecond">
-						<li>
-							{{j+1}}
-						</li>
-						<li class="over_hide" :title="item.materialName">{{item.materialName}}</li>
-						<li class="over_hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
-						<li>{{getType(item.materialType)}}</li>
-						<li style="line-height: 0;margin-top: 15px" @click="backItem(item,item.index)">
-							<selectBtn @emit="selectType"  :sorts="item.unitList" :index="item.index"  :width="'80'"></selectBtn>
-						</li>
-						<li class="over_hide" :title="item.number">{{item.number}}</li>
-						<li class="over_hide" :title="item.backJ">{{item.backJ}}</li>
-						<li class="over_hide" :title="item.beforeJ">{{item.beforeJ}}</li>
-						<li class="over_hide" :title="item.afterJ">{{item.afterJ}}</li>
-					</ul>
-					<section style="border-bottom: 3px solid #f7f7f7;">
-						<ul class="oulThd font16" v-if="isChangeList&&(item.batch.length!=0)">
-							<li>序号</li>
-							<li>批次编码</li>
-							<li>生产日期</li>
-							<li>供应商</li>
-							<li>进价</li>
-							<li>所属仓库</li>
+				<div class="scroll-box">
+					<div class="list-box">
+						<ul class="oulFirst">
+							<li >序号</li>
+							<li>物料名</li>
+							<li>分类</li>
+							<li>类型</li>
+							<li >领料单位选择</li>
 							<li >领料消耗</li>
 							<li >领料回库</li>
 							<li >领料人盘库前</li>
 							<li >领料人盘库后</li>
 						</ul>
-						<ul class="oulThd" v-if="isChangeList&&(item.batch.length!=0)" v-for="(info,i) in item.batch" :key="i">
-							<li>批次{{i+1}}</li>
-							<li class="over_hide" :title="info.batchCode">{{info.batchCode}}</li>
-							<li>{{transformTime(info.productionTime)}}</li>
-							<li class="over_hide" :title="info.supplier">{{info.supplier}}</li>
-							<li class="over_hide" :title="info.purchasePrice">{{info.purchasePrice}}</li>
-							<li  class="over_hide" :title="info.warehouseName+'-'+info.areaName">{{info.warehouseName}}-{{info.areaName}}</li>
-							<li class="over_hide" :title="info.number">{{info.number}}</li>
-							<li class="over_hide" :title="info.backJ">{{info.backJ}}</li>
-							<li class="over_hide" :title="info.beforeJ">{{info.beforeJ}}</li>
-							<li class="over_hide" :title="info.afterJ">{{info.afterJ}}</li>
+						<ul v-if="detailList.length==0" class="no_record">
+							<li>无记录</li>
 						</ul>
-					</section>
-				</section>
+						<section v-if="detailList.length!=0"  v-for="(item,j) in detailList" :key="j" style="clear: both">
+							<ul class="oUl oulSecond">
+								<li>
+									{{j+1}}
+								</li>
+								<li class="over_hide" :title="item.materialName">{{item.materialName}}</li>
+								<li class="over_hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
+								<li>{{getType(item.materialType)}}</li>
+								<li style="line-height: 0;padding-top: 15px">
+									<el-select v-model="item.index" @change="(res)=>{backItem(item,res)}" style="width:100px;">
+									    <el-option
+											v-for="elItem in item.unitList"
+											:key="elItem.value"
+											:label="elItem.label"
+											:value="elItem.value">
+									    </el-option>
+									</el-select>
+								</li>
+								<li class="over_hide" :title="item.number">{{item.number}}</li>
+								<li class="over_hide" :title="item.backJ">{{item.backJ}}</li>
+								<li class="over_hide" :title="item.beforeJ">{{item.beforeJ}}</li>
+								<li class="over_hide" :title="item.afterJ">{{item.afterJ}}</li>
+							</ul>
+							<section class="sec-box" v-if="isChangeList&&(item.batch.length!=0)">
+								<ul class="oulThd font16" >
+									<li>序号</li>
+									<li>批次编码</li>
+									<li>生产日期</li>
+									<li>供应商</li>
+									<li>进价</li>
+									<li>所属仓库</li>
+									<li >领料消耗</li>
+									<li >领料回库</li>
+									<li >领料人盘库前</li>
+									<li >领料人盘库后</li>
+								</ul>
+								<ul class="oulThd" v-for="(info,i) in item.batch" :key="i">
+									<li>批次{{i+1}}</li>
+									<li class="over_hide" :title="info.batchCode">{{info.batchCode}}</li>
+									<li>{{transformTime(info.productionTime)}}</li>
+									<li class="over_hide" :title="info.supplier">{{info.supplier}}</li>
+									<li class="over_hide" :title="info.purchasePrice">{{info.purchasePrice}}</li>
+									<li  class="over_hide" :title="info.warehouseName+'-'+info.areaName">{{info.warehouseName}}-{{info.areaName}}</li>
+									<li class="over_hide" :title="info.number">{{info.number}}</li>
+									<li class="over_hide" :title="info.backJ">{{info.backJ}}</li>
+									<li class="over_hide" :title="info.beforeJ">{{info.beforeJ}}</li>
+									<li class="over_hide" :title="info.afterJ">{{info.afterJ}}</li>
+								</ul>
+							</section>
+						</section>
+					</div>	
+				</div>
 			</section>
 		</div>
 	</div>
@@ -106,7 +117,7 @@
 		},
 		mounted(){
 			this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
-			let arr = [{name:'返回',className:'huiC',fn:()=>{
+			let arr = [{name:'返回',className:'info',type:4,fn:()=>{
 				storage.session('listDetail',null);
 				storage.session('isBackPickingRecord',true);   //是否点击返回
 				this.$router.push({path:'../pickingList',query:this.$route.query});
@@ -134,17 +145,15 @@
 				return '--';
 			},
 			//选择单位
-			selectType(index){
-				this.backItem(this.item,index);
-			},
-			backItem(item,index){
-				this.item=item;
-				item.index=index;
-				let showName=item.unitList[index];      //展示的单位名称
+			backItem(item,id){
+				item.index=id;
+				let showName = '';      //展示的单位名称
 				let value='';                                //换算关系
 				for(let k=0;k<item.materialUnit.length;k++){
-					if(item.materialUnit[k].name==showName){
+					if(item.materialUnit[k].muId==id){
 						value=item.materialUnit[k].value;
+						showName = item.materialUnit[k].name;
+						break;
 					}
 				}
 				item.number=global.comUnit(item.consumeNum,value,showName,item.minName);   //外层列表
@@ -172,16 +181,20 @@
 						if(this.detailList[i].materialUnit[j].isMin==1){
 							this.detailList[i].minName=this.detailList[i].materialUnit[j].name;  //最小单位
 						}
-						unitList=unitList.concat(this.detailList[i].materialUnit[j].name);        //单位列表
-						for(let b=0;b<unitList.length;b++){                                      //把默认单位放到数组第一位
-							if(unitList[b]==this.detailList[i].defaultName){
-								let str = unitList.splice(b,1);
-								unitList.unshift(str[0]);
-							}
-						}
-						this.detailList[i].unitList=unitList;
+						let obj={
+							value:this.detailList[i].materialUnit[j].muId,
+							label:this.detailList[i].materialUnit[j].name
+						};
+						unitList.push(obj);        //单位列表
 					}
-					this.detailList[i].index=0;
+					for(let b=0;b<unitList.length;b++){                                      //把默认单位放到数组第一位
+						if(unitList[b].label==this.detailList[i].defaultName){
+							let str = unitList.splice(b,1);
+							unitList.unshift(str[0]);
+						}
+					}
+					this.$set(this.detailList[i],'unitList',unitList);
+					this.$set(this.detailList[i],'index',unitList[0].value);
 					//显示默认单位值
 					let value=this.detailList[i].defaultValue,name=this.detailList[i].defaultName,minName=this.detailList[i].minName;
 					this.detailList[i].number=global.comUnit(this.detailList[i].consumeNum,value,name,minName);
@@ -235,7 +248,7 @@
 <style scoped lang="less">
 	#plate_div{
 		.ic-title {
-			width: 650px;
+			width: 100%;
 			height: 30px;
 			line-height: 30px;
 			position: relative;
@@ -251,11 +264,11 @@
 				border-left: 2px solid rgba(40,168,224,1);
 			}
 			.dashed {
-				width: 535px;
+				width: 100%;
 				height: 10px;
-				border-top: 1px dashed rgb(228,229,230);
+				border-top: 2px dashed rgb(228,229,230);
 				position: absolute;
-				right: 0;
+				left: 120px;
 				top: 20px;
 			}
 		}
@@ -275,13 +288,16 @@
 		}
 		.list_num{
 			width: 100%;
-			overflow: auto;
-			min-width: 780px;
 			background-color: #FFFFFF;
-			border: 1px solid #D2D2D2;
+			border: 1px solid #ebeef5;
 			.totle{
-				min-width: 1300px;
-				height: 100%;
+				width: 100%;
+				.scroll-box{
+					overflow: auto;
+					.list-box{min-width: 1300px;
+						.sec-box{border-bottom: 3px solid #ebeef5;}
+					}
+				}
 				.head{
 					height: 50px;
 					line-height: 50px;
@@ -301,7 +317,7 @@
 				.oUl{
 					width:100%;
 					color:#333333;
-					border-bottom: 3px solid #f7f7f7;
+					border-bottom: 1px solid #ebeef5;
 					li{
 						text-align: center;
 						float: left;
