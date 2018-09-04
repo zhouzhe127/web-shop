@@ -119,7 +119,8 @@ class Main {
             let log = console.log;
             console.log = function () {};
         }
-
+        
+        console.log("---------")
     }
 
 
