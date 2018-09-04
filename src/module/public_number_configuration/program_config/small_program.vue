@@ -52,6 +52,13 @@
 						<a href="javascript:void(0)" class="gray abtn fl" @click="deleteAuth">解除授权</a>
 					</div>
 				</div>
+				<!-- 审核状态 -->
+				<div class="online-box clearfix" v-if="reviewStatus !== ''">
+					<span class="online-sub fl">状态:</span>
+					<div class="rightHalf">
+						<span class="fl name">{{reviewObj[reviewStatus]}}</span>
+					</div>
+				</div>
 				<!-- 微信支付 -->
 				<!-- 	<div class="online-box clearfix">
 					<span class="online-sub fl">微信支付:</span>
@@ -107,10 +114,12 @@
 				<div class="online-box clearfix">
 					<span class="online-sub fl"></span>
 					<div class="rightHalf">
-						<a href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
+						<a v-if="reviewStatus == '2'" href="javascript:;" class="gray" style="width:200px;" >提交微信审核</a>
+						<a v-else href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="getQRcode">小程序体验二维码</a>
-						<a href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
+						<a v-if="reviewStatus == 0" href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
+						<a v-else href="javascript:;" class="gray" style="width:200px;margin-top: 10px;">发布</a>
 					</div>
 				</div>
 			</template>
@@ -144,7 +153,13 @@ export default {
 			authMiniBackground: '', //小程序背景图片
 			authMiniAppName: '', //小程序名字
 			appletQrcode: '', //体验版的小程序二维码 
-			codeWin: false
+			codeWin: false,
+			reviewStatus: '', //审核状态码
+			reviewObj:{ //审核状态
+				'0':'审核成功',
+				'1':'审核失败',
+				'2':'审核成功'
+			}
 		};
 	},
 	methods: {
@@ -268,8 +283,9 @@ export default {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',
-					content: '审核成功',
+					content: '已提交微信审核',
 				});
+				this.getConfig();
 			}
 		},
 		// 获取公众号配置
@@ -286,6 +302,9 @@ export default {
 					this.number = res.miniAppId;
 					this.secret = res.miniAppSecret;
 					this.authMiniAppName = res.authMiniAppName;
+				}
+				if (res.auditData != '') {
+					this.reviewStatus = res.auditData.status;
 				}
 				this.authMiniBackground = res.authMiniBackground;
 			}
