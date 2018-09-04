@@ -81,7 +81,7 @@
 		<dataform v-show="chartList.flag === 0" @back="getBack" :num="num" :shopId="shopId" :exportIndex="exportIndex" :width="showWidth"
 		    :loading="loading" :headList="headList" :reportList="orderList" :selShopid="selShopid" :selectedType="typeFlag" :selHead="selHead"
 		    :flag="buttonList.flag" :isBack="isBack"></dataform>
-		<datacharts v-if="chartList.flag === 1" @search="chartSearch" :num="num" :chartType="chartType.flag" :loading="loading"
+		<datacharts v-if="chartList.flag === 1" @search="chartSearch" :num="num"  :loading="loading"
 		    :ChartShop="ChartShopName" :selShopid="selShopid" :chartFlag="chartType.flag" :typeFlag="typeFlag"
 		    :reportList="orderList" :flag="buttonList.flag" :headList="headList"></datacharts>
 		<loading v-if="!loading" :totalCount="totalCount" :taskCountTotal="taskCountTotal" :taskCount="taskCount"></loading>

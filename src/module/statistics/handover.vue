@@ -15,7 +15,18 @@
             </div>
             <div class="top" v-else>
                 <section class="timeS">
-                    <el-date-picker style="width:250px;" v-model="timeShop" :clearable="false" value-format="timestamp" type="daterange">
+                    <el-date-picker style="width:200px;cursor: pointer"
+                                    :clearable="false"
+                                    v-model="startT"
+                                    type="datetime"
+                                    value-format="timestamp">
+                    </el-date-picker>
+                    <span style="width: 25px;line-height: 40px;text-align: center;">-</span>
+                    <el-date-picker style="width:200px;cursor: pointer"
+                                    :clearable="false"
+                                    v-model="endT"
+                                    type="datetime"
+                                    value-format="timestamp">
                     </el-date-picker>
                     <el-button type="primary" icon="el-icon-search" @click="search()"></el-button>
                 </section>
@@ -116,7 +127,8 @@
 	export default {
 		data() {
 			return {
-				timeShop:[new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)],
+				startT: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
+				endT: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
 				isOpenTime: true, //是否按营业时间
 
 				handoverList:[],//当前展示的数据
@@ -139,7 +151,7 @@
 			};
 		},
 		props:['obj'],
-//		props:['time','open','shopId','shopName'],
+//		props:['startTime','endTime','open','shopId','shopName'],
 		created() {
 			this.userdata = storage.session('userShop');
 			if(this.obj){//从品牌进入单店
@@ -148,8 +160,8 @@
 				}}];
 				this.$store.commit('setPageTools',arr);
 				this.isOpenTime=this.obj.open;
-				this.shopTime=utils.format(new Date(this.obj.time[0]),'yyyy年MM月dd日')+'-'+
-					utils.format(new Date(this.obj.time[1]),'yyyy年MM月dd日');
+				this.shopTime=utils.format(new Date(this.obj.startTime),'yyyy年MM月dd日')+'-'+
+					utils.format(new Date(this.obj.endTime),'yyyy年MM月dd日');
 			}
 			this.dataWin.trueShopId=this.obj?this.obj.shopId:this.userdata.currentShop.id;
             this.getChangeShiftsList();
@@ -157,7 +169,7 @@
 		methods:{
 			//获取列表数据
 			async getChangeShiftsList() {
-				let difference=this.obj?(this.obj.time[1]-this.obj.time[0]):(this.timeShop[1] - this.timeShop[0]);
+				let difference=this.obj?(this.obj.endTime-this.obj.startTime):(this.endT- this.startT);
                 let timer = 3 * 31 * 24 * 60 * 60 * 1000;
                 if (difference> timer) {
                     this.$store.commit('setWin', {
@@ -168,8 +180,8 @@
                 }
                 let nowData= {
 //					shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
-					startTime:this.obj?this.obj.time[0]/1000:this.timeShop[0]/1000,
-					endTime:this.obj?this.obj.time[1]/1000:this.timeShop[1]/1000,
+					startTime:this.obj?this.obj.startTime/1000:this.startT/1000,
+					endTime:this.obj?this.obj.endTime/1000:this.endT/1000,
 					page: this.page,
 					num: this.num,
 					isOpenTime:Number(this.isOpenTime)

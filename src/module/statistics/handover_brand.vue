@@ -10,12 +10,25 @@
         <div v-if="!isShop">
             <div class="top">
                 <section class="timeS">
-                    <el-date-picker style="width:250px;"
-                                    v-model="timeSer"
-                                    :clearable="false"
-                                    value-format="timestamp"
-                                    type="daterange">
-                    </el-date-picker>
+                    <!--<el-date-picker style="width:250px;"-->
+                                    <!--v-model="timeSer"-->
+                                    <!--:clearable="false"-->
+                                    <!--value-format="timestamp"-->
+                                    <!--type="daterange">-->
+                    <!--</el-date-picker>-->
+                        <el-date-picker style="width:200px;cursor: pointer"
+                                :clearable="false"
+                                v-model="startTime"
+                                type="datetime"
+                                value-format="timestamp">
+                        </el-date-picker>
+                        <span style="width: 25px;line-height: 40px;text-align: center;">-</span>
+                        <el-date-picker style="width:200px;cursor: pointer"
+                                :clearable="false"
+                                v-model="endTime"
+                                type="datetime"
+                                value-format="timestamp">
+                        </el-date-picker>
                 </section>
                 <section class="block-div">
                     <div v-on:click="selectBusinessHours" :class="[{'active':isOpenTime},'pickBlu']"></div>
@@ -25,8 +38,8 @@
                     <elShopList :shopIds="selShopId" @chooseShop="getShop"></elShopList>
                 </section>
                 <div class="block-div">
-                    <a href="javascript:;" style="background: #2EA8DC;" @click="search()">筛选</a>
-                    <a href="javascript:;" style="background: #B3B3B3;" @click="reset()">重置</a>
+                    <el-button v-on:click="search()" type="primary">搜索</el-button>
+                    <el-button v-on:click="reset()" type="info">重置</el-button>
                 </div>
             </div>
             <div class="clear"></div>
@@ -64,7 +77,8 @@
 				isShop:false,
 				obj:{},//传递给单店的数据
 
-				timeSer:[new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)],
+				startTime: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
+				endTime: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
 				isOpenTime: true, //是否按营业时间
 				selShopId: [], //选中的店铺id
 
@@ -113,8 +127,8 @@
                     data: {
 							type: 25,
 							timeType: 1,
-							startTime: this.timeSer[0]/1000,
-							endTime: this.timeSer[1]/1000,
+							startTime: this.startTime/1000,
+							endTime: this.endTime/1000,
 							isOpenTime: Number(this.isOpenTime),
 							shopIds: this.selShopId.toString()}
 					}).then(data => {
@@ -168,10 +182,17 @@
 					return false;
                 }
 				let timer = 3 * 31 * 24 * 60 * 60 * 1000;
-				if (this.timeSer[1] - this.timeSer[0]> timer) {
+				if (this.endTime - this.startTime> timer) {
 					this.$store.commit('setWin', {
 						title: '操作提示',
 						content: '最大只能查询三个月时间'
+					});
+					return false;
+				}
+				if (this.startTime> this.endTime) {
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '开始时间不能大于结束时间'
 					});
 					return false;
 				}
@@ -187,11 +208,14 @@
 			},
             //搜索
 			search(){
+				console.log(this.startTime);
+				console.log(this.endTime);
 				this.getStoreOrder();
             },
             //重置
 			reset(){
-				this.timeSer=[new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)];
+				this.startTime=new Date().setHours(0, 0, 0, 0);
+                this.endTime=new Date().setHours(23, 59, 59, 999);
 				this.isOpenTime=true;
 				this.page=1;
 				this.num=10;
@@ -216,7 +240,8 @@
 			//去单店
 			toShop(item){
 				this.obj={
-					time:this.timeSer,
+					startTime:this.startTime,
+					endTime:this.endTime,
 					open:this.isOpenTime,
 					shopId:item.shopId,
 					shopName:item.shopName
