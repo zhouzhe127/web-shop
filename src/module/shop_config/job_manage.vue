@@ -128,6 +128,7 @@ export default {
 		//每页显示多少行
 		numChange(e){
 			this.num = e;
+			this.currentPage = 1;
 		},
 		//筛选按钮点击
 		keyUp: function() {

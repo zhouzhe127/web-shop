@@ -1,3 +1,10 @@
+/**
+ * @Author: 曾伟福 
+ * @Date: 2018-09-04 14:04:23 
+ * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-09-04 14:39:40
+ * @Module:商品管理
+**/
 
 <template>
 	<!--
@@ -5,7 +12,6 @@
 	@file:商品管理
 -->
 	<div>
-
 		<section id="details_con" v-cloak>
 			<div style="margin:10px 0;">
 				<el-radio-group v-model="selectTab" @change="typeChange">
@@ -18,11 +24,34 @@
 				</el-radio-group>
 			</div>
 			<section style="width:100%;height:50px;">
-				<!-- 分类选择 -->
 				<div v-if="ischain == 1|| ischain == 2" style="float:left;margin-right:10px;">
-					<select-btn @emit="selectType" :name="typeName" :sorts="goodSec.map(v=>v.name)" :width="158"></select-btn>
+					<el-select v-model="typeName" @change="selectType" placeholder="请选择指派类型" style="width:150px;">
+						<el-option
+							v-for="item in goodSec" 
+							:key="item.id"
+							:label="item.name"
+							:value="item.id">
+						</el-option>
+					</el-select>
+					<!-- <select-btn @emit="selectType" :name="typeName" :sorts="goodSec.map(v=>v.name)" :width="158"></select-btn> -->
 				</div>
-				<div class="select-down" @click.stop style="margin-right: 20px;">
+				<!-- 分类选择 -->
+				<el-popover
+					placement="bottom"
+					width="400"
+					v-model="showArea"
+					trigger="click">
+					<section style="max-height:260px;overflow:auto;min-height:100px;">
+						<el-radio-group v-model="oneIndex" size ="small" @change="newselectOneArea">
+							<el-radio border v-for="(item,index) in category" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
+						</el-radio-group>
+					</section>
+					<el-button slot="reference" plain style="width:200px;overflow: hidden;position: relative;text-overflow: ellipsis;white-space: nowrap;padding-right:30px;">
+						<span>{{oneArea.name}}</span>
+						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
+					</el-button>
+				</el-popover>
+				<!-- <div class="select-down" @click.stop style="margin-right: 20px;">
 					<section class="staList">
 						<section class="tableList" v-on:click="showOneArea">
 							<section class="oSpan">{{oneArea.name}}</section>
@@ -39,8 +68,24 @@
 							</div>
 						</div>
 					</section>
-				</div>
-				<div class="select-down" style="margin-right: 20px;" @click.stop>
+				</div> -->
+				<el-popover
+					placement="bottom"
+					width="400"
+					@show = "showTwoArea"
+					v-model="showTArea"
+					trigger="click">
+					<section style="max-height:260px;overflow:auto;min-height:100px;">
+						<el-radio-group v-model="twoIndex" size ="small" @change="newselectTwoArea">
+							<el-radio border v-for="(item,index) in child" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
+						</el-radio-group>
+					</section>
+					<el-button slot="reference" plain style="width:200px;overflow: hidden;position: relative;text-overflow: ellipsis;white-space: nowrap;padding-right:30px;">
+						<span>{{twoArea.name}}</span>
+						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
+					</el-button>
+				</el-popover>
+				<!-- <div class="select-down" style="margin-right: 20px;" @click.stop>
 					<section class="staList">
 						<section v-on:click="showTwoArea" class="tableList">
 							<section class="oSpan">{{twoArea.name}}</section>
@@ -57,19 +102,14 @@
 							</div>
 						</div>
 					</section>
-				</div>
-
+				</div> -->
 				<!-- 搜索 -->
-				<section class="search fl">
-					<div v-if="industry == 1">
-						<input type="text" placeholder="请输入名称" class="search-input" v-model="search" />
-						<a href="javascript:void(0);" class="search-btn" @click="searchNewGood(true)" style="background-color:#29A7E1;"></a>
-					</div>
-					<div v-if="industry != 1">
-						<input type="text" placeholder="请输入名称/简码" class="search-input" @keyup="funSearchkeyUp(null)" v-model="search" />
-						<a href="javascript:void(0);" class="search-btn" @click="funSearchkeyUp(null)" style="background-color:#29A7E1;"></a>
-					</div>
-				</section>
+				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
+					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
+				</el-input>
+				<el-input v-if="industry != 1" placeholder="请输入名称/简码" v-model="search" @change="funSearchkeyUp(null)" style="width:200px;">
+					<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp(null)"></el-button>
+				</el-input>
 			</section>
 
 			<section style="clear:both;overflow:hidden;margin-bottom:10px;">
@@ -272,11 +312,9 @@
 			</div>
 		</section>
 
-		<div class="page-container" v-show="goodsList.length>0">
-			<div class="page-content">
-				<el-pagination background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" ></el-pagination>
-				<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
-			</div>
+		<div v-show="goodsList.length>0">
+			<el-pagination background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" ></el-pagination>
+			<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
 		</div>
 
 		<transition name="fade">
@@ -284,9 +322,7 @@
 			</component>
 		</transition>
 	</div>
-
 </template>
-
 <script type="text/javascript">
 /*
 	1)品牌的判断
@@ -371,6 +407,8 @@ export default {
 			goodType:0,//商品类型下标
 			typeName:'请选择商品类型',
 			selectTab:1,//默认表格模式
+			showArea:false,//显示一级分类
+			showTArea:false,//显示二级分类
 		};
 	},
 	mounted() {
@@ -478,10 +516,23 @@ export default {
 			this.initPage(this.pageGoods);
 		},
 		//----------分类筛选---------
-		showOneArea(e) {
-			e.stopPropagation();
-			this.oneArea.show = !this.oneArea.show;
-			this.twoArea.show = false;
+		// showOneArea(e) {
+		// 	e.stopPropagation();
+		// 	this.oneArea.show = !this.oneArea.show;
+		// 	this.twoArea.show = false;
+		// },
+		newselectOneArea(index) {
+			console.log(index);
+			this.oneIndex = index;
+			this.showArea = false;
+			let item = this.category[index];
+			this.selectOneArea(item,index);
+		},
+		newselectTwoArea(index){
+			// this.twoIndex = index;
+			let item = this.child[index];
+			this.showTArea = false;
+			this.selectTwoArea(item,index);
 		},
 		selectOneArea(item, index) {
 			this.oneIndex = index;
@@ -523,12 +574,14 @@ export default {
 			this.initPage(this.pageGoods);
 		},
 		showTwoArea(e) {
-			e.stopPropagation();
+			// e.stopPropagation();
 			if (this.oneArea.id == -1) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					content: '请先选择一级分类!'
 				});
+				console.log(this.showTArea)
+				this.showTArea = false;
 				return false;
 			}
 			if (this.child.length == 0) {
@@ -536,6 +589,7 @@ export default {
 					title: '温馨提示',
 					content: '该分类下没有二级分类!'
 				});
+				this.showTArea = false;
 				return false;
 			}
 			this.twoArea.show = !this.twoArea.show;
@@ -1042,6 +1096,13 @@ export default {
 
 <style lang="less" scoped>
 #details_con {
+	
+	.labItem {
+		margin-bottom: 5px;
+		margin-left: 0!important;
+		margin-right: 10px;
+		float: left;
+	}
 	padding-bottom: 15px;
 	.whb(@width,@height,@border:none) {
 		height: @height;
@@ -1065,99 +1126,99 @@ export default {
 		}
 	}
 	//分类
-	.select-down {
-		width: 210px;
-		float: left;
+	// .select-down {
+	// 	width: 210px;
+	// 	// float: left;
+	// 	display: inline-block;
+	// 	.staList {
+	// 		position: relative;
+	// 		line-height: 41px;
+	// 		width: 210px;
+	// 		cursor: pointer;
+	// 		float: left;
 
-		.staList {
-			position: relative;
-			line-height: 41px;
-			width: 210px;
-			cursor: pointer;
-			float: left;
+	// 		.tableList {
+	// 			height: 40px;
+	// 			color: #666666;
+	// 			border: #b3b3b3 solid 1px;
+	// 			cursor: pointer;
+	// 			div {
+	// 				.whb(40px,40px);
+	// 				position: relative;
+	// 				z-index: 5;
+	// 				i {
+	// 					.whb(10px,10px);
+	// 					position: absolute;
+	// 					top: 50%;
+	// 					left: 50%;
+	// 					margin-top: -5px;
+	// 					margin-left: -5px;
+	// 					border-top: 10px solid #b3b3b3;
+	// 					border-left: 5px solid transparent;
+	// 					border-right: 5px solid transparent;
+	// 					box-sizing: border-box;
+	// 				}
+	// 			}
+	// 			.oSpan {
+	// 				height: 39px;
+	// 				line-height: 39px;
+	// 				width: 165px;
+	// 				float: left;
+	// 				text-align: center;
+	// 				border-right: 1px solid #b3b3b3;
+	// 				overflow: hidden;
+	// 			}
+	// 		}
+	// 	}
 
-			.tableList {
-				height: 40px;
-				color: #666666;
-				border: #b3b3b3 solid 1px;
-				cursor: pointer;
-				div {
-					.whb(40px,40px);
-					position: relative;
-					z-index: 5;
-					i {
-						.whb(10px,10px);
-						position: absolute;
-						top: 50%;
-						left: 50%;
-						margin-top: -5px;
-						margin-left: -5px;
-						border-top: 10px solid #b3b3b3;
-						border-left: 5px solid transparent;
-						border-right: 5px solid transparent;
-						box-sizing: border-box;
-					}
-				}
-				.oSpan {
-					height: 39px;
-					line-height: 39px;
-					width: 165px;
-					float: left;
-					text-align: center;
-					border-right: 1px solid #b3b3b3;
-					overflow: hidden;
-				}
-			}
-		}
+	// 	.detDiv {
+	// 		.whb(450px,250px);
+	// 		position: absolute;
+	// 		top: 45px;
+	// 		left: 0;
+	// 		padding: 10px;
+	// 		box-shadow: 3px 2px 10px #ccc;
+	// 		z-index: 15;
+	// 		background-color: #45404b;
 
-		.detDiv {
-			.whb(450px,250px);
-			position: absolute;
-			top: 45px;
-			left: 0;
-			padding: 10px;
-			box-shadow: 3px 2px 10px #ccc;
-			z-index: 15;
-			background-color: #45404b;
+	// 		.detI {
+	// 			.whb(0,0);
+	// 			line-height: 0;
+	// 			position: absolute;
+	// 			top: -10px;
+	// 			left: 80px;
+	// 			border-width: 10px;
+	// 			border-top: 0px;
+	// 			border-style: solid;
+	// 			border-color: #fff #fff #45404b #fff;
+	// 		}
+	// 		.detCategory {
+	// 			.whb(100%,100%);
+	// 			overflow-y: auto;
+	// 			z-index: 16;
+	// 		}
+	// 		.detChild {
+	// 			width: 100%;
+	// 			height: 100%;
+	// 			overflow-y: auto;
+	// 			z-index: 16;
+	// 		}
+	// 	}
 
-			.detI {
-				.whb(0,0);
-				line-height: 0;
-				position: absolute;
-				top: -10px;
-				left: 80px;
-				border-width: 10px;
-				border-top: 0px;
-				border-style: solid;
-				border-color: #fff #fff #45404b #fff;
-			}
-			.detCategory {
-				.whb(100%,100%);
-				overflow-y: auto;
-				z-index: 16;
-			}
-			.detChild {
-				width: 100%;
-				height: 100%;
-				overflow-y: auto;
-				z-index: 16;
-			}
-		}
-
-		.showName {
-			height: 40px;
-			line-height: 40px;
-			border: 1px solid #f2f2f2;
-			float: left;
-			margin: 5px;
-			color: #fff;
-			padding: 0 10px;
-		}
-		.showname-select {
-			border-color: #ff9800;
-			background: url(../../res/images/sign.png) right bottom no-repeat;
-		}
-	}
+	// 	.showName {
+	// 		height: 40px;
+	// 		line-height: 40px;
+	// 		border: 1px solid #f2f2f2;
+	// 		float: left;
+	// 		margin: 5px;
+	// 		color: #fff;
+	// 		padding: 0 10px;
+	// 	}
+	// 	.showname-select {
+	// 		border-color: #ff9800;
+	// 		background: url(../../res/images/sign.png) right bottom no-repeat;
+	// 	}
+	// }
 	.commodity-box {
 		&:after {
 			content: '';
@@ -1264,17 +1325,6 @@ export default {
 					}
 				}
 			}
-		}
-	}
-	.page-container {
-		width: 95%;
-		overflow: hidden;
-		margin-bottom: 30px;
-		.page-content {
-			.whb(auto,45px);
-			float: left;
-			padding-bottom: 30px;
-			overflow: auto;
 		}
 	}
 	.boxTop{
