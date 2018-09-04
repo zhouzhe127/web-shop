@@ -1,33 +1,43 @@
 /* * @Author: zhouzhe * @Date: 2018-04-26 13:50:23 */
 <template>
 	<div id="wareImport">
-		<!-- <el-tooltip content="Top center" placement="top">
-			<el-button>Dark</el-button>
-		</el-tooltip> -->
-		<ul class="tebBox" v-if="inventConfigure==0">
-			<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
-		</ul>
+		<el-radio-group v-model="tabactive" fill="rgb(255, 152, 0)" size="medium"  @change="tebClick">
+			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
+		</el-radio-group>
+		<el-tooltip content="Top center" placement="top">
+		</el-tooltip>
 		<div class="serBox">
 			<h1>操作时间：</h1>
 			<div class="timer">
-				<calendar :only="false" :time="startTime" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
+				<el-date-picker v-model="startTime" format="yyyy 年 MM 月 dd 日" type="date" @change="startTimeChange" placeholder="选择日期"></el-date-picker>
 			</div>
 			<span>-</span>
-			<div class="timer" style="margin-right: 10px;">
-				<calendar :only="false" :time="endTime" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
+			<div class="timer">
+				<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" @change="endTimeChange" placeholder="选择日期"></el-date-picker>
 			</div>
-			<input type="text" class="search-input" v-model="createUser" placeholder="请输入操作人">
+			<el-input v-model="createUser" placeholder="请输入操作人"></el-input>
 			<div class="btnChange" style="display:inline-block;">
-				<a @click="searchList" href="javascript:void(0);" class="blue" style="width: 100px;height: 40px;line-height: 40px;">筛选</a>
-				<a @click="searchReset" href="javascript:void(0);" class="gray" style="width: 100px;height: 40px;line-height: 40px;margin-right: 8px;">重置</a>
+				 <el-button @click="searchList" type="primary">筛选</el-button>
+				 <el-button @click="searchReset" type="info">重置</el-button>
 			</div>
 		</div>
-		<com-table :listName="'入库导入记录'" :titleData="titleList" :allTotal="allTotal" :introData="listData">
-			<div slot="con-0" slot-scope="props" @click="getDetail(props)" class="detailsBtn">查看详情</div>
-			<div slot="con-1" slot-scope="props">{{getTime(props.data.createTime)}}</div>
-		</com-table>
+		<el-table :data="listData" style="width: 100%;margin-top:20px;" stripe>
+			<el-table-column :label="`入库导入记录 · 共${allTotal}个条目`" class-name='tabletop'>
+				<el-table-column label="操作" style="text-aline:center;">
+					<template slot-scope="scope">
+						<div @click="getDetail(scope.row)" class="detailsBtn">查看详情</div>
+					</template>
+				</el-table-column>
+				 <el-table-column label="操作时间" >
+					 <template slot-scope="scope">
+						<div>{{getTime(scope.row.createTime)}}</div>
+					</template>
+				 </el-table-column>
+				 <el-table-column label="操作人" prop="creator"></el-table-column>
+			</el-table-column>
+		</el-table>
 		<div class="page-box">
-			<page-turn @pageNum="pageChange" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn>
+			<el-pagination @current-change="pageChange" :current-page="page" layout="total, prev, pager, next, jumper" :total="allTotal"></el-pagination>
 		</div>
 	</div>
 </template>
@@ -37,6 +47,7 @@
 	import storage from 'src/verdor/storage';
 	import Timer from 'src/verdor/timer';
 	import global from 'src/manager/global';
+
 	export default {
 		data() {
 			return {
@@ -55,7 +66,7 @@
 				page: 1,
 				pageTotal: 0,
 				startTime: utils.getTime({
-					time: new Date()
+					time: new Date()-global.timeConst.ONEMONTH
 				}).start,
 				endTime: utils.getTime({
 					time: new Date()
@@ -93,12 +104,12 @@
 				});
 				this.listData = data.list;
 				this.page = data.page;
-				this.allTotal = data.rows;
+				this.allTotal = Number(data.rows);
 				this.pageTotal = data.count;
 				console.log(data);
 			},
 			getDetail(props) {
-				storage.session('detailNeed', props.data);
+				storage.session('detailNeed', props);
 				this.$router.push({
 					path: 'wareImport/wareProsperity'
 				});
@@ -132,7 +143,7 @@
 				this.init();
 			},
 			pageChange(page) {
-				this.page = page.page;
+				this.page = page;
 				this.init();
 			},
 			heardBtn() {
@@ -231,6 +242,13 @@
 </script>
 <style lang="less" scoped>
 	#wareImport {
+		.el-input{
+			width: 200px;
+		}
+		.tabletop{
+			background-color: #ffffff;
+			text-align: center;
+		}
 		.detailsBtn {
 			color: #29abe2;
 			cursor: pointer;

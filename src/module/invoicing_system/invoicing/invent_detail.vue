@@ -127,17 +127,17 @@
 			</section>
 		</section>
 		<section style="display: block;margin-top:20px;" v-if="!soldShow&&!loseShow">
-			<section class="titleTop" style="width:100%;height:40px;overflow: hidden;">
+			<!-- <section class="titleTop" style="width:100%;height:40px;overflow: hidden;">
 				<ul class="tebBox">
 					<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
 				</ul>
-			</section>
-			<section class="listBox" v-if="tabactive==0" style="width:100%;height:auto;margin-top: 20px;">
+			</section> -->
+			<section class="listBox" style="width:100%;height:auto;margin-top: 20px;">
 				<com-table :listName="'批次列表'" :titleData="titleList" :allTotal="allList.length" :introData="newbatchDetail">
 					<div class="infoDetail" slot="con-0" slot-scope="props">
 						<a href="javascript:void(0);" @click="addDetailhouse(props.data,1)" style="color:#5ebee8;">入库</a>|
-						<a href="javascript:void(0);" @click="batchLose(props.data)" style="color:red;">耗损</a>|
-						<a href="javascript:void(0);" @click="revamp(props.data)" style="color:orange;">修改</a>
+						<a href="javascript:void(0);" @click="batchLose(props.data)" style="color:red;">耗损</a>
+						<!-- <a href="javascript:void(0);" @click="revamp(props.data)" style="color:orange;">修改</a> -->
 					</div>
 					<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 					<span slot="con-3" slot-scope="props">{{getTime(props.data.productionTime)}}</span>
@@ -145,9 +145,9 @@
 					<span slot="con-7" slot-scope="props">{{props.data.wName||"暂无"}}/{{props.data.aName||"暂无"}}</span>
 				</com-table>
 			</section>
-			<operating-record v-if="tabactive==1" :gid="shopList.id"></operating-record>
+			<!-- <operating-record v-if="tabactive==1" :gid="shopList.id"></operating-record> -->
 			<div style="margin-top:10px;padding-bottom:30px;">
-				<page-turn v-if="tabactive==0" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page" @pageNum="changePage"
+				<page-turn :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page" @pageNum="changePage"
 				    ref="pageTurn"></page-turn>
 			</div>
 		</section>
@@ -187,7 +187,7 @@
 				chooseShelf: '', //选择的货架
 				shelfIndex: null,
 				tebData: ['批次列表', '操作记录'],
-				tabactive: 0,
+				// tabactive: 0,
 				goodsCate: [], //分类
 				soldShow: false,
 				shelveNum: 0,
@@ -456,9 +456,9 @@
 				// debugger
 				// this.allList = list;
 			},
-			tebClick(index) {
-				this.tabactive = index;
-			},
+			// tebClick(index) {
+			// 	this.tabactive = index;
+			// },
 			getTime(time) {
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
 			},
@@ -519,8 +519,8 @@
 				import ( /*webpackChunkName: 'warehouse_win'*/ './warehouse_win'),
 			putawayWin: () =>
 				import ( /*webpackChunkName: 'putaway_win'*/ './putaway_win'),
-			operatingRecord: () =>
-				import ( /*webpackChunkName: 'operating_record'*/ './operating_record'),
+			// operatingRecord: () =>
+			// 	import ( /*webpackChunkName: 'operating_record'*/ './operating_record'),
 			inventSoldout: () =>
 				import ( /*webpackChunkName: 'invent_soldout'*/ './invent_soldout'),
 			loseManage: () =>
@@ -542,7 +542,7 @@
 		display: flex;
 		a {
 			display: inline-block;
-			width: 33.33%;
+			width: 50%;
 			text-align: center;
 		}
 	}
@@ -641,7 +641,7 @@
 		display: flex;
 		a {
 			display: inline-block;
-			width: 33.33%;
+			width: 50%;
 			text-align: center;
 		}
 	}
@@ -654,18 +654,18 @@
 		color: orange;
 	}
 
-	.tebBox {
-		display: inline-block;
-		color: orange;
-		cursor: pointer;
-		li {
-			border: 1px orange solid;
-			display: inline-block;
-			padding: 10px 30px;
-		}
-		.active {
-			background-color: orange;
-			color: #ffffff;
-		}
-	}
+	// .tebBox {
+	// 	display: inline-block;
+	// 	color: orange;
+	// 	cursor: pointer;
+	// 	li {
+	// 		border: 1px orange solid;
+	// 		display: inline-block;
+	// 		padding: 10px 30px;
+	// 	}
+	// 	.active {
+	// 		background-color: orange;
+	// 		color: #ffffff;
+	// 	}
+	// }
 </style>

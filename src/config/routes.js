@@ -1,6 +1,4 @@
 import Login from 'src/module/login';
-const test10 = (resolve) =>
-    import ( /* webpackChunkName: "brand_audit" */ 'src/module/invoicing_system/wareimport/test');
 const brandAudit = (resolve) =>
     import ( /* webpackChunkName: "brand_audit" */ 'src/module/brand/brand_audit');
 const loginHead = (resolve) =>
@@ -657,12 +655,6 @@ export default [{
                     path: 'storeOverview', //概况
                     components: {
                         details_con: homePage
-                    }
-                },
-                {
-                    path: 'test', //商品管理
-                    components: {
-                        details_con: test10
                     }
                 },
                 {

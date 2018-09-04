@@ -33,7 +33,7 @@
 				</section>
 			</section>
 			<section class="comList" v-if="selectgoods.length>0">
-				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
+				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='areaIndex[0]==2?"eDishCode":"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
 			</section>
 		</section>
 
@@ -77,6 +77,7 @@ export default {
 	},
 	methods: {
 		getRelation: function(res) {
+			console.log(res);
 			if (res.length > 0) {
 				this.goodsIndex = res;
 			}
@@ -109,7 +110,7 @@ export default {
 						}
 					} else if (this.areaIndex[0] == 2) {
 						for (let j = 0; j < this.mtgoods.length; j++) {
-							if (this.goodsIds[i] == this.mtgoods[j].goodsId) {
+							if (this.goodsIds[i] == this.mtgoods[j].eDishCode) {
 								let packageIds = [];
 								if (this.mtgoods[j].packageIds != '') {
 									packageIds.push(this.mtgoods[j].packageIds);
@@ -118,7 +119,7 @@ export default {
 									packageIds
 								);
 								this.packageIds = allPackageIds.toString();
-								goods[this.goodsIds[i] + ''] = this.mtgoods[
+								goods[this.mtgoods[j].goodsId + ''] = this.mtgoods[
 									j
 								].specId;
 							}
@@ -145,6 +146,7 @@ export default {
 						}
 					}
 				}
+				console.log(goods)
 				this.goods = JSON.stringify(goods);
 			}
 			this.goodsIndex = utils.unique(this.goodsIndex);
@@ -346,6 +348,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log(this.pObj.areaIndex);
 		this.areaIndex = this.pObj.areaIndex;
 		this.goodsIds = this.pObj.goodsIds;
 		this.eleShopId = this.pObj.eleShopid;

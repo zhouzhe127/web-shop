@@ -21,8 +21,8 @@
 				<li v-for="(item,index) in showList" :key="index">
 					<div class="infoDetail">
 						<a href="javascript:void(0);" @click="showDetail(item)" style="color:#5ebee8;">入库</a>|
-						<a href="javascript:void(0);" @click="addListhouse(item)" style="color:red;">耗损</a>|
-						<a href="javascript:void(0);" @click="openBar(item)" style="color:orange;">修改</a>
+						<a href="javascript:void(0);" @click="addListhouse(item)" style="color:red;">耗损</a>
+						<!-- <a href="javascript:void(0);" @click="openBar(item)" style="color:orange;">修改</a> -->
 					</div>
 					<span class="wide handle">
 						{{(index+1)+(page-1)*10}}

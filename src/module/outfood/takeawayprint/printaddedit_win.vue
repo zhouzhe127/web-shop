@@ -113,8 +113,8 @@ export default {
 		},
 		async getDate() {
 			//请求单据数据列表
-			let info = await http.getOrderName();
-			this.docType = info;
+			let order = await http.getOrderName();
+			this.docType = order;
 			this.initTogath();
 			// 请求打印机列表
 			let printInfo = await http.getWireprinter();
@@ -172,9 +172,21 @@ export default {
 				this.eleShopid = info.areaShopId;
 				//后台获取的菜品数据处理为数组id
 				let arr = [];
-				for (let i in JSON.parse(info.goodsIds)) {
-					arr.push(parseInt(i));
+				let goodsfo = JSON.parse(info.goodsIds);
+
+				if(info.areaIds==2){//美团匹配菜品数据处理
+					Object.values(goodsfo).forEach(v=>{
+						arr.push(Number(v[0]));
+					});
+				}else{//饿了么百度匹配菜品数据处理
+					Object.keys(goodsfo).forEach(v=>{
+						arr.push(Number(v));
+					});
 				}
+				// for (let i in JSON.parse(info.goodsIds)) {
+				// 	arr.push(parseInt(i));
+				// }
+				console.log(arr);
 				this.goodsIds = arr;
 				this.goods = info.goodsIds;
 				this.isAreaid = info.areaShopId;
@@ -186,7 +198,10 @@ export default {
 						this.orderTypeIndex = index;
 					}
 				}
-				for(let index in printInfo){
+				console.log(printInfo);
+				console.log(info);
+				for(let index=0; index<printInfo.length;index++){
+					console.log(index);
 					if(printInfo[index].id==info.printerId){
 						this.printerIndex = index;
 					}
@@ -484,6 +499,7 @@ export default {
 		},
 		getReturnInfo: function(res, item) {
 			if(res=='ok'){
+				console.log(item);
 				this.goods = item.goods;
 				this.packageIds = item.packageIds;
 				this.goodsLength = item.goodsLength;
