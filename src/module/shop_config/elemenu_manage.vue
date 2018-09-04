@@ -18,7 +18,7 @@
 			</el-form-item>
 			<el-form-item label="电子菜单允许登录会员">
 				<el-switch v-model="islogin" @change="getLogin" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-				<div style="width:260px;display:inline-block;">
+				<div style="width:380px;display:inline-block;">
 					<el-checkbox-group  v-if="loginShow" @change="setLogin" v-model="loginSel">
 						<el-checkbox v-for="item in loginList" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
 					</el-checkbox-group>
@@ -108,7 +108,8 @@ export default {
 			types: '', //添加或修改
 			loginList: [
 				{ id: '0', name: '手机号登录' },
-				{ id: '1', name: '卡号登录' }
+				{ id: '1', name: '卡号登录' },
+				{ id: '2', name: '扫码登录' },
 			],
 			orderModel: [
 				{ id: '0', name: '标准模式' },
