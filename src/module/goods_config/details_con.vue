@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-04 14:27:01
+ * @Last Modified time: 2018-09-04 14:39:40
  * @Module:商品管理
 **/
 
@@ -24,8 +24,6 @@
 				</el-radio-group>
 			</div>
 			<section style="width:100%;height:50px;">
-				
-				<!-- 分类选择 -->
 				<div v-if="ischain == 1|| ischain == 2" style="float:left;margin-right:10px;">
 					<el-select v-model="typeName" @change="selectType" placeholder="请选择指派类型" style="width:150px;">
 						<el-option
@@ -37,12 +35,13 @@
 					</el-select>
 					<!-- <select-btn @emit="selectType" :name="typeName" :sorts="goodSec.map(v=>v.name)" :width="158"></select-btn> -->
 				</div>
+				<!-- 分类选择 -->
 				<el-popover
 					placement="bottom"
 					width="400"
 					v-model="showArea"
 					trigger="click">
-					<section style="max-height:260px;overflow:hidden;min-height:100px;">
+					<section style="max-height:260px;overflow:auto;min-height:100px;">
 						<el-radio-group v-model="oneIndex" size ="small" @change="newselectOneArea">
 							<el-radio border v-for="(item,index) in category" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
 						</el-radio-group>
@@ -76,7 +75,7 @@
 					@show = "showTwoArea"
 					v-model="showTArea"
 					trigger="click">
-					<section style="max-height:260px;overflow:hidden;min-height:100px;">
+					<section style="max-height:260px;overflow:auto;min-height:100px;">
 						<el-radio-group v-model="twoIndex" size ="small" @change="newselectTwoArea">
 							<el-radio border v-for="(item,index) in child" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
 						</el-radio-group>
