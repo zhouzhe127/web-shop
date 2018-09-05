@@ -997,13 +997,15 @@ export default {
 			//当外卖的时候 给使用时间段赋值
 			//0 与门店营业时间保持一致
 			//1 单独设置外卖时间
-			this.payType = item.openTimeStatus;
-			if (item.openTime.type == 'week') {
+			if(item.openTime){
+				if (item.openTime.type == 'week') {
 				this.useDate.index = 1;
 				this.useDate.week = this.changeArrToNeed(item.openTime.list, 'w');
 			} else if (item.openTime.type == 'month') {
 				this.useDate.index = 2;
 				this.useDate.month = this.changeArrToNeed(item.openTime.list, 'm');
+			}
+			this.payType = item.openTimeStatus;
 			}
 			//判断自动出餐
 			if (this.type == 1) {
