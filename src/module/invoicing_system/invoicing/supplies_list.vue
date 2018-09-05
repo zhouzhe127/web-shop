@@ -32,7 +32,7 @@
 					<span>{{item.supplier||"--"}}</span>
 					<span v-if="goodsData.relation.length>0">{{comUnit(item.surplus,goodsData.relation[selUnit].value,goodsData.relation[selUnit].name,isMin.name)}}</span>
 					<span v-else>--</span>
-					<span>{{item.purchasePrice}}元/{{getpiceunit(item.purchaseUnit)}}</span>
+					<span>{{item.distributionPrice}}元/{{getpiceunit(Number(item.distributionUnit))}}</span>
 					<span>{{item.wName||"暂无"}}-{{item.aName||"暂无"}}</span>
 				</li>
 			</ul>

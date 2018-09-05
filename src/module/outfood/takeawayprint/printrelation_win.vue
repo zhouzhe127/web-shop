@@ -33,7 +33,7 @@
 				</section>
 			</section>
 			<section class="comList" v-if="selectgoods.length>0">
-				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='areaIndex[0]==2?"eDishCode":"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
+				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='areaIndex[0]==2?"shelfId":"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
 			</section>
 		</section>
 
@@ -77,10 +77,15 @@ export default {
 	},
 	methods: {
 		getRelation: function(res) {
-			console.log(res);
-			if (res.length > 0) {
-				this.goodsIndex = res;
+			if(res[res.length-1]>=0){
+				if (res.length > 0) {
+					this.goodsIndex = res;
+				}
+			}else{
+				res.pop();
+				this.$message.error('该商品未关联！');
 			}
+			
 		},
 		getWinClickResult: function(res) {
 			if (res == 'ok') {
@@ -110,7 +115,7 @@ export default {
 						}
 					} else if (this.areaIndex[0] == 2) {
 						for (let j = 0; j < this.mtgoods.length; j++) {
-							if (this.goodsIds[i] == this.mtgoods[j].eDishCode) {
+							if (this.goodsIds[i] == this.mtgoods[j].shelfId) {
 								let packageIds = [];
 								if (this.mtgoods[j].packageIds != '') {
 									packageIds.push(this.mtgoods[j].packageIds);
@@ -295,6 +300,7 @@ export default {
 				}
 			} else if (this.areaIndex[0] == 2) {
 				for (let i = 0; i < this.mtgoods.length; i++) {
+					this.mtgoods[i].shelfId = this.mtgoods[i].specId[0]||-i+1;
 					if (id === undefined || id === '全部') {
 						let item = this.mtgoods[i];
 						if (!(item.categoryName instanceof Array)) {
@@ -310,6 +316,7 @@ export default {
 						}
 					}
 				}
+				console.log(arr);
 			} else if (this.areaIndex[0] == 3) {
 				for (let i = 0; i < this.baidugoods.length; i++) {
 					if (id === undefined || id === '全部') {

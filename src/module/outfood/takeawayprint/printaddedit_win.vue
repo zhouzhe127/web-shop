@@ -176,11 +176,15 @@ export default {
 
 				if(info.areaIds==2){//美团匹配菜品数据处理
 					Object.values(goodsfo).forEach(v=>{
-						arr.push(Number(v[0]));
+						if(v[0]){
+							arr.push(Number(v[0]));
+						}
 					});
 				}else{//饿了么百度匹配菜品数据处理
 					Object.keys(goodsfo).forEach(v=>{
-						arr.push(Number(v));
+						if(v){
+							arr.push(Number(v));
+						}
 					});
 				}
 				// for (let i in JSON.parse(info.goodsIds)) {
@@ -201,7 +205,6 @@ export default {
 				console.log(printInfo);
 				console.log(info);
 				for(let index=0; index<printInfo.length;index++){
-					console.log(index);
 					if(printInfo[index].id==info.printerId){
 						this.printerIndex = index;
 					}
@@ -361,6 +364,7 @@ export default {
 			arr.push(res);
 			this.shopsList = arr;
 			this.shopsIndex = [arr[0].TakeoutShopId];
+			console.log(arr);
 			//切换渠道，重置选中店铺
 			if (this.eleShopid&&arr[0].TakeoutShopId != this.eleShopid) {
 				this.shopsList = [];

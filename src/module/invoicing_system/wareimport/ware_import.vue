@@ -1,7 +1,7 @@
 /* * @Author: zhouzhe * @Date: 2018-04-26 13:50:23 */
 <template>
 	<div id="wareImport">
-		<el-radio-group v-model="tabactive" fill="rgb(255, 152, 0)" size="medium"  @change="tebClick">
+		<el-radio-group v-model="tabactive" fill="rgb(255, 152, 0)" size="medium" @change="tebClick">
 			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
 		</el-radio-group>
 		<el-tooltip content="Top center" placement="top">
@@ -9,16 +9,17 @@
 		<div class="serBox">
 			<h1>操作时间：</h1>
 			<div class="timer">
-				<el-date-picker v-model="startTime" format="yyyy 年 MM 月 dd 日" type="date" @change="startTimeChange" placeholder="选择日期"></el-date-picker>
+				<el-date-picker v-model="timeAll" type="daterange" align="right" unlink-panels range-separator="至"
+				    start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+				</el-date-picker>
 			</div>
-			<span>-</span>
-			<div class="timer">
-				<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" @change="endTimeChange" placeholder="选择日期"></el-date-picker>
+			<div class="inpBox">
+				<el-input v-model="createUser" placeholder="请输入操作人"></el-input>
+
 			</div>
-			<el-input v-model="createUser" placeholder="请输入操作人"></el-input>
 			<div class="btnChange" style="display:inline-block;">
-				 <el-button @click="searchList" type="primary">筛选</el-button>
-				 <el-button @click="searchReset" type="info">重置</el-button>
+				<el-button @click="searchList" type="primary">筛选</el-button>
+				<el-button @click="searchReset" type="info">重置</el-button>
 			</div>
 		</div>
 		<el-table :data="listData" style="width: 100%;margin-top:20px;" stripe>
@@ -28,12 +29,12 @@
 						<div @click="getDetail(scope.row)" class="detailsBtn">查看详情</div>
 					</template>
 				</el-table-column>
-				 <el-table-column label="操作时间" >
-					 <template slot-scope="scope">
+				<el-table-column label="操作时间">
+					<template slot-scope="scope">
 						<div>{{getTime(scope.row.createTime)}}</div>
 					</template>
-				 </el-table-column>
-				 <el-table-column label="操作人" prop="creator"></el-table-column>
+				</el-table-column>
+				<el-table-column label="操作人" prop="creator"></el-table-column>
 			</el-table-column>
 		</el-table>
 		<div class="page-box">
@@ -52,25 +53,24 @@
 		data() {
 			return {
 				titleList: [{
-					titleName: '操作'
-				},
-				{
-					titleName: '操作时间'
-				},
-				{
-					titleName: '操作人',
-					dataName: 'creator'
-				}
+						titleName: '操作'
+					},
+					{
+						titleName: '操作时间'
+					},
+					{
+						titleName: '操作人',
+						dataName: 'creator'
+					}
 				],
 				allTotal: 0,
 				page: 1,
 				pageTotal: 0,
-				startTime: utils.getTime({
-					time: new Date()-global.timeConst.ONEMONTH
-				}).start,
-				endTime: utils.getTime({
+				timeAll:[utils.getTime({
+					time: new Date() - global.timeConst.ONEMONTH
+				}).start,utils.getTime({
 					time: new Date()
-				}).end,
+				}).end],
 				createUser: '', //操作人
 				tebData: ['商品', '物料'],
 				tabactive: 0,
@@ -80,22 +80,55 @@
 				checkAlert: false,
 				checkFile: '',
 				cdn: global.cdnUrl,
-				inventConfigure:0,
+				inventConfigure: 0,
+				pickerOptions: {
+					shortcuts: [{
+						text: '最近一周',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+							picker.$emit('pick', [start, end]);
+						}
+					}, {
+						text: '最近一个月',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+							picker.$emit('pick', [start, end]);
+						}
+					}, {
+						text: '最近三个月',
+						onClick(picker) {
+							const end = new Date();
+							const start = new Date();
+							start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+							picker.$emit('pick', [start, end]);
+						}
+					}]
+				},
 			};
 		},
-		mounted() {
-			this.inventConfigure = storage.session('inventConfigure')||0;
-			this.tabactive = this.inventConfigure==0?0:this.inventConfigure-1;
+		// mounted() {
+		// 	this.inventConfigure = storage.session('inventConfigure')||0;
+		// 	this.tabactive = this.inventConfigure==0?0:this.inventConfigure-1;
+		// 	this.heardBtn();
+		// 	this.init();
+		// },
+		activated() {
+			this.inventConfigure = storage.session('inventConfigure') || 0;
+			this.tabactive = this.inventConfigure == 0 ? 0 : this.inventConfigure - 1;
 			this.heardBtn();
 			this.init();
 		},
 		methods: {
 			async init() {
-				if (this.startTime > this.endTime)[this.startTime, this.endTime] = [this.endTime, this.startTime];
+				// if (this.startTime > this.endTime)[this.startTime, this.endTime] = [this.endTime, this.startTime];
 				let data = await http.invoicing_getBatchStorageRecords({
 					data: {
-						startTime: parseInt(this.startTime / 1000),
-						endTime: parseInt(this.endTime / 1000),
+						startTime: parseInt(this.timeAll[0] / 1000),
+						endTime: parseInt(this.timeAll[1] / 1000),
 						page: this.page,
 						creator: this.createUser,
 						num: 10,
@@ -114,19 +147,9 @@
 					path: 'wareImport/wareProsperity'
 				});
 			},
-			startTimeChange(time) {
-				this.startTime = utils.getTime({
-					time: time
-				}).start;
-			},
-			endTimeChange(time) {
-				this.endTime = utils.getTime({
-					time: time
-				}).end;
-			},
 			tebClick(index) {
 				this.tabactive = index;
-				this.init();
+				this.searchReset();
 			},
 			searchList() {
 				this.init();
@@ -134,12 +157,11 @@
 			searchReset() {
 				this.createUser = '';
 				this.page = 1;
-				this.startTime = utils.getTime({
+				this.timeAll=[utils.getTime({
+					time: new Date() - global.timeConst.ONEMONTH
+				}).start,utils.getTime({
 					time: new Date()
-				}).start;
-				this.endTime = utils.getTime({
-					time: new Date()
-				}).end;
+				}).end];
 				this.init();
 			},
 			pageChange(page) {
@@ -148,48 +170,48 @@
 			},
 			heardBtn() {
 				this.$store.commit('setPageTools', [{
-					name: '导出模板',
-					className: ['wearhouse create float'],
-					fn: () => {
-						if (this.tabactive == 1) {
-							window.location.href = this.cdn + '/suppliestemple.xlsx?v=1';
-						}
-						if (this.tabactive == 0) {
-							window.location.href = this.cdn + '/goodstemple.xlsx?v=1';
-						}
-					}
-				},
-				{
-					name: '入库导入',
-					className: ['wearhouse handle refoin'],
-					inputName: 'file',
-					fn: async () => {//e
-						let data = await http.invoicing_warehouseImport({
-							data: {
-								shopId: this.shopId
-							},
-							timeout: 60000,
-							formId: 'form_import_good'
-						});
-						this.checkFile = data;
-						this.time = Timer.add(this.checkUp, 2000, 200);
-						this.$store.commit('setWin', {
-							title: '提示',
-							winType: 'alert',
-							content: '正在上传....',
-							maskShow: false,
-							callback: (str) => {
-								if (str != 'ok') {
-									Timer.clear(this.time);
-								} else {
-									this.checkAlert = true;
-								}
+						name: '导出模板',
+						className: ['wearhouse create float'],
+						fn: () => {
+							if (this.tabactive == 1) {
+								window.location.href = this.cdn + '/suppliestemple.xlsx?v=1';
 							}
-						});
-
+							if (this.tabactive == 0) {
+								window.location.href = this.cdn + '/goodstemple.xlsx?v=1';
+							}
+						}
 					},
-					type: 1
-				}
+					{
+						name: '入库导入',
+						className: ['wearhouse handle refoin'],
+						inputName: 'file',
+						fn: async () => { //e
+								let data = await http.invoicing_warehouseImport({
+									data: {
+										shopId: this.shopId
+									},
+									timeout: 60000,
+									formId: 'form_import_good'
+								});
+								this.checkFile = data;
+								this.time = Timer.add(this.checkUp, 2000, 200);
+								this.$store.commit('setWin', {
+									title: '提示',
+									winType: 'alert',
+									content: '正在上传....',
+									maskShow: false,
+									callback: (str) => {
+										if (str != 'ok') {
+											Timer.clear(this.time);
+										} else {
+											this.checkAlert = true;
+										}
+									}
+								});
+
+							},
+							type: 1
+					}
 				]);
 			},
 			async checkUp() {
@@ -242,21 +264,28 @@
 </script>
 <style lang="less" scoped>
 	#wareImport {
-		.el-input{
+		.el-input {
 			width: 200px;
 		}
-		.tabletop{
+
+		.tabletop {
 			background-color: #ffffff;
 			text-align: center;
 		}
+
 		.detailsBtn {
 			color: #29abe2;
 			cursor: pointer;
 		}
+
 		@media only screen and (max-width:1150px) {
 			.btnChange {
 				margin-top: 15px;
 			}
+		}
+		.inpBox{
+			display: inline-block;
+			margin: 0 15px;
 		}
 		@import url("./warecom");
 	}

@@ -140,9 +140,11 @@ const bomChange = (resolve) =>
 const checkMaterial = (resolve) =>
     import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/check_material'); //批量盘库-物料盘库-提交
 const editGoodsCountTemplate = (resolve) =>
-    import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_goods'); //批量盘库-编辑商品模板
+    import ( /* webpackChunkName:"add_goods" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_goods'); //批量盘库-编辑商品模板
 const editMaterialCountTemplate = (resolve) =>
-    import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_material'); //批量盘库-编辑物料模板
+    import ( /* webpackChunkName:"add_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_material'); //批量盘库-编辑物料模板
+const supbranchDetail = (resolve) =>
+    import ( /* webpackChunkName:"supbranch_detail" */ 'src/module/invoicing_system/invoicing/supbranch_detail'); //物料批次详情    
 const wareImport = (resolve) =>
     import ( /* webpackChunkName:"ware_import" */ 'src/module/invoicing_system/wareimport/ware_import'); //入库导入
 const wareProsperity = (resolve) =>
@@ -1343,7 +1345,11 @@ export default [{
                             path: '',
                             components: {
                                 details_con: wareImport
+                            },
+                            meta: {
+                                keepAlive: true
                             }
+
                         },
                         {
                             path: 'wareProsperity', //入库导入成功
@@ -1506,6 +1512,13 @@ export default [{
                             path: 'warehouseCount',
                             components: {
                                 details_con: warehouseCount
+                            }
+                        },
+                        {
+                            //物料批次详情
+                            path: 'supbranchDetail',
+                            components: {
+                                details_con: supbranchDetail
                             }
                         }
                     ]
