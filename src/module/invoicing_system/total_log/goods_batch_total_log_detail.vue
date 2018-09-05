@@ -159,6 +159,7 @@ export default {
             flex-flow: row wrap;
             margin-top: 20px;
             width:90%;
+            padding-left:50px;
             .col{
                 min-width:210px;
                 flex-grow: 1;

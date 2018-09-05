@@ -20,7 +20,6 @@ export default {
 		},
 		//时间对象转时间戳
         getTimestamp(res){
-
         },
 		//商品物料导航的切换
         navigateTo(navigate){
