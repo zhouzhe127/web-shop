@@ -8,8 +8,10 @@
 <template>
 	<div class="detail-list">
 		<ul class="chooseBtn">
-			<li :class="{select:selectType==0}" @click="selectTab(0)">商品</li>
-			<li :class="{select:selectType==1}" @click="selectTab(1)">物料</li>
+			<el-radio-group v-model="selectType">
+			    <el-radio-button label="0">商品</el-radio-button>
+			    <el-radio-button label="1">物料</el-radio-button>
+			</el-radio-group>
 		</ul>
 		<div class="table" v-if="selectType==0">
 			<div class="table-head">商品信息<span class="circle"></span>共<em>{{goodsDetails.length}}</em>个条目

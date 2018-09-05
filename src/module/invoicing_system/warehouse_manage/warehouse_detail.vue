@@ -210,7 +210,7 @@ export default {
 			goodsType:-1,//选中商品类型
 			goodsName:'',//商品名称
 			matTypeList:[
-				{value:'-1',label:'全部'},
+				{value:'-1',label:'全部类型'},
 				{value:'0',label:'成品'},
 				{value:'1',label:'半成品'},
 				{value:'2',label:'普通物料'},

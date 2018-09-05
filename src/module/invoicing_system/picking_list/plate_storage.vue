@@ -27,20 +27,21 @@
 					盘库列表 · 共<span style="color: #F8931F;padding: 0 3px;font-size: inherit;">{{storageInfo.length}}</span>个条目
 				</div>
 				<div class="scroll-box">
-					<div class="list-box">
+					<div class="list-box" @click="banClick">
 						<ul class="oUl oulFirst">
 							<li>操作</li>
 							<li>物料名称</li>
 							<li>领料单位选择</li>
 							<li style="width: 15%">领料数量/重量</li>
-							<li style="width: 20%">剩余数量/重量 <span @click="allUse">{{isSurplus?'全部消耗':'全部剩余'}}</span></li>
-							<li style="width: 20%">回库数量/重量 <span @click="allBack" style="color:#27A8E0;">剩余回库</span></li>
+							<li style="width: 20%">剩余数量/重量 <span @click="allUse" :class="{warning:isSurplus}">{{isSurplus?'全部消耗':'全部剩余'}}</span></li>
+							<li style="width: 20%">回库数量/重量 <span @click="allBack" style="color:#E1BB4A;">剩余回库</span></li>
 							<li >分类</li>
 							<li >类型</li>
 						</ul>
 						<ul class="oUl oulSecond" v-for="(item, index) in infoList" :key="index">
-							<li style="cursor:pointer;color:#27A8E0;" @click="doThing(item)">
-								批次处理
+							<li>
+								<span class="handle-btn" @click="doThing(item)">批次选择</span>
+								<span class="handle-btn reset" @click="resetItem(item)">重置</span>
 							</li>
 							<li :title="item.materialName" class="hide">{{item.materialName}}</li>
 							<li>
@@ -58,26 +59,30 @@
 							</li>
 							<li style="width: 20%;">
 								<div class="div_float">
-									<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useNum" placeholder="请输入"/>
+									<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useNum" placeholder="请输入"
+										:disabled="item.haveBatch"/>
 									<span class="span_line" v-if="item.selUnit.name" :title="item.selUnit.name">{{item.selUnit.name}}</span>
 								</div>
 								<template v-if="item.selUnit.isMin != 1">
 									<span class="div_float add-sign">+</span>
 									<div class="div_float">
-										<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useWeight" placeholder="请输入"/>
+										<input class="searchgoods" type="text" :onkeyup="getmin(item)" v-model="item.useWeight" placeholder="请输入"
+											:disabled="item.haveBatch"/>
 										<span class="span_line" :title="item.isMin">{{item.isMin}}</span>
 									</div>
 								</template>
 							</li>
 							<li style="width: 20%">
 								<div class="div_float">
-									<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backNum" placeholder="请输入"/>
+									<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backNum" placeholder="请输入"
+										:disabled="item.haveBatch"/>
 									<span class="span_line" v-if="item.selUnit.name" :title="item.selUnit.name">{{item.selUnit.name}}</span>
 								</div>
 								<template v-if="item.selUnit.isMin != 1">
 									<span class="div_float add-sign">+</span>
 									<div class="div_float">
-										<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backWeight" placeholder="请输入"/>
+										<input class="searchgoods" type="text" :onkeyup="getmin(item,'1')" v-model="item.backWeight" placeholder="请输入"
+											:disabled="item.haveBatch"/>
 										<span class="span_line" :title="item.isMin">{{item.isMin}}</span>
 									</div>
 								</template>
@@ -149,6 +154,30 @@
 				];
 				this.$store.commit('setPageTools', arr);
 			},
+			banClick(event){//被禁用按钮点击事件
+				let target = event.target;
+				if(target.className.includes('searchgoods')){
+					if(target.getAttribute('disabled')=='disabled'){
+						this.$message({message: '已选中批次的物料无法修改，请先重置',type: 'error'});
+					}
+				}
+			},
+			resetItem(item){//重置填写，批次
+				this.$confirm('此操作会重置已选择的批次, 是否继续?','重置', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'info'
+		        }).then(()=>{
+		        	this.setDefaultItem(item);
+					item.haveBatch = false;
+					item.usemin = item.surplus*item.selUnit.value+item.useWeight*1;//全部剩余，消耗数量为0
+					item.batchDetail = [];//清空批次
+					
+					item.backNum = '';
+					item.backWeight = '';
+					item.backmin = 0;
+		        }).catch(()=>{});
+			},
 			setInitData(){
 				for(let j = 0; j < this.infoList.length; j++){
 					let infoItem = this.infoList[j];
@@ -181,13 +210,7 @@
 					for(let unitItem of infoItem.materialUnit){
 						this.$set(infoItem,'selUnit',unitItem);
 						infoItem.unit = this.comUnit(infoItem.surplus,unitItem.value,unitItem.name,infoItem.minUnit.name);
-						let obj = this.comUnit(infoItem.surplus,unitItem.value,unitItem.name,infoItem.minUnit.name,true);
-						if(infoItem.selUnit.isMin == 1){
-							infoItem.useNum = obj.tNull;
-						}else{
-							infoItem.useNum = obj.oNull;
-							infoItem.useWeight = obj.tNull;
-						}
+						this.setDefaultItem(infoItem);
 						break;
 					}
 					for(let unitItem of infoItem.materialUnit){
@@ -197,7 +220,15 @@
 						}
 					}
 				}
-				
+			},
+			setDefaultItem(infoItem){
+				let obj = this.comUnit(infoItem.surplus,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name,true);
+				if(infoItem.selUnit.isMin == 1){
+					infoItem.useNum = obj.tNull;
+				}else{
+					infoItem.useNum = obj.oNull;
+					infoItem.useWeight = obj.tNull;
+				}
 			},
 			selectType(item,unitId){
 				let infoItem = item;
@@ -256,36 +287,41 @@
 			},
 			//全部消耗-全部剩余
 			allUse(){
-				if(!this.isSurplus){//全部剩余
+	        	if(!this.isSurplus){//全部剩余
 					for(let infoItem of this.infoList){
-						infoItem.unit = this.comUnit(infoItem.surplus,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name);
-						let obj = this.comUnit(infoItem.surplus,infoItem.selUnit.value,infoItem.selUnit.name,infoItem.minUnit.name,true);
-						if(infoItem.selUnit.isMin == 1){
-							infoItem.useNum = obj.tNull;
-						}else{
-							infoItem.useNum = obj.oNull;
-							infoItem.useWeight = obj.tNull;
+						if(!infoItem.haveBatch){
+							this.setDefaultItem(infoItem);
+							infoItem.usemin = 0;//全部剩余，消耗数量为0
+							infoItem.haveBatch = false;
+							infoItem.batchDetail = [];
 						}
-						infoItem.usemin = 0;//全部剩余，消耗数量为0
 					}
 				}else{//全部消耗，剩余数量清空，回库数量清空
 					for(let infoItem of this.infoList){
-						infoItem.useNum = 0;
-						infoItem.useWeight = 0;
-						infoItem.backNum = '';
-						infoItem.backWeight = '';
-						infoItem.usemin = infoItem.surplus*infoItem.selUnit.value+infoItem.useWeight*1;
-						infoItem.backmin = 0;
+						if(!infoItem.haveBatch){
+							infoItem.useNum = 0;
+							infoItem.useWeight = 0;
+							infoItem.backNum = '';
+							infoItem.backWeight = '';
+							infoItem.usemin = infoItem.surplus*infoItem.selUnit.value+infoItem.useWeight*1;
+							infoItem.backmin = 0;
+							infoItem.haveBatch = false;
+							infoItem.batchDetail = [];
+						}
 					}
 				}
 				this.isSurplus = !this.isSurplus;
 			},
 			//剩余回库
 			allBack(){
-				for(let infoItem of this.infoList){
-					infoItem.backNum = infoItem.useNum?infoItem.useNum:'';
-					infoItem.backWeight = infoItem.useWeight?infoItem.useWeight:'';
-					infoItem.backmin = infoItem.backNum*infoItem.selUnit.value+infoItem.backWeight*1;
+	        	for(let infoItem of this.infoList){
+	        		if(!infoItem.haveBatch){
+						infoItem.backNum = infoItem.useNum?infoItem.useNum:'';
+						infoItem.backWeight = infoItem.useWeight?infoItem.useWeight:'';
+						infoItem.backmin = infoItem.backNum*infoItem.selUnit.value+infoItem.backWeight*1;
+						infoItem.haveBatch = false;
+						infoItem.batchDetail = [];
+					}
 				}
 			},
 			//取消
@@ -297,7 +333,7 @@
 			async invoicingCheckMaterial(obj){
 				let res = await http.invoicingCheckMaterial({data:obj});
 				if(res == false){
-					this.$store.commit('setWin',{winType:'alert',content:'盘库失败'});
+					this.$message({message: '盘库失败',type: 'error'});
 				}else{
 					storage.session('listDetail',res);
 					this.$router.push({path:'plateDetails',query:this.$route.query});
@@ -305,13 +341,13 @@
 			},
 			//确定
 			enter(){
-				for(let i = 0; i < this.infoList.length; i++){
-					if(this.infoList[i].usemin > this.infoList[i].number){ 
-						this.$store.commit('setWin',{winType:'alert',content:'物料：' + this.infoList[i].materialName + '剩余数量不能大于领料数量'});
+				for(let infoItem of this.infoList){
+					if(infoItem.usemin > infoItem.surplus){ 
+						this.$message({message: `物料: ${infoItem.materialName} 剩余数量不能大于领料数量`,type: 'error'});
 						return false;
 					}
-					if(this.infoList[i].backmin > this.infoList[i].usemin){
-						this.$store.commit('setWin',{winType:'alert',content:'物料：' + this.infoList[i].materialName + '回库数量不足'});
+					if(infoItem.backmin > infoItem.usemin){
+						this.$message({message: `物料: ${infoItem.materialName} 回库数量不足`,type: 'error'});
 						return false;
 					}
 				}
@@ -323,7 +359,7 @@
 					'materialDetail': []
 				};
 				//整合字段传给后台
-				for(let i = 0; i < this.infoList.length; i++){
+				for(let infoItem of this.infoList){
 					let obj = {
 						'materialId': '',                    //物料id
 						'materialName': '',               //物料名
@@ -337,22 +373,20 @@
 						'batchDetail': [],  //批次
 					};
 					for(let key in obj){
-						obj[key] = this.infoList[i][key];
-						if(key == 'consumeNum'){//消耗数量=总量-剩余数量
-							obj[key] = this.infoList[i].number-this.infoList[i].usemin;
-						}
-						if(key == 'returnNum'){
-							obj[key] = this.infoList[i].backmin;
+						if(key!='consumeNum' && key!='returnNum'){
+							obj[key] = infoItem[key];
 						}
 					}
+					obj.consumeNum = infoItem.surplus-infoItem.usemin;
+					obj.returnNum = infoItem.backmin;
 					if(!obj.consumeNum && !obj.returnNum){
 						continue;  //没有填写数量  过滤掉
 					}
 					obj.batchDetail = [];
 					let consumeNum = 0; // 计算批次内消耗总量
 					let returnNum = 0; // 计算批次内回库总量
-					if(this.infoList[i].batchDetail){
-						for(let j = 0; j < this.infoList[i].batchDetail.length; j++){
+					if(infoItem.batchDetail && infoItem.batchDetail.length){
+						for(let bathcItem of infoItem.batchDetail){
 							let batch = {
 								'id': '',                //批次id
 								'materialId': '',                //物料id
@@ -364,28 +398,25 @@
 								'returnNum': ''                 //领取量（以最小单位计算）
 							};
 							for(let m in batch){
-								batch[m] = this.infoList[i].batchDetail[j][m];
+								batch[m] = bathcItem[m];
 								if(m == 'consumeNum'){
-									batch[m] = this.infoList[i].batchDetail[j].usemin;
+									batch[m] = bathcItem.surplus-bathcItem.usemin;
 								}
 								if(m == 'returnNum'){
-									batch[m] = this.infoList[i].batchDetail[j].backmin;
+									batch[m] = bathcItem.backmin;
 								}
 							}
-							batch.number = this.infoList[i].batchDetail[j].minNumber;
+							batch.number = bathcItem.minNumber;
 							consumeNum += batch.consumeNum*1;
 							returnNum += batch.returnNum*1;
 							obj.batchDetail.push(batch);
 						}
 					}
-					if(obj.consumeNum != consumeNum || obj.returnNum != returnNum){
-						obj.batchDetail = [];
-					}
 					returnData.materialDetail.push(obj);
 				}
-				if(returnData.materialDetail.length == 0){
-					this.$store.commit('setWin',{winType:'alert',content:'请填写消耗数量或回库数量'});
-					return false;
+				if(!returnData.materialDetail.length){
+					this.$message({message: `没有需要盘库或回库的物料`,type: 'error'});
+					return;
 				}
 				this.invoicingCheckMaterial(returnData);
 			},
@@ -393,47 +424,43 @@
 			getWin(res,info,batch){
 				if(res == 'ok'){
 					this.winInfo = info;
-					for(let i = 0; i < this.infoList.length; i++){
-						for(let j = 0; j < this.infoList[i].materialUnit.length; j++){
-							if(this.infoList[i].materialId == info.materialId && this.infoList[i].materialUnit[j].name == info.selUnit.name){
-								this.selectType(this.infoList[i],this.infoList[i].index);
+					for(let infoItem of this.infoList){
+						for(let j = 0; j < infoItem.materialUnit.length; j++){
+							if(infoItem.materialId == info.materialId && infoItem.materialUnit[j].name == info.selUnit.name){
+								this.selectType(infoItem,infoItem.index);
 							}
 						}
-						if(this.infoList[i].materialId == info.materialId){
-							this.infoList[i].useNum = '';
-							this.infoList[i].useWeight = '';
-							this.infoList[i].backNum = '';
-							this.infoList[i].backWeight = '';
+						if(infoItem.materialId == info.materialId){
+							infoItem.useNum = '';
+							infoItem.useWeight = '';
+							infoItem.backNum = '';
+							infoItem.backWeight = '';
+							infoItem.consumeNum = infoItem.usemin;
+							infoItem.returnNum = infoItem.backmin;
+							infoItem.initialNum = infoItem.surplus;
+							infoItem.batchDetail = [];
 							for(let j = 0; j < batch.length; j++){
-								this.infoList[i].useNum = this.infoList[i].useNum*1 + batch[j].useNum*1;
-								this.infoList[i].useWeight = this.infoList[i].useWeight*1 + batch[j].useWeight*1;
-								this.infoList[i].backNum = this.infoList[i].backNum*1 + batch[j].backNum*1;
-								this.infoList[i].backWeight = this.infoList[i].backWeight*1 + batch[j].backWeight*1;
+								infoItem.useNum = infoItem.useNum*1 + batch[j].useNum*1;
+								infoItem.useWeight = infoItem.useWeight*1 + batch[j].useWeight*1;
+								infoItem.backNum = infoItem.backNum*1 + batch[j].backNum*1;
+								infoItem.backWeight = infoItem.backWeight*1 + batch[j].backWeight*1;
 							}
-						}
-					}
-					//整合字段传给后台
-					for(let i = 0; i < this.infoList.length; i++){
-						this.infoList[i].consumeNum = this.infoList[i].usemin;
-						this.infoList[i].returnNum = this.infoList[i].backmin;
-						this.infoList[i].initialNum = this.infoList[i].surplus;
-						this.infoList[i].batchDetail = [];
-						if(this.infoList[i].materialId == info.materialId){
-							for(let j = 0; j < this.infoList[i].batch.length; j++){
-								for(let key in this.infoList[i].batch[j]){
-									this.infoList[i].batch[j][key] = batch[j][key];
+							for(let j = 0; j < infoItem.batch.length; j++){
+								for(let key in infoItem.batch[j]){
+									infoItem.batch[j][key] = batch[j][key];
 								}
 							}
-						}
-						for(let k = 0; k < this.infoList[i].batch.length; k++){
-							if(this.infoList[i].batch[k].usemin || this.infoList[i].batch[k].backmin){
-								this.infoList[i].batch[k].consumeNum = this.infoList[i].batch[k].usemin;
-								this.infoList[i].batch[k].returnNum = this.infoList[i].batch[k].backmin;
-								this.infoList[i].batchDetail.push(this.infoList[i].batch[k]);
+							for(let k = 0; k < infoItem.batch.length; k++){
+								if(infoItem.batch[k].usemin || infoItem.batch[k].backmin){
+									infoItem.batch[k].consumeNum = infoItem.batch[k].usemin;
+									infoItem.batch[k].returnNum = infoItem.batch[k].backmin;
+									infoItem.batchDetail.push(infoItem.batch[k]);
+								}
 							}
+							this.$set(infoItem,'haveBatch',true);
+							break;
 						}
 					}
-
 				}
 				this.showBatch = false;
 			}
@@ -531,11 +558,18 @@
 				font-size: 16px;
 				height: 50px;
 				line-height: 50px;
-				span{color:#FF3D04;cursor:pointer;}
+				span{color:#E1BB4A;cursor:pointer;
+					&:hover{text-decoration: underline;}
+				}
+				.warning{color: red;}
 			}
 		}
 		.oulSecond{
 			color: #666666;
+			.handle-btn{display: inline-block;padding: 10px 5px;color: #E1BB4A;cursor: pointer;
+				&:hover{text-decoration: underline;}
+			}
+			.reset{color: red;}
 		}
 	}
 	/*.totle .oulSecond li span{*/
