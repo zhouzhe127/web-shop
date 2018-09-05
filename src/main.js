@@ -83,7 +83,7 @@ class Main {
             let name = elem.tagName.toLowerCase();
             if (name === 'script' && elem.src.indexOf(cdn) > -1) {
                 store.commit("setWin", {
-                    content: "版本已经更新,请刷新页面",
+                    content: "版本已经更新,请清除缓存,然后刷新页面",
                     callback: () => {
 
                     }

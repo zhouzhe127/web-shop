@@ -438,7 +438,7 @@ export default {
 		position: fixed;
 		background-color: #fff;
 		overflow: hidden;
-		z-index: 4998;
+		z-index: 999;
 	}
 
 	.win.center {
@@ -446,7 +446,7 @@ export default {
 		transform: translate(0, -50%);
 		width: 100%;
 		height: 660px;
-		z-index: 5000;
+		z-index: 999;
 		transform: translate(-50%, -50%);
 		left: 50%;
 		max-width: 1200px;

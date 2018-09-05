@@ -23,7 +23,7 @@
 			</section>
 			<section>
 				<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="formList" :listName="'会员充值统计'" :key="index" :showTitle='1' :allTotal="count">
-					<div slot="con-0" slot-scope="props">
+					<div slot="con-0" slot-scope="props" @click="openDetail(props.data)">
 						查看账户
 					</div>
 					<div slot="con-1" slot-scope="props">
@@ -286,6 +286,10 @@ export default {
 					return '中信微信支付';
 				case 7:
 					return '中信支付宝支付';
+				case 23:
+					return '上海中信';
+				case 24:
+					return '上海中信支付宝';		
 			}
 		},
 		async Export() {

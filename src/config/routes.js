@@ -306,7 +306,7 @@ const shopNotice = (resolve) =>
 const boundPublicNumber = (resolve) =>
     import ( /* webpackChunkName:"bound_public_number" */ 'src/module/public_number_configuration/bound_public_number'); //绑定公众号
 const smallProgramBinding = (resolve) =>
-    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/small_program_binding'); //小程序绑定
+    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/program_config/small_program'); //小程序绑定
 const moduleSet = (resolve) =>
     import ( /* webpackChunkName:"module_set" */ 'src/module/public_number_configuration/module_set'); //模板设置
 const menuSet = (resolve) =>
@@ -457,7 +457,7 @@ const activityFullreduce = () =>
 const activityCoupon = () =>
     import ( /* webpackChunkName:"activity_coupon" */ 'src/module/marketing_tools/new_activity/activity_coupon'); //领券活动   
 const selfHelpMode = () =>
-    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help_mode'); //自助模式
+    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help/self_help_mode'); //自助模式
 const weixinOnfiguration = () =>
     import ( /* webpackChunkName:"weixin_onfiguration" */ 'src/module/marketing_tools/weixin_onfiguration'); //微信首页配置
 const CommentConfig = () =>
