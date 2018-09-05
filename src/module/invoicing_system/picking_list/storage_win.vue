@@ -65,24 +65,32 @@
 								</li>
 								<li :title="comUnit(item.surplus,selUnit.value,selUnit.name,minUnit.name)">{{comUnit(item.surplus,selUnit.value,selUnit.name,minUnit.name)}}</li>
 								<li class="end">
-									<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useNum">
-									<span v-if="selUnit.name" :title="selUnit.name">{{selUnit.name}}</span>
-									<span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
-									<em v-if="selUnit.isMin != 1">
+									<div class="input-box">
+										<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useNum">
+										<span v-if="selUnit.name" :title="selUnit.name">{{selUnit.name}}</span>
+										<span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
+									</div>
+									<template v-if="selUnit.isMin != 1">
 										<i>+</i>
-										<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useWeight">
-										<span :title="infoList.isMin">{{infoList.isMin}}</span>
-									</em>
+										<div class="input-box">
+											<input type="text" placeholder="输入数字" :onkeyup="getmin()" v-model="item.useWeight">
+											<span :title="infoList.isMin">{{infoList.isMin}}</span>
+										</div>
+									</template>
 								</li>
 								<li class="end">
-									<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backNum">
-									<span :title="selUnit.name" v-if="selUnit.name">{{selUnit.name}}</span>
-									<span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
-									<em v-if="selUnit.isMin != 1">
+									<div class="input-box">
+										<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backNum">
+										<span :title="selUnit.name" v-if="selUnit.name">{{selUnit.name}}</span>
+										<span :title="infoList.isDefault" v-else>{{infoList.isDefault}}</span>
+									</div>
+									<template v-if="selUnit.isMin != 1">
 										<i>+</i>
-										<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backWeight">
-										<span :title="infoList.isMin">{{infoList.isMin}}</span>
-									</em>
+										<div class="input-box">
+											<input type="text" placeholder="输入数字" :onkeyup="getmin('1')" v-model="item.backWeight">
+											<span :title="infoList.isMin">{{infoList.isMin}}</span>
+										</div>
+									</template>
 								</li>
 							</ul>
 						</div>
@@ -205,10 +213,10 @@
 				if(res == 'ok'){
 					for(let i = 0; i < this.batchList.length; i++){
 						if(this.batchList[i].usemin > this.batchList[i].surplus){
-							this.$store.commit('setWin',{winType:'alert',content:'批次编号' + this.batchList[i].batchCode + '消耗数量不能大于领料数量'});
+							this.$store.commit('setWin',{winType:'alert',content:'批次编号' + this.batchList[i].batchCode + '剩余数量不能大于领料数量'});
 							return false;
 						}
-						if(this.batchList[i].backmin > (this.batchList[i].surplus*1-this.batchList[i].usemin*1)){
+						if(this.batchList[i].backmin > this.batchList[i].usemin*1){
 							this.$store.commit('setWin',{winType:'alert',content:'批次编号' + this.batchList[i].batchCode + '回库数量不足'});
 							return false;
 						}
@@ -287,32 +295,13 @@
 					}
 				}
 				this.isSurplus = !this.isSurplus;
-//				for(let i = 0; i < this.batchList.length; i++){
-//					let str = this.comUnit(this.batchList[i].surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-//					if(this.selUnit.isMin != 1){
-//						this.batchList[i].useNum = str.oNull;
-//						this.batchList[i].useWeight = str.tNull;
-//					}else{
-//						this.batchList[i].useNum = str.tNull;
-//						this.batchList[i].useWeight = '';
-//					}
-//					this.batchList[i].backNum = '';
-//					this.batchList[i].backWeight = '';
-//					this.batchList[i].usemin = this.batchList[i].useNum * this.selUnit.value + this.batchList[i].useWeight*1; //消耗的最小单位数量
-//				}
 			},
 			//剩余回库
 			allBack(){
-				for(let i = 0; i < this.batchList.length; i++){
-					let data = this.batchList[i].surplus*1 - this.batchList[i].usemin*1;
-					let str = this.comUnit(data,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-					if(this.selUnit.isMin != 1){
-						this.batchList[i].backNum = str.oNull;
-						this.batchList[i].backWeight = str.tNull;
-					}else{
-						this.batchList[i].backNum = str.tNull;
-						this.batchList[i].backWeight = '';
-					}
+				for(let infoItem of this.batchList){
+					infoItem.backNum = infoItem.useNum?infoItem.useNum:'';
+					infoItem.backWeight = infoItem.useWeight?infoItem.useWeight:'';
+					infoItem.backmin = infoItem.backNum*infoItem.selUnit.value+infoItem.backWeight*1;
 				}
 			},
 			//筛选
@@ -356,7 +345,7 @@
 	};
  </script>
 
- <style scoped>
+ <style scoped lang="less">
 	#tan {
 		height: 100%;
 		background: #F7F7F7;
@@ -493,26 +482,32 @@
 	#tan .content ul.batch li:nth-child(7){
 		width: 250px;
 	}
-	#tan .content .list input{
-		width: 70px;
-		height: 39px;
-		padding-left: 7px;
-		border: 1px solid #D5D5D5;
-		vertical-align: middle;
-	}
 	#tan .content .list ul li{
 		line-height: 60px;
 	}
-	#tan .content .list ul .end span{
-		display: inline-block;
-		width: 40px;
-		height: 39px;
-		line-height: 39px;
-		border: 1px solid #D5D5D5;
-		vertical-align: middle;
-		border-left: none;
-		background: #fff;
+	#tan .content .list ul .end{
+		input{
+			width: 70px;
+			height: 40px;
+			padding: 0 7px;
+			border: 1px solid #D5D5D5;
+			float: left;
+		}
+		span{
+			width: 40px;
+			height: 40px;
+			line-height: 38px;
+			border: 1px solid #D5D5D5;
+			float: left;
+			border-left: none;
+			background: #fff;
+		}
+		.input-box,i{
+			display: inline-block;overflow: hidden;vertical-align: middle;
+		}
+		i{height: 40px;line-height: 40px;}
 	}
+	 
 	#tan .list:last-child ul{
 		border-bottom: 1px solid #D5D5D5;
 	}
