@@ -25,42 +25,49 @@
 						<section v-on:click="getGoodList(1)" class="oDe" :class="{'act' : isPackage}">套餐</section>
 					</div>
 					<ul v-if="!isPackage" class="noPackage">
-						<li style="width:210px;float: left;">
-							<!--一级分类选择框-->
-							<section class="staList fl detLi">
-								<section v-on:click="showOneArea" class="tableList">
-									<span class="oSpan">{{oneArea.oneAreaName}}</span>
-									<div class="fl">
-										<i></i>
-									</div>
-								</section>
-								<div v-if="oneArea.oneAreaBtn" class="detDiv">
-									<i class="detI"></i>
-									<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">
-										<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
-									</div>
-								</div>
-							</section>
-						</li>
-						<li style="width:210px;margin-left: 20px;float: left;">
-							<!--二级级分类选择框-->
-							<section class="staList fl detLi">
-								<section v-on:click="showTwoArea" class="tableList">
-									<span class="oSpan">{{twoArea.twoAreaName}}</span>
-									<div class="fl">
-										<i></i>
-									</div>
-								</section>
-								<div v-if="twoArea.twoAreaBtn" class="detDiv" style="left: -180px;">
-									<i class="detI" style="left: 290px;"></i>
-									<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">
-										<section v-for="(item,index) in twoArea.twoAreaList" :key="index" v-on:click='selectTwoArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
-									</div>
-								</div>
-							</section>
-						</li>
+						<!--一级分类选择框-->
+						<elCategory  @selectCategory = "newselectOneArea" :itemIndex="oneArea.oneAreaIndex" :categoryArr="oneArea.oneAreaList" :itemArea = "oneArea" style="float: left;"></elCategory>
+						<!--二级级分类选择框-->
+						<elCategory  @selectCategory = "newselectTwoArea" :itemIndex="twoArea.twoAreaIndex" :categoryArr="twoArea.twoAreaList"  :itemArea = "twoArea" style="float: left;"></elCategory>
+
+						<!--<li style="width:210px;float: left;">-->
+							<!--&lt;!&ndash;一级分类选择框&ndash;&gt;-->
+							<!--<section class="staList fl detLi">-->
+								<!--<section v-on:click="showOneArea" class="tableList">-->
+									<!--<span class="oSpan">{{oneArea.oneAreaName}}</span>-->
+									<!--<div class="fl">-->
+										<!--<i></i>-->
+									<!--</div>-->
+								<!--</section>-->
+								<!--<div v-if="oneArea.oneAreaBtn" class="detDiv">-->
+									<!--<i class="detI"></i>-->
+									<!--<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">-->
+										<!--<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>-->
+									<!--</div>-->
+								<!--</div>-->
+							<!--</section>-->
+						<!--</li>-->
+						<!--<li style="width:210px;margin-left: 20px;float: left;">-->
+							<!--&lt;!&ndash;二级级分类选择框&ndash;&gt;-->
+							<!--<section class="staList fl detLi">-->
+								<!--<section v-on:click="showTwoArea" class="tableList">-->
+									<!--<span class="oSpan">{{twoArea.twoAreaName}}</span>-->
+									<!--<div class="fl">-->
+										<!--<i></i>-->
+									<!--</div>-->
+								<!--</section>-->
+								<!--<div v-if="twoArea.twoAreaBtn" class="detDiv" style="left: -180px;">-->
+									<!--<i class="detI" style="left: 290px;"></i>-->
+									<!--<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">-->
+										<!--<section v-for="(item,index) in twoArea.twoAreaList" :key="index" v-on:click='selectTwoArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>-->
+									<!--</div>-->
+								<!--</div>-->
+							<!--</section>-->
+						<!--</li>-->
+
+
 						<!--搜索-->
-						<li style="width:180px;margin-left: 20px;float: left;">
+						<li style="width:180px;margin-left: 20px;float: left">
 							<div class='search'>
 								<input type="text" placeholder="请输入名称" class="search-input" v-model="search" />
 								<a href="javascript:void(0);" class="search-btn" @click="searchGoods()" style="background-color:#29A7E1;"></a>
@@ -117,17 +124,28 @@ import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
+//			oneArea: {
+//				oneAreaBtn: false, //一级分类
+//				oneAreaName: '请选择一级分类',
+//				oneAreaIndex: -1, //分类下标
+//				oneAreaList: [{ id: '0', name: '全部' }] //一级分类列表
+//			},
+//			twoArea: {
+//				twoAreaBtn: false, //二级分类
+//				twoAreaName: '请选择二级分类',
+//				twoAreaIndex: -1, //分类下标
+//				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+//			},
+
 			oneArea: {
-				oneAreaBtn: false, //一级分类
-				oneAreaName: '请选择一级分类',
+				name: '请选择一级分类',
 				oneAreaIndex: -1, //分类下标
-				oneAreaList: [{ id: '0', name: '全部' }] //一级分类列表
+				oneAreaList: [] //一级分类列表
 			},
 			twoArea: {
-				twoAreaBtn: false, //二级分类
-				twoAreaName: '请选择二级分类',
+				name: '请选择二级分类',
 				twoAreaIndex: -1, //分类下标
-				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+				twoAreaList:[],   //二级分类列表
 			},
 			L1ID: 0, // 1级分类 id
 			L2ID: 0, // 2级分类id
@@ -176,11 +194,10 @@ export default {
 	},
 	props: ['getGoods', 'getPacks', 'goodCom'],
 	created() {
-		document.addEventListener('click', this.myClick);
+//		document.addEventListener('click', this.myClick);
 		this.getOneAreaList(); //获取分类列表
 		//初始化数据
 		this.init();
-		// console.log(this.getGoods);
 	},
 	methods: {
 		init() {
@@ -267,13 +284,20 @@ export default {
 			if (this.L1ID != 0) {
 				this.L1ID = 0;
 				this.L2ID = 0;
-				this.oneArea.oneAreaName = '请选择一级分类';
-				this.twoArea = {
-					twoAreaBtn: false, //二级分类
-					twoAreaName: '请选择二级分类',
+//				this.oneArea.oneAreaName = '请选择一级分类';
+				this.oneArea.name = '请选择一级分类';
+				this.twoArea={
+					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
-					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+					twoAreaList: [] //二级分类列表
 				};
+//				this.twoArea = {
+//					twoAreaBtn: false, //二级分类
+//					twoAreaName: '请选择二级分类',
+//					twoAreaIndex: -1, //分类下标
+//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+//				};
 				this.allGood = true;
 				for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
 					this.oneArea.oneAreaList[i].selected = false;
@@ -667,25 +691,20 @@ export default {
 				}
 			}
 		},
-		//显示一级分类
-		showOneArea(e) {
-			e.stopPropagation();
-			this.twoArea.twoAreaBtn = false;
-			this.oneArea.oneAreaBtn = !this.oneArea.oneAreaBtn;
+
+
+		//一级分类框返回
+		newselectOneArea(index) {
+			this.oneArea.oneAreaIndex = index;
+			this.twoArea.twoAreaIndex = -1;
+			let item = this.oneArea.oneAreaList[index];
+			this.selectOneArea(index,item);
 		},
-		//显示二级分类
-		showTwoArea(e) {
-			e.stopPropagation();
-			if (this.L1ID == 0) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					winType: 'alert',
-					content: '请先选择一个一级分类'
-				});
-				return false;
-			}
-			this.oneArea.oneAreaBtn = false;
-			this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
+		//二级分类框返回
+		newselectTwoArea(index) {
+			this.twoArea.twoAreaIndex = index;
+			let item = this.twoArea.twoAreaList[index];
+			this.selectTwoArea(item);
 		},
 		//选择一级分类
 		selectOneArea(index, item) {
@@ -695,28 +714,35 @@ export default {
 				this.oneArea.oneAreaList[i].selected = false;
 			}
 			item.selected = true;
-			this.oneArea.oneAreaBtn = false;
+//			this.oneArea.oneAreaBtn = false;
 			//选择一级，清空所选二级
-			this.twoArea.twoAreaName = '请选择二级分类';
+//			this.twoArea.twoAreaName = '请选择二级分类';
+			this.twoArea.name = '请选择二级分类';
 			this.L1ID = item.id;
 			this.L2ID = 0;
 			if (index == 0) {
-				//若选择一级分类下的全部，为选择全部商品，包含一级分类下的和二级分类下的商品
+				//选择一级分类下的全部，为选择全部商品，包含一级分类下的和二级分类下的商品
 				this.allGood = true;
 				this.goodsCom = this.goodList;
-				this.oneArea.oneAreaName = '全部';
+//				this.oneArea.oneAreaName = '全部';
+				this.oneArea.name = '全部';
+
+				this.twoArea.twoAreaList=[]; //二级分类制空
 			} else {
 				this.allGood = false;
-				this.oneArea.oneAreaName = item.name;
+//				this.oneArea.oneAreaName = item.name;
+				this.oneArea.name = item.name;
 				this.oneArea.oneAreaIndex = index;
 				let goodList = this.goodList;
 				item.goodsList = [];
 				//初始化二级分类，且让一级分类中的菜品为空
-				this.twoArea.twoAreaList = [{ id: '0', name: '全部二级分类' }];
-				for (let i = 0; i < item.child.length; i++) {
-					item.child[i].selected = false; //让所有的二级分类都处于未选中状态
-					this.twoArea.twoAreaList.push(item.child[i]);
-					item.child[i].goodsList = [];
+				if(item.child.length>0){
+					this.twoArea.twoAreaList = [{ id: '0', name: '全部二级分类' }];
+					for (let i = 0; i < item.child.length; i++) {
+						item.child[i].selected = false; //让所有的二级分类都处于未选中状态
+						this.twoArea.twoAreaList.push(item.child[i]);
+						item.child[i].goodsList = [];
+					}
 				}
 				//引入一级分类和二级分类的数据，把对应的菜品加入到各个分类中
 				for (let j = 0; j < goodList.length; j++) {
@@ -738,16 +764,17 @@ export default {
 			}
 		},
 		//选择二级分类
-		selectTwoArea(index, item) {
+		selectTwoArea(item) {
 			this.search = '';
-			this.twoArea.twoAreaName = item.name;
+//			this.twoArea.twoAreaName = item.name;
+			this.twoArea.name = item.name;
 			//单选
 			let twoList = this.twoArea.twoAreaList;
 			for (let i = 0; i < twoList.length; i++) {
 				twoList[i].selected = false;
 			}
 			item.selected = true;
-			this.twoArea.twoAreaBtn = false;
+//			this.twoArea.twoAreaBtn = false;
 			let dowArr = this.newOneGoodList;
 			let selectArr = {};
 			if (item.id == 0) {
@@ -763,15 +790,33 @@ export default {
 			}
 			this.L2ID = item.id;
 		},
+
+//		//显示一级分类
+//		showOneArea(e) {
+//			e.stopPropagation();
+//			this.twoArea.twoAreaBtn = false;
+//			this.oneArea.oneAreaBtn = !this.oneArea.oneAreaBtn;
+//		},
+//		//显示二级分类
+//		showTwoArea(e) {
+//			e.stopPropagation();
+//			if (this.L1ID == 0) {
+//				this.$store.commit('setWin', {
+//					title: '温馨提示',
+//					winType: 'alert',
+//					content: '请先选择一个一级分类'
+//				});
+//				return false;
+//			}
+//			this.oneArea.oneAreaBtn = false;
+//			this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
+//		},
+
+
 		//获取分类列表
 		async getOneAreaList() {
-			this.oneArea.oneAreaList = [{ id: '0', name: '全部' }]; //分类列表
-			let oneAreaList = [{ id: '0', name: '全部' }];
-			//			let twoAreaList = [{ id: '0', name: '全部二级分类' }];
-			let list;
-			let areaList = storage.session('areaList');
-			//如果存在保存的分类信息
-			if (areaList) {
+			let list,areaList = storage.session('areaList');
+			if(areaList) {
 				list = areaList;
 			} else {
 				list = await http.getCategoryList({
@@ -779,18 +824,18 @@ export default {
 				});
 				storage.session('areaList', list);
 			}
+			console.log(list);
 			//加上selected字段且把二级和一级各自放在各自的列表中
 			for (let i = 0; i < list.length; i++) {
 				list[i].selected = false;
-				oneAreaList.push(list[i]);
 			}
-			this.oneArea.oneAreaList = oneAreaList;
+			list.unshift({ id: '0', name: '全部' });
+			this.oneArea.oneAreaList=utils.deepCopy(list);
 		},
-
-		myClick() {
-			this.oneArea.oneAreaBtn = false;
-			this.twoArea.twoAreaBtn = false;
-		},
+//		myClick() {
+//			this.oneArea.oneAreaBtn = false;
+//			this.twoArea.twoAreaBtn = false;
+//		},
 		//搜索功能
 		searchGoods() {
 			let secGoods = [];
@@ -806,13 +851,20 @@ export default {
 			if (this.L1ID != 0) {
 				this.L1ID = 0;
 				this.L2ID = 0;
-				this.oneArea.oneAreaName = '请选择一级分类';
-				this.twoArea = {
-					twoAreaBtn: false, //二级分类
-					twoAreaName: '请选择二级分类',
+				this.oneArea.name = '请选择一级分类';
+				this.twoArea={
+					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
-					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+					twoAreaList: [] //二级分类列表
 				};
+//				this.oneArea.oneAreaName = '请选择一级分类';
+//				this.twoArea = {
+//					twoAreaBtn: false, //二级分类
+//					twoAreaName: '请选择二级分类',
+//					twoAreaIndex: -1, //分类下标
+//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+//				};
 				this.allGood = true;
 				for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
 					this.oneArea.oneAreaList[i].selected = false;
@@ -852,7 +904,8 @@ export default {
 		document.removeEventListener('click', this.myClick); //去除绑定
 	},
 	components: {
-		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
+		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
+		elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
 	}
 };
 </script>
@@ -946,7 +999,8 @@ export default {
 			}
 		}
 		.noPackage{
-			float: left;margin-left: 20px;
+			float: left;
+			margin-left: 20px;
 			.staList {
 				position: relative;
 				line-height: 41px;
