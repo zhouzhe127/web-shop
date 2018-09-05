@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-04 14:39:40
+ * @Last Modified time: 2018-09-04 18:08:53
  * @Module:商品管理
 **/
 
@@ -33,10 +33,11 @@
 							:value="item.id">
 						</el-option>
 					</el-select>
-					<!-- <select-btn @emit="selectType" :name="typeName" :sorts="goodSec.map(v=>v.name)" :width="158"></select-btn> -->
 				</div>
 				<!-- 分类选择 -->
-				<el-popover
+				<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :oneIndex="oneIndex" :itemArea = "oneArea"></elCategory>
+				<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :oneIndex="twoIndex" :itemArea = "twoArea"></elCategory>
+				<!-- <el-popover
 					placement="bottom"
 					width="400"
 					v-model="showArea"
@@ -50,7 +51,7 @@
 						<span>{{oneArea.name}}</span>
 						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
 					</el-button>
-				</el-popover>
+				</el-popover> -->
 				<!-- <div class="select-down" @click.stop style="margin-right: 20px;">
 					<section class="staList">
 						<section class="tableList" v-on:click="showOneArea">
@@ -69,7 +70,7 @@
 						</div>
 					</section>
 				</div> -->
-				<el-popover
+				<!-- <el-popover
 					placement="bottom"
 					width="400"
 					@show = "showTwoArea"
@@ -84,7 +85,7 @@
 						<span>{{twoArea.name}}</span>
 						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
 					</el-button>
-				</el-popover>
+				</el-popover> -->
 				<!-- <div class="select-down" style="margin-right: 20px;" @click.stop>
 					<section class="staList">
 						<section v-on:click="showTwoArea" class="tableList">
@@ -415,9 +416,9 @@ export default {
 		this.initData();
 		this.initSyncBtn();
 		this.syncRequest();
-		document.addEventListener('click', this.domClick, false);
+		// document.addEventListener('click', this.domClick, false);
 		// this.windowResize();
-		window.addEventListener('resize', this.windowResize, false);
+		// window.addEventListener('resize', this.windowResize, false);
 	},
 	components: {
 		openAddGoodsWin: () =>
@@ -428,8 +429,10 @@ export default {
 			import(/*webpackChunkName:'async_goods_choice'*/ './goods_manager_coms/async_goods_choice'),
 		// pageElement: () =>
 		// 	import(/*webpackChunkName:'page_element'*/ 'src/components/page_element'),
-		selectBtn: () =>
-			import(/* webpackChunkName:"select_btn" */ 'src/components/select_btn'), // 下拉
+		elCategory: () =>
+			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
+		// selectBtn: () =>
+		// 	import(/* webpackChunkName:"select_btn" */ 'src/components/select_btn'), // 下拉
 	},
 	methods: {
 		//切换图片时计算宽度
@@ -522,14 +525,19 @@ export default {
 		// 	this.twoArea.show = false;
 		// },
 		newselectOneArea(index) {
-			console.log(index);
 			this.oneIndex = index;
+			this.twoIndex = -1;
 			this.showArea = false;
 			let item = this.category[index];
+			this.oneArea = {
+				id: item.id,
+				name: item.name,
+				show: false
+			};
 			this.selectOneArea(item,index);
 		},
 		newselectTwoArea(index){
-			// this.twoIndex = index;
+			this.twoIndex = index;
 			let item = this.child[index];
 			this.showTArea = false;
 			this.selectTwoArea(item,index);
@@ -546,7 +554,6 @@ export default {
 				name: item.name,
 				show: false
 			};
-
 			this.child = item.child;
 			this.child || (this.child = []);
 
@@ -580,7 +587,6 @@ export default {
 					title: '温馨提示',
 					content: '请先选择一级分类!'
 				});
-				console.log(this.showTArea)
 				this.showTArea = false;
 				return false;
 			}
@@ -1080,16 +1086,16 @@ export default {
 			this.listHeight = width * 2 / 3;
 		},
 		//dom点击隐藏事件
-		domClick() {
-			if (this.twoArea.show || this.oneArea.show) {
-				this.showCom = '';
-			}
-			this.twoArea.show = this.oneArea.show = false;
-		}
+		// domClick() {
+		// 	if (this.twoArea.show || this.oneArea.show) {
+		// 		this.showCom = '';
+		// 	}
+		// 	this.twoArea.show = this.oneArea.show = false;
+		// }
 	},
 	beforeDestroy() {
-		document.removeEventListener('click', this.domClick);
-		window.removeEventListener('resize', this.windowResize);
+		// document.removeEventListener('click', this.domClick);
+		// window.removeEventListener('resize', this.windowResize);
 	}
 };
 </script>

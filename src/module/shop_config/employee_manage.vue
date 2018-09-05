@@ -70,7 +70,7 @@
 				<el-table-column align="center" label="手机号码" prop="mobile"></el-table-column>
 			</el-table>
 		</div>
-		<div class="pageWrap" v-if="!batch && orginList.length>pagenum">
+		<div class="pageWrap" v-if="!batch">
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size = "pagenum" layout="sizes, prev, pager, next" :page-count="totalPage" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
 		<employee-win v-if="showWin" @throwWinResult="doThrowWinResult" :isAdd="isAdd" :employeeId="employeeId" :employeeIndex="employeeIndex" :list="pagedList" :jobList="jobList.slice(1)" :ischain="+ischain"></employee-win>
