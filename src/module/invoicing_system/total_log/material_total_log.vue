@@ -2,7 +2,7 @@
     <div class="goods-total-log">
         <div class="tab-header">
             <el-button-group>
-                <el-button type="primary" :plain="true" @click="navigateTo">商品</el-button>
+                <el-button type="primary" :plain="true" @click="navigateTo('material')">商品</el-button>
                 <el-button type="primary" >物料</el-button>
             </el-button-group>
         </div>
@@ -139,6 +139,12 @@
     </div>
 </template>
 <script>
+/*
+    请求:
+        获取物料操作类型:invoic_getType
+
+
+*/
 import storage from 'src/verdor/storage';
 import common from './goods_material_log.js'
 export default {
@@ -199,9 +205,6 @@ export default {
 				this.pageObj.currentPage = res;
 			}
         },
-        navigateTo(){
-            this.$router.push({path:'/admin/goodsTotalLog'});
-        },
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
@@ -214,6 +217,62 @@ export default {
             console.log(row);
             console.log(column);
 
+        },
+        //查看记录
+        viewHistory(item){
+            let obj = {};
+            switch(item.id+''){
+                case '2'://入库
+                case '3'://耗损
+                case '4'://新建物料
+                case '18'://删除物料
+                    return;                
+                case '1'://批量盘库记录
+                    obj.path = '/admin/goodsCountHistory';
+                    obj.query = {id:item.id};
+                    break;
+                case '5'://BOM单消耗->跳转到BOM单消耗详情页面（子页面）
+                    break;
+                case '6'://调出->点击进入调度出货单，出货单表格在出货数量后边增加，出货成本总额。                
+                    break;
+                case '7'://调入->点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额。（商品跳商品，物料跳物料）
+                    break;
+                case '8'://领料->点击进入该条领料记录
+                    break;
+                case '9'://领料回库->点击进入该条领料盘库记录。领料盘库中，增加一条剩余数量，消耗数量自动计算
+                    break;
+                case '10'://修改物料信息->跳转到修改物料
+                    break;
+                case '11'://取消回库->点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额
+                    break;
+                case '13'://加工入库->点击进入该条加工记录
+                    break;
+                case '14'://加工消耗->点击进入该条加工记录
+                    break;
+                case '15'://修改物料单位->跳转到修改物料单位
+                    break;
+                case '16'://导入入库->导入入库，跳转到导入入库列表
+                    break;
+                case '17'://领料消耗->点击进入该条领料记录
+                    break;
+            }
+        },
+        //查看批次详情
+        viewBatchDetail(){
+            let obj = {};
+            switch(item.id+''){
+                case '1'://批量盘库->批次详情
+                case '3'://耗损
+                case '5'://BOM单消耗
+                case '6'://调出
+                case '7'://调入
+                case '8'://领料
+                case '9'://领料回库
+                case '11'://取消调度物料回库
+                case '13'://加工入库
+                case '14'://加工消耗
+                case '16'://导入入库
+            }
         },
         getSubmitData(){
             let clock
@@ -244,13 +303,14 @@ export default {
         },
     },
     async mounted(){
+        let operationList = [];
+        operationList = await this.getHttp('invoic_getType');
+        this.operationList = this.changeOperationType(operationList);
+
+
         this.getCategoryList();
         this.warehouseList =  await this.getHttp('warehouseList');
 
-    },
-    components: {
-        elShopList: () =>
-            import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
     },
 };
 </script>
