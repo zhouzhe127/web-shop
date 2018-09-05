@@ -44,7 +44,7 @@ let errCached = {};
 		fixableWarningCount: 0
 	}
 */
-exec('git diff HEAD --name-only --diff-filter=ACMR -- src/',(error, stdout, stderr) => {  
+exec('git diff --cached --name-only --diff-filter=ACMR -- src/',(error, stdout, stderr) => {  
 	
 	//获取到修改的文件
     if(stdout.length){
