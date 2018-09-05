@@ -71,15 +71,25 @@ exec('git diff HEAD --name-only --diff-filter=ACMR -- src/',(error, stdout, stde
 			let num = 1;
 			for(let str in errCached){
 				let temp = errCached[str];
-				console.log(`${num++}=>${str}\n`);
-				let index = 0;
-				for(let item of temp){
-					console.log(`\t${++index}.错误为:${item.message},行:${item.line},列:${item.column},错误规则:${item.ruleId}`);
+				if(temp.length > 0){
+					console.log(`${num++}=>${str}\n`);
+					let index = 0;
+					for(let item of temp){
+						console.log(`\t${++index}.错误为:${item.message},行:${item.line},列:${item.column},错误规则:${item.ruleId}`);
+					}
 				}
+				
 			}
-
-			console.log('\n\错误太多,建议你把config下的webpack.dev.conf.js的所属自己的板块的eslint验证打开');
-			process.exit(1);
+			
+			if( num > 1){
+				console.log('\n\错误太多,建议你把config下的webpack.dev.conf.js的所属自己的板块的eslint验证打开');
+				process.exit(1);
+			}
+			else{
+				console.log("牛逼验证通过了，可以上传");
+				process.exit(0);
+			}
+			
 		}else{
 			console.log("牛逼验证通过了，可以上传");
 			process.exit(0);
