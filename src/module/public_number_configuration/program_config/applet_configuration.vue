@@ -67,29 +67,29 @@ export default {
 		return {
 			shopId: '', //shopID
 			payWays: [{
-					id: 0,
-					name: '加载页'
-				},
-				{
-					id: 1,
-					name: '主页'
-				}
+				id: 0,
+				name: '加载页'
+			},
+			{
+				id: 1,
+				name: '主页'
+			}
 			], //类型
 			payType: 0,
 			integralList: [{
-					name: '默认'
-				},
-				{
-					name: '自定义'
-				}
+				name: '默认'
+			},
+			{
+				name: '自定义'
+			}
 			],
 			integralOn: 0, //活动对象的选择
 			authorizedList: [{
-					name: '验证码授权'
-				},
-				{
-					name: '直接授权'
-				}
+				name: '验证码授权'
+			},
+			{
+				name: '直接授权'
+			}
 			],
 			authorizedId: 0,
 			uploadUrl: '', //图片前缀
@@ -149,7 +149,7 @@ export default {
 					merchantId: this.number,
 					merchantSecret: this.secret
 				}
-			})
+			});
 			if (data) {
 				this.endingImage = data.authMiniBackground;
 				this.$store.commit('setWin', {

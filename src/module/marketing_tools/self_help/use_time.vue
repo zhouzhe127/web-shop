@@ -185,13 +185,13 @@ export default {
 			week: ['日', '一', '二', '三', '四', '五', '六'],
 			openMonthIndex: -1, //打开日期选择的下标 
 			durationList: [{ //使用时间段
-					name: '指定每周使用时段',
-					id: 1
-				},
-				{
-					name: '指定每月使用日期和时段',
-					id: 2
-				}
+				name: '指定每周使用时段',
+				id: 1
+			},
+			{
+				name: '指定每月使用日期和时段',
+				id: 2
+			}
 			],
 			durationId: 1, //选中的id
 			durationName: '指定每周使用时段', //选中显示的民称        
@@ -202,7 +202,7 @@ export default {
 			let obj = {
 				name: '不设限制',
 				id: 0
-			}
+			};
 			this.durationList.unshift(obj);
 			this.durationId = 0;
 			this.durationName = '不设限制';

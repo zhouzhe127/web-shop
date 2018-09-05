@@ -114,12 +114,31 @@
 				<div class="online-box clearfix">
 					<span class="online-sub fl"></span>
 					<div class="rightHalf">
-						<a v-if="reviewStatus == '2'" href="javascript:;" class="gray" style="width:200px;" >提交微信审核</a>
+						<a v-if="reviewStatus == '2'" href="javascript:;" class="gray" style="width:200px;">提交微信审核</a>
 						<a v-else href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="getQRcode">小程序体验二维码</a>
 						<a v-if="reviewStatus == 0" href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
 						<a v-else href="javascript:;" class="gray" style="width:200px;margin-top: 10px;">发布</a>
+					</div>
+				</div>
+				<!-- 小程序二维码规则配置 -->
+				<div class="set-line">
+					<div class="titles" style="width: 160px;">小程序二维码规则配置</div>
+					<div class="line" style="width:580px;"></div>
+				</div>
+				<!-- 小程序规则 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl">提示:</span>
+					<div class="rightHalf">
+						<p class="name">需提交小程序二维码校验文件后,方可进行小程序登录。</p>
+						<p class="name">步骤一：登录小程序后台，点击左方侧边栏选中“设置”</p>
+						<p class="name">步骤二：设置中选择“开发设置”，滑动至最下方“扫普通链接二维码打开小程序”，点击“添加”</p>
+						<p class="name">步骤三：二维码规则处填写
+							<input type="text" value="'https://wx.ishandian.net/MiniPro?oid='" class="url urlo inpurl" readonly="true" /><span style="color: #29A8E0;font-size: 16px;" @click="copyCode">点击复制</span></p>
+						<p class="name">步骤四：在“配置普通链接二维码规则”内，点击“下载校验文件”</p>
+						<p class="name">步骤五：打开校验文件，复制文件名与文件内容粘贴至下方，点击保存。</p>
+						<a href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="openCheckWin">配置校验文件</a>
 					</div>
 				</div>
 			</template>
@@ -128,14 +147,16 @@
 		</template>
 		<!-- 弹窗 -->
 		<programWin v-if="showWin" @getAppliedWin='getResult'></programWin>
+		<!-- 二维码弹窗 -->
 		<qrcode v-if="codeWin" @getcodeResult='getcodeResult'></qrcode>
+		<checkFile v-if="checkWin" @getCheckWin="getcheckResult"></checkFile>
 	</div>
 </template>
 <script>
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
-import global from 'src/manager/global';
+//import utils from 'src/verdor/utils';
+//import global from 'src/manager/global';
 export default {
 	data() {
 		return {
@@ -155,24 +176,25 @@ export default {
 			appletQrcode: '', //体验版的小程序二维码 
 			codeWin: false,
 			reviewStatus: '', //审核状态码
-			reviewObj:{ //审核状态
-				'0':'审核成功',
-				'1':'审核失败',
-				'2':'审核成功'
-			}
+			reviewObj: { //审核状态
+				'0': '审核成功',
+				'1': '审核失败',
+				'2': '审核中'
+			},
+			checkWin: false //校验文件弹窗
 		};
 	},
 	methods: {
-		getResult: function(res, item) {
+		getResult: function(res) {
 			//弹窗回调
 			if (res == 'ok') {
 				// console.log('11111')
 				//this.bussinessselect = item;
 				this.addWeChat();
 			}
-			// if (res == 'cancel') {
-			// 	this.setAuth(this.auth_code);
-			// }
+			if (res == 'cancel') {
+				this.getConfig();
+			}
 			this.showWin = false;
 		},
 		getConfigs: function(res, item) {
@@ -198,27 +220,28 @@ export default {
 					redirect_uri: document.location.toString(),
 					auth_type: 2
 				}
-			})
+			});
 			if (data) {
-				window.location.href = data;
+				this.showWin = true;
+				//window.location.href = data;
+				window.open(data);
 			}
 		},
 		GetQueryString: function(paraName) { //获取url参数
-			let url = document.location.toString();　
-			// let url = 'https://v5.qa.ishandian.com.cn/?branch=zs#/admin/appletBinding?i=5&o=5&s=0&auth_code=queryauthcode%40%40%406UkO46yxE_AO4x2Dx8sBh7F5s-6z_aHySj9FLeofLagoO69SKfiaUJ7luZ8q26jDRVA4ColyTsX4CIdxNj8N4g&expires_in=3600'　;　
-			let arrObj = url.split("?");　
-			if (arrObj.length > 1) {　　　　　　
-				let arrPara = arrObj[arrObj.length - 1].split("&");　　　　　　
-				let arr;　　　　　　
-				for (let i = 0; i < arrPara.length; i++) {　　　　　　　　
-					arr = arrPara[i].split("=");
-					if (arr != null && arr[0] == paraName) {　　　　　　　
-						return unescape(arr[1]);　
-					}　　　　　　
-				}　　　　　　
-				return "";　　　　
-			} else {　　　　　　
-				return "";　
+			let url = document.location.toString();
+			let arrObj = url.split('?');
+			if (arrObj.length > 1) {
+				let arrPara = arrObj[arrObj.length - 1].split('&');
+				let arr = [];
+				for (let i = 0; i < arrPara.length; i++) {
+					arr = arrPara[i].split('=');
+					if (arr != null && arr[0] == paraName) {
+						return unescape(arr[1]);
+					}
+				}
+				return '';
+			} else {
+				return '';
 			}
 		},
 		async setAuth(id) { //授权
@@ -226,7 +249,7 @@ export default {
 				data: {
 					auth_code: id
 				}
-			})
+			});
 			if (data) {
 				this.isAuth = true;
 				this.$store.commit('setWin', {
@@ -269,7 +292,7 @@ export default {
 			}
 			return true;
 		},
-		async Auditing(type) {
+		async Auditing() {
 			//if (!this.checkForm(type)) return;
 			let data = await http.Auditing({
 				data: {
@@ -278,7 +301,7 @@ export default {
 					merchantId: '',
 					merchantSecret: ''
 				}
-			})
+			});
 			if (data) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
@@ -309,7 +332,7 @@ export default {
 				this.authMiniBackground = res.authMiniBackground;
 			}
 		},
-		async getQRcode() {
+		getQRcode: function() {
 			this.codeWin = true;
 		},
 		getcodeResult: function() {
@@ -318,7 +341,7 @@ export default {
 		async releaseCode() { //提交到线上
 			let data = await http.release({
 				data: {}
-			})
+			});
 			if (data) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
@@ -332,7 +355,7 @@ export default {
 				data: {
 					type: 2
 				}
-			})
+			});
 			if (data) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
@@ -341,6 +364,23 @@ export default {
 				});
 				this.getConfig();
 			}
+		},
+		openCheckWin: function() { //打开配置文件弹窗
+			this.checkWin = true;
+		},
+		getcheckResult: function() { //获取校验配置文件
+			this.checkWin = false;
+		},
+		copyCode: function() {
+			let t = null;
+			t = document.getElementsByClassName('inpurl')[0];
+			t.select();
+			document.execCommand('copy');
+			this.$store.commit('setWin', {
+				title: '提示信息',
+				winType: 'alert',
+				content: '复制成功',
+			});
 		}
 	},
 	components: {
@@ -350,21 +390,23 @@ export default {
 			import ( /* webpackChunkName: 'applet_configuration' */ './applet_configuration'),
 		'qrcode': () =>
 			import ( /* webpackChunkName: 'qrcode_win' */ './qrcode_win.vue'),
+		'checkFile': () =>
+			import ( /* webpackChunkName: 'check_file_win.vue' */ './check_file_win.vue'),
 	},
 	mounted() {
 		this.userData = storage.session('userShop');
 		this.getConfig();
-		let auth_code = this.GetQueryString('auth_code');
-		this.auth_code = auth_code;
+		// let auth_code = this.GetQueryString('auth_code');
+		// this.auth_code = auth_code;
 		// if(this.auth_code != ''){
 		// 	this.showWin = true;
 		// }
 		//console.log(auth_code)
-		if (auth_code && auth_code != null) {
-			this.setAuth(this.auth_code);
-			this.showWin = true;
-			//this.setAuth(auth_code);
-		}
+		// if (auth_code && auth_code != null) {
+		// 	this.setAuth(this.auth_code);
+		// 	this.showWin = true;
+		// 	//this.setAuth(auth_code);
+		// }
 		//this.getConfig();
 	}
 };
@@ -382,7 +424,7 @@ export default {
 #merchants .set-line .titles {
 	float: left;
 	margin-left: 12px;
-	width: 120px;
+	width: 130px;
 	font-size: 16px;
 	text-align: left;
 }
@@ -478,7 +520,7 @@ export default {
 
 #merchants .online-box .rightHalf .name {
 	font-size: 16px;
-	line-height: 42px;
+	line-height: 40px;
 	margin-right: 30px;
 }
 
@@ -516,6 +558,17 @@ export default {
 #merchants .online-box .businessHours span {
 	font-size: 16px;
 	color: #333;
+}
+
+#merchants .url {
+	width: 300px;
+	font-size: 16px;
+	color: #FF9800;
+	height: 32px;
+	text-align: center;
+	line-height: 32px;
+	border: none;
+	margin-right: 25px;
 }
 
 .handle-tips {

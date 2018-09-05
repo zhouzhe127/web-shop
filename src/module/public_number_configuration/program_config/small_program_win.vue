@@ -39,9 +39,6 @@ export default {
 		Win: () =>
 			import ( /* webpackChunkName:'win' */ 'src/components/win'),
 	},
-	mounted() {
-
-	}
 };
 </script>
 <style scoped>

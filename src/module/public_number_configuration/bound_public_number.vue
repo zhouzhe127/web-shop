@@ -7,21 +7,21 @@
 -->
 <template>
 	<div id="weChatBinding">
-		<template v-if='isAuth'>
+		<!-- <template v-if='isAuth'>
 			<div class="wx-showBox">
 				<span>微信公众号</span>
 				<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">重新授权</a>
-				<a href="javascript:void(0)" class="gray abtn fl" @click="deleteAuth">解除授权</a>
+				<a href="javascript:void(0)" class="gray addnumber fl" @click="deleteAuth">解除授权</a>
 			</div>
 			<div class="wx-showBox">
 				<span>公众号昵称</span>
 				<p>{{authMiniAppName}}</p>
 			</div>
-		</template>
-		<div class="wx-showBox" v-else>
+		</template> -->
+	<!-- 	<div class="wx-showBox" v-else>
 			<span></span>
 			<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">添加微信公众号</a>
-		</div>
+		</div> -->
 		<div class="wx-showBox">
 			<span class="required">AppId</span>
 			<input type="text" placeholder="请输入AppId" v-model="appIds" maxlength="32" />
@@ -49,11 +49,11 @@ export default {
 	mounted() {
 		this.userData = storage.session('userShop');
 		this.getConfig();
-		let auth_code = this.GetQueryString('auth_code');
-		console.log(auth_code)
-		if (auth_code && auth_code != null) {
-			this.setAuth(auth_code);
-		}
+		// let auth_code = this.GetQueryString('auth_code');
+		// console.log(auth_code)
+		// if (auth_code && auth_code != null) {
+		// 	this.setAuth(auth_code);
+		// }
 	},
 	methods: {
 		// 获取公众号配置
@@ -66,11 +66,11 @@ export default {
 			if (res) {
 				this.appId = res.appId;
 				this.appSecret = res.appSecret;
-				this.isAuth = false;
-				if (res.authorizerAppId != '') {
-					this.isAuth = true;
-					this.authMiniAppName = res.authMiniAppName;
-				}
+				// this.isAuth = false;
+				// if (res.authorizerAppId != '') {
+				// 	this.isAuth = true;
+				// 	this.authMiniAppName = res.authMiniAppName;
+				// }
 			}
 		},
 		// 设置公众号配置
@@ -115,27 +115,27 @@ export default {
 					redirect_uri: document.location.toString(),
 					auth_type: 1
 				}
-			})
+			});
 			if (data) {
 				window.location.href = data;
 				// window.open(data);
 			}
 		},
 		GetQueryString: function(paraName) { //获取url参数
-			let url = document.location.toString();　　　　
-			let arrObj = url.split("?");　　
-			if (arrObj.length > 1) {　　　　　　
-				let arrPara = arrObj[1].split("&");　　　　　　
-				let arr;　　　　　　
-				for (let i = 0; i < arrPara.length; i++) {　　　　　　　　
-					arr = arrPara[i].split("=");
-					if (arr != null && arr[0] == paraName) {　　　　　　　　　　
-						return unescape(arr[1]);　
-					}　　　　　　
-				}　　　　　　
-				return "";　　　　
-			} else {　　　　　　
-				return "";　
+			let url = document.location.toString();
+			let arrObj = url.split('?');
+			if (arrObj.length > 1) {
+				let arrPara = arrObj[1].split('&');
+				let arr = [];
+				for (let i = 0; i < arrPara.length; i++) {
+					arr = arrPara[i].split('=');
+					if (arr != null && arr[0] == paraName) {
+						return unescape(arr[1]);
+					}
+				}
+				return '';
+			} else {
+				return '';
 			}
 		},
 		async setAuth(id) { //授权
@@ -143,9 +143,9 @@ export default {
 				data: {
 					auth_code: id
 				}
-			})
+			});
 			if (data) {
-				this.isAuth = true;
+				//this.isAuth = true;
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',
@@ -158,7 +158,7 @@ export default {
 				data: {
 					type: 1
 				}
-			})
+			});
 			if (data) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',

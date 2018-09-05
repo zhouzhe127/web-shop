@@ -39,7 +39,7 @@ export default {
 		async getQRcode(){
 			let data = await http.getQRcode({
 				data:{}
-			})
+			});
 			if(data){
 				this.codeimg = data;
 			}
