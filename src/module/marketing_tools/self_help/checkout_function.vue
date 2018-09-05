@@ -115,7 +115,7 @@
 			<span class="fl pay-window-sub required">配餐时间</span>
 			<div class="rightHalf">
 				<section class="fl">
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
+					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="2" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分钟</span>
 				</section>
 				<div class="prompting fl" @click="isPublicNumber('0')">
@@ -138,7 +138,7 @@
 			<span class="fl pay-window-sub required">配餐时间</span>
 			<div class="rightHalf">
 				<section class="fl">
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
+					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="2" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分钟</span>
 				</section>
 				<div class="prompting fl" @click="isPublicNumber('0')">
@@ -820,7 +820,7 @@ export default {
 				}
 				if (this.equipment > 60) {
 					// 当输入框的为''时
-					this.valiData('备餐时间不得超过60分钟');
+					this.valiData('配餐时间不得超过60分钟');
 					return false;
 				}
 				if (this.personStatus && utils.trim(this.mealsNum) == '') {
@@ -845,6 +845,11 @@ export default {
 				// 自动出餐
 				if (this.mealStatus && this.equipment == '') {
 					this.valiData('请填写接单自动出餐');
+					return false;
+				}
+				if (this.equipment > 60) {
+					// 当输入框的为''时
+					this.valiData('配餐时间不得超过60分钟');
 					return false;
 				}
 				if (this.estimatedtime == '') {
