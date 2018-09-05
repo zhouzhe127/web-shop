@@ -16,17 +16,19 @@
                                     <!--value-format="timestamp"-->
                                     <!--type="daterange">-->
                     <!--</el-date-picker>-->
-                        <el-date-picker style="width:200px;cursor: pointer"
+                        <el-date-picker style="width:150px;cursor: pointer"
                                 :clearable="false"
                                 v-model="startTime"
-                                type="datetime"
+                                type="date"
+                                format="yyyy-MM-dd"
                                 value-format="timestamp">
                         </el-date-picker>
                         <span style="width: 25px;line-height: 40px;text-align: center;">-</span>
-                        <el-date-picker style="width:200px;cursor: pointer"
+                        <el-date-picker style="width:150px;cursor: pointer"
                                 :clearable="false"
                                 v-model="endTime"
-                                type="datetime"
+                                type="date"
+                                format="yyyy-MM-dd"
                                 value-format="timestamp">
                         </el-date-picker>
                 </section>
@@ -78,7 +80,7 @@
 				obj:{},//传递给单店的数据
 
 				startTime: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
-				endTime: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
+				endTime: new Date().setHours(0,0,0,0), //日期组件的结束时间
 				isOpenTime: true, //是否按营业时间
 				selShopId: [], //选中的店铺id
 
@@ -128,7 +130,7 @@
 							type: 25,
 							timeType: 1,
 							startTime: this.startTime/1000,
-							endTime: this.endTime/1000,
+							endTime: this.endTime/1000+24*60*60-1,
 							isOpenTime: Number(this.isOpenTime),
 							shopIds: this.selShopId.toString()}
 					}).then(data => {
@@ -148,7 +150,6 @@
                                             this.loading = false; //停止加载动画
                                             this.pageList = data;
 											this.paging(); //分页
-                                            console.log(data);
                                         });
                                     }else if(data.status == 2) {
                                         //失败
@@ -208,14 +209,12 @@
 			},
             //搜索
 			search(){
-				console.log(this.startTime);
-				console.log(this.endTime);
 				this.getStoreOrder();
             },
             //重置
 			reset(){
 				this.startTime=new Date().setHours(0, 0, 0, 0);
-                this.endTime=new Date().setHours(23, 59, 59, 999);
+                this.endTime=new Date().setHours(0, 0, 0, 0);
 				this.isOpenTime=true;
 				this.page=1;
 				this.num=10;

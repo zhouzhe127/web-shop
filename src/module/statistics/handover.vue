@@ -15,19 +15,34 @@
             </div>
             <div class="top" v-else>
                 <section class="timeS">
-                    <el-date-picker style="width:200px;cursor: pointer"
+                    <el-date-picker style="width:150px;cursor: pointer"
                                     :clearable="false"
                                     v-model="startT"
-                                    type="datetime"
+                                    type="date"
+                                    format="yyyy-MM-dd"
                                     value-format="timestamp">
                     </el-date-picker>
                     <span style="width: 25px;line-height: 40px;text-align: center;">-</span>
-                    <el-date-picker style="width:200px;cursor: pointer"
+                    <el-date-picker style="width:150px;cursor: pointer"
                                     :clearable="false"
                                     v-model="endT"
-                                    type="datetime"
+                                    type="date"
+                                    format="yyyy-MM-dd"
                                     value-format="timestamp">
                     </el-date-picker>
+                    <!--<el-date-picker style="width:200px;cursor: pointer"-->
+                                    <!--:clearable="false"-->
+                                    <!--v-model="startT"-->
+                                    <!--type="datetime"-->
+                                    <!--value-format="timestamp">-->
+                    <!--</el-date-picker>-->
+                    <!--<span style="width: 25px;line-height: 40px;text-align: center;">-</span>-->
+                    <!--<el-date-picker style="width:200px;cursor: pointer"-->
+                                    <!--:clearable="false"-->
+                                    <!--v-model="endT"-->
+                                    <!--type="datetime"-->
+                                    <!--value-format="timestamp">-->
+                    <!--</el-date-picker>-->
                     <el-button type="primary" icon="el-icon-search" @click="search()"></el-button>
                 </section>
                 <section class="block-div">
@@ -62,7 +77,7 @@
                                layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
             </div>
         </section>
-        <section  v-else>
+        <section v-else>
             <section class="all">
                 <div class="text">基本信息</div>
                 <div class="dash"></div>
@@ -128,7 +143,7 @@
 		data() {
 			return {
 				startT: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
-				endT: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
+				endT: new Date().setHours(0, 0, 0, 0), //日期组件的结束时间
 				isOpenTime: true, //是否按营业时间
 
 				handoverList:[],//当前展示的数据
@@ -181,7 +196,7 @@
                 let nowData= {
 //					shopId:this.obj?this.obj.shopId:this.userdata.currentShop.id,
 					startTime:this.obj?this.obj.startTime/1000:this.startT/1000,
-					endTime:this.obj?this.obj.endTime/1000:this.endT/1000,
+					endTime:(this.obj?this.obj.endTime/1000:this.endT/1000)+24*60*60-1,
 					page: this.page,
 					num: this.num,
 					isOpenTime:Number(this.isOpenTime)
@@ -323,7 +338,7 @@
 			this.$store.commit('setPageTools',[]);
 		},
 		components: {
-			handoverWin: () => import(/*webpackChunkName: "handover_win"*/ './handover_win'),
+			handoverWin: () => import(/*webpackChunkName: "handover_win"*/ './handover_win')
 		}
 	};
 </script>
