@@ -27,8 +27,10 @@
 			<!-- <select-btn :name="selectJob.name" :sorts="reduceJobList.map(v=>v.name)" :width="138" @emit="selectJobFilte"></select-btn> -->
 			<el-input v-model="seachValue" clearable maxlength="11" placeholder="请输入员工名称/手机号码" style="width:225px;"></el-input>
 			<!-- <input type="text" v-model="seachValue" maxlength="11" placeholder="请输入员工名称/手机号码"> -->
-			<a href="javascript:;" class="blue" @click="seachFn">筛选</a>
-			<a href="javascript:;" class="gray" @click="resetFn">重置</a>
+			<el-button v-on:click="seachFn" type="primary">搜索</el-button>
+			<el-button v-on:click="resetFn" type="info">重置</el-button>
+			<!-- <a href="javascript:;" class="blue" @click="seachFn">筛选</a>
+			<a href="javascript:;" class="gray" @click="resetFn">重置</a> -->
 		</nav>
 		<div class="aBox">
 			<div class="boxTop">

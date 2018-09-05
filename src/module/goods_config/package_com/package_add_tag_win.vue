@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-28 18:21:30 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-08-29 16:01:49
+ * @Last Modified time: 2018-09-04 18:35:57
  * @Module:选择商品列表  套餐和商品
 **/
 <template>
@@ -25,10 +25,12 @@
 				<section class="oCont" style="width: 100%;">
 					<ul style="float: left;margin-left: 20px;">
 						<li style="width:210px;float: left;">
+							<elCategory @selectCategory = "newselectOneArea" :categoryArr="oneArea.oneAreaList" :itemIndex="oneArea.oneAreaIndex" :itemArea = "oneArea"></elCategory>
+
 							<!--一级分类选择框-->
-							<section class="fl detLi">
+							<!-- <section class="fl detLi">
 								<section v-on:click="showOneArea" class="tableList">
-									<span class="oSpan">{{oneArea.oneAreaName}}</span>
+									<span class="oSpan">{{oneArea.name}}</span>
 									<div class="fl">
 										<i></i>
 									</div>
@@ -39,13 +41,14 @@
 										<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
 									</div>
 								</div>
-							</section>
+							</section> -->
 						</li>
 						<li style="width:210px;margin-left: 20px;float: left;">
 							<!--二级级分类选择框-->
-							<section class="fl detLi">
+							<elCategory @selectCategory = "newselectTwoArea" :categoryArr="twoArea.twoAreaList" :itemIndex="twoArea.twoAreaIndex" :itemArea = "twoArea"></elCategory>
+							<!-- <section class="fl detLi">
 								<section v-on:click="showTwoArea" class="tableList">
-									<span class="oSpan">{{twoArea.twoAreaName}}</span>
+									<span class="oSpan">{{twoArea.name}}</span>
 									<div class="fl">
 										<i></i>
 									</div>
@@ -56,7 +59,7 @@
 										<section v-for="(item,index) in twoArea.twoAreaList" :key="index" v-on:click='selectTwoArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
 									</div>
 								</div>
-							</section>
+							</section> -->
 						</li>
 						<!--搜索-->
 						<li style="width:180px;margin-left: 20px;float: left;">
@@ -75,7 +78,7 @@
 							<div style="margin-bottom:2px;display:inline-block;margin-right:10px;" v-for="(item,i) in goodsCom" :key="i">
 								<el-checkbox @change="funSetIsSelect(item,i)" class="labItem" :label="item.id" border>{{item.goodsName}}</el-checkbox>
 								<template v-if="packageType!=2">
-									<el-input v-model="item.packageGoodsNum" maxlength="2" style = "width:40px;"></el-input>
+									<el-input v-model="item.packageGoodsNum" @change="funSetGoodsNum(item,i)" maxlength="2" style = "width:40px;"></el-input>
 									<span>{{item.unit}}</span>
 								</template>
 							</div>
@@ -136,13 +139,13 @@ export default {
 			title: '',
 			oneArea: {
 				oneAreaBtn: false, //一级分类
-				oneAreaName: '请选择一级分类',
+				name: '请选择一级分类',
 				oneAreaIndex: -1, //分类下标
 				oneAreaList: [{ id: '0', name: '全部' }] //一级分类列表
 			},
 			twoArea: {
 				twoAreaBtn: false, //二级分类
-				twoAreaName: '请选择二级分类',
+				name: '请选择二级分类',
 				twoAreaIndex: -1, //分类下标
 				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
 			},
@@ -192,6 +195,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
+		elCategory: () =>
+			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
 		// subAdd: () =>
 		// 	import(/*webpackChunkName:'subadd'*/ 'src/components/subadd')
 	},
@@ -223,7 +228,7 @@ export default {
 		recSearch(){
 			let item = {id:0};
 			this.selectOneArea(0,item);
-			this.oneArea.oneAreaName = '请选择一级分类';
+			this.oneArea.name = '请选择一级分类';
 			this.L1ID == 0;
 			this.search = '';
 		},
@@ -246,11 +251,11 @@ export default {
 					secGoods.push(list[i]);
 				}
 			}
-			this.oneArea.oneAreaName = '请选择一级分类';
+			this.oneArea.name = '请选择一级分类';
 			this.L1ID == 0;
 			this.twoArea = {
 				twoAreaBtn: false, //二级分类
-				twoAreaName: '请选择二级分类',
+				name: '请选择二级分类',
 				twoAreaIndex: -1, //分类下标
 				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
 			};
@@ -429,6 +434,17 @@ export default {
 			this.oneArea.oneAreaBtn = false;
 			this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
 		},
+		newselectOneArea(index) {
+			this.oneArea.oneAreaIndex = index;
+			this.twoArea.twoAreaIndex = -1;
+			let item = this.oneArea.oneAreaList[index];
+			this.selectOneArea(index,item);
+		},
+		newselectTwoArea(index) {
+			this.twoArea.twoAreaIndex = index;
+			let item = this.twoArea.twoAreaList[index];
+			this.selectTwoArea(index,item);
+		},
 		//选择一级分类
 		selectOneArea: function(index, item) {
 			this.search = '';
@@ -440,17 +456,17 @@ export default {
 			item.selected = true;
 			this.oneArea.oneAreaBtn = false;
 			//选择一级，清空所选二级
-			this.twoArea.twoAreaName = '请选择二级分类';
+			this.twoArea.name = '请选择二级分类';
 			this.L1ID = item.id;
 			this.L2ID = 0;
 			if (index == 0) {
 				//若选择一级分类下的全部，为选择全部商品，包含一级分类下的和二级分类下的商品
 				this.allGood = true;
 				this.goodsCom = this.goodList;
-				this.oneArea.oneAreaName = '全部';
+				this.oneArea.name = '全部';
 			} else {
 				this.allGood = false;
-				this.oneArea.oneAreaName = item.name;
+				this.oneArea.name = item.name;
 				this.oneArea.oneAreaIndex = index;
 				let goodList = this.goodList;
 				item.goodsList = [];
@@ -486,7 +502,7 @@ export default {
 		//选择二级分类
 		selectTwoArea: function(index, item) {
 			this.search = '';
-			this.twoArea.twoAreaName = item.name;
+			this.twoArea.name = item.name;
 			//单选
 			let twoList = this.twoArea.twoAreaList;
 			for (let i = 0; i < twoList.length; i++) {

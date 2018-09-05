@@ -35,8 +35,8 @@
 					</el-select>
 				</div>
 				<!-- 分类选择 -->
-				<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :oneIndex="oneIndex" :itemArea = "oneArea"></elCategory>
-				<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :oneIndex="twoIndex" :itemArea = "twoArea"></elCategory>
+				<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea = "oneArea"></elCategory>
+				<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea = "twoArea"></elCategory>
 				<!-- <el-popover
 					placement="bottom"
 					width="400"
