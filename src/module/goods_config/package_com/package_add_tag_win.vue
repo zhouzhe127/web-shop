@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-28 18:21:30 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 11:04:06
+ * @Last Modified time: 2018-09-05 15:50:12
  * @Module:选择商品列表  套餐和商品
 **/
 <template>
@@ -449,11 +449,11 @@ export default {
 			this.search = '';
 			// console.log(item);
 			//判断选择的是否是全部商品
-			for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
-				this.oneArea.oneAreaList[i].selected = false;
-			}
-			item.selected = true;
-			this.oneArea.oneAreaBtn = false;
+			// for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
+			// 	this.oneArea.oneAreaList[i].selected = false;
+			// }
+			// item.selected = true;
+			// this.oneArea.oneAreaBtn = false;
 			//选择一级，清空所选二级
 			this.twoArea.name = '请选择二级分类';
 			this.L1ID = item.id;
