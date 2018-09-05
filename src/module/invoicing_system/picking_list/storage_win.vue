@@ -44,8 +44,8 @@
 							<li>供应商</li>
 							<li>所属仓库</li>
 							<li>领料数量/重量</li>
-							<li>剩余数量/重量<i style="color:#FF3D04;cursor:pointer" @click="allUse">{{isSurplus?'全部消耗':'全部剩余'}}</i></li>
-							<li>回库数量/重量<i style="color:#27A8E0;cursor:pointer" @click="allBack">剩余回库</i></li>
+							<li>剩余数量/重量<i @click="allUse" :class="{warning:isSurplus}">{{isSurplus?'全部消耗':'全部剩余'}}</i></li>
+							<li>回库数量/重量<i style="color:#27A8E0;" @click="allBack">剩余回库</i></li>
 						</ul>
 					</div>
 					<!-- <div class="list clearfix" v-for="(item, index) in infoList.batch" :key="index"> -->
@@ -145,6 +145,7 @@
 			// this.type ? this.title = '批次分配' : this.title = '批次选择';
 			this.title = '批次分配';
 			this.infoList = utils.deepCopy(this.batchInfo);
+			console.log(this.infoList);
 			this.batchList = this.infoList.batch;
 			this.list = utils.deepCopy(this.infoList.batch);
 			this.options = this.infoList.options.map((res)=>{
@@ -252,17 +253,43 @@
 					}
 				}
 			},
-			//单位选择
+			setDefaultItem(infoItem){
+				let obj = this.comUnit(infoItem.surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
+				if(this.selUnit.isMin == 1){
+					infoItem.useNum = obj.tNull;
+				}else{
+					infoItem.useNum = obj.oNull;
+					infoItem.useWeight = obj.tNull;
+				}
+				infoItem.usemin = 0;//全部剩余，消耗数量为0
+			},
+			//设置默认数据
 			selOn(){
 				for(let batchItem of this.batchList){
-					let obj = this.comUnit(batchItem.surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-					if(this.selUnit.isMin == 1){
-						batchItem.useNum = obj.tNull;
+					if(this.infoList.batchDetail && this.infoList.batchDetail.length){
+						for(let batch of this.infoList.batchDetail){
+							if(batch.id == batchItem.id){
+								let obj = this.comUnit(batch.consumeNum,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
+								if(this.selUnit.isMin == 1){
+									batch.useNum = obj.tNull;
+								}else{
+									batch.useNum = obj.oNull;
+									batch.useWeight = obj.tNull;
+								}
+								let backObj = this.comUnit(batch.returnNum,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
+								if(this.selUnit.isMin == 1){
+									batch.backNum = backObj.tNull;
+								}else{
+									batch.backNum = backObj.oNull;
+									batch.backWeight = backObj.tNull;
+								}
+							}
+						}
 					}else{
-						batchItem.useNum = obj.oNull;
-						batchItem.useWeight = obj.tNull;
+						this.setDefaultItem(batchItem);
+						batchItem.backNum = '';
+						batchItem.backWeight = '';
 					}
-					batchItem.usemin = 0;//全部剩余，消耗数量为0
 				}
 			},
 			//单位换算
@@ -274,15 +301,7 @@
 			allUse(){
 				if(!this.isSurplus){//全部剩余
 					for(let infoItem of this.batchList){
-						let obj = this.comUnit(infoItem.surplus,this.selUnit.value,this.selUnit.name,this.minUnit.name,true);
-						console.log(obj);
-						if(this.selUnit.isMin == 1){
-							infoItem.useNum = obj.tNull;
-						}else{
-							infoItem.useNum = obj.oNull;
-							infoItem.useWeight = obj.tNull;
-						}
-						infoItem.usemin = 0;//全部剩余，消耗数量为0
+						this.setDefaultItem(infoItem);
 					}
 				}else{
 					for(let infoItem of this.batchList){
@@ -425,13 +444,13 @@
 		line-height: 40px;
 		margin-top: 10px;
 		border-right: 1px solid #D5D5D5;
+		i{color: #E1BB4A;cursor: pointer;margin-left: 10px;
+			&:hover{text-decoration: underline;}
+		}
+		.warning{color: red;}
 	}
 	#tan .content{
 		background: #F7F7F7;
-	}
-	#tan .content .top i{
-		text-decoration: underline;
-		margin-left: 10px;
 	}
 	#tan .list li,
 	#tan .list li span{

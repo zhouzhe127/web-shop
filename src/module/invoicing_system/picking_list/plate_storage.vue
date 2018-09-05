@@ -33,7 +33,7 @@
 							<li>物料名称</li>
 							<li>领料单位选择</li>
 							<li style="width: 15%">领料数量/重量</li>
-							<li style="width: 20%">剩余数量/重量 <span @click="allUse">{{isSurplus?'全部消耗':'全部剩余'}}</span></li>
+							<li style="width: 20%">剩余数量/重量 <span @click="allUse" :class="{warning:isSurplus}">{{isSurplus?'全部消耗':'全部剩余'}}</span></li>
 							<li style="width: 20%">回库数量/重量 <span @click="allBack" style="color:#E1BB4A;">剩余回库</span></li>
 							<li >分类</li>
 							<li >类型</li>
@@ -163,14 +163,20 @@
 				}
 			},
 			resetItem(item){//重置填写，批次
-				this.setDefaultItem(item);
-				item.haveBatch = false;
-				item.usemin = item.surplus*item.selUnit.value+item.useWeight*1;//全部剩余，消耗数量为0
-				item.batchDetail = [];//清空批次
-				
-				item.backNum = '';
-				item.backWeight = '';
-				item.backmin = 0;
+				this.$confirm('此操作会重置已选择的批次, 是否继续?','重置', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'info'
+		        }).then(()=>{
+		        	this.setDefaultItem(item);
+					item.haveBatch = false;
+					item.usemin = item.surplus*item.selUnit.value+item.useWeight*1;//全部剩余，消耗数量为0
+					item.batchDetail = [];//清空批次
+					
+					item.backNum = '';
+					item.backWeight = '';
+					item.backmin = 0;
+		        }).catch(()=>{});
 			},
 			setInitData(){
 				for(let j = 0; j < this.infoList.length; j++){
@@ -281,26 +287,18 @@
 			},
 			//全部消耗-全部剩余
 			allUse(){
-				let tipTitle = '';
-				if(!this.isSurplus){
-					tipTitle = '全部剩余';
-				}else{
-					tipTitle = '全部消耗';
-				}
-				this.$confirm('此操作会重置已选择的批次, 是否继续?',tipTitle, {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'info'
-		        }).then(()=>{
-		        	if(!this.isSurplus){//全部剩余
-						for(let infoItem of this.infoList){
+	        	if(!this.isSurplus){//全部剩余
+					for(let infoItem of this.infoList){
+						if(!infoItem.haveBatch){
 							this.setDefaultItem(infoItem);
 							infoItem.usemin = 0;//全部剩余，消耗数量为0
 							infoItem.haveBatch = false;
 							infoItem.batchDetail = [];
 						}
-					}else{//全部消耗，剩余数量清空，回库数量清空
-						for(let infoItem of this.infoList){
+					}
+				}else{//全部消耗，剩余数量清空，回库数量清空
+					for(let infoItem of this.infoList){
+						if(!infoItem.haveBatch){
 							infoItem.useNum = 0;
 							infoItem.useWeight = 0;
 							infoItem.backNum = '';
@@ -311,24 +309,20 @@
 							infoItem.batchDetail = [];
 						}
 					}
-					this.isSurplus = !this.isSurplus;
-		        }).catch();
+				}
+				this.isSurplus = !this.isSurplus;
 			},
 			//剩余回库
 			allBack(){
-				this.$confirm('此操作会重置已选择的批次, 是否继续?','剩余回库', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'info'
-		        }).then(()=>{
-		        	for(let infoItem of this.infoList){
+	        	for(let infoItem of this.infoList){
+	        		if(!infoItem.haveBatch){
 						infoItem.backNum = infoItem.useNum?infoItem.useNum:'';
 						infoItem.backWeight = infoItem.useWeight?infoItem.useWeight:'';
 						infoItem.backmin = infoItem.backNum*infoItem.selUnit.value+infoItem.backWeight*1;
 						infoItem.haveBatch = false;
 						infoItem.batchDetail = [];
 					}
-		        }).catch();
+				}
 			},
 			//取消
 			cancel(){
@@ -564,7 +558,10 @@
 				font-size: 16px;
 				height: 50px;
 				line-height: 50px;
-				span{color:red;cursor:pointer;}
+				span{color:#E1BB4A;cursor:pointer;
+					&:hover{text-decoration: underline;}
+				}
+				.warning{color: red;}
 			}
 		}
 		.oulSecond{
