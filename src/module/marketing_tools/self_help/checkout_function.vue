@@ -304,7 +304,7 @@
 						<div class="detDiv" v-if="item.status">
 							<i class="detI triright"></i>
 							<h3 class="detH3">
-								第三方配送向商家收取的配送费是按照店铺地址和顾客收货地址的步行距离计算,而非两点间的直线距离。
+								第三方配送向商家收取的配送费是按照店铺地址和顾客收货地址的步行距离计算,而非两点间的直线距离。系统内的配送范围与配送费的收取根据直线距离计算，请知悉！
 						</h3>
 						</div>
 					</div>
@@ -1310,7 +1310,7 @@ export default {
 			}
 			let circle = new AMap.Circle({
 				center: [this.pointLng, this.pointLat], // 圆心位置
-				radius: 1000, //半径
+				radius: 4000, //半径
 				strokeColor: this.colorList[this.disareaList.length].name, //线颜色
 				strokeOpacity: 1, //线透明度
 				strokeWeight: 3, //线粗细度
@@ -1339,7 +1339,7 @@ export default {
 				circle: circle,
 				polygon: polygon,
 				promotersNum: '', //配送费
-				mileageNum: 1, //公里数
+				mileageNum: 4, //公里数
 				circleEditor: new AMap.CircleEditor(this.map, circle), //编辑的构造函数
 				polygonEditor: new AMap.PolyEditor(this.map, polygon), //编辑的构造函数
 				center: '', //圆形坐标
@@ -1571,7 +1571,7 @@ export default {
 					divisionsType = 1;
 					circle = new AMap.Circle({
 						center: [this.pointLng, this.pointLat], // 圆心位置
-						radius: 1000, //半径
+						radius: 4000, //半径
 						strokeColor: this.colorList[index].name, //线颜色
 						strokeOpacity: 1, //线透明度
 						strokeWeight: 3, //线粗细度
@@ -1604,7 +1604,7 @@ export default {
 					circle: circle,
 					polygon: polygon,
 					promotersNum: item.cost, //配送费
-					mileageNum: 1, //公里数
+					mileageNum: 4, //公里数
 					circleEditor: new AMap.CircleEditor(this.map, circle), //编辑的构造函数
 					polygonEditor: new AMap.PolyEditor(this.map, polygon), //编辑的构造函数
 					center: '', //圆形坐标
