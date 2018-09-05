@@ -3,7 +3,7 @@
         <div class="tab-header">
             <el-button-group>
                 <el-button type="primary" >商品</el-button>
-                <el-button type="primary" :plain="true" @click="navigateTo">物料</el-button>
+                <el-button type="primary" :plain="true" @click="navigateTo('goods')">物料</el-button>
             </el-button-group>
         </div>
         
@@ -12,12 +12,11 @@
                 <el-date-picker
                     v-model="condition.time"
                     type="datetimerange"
+                    :editable="false"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
-                    unlink-panels
                     format="yyyy-MM-dd"
-                    :default-value="[new Date(2018,5,1),new Date(2018,6,1)]"
-                    :default-time="['12:00:00']">
+                    >
                 </el-date-picker>
             </div>
 
@@ -64,8 +63,8 @@
             </div>
 
             <div class="in-block" >
-                <el-button type="primary">筛选</el-button>
-                <el-button type="info">重置</el-button>
+                <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
+                <el-button type="info" @click="filterReset('reset')">重置</el-button>
             </div>
         </div>
 
@@ -74,21 +73,21 @@
                 <el-table-column prop="name" width="150px"  label="商品名称" fixed="left">
                     <span slot-scope="{row,column}" @click="viewDetail(row,column)" class="yellow-font">{{row.name}}</span>
                 </el-table-column>
-                <el-table-column prop="name" width="150px" label="条形码" >
+                <el-table-column prop="barcode" width="150px" label="条形码" >
                 </el-table-column>
-                <el-table-column prop="name" width="150px" label="操作类型" >
+                <el-table-column prop="operationType" width="150px" label="操作类型" >
                 </el-table-column>
-                <el-table-column prop="name" width="150px" label="操作前数量/重量" >
+                <el-table-column prop="before" width="150px" label="操作前数量/重量" >
                 </el-table-column>
-                <el-table-column prop="name" width="150px" label="数量/重量变化" >
+                <el-table-column prop="change" width="150px" label="数量/重量变化" >
                 </el-table-column>
-                <el-table-column prop="name" width="150px" label="操作后数量/重量" >
+                <el-table-column prop="after" width="150px" label="操作后数量/重量" >
                 </el-table-column>
-                <el-table-column prop="name"  label="成本金额" >
+                <el-table-column prop="cost"  label="成本金额" >
                 </el-table-column>
-                <el-table-column prop="name" label="售卖价格" >
+                <el-table-column prop="price" label="售卖价格" >
                 </el-table-column>
-                <el-table-column prop="name" label="日期" width="150px">
+                <el-table-column prop="createTime" label="日期" width="150px">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="scope">
@@ -165,85 +164,291 @@
 <script>
 import storage from 'src/verdor/storage';
 import common from './goods_material_log.js'
+import global from 'src/manager/global';
+
+import Mock from 'mockjs';
+import template from 'src/mock/mock';
+
+/*
+    问题:
+        仓库选择?:仓库的筛选
+        多选?:操作类型,仓库的单选多选
+        时间?:
+
+    请求:
+        获取商品日志类型:invoicing_getInventoryLogType
+*/
 export default {
     mixins:[common],
     data () {
         return {
-            condition:{
-                operationType:'',
-                goodsName:'',
-                category:[],
-                code:'',
-                operationUser:'',
-                shop:'',
-                secondLevel:'',
-                wid:'',
-                time:[],                
-            },
+            condition:{},
             categoryList:[],
             warehouseList:[],
             shopList:[],
-            operationList:[
-                {id:1,name:'类型一'},
-                {id:2,name:'类型二'},
-                {id:3,name:'类型三'},
-            ],
-            tableData:[
-                {id:1,name:'类型一'},
-                {id:2,name:'类型二'},
-                {id:3,name:'类型三'},                
-            ],
+            operationList:[],
+            tableData:[],
             pageObj:{},
 
             dialog:{
                 title:'库存详情',
                 show:false
-            }
+            },
+            goodsList:[],           //所有进销存商品
+
             
         };
     },
     methods: {
-        getTime(res){
-            //当清空时间的时候
-            this.condition.time = res;
-            if(!Array.isArray(res)){
-                let [start,end] = res;
-                start = start.getTime();
-                end = end.getTime();
-                this.condition.startTime = parseInt(start / 1000);
-                this.condition.endTime = parseInt(end / 1000);
-            }
-        },
-        cellClick(a,b,c){
-            console.log(a);
-            console.log(b);
-        },
-
 		funGetPage(flag,res){
 			//获取页码值
 			if(flag == 'size-change'){
 				this.pageObj.pageSize = res;				
 			}else{
 				this.pageObj.currentPage = res;
+            }
+            this.getList();
+        },
+        getSubmitData(){
+        },
+        //筛选重置
+        filterReset(flag){
+            if(flag == 'reset'){
+                this.pageObj.currentPage = 1;
+                this.initCondition();
+
+            }
+            this.getList();
+        },
+        //获取日志列表
+        async getList(){
+            let retData = {};
+            retData = Mock.mock(template);
+            this.tableData = retData.list;
+
+            this.tableData = this.tableData.map((ele)=>{
+                ele.createTime = this.generatorDate(ele.createTime * 1000).str;
+                ele.operationType = this.getAttr(this.operationList,ele.operationType);
+                return ele;
+            });
+            
+        },
+        //查看商品详情
+        viewDetail(row,column){
+            this.dialog.show = true;
+        },
+        /*
+        商品:
+            不查看批次,记录
+                售卖                      8      
+                下架到耗损                 7          货架耗损 
+                下架到库存（货架)           20                     
+                上架（货架）               19
+                入库并上架                 15
+                盘点货架                  16
+        物料:
+            不查看批次,记录
+                售卖                      8      
+                下架到库存（货架)           20     
+                下架到耗损                 7          货架耗损 
+                上架（货架）               19
+                入库并上架                 15
+                盘点货架                  16
+
+
+        */
+        //查看记录
+        viewHistory(item){
+            let obj = {};
+            switch(item.id+''){
+                case '1'://入库,
+                case '4'://上架(库存)
+                case '5'://下架到库存(老批次)
+                case '6'://仓库耗损
+                case '7'://下架到耗损
+                case '8'://售出
+                case '9'://售出退货
+                case '12'://下架到库存新批次
+                case '15'://入库并上架
+                case '16'://盘点货架
+                    return;
+                case '2'://调入->入货单
+                    obj.path = '/admin/operation/enterGoods';
+
+                    obj.query = {id:893};
+                    break;
+                case '3'://调出->出货单
+                case '17'://出货回库                
+                    obj.path = '/admin/operation/operationDetail';
+                    obj.query = {id:899};
+                case '13'://导入入库
+                case '14'://导入上架
+                    obj.path = '/admin/wareImport';
+                    break;
+                case '18'://批量盘库记录
+                    obj.path = '/admin/goodsCountHistory';
+                    obj.query = {id:item.id};
+                    break;
+            }
+        },
+        //查看批次详情
+        viewBatchDetail(){
+            let obj = {};
+            switch(item.id+''){
+                case '7'://下架到耗损
+                case '8'://售出
+                case '14'://导入上架
+                case '15'://入库并上架
+                case '16'://盘点货架
+                case '19'://上架货架
+                case '20'://下架到库存(货架)
+                    return;
+
+                case '1'://跳转到批次详情(新)-->入库,  未标注
+                case '2'://调入出
+                case '3'://调入
+                case '6'://仓库耗损
+                case '9'://售出退货
+                case '13'://导入入库
+                case '17'://取消调度会哭
+                case '18'://批量盘库
+                    break;
+
+                case '4'://上架库存 -> 进入批次详情
+                    break;
+
+                case '5'://下架到库存（老批次）-->进入批次详情
+                    break;
+
+                case '12'://下架到库存(新批次) ->下架页面(下架到新建批次)
+
+
+
+                case '18':
+                    obj.path = '/admin/inventoryManagement/detail';
+                    
+                    break;
+                case '2':
+
+                    break;
+                case '3':
+                    
+            }
+        },
+
+        //获取所有商品
+        async getAllGoods(){
+            let goods = [],
+                res = {};
+
+            res = await this.getHttp('ShopGetExtra'); //获取版本号
+            goods = await this.getGoodsList(false,res.goodsConfigVer);
+            this.goodsList = this.filterInvoGoods(goods,1,'isInvoicing');
+        },
+		//获取商品
+		async getGoods() {
+            let goods = [];
+			let temp = await http.getGoodsList({
+				data: {
+					shopId: this.shopId,
+					page: 1,
+					num: 200,
+					specification: 1
+				}
+			});
+			goods = temp.list;
+			storage.session('goodList', goods);
+			return goods;
+		},
+		async getGoodsList(flag, goodVer) {
+			let goods = null;
+			if (flag) {
+				goods = await this.getGoods();
+			} else {
+				let httpGoodVersion = storage.session('httpGoodVersion');
+				if (!httpGoodVersion) {
+					goods = await this.getGoods();
+				} else {
+					if (httpGoodVersion.goodsConfigVer == goodVer) {
+						goods = storage.session('goodList');
+						if (!goods) goods = await this.getGoods();
+					} else {
+						goods = await this.getGoods();
+					}
+				}
 			}
+			return goods;
         },
-        navigateTo(){
-            this.$router.push({path:'/admin/materialTotalLog'});
+        //筛选进销存商品
+        filterInvoGoods(goods,val,attr='id'){
+            let temp = [];
+            temp = goods.filter((ele)=>{
+                if(Number(ele[attr] == val)){
+                    return true;
+                }
+            });
+            return temp;
         },
+        //搜索商品
+		funSearchGoods(goodsList) {
+			let tempGoods = [];
+			if (!this.search || this.search.trim().length == 0) {
+				return goodsList;
+			}
+			this.search = this.search.trim();
+			tempGoods = goodsList.filter(ele => {
+				let BC = '' + ele.BC;
+				BC = BC.toLowerCase();
+				let name = ele.goodsName.toLowerCase();
+				let search = this.search.toLowerCase();
+				if (BC && BC.indexOf(search) > -1) return true;
+				if (name && name.indexOf(search) > -1) return true;
+			});
+			return tempGoods;
+		},
+        //根据分类id筛选商品
+		filterGoodsByCategoryByPid(goods, id) {
+			if (id == -1) return goods;
+			let arr = [];
+			goods.forEach(ele => {
+				ele.cids || (ele.cids = []);
+				ele.cids.some(e => {
+					if (e == id) {
+						arr.push(ele);
+						return true;
+					}
+				});
+			});
+			return arr;
+		},
+        //初始化分页组件
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
 				pageSize:10,			//每页显示的记录数
 				pagerCount:11,			//每页显示的按钮数
-				currentPage:1,
+				currentPage:1,          //当前页
 			};
         },
-        getSubmitData(){
+        initCondition(){
+            this.condition = {
+                operationType:'',
+                goodsName:'',
+                category:[],                //选择的分类
+                code:'',
+                operationUser:'',
+                wid:'',                     //仓库id     
+                time:[],                    //时间选择[Date,Date]      
+            };
+            this.initTime();
         },
-        viewDetail(row,column){
-            console.log(row);
-            console.log(column);
-
+        //初始时间
+        initTime(){
+            let start,end;
+            end = new Date();
+            start = end.getTime() - global.timeConst.ONEMONTH;
+            start = new Date(start);
+            this.condition.time = [start,end];
         },
         //获取分类
         async getCategoryList(){
@@ -264,13 +469,34 @@ export default {
         },
     },
     async mounted(){
+        let operationList = [];
+
+        this.initCondition();
+
+        operationList = await this.getHttp('invoicing_getInventoryLogType');
+        this.operationList = this.changeOperationType(operationList);
+
         this.getCategoryList();
+
         this.warehouseList =  await this.getHttp('warehouseList');
 
+        this.filterReset('reset');
     },
-    components: {
-        elShopList: () =>
-            import ( /*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList')
+    beforeRouteEnter(to,from,next){
+        if(from.meta.comName == 'materialTotalLog'){
+            to.meta.keepAlive = true;
+        }else{
+            to.meta.keepAlive = false;            
+        }
+        next();
+    },
+    beforeRouteLeave(to,from,next){
+        if(to.meta.comName == 'materialTotalLog'){
+            from.meta.keepAlive = true;
+        }else{
+            from.meta.keepAlive = false;            
+        }
+        next();
     },
 };
 </script>
@@ -302,11 +528,7 @@ export default {
         cursor: not-allowed;
     }
 
-    .view-batch{
-        color:@ey;
-        display: inline-block;
-        height:40px;
-    }
+
     .goods-total-log{
         .search-header{
             margin-top:20px;
@@ -332,5 +554,4 @@ export default {
             }
         }
     }
-
 </style>

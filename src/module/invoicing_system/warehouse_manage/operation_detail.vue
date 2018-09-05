@@ -64,11 +64,11 @@
 							</template>
 						</div>
 					</div>
-				<div class="tab-box" @click="tabClick" v-if="enterList.length">
-					<span data-type="1" :class="{active:selIndex==-1}">出货单</span>
-					<span v-for="(item,index) in enterList" :key="index" data-type="2" :data-index="index" :class="{active:selIndex==index}">
-						入货单{{index+1}}
-					</span>
+				<div class="tab-box" v-if="enterList.length">
+					<el-radio v-model="selIndex" label="-1" border>出货单</el-radio>
+					<template v-for="(item,index) in enterList">
+						<el-radio v-model="selIndex" :label="index" border>入货单{{index+1}}</el-radio>
+					</template>
 				</div>
 				<!-- 仓库详情弹窗 -->
 				<component
@@ -264,19 +264,13 @@ export default {
 		getDetailObj(obj) {
 			this.showCom = obj.showCom; //打印的时候 是否展示详细内容
 		},
-		tabClick(event) { //单据类型切换
+		tabClick(index) { //单据类型切换
 			let target = event.target;
-			if(target.tagName.toLocaleLowerCase() == 'span') {
-				let type = target.getAttribute('data-type');
-				let index = target.getAttribute('data-index');
-				if(type == 1) { //出货单
-					this.selIndex = -1;
-					this.setOrderDetail(this.outDetails, type);
-				} else if(type == 2) { //入货单
-					this.selIndex = index;
-					let item = this.enterList[index];
-					this.setOrderDetail(item, type);
-				}
+			if(index == -1) { //出货单
+				this.setOrderDetail(this.outDetails, type);
+			} else if(type == 2) { //入货单
+				let item = this.enterList[index];
+				this.setOrderDetail(item, type);
 			}
 		},
 		setOrderDetail(item, type) {

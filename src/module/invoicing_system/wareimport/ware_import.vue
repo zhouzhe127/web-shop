@@ -132,14 +132,13 @@
 						page: this.page,
 						creator: this.createUser,
 						num: 10,
-						type: this.tabactive + 1 //1商品；2物料；3服装 为空则获取全部
+						type: Number(this.tabactive) + 1 //1商品；2物料；3服装 为空则获取全部
 					}
 				});
 				this.listData = data.list;
 				this.page = data.page;
 				this.allTotal = Number(data.rows);
 				this.pageTotal = data.count;
-				console.log(data);
 			},
 			getDetail(props) {
 				storage.session('detailNeed', props);
