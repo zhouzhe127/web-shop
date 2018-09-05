@@ -118,8 +118,8 @@
 						<a v-else href="javascript:;" class="blue" style="width:200px;" @click="Auditing">提交微信审核</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="openConfig">配置小程序</a>
 						<a href="javascript:;" class="blue" style="width:200px;" @click="getQRcode">小程序体验二维码</a>
-						<a v-if="reviewStatus == 0" href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
-						<a v-else href="javascript:;" class="gray" style="width:200px;margin-top: 10px;">发布</a>
+						<!-- <a v-if="reviewStatus == 0" href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="releaseCode">发布</a>
+						<a v-else href="javascript:;" class="gray" style="width:200px;margin-top: 10px;">发布</a> -->
 					</div>
 				</div>
 				<!-- 小程序二维码规则配置 -->
