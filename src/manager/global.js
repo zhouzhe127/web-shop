@@ -195,11 +195,7 @@ let global = {
     //     "pos":"http://v5.ishandian.com.cn/pos/"
     // },
     // qa
-<<<<<<< .mine
-    "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
-=======
      "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
->>>>>>> .theirs
     // pre
     // "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/"},
     // "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/"},
