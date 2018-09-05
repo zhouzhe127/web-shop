@@ -391,7 +391,7 @@ export default {
 		'qrcode': () =>
 			import ( /* webpackChunkName: 'qrcode_win' */ './qrcode_win.vue'),
 		'checkFile': () =>
-			import ( /* webpackChunkName: 'check_file_win.vue' */ './check_file_win.vue'),
+			import ( /* webpackChunkName: 'check_file_win' */ './check_file_win.vue'),
 	},
 	mounted() {
 		this.userData = storage.session('userShop');
