@@ -211,14 +211,16 @@ export default {
 			this.fuData();
 		},
 		changeType(i) {
-			this.showDefined=(i==2?false:true);
 			this.saveData();
 			this.typeC = i;
+			this.showDefined=(i==2?false:true);
+			this.packBtn=-1;
 			this.fuData();
 		},
 		queryTo(v) {
 			this.saveData();
 			this.mustSon = v;
+			this.packBtn=-1;
 			this.fuData();
 		},
 		//切换前保存数据
@@ -278,8 +280,8 @@ export default {
 				}
 			}
 			console.log('切换时复制');
-			let nowGoods = utils.deepCopy(this.fatherGoods);
-			let nowPacks = utils.deepCopy(this.fatherPacks);
+			let nowGoods = utils.deepCopy(this.fatherGoods);   //商品
+			let nowPacks = utils.deepCopy(this.fatherPacks);   //套餐
 			switch (this.typeC + '') {
 				case '0':
 					this.isOnlyGoods = false;
@@ -393,9 +395,10 @@ export default {
 			this.goodsCom = nowGoods;
 			this.goodList = nowGoods;
 
+			//套餐过滤
 			if (this.typeC==2) {
                 for (let i = 0;i < nowPacks.length; i++) {
-                    if (!this.oneP.includes(nowPacks[i].id)) {//过滤市别中未选择的
+                    if (!this.oneP.includes(nowPacks[i].id)||nowPacks[i].type==2) {//过滤市别中未选择的,及可选套餐
                         nowPacks.splice(i, 1);
                         i--;
                     }
@@ -429,13 +432,13 @@ export default {
 		//确定
 		async channelEditGoods() {
 			let temp = [];
-			this.twoG.forEach(ele => {
+			this.twoG.forEach(ele => {  //人均商品
 				let obj = {};
 				obj.gid = ele;
 				obj.goodsNum = '1';
 				temp.push(obj);
 			});
-			for(let i=0;i<this.oneG.length;i++){
+			for(let i=0;i<this.oneG.length;i++){  //选中多规格主菜时，把其子菜id也传递给后台
 			    for(let j=0;j<this.getGoods.length;j++){
 			        if(this.oneG[i]==this.getGoods[j].id&&this.getGoods[j].myId&&this.getGoods[j].myId.length>0){
 			            this.oneG=this.oneG.concat(this.getGoods[j].myId);
@@ -443,7 +446,6 @@ export default {
 					}
 				}
 			}
-			console.log(this.oneG);
 			let res = await http.ChannelEditGoods({
 				data: {
 					id: this.goodCom.id,
@@ -610,8 +612,7 @@ export default {
 									) {
 										this.oneGoodList.child[i].goodsList[j].selected = false;
 										if (
-											this.goodsCom[m].id ==
-											this.oneGoodList.child[i].goodsList[j].id
+											this.goodsCom[m].id==this.oneGoodList.child[i].goodsList[j].id
 										) {
 											this.goodsCom[m].selected = false;
 										}

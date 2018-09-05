@@ -360,7 +360,7 @@ export default {
 					i--;
 				}
 			}
-
+			//给多规格主菜添加myId属性，myId即其所有子菜id。
 			for (let j=0;j<goodList.length;j++){
 			    if(goodList[j].isGroup==1){
                     goodList[j].myId=[];
