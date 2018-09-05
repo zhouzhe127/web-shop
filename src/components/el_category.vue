@@ -1,11 +1,10 @@
 /**
- * @Author: zhengu.jiang
- * @Date: 2018-08-13 11:04:36 
+ * @Author: 孔伟研 
+ * @Date: 2018-09-05 10:54:43 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-04 18:06:57
- * @Module: 分类选择框
- */
-
+ * @Last Modified time: 2018-09-05 14:23:09
+ * @Module:分类选择框
+**/
 <template>
 	<div id="elCategory" style="display:inline-block;">
 		<el-popover

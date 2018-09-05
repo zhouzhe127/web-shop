@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-28 18:21:30 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-04 18:35:57
+ * @Last Modified time: 2018-09-05 11:04:06
  * @Module:选择商品列表  套餐和商品
 **/
 <template>
@@ -195,8 +195,7 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		elCategory: () =>
-			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
+		elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
 		// subAdd: () =>
 		// 	import(/*webpackChunkName:'subadd'*/ 'src/components/subadd')
 	},

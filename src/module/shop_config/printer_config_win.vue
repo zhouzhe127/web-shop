@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-08-16 15:05:57
+ * @Last Modified time: 2018-09-05 14:33:01
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
@@ -106,13 +106,13 @@
 								</div>
 							</el-radio-group>
 						</el-form-item>
-						<!-- <el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
+						<el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
 							<el-switch
 								v-model="isQrcode"
 								active-color="#E1BB4A"
 								inactive-color="#e6e6e6">
 							</el-switch>
-						</el-form-item> -->
+						</el-form-item>
 					</el-form>
 				</section>
 			</div>
