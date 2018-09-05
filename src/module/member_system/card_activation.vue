@@ -536,7 +536,7 @@
 						return false;
 					}
 					// 手机
-					if (this.entityCard.consumerPhone && !/^1[34578]\d{9}$/.test(this.entityCard.consumerPhone)) {
+					if (this.entityCard.consumerPhone && !/^1[3456789]\d{9}$/.test(this.entityCard.consumerPhone)) {
 						this.$store.commit('setWin', {
 							title: '温馨提示',
 							content: '手机号码格式有误'
@@ -597,7 +597,7 @@
 							content: '虚拟卡激活必须填写手机号码'
 						});
 						return false;
-					} else if (!/^1[34578]\d{9}$/.test(this.virtualCard.consumerPhone)) {
+					} else if (!/^1[3456789]\d{9}$/.test(this.virtualCard.consumerPhone)) {
 						this.$store.commit('setWin', {
 							title: '温馨提示',
 							content: '手机号码格式有误'
