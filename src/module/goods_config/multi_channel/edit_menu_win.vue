@@ -89,8 +89,8 @@
 					<section v-if="!allGood">
 						<div class="onecate" v-if="oneGoodList.goodsList.length > 0">
 							<section class="onecataTitle">
-								<i class="twoI" :class="{'oneI':L2ID == '0'}"></i>
-								<li class="twoTitle " :class="{'oneTitle':L2ID == '0'}">{{oneGoodList.name}}</li>
+								<i class="twoI" :class="{'oneI':twoArea.twoAreaIndex==-1}"></i>
+								<li class="twoTitle " :class="{'oneTitle':twoArea.twoAreaIndex==-1}">{{oneGoodList.name}}</li>
 							</section>
 							<section style="width:600px;float: left;">
 								<li v-on:click="choseGood(item)" v-for="(item,index) in oneGoodList.goodsList" :key="index" class="aLi" :class="{'shoName-select':item.selected}">{{item.goodsName ? item.goodsName : item.packageName}}</li>
@@ -147,8 +147,6 @@ export default {
 				twoAreaIndex: -1, //分类下标
 				twoAreaList:[],   //二级分类列表
 			},
-			L1ID: 0, // 1级分类 id
-			L2ID: 0, // 2级分类id
 
 			packlist: [], //所有的套餐列表
 			goodList: [], // 所有商品
@@ -281,23 +279,15 @@ export default {
 		fuData() {
 			this.search = ''; //清空搜索数据
 			this.isPackage = false; //切回默认的商品
-			if (this.L1ID != 0) {
-				this.L1ID = 0;
-				this.L2ID = 0;
-//				this.oneArea.oneAreaName = '请选择一级分类';
+			if (this.oneArea.oneAreaIndex!= -1) {
+
 				this.oneArea.name = '请选择一级分类';
+				this.oneArea.oneAreaIndex = -1;
 				this.twoArea={
 					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
-//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
 					twoAreaList: [] //二级分类列表
 				};
-//				this.twoArea = {
-//					twoAreaBtn: false, //二级分类
-//					twoAreaName: '请选择二级分类',
-//					twoAreaIndex: -1, //分类下标
-//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
-//				};
 				this.allGood = true;
 				for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
 					this.oneArea.oneAreaList[i].selected = false;
@@ -560,6 +550,14 @@ export default {
 			if (index == 0) {
 				this.isPackage = false;
 				this.goodsCom = this.goodList;
+
+				this.oneArea.name = '请选择一级分类';
+				this.oneArea.oneAreaIndex = -1;
+				this.twoArea={
+					name: '请选择二级分类',
+					twoAreaIndex: -1, //分类下标
+					twoAreaList: [] //二级分类列表
+				};
 			} else if (index == 1) {
 				this.isPackage = true;
 				this.goodsCom = this.packlist;
@@ -719,8 +717,7 @@ export default {
 //			this.twoArea.twoAreaName = '请选择二级分类';
 			this.twoArea.name = '请选择二级分类';
 			this.twoArea.twoAreaList=[]; //二级分类制空
-			this.L1ID = item.id;
-			this.L2ID = 0;
+
 			if (index == 0) {
 				//选择一级分类下的全部，为选择全部商品，包含一级分类下的和二级分类下的商品
 				this.allGood = true;
@@ -787,7 +784,6 @@ export default {
 				}
 				this.oneGoodList = selectArr;
 			}
-			this.L2ID = item.id;
 		},
 
 //		//显示一级分类
@@ -847,14 +843,12 @@ export default {
 				}
 			}
 			this.goodsCom = secGoods;
-			if (this.L1ID != 0) {
-				this.L1ID = 0;
-				this.L2ID = 0;
+			if (this.oneArea.oneAreaIndex!= -1) {
 				this.oneArea.name = '请选择一级分类';
+				this.oneArea.oneAreaIndex=-1;
 				this.twoArea={
 					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
-//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
 					twoAreaList: [] //二级分类列表
 				};
 //				this.oneArea.oneAreaName = '请选择一级分类';
