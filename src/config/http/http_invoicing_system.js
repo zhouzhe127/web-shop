@@ -941,6 +941,14 @@ export default {
     "MaterialGetUnitList":{
         url:b+"Material/getUnitList",                           //获取物料的关联关系
         method:'get'
+    },
+    "invoicingGetMaterialLogList":{
+        url:b+"invoicing/getMaterialLogList",                   //获取物料总日志列表
+        method:'get'
+    },
+    "materialGetUnitRelation":{
+        url:b+"material/getUnitRelation",                       //获取一个或多个物料的单位和关联
+        method:'get'
     }
     
 }
