@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-06 13:45:18
+ * @Last Modified time: 2018-09-06 18:37:38
  * @Module:商品管理
 **/
 
@@ -314,7 +314,8 @@
 		</section>
 
 		<div v-show="goodsList.length>0">
-			<el-pagination background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="total, prev, pager, next"></el-pagination>
+			<el-pagination v-if="selectTab=='1'" background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50, 100]"></el-pagination>
+			<el-pagination v-if="selectTab=='0'" background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="prev, pager, next"></el-pagination>
 			<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
 		</div>
 
@@ -438,6 +439,7 @@ export default {
 		//切换图片时计算宽度
 		typeChange(res){
 			if(res==0){
+				this.sizeChange(14);
 				this.windowResize();
 			}
 			this.initSyncBtn();
@@ -775,6 +777,12 @@ export default {
 				}
 			}
 		},
+		sizeChange(e){
+			this.num = e;
+			this.currentPage = 1;
+			this.initPage(this.pageGoods);
+		},
+
 		//分页点击
 		async pageClick(p) {
 			this.currentPage = p;
