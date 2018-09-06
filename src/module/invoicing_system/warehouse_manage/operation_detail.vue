@@ -170,7 +170,7 @@ export default {
 			isBrand:0,//0单店 1品牌
 			wareDetail:{},//仓库详情
 			dialogVisible:false,//仓库详情显示/隐藏
-			isTotalLog:true,//是否从总日志进入
+			isTotalLog:false,//是否从总日志进入
 			logObj:{
 				id:'',
 				tab:'',
@@ -246,9 +246,7 @@ export default {
 			}else{
 				for(let i=0;i<this.enterList.length;i++){
 					let item = this.enterList[i];
-					console.log(this.enterList);
 					if(this.logObj.id==item.id){
-						console.log(i);
 						this.selIndex = i;
 					}
 				}
