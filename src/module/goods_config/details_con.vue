@@ -314,7 +314,7 @@
 		</section>
 
 		<div v-show="goodsList.length>0">
-			<el-pagination background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" ></el-pagination>
+			<el-pagination background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="total, prev, pager, next"></el-pagination>
 			<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
 		</div>
 
