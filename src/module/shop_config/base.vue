@@ -100,6 +100,13 @@
 				<span>隔天</span>
 			</div>
 		</div>
+		<div class="line" style="clear: both;position: relative;">
+			<span class="ltitle" style="margin-right:20px;float:left;">启用交接班班次</span>
+			<el-switch v-model="showShift" active-color="#13ce66" inactive-color="#ff4949" style="float: left;margin-top:10px">
+			</el-switch>
+
+			<el-checkbox  v-for="(item,index) in shiftList" :key="index" v-model="item.selected" :label="item.name" border size="medium"></el-checkbox>
+		</div>
 		<div style="width:300px;padding-left: 50px;">
 			<a class="yellow fl" style="width: 290px;" @click="send">修改店铺信息</a>
 		</div>
@@ -133,16 +140,25 @@ export default {
 			userData: null,
 			pointLng: 116.404, //地图经度116.404;39.915
 			pointLat: 39.915, //地图纬度
-			optionW: 13 //地图缩放级别
+			optionW: 13, //地图缩放级别
+
+//			shiftList:[
+//				{name:'早班',selected:false,id:1},
+//				{name:'中班',selected:false,id:2},
+//				{name:'晚班',selected:false,id:3},
+//				{name:'日常班',selected:false,id:4},
+//			],//班次数组
+			shiftList:[],
+			showShift:false,//交接班开关
 		};
 	},
-	async mounted() {
+	async created() {
 		await global.getBaiduMapApi();
 
 		this.userData = storage.session('userShop');
 		this.shopId = this.userData.currentShop.id;
 		this.imgHost = this.userData.uploadUrl;
-		this.baseGet();
+		this.getChangeShifts();
 	},
 	components: {
 		onOff: () =>
@@ -248,11 +264,34 @@ export default {
 			this.endSlot.hour = time.end.hour;
 			this.endSlot.minute = time.end.minute;
 		},
+		//获取交接班班次信息
+		async getChangeShifts(){
+			let res=await http.getChangeShifts({
+				data:{}
+			});
+			this.shiftList=res.map((v)=>{
+				v.selected=false;
+				return v;
+			});
+			this.baseGet();
+		},
 		//获取店铺基本信息
 		async baseGet() {
 			this.baseDetial = await http.baseGet({
 				data: { shopId: this.shopId }
 			});
+			this.showShift=Boolean(Number(this.baseDetial.isShifts));
+			let arr=this.baseDetial.changeShifts.split(',');
+			if(arr.length>0){
+				for(let i=0;i<this.shiftList.length;i++){
+					if(arr.includes(this.shiftList[i].id)){
+						this.shiftList[i].selected=true;
+					}
+				}
+			}
+			console.log(this.shiftList);
+
+
 			this.onoff = this.baseDetial.isWarrant == 0 ? true : false;
 			this.isShared = this.baseDetial.isShared == 0 ? true : false;
 			this.shopNumber = this.baseDetial.shopNumber
@@ -313,7 +352,9 @@ export default {
 					isWarrant: this.onoff ? 0 : 1,
 					isShared: this.isShared ? 0 : 1,
 					shopNumber: this.shopNumber,
-					position: this.pointLng + ',' + this.pointLat
+					position: this.pointLng + ',' + this.pointLat,
+					changeShifts:this.shiftList.filter((v)=>{return v.selected}).map((v)=>{return v.id}).toString(),
+					isShifts:Number(this.showShift)
 				}
 			});
 
@@ -433,6 +474,14 @@ export default {
 					title: '错误提示',
 					winType: 'alert',
 					content: '店铺地址不能为空'
+				});
+				return false;
+			}
+			if (this.showShift&&this.shiftList.filter((v)=>{return v.selected}).length===0) {
+				this.$store.commit('setWin', {
+					title: '错误提示',
+					winType: 'alert',
+					content: '请至少选择一个交接班次'
 				});
 				return false;
 			}

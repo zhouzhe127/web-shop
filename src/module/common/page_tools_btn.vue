@@ -69,6 +69,7 @@ export default {
 			oldBtn: {
 				leadIn: new Btn('导入', 'import-form', '', 1, {}, 'goods'),
 				leadOut: new Btn('导出', 'export-btn'),
+				addGood: new Btn('添加', 'pick'),
 				filter: new Btn('筛选'),
 				createScheme: new Btn('创建方案'),
 				back: new Btn('返回'),
@@ -182,6 +183,7 @@ a {
 		background-color: @sdSkyBlue;
 		float: left;
 		position: relative;
+		margin-left: 5px;
 		transition: background-color 0.7s;
 		cursor: pointer;
 		.import-btn {

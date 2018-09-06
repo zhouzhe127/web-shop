@@ -13,11 +13,11 @@
 		</section>
 		<comTable :showHand="false" :titleData="titleData" :introData="currentList" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :titleHeight="50" :listHeight="50">
 			<span style="cursor: pointer;display: inline-block" slot="con-0" slot-scope="props">
-				<span style="color: #28A8E0;font-size: 16px" @click="see(props.data,props.index,$event)">查看</span>
+				<span style="color: #28A8E0;" @click="see(props.data,props.index,$event)">查看</span>
 				<span style="padding:0 20px;color: #D2D2D2;">|</span>
-				<span style="color: #FE8D2C;font-size: 16px" @click="toEdit(props.data,props.index)">编辑</span>
+				<span style="color: #FE8D2C;" @click="toEdit(props.data,props.index)">编辑</span>
 				<span style="padding:0 20px;color: #D2D2D2;">|</span>
-				<span style="color: #FD3F1F;font-size: 16px" @click="delJob(props.data.id,props.index)">删除</span>
+				<span style="color: #FD3F1F;" @click="delJob(props.data.id,props.index)">删除</span>
 				<div v-if="isShowGoods === props.index" class="detLi">
 					<div class="detDiv">
 						<i class="detI"></i>

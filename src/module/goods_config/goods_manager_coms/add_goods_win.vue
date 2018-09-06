@@ -4,7 +4,7 @@
 	<win :height="650" :width="700" @winEvent="closeSelfWin"  :align="'right'" :ok="btnOk" :cancel="btnCancel">
 		<span slot="title">{{title}}</span>
 		<div slot="content" class="win-content">
-			<section class="commodity-form" v-cloak>
+			<section>
 				<!--		三种类型商品的公共部分	-->
 				<section class="titleTop" style="width:100%;height:40px;">
 					<div class="good-baseInfo">
@@ -14,409 +14,252 @@
 					<span v-if="good.id">商品ID:{{good.id}}</span>
 					</div>
 				</section>
-
-				<section class="good-type">
-					<label class="commodity-name required fl">类型</label>
-					<label class="fl commodity-type">
-					<template v-for="(goodType,index) in goodsType">
-						<span  :key="index" :class="{'signa':goodType.type==good.type}" v-on:click="toggleGoodType(goodType.type)"   style="margin-right: 15px;border: 1px solid #BDBDBD;cursor: default;">{{goodType.name}}</span>
-					</template>
-					</label>
-				</section>
-
-				<section class="good-sort">
-					<label class="commodity-name required fl">排序</label>
-				</section>
-				<div>
-					<sub-add  :minnum="1" :bindnum="good.sort" :sign="false" @toClick ="(res)=>{switchFn(res,'sort')}"></sub-add>
-				</div>
-
-
-				<!--		自定义菜品选择分类		-->
-				<section v-if="good.type==2">
-					<label class="commodity-name required fl">分类</label>
-					<label class="commodity-type fl"  style="width: 600px;">
-					<span class="signa"  v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
-					<a href="javascript:void(0);"  v-on:click="openCommonWin('category')" class="addclassify fl" >添加分类</a>
-					</label>
-				</section>
-
-
-				<section style="width:100%;" v-if="good.type==1 || good.type==0">
-					<!--		普通菜,称重菜的名称,简码,售价,成本,单位		-->
-					<section class="fl" style="width: 65%;margin-top: 0;">
-					<section style="margin-top: 0;margin-bottom: 15px;">
-						<label class="commodity-name required fl">名称</label>
-						<label><input type="text" v-model="good.goodsName" placeholder="输入名称"  maxlength="45"  /></label>
+				<section style="width:100%;overflow:hidden;">
+					<section style="width:430px;float:left;">
+						<el-form :model="good" ref="good" label-width="80px">
+							<el-form-item required label="类型" prop="type">
+								<template v-if="!editGoodsId">
+									<el-radio-group v-model="good.type" @change = "toggleGoodType">
+										<el-radio-button label="0">普通菜品</el-radio-button>
+										<el-radio-button label="1">称重菜品</el-radio-button>
+										<el-radio-button label="2">自定义菜品</el-radio-button>
+									</el-radio-group>
+								</template>
+								<template v-if="editGoodsId">
+									<el-radio-group v-model="good.type">
+										<el-radio-button :label="good.type">
+											<span v-if="good.type==0">普通菜品</span>
+											<span v-if="good.type==1">称重菜品</span>
+											<span v-if="good.type==2">自定义菜品</span>
+										</el-radio-button>
+									</el-radio-group>
+								</template>
+							</el-form-item>
+							<template v-if="good.type==1 || good.type==0">
+								<el-form-item required label="名称">
+									<el-input v-model="good.goodsName" maxlength = "45" placeholder = "请输入商品名称" style = "width:270px;"></el-input>
+								</el-form-item>
+								<el-form-item label="简码" prop="BC">
+									<el-input v-model="good.BC" maxlength = "20" placeholder = "请输入商品简码" style = "width:270px;"></el-input>
+								</el-form-item>
+								<el-form-item v-if="good.type==0" required label="售价">
+									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:120px;">
+										<i slot="suffix">元</i>
+									</el-input>
+									<el-input v-model="good.unit" maxlength = "5" placeholder = "单位" style = "width:80px;"></el-input>
+									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:110px;">
+										<i slot="suffix">元</i>
+									</el-input>
+								</el-form-item>
+								<el-form-item v-if="good.type==1" required label="售价">
+									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:120px;">
+										<i slot="suffix">元</i>
+									</el-input>
+									<el-select v-model="good.unit" :disabled="good.isCode==1?true:false"  placeholder="选择单位" style="width:80px">
+										<el-option v-for="item in unitArr" :key="item.name" :label="item.name" :value="item.name"> </el-option>
+									</el-select>
+									<el-input v-model="good.cost" maxlength = "10" placeholder = "输入成本" style = "width:110px;">
+										<i slot="suffix">元</i>
+									</el-input>
+								</el-form-item>
+							</template>
+						</el-form>
 					</section>
-					<section style="margin-top: 0;margin-bottom: 15px;">
-						<label class="commodity-name fl">简码</label>
-						<label><input type="text" placeholder="输入简码" v-model="good.BC"  maxlength="20" /></label>
-					</section>
-
-					<!--		普通菜的售价,成本,单位	-->
-					<section  style="margin: 0;" v-if="good.isGroup!=1 && good.type==0">
-						<label class="commodity-name required fl">售价</label>
-						<input type="text" placeholder="输入售价"  v-model="good.price" style="width:106px;" maxlength="7"/>
-						<div class="good-price">元</div>
-						<label >
-							<input type="text" placeholder="输入单位" v-model="good.unit"  style="width: 75px;margin-right: 1px;" maxlength="5" />
-						</label>
-						<label >
-							<input type="text" placeholder="输入成本" v-model="good.cost"  style="width: 63px" maxlength="10"  />
-							<div class="good-cost">元</div>
-						</label>
-					</section>
-
-					<!-- 	称重菜的售价,单位,成本 	-->
-					<section  style="margin: 0;" v-if="good.type==1">
-						<label class="commodity-name required fl">售价</label>
-						<input type="text" placeholder="输入售价"  v-model="good.price" style="width:70px;" maxlength="7"/>
-						<div class="good-price">元</div>
-						<label >
-							<div class="weight" @click.stop>
-								<div class="sList fl" style="border:1px solid #ccc;margin-left:10px;position: relative;">
-									<div class="tableListInp" v-on:click="funToggleUnit">
-										<span>{{good.unit}}</span>
-										<div class="fl" style="background-color: #fff;">
-											<i></i>
-										</div>
-									</div>
-									<ul v-show="showUnit"  class="tableListUl" v-on:click="funGetUnit($event)">
-										<li v-for="(unit,i) in unitArr" :key="i">{{unit.name}}</li>
-									</ul>
-								</div>
-									<input type="text" placeholder="输入成本"  v-model="good.cost"   style="width: 63px;margin-left: 10px;" maxlength="10"  />
-								<div class="good-cost">元</div>
+					<section style="width:220px;float:right;margin-right:25px;">
+						<el-form :model="good" ref="good" label-width="80px">
+							<el-form-item required label="排序">
+								<el-input-number v-model="good.sort" style="width:150px;" :min="1" :max="255"></el-input-number>
+							</el-form-item>
+						</el-form>
+						<div v-if="good.type==1 || good.type==0" class="good-image">
+							<div class="good-image-div"  id="image">
+								<img v-if="!!good.imageName"  :src="(good.imageName.indexOf('http')>-1)?good.imageName: imgHost+good.imageName"  width="225" height="150">
+								<img v-else src="../../../res/images/busis.png" width="225" height="150"  alt="商品" />
+								<a  class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
+								<a class="good-image-edit">编辑图片</a>
+								<form enctype="multipart/form-data" id="img_upload">
+									<input type="file" @change="uploadGoodsImg"  accept="image/jpeg,image/png,image/gif,image/tiff" name="image"  class="good-image-file" />
+								</form>
 							</div>
-						</label>
-					</section>
-					</section>
-
-					<!-- 	图片	 -->
-					<div class="good-image">
-						<div class="good-image-div"  id="image">
-							<img v-if="!!good.imageName"  :src="(good.imageName.indexOf('http')>-1)?good.imageName: imgHost+good.imageName"  width="225" height="150">
-							<img v-else src="../../../res/images/busis.png" width="225" height="150"  alt="商品" />
-							<a  class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
-							<a class="yellow good-image-edit">编辑图片</a>
-							<form enctype="multipart/form-data" id="img_upload">
-								<input type="file" @change="uploadGoodsImg"  accept="image/jpeg,image/png,image/gif,image/tiff" name="image"  class="good-image-file" />
-							</form>
 						</div>
-					</div>
-
-
-					<!--    普通菜,称重菜品牌的选择    -->
-					<section>
-									<!--		普通菜		-->
+					</section>
+				</section>
+				
+				<section v-if="good.type!=2" style="width:100%;">
+					<el-form :model="good" ref="good" :inline="true" label-width="105px">
+						<!--		普通菜		-->
 						<template v-if="good.type==0 && good.isInvoicing==1">
-							<section  style="margin-top: 0;margin-bottom: 15px;width: 350px;">
-								<label class="commodity-name fl">品牌</label>
-								<label class="commodity-type fl">
-									<a href="javascript:void(0);"  class="addclassify fl"  v-on:click="openCommonWin('brand')">选择品牌</a>
-									<span v-if="selectBrandObj.name"  class="sign" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
-								</label>
-							</section>
-							<section v-show="good.isGroup!=1" style="margin-top: 0;margin-bottom: 15px;float: left;width: 320px;">
-								<label class="commodity-name required fl">条码</label>
-								<label>
-									<input type="text" placeholder="输入条码" v-model="good.barCode" maxlength="13" style="width:140px;" />
-									<a href="javascript:void(0);" v-on:click="setBarCode('barCode',null,null)" class="yellow" style="width: 80px;height:40px;line-height: 40px;">获取条码</a>
-								</label>
-							</section>
-							<section  v-show="good.isGroup!=1" class="good-invalidity">
-								<label class="commodity-name fl">保质期</label>
-								<label style="width:250px;">
-									<div class="weight" @click.stop>
-										<input type="text" placeholder="输入保质期" v-model="good.validity" maxlength="3" class="good-invalidity-input"/>
-										<div class="sList fl" style="margin-left:10px;">
-											<div class="tableListInp" v-on:click="showValidity=!showValidity">
-												<span style="border:1px solid #ccc;" >{{good.validityType}}</span>
-												<div class="fl" style="background-color: #fff;border:1px solid #ccc;border-left:none;">
-													<i></i>
-												</div>
-											</div>
-												<ul class="tableListUl" v-if="showValidity" v-on:click="funGetGoodValidityType($event)">
-												<li v-for="(date,i) in validityTypeArr" :key="i">{{date.name}}</li>
-											</ul> 
-										</div>
-									</div>
-								</label>
-							</section>
-							<section v-show="good.isGroup!=1" style="margin-top: 0;margin-bottom: 15px;float: left;width: 320px;">
-								<label class="commodity-name fl">副条码</label>
-								<label>
-									<input type="text" placeholder="输入副条码" v-model="good.secBarCode" maxlength="13" style="width:140px;" />
-									<a href="javascript:void(0);" v-on:click="setBarCode('secBarCode',null,null)" class="yellow" style="width: 80px;height:40px;line-height: 40px;">获取条码</a>
-								</label>
-							</section>
-							<section  v-show="good.isGroup!=1" class="good-speci">
-								<label class="commodity-name required fl">规格</label>
-								<label><input type="text" placeholder="输入规格"  v-model="good.specifications" maxlength="21" style="width:228px;" /></label>
-							</section>
+							<el-form-item v-if="good.isGroup =='0'" label="品牌" style="width:350px;">
+								<el-button @click="openCommonWin('brand')" type="primary" style="width:100px;">选择品牌</el-button>
+								<span v-if="selectBrandObj.name"  class="sign" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" required label="条码" style="width:310px;">
+								<el-input v-model="good.barCode" maxlength = "13" placeholder = "输入条码" style = "width:200px;">
+									<el-button slot="append"  @click="setBarCode('barCode',null,null)" style="width:82px;padding:0;">获取条码</el-button>
+								</el-input>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" label="保质期" style="width:350px;">
+								<el-input v-model="good.validity" maxlength = "3" placeholder = "输入保质期" style = "width:120px;"></el-input>
+								<el-select v-model="good.validityType" style="width:60px">
+									<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}} </el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" label="副条码" style="width:310px;">
+								<el-input v-model="good.secBarCode" maxlength = "13" placeholder = "输入副条码" style = "width:200px;">
+									<el-button slot="append"  @click="setBarCode('secBarCode',null,null)" style="width:82px;padding:0;">获取副条码</el-button>
+								</el-input>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" required label="规格">
+								<el-input v-model="good.specifications" maxlength = "21" placeholder = "输入规格" style = "width:220px;"></el-input>
+							</el-form-item>
 						</template>
-
 									<!--		称重菜		-->
 						<template v-if="good.type==1 && good.isCode==1">
-							<section  class="good-brand">
-								<label class="commodity-name fl">品牌</label>
-								<label class="commodity-type fl">
-									<a href="javascript:void(0);"  class="addclassify fl" v-on:click="openCommonWin('brand')">选择品牌</a>
-									<span class="sign" v-if="selectBrandObj.name" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
-								</label>
-							</section>
-							<section  class="good-code">
-								<label class="commodity-name required fl" style="width:90px;">类别(识别码)</label>
-								<div class="weight">
-									<div class="sList fl">
-										<div class="tableListInp" @click.stop="funShowList">
-										<span style="width: 180px;border:1px solid #ccc;" >{{identifyName}}</span>
-										<div class="fl" style="background-color: #fff;border:1px solid #ccc;border-left:none;">
-											<i></i>
-										</div>
-										</div>
-										<ul v-show="showBarList" class="tableListUl" style="max-height: 300px;overflow: auto;">
-											<li v-for="(oneList,i) in barList" :key="i" @click="funSelectList(oneList,i)">{{oneList.name}}</li>
-										</ul>
-									</div>
-								</div>
-							</section>
-							<section  class="good-invalidity">
-								<label class="commodity-name fl">保质期</label>
-								<label style="width:250px;">
-									<div class="weight" @click.stop>
-										<input type="text" placeholder="输入保质期" v-model="good.validity" maxlength="3" style="width: 120px;margin-left: 1px;float: left;"/>
-										<div class="sList fl" style="margin-left:10px;">
-											<div class="tableListInp" v-on:click="showValidity=!showValidity">
-												<span style="border:1px solid #ccc;" >{{good.validityType}}</span>
-												<div class="fl" style="background-color: #fff;border:1px solid #ccc;border-left:none;">
-													<i></i>
-												</div>
-											</div>
-												<ul class="tableListUl" v-if="showValidity" v-on:click="funGetGoodValidityType($event)">
-												<li v-for="(date,i) in validityTypeArr" :key="i">{{date.name}}</li>
-											</ul> 
-										</div>
-									</div>
-								</label>
-							</section>
-							<section  style="margin-top: 0;margin-bottom: 15px;float: left;width: 320px;">
-								<label class="commodity-name required fl" style="width:90px;">商品识别码</label>
-								<label>
-									<input type="text" placeholder="输入商品识别码" v-model="good.identifyCode"  maxlength="5" style="width:135px;" />
-									<a  href="javascript:void(0);" class="yellow" @click="setBarCode('identifyCode',null,null)" style="width: 80px;height:40px;line-height: 40px;">生成识别码</a>
-								</label>
+							<el-form-item label="品牌" style="width:350px;">
+								<el-button @click="openCommonWin('brand')" type="primary" style="width:100px;">选择品牌</el-button>
+								<span v-if="selectBrandObj.name"  class="sign" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
+							</el-form-item>
+							<el-form-item required label="类别(识别码)" style="width:310px;">
+								<el-select v-model="identifyName" style="width:200px" @change="funSelectList">
+									<el-option v-for="(item,i) in barList" :key="i" :value="i" :label="item.name">{{item.name}} </el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="保质期" style="width:350px;">
+								<el-input v-model="good.validity" maxlength = "3" placeholder = "输入保质期" style = "width:120px;"></el-input>
+								<el-select v-model="good.validityType" style="width:60px">
+									<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}} </el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item required label="商品识别码">
+								<el-input v-model="good.identifyCode" maxlength = "5" placeholder = "输入商品识别码" style = "width:213px;">
+									<el-button slot="append"  @click="setBarCode('identifyCode',null,null)" style="width:82px;padding:0;">生成识别码</el-button>
+								</el-input>
+							</el-form-item>
+						</template>
+					</el-form>
+				</section>
+
+				<section v-if="good.type!=2" style="width:100%;">
+					<el-form :model="good" ref="good" label-width="80px">
+						<el-form-item required label="分类">
+							<span class="sign"  v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
+							<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
+						</el-form-item>
+						<el-form-item v-if="good.id" label="来源">
+							<span v-if="good.id>100000">门店自建</span>
+							<span v-if="good.id>0&&good.id<100000">品牌同步</span>
+						</el-form-item>
+						<el-form-item v-show="good.isGroup=='0' && good.isCode!=1" label="口味">
+							<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(index)" class="sign" >{{att.name}}</span>
+							<el-button @click="openCommonWin('attr')" type="primary" style="width:100px;">添加口味</el-button>
+						</el-form-item>
+						<el-form-item v-show="good.type==0" label="多规格">
+							<el-switch v-model="good.isGroup" active-value="1" inactive-value="0" @change="toggleIsGroup" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<el-button v-if="good.isGroup==1" @click="addGroup(1)" type="primary" style="width:140px;">添加规格</el-button>
+						</el-form-item>
+						<template v-if="good.isGroup=='1' && good.type==0" v-for="(group,groupIndex) in groupData">
+							<section :key="groupIndex">
+								<el-form-item required  :label="'规格'+(groupIndex+1)">
+									<el-input v-model="group.goodsName" maxlength = "6" placeholder = "规格名称" style = "width:90px;"></el-input>
+									<span class="required" style="color:#606266">售价</span>
+									<el-input v-model="group.price" maxlength = "10" placeholder = "售价" style = "width:90px;"></el-input>
+									<span style="color:#606266">元</span>
+									<span style="color:#606266">成本</span>
+									<el-input v-model="group.cost" maxlength = "10" placeholder = "成本" style = "width:90px;"></el-input>
+									<span style="color:#606266">元</span>
+									<span class="required" style="color:#606266">单位</span>
+									<el-input v-model="group.unit" maxlength = "10" placeholder = "单位" style = "width:60px;"></el-input>
+									<el-button @click="deleteGroup(group,groupIndex)" size="mini" round type="primary" style="width:80px;">解除关联</el-button>
+								</el-form-item>
+								<el-form-item  v-if="good.isInvoicing==1" required label="条码">
+									<el-input v-model="group.barCode" maxlength = "13" placeholder = "输入条码" style = "width:200px;">
+										<el-button slot="append"  @click="setBarCode('groupBarCode',group,groupIndex)" style="width:70px;padding:0;">获取条码</el-button>
+									</el-input>
+									<span style="margin-left:10px;color:#606266">副条码</span>
+									<el-input v-model="group.secBarCode" maxlength = "13" placeholder = "输入副条码" style = "width:200px;">
+										<el-button slot="append"  @click="setBarCode('groupSecBarCode',group,groupIndex)" style="width:80px;padding:0;">获取副条码</el-button>
+									</el-input>
+								</el-form-item>
+								<el-form-item v-if="good.isInvoicing==1" label="保质期">
+									<el-input v-model="group.validity" maxlength = "3" placeholder = "输入保质期" style = "width:105px;"></el-input>
+									<el-select v-model="group.validityType" style="width:60px">
+										<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}}</el-option>
+									</el-select>
+									<span v-if="good.isVip =='1'" class="required">会员价格</span>
+									<el-input v-if="good.isVip =='1'" v-model="group.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
+								</el-form-item>
+								<el-form-item  v-if="good.isVip =='1' && good.isInvoicing==0" required label="会员价格" style="width:300px;">
+									<el-input v-model="group.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
+								</el-form-item>
+								<el-form-item v-if="!group.id" label="">
+									<el-button @click="openMultipleAddRelativeGoodWin(group,groupIndex)" type="primary" style="width:140px;">添加关联商品</el-button>
+									<span v-if="group.relativeGood.goodsName" style="width:120px;padding:0 10px;">已关联商品：</span>
+									<span v-if="group.relativeGood.goodsName" @click="deleteRelativeGood(group,groupIndex)" class="sign" style="padding:0 10px;">{{group.relativeGood.goodsName}}</span>
+								</el-form-item>
+								<el-form-item  label="">
+									<el-button @click="openMultipleAttrWin(group,groupIndex)" type="primary" style="width:140px;">添加口味</el-button>
+									<span  v-for="(att,attIndex) in group.attr" :key="attIndex" v-on:click="deleteSelectAttrMul(group.attr,attIndex,att)" class="sign" >{{att.name}}</span>
+								</el-form-item>
 							</section>
 						</template>
-					
-					</section>
-
-					<section>
-						<label class="commodity-name required fl">分类</label>
-						<label class="commodity-type fl"  style="width: 600px;">
-							<span class="sign"  v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
-							<a href="javascript:void(0);"  v-on:click="openCommonWin('category')" class="addclassify fl" >添加分类</a>
-						</label>
-					</section>
-	
-					<section v-if="ischain == 1 || ischain == 2">
-					<label v-if="good.id" class="commodity-name fl">来源</label>
-					<label v-if="good.id" id="cids" style="width: 600px;">
-						<span v-if="good.id>100000">门店自建</span>
-						<span v-if="good.id>1&&good.id<100000">品牌同步</span>
-					</label>
-					</section>
-
-					<section v-if="good.isGroup!=1 && good.isCode!=1">
-						<label class="commodity-name  fl">口味</label>
-						<label class="commodity-type fl" id="attrs" style="width: 600px;">
-							<template >
-								<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(index)" class="sign" >{{att.name}}</span>
-							</template>
-						<a href="javascript:void(0);" class="addclassify fl" v-on:click="openCommonWin('attr')">添加口味</a>
-						</label>
-					</section>
-
-					<!--		多规格开关		-->
-					<section v-if="good.type==0">
-						<label class="commodity-name  fl">多规格</label>
-						<span class="on check-span fl" style="display:inline-block">
-							<on-off @statusChange="toggleIsGroup" :status="good.isGroup==1"></on-off>
-						</span>
-						<a v-show="good.isGroup==1"  href="javascript:void(0);" v-on:click="addGroup(1)"  class="addclassify fl" style="margin-left: 20px;display:inline-block;" >添加规格</a>
-					</section>
-
-					<!--		添加多规格		-->
-					<section  v-if="good.isGroup==1 && good.type==0">
-					<div v-for="(group,groupIndex) in groupData" :key="groupIndex">
-						<div class="good-group" >
-							<label v-if="groupIndex==0" class="commodity-name required fl">规格
-								一
-							</label>
-							<label v-if="groupIndex==1" class="commodity-name required fl">规格
-								二
-							</label>
-							<label v-if="groupIndex==2" class="commodity-name required fl">规格
-								三
-							</label>
-							<input type="text" v-model="group.goodsName" placeholder="规格名称"  style="width:76px;" maxlength="6"/>
-							<label class="commodity-name required fl" style="width:60px;">售价</label>
-							<label >
-								<input type="text" placeholder="售价" v-model="group.price"  style="width: 40px" maxlength="10"  />
-								<div class="price">元</div>
-							</label>
-							<label class="commodity-name fl" style="width:60px;">成本</label>
-							<label >
-								<input type="text" placeholder="成本" v-model="group.cost"  style="width: 40px" maxlength="10"  />
-								<div class="cost">元</div>
-							</label>
-							<label class="commodity-name required fl" style="width:80px;">单位</label>
-							<label>
-								<input type="text" placeholder="单位"  v-model="group.unit"  style="width: 40px" maxlength="10"  />
-							</label>
-							<div v-if="false" class="delete-div" >
-								<img  src="../../../res/icon/delete.png"/>
-							</div>
-							<div  class="relative-div" v-on:click = "deleteGroup(group,groupIndex)">
-								<div class="blue release-relative">解除关联</div>
-							</div>
-						</div>
-
-						<section v-if="good.isInvoicing==1"  class="good-group-invoicing" style="width:475px;">
-							<label class="commodity-name required fl">条码</label>
-							<label style="margin-right:15px;float:left;">
-								<input type="text" placeholder="输入条码" v-model="group.barCode"  maxlength="13" style="width:80px;" />
-								<a  href="javascript:void(0);" class="yellow getBarCode" v-on:click="setBarCode('groupBarCode',group,groupIndex)" >获取条码</a>
-							</label>
-							<label class="fl" style="margin-right:15px">副条码</label>
-							<label>
-								<input type="text" placeholder="输入副条码" v-model="group.secBarCode"  maxlength="13" style="width:80px;" />
-								<a  href="javascript:void(0);" class="yellow getBarCode" v-on:click="setBarCode('groupSecBarCode',group,groupIndex,true)" >获取副条码</a>
-							</label>
-						</section>
-
-						<section  v-if="good.isInvoicing==1"  class="good-group-validity">
-							<label class="commodity-name fl" style="width: 60px;">保质期</label>
-							<label style="width:250px;">
-								<div class="weight" @click.stop>
-									<input type="text" v-model="group.validity" style="width:40px;"  maxlength="3" class="input"/>
-									<div  class="sList fl" style="margin-left:10px;" >
-										<div  class="tableListInp"  v-on:click="toggleGroupShowValidityTyep(group,groupIndex,$event)">
-											<span style="width: 30px;border:1px solid #ccc;" >{{group.validityType}}</span>
-											<div class="fl" style="background-color: #fff;width: 15px;border:1px solid #ccc;border-left:none;">
-												<i></i>
-											</div>
-										</div>
-										<ul v-show="group.showValidity"  v-on:click="funSelectValidityType($event,group,groupIndex)" class="tableListUl">
-											<li v-for="(date,valIndex) in validityTypeArr" :key="valIndex">{{date.name}}</li>
-										</ul>
-									</div>
-								</div>
-							</label>
-						</section>
-
-						<div  class="good-group-vipPrice" v-if="good.isVip==1">
-							<label class="commodity-name required fl" style="width:80px;">会员价格</label>
-							<label >
-								<input type="text" placeholder="会员价格"  v-model="group.vipPrice"   style="width: 70px" maxlength="10"  />
-								<div class="vip-div">元</div>
-							</label>
-						</div>
-
-
-						<div class="good-add-relative">
-							<label v-if="!group.id" class="commodity-type fl" style="width: 600px;margin-bottom: 10px;">
-								<a href="javascript:void(0);" class="addclassify fl" v-on:click="openMultipleAddRelativeGoodWin(group,groupIndex)">添加关联商品</a>
-								<h3 v-show="!!group.relativeGood.goodsName" class="relative-good">已关联商品：</h3>
-								<span v-show="!!group.relativeGood.goodsName" class="sign" @click="deleteRelativeGood(group,groupIndex)" >{{group.relativeGood.goodsName}}</span>
-							</label>
-
-							<label class="commodity-type fl" style="width: 600px;" >
-								口味
-								<a href="javascript:void(0);" v-on:click="openMultipleAttrWin(group,groupIndex)" class="addclassify fl" >添加口味</a>
-								<span  v-for="(att,attIndex) in group.attr" :key="attIndex" class="sign" @click="deleteSelectAttrMul(group.attr,attIndex,att)">{{att.name}}</span>
-							</label>
-						</div>
 						
-					</div>
-					</section>
-
-
-
-					<!--关联信息-->
-					<section class="titleTop" style="width:100%;height:40px;">
-						<div class="relative-info">
-							<i></i>
-							<h3>关联信息</h3>
-							<div class="dian"></div>
-						</div>
-						</section>
-
-						<section>
-							<section class="fl" style="width: 33%;">
-								<label class="commodity-name  fl">参与优惠</label>
-								<on-off :status="good.isDiscount==1" @statusChange="(res)=>{switchFn(res,'isDiscount')}"></on-off>
-							</section>
-							<section class="fl" style="width: 33%;">
-								<label class="commodity-name  fl">服务费</label>
-							<on-off :status="good.serviceCharge==1" @statusChange="(res)=>{switchFn(res,'serviceCharge')}"></on-off>
-							</section>
-							<section class="fl" style="width: 33%;">
-								<label class="commodity-name  fl">推荐菜</label>
-								<on-off :status="good.isRecommend==1" @statusChange="(res)=>{switchFn(res,'isRecommend')}"></on-off>
-							</section>
-						</section>
-
-						<section>
-							<section class="fl" style="width: 33%;" >
-								<label class="commodity-name  fl">开启进销存</label>
-								<on-off :status="good.isInvoicing==1" @statusChange="toggleIsInvoicing"></on-off>
-							</section>
-							<section  class="fl" style="width: 33%;" v-if="good.type==0">
-								<label class="commodity-name  fl">自取</label>
-								<on-off :status="good.isSelf==1" @statusChange="(res)=>{switchFn(res,'isSelf')}"></on-off>
-							</section>
-							<section  class="fl" style="width: 33%;" v-if="good.type==1">
-								<label class="commodity-name  fl">识别码</label>
-								<on-off :status="good.isCode==1" @statusChange="toggleIsCode"></on-off>
-							</section>
-							<section v-if="ischain !='3'" class="fl" style="width: 33%;">
-								<label class="commodity-name  fl">开启库存</label>
-								<on-off :status="good.isStock==1"  @statusChange="toggleIsStock"></on-off>
-							</section>
-						</section>
-
-						<section class="fl" style="width: 33%;">
-							<label class="commodity-name  fl">时价菜</label>
-							<on-off :status="good.isSeasonal==1"  @statusChange="(res)=>{switchFn(res,'isSeasonal')}"></on-off>
-						</section>
-						<section class="fl" style="width: auto;">
-							<label class="commodity-name  fl">参与会员</label>
-							<span class="on check-span" style="display:inline-block">
-								<on-off :status="good.isVip!=0"  @statusChange="(res)=>{switchFn(res,'isVip')}"></on-off>
-							</span>
-						</section>
-
-						<section v-if="good.isVip!=0" class="fl relative-vip" >
-							<section  style="width: 50%;margin: 0;">
-								<span  @click="good.isVip=1" :class="{'fl':true,'sign':good.isVip==1 ,'vip':true}">会员价格</span>
-								<span  @click="good.isVip=2" :class="{'fl':true,'sign':good.isVip==2,'vip':true}">会员折扣</span>
-							</section>
-							<section  class="vipPrice" style="width: 50%;float: right;margin: 0;" v-show="good.isVip==1 && good.isGroup!=1">
-								<label class="commodity-name  fl">会员价格</label>
-								<input type="text" placeholder="输入会员价格" v-model="good.vipPrice" style="width: 120px;"/>
-							</section>
-							</section>
-						<section>
-
-						<section>
-							<label class="commodity-name fl">描述</label>
-							<textarea class="describe fl" v-model="good.description"  placeholder="请输入描述" maxlength="100"></textarea>
-						</section>   
-					
-					</section>
+					</el-form>
 				</section>
+				<section v-if="good.type!=2" class="titleTop" style="width:100%;">
+					<div class="relative-info">
+						<i></i>
+						<h3>关联信息</h3>
+						<div class="dian"></div>
+					</div>
+					<el-form :model="good" ref="good" :inline="true" label-width="100px">
+						<el-form-item label="参与优惠" style="width:200px;">
+							<el-switch v-model="good.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="服务费" style="width:200px;">
+							<el-switch v-model="good.serviceCharge" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="推荐菜" style="width:200px;">
+							<el-switch v-model="good.isRecommend" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="开启进销存" style="width:200px;">
+							<el-switch v-model="good.isInvoicing" active-value="1" inactive-value="0" @change="toggleIsInvoicing" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="自取" v-if="good.type==0" style="width:200px;">
+							<el-switch v-model="good.isSelf" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="识别码" v-if="good.type==1" style="width:200px;">
+							<el-switch v-model="good.isCode" active-value="1" inactive-value="0" @change="toggleIsCode" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item v-if="ischain !='3'" label="开启库存" style="width:200px;">
+							<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="参与会员 ">
+							<el-switch v-model="isVipShow"  @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<template v-if="isVipShow">
+								<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border style="margin-left:10px;">会员价格</el-radio>
+    							<el-radio @click="getVipRadio('2')" v-model="good.isVip" label="2" border>会员折扣</el-radio>
+							</template>
+							<template v-if="good.isVip == '1' && good.isGroup==0">
+								<span style="color:#606266;margin:0 20px;">会员价格</span>
+								<el-input v-model="good.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
+							</template>
+						</el-form-item>
+						<el-form-item label="时价菜" style="width:200px;">
+							<el-switch v-model="good.isSeasonal" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="描述" prop="description" >
+							<el-input type="textarea"  placeholder="请输入描述" maxlength="100" :autosize="{minRows: 3, maxRows: 6}" v-model="good.description" style="width:500px;"></el-input>
+						</el-form-item>
+					</el-form>
+				</section>
+			</section>
+			<section v-if="good.type==2">
+				<el-form :model="good" ref="good" :inline="true" label-width="100px">
+					<el-form-item required label="分类">
+						<span class="sign"  v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
+						<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
+					</el-form-item>
+				</el-form>
 			</section>
 		</div>
 	</win>
@@ -515,18 +358,18 @@ export default {
 				secBarCode:'',			  //第二个条码
 				description: '',          //描述
 				validity: '',             //保质期时间
-				validityType: '月',        //保质期的类型 0:月 1:日 2:年
+				validityType: 0,        //保质期的类型 0:月 1:日 2:年
 				isGroup: 0,               //是否是多规格
-				isDiscount: 0,            //是否开启折扣
-				serviceCharge: 0,         //是否开启服务费
-				isRecommend: 0,           //是否开启推荐菜
-				isInvoicing: 0,           //是否开启进销存
-				isSelf: 0,                //是否开启自取
-				isStock: 0,               //是否开启库存
-				isSeasonal: 0,            //是否开启时价菜
-				isVip: 0,                 //是否开启会员		0:未开启 1:开启会员价格 2:开启折扣
+				isDiscount: false,            //是否开启折扣
+				serviceCharge: false,         //是否开启服务费
+				isRecommend: false,           //是否开启推荐菜
+				isInvoicing: false,           //是否开启进销存
+				isSelf: false,                //是否开启自取
+				isStock: false,               //是否开启库存
+				isSeasonal: false,            //是否开启时价菜
+				isVip: false,                 //是否开启会员		0:未开启 1:开启会员价格 2:开启折扣
 				isBom:0,				  //是否关联bom单
-				isCode: 0,                //是否开启识别码	(称重商品)
+				isCode: false,                //是否开启识别码	(称重商品)
 				imageName: '',            //图片的名字
 				specifications: '',       //输入的规格
 				vipPrice: '',             //会员价格
@@ -570,6 +413,7 @@ export default {
 				GoodWeighgoodsGetList:'GoodWeighgoodsGetList',						//获取识别码
 				goodUpOrDownShelf:'goodUpOrDownShelf',	//商品的上下架
 			},
+			isVipShow:false,//是否VIP
 		};
 	},
 	props: {
@@ -588,10 +432,22 @@ export default {
 		*/
 	},
 	methods: {
+		// 切换开通会员后，折扣和会员价格
+		getVipRadio(res) {
+			this.good.isVip = res;
+		},
+		//会员开通关闭
+		openVipRadio(res){
+			this.isVipShow = res;
+			if(this.isVipShow){
+				this.good.isVip = '1';
+			}else{
+				this.good.isVip = '0';
+			}
+		},
 		//切换商品的类型
 		toggleGoodType(id) {
 			if(this.editGoodsId) return;
-
 			this.good.isInvoicing=0;
 			this.good.isStock=0;
 			this.good.isCode=0;
@@ -601,11 +457,11 @@ export default {
 			switch ('' + this.good.type) {
 				case '0':
 					this.good.unit = '';
-					this.good.validityType = '月';
+					// this.good.validityType = '月';
 					break;
 				case '1':
 					this.good.unit = '斤';
-					this.good.validityType = '月';
+					// this.good.validityType = '月';
 					break;
 				case '2':
 					this.selectCategory = [];
@@ -689,31 +545,32 @@ export default {
 			this.selectCategory.splice(index, 1);
 		},
 		//保质期的的选择 (普通菜与称重菜)
-		funGetGoodValidityType(event) {
-			this.good.validityType = event.target.innerHTML;
-			this.showValidity = false;
-		},
+		// funGetGoodValidityType(e) {
+		// 	console.log(e);
+		// 	this.good.validityType = e;
+		// },
 		//保质期下拉框的显示(多规格)
-		toggleGroupShowValidityTyep(group,index){
-			this.groupData.forEach((ele,eleIndex)=>{
-				if(index==eleIndex){
-					group.showValidity=!group.showValidity;
-				}else{
-					ele.showValidity=false;
-				}
-			});
-			this.groupData.splice(index,1,group);
-		},
+		// toggleGroupShowValidityTyep(group,index){
+		// 	this.groupData.forEach((ele,eleIndex)=>{
+		// 		if(index==eleIndex){
+		// 			group.showValidity=!group.showValidity;
+		// 		}else{
+		// 			ele.showValidity=false;
+		// 		}
+		// 	});
+		// 	this.groupData.splice(index,1,group);
+		// },
 		//保质期的选择(多规格)
-		funSelectValidityType(event, group,index) {
-			let res = event.target.innerHTML;
-			group.validityType = res;
-			group.showValidity = false;
-			this.groupData.splice(index,1,group);
-		},
+		// funSelectValidityType(event, group,index) {
+		// 	let res = event.target.innerHTML;
+		// 	group.validityType = res;
+		// 	group.showValidity = false;
+		// 	this.groupData.splice(index,1,group);
+		// },
 		//添加规格
 		addGroup(len=1) {
 			for(let i=0;i<len;i++){
+				console.log(this.groupData);
 				if (this.groupData.length < 3) {
 					let obj = {
 						showValidity:false,   	//是否显示保质期下拉框
@@ -721,7 +578,7 @@ export default {
 						attr:[],                //口味
 					};
 					this.assignObj(obj);
-					obj.validityType='月';      //保质期类别,月日年  
+					obj.validityType=0;      //保质期类别,月日年  
 					this.groupData.push(obj);
 				} else {
 					this.alertWin('商品规格不能超过三个!');
@@ -762,35 +619,35 @@ export default {
 
 		//--------		称重菜		-----------
 		//单位下拉框的显示
-		funToggleUnit() {
-			if(this.good.type==1 && this.good.isCode==1){
-				this.showUnit=false;
-				this.alertWin('请先选择类别识别码!');
-			}else{
-				this.showUnit = !this.showUnit;
-			}
-		},
+		// funToggleUnit() {
+		// 	if(this.good.type==1 && this.good.isCode==1){
+		// 		this.showUnit=false;
+		// 		this.alertWin('请先选择类别识别码!');
+		// 	}else{
+		// 		this.showUnit = !this.showUnit;
+		// 	}
+		// },
 		//获取单位(称重)
-		funGetUnit(event) {
-			if (this.editGoodsId && this.good.isCode==1)  return ;
-			this.good.unit = event.target.innerHTML;
-			this.showUnit = false;
-		},
+		// funGetUnit(event) {
+		// 	if (this.editGoodsId && this.good.isCode==1)  return ;
+		// 	this.good.unit = event.target.innerHTML;
+		// 	this.showUnit = false;
+		// },
 		//称重商品识别码下拉框的展示
-		funShowList() {
-			this.barList || (this.barList = []);
-			if (this.barList.length == 0) {
-				this.showBarList = false;
-				this.alertWin('类别识别码列表为空，请在进销存管理中称重商品配置中添加');
-				return;
-			}
-			this.showBarList = !this.showBarList;
-		},
+		// funShowList() {
+		// 	this.barList || (this.barList = []);
+		// 	if (this.barList.length == 0) {
+		// 		this.showBarList = false;
+		// 		this.alertWin('类别识别码列表为空，请在进销存管理中称重商品配置中添加');
+		// 		return;
+		// 	}
+		// 	this.showBarList = !this.showBarList;
+		// },
 		//选择称重商品的识别码
 		funSelectList(oneList) {
-			this.identifyName = oneList.name;
-			this.good.unit = oneList.weightCompany;
-			this.good.code = oneList.code;
+			this.identifyName = this.barList[oneList].name;
+			this.good.unit = this.barList[oneList].weightCompany;
+			this.good.code = this.barList[oneList].code;
 			this.showBarList = false;
 		},
 		//称重商品识别码的生成
@@ -1038,17 +895,19 @@ export default {
 		//格式化数据
 		formatData() {
 			let obj = {}; 					//需要提交的所有数据
-			let submitValidityType; 			//需要提交的保质期类型id,
+			// let submitValidityType; 			//需要提交的保质期类型id,
 			let cids = []; 				//分类id  最终提交的为字符串
 			let attrId = []; 				//口味的id 最终提交的为字符串
 			let groupData = []; 			//多规格数据
 
 			//保质期的类型
-			this.validityTypeArr.some(ele => {
-				if (ele.name == this.good.validityType) {
-					submitValidityType = ele.id;return true;
-				}
-			});
+			console.log(this.good.validityType);
+			// this.validityTypeArr.some(ele => {
+			// 	if (ele.id == this.good.validityType) {
+			// 		submitValidityType = ele.id;return true;
+			// 	}
+			// });
+			console.log(this.good.validityType);
 
 			//分类的id
 			for(let ele of this.selectCategory){
@@ -1069,6 +928,7 @@ export default {
 			}
 
 			//多规格
+						// console.log(this.groupData);
 			if (this.good.type == 0 && this.good.isGroup == 1) {
 				this.groupData.forEach(ele => {
 					let group = {
@@ -1105,12 +965,15 @@ export default {
 						group.barCode = ele.barCode;
 						group.secBarCode = ele.secBarCode;
 						group.validity = parseInt(ele.validity);
-						this.validityTypeArr.some((val) => {
-							if (val.name == ele.validityType) {
-								group.validityType = val.id;
-								return true;
-							}
-						});
+						group.validityType = ele.validityType*1;
+						// console.log(group.validityType);
+						// console.log(ele.validityType);
+						// this.validityTypeArr.some((val) => {
+						// 	if (val.id == ele.validityType) {
+						// 		group.validityType = val.id;
+						// 		return true;
+						// 	}
+						// });
 					}
 					groupData.push(group);
 				});
@@ -1137,7 +1000,7 @@ export default {
 				obj[key]=this.good[key];
 			}
 			obj.cids = cids.join(',');
-			obj.validityType = submitValidityType;
+			obj.validityType = this.good.validityType;
 			obj.attrs = attrId.join(',');
 
 			if (this.good.type == 0 && this.good.isGroup == 1) {
@@ -1400,52 +1263,54 @@ export default {
 
 		//----------		开关		---------
 		//多个开关的切换
-		switchFn(res,flag) {
-			switch(flag){
-				case 'sort':				//获取排序值
-					this.good[flag] = parseInt(res);
-					break;				
-				case 'isDiscount':			//是否优惠
-				case 'isRecommend':
-				case 'serviceCharge':
-				case 'isSelf':
-				case 'isSeasonal':
-				case 'isVip':
-					this.good[flag] = res ? 1 : 0;
-					break;
-			}
-		},
+		// switchFn(res,flag) {
+		// 	switch(flag){
+		// 		case 'sort':				//获取排序值
+		// 			this.good[flag] = parseInt(res);
+		// 			break;				
+		// 		case 'isDiscount':			//是否优惠
+		// 		case 'isRecommend':
+		// 		case 'serviceCharge':
+		// 		case 'isSelf':
+		// 		case 'isSeasonal':
+		// 		case 'isVip':
+		// 			this.good[flag] = res ? 1 : 0;
+		// 			break;
+		// 	}
+		// },
 		//是否是多规格
 		toggleIsGroup(res) {
-			if (!res && this.editGoodsId && this.good.isInvoicing == 1 && this.good.isGroup==1) {
+			console.log(res);
+			if (res == 0 && this.editGoodsId && this.good.isInvoicing == 1 && this.good.isGroup == 1) {
 				this.alertWin('商品已参与进销存核销,多规格不能取消!');
 				this.good.isGroup=1;
 				return;
 			}
-			if (res && this.editGoodsId && this.good.isInvoicing == 1) {
+			if (res==1 && this.editGoodsId && this.good.isInvoicing == 1) {
 				this.$set(this.good,'isGroup',0);
 				this.alertWin('商品已参与进销存核销,不能开启多规格!');
 				return;
 			}
-			this.good.isGroup = res ? 1 : 0;
+			this.good.isGroup = res;
 			if(this.good.isGroup==1 && this.groupData.length<2){
 				this.addGroup(2);
 			}
 		},
 		//开启进销存
 		toggleIsInvoicing(res) {
-			if (res && this.good.isStock == 1) {
+			console.log(res);
+			if (res==1 && this.good.isStock == 1) {
 				this.alertWin('进销存和库存只能开启一个!');
 				return;
 			}
 
 			//校验BOM单
-			if(this.good.type==0 && this.editGoodsId && this.good.isBom==1 && res){
+			if(this.good.type==0 && this.editGoodsId && this.good.isBom==1 && res==1){
 				this.alertWin('该商品已经关联BOM单,不能开启进销存!');
 				return;
 			}
 			//子菜关联了BOM单,不能开启进销存.
-			if(this.good.type==0 && this.good.isGroup==1 && res){
+			if(this.good.type==0 && this.good.isGroup== 1 && res ==1){
 				let [goodsName,tipsWord]=['',''];
 				let bomFlag=this.groupData.some((group)=>{
 					if(group.relativeGood.isBom==1){
@@ -1459,10 +1324,10 @@ export default {
 				}
 			}
 
-			this.good.isInvoicing = res ? 1 : 0;
+			this.good.isInvoicing = res;
 
 			//请求识别码
-			if(this.good.type==1 && this.good.isCode==0 && this.good.isInvoicing==1){
+			if(this.good.type==1 && this.good.isCod==0 && this.good.isInvoicing == 1){
 				this.good.isCode=1;
 				if(this.good.type==1 && this.good.isCode==1 && this.barList.length==0){
 					this.getHttp(this.mapHttp.GoodWeighgoodsGetList,{data:{shopId:this.shopId,brandId:this.brandId}}).then((barList)=>{
@@ -1477,11 +1342,11 @@ export default {
 				this.alertWin('进销存和库存只能开启一个!');
 				return;
 			}
-			this.good.isStock = res ? 1 : 0;
+			this.good.isStock = res;
 		},
 		//识别码
 		async toggleIsCode(res) {
-			this.good.isCode = res ? 1 : 0;
+			this.good.isCode = res;
 			//同步关闭识别码与进销存
 			if (this.good.type == 1 && this.good.isCode == 0 && this.good.isInvoicing == 1) {
 				this.good.isInvoicing = 0;
@@ -1530,21 +1395,23 @@ export default {
 		},
 		//初始化商品
 		async initGoods(res) {
-
+			if(this.good.isVip*1>0){
+				this.isVipShow = true;
+			}
 			//为good添加字段
 			this.$set(this.good,'code','');				//称重商品的类别识别码
 			this.$set(this.good,'identifyCode','');		//称重商品的商品识别码
 			if(!this.good.secBarCode) this.$set(this.good,'secBarCode','');
-
+			this.good.validityType = +this.good.validityType;//将年月日的id转化为数字
 			//将保质期类型(数字)映射为文字
-			if (res.type == 0 || res.type == 1) {
-				for(let ele of this.validityTypeArr){
-					if(ele.id == res.validityType){
-						this.good.validityType = ele.name;
-						break;					
-					} 
-				}
-			}
+			// if (res.type == 0 || res.type == 1) {
+			// 	for(let ele of this.validityTypeArr){
+			// 		if(ele.id == res.validityType){
+			// 			this.good.validityType = ele.name;
+			// 			break;					
+			// 		} 
+			// 	}
+			// }
 
 			//初始化称重商品识别码code(类别识别码),identifyCode(商品识别码),identifyName(类名识别码的文字名称)
 			if(this.good.type == 1 && this.good.isCode==1) {
@@ -1569,8 +1436,8 @@ export default {
 					if(!group.barCode) group.barCode='';
 					if(!group.secBarCode) group.secBarCode='';
 					if(!group.validity) group.validity='';
-					if(!group.validityType) group.validityType='0';
-
+					if(!group.validityType) group.validityType=0;
+					group.validityType = +group.validityType;
 					this.goodsList.some((ele)=>{
 						if(group.id==ele.id){
 							group.relativeGood={
@@ -1583,13 +1450,13 @@ export default {
 						}
 					});	
 
-					let flag=this.validityTypeArr.some((ele) => {
-						if(ele.id == group.validityType){
-							group.validityType = ele.name;
-							return true;
-						}
-					});
-					if(!flag) group.validityType='月';
+					// let flag=this.validityTypeArr.some((ele) => {
+					// 	if(ele.id == group.validityType){
+					// 		group.validityType = ele.id;
+					// 		return true;
+					// 	}
+					// });
+					// if(!flag) group.validityType='1';
 				}
 			}
 
@@ -1665,8 +1532,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName:'win'*/ 'src/components/win'),
-		subAdd: () => import(/*webpackChunkName:'subadd'*/ 'src/components/subadd'),
-		onOff: () => import(/*webpackChunkName:'on_off'*/ 'src/components/on_off'),
+		// subAdd: () => import(/*webpackChunkName:'subadd'*/ 'src/components/subadd'),
+		// onOff: () => import(/*webpackChunkName:'on_off'*/ 'src/components/on_off'),
 		addAttr: () => import(/*webpackChunkName:'add_attr_win'*/ '../goods_manager_coms/add_attr_win'),
 		addCategory: () => import(/*webpackChunkName:'add_category_win'*/ '../goods_manager_coms/add_category_win'),
 		addRelative: () => import(/*webpackChunkName:'good_package_win'*/ '../common/good_package_win')
@@ -1676,9 +1543,19 @@ export default {
 <style lang="less" scoped>
 
 	.win-content {
-		width: 700px;
-		height: 100%;
-		background-color: #f2f2f2;
+		.sign{
+			font-size: 14px;
+			display: inline-block;
+			width: auto;
+			height: 40px;
+			margin-bottom: 2px;
+			margin-left: 2px;
+			padding: 0 20px;
+			cursor: pointer;
+			text-align: center;
+			border-right: 1px solid #f1f1f1;
+			background-color: #f2f2f2;
+		}
 	}
 	.good-baseInfo {
 		width: 100%;
@@ -1707,39 +1584,6 @@ export default {
 			border-bottom: 1px dashed #ccc;
 		}
 	}
-	.good-type {
-		position: relative;
-		display: inline-block;
-		width: 440px;
-	}
-	.good-sort {
-		display: inline-block;
-		width: auto;
-		label {
-			width: auto;
-			padding-right: 5px;
-		}
-	}
-	.good-price {
-		background-color: #fff;
-		width: 30px;
-		text-align: center;
-		float: left;
-		margin-right: 1px;
-	}
-	.good-cost {
-		background-color: #fff;
-		width: 30px;
-		text-align: center;
-		float: left;
-	}
-	.good-isInvoicing {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		z-index: 10;
-	}
 	.good-image {
 		float: left;
 		width: 225px;
@@ -1752,7 +1596,8 @@ export default {
 			no-repeat #ddd;
 		}
 		.good-image-delete {
-			background: url(../../../res/images/a50.png) repeat;
+			background-color: rgba(27, 21, 21,.6);
+			// background: url(../../../res/images/a50.png) repeat;
 			height: 40px;
 			line-height: 40px;
 			position: absolute;
@@ -1764,6 +1609,7 @@ export default {
 			font-size: 16px;
 		}
 		.good-image-edit {
+			background-color: #E1BB4A;
 			height: 40px;
 			line-height: 40px;
 			position: absolute;
@@ -1783,130 +1629,17 @@ export default {
 			opacity: 0;
 			cursor: pointer;
 		}
-		.good-barCode {
-			margin-top: 0;
-			margin-bottom: 15px;
-			float: left;
-			width: 320px;
-		}
-		.good-getBarCode {
-			width: 80px;
-			height: 40px;
-			line-height: 40px;
-		}
-	}
-	.good-code {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 315px;
-	}
-	.good-invalidity {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 350px;
-		.good-invalidity-input {
-			width: 120px;
-			margin-left: 1px;
-			float: left;
-		}
-	}
-	.good-speci {
-		margin-top: 0;
-		margin-bottom: 15px;
-		width: 320px;
-	}
-	.good-brand {
-		margin-top: 0;
-		margin-bottom: 15px;
-		width: 350px;
-	}
-	.good-group {
-		width: 100%;
-		width: 100%;
-		overflow: hidden;
-		margin-bottom: 10px;
-		.price {
-			background-color: #fff;
-			width: 30px;
-			text-align: center;
-			float: left;
-		}
-		.cost {
-			background-color: #fff;
-			width: 30px;
-			text-align: center;
-			float: left;
-		}
-		.delete-div {
-			width: 25px;
-			height: 25px;
-			display: inline-block;
-			margin: 6px 15px;
-			cursor: pointer;
-		}
-		.release-relative {
-			width: 70px;
-			height: 30px;
-			line-height: 30px;
-			text-align: center;
-			color: #fff;
-			border-radius: 6px;
-		}
-		.relative-div {
-			width: 25px;
-			height: 25px;
-			float: left;
-			margin: 6px 15px;
-		}
-	}
-	.good-group-invoicing {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 280px;
-		.getBarCode {
-			width: 80px;
-			height: 40px;
-			line-height: 40px;
-		}
-	}
-	.good-group-validity {
-		margin-top: 0;
-		margin-bottom: 15px;
-		float: left;
-		width: 170px;
-		.input {
-			width: 30px;
-			margin-left: 1px;
-			float: left;
-		}
-	}
-	.good-group-vipPrice {
-		width: 180px;
-		margin: 10px 0;
-		overflow: hidden;
-		.vip-div {
-			background-color: #fff;
-			width: 30px;
-			text-align: center;
-			float: left;
-		}
-	}
-	.good-add-relative {
-		width: 100%;
-		padding-left: 80px;
-		margin-top: 10px;
-		margin-bottom: 5px;
-		overflow: hidden;
-		.relative-good {
-			float: left;
-			line-height: 40px;
-			font-size: 16px;
-			width: 120px;
-			text-align: center;
-		}
+		// .good-barCode {
+		// 	margin-top: 0;
+		// 	margin-bottom: 15px;
+		// 	float: left;
+		// 	width: 320px;
+		// }
+		// .good-getBarCode {
+		// 	width: 80px;
+		// 	height: 40px;
+		// 	line-height: 40px;
+		// }
 	}
 	.relative-info {
 		width: 100%;
@@ -1934,87 +1667,6 @@ export default {
 			float: left;
 			border-bottom: 1px dashed #ccc;
 		}
-	}
-	.relative-vip {
-		width: 100%;
-		text-align: center;
-		padding-left: 80px;
-		.vip {
-			width: 90px;
-			height: 40px;
-			line-height: 40px;
-			background-color: #fff;
-			margin-right: 1px;
-			cursor: pointer;
-		}
-	}
-	.sList {
-		display: inline-block;
-		position: relative;
-		height: 40px;
-		line-height: 40px;
-		ul {
-			width: 100%;
-			margin: 0;
-			position: absolute;
-			top: 40px;
-			left: 0;
-			z-index: 10;
-			background: #fff;
-			li {
-				text-align: center;
-				height: 41px;
-				border: 1px #b3b3b3 solid;
-				border-top: 0;
-				background: #fff;
-				cursor: pointer;
-			}
-		}
-		input {
-			text-align: center;
-			display: block;
-			float: left;
-			height: 41px;
-			width: 158px;
-			outline: none;
-			border: 0;
-			border-right: 1px #b3b3b3 solid;
-		}
-	}
-	.weight .tableListInp {
-		span {
-			height: 38px;
-			width: 60px;
-			display: block;
-			float: left;
-			text-align: center;
-			border-right: 1px #b3b3b3 solid;
-			color: #636162;
-		}
-		div {
-			width: 40px;
-			height: 38px;
-			position: relative;
-			z-index: 5;
-			i {
-				height: 10px;
-				width: 10px;
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				margin-top: -5px;
-				margin-left: -5px;
-				border-top: 10px solid #b3b3b3;
-				border-left: 5px solid transparent;
-				border-right: 5px solid transparent;
-				box-sizing: border-box;
-			}
-		}
-	}
-	.signa {
-		background: #fff3e5 !important;
-		border: 1px solid #f8931f !important;
-		color: #f9911e !important;
 	}
 
 </style>

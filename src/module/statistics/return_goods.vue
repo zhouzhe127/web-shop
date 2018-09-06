@@ -288,11 +288,12 @@ export default {
 					trueShopId: this.shopId
 				}
 			});
-			let reasonArr = await http.getReasonList({
-				data: {
-					shopId:this.shopId
-				}
-			});
+			let reasonArr = data.reasonList;//后台因为权限的问题在上个接口里传值了
+			// let reasonArr = await http.getReasonList({
+			// 	data: {
+			// 		shopId:this.shopId
+			// 	}
+			// });
 			let areaArr = [];
 			let tableArr = [];
 			for (let item of data.areaList) {

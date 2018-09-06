@@ -207,6 +207,21 @@ export default {
 			}
 		},
 		isSelected(item) {
+			console.log(item);
+			if(item.id ==3110 && !item.selected){//特殊情况，佳伟骚需求，如果点选中击备用金，则交接班也必选上
+				for (let i = 0; i < this.list.length; i++) {
+					if (this.list[i].id ==3015) {
+						this.list[i].selected = true;
+					}
+				}
+			}
+			if(item.id ==3015 && item.selected){
+				for (let i = 0; i < this.list.length; i++) {
+					if (this.list[i].id ==3110) {
+						this.list[i].selected = false;
+					}
+				}
+			}
 			this.tab1Changed(item);
 		},
 		clickTanResult(res) {
