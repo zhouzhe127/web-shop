@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 18:12:37
+ * @Last Modified time: 2018-09-06 13:45:18
  * @Module:商品管理
 **/
 
@@ -108,7 +108,7 @@
 				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
 				</el-input>
-				<el-input v-if="industry != 1" placeholder="请输入名称/简码" v-model="search" @change="funSearchkeyUp(null)" style="width:200px;">
+				<el-input v-if="industry != 1" placeholder="请输入名称/简码" clearable v-model="search" @change="funSearchkeyUp(null)" style="width:210px;">
 					<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp(null)"></el-button>
 				</el-input>
 			</section>

@@ -42,7 +42,7 @@
 								<el-form-item label="简码" prop="BC">
 									<el-input v-model="good.BC" maxlength = "20" placeholder = "请输入商品简码" style = "width:270px;"></el-input>
 								</el-form-item>
-								<el-form-item v-if="good.type==0" required label="售价">
+								<el-form-item v-if="good.type==0 && good.isGroup !=='1'" required label="售价">
 									<el-input v-model="good.price" maxlength = "7" placeholder = "请输入售价" style = "width:120px;">
 										<i slot="suffix">元</i>
 									</el-input>
