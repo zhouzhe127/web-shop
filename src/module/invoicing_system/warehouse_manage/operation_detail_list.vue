@@ -25,11 +25,13 @@
 						<li>条形码</li>
 						<li>商品类型</li>
 						<li>出货数量/重量</li>
+						<li>成本总额</li>
 					</template>
 					<template v-if="detailType==2">
 						<li>出货数量</li>
 						<li>入货数量</li>
 						<li>耗损数量</li>
+						<li>成本总额</li>
 						<li>入货仓库</li>
 					</template>
 				</div>
@@ -42,11 +44,13 @@
 								<li>{{item.barCode}}</li>
 								<li>{{item.typeNameCus}}</li>
 								<li>{{item.outGoodsNumCus}}</li>
+								<li>{{item.costTotal}}</li>
 							</template>
 							<template v-if="detailType==2">
 								<li>{{item.num}}</li>
 								<li>{{item.intoNum}}</li>
 								<li>{{item.consumeNum}}</li>
+								<li>{{item.costTotal}}</li>
 								<li>{{item.wName}}-{{item.aName}}</li>
 							</template>
 						</div>
@@ -99,11 +103,13 @@
 						<li>分类</li>
 						<li>类型</li>
 						<li>出货数量/重量</li>
+						<li>成本总额</li>
 					</template>
 					<template v-if="detailType==2">
 						<li>出货数量</li>
 						<li>入货数量</li>
 						<li>耗损数量</li>
+						<li>成本总额</li>
 						<li>入货仓库</li>
 					</template>
 				</div>
@@ -116,11 +122,13 @@
 								<li>{{item.cateCus}}</li>
 								<li>{{item.matType}}</li>
 								<li>{{item.outMatNumCus}}</li>
+								<li>{{item.costTotal}}</li>
 							</template>
 							<template v-if="detailType==2">
 								<li>{{item.num}}</li>
 								<li>{{item.intoNum}}</li>
 								<li>{{item.consumeNum}}</li>
+								<li>{{item.costTotal}}</li>
 								<li>{{item.wName}}-{{item.aName}}</li>
 							</template>
 						</div>
@@ -180,7 +188,7 @@ export default {
 			isBrand:0,//0单店 1品牌
 		};
 	},
-	props: ['detail', 'detailInto', 'type'],
+	props: ['detail', 'detailInto', 'type','tabIndex'],
 	watch: {
 		'type': 'initData',
 		'detail': 'initData',
@@ -201,10 +209,14 @@ export default {
 				if(this.detailInto.goods) this.goodsDetails = this.detailInto.goods;
 				if(this.detailInto.material) this.materialDetails = this.detailInto.material;
 			}
-			if(!this.goodsDetails.length && this.materialDetails.length){
-				this.selectType = 1;
+			if(this.tabIndex){
+				this.selectType = this.tabIndex-1;
 			}else{
-				this.selectType = 0;
+				if(!this.goodsDetails.length && this.materialDetails.length){
+					this.selectType = 1;
+				}else{
+					this.selectType = 0;
+				}
 			}
 		},
 		openInfo() {
@@ -235,12 +247,12 @@ export default {
 		}
 	}
 	.table {
-		border: 1px solid #ccc;width: 100%;margin-top: 10px;
+		border: 1px solid #dcdfe6;width: 100%;margin-top: 10px;
 		.scroll-box{overflow: auto;}
 		.table-head {padding-left: 20px;height: 46px;line-height: 46px;
 			em{color: #fe8d01;display: inline-block;padding: 0 3px;}
 			.color-size;.detail-toggle {
-				color: #28a8e0;margin-left: 20px;font-size: 16px;text-decoration: underline #28a8e0;cursor: pointer;
+				color: #E1BB4A;margin-left: 20px;font-size: 16px;text-decoration: underline;cursor: pointer;
 			}
 			.circle {
 				display: inline-block;width: 4px;height: 4px;border: 1px solid #333;border-radius: 50%;margin: 0 15px;
@@ -253,28 +265,28 @@ export default {
 		.table-title {min-width: 1200px;
 			height: 40px;background-color: #f2f2f2;line-height: 40px;overflow: hidden;
 			li {
-				height: 40px;.table-li;.color-size;width: 22.5%;
+				height: 40px;.table-li;.color-size;width: 18%;
 				&:first-child{width: 10%;}
 			}
 		}
 		.enter{
-			li{width: 18%;
+			li{width: 15%;
 				&:first-child{width: 10%;}
 			}
 		}
 		.table-body {min-width: 1200px;
-			.table-item{border-bottom: 2px solid #f7f7f7;
+			.table-item{border-bottom: 1px solid #dcdfe6;
 				&:last-child{border-bottom: 0;}
 			}
 			.empty{height: 70px;line-height: 70px;width: 100%;text-align: center;color: #999;font-size: 20px;}
 			.one-item{overflow: hidden;
 				li {
-					.table-li;height: 70px;line-height: 70px;color: #666;font-size: 14px;width: 22.5%;
+					.table-li;height: 70px;line-height: 70px;color: #666;font-size: 14px;width: 18%;
 					&:first-child{width: 10%;}
 				}
 			}
 			.enter{
-				li{width: 18%;
+				li{width: 15%;
 					&:first-child{width: 10%;}
 				}
 			}
