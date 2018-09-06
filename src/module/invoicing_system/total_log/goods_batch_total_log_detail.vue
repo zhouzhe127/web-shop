@@ -68,6 +68,8 @@
                 </el-table-column>
                 <el-table-column prop="cost" width="150px" label="仓库" >
                 </el-table-column>
+                <el-table-column prop="cost" width="150px" label="备注" >
+                </el-table-column>
             </el-table>           
         </div>
     </div>
