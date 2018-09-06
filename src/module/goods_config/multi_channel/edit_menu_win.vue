@@ -718,6 +718,7 @@ export default {
 			//选择一级，清空所选二级
 //			this.twoArea.twoAreaName = '请选择二级分类';
 			this.twoArea.name = '请选择二级分类';
+			this.twoArea.twoAreaList=[]; //二级分类制空
 			this.L1ID = item.id;
 			this.L2ID = 0;
 			if (index == 0) {
@@ -726,8 +727,6 @@ export default {
 				this.goodsCom = this.goodList;
 //				this.oneArea.oneAreaName = '全部';
 				this.oneArea.name = '全部';
-
-				this.twoArea.twoAreaList=[]; //二级分类制空
 			} else {
 				this.allGood = false;
 //				this.oneArea.oneAreaName = item.name;
