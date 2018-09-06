@@ -175,12 +175,20 @@ export default {
 				id: item.id,
 				name: item.name,
 			};
+			this.twoArea = {
+				id: -1,
+				name: '请选择二级分类',
+			};
 			this.funToggleCate(item);
 		},
 		newselectTwoArea(index){
 			this.twoIndex = index;
 			let item = this.child[index];
-			this.selectTwo(item);
+			this.twoArea = {
+				id: item.id,
+				name: item.name,
+			};
+			this.funToggleChild(item);
 		},
 		selectOne(arr) {
 			for (let i = 0; i < arr.length; i++) {
