@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-04 18:08:53
+ * @Last Modified time: 2018-09-05 18:12:37
  * @Module:商品管理
 **/
 
@@ -217,7 +217,7 @@
 					</section>
 				</div>
 			</div>
-			<div v-if="selectTab==1" class="commodity-box">
+			<div v-if="selectTab==1 && load" class="commodity-box">
 				<el-table
 					stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
 					:data="nowGoods"

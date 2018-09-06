@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-05 10:54:43 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 14:23:09
+ * @Last Modified time: 2018-09-05 18:26:39
  * @Module:分类选择框
 **/
 <template>
@@ -47,7 +47,7 @@ export default {
 			if (this.categoryArr.length == 0) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
-					content: '该分类下没有二级分类!'
+					content: '没有分类或该分类下没有二级分类!'
 				});
 				this.showArea = false;
 			}
