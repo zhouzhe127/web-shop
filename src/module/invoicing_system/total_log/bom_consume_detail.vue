@@ -61,6 +61,10 @@
     </div>
 </template>
 <script>
+/*
+    请求:
+        获取bom单消耗详情:InvoicingGetLogDetail
+*/
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 
@@ -78,10 +82,30 @@ export default {
                 {id:2,name:'年'},
             ],
             materialInfo:{},
-            
+            logId:50,                       //日志id
+            materialId:18,                  //物料id
         };
     },
     methods: {
+
+        async getMaterialDetail(){
+            let info = {};
+            info = await this.getHttp('MaterialGetMaterialDetail',{mid:this.materialId,wid:0,isDistribution:0});
+            if(this.toRaw(info,'Object')){
+                info.typeName = this.getAttr(this.materialType,info.type);
+                this.getMaterialUnitInfo(info,'unit');
+                info.sumStoreNum = global.comUnit(info.num, info.defUnitVal, info.defUnitName, info.minUnitName);
+                info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
+                this.materialInfo = info;
+            }
+        },
+        async getHistory(){
+            let retData = {};
+
+            retData = await this.getHttp('InvoicingGetLogDetail',{logId:this.logId});
+            console.log(retData);
+
+        },
         getMaterialUnitInfo(ele,id,attr='unit'){
             //获取物料的单位信息
             if(!Array.isArray(ele[attr])){
@@ -117,7 +141,7 @@ export default {
 			for(let ele of arr){
 				if(ele[attr] == val) return ele[getAttr];
 			}
-		},
+        },
 		async getHttp(url,obj={}){
 			let res = await http[url]({data:obj});
 			return res;
@@ -154,22 +178,14 @@ export default {
         },
         toRaw(val,type){
             return Object.prototype.toString.call(val).slice(8,-1) === type;
-        }
+        },
     },
     components: {
 
     },
-    async mounted(){
-        let info = {};
-        info = await this.getHttp('MaterialGetMaterialDetail',{mid:18,wid:0,isDistribution:0});
-        if(this.toRaw(info,'Object')){
-            info.typeName = this.getAttr(this.materialType,info.type);
-            this.getMaterialUnitInfo(info,'unit');
-            info.sumStoreNum = global.comUnit(info.num, info.defUnitVal, info.defUnitName, info.minUnitName);
-            info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
-            this.materialInfo = info;
-            console.log(info);
-        }
+    mounted(){
+        this.getMaterialDetail();
+        this.getHistory();
     },
 };
 </script>
