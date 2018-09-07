@@ -244,11 +244,11 @@
 							<span>{{parseFloat(scope.row.paymentPrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额" >
+					<!-- <el-table-column min-width = "120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额" >
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.settlePrice).toFixed(2)}}</span>
 						</template>
-					</el-table-column>
+					</el-table-column> -->
 				</el-table>
 			</section>
 			
