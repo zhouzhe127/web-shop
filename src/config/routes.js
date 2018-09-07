@@ -1783,6 +1783,25 @@ export default [{
                         },
                     ]
                 },
+                //总日志
+                {
+                    path:'goodsTotalLog',
+                    components:{
+                        details_con:goodsTotalLog
+                    },
+                    meta:{
+                        comName:'goodsTotalLog'
+                    }
+                },
+                {
+                    path:'materialTotalLog',
+                    components:{
+                        details_con: materialTotalLog
+                    },
+                    meta:{
+                        comName:'materialTotalLog'
+                    }
+                },
                 {
                     path: 'materialCount', //批量盘库-物料盘库
                     components: {
