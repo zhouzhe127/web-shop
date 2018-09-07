@@ -379,7 +379,6 @@ export default {
 
 			brandList: null, //品牌列表
 
-			isBrand: null, //是否是品牌
 			ischain: null,
 			brandId: null,
 			shopId: null, //店铺id
@@ -977,11 +976,6 @@ export default {
 			for (let key of ['industry', 'brandId', 'ischain']) {
 				this[key] = userData.currentShop[key];
 			}
-			this.isBrand =
-				userData.currentShop.ischain == '1' ||
-				userData.currentShop.ischain == '2'
-					? false
-					: true;
 		},
 		//获取分类
 		async getCate() {
