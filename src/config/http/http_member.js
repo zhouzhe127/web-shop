@@ -34,6 +34,7 @@ export default {
         url: w + "Activitystatistics/getList", //获取活动列表
     },
     "getActivityMould": {
+        url: w + "Activityconfig/getActivityMould", //获取活动类型列表
     },
     //---------------------来源统计--------------------------------------
     "getCountList": {
