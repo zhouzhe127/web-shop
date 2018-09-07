@@ -20,7 +20,7 @@
             </div>
 
             <div class="in-block" >
-                <el-select v-model="condition.operationType" placeholder="操作类型" clearable>
+                <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" clearable>
                     <el-option
                     v-for="item in operationList"
                     :key="item.id"
@@ -51,7 +51,7 @@
                     >
                 </el-cascader>
 
-                <el-select v-model="condition.wid" placeholder="仓库选择" clearable>
+                <el-select v-model="condition.wid" :multiple="true" placeholder="仓库选择" clearable>
                     <el-option
                     v-for="item in warehouseList"
                     :key="item.id"
@@ -68,7 +68,7 @@
         </div>
 
         <div class="content">
-            <el-table :data="tableData" style="width: 90%" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
+            <el-table :data="tableData" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
                 <el-table-column prop="name" width="150px" label="物料名称" fixed="left">
                     <span slot-scope="{row,column}" @click="viewDetail(row,column)" class="yellow-font">{{row.itemName}}</span>
                 </el-table-column>
@@ -101,9 +101,9 @@
                 <el-table-column prop="wName" label="仓库" width="150px">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
-                    <template slot-scope="scope">
-                        <span class="view view-detail view-detail-disable">查看记录</span>
-                        <span class="view">批次详情</span>
+                    <template slot-scope="{row,column,index}">
+                        <span class="view view-detail" @click="viewHistory(row)" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
+                        <span class="view"  @click="viewBatchDetail(row)">批次详情</span>
                     </template>
                 </el-table-column>
 
@@ -117,6 +117,7 @@
 				layout="total,sizes,prev, pager, next,jumper"
 				:background="true"
 				:total="pageObj.total"
+                :current-page.sync="pageObj.currentPage"
 				@size-change="(res)=>{funGetPage('size-change',res)}"
 				@current-change="(res)=>{funGetPage('current-change',res)}"
 			>
@@ -131,20 +132,45 @@
             >
             <div class="dialog-content">
                 <div class="column">
-                    <div>物料名称:</div>
-                    <div>物料简码:</div>
-                    <div>品牌:</div>
-                    <div>批次数:</div>
-                    <div>物料类型:</div>
-                    <div>物料单位:</div>
-                    <div>默认单位:</div>
-                    <div>最小单位:</div>
+                    <div>物料名称:{{materialInfo.name}}</div>
+                    <div>物料简码:{{materialInfo.BC}}</div>
+                    <div>品牌:{{materialInfo.brandName}}</div>
+                    <div>批次数:{{materialInfo.batchNum}}</div>
+                    <div>物料类型:{{materialInfo.typeName}}</div>
+                    <div>物料单位:
+                        <template v-for="(a,ai) in materialInfo.unit">
+                            {{a.name}}
+                            <i :key="ai" v-if="ai != materialInfo.unit.length -1 ">&nbsp;,&nbsp;</i>
+                        </template>
+                    </div>
+                    <div>默认单位:{{materialInfo.defUnitName}}</div>
+                    <div>最小单位:{{materialInfo.minUnitName}}</div>
                 </div>
                 <div class="column">
-                    <div>单位换算:</div>
-                    <div>分类:</div>
-                    <div>库存总量:</div>
-                    <div>保质期:</div>
+                    <div class="column-container">
+                        <div class="label">单位换算:</div>
+                        <div class="">
+                            <template v-for="(a,ai) in materialInfo.unit">
+                                <p :key="ai">
+                                    1{{a.name}}={{a.value}}{{materialInfo.minUnitName}}
+                                    <i v-if="ai != materialInfo.unit.length -1 ">&nbsp;;&nbsp;</i>
+                                </p>
+                            </template>                        
+                        </div>
+                    </div>
+                    <div class="column-container">
+                        <div class="label">分类:</div>
+                        <div class="">
+                            <template v-for="(a,ai) in materialInfo.cate">
+                                <p :key="ai">
+                                    {{a.name}}
+                                    <i v-if="ai != materialInfo.cate.length -1 ">&nbsp;;&nbsp;</i>
+                                </p>
+                            </template>                        
+                        </div>
+                    </div>
+                    <div>库存总量:{{materialInfo.sumStoreNum}}</div>
+                    <div>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</div>
                 </div>
             </div>
             </el-dialog>
@@ -157,24 +183,39 @@
         获取物料操作类型:invoic_getType
         获取物料总日志列表:invoicingGetMaterialLogList
         获取一个或多个物料的单位和关联:materialGetUnitRelation
+        获取物料详情:MaterialGetMaterialDetail
 
+    问题:
+        仓库的选择
+        其他页面的分页组件
+    
+    优化:
+        搜索时间间隔
 
 */
 import storage from 'src/verdor/storage';
 import common from './goods_material_log.js';
+import global from 'src/manager/global';
+
 export default {
     mixins:[common],
     data () {
         return {
-            condition:{},
+            materialType:[
+                {id:0,name:'成品'},
+                {id:1,name:'半成品'},
+                {id:2,name:'普通物料'}
+            ],
 
+
+            condition:{},
             categoryList:[],
             warehouseList:[],
             operationList:[],
             tableData:[],
+            materialInfo:{},                //物料信息
 
             pageObj:{},
-
             dialog:{
                 title:'物料信息',
                 show:false
@@ -186,52 +227,12 @@ export default {
         //筛选重置
         filterReset(flag){
             if(flag == 'reset'){
-                this.pageObj.currentPage = 1;
+                this.initPageObj();
                 this.initCondition();
-
+            }else{
+                this.pageObj.currentPage = 1;
             }
             this.getList();
-        },
-        //获取日志列表
-        async getList(){
-            let retData = {},
-                unitArr = [],
-                midStr = [],
-                subObj = {};
-
-            subObj = this.getSubmitData();
-            retData = await this.getHttp('invoicingGetMaterialLogList',subObj);
-
-            if(!Array.isArray(retData.list)) retData.list = [];
-            this.tableData = retData.list;
-            this.pageObj.total = retData.count || 0;
-            this.pageObj.total = Number(this.pageObj.total);
-
-            for(let ele of this.tableData){
-                midStr += ele.id+'';
-            }
-            midStr = '10,11,12,13,14,15';
-            unitArr = await this.getHttp('materialGetUnitRelation',{mids:midStr});
-            if(!Array.isArray(unitArr)){
-                unitArr = [];
-            }
-
-            this.matchList(this.tableData,unitArr);
-
-
-            this.tableData = this.tableData.map((ele)=>{
-                ele.createTime = this.generatorDate(ele.createTime * 1000).str;
-                ele.operationType = this.getAttr(this.operationList,ele.type);
-                ele.arrowOperation = ele.change > 0;//红色箭头
-                ele.change = Math.abs(ele.change);
-                ele.arrowCost = ele.cost > 0;//红色箭头
-                ele.cost = Math.abs(ele.cost);
-                this.getMaterialUnitInfo(ele,null,'relation');
-                
-                return ele;
-            });
-            console.log(this.tableData);
-            
         },
 		funGetPage(flag,res){
 			//获取页码值
@@ -244,25 +245,99 @@ export default {
         },
 
 
-        //查看物料详情
-        viewDetail(row,column){
-            console.log(row);
-            console.log(column);
+        //获取日志列表
+        async getList(){
+            let retData = {},
+                unitArr = [],
+                midStr = [],
+                subObj = {};
 
+            //获取日志
+            subObj = this.getSubmitData();
+            retData = await this.getHttp('invoicingGetMaterialLogList',subObj);
+            if(!Array.isArray(retData.list)) retData.list = [];
+            this.tableData = retData.list;
+            this.pageObj.total = retData.count || 0;
+            this.pageObj.total = Number(this.pageObj.total);
+
+            //获取物料单位
+            midStr = this.getListAttrs(this.tableData,'itemId');
+            midStr = midStr.join(',');;
+            unitArr = await this.getHttp('materialGetUnitRelation',{mids:midStr});
+            if(!Array.isArray(unitArr)) unitArr = [];
+
+            //初始化日志列表
+            this.matchList(this.tableData,unitArr);
+            this.initTableData();
         },
+        //初始化表格数据
+        initTableData(){
+            this.tableData = this.tableData.map((ele)=>{
+                ele.createTime = this.generatorDate(ele.createTime * 1000).str;         //时间
+                ele.operationType = this.getAttr(this.operationList,ele.type);          //操作类型
+
+                ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
+                ele.change = Math.abs(ele.change);
+                ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
+                ele.cost = Math.abs(ele.cost);
+
+                this.getMaterialUnitInfo(ele,null,'relation');
+                
+                this.initObject(ele,['changeBefore','change','changeAfter']);
+
+                ele.changeBefore = global.comUnit(ele.changeBefore, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+
+                return ele;
+            });
+        },
+
+
+        //查看物料详情
+        async viewDetail(row,column){
+            if(this.materialInfo.id != row.itemId){
+                this.materialInfo = await this.getHttp('MaterialGetMaterialDetail',{mid:row.itemId,wid:0,isDistribution:0});
+                this.initMaterialInfo();
+            }
+            this.dialog.show = true;    
+        },
+        initMaterialInfo(){
+            let info = this.materialInfo;
+            if(this.toRaw(info,'Object')){
+                this.getMaterialUnitInfo(info,null,'unit');
+                info.typeName = this.getAttr(this.materialType,info.type);
+                info.sumStoreNum = global.comUnit(info.num, info.selUnitVal, info.selUnitName, info.minUnitName);
+                info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
+            }else{
+                info = {};
+            }
+            this.materialInfo = info;            
+        },
+
+
+        //是否可以查看批次详情
+        canviewBatchDetail(id){
+            let cannot = [1,2,3,,18];
+            return cannot.includes(Number(id));
+        },
+        //是否可以查看记录
+        canViewHistory(id){
+            let cannot = [1,2,3,4,18];
+            return cannot.includes(Number(id));
+        },
+
+
         //查看记录
         viewHistory(item){
             let obj = {};
             switch(item.id+''){
+                case '1'://单个盘库
                 case '2'://入库
                 case '3'://耗损
                 case '4'://新建物料
                 case '18'://删除物料
                     return;                
-                case '1'://批量盘库记录      这个是单个盘库,差批量盘库
-                    obj.path = '/admin/goodsCountHistory';
-                    obj.query = {id:item.id};
-                    break;
                 case '5'://BOM单消耗->跳转到BOM单消耗详情页面（子页面）
                     break;
                 case '6'://调出->点击进入调度出货单，出货单表格在出货数量后边增加，出货成本总额。                
@@ -287,6 +362,10 @@ export default {
                     break;
                 case '17'://领料消耗->点击进入该条领料记录
                     break;
+                case '19'://批量盘库->批量盘库记录
+                    obj.path = '/admin/goodsCountHistory';
+                    obj.query = {id:item.id};
+                    break;
             }
         },
         //查看批次详情
@@ -310,13 +389,14 @@ export default {
         },
 
 
+        //匹配
         matchList(list,unit){
-            let listAttr = 'id',
+            let listAttr = 'itemId',
                 getAttr = 'relation',
                 unitAttr = 'mid';
 
             for(let ele of list){
-                for(let e of unitAttr){
+                for(let e of unit){
                     if(ele[listAttr] == e[unitAttr]){
                         ele[getAttr] = e[getAttr];
                     }
@@ -353,57 +433,8 @@ export default {
             }
          
         },
-        //获取所有条件
-        getSubmitData(){
-            let obj = {},
-                condition = this.condition;
-
-            obj.type = condition.operationType;
-            obj.name = condition.operationUser;
-            obj.bc = condition.code;
-            obj.wid = condition.wid;
-            obj.page = this.pageObj.currentPage;
-            obj.size = this.pageObj.pageSize;
-            obj.beginTime = 0;
-            obj.endTime = 0;       
-            obj.cid = '';
-
-            if(Array.isArray(condition.time) && condition.time.length > 0){
-                let [start,end] = condition.time;
-                start = start.getTime();
-                end = end.getTime();
-                obj.beginTime = parseInt(start / 1000);
-                obj.endTime = parseInt(end / 1000);  
-            }
-            if(Array.isArray(condition.category) && condition.category.length > 0){
-                obj.cid = condition.category[0];
-                if(condition.category.length >= 2){
-                    obj.cid = condition.category[1];                    
-                }   
-            }
-
-            return obj;
-        },
-        //初始化分页
-		initPageObj(){
-			this.pageObj = {
-				total:0,				//总记录数
-				pageSize:10,			//每页显示的记录数
-				pagerCount:11,			//每页显示的按钮数
-				currentPage:1,
-			};
-        },
-        //初始化条件
-        initCondition(){
-            this.condition = {
-                time:[],                    //时间                
-                operationType:'',           //操作类型
-                goodsName:'',               //物料名称
-                code:'',                    //物料简码
-                operationUser:'',           //操作人
-                category:[],                //分类
-                wid:'',                     //仓库
-            };
+        toRaw(val,type){
+            return Object.prototype.toString.call(val).slice(8,-1) === type;
         },
         //获取分类
         async getCategoryList(){
@@ -429,93 +460,20 @@ export default {
             }
             this.categoryList = arr;
         },
-        //获取操作类型
-        async getOperationType(){
-            let operationList = [];
-            operationList = await this.getHttp('invoic_getType');
-            this.operationList = this.changeOperationType(operationList);
-        }
     },
     async mounted(){
+        this.initData();
         this.initCondition();
         this.initPageObj();
-        this.getOperationType();
+        this.getOperationList('material');
         this.getCategoryList();
+        this.getWarehouseList();
+        this.filterReset('reset');
 
-        this.warehouseList =  await this.getHttp('warehouseList');
-
+        
     },
 };
 </script>
 <style lang='less' scoped>
-    @import url('../warehouse_manage/z_less.less');
-    .in-block{
-        margin-bottom:20px;
-        display: inline-block;             
-    }
-    //箭头
-    .arrow{
-        display: inline-block;
-        height: 16px;
-        width: 8px;
-        vertical-align: middle;
-    }
-    .arrow-up{
-        background: url('../../../res/images/arrow-up.png') no-repeat;
-    }
-    .arrow-down{
-        background: url('../../../res/images/arrow-down.png') no-repeat;		
-    }
-    //查看详情
-    .view{
-        color:@ey;
-        display: inline-block;
-        height:40px;   
-        line-height: 40px;   
-        cursor: pointer;  
-    }
-    .view-detail{
-        padding-right: 10px;
-    }
-    .view-detail-disable{
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
-    .yellow-font{
-        color:#E1BB4A;
-        width: 100%;
-        display: inline-block;
-        cursor: pointer;
-    }
-    .view-batch{
-        color:@ey;
-        display: inline-block;
-        height:40px;
-    }
-    .goods-total-log{
-        .search-header{
-            margin-top:20px;
-            width:90%;
-        }
-    }
-    .footer{
-        margin-top:37px;
-    }
-
-    .component{
-        .dialog-content{
-            padding:20px;
-            border-top:1px solid #E4E7ED;
-            display: flex;
-            flex-flow: row nowrap;
-            .column{
-                width:50%;
-                &>div{
-                    flex-grow:1;
-                    margin-bottom:20px;
-                }
-            }
-        }
-    }
-
+    @import url('./goods_material_log.less');
 </style>

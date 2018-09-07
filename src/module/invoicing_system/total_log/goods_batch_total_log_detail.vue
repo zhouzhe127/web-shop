@@ -6,27 +6,46 @@
 
         <div class="info">
             <div class="col">
-                <li>商品名:</li>
-                <li>条形码:</li>
-                <li>品牌:</li>
-                <li>序号:</li>
+                <li>商品名:{{materialInfo.gName}}</li>
+                <li>条形码:{{materialInfo.barCode}}</li>
+                <li>品牌:{{materialInfo.brandName}}</li>
+                <li class="column-container">
+                    <div class="label">分类:</div>
+                    <div class="">
+                        <template v-for="(a,ai) in materialInfo.cate">
+                            <p :key="ai">
+                                {{a.name}}
+                                <i v-if="ai != materialInfo.cate.length -1 ">&nbsp;;&nbsp;</i>
+                            </p>
+                        </template>                        
+                    </div>
+                </li>
             </div>
             <div class="col">
-                <li>分类:</li>
-                <li>单位:</li>
-                <li>售价:</li>
-                <li>批次数:</li>
+                <li>单位:{{materialInfo.unit}}</li>
+                <li>售价:{{materialInfo.price}}</li>
+                <li>批次数:{{materialInfo.batchNum}}</li>
+                <li class="column-container">
+                    <div class="label">货架位置:</div>
+                    <div class="">
+                        <template v-for="(a,ai) in materialInfo.shelves">
+                            <p :key="ai">
+                                {{a.shelfName}}/{{a.areaName}}
+                                <i v-if="ai != materialInfo.shelves.length -1 ">&nbsp;;&nbsp;</i>
+                            </p>
+                        </template>                        
+                    </div>
+                </li>
             </div>
             <div class="col">
-                <li>规格:</li>
-                <li>保质期:</li>
-                <li>耗损:</li>
-                <li>货架位置:</li>
+                <li>规格:{{materialInfo.specifications}}</li>
+                <li>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</li>
+                <li>耗损:{{materialInfo.lossNum}}</li>
             </div>
             <div class="col">
-                <li>仓库数量/重量:</li>
-                <li>上架数量:</li>
-                <li>总量:</li>
+                <li>仓库数量/重量:{{materialInfo.surplus}}</li>
+                <li>上架数量:{{materialInfo.shelveNum}}</li>
+                <li>总量:{{materialInfo.total}}</li>
             </div>
         </div>
 
@@ -40,7 +59,7 @@
                 </el-option>
             </el-select>
             <div class="operation-type">
-                操作类型:
+                操作类型:{{typeName}}
             </div>
         </div>
 
@@ -75,17 +94,47 @@
     </div>
 </template>
 <script>
+/*
+    请求:
+        获取商品库存详情:InvoicingGetGoodsDetail
+        获取批次详情:InvoicingGetLogBatchDetail
+*/
 import http from 'src/manager/http';
 
 export default {
     data () {
         return {
+            valiDate:[
+                {id:0,name:'月'},
+                {id:1,name:'日'},
+                {id:2,name:'年'},
+            ],
+            materialInfo:{},
+            typeName:'',            //操作类型
             tableData:[],
+            operationList:[],
             unitArr:[],
+            goodsId:1,               //商品id
+            logId:1,                 //日志id
         };
     },
     methods: {
+        async getGoodsDetail(){
+            let info = {};
+            info = await this.getHttp('InvoicingGetGoodsDetail',{gid:this.goodsId,wid:0});
+            if(!info || typeof info != 'object') info = {};
+            info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
+            this.materialInfo = info;
+        },
 
+
+		getAttr(arr,val,attr='type'){
+			let getAttr = 'typeName';
+			if(!Array.isArray(arr)) arr = [];
+			for(let ele of arr){
+				if(ele[attr] == val) return ele[getAttr];
+			}
+		},
 		async getHttp(url,obj={}){
 			let res = await http[url]({data:obj});
 			return res;
@@ -124,8 +173,18 @@ export default {
     components: {
 
     },
-    mounted(){
+    async mounted(){
+        let typeName = '';
+        let retData = {};
+        
+        this.getGoodsDetail();
 
+        retData = await this.getHttp('InvoicingGetLogBatchDetail',{id:this.logId});
+        if(!retData || typeof retData != 'object') retData = {};
+
+        this.operationList = await this.getHttp('invoicing_getInventoryLogType');
+        console.log(retData.type);
+        this.typeName = this.getAttr(this.operationList,retData.type);
     },
 };
 </script>
@@ -168,6 +227,19 @@ export default {
                 li{
                     .lfc(#606266,inherit,14px);
                     margin-bottom:20px;
+                }
+            }
+            .column-container{
+                display: flex;
+                flex-flow:row nowrap;
+                div{
+                    flex: 0 0 auto;
+                    p{
+                        padding-bottom:5px;
+                    }
+                }
+                .label{
+                    padding-right:5px; 
                 }
             }
         }
