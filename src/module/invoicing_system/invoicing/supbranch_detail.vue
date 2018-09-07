@@ -6,19 +6,20 @@
 <template>
 	<div class="warehouse-lists">
 		<div class="heander">
-			<div class="title"><span>库存详情</span></div>
+			<div class="title"><span>物料信息</span></div>
             <div class="innerBox">
                 <ul>
                     <li><span>物料名称：</span><span>{{goodsDetail.name}}</span></li>
 	                <li><span>物料简码：</span><span>{{goodsDetail.BC}}</span></li>
 	                <li><span>品牌：</span><span>{{goodsDetail.brandName||'无'}}</span></li>
 	                <li><span>批次数：</span><span>{{goodsDetail.batchNum}}</span></li>
+					<li><span>备注：</span><span></span></li>
                 </ul>
                 <ul>
                     <li><span>物料类型：</span><span>{{typeValue[Number(goodsDetail.type)]}}</span></li>
                     <li><span>物料单位：</span><span>{{unitArr.join(',')}}</span></li>
-                	<li><span>默认单位：</span><span v-if="goodsDetail.unit">{{getdefUnit(goodsDetail.unit,1)}}</span></li>
-                	<li><span>最小单位：</span><span v-if="goodsDetail.unit">{{getdefUnit(goodsDetail.unit,2)}}</span></li>
+                	<li><span>默认单位：</span><span v-if="goodsDetail.unit">{{defName}}</span></li>
+                	<li><span>最小单位：</span><span v-if="goodsDetail.unit">{{minName}}</span></li>
                 	
                 </ul>
                 <ul>
@@ -31,34 +32,46 @@
 		</div>
 		<div class="main">
 			<div class="unit-box">
-                <el-select v-model="selUnit" placeholder="单位切换">
+                <el-select v-model="selUnit" @change="unitChang" placeholder="单位切换">
 					<el-option v-for="item in goodsUnit" :key="item.muId" :label="item.name" :value="item.muId"></el-option>
-				</el-select>
+				</el-select>&nbsp;&nbsp;
+				<span>操作类型：{{recordName}}</span>
 		    </div>
 			<div class="list">
 				<!-- <div class="head">
 					批次列表 · 共<em> {{batchList.length}} </em>条数据
 				</div> -->
                 <el-table :data="selList" style="width: 100%;" row-class-name='a' border stripe>
-					<el-table-column :label="`批次列表 · 共${batchList.length}个条目`" class-name='tabletop'>
+					<el-table-column :label="`批次列表 · 共${selList.length}个条目`" class-name='tabletop'>
 						<el-table-column label="序号" width="180" type="index"></el-table-column>
-						<el-table-column label="批次编码" >
+						<el-table-column label="批次编码" prop="batchCode">
 							<!-- <template slot-scope="scope">
 								<div>{{getTime(scope.row.createTime)}}</div>
 							</template> -->
 						</el-table-column>
-						<el-table-column label="生产日期"></el-table-column>
-						<el-table-column label="供应商"></el-table-column>
-						<el-table-column label="变化量"></el-table-column>
-						<el-table-column label="进价"></el-table-column>
-						<el-table-column label="仓库"></el-table-column>
+						<el-table-column label="生产日期">
+							<template slot-scope="scope">
+								<div>{{getTime(scope.row.productionTime)}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="供应商" prop="supplier"></el-table-column>
+						<el-table-column label="变化量">
+							<template slot-scope="scope">
+								<div :class="scope.row.num>0? 'up':'down'">{{scope.row.num>0? '↑':'↓'}}{{scope.row.changeNum}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="进价">
+							<template slot-scope="scope">
+								<div>{{scope.row.distributionPrice}}元/{{scope.row.distributionUnit}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="仓库" prop="wName"></el-table-column>
 					</el-table-column>
                 </el-table>
 			</div>
-			<div class="page-box">
+			<!-- <div class="page-box">
                 <el-pagination @current-change="pageChange" :current-page="page" layout="total, prev, pager, next, jumper" :total="pageTotal"></el-pagination>
-			</div>
-
+			</div> -->
 		</div>
 	</div>
 </template>
@@ -74,6 +87,8 @@
 			return {
 				tabactive: 0,
 				mid: '',
+				logId:'',
+				recordName:'',
 				goodsDetail: {
 					unit: [],
 				},
@@ -81,32 +96,41 @@
 				goodsData: {},
 				goodsUnit: [],
 				goodsCate: [],
+				selList:[],
 				selUnit: '',
 				minName: '', //最小单位名称
+				defName:'',//默认单位名称
 				unitArr: [],
-				page: 1,
-				pageTotal: 0,
-				batchList: [], //批次列表
-				selList: [], //分页后的列表
+				// page: 1,
+				// pageTotal: 0,
                 dataObj:{},//请求参数
                 typeValue:['成品','半成品','普通物料']
 			};
 		},
-		mounted() {
-            // this.mid = this.$route.query.id;
-            this.mid = 3;
+		async mounted() {
+			// this.mid = this.$route.query.id;
+			// this.logId = this.$route.query.logId;
+            this.mid = 8;
 			this.dataObj = {mid: this.mid};
 			this.$store.commit('setPageTools', [{name: '返回',className: '',type:4,
 				fn: () => {
 					window.history.go(-1);
 				}
 			}]);
-			// this.init();
-			this.getDetail();
+			await this.getDetail();
+			this.init();
 		},
 		methods: {
 			async init() {
 				//获取批次列表
+				let data = await http.invoicgetLogBatchDetail({
+					data:{
+						id:8
+					}
+				})
+				console.log(data);
+				this.selList = data.list;
+				this.unitChang();
 			},
 			async getDetail() {
 				//获取详情
@@ -114,7 +138,9 @@
 					data: this.dataObj,
 				});
                 this.goodsDetail = data;
-                this.goodsUnit = data.unit;
+				this.goodsUnit = data.unit;
+				this.minName = this.getdefUnit(data.unit,1);
+				this.defName = this.getdefUnit(data.unit,2)
 				for(let item of this.goodsDetail.cate) {
 					this.goodsCate.push(item.name);
 				}
@@ -122,18 +148,8 @@
 					this.unitArr.push(item.name);
 				}
 			},
-			paging() { //分页
-				
-			},
 			timeFormat(time) {
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
-			},
-			pageChange(obj) {
-				
-			},
-			comUnit(...args) { //number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称
-				let [number, value, showName, minName] = args;
-				return global.comUnit(number, value, showName, minName);
 			},
 			computeUnit(arr) {
 				//单位换算
@@ -153,7 +169,35 @@
 						return item.name;
 					}
 				}
-			}
+			},
+			getTime(time) {
+				return utils.format(parseInt(time) * 1000, 'yyyy-MM-dd hh:mm');
+			},
+			unitChang(id){
+				let sel = '';
+				for(let item of this.goodsUnit){
+					if(id){
+						if(item.muId==id){
+							sel = item;
+							break;
+						}
+					}else{
+						if(item.isDefault==1){
+							sel = item;
+							break;
+						}
+					}
+				}
+				this.selList.map(v=>{
+					v.changeNum = this.comUnit(v.num,sel.value,sel.name,this.minName);
+				});
+			},
+			//单位换算
+			comUnit(...args) {
+				//number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称
+				let [number, value, showName, minName, type] = args;
+				return global.comUnit(number, value, showName, minName, type);
+			},
 		}
 	};
 </script>
@@ -213,6 +257,12 @@
 			}
 		}
 	}
+	.up{
+		color: red;
+	}
+	.down{
+		color: green;
+	}
 	.main {
 		margin-top: 20px;
 		padding-bottom: 50px;
@@ -227,7 +277,7 @@
 				padding: 0 10px;
                 font-size: 16px;
                 border:1px solid #ebeef5;
-                border-bottom: none;
+				border-bottom: none;
 				em {
 					color: #ff3c04;
 					font-size: inherit;

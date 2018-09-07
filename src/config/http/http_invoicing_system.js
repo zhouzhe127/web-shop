@@ -936,11 +936,15 @@ export default {
     "DispatchrecordEexportBills": {
         url: b + "Dispatchrecord/exportBills", //批量审核-导出
         method: 'get',
-        type:'file',
+        type: 'file',
     },
-    "MaterialGetUnitList":{
-        url:b+"Material/getUnitList",                           //获取物料的关联关系
-        method:'get'
+    "MaterialGetUnitList": {
+        url: b + "Material/getUnitList", //获取物料的关联关系
+        method: 'get'
+    },
+    "invoicgetLogBatchDetail": {
+        url: b + "Invoicing/getLogBatchDetail", //日志查看批次详情
+        method: 'get'
     }
-    
+
 }

@@ -75,11 +75,10 @@
 							</div>
 							<div class="shopAfter" v-else>--</div>
 						</div>
-
-						<div style="width:100%;height:40px;">
+						<!-- <div style="width:100%;height:40px;">
 							<h3 class="showBefore">耗损:</h3>
 							<div class="shopAfter">{{shopGoods.lossNum}}</div>
-						</div>
+						</div> -->
 						<div class="cList-five" style="height:auto;">
 							<div style="width:100%;" class="clearfix ">
 								<h3 class="showBefore">货架位置:</h3>
