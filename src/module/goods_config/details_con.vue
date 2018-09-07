@@ -438,7 +438,7 @@ export default {
 	methods: {
 		//切换图片时计算宽度
 		typeChange(res){
-			if(res==0){
+			if(res==0&&this.num!=14){
 				this.sizeChange(14);
 				this.windowResize();
 			}
