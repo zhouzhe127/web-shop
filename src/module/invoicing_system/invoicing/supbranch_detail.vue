@@ -101,17 +101,14 @@
 				minName: '', //最小单位名称
 				defName:'',//默认单位名称
 				unitArr: [],
-				// page: 1,
-				// pageTotal: 0,
-                dataObj:{},//请求参数
                 typeValue:['成品','半成品','普通物料']
 			};
 		},
 		async mounted() {
-			// this.mid = this.$route.query.id;
-			// this.logId = this.$route.query.logId;
+			this.mid = this.$route.query.id;//物料id
+			this.logId = this.$route.query.logId;//日志id
+			this.recordName = this.$route.query.recordName;//操作类型
             this.mid = 8;
-			this.dataObj = {mid: this.mid};
 			this.$store.commit('setPageTools', [{name: '返回',className: '',type:4,
 				fn: () => {
 					window.history.go(-1);
@@ -125,7 +122,7 @@
 				//获取批次列表
 				let data = await http.invoicgetLogBatchDetail({
 					data:{
-						id:8
+						id:this.logId
 					}
 				})
 				console.log(data);
@@ -135,7 +132,9 @@
 			async getDetail() {
 				//获取详情
 				let data = await http.invoic_getMaterialDetail({
-					data: this.dataObj,
+					data: {
+						mid:this.mid
+					},
 				});
                 this.goodsDetail = data;
 				this.goodsUnit = data.unit;

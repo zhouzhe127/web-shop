@@ -62,7 +62,7 @@
                 </el-select>
             </div>
 
-            <div class="in-block" >
+            <div class="in-block" style="padding-left:10px;">
                 <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
                 <el-button type="info" @click="filterReset('reset')">重置</el-button>
             </div>
@@ -165,10 +165,11 @@
 import storage from 'src/verdor/storage';
 import common from './goods_material_log.js'
 import global from 'src/manager/global';
+import http from 'src/manager/http';
+
 
 import Mock from 'mockjs';
 import template from 'src/mock/mock';
-
 /*
     问题:
         仓库选择?:仓库的筛选
@@ -275,12 +276,26 @@ export default {
                 case '2'://调入->入货单
                     obj.path = '/admin/operation/enterGoods';
 
+                    //1).这条调度单的id
                     obj.query = {id:893};
+
+                    //2).入货单id
+
+                    //3).logTab = 1 (出货单)  2:入货单
+                    
+                    //4).logType = 1 (商品)  2:物料
+
+                    //路由传参
                     break;
                 case '3'://调出->出货单
+
+
+                    //1)    logTab = 1 (出货单)  2:入货单
+                    //2)    logType = 1 (商品)  2:物料
                 case '17'://出货回库                
                     obj.path = '/admin/operation/operationDetail';
                     obj.query = {id:899};
+
                 case '13'://导入入库
                 case '14'://导入上架
                     obj.path = '/admin/wareImport';
@@ -341,24 +356,28 @@ export default {
             let goods = [],
                 res = {};
 
-            res = await this.getHttp('ShopGetExtra'); //获取版本号
+            res = await this.getHttp('ShopGetExtra');                           //获取版本号
             goods = await this.getGoodsList(false,res.goodsConfigVer);
             this.goodsList = this.filterInvoGoods(goods,1,'isInvoicing');
         },
 		//获取商品
 		async getGoods() {
-            let goods = [];
+            let page = 1,
+                total = 0;              //总页数
+
 			let temp = await http.getGoodsList({
 				data: {
 					shopId: this.shopId,
-					page: 1,
+					page: page,
 					num: 200,
 					specification: 1
 				}
-			});
-			goods = temp.list;
-			storage.session('goodList', goods);
-			return goods;
+            });
+            total = temp.total;
+            this.goodsList.push(...temp.list);
+            if(page > total){
+
+            }
 		},
 		async getGoodsList(flag, goodVer) {
 			let goods = null;
@@ -482,6 +501,7 @@ export default {
 
         this.filterReset('reset');
     },
+    /*
     beforeRouteEnter(to,from,next){
         if(from.meta.comName == 'materialTotalLog'){
             to.meta.keepAlive = true;
@@ -498,6 +518,7 @@ export default {
         }
         next();
     },
+    */
 };
 </script>
 <style lang='less' scoped>
