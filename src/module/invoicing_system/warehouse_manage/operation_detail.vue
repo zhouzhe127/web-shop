@@ -20,11 +20,11 @@
 							</div>
 							<div class="item ware">
 								<span>入货仓库：</span>
-								<p>{{details.intoWname}}<em @click="openWareWin(details.intoWarehouse)"></em></p>
+								<p>{{details.intoWname}}<em @click="openWareWin(details.intoWarehouse)" class="el-icon-document"></em></p>
 							</div>
 							<div class="item ware">
 								<span>出货仓库：</span>
-								<p>{{details.outWname}}<em @click="openWareWin(details.outWarehouse)"></em></p>
+								<p>{{details.outWname}}<em @click="openWareWin(details.outWarehouse)" class="el-icon-document"></em></p>
 							</div>
 						</div>
 						<div class="block">
@@ -64,26 +64,36 @@
 							</template>
 						</div>
 					</div>
-				<div class="tab-box" v-if="enterList.length">
-					<el-radio v-model="selIndex" label="-1" border>出货单</el-radio>
-					<template v-for="(item,index) in enterList">
-						<el-radio v-model="selIndex" :label="index" border>入货单{{index+1}}</el-radio>
-					</template>
+				<div class="tab-box" @click="tabClick" v-if="enterList.length">
+					<span data-type="1" :class="{active:selIndex==-1}">出货单</span>
+					<span v-for="(item,index) in enterList" :key="index" data-type="2" :data-index="index" :class="{active:selIndex==index}">
+						入货单{{index+1}}
+					</span>
 				</div>
 				<!-- 仓库详情弹窗 -->
-				<component
-                    :is="showWareWin"
-					:wid="wareId"
-                    @winEvent="wareWin"
-                    :width="550"
-                    :height="200"
-                ></component>
+                <div>
+					<el-dialog
+					  title="仓库信息"
+					  :visible.sync="dialogVisible"
+					  width="250"
+					  :close="handleClose">
+					  <div class="ware-detail">
+					  	<span>仓库名称：{{this.wareDetail.name}}</span>
+					  	<span>仓库所属：{{this.wareDetail.ownerName}}</span>
+					  	<span>仓库地址：{{this.wareDetail.provinceName}} {{this.wareDetail.cityName}} {{this.wareDetail.townName}}</span>
+					  </div>
+					  <span slot="footer" class="dialog-footer">
+					    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+					  </span>
+					</el-dialog>
+				</div>
 				<!-- 调度详情-列表 -->
 				<detail-list
 				@emit="getDetailObj"
 				:detail="detailObj"
 				:detailInto="detailObjInto"
 				:type="disType"
+				:tabIndex="logObj.type"
 				></detail-list>
 			</template>
 			<!-- 打印 -->
@@ -116,7 +126,6 @@ export default {
 	data() {
 		return {
 			showCom: false, //是否展示详细内容
-			showWareWin: null, //仓库详情弹窗
 			details: {}, //详情信息
 			allStatus: {
 				1:'未调度',
@@ -159,6 +168,14 @@ export default {
 			uid: '', //操作人id
 			isExamine: false, //是否从审核进入该详情
 			isBrand:0,//0单店 1品牌
+			wareDetail:{},//仓库详情
+			dialogVisible:false,//仓库详情显示/隐藏
+			isTotalLog:false,//是否从总日志进入
+			logObj:{
+				id:'',
+				tab:'',
+				type:'',
+			},//总日志对象
 		};
 	},
 	components: {
@@ -168,10 +185,17 @@ export default {
 			import( /*webpackChunkName: 'output_shipper_print'*/ './output_shipper_print'),
 		outputPrintInto: () =>
 			import( /*webpackChunkName: 'output_shipper_print'*/ './output_shipper_print_into'),
-		warehouseWin: () =>
-			import( /*webpackChunkName: 'waremessage_win'*/ '../conclusion/waremessage_win'),
 		enterGoods: () =>
 			import( /*webpackChunkName: 'enter_goods'*/ './enter_goods'),
+	},
+	beforeRouteEnter (to, from, next) {
+		if(from.path=='/admin/inventoryManagement/publicDetails'){
+			next(function(self){
+				self.isTotalLog = true;
+			});
+		}else{
+			next();	
+		}
 	},
 	mounted() {
 		this.initBtn();
@@ -179,23 +203,24 @@ export default {
 		let userData = storage.session('userShop');
 		this.isBrand = userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌
 		let isExamine = storage.session('clusionToOperationDetail');
-		
 		if(isExamine) {
 			this.isExamine = isExamine;
 			storage.session('clusionToOperationDetail', null);
 		}
 		this.uid = userData.user.id;
-		this.init();
+		this.init().then(()=>{
+			if(this.isTotalLog) this.totalLog();
+		});
 	},
 	methods: {
 		initBtn() {
-			this.btnArr = [{name: '返回',className: ['back'],
+			this.btnArr = [{name: '返回',className: 'info',type:4,
 				fn: () => {
 					storage.session('operationRequestDestroy', true);
 					this.$router.go(-1);
 				}
 			},
-			{name: '打印',className: ['wearhouse all'],
+			{name: '打印',className: 'warning',type:5,
 				fn: () => {
 					if(this.disType == 1) {
 						this.printShow = true;
@@ -208,20 +233,39 @@ export default {
 			}];
 			this.$store.commit('setPageTools', this.btnArr);
 		},
+		totalLog(){//从总日志进入时，设置tab切换
+			this.detailId = this.$route.query.id;
+			this.logObj={
+				id: this.$route.query.intoId,
+				tab:this.$route.query.logTab,
+				type:this.$route.query.logType,
+			};
+			
+			if(this.logObj.tab==1){//辨别出货单/入货单  1出货单  2入货单
+				this.selIndex = -1;
+			}else{
+				for(let i=0;i<this.enterList.length;i++){
+					let item = this.enterList[i];
+					if(this.logObj.id==item.id){
+						this.selIndex = i;
+					}
+				}
+			}
+		},
 		setInitBtn() { //等待接口返回后 显示按钮
 			this.btnArr.splice(2);
 			if(this.isExamine) return; //审核页面不出现以下按钮
 			if(this.dynamic == 1) {
 				let addArr = [{
 					name: '取消调度',
-					style: 'border: 1px solid #f03c3d;color: #f03c3d;background: #fff;',
+					className: 'danger',type:5,
 					fn: () => {
 						this.cancelMethod(); //取消
 					}
 				},
 				{
 					name: '确认出货',
-					style: 'border: 1px solid #fe8d01;color: #fff;background: #fe8d01;',
+					className: 'success',type:4,
 					fn: () => {
 						this.confirmMethod(); //确认
 					}
@@ -231,7 +275,7 @@ export default {
 			if(this.dynamic == 2) { //this.dynamic==2
 				let addArr = [{
 					name: '入货',
-					style: 'color: #fff;background: #22aae0;',
+					className: 'success',type:4,
 					fn: () => {
 						this.$router.push({
 							path: '/admin/operation/enterGoods',
@@ -243,12 +287,21 @@ export default {
 			}
 			this.$store.commit('setPageTools', this.btnArr);
 		},
-		openWareWin(wid) {
+		async openWareWin(wid) {
 			this.wareId = wid;
-			this.showWareWin = 'warehouseWin';
+			let data = await http.warehouseGetWarehouse({data:{
+				id:this.wareId,
+			}});
+			let res = await import ( /*webpackChunkName: 'area_cn'*/ 'src/verdor/area_cn');
+			let areaCn = res.default;
+			data.provinceName = areaCn.getNameByCode(data.province);
+			data.cityName = areaCn.getNameByCode(data.city);
+			data.townName = areaCn.getNameByCode(data.town);
+			this.wareDetail = data;
+			this.dialogVisible = true;
 		},
-		wareWin() {
-			this.showWareWin = null;
+		handleClose() {
+			this.dialogVisible = null;
 		},
 		getEmit() { //获取打印传值
 			this.printShow = false;
@@ -266,11 +319,17 @@ export default {
 		},
 		tabClick(index) { //单据类型切换
 			let target = event.target;
-			if(index == -1) { //出货单
-				this.setOrderDetail(this.outDetails, type);
-			} else if(type == 2) { //入货单
-				let item = this.enterList[index];
-				this.setOrderDetail(item, type);
+			if(target.tagName.toLocaleLowerCase() == 'span') {
+				let type = target.getAttribute('data-type');
+				let index = target.getAttribute('data-index');
+				if(type == 1) { //出货单
+					this.selIndex = -1;
+					this.setOrderDetail(this.outDetails, type);
+				} else if(type == 2) { //入货单
+					this.selIndex = index;
+					let item = this.enterList[index];
+					this.setOrderDetail(item, type);
+				}
 			}
 		},
 		setOrderDetail(item, type) {
@@ -392,13 +451,18 @@ export default {
 				item.serialNumCus = Number(i) + 1; //序号
 				item.typeNameCus = item.type == 0 ? '普通商品' : '称重商品'; //商品类型
 				item.outGoodsNumCus = item.num + item.unit; //重量/数量
+				let costTotal = 0;//成本总额
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
+					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + item.unit; //进价
 					detail.outGoodsNumCus = detail.num + item.unit; //重量/数量
+					cost = detail.purchasePrice*detail.num;
+					costTotal += cost;
 				}
+				item.costTotal = costTotal+'元';
 			}
 			return goodList;
 		},
@@ -414,21 +478,30 @@ export default {
 				item.cateCus = cateArr.join(','); //物料分类
 				item.outMatNumCus = this.setUnit(item.unitData, item.num, item.selectUnitName); //重量 数量
 				item.matType = this.matTypeHash[item.type];
+				let costTotal = 0;//成本总额
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
+					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + this.getUnitName(item.unitData,detail.purchaseUnit); //进价
 					detail.outMatNumCus = this.setUnit(item.unitData, detail.num, item.selectUnitName); //重量/数量
 					if(this.isBrand) detail.distributionStr = detail.distributionPrice +'元/'+ this.getUnitName(item.unitData,detail.distributionUnit);//分销价
+					cost = detail.num/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
+					costTotal += cost;
 				}
+				item.costTotal = costTotal+'元';
 			}
 			return materialList;
 		},
-		getUnitName(unit,id){//获取单位名称
+		getUnitName(unit,id,isValue){//获取单位名称
 			for(let item of unit){
 				if(item.muId==id){
-					return item.name;
+					if(isValue){//是否返回比例
+						return item.value;
+					}else{
+						return item.name;	
+					}
 				}
 			}
 		},
@@ -455,9 +528,11 @@ export default {
 				item.serialNumCus = Number(i) + 1; //序号
 				item.num = item.num + item.unit;
 				let into = 0,
-					consume = 0;
+					consume = 0,
+					costTotal = 0;
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
+					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + item.unit; //进价
@@ -466,6 +541,8 @@ export default {
 					detail.consumeNumDetail = detail.consumeNum + item.unit;
 					into = into + Number(detail.intoNum);
 					consume = consume + Number(detail.consumeNum);
+					cost = detail.intoNum*detail.purchasePrice;
+					costTotal += cost;
 				}
 				item.intoNum = into + item.unit;
 				item.consumeNum = consume + item.unit;
@@ -473,6 +550,7 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
+				item.costTotal = costTotal+'元';
 			}
 			return goodList;
 		},
@@ -484,9 +562,11 @@ export default {
 				item.serialNumCus = Number(i) + 1; //序号
 				item.num = this.setUnit(item.unitData, item.num, item.unit);
 				let into = 0,
-					consume = 0;
+					consume = 0,
+					costTotal = 0;
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
+					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + this.getUnitName(item.unitData,detail.purchaseUnit); //进价
@@ -495,6 +575,8 @@ export default {
 					detail.consumeNumDetail = this.setUnit(item.unitData, detail.consumeNum, item.unit);
 					into = into + Number(this.setUnitNum(item.unitData, detail.intoNum, item.unit));
 					consume = consume + Number(this.setUnitNum(item.unitData, detail.consumeNum, item.unit));
+					cost = detail.intoNum/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
+					costTotal += cost;
 				}
 				item.intoNum = into + item.unit;
 				item.consumeNum = consume + item.unit;
@@ -502,6 +584,7 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
+				item.costTotal = costTotal+'元';
 			}
 			return materialList;
 		},
@@ -535,13 +618,18 @@ export default {
 };
 </script>
 <style scoped lang='less'>
+	.ware-detail{
+		span{display: block;padding: 10px 0;font-size: 16px;line-break: 1.5;}
+	}
 #output-shipper {
 	position: relative;
 	.color-size {color: #333;font-size: 16px;}
 	.head {
 		padding-left: 15px;height: 30px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 30px;color: #333;
+		position: relative;
 		&:after {
-			content: "";display: inline-block;width: 535px;margin-left: 25px;border: 1px dashed #ccc;position: relative;top: -5px;
+			content: "";display: inline-block;width: 100%;margin-left: 25px;border: 1px dashed #ccc;position: absolute;top: 10px;
+			left: 100px;
 		}
 	}
 	.detail {overflow: hidden;padding-top: 20px;padding-left:5%;
@@ -549,8 +637,7 @@ export default {
 			.item{font-size: 16px;position: relative;min-height:20px;padding-left: 80px;margin-bottom: 20px;
 				span{position: absolute;left: 0;top: 0;font-size: 16px;}
 				p{min-width: 30px;max-width: 100%;min-height: 20px;position: relative;display: inline-block;font-size: inherit;
-					em{display: block;height: 18px;width: 18px;position: absolute;right: -22px;top: 0;cursor: pointer;
-						background: url(../../../res/images/examine.jpg) center;}
+					em{display: block;font-size: 18px;color: #E1BB4A;position: absolute;right: -22px;top: 0;cursor: pointer;}
 				}
 			}
 			.narrow{padding-left: 50px;}
@@ -560,10 +647,11 @@ export default {
 	}
 	.tab-box{
 		overflow: hidden;display: inline-block;padding-left: 1px;
-		span{float: left;color: #fe8d01;height: 35px;line-height: 33px;width: 120px;text-align: center;margin-bottom: 10px;
-			cursor: pointer;border: 1px solid #fe8d01;margin-left: -1px;
-			&:first-child{}
-			&.active{background: #fe8d01;color: #fff;}
+		span{float: left;color: #606266;height: 40px;line-height: 38px;padding: 0 15px;text-align: center;margin-bottom: 10px;
+			cursor: pointer;border: 1px solid #dcdfe6;margin-left: -1px;
+			&.active{background: #E1BB4A;color: #fff;border: 1px solid #E1BB4A;}
+			&:first-child{border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
+			&:last-child{border-top-right-radius: 4px;border-bottom-right-radius: 4px;}
 		}
 	}
 }

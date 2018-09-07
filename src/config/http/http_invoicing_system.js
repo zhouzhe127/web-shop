@@ -938,9 +938,14 @@ export default {
         method: 'get',
         type:'file',
     },
-    "MaterialGetUnitList":{
-        url:b+"Material/getUnitList",                           //获取物料的关联关系
-        method:'get'
+
+    "MaterialGetUnitList": {
+        url: b + "Material/getUnitList", //获取物料的关联关系
+        method: 'get'
+    },
+    "invoicgetLogBatchDetail": {
+        url: b + "Invoicing/getLogBatchDetail", //日志查看批次详情
+        method: 'get'
     },
     "invoicingGetMaterialLogList":{
         url:b+"invoicing/getMaterialLogList",                   //获取物料总日志列表
@@ -966,5 +971,5 @@ export default {
         url:b+"Invoicing/getLogDetail",
         method:"get"
     }
-    
+
 }
