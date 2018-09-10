@@ -31,7 +31,7 @@
 					</section>
 
 					<section class="bat" v-if="takeoutList[pList.areaIds] == 0">
-						<span @click="addWarrant(pList.areaIds,$event)">激活授权</span>
+						<span @click.stop="addWarrant(pList.areaIds,$event)">激活授权</span>
 					</section>
 					<section class="bated" v-else></section>
 
@@ -161,17 +161,16 @@ export default {
 			};
 		},
 		async getReturnInfo(res, cancelStatus) {
-			if (res) {
+			if (res=='ok') {
 				if (cancelStatus) {
-					this.showCom = '';
 					setTimeout(async () => {
 						await this.init();
 					}, 2000);
 					return;
 				}
-				this.showCom = '';
 				await this.init();
 			}
+			this.showCom = '';
 		},
 		//授权
 		async addWarrant(id, e) {

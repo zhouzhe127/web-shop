@@ -40,27 +40,31 @@
         <div class="page-head">操作记录</div>
         <div class="info">
             <div class="col">
-                <li>操作人:&nbsp;</li>
-                <li>商品名称:&nbsp;</li>
-                <li>毛料:&nbsp;</li>
+                <li>操作人:&nbsp;{{operationInfo.createUName}}</li>
+                <li>商品名称:&nbsp;{{operationInfo.goodsName}}</li>
+                <li>毛料:&nbsp;{{operationInfo.change}}</li>
             </div>
             <div class="col">
-                <li>操作时间:&nbsp;</li>
-                <li>操作前数量:&nbsp;</li>
-                <li>净料:&nbsp;</li>
+                <li>操作时间:&nbsp;{{operationInfo.createTime}}</li>
+                <li>操作前数量:&nbsp;{{operationInfo.changeBefore}}</li>
+                <li>净料:&nbsp;{{operationInfo.netMaterial}}</li>
             </div>
             <div class="col">
-                <li>操作类型:&nbsp;</li>
-                <li>操作后数量:&nbsp;</li>
-                <li>出成率:&nbsp;</li>
+                <li>操作类型:&nbsp;{{operationInfo.operationTypeName}}</li>
+                <li>操作后数量:&nbsp;{{operationInfo.changeAfter}}</li>
+                <li>出成率:&nbsp;{{operationInfo.yield}}</li>
             </div>
             <div class="col">
-                <li>消耗仓库:&nbsp;</li>
+                <li>消耗仓库:&nbsp;{{operationInfo.wName}}</li>
             </div>
         </div>
     </div>
 </template>
 <script>
+/*
+    请求:
+        获取bom单消耗详情:InvoicingGetLogDetail
+*/
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 
@@ -77,11 +81,56 @@ export default {
                 {id:1,name:'日'},
                 {id:2,name:'年'},
             ],
-            materialInfo:{},
-            
+            materialInfo:{},                //物料详情
+            operationInfo:{},               //操作记录
+            logId:'',                       //日志id
+            materialId:'',                  //物料id
         };
     },
     methods: {
+        //获取物料详情
+        async getMaterialDetail(){
+            let info = {};
+
+            info = await this.getHttp('MaterialGetMaterialDetail',{mid:this.materialId,wid:0,isDistribution:0});
+            if(this.toRaw(info,'Object')){
+                //物料类型
+                info.typeName = this.getAttr(this.materialType,info.type,'id','name');                                          
+                this.getMaterialUnitInfo(info,'unit');                                                  
+                //库存总量
+                info.sumStoreNum = global.comUnit(info.num, info.defUnitVal, info.defUnitName, info.minUnitName);   
+                //保质期类型
+                info.validityTypeName = this.getAttr(this.valiDate,info.validityType,'id','name');
+                this.materialInfo = info;
+            }
+        },
+        async getHistory(){
+            let retData = {};
+            let info = this.materialInfo;
+            
+            retData = await this.getHttp('InvoicingGetLogDetail',{id:this.$route.query.logId});
+            if(this.toRaw(retData,'Object')){
+                retData.createTime = this.generatorDate(retData.createTime * 1000).str;
+                retData.operationTypeName = 'BOM单消耗';
+                //操作前
+                retData.changeBefore = global.comUnit(retData.changeBefore, info.defUnitVal, info.defUnitName, info.minUnitName);
+                //操作后
+                retData.changeAfter = global.comUnit(retData.changeAfter, info.defUnitVal, info.defUnitName, info.minUnitName);
+                //毛料
+                retData.change = Math.abs(retData.change);                                  
+                //净料
+                retData.netMaterial = retData.change * retData.yield;     
+                retData.netMaterial = retData.netMaterial.toFixed(3);
+                retData.netMaterial = global.comUnit(retData.netMaterial, info.defUnitVal, info.defUnitName, info.minUnitName);   
+                //出成率
+                retData.yield = retData.yield * 100 + '%';   
+                retData.change = global.comUnit(retData.change, info.defUnitVal, info.defUnitName, info.minUnitName);   
+            }
+            this.operationInfo = retData;
+        },
+
+
+
         getMaterialUnitInfo(ele,id,attr='unit'){
             //获取物料的单位信息
             if(!Array.isArray(ele[attr])){
@@ -111,8 +160,8 @@ export default {
             }
          
         },
-		getAttr(arr,val,attr='id'){
-			let getAttr = 'name';
+		getAttr(...args){
+            let [arr=[],val,attr='type',getAttr='typeName'] = args;
 			if(!Array.isArray(arr)) arr = [];
 			for(let ele of arr){
 				if(ele[attr] == val) return ele[getAttr];
@@ -154,21 +203,31 @@ export default {
         },
         toRaw(val,type){
             return Object.prototype.toString.call(val).slice(8,-1) === type;
-        }
-    },
-    components: {
-
+        },
+		initBtn(){
+			this.$store.commit('setPageTools',[
+				{
+					name: '返回',
+					type:'5',
+					className:'plain',
+					fn:()=>{
+						this.$router.go(-1);
+					}
+				}
+			]);
+		}
     },
     async mounted(){
-        let info = {};
-        info = await this.getHttp('MaterialGetMaterialDetail',{mid:18,wid:0,isDistribution:0});
-        if(this.toRaw(info,'Object')){
-            info.typeName = this.getAttr(this.materialType,info.type);
-            this.getMaterialUnitInfo(info,'unit');
-            info.sumStoreNum = global.comUnit(info.num, info.defUnitVal, info.defUnitName, info.minUnitName);
-            info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
-            this.materialInfo = info;
-            console.log(info);
+        this.initBtn();
+        let {mid:materialId,logId} = this.$route.query;
+        this.logId = Number(logId);
+        this.materialId = Number(materialId);
+        
+        if(typeof this.materialId == 'number'){
+            await this.getMaterialDetail();
+        }
+        if(typeof this.logId == 'number'){
+            await this.getHistory();
         }
     },
 };
