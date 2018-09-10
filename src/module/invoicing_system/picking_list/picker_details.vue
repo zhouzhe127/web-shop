@@ -141,25 +141,24 @@
 					this.initOne();
 				}else{
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'领料人详情'}]});
-					let arr = [{
-						name:'返回',
-						className:'info',
-						type:4,
-						fn:()=>{
-							// this.$emit('throwWinResult',false);
-							this.$store.commit('setPageTools',{});
-							storage.session('numType',{num:1});
-							this.$router.push({path:'../pickingList',query:this.$route.query});
-						}},{
-						name:'领料盘库',
-						className:'success',
-						type:4,
-						fn:()=>{
-							this.isPickerDetail = false;
-							let data = {storageInfo:this.detailList,info:this.info};
-							storage.session('plateStorage',data);
-							this.$router.push({path:'../pickingList/plateStorage',query:this.$route.query});
-						}}];
+					let arr = [
+						{name:'领料盘库',className:'success',type:4,
+							fn:()=>{
+								this.isPickerDetail = false;
+								let data = {storageInfo:this.detailList,info:this.info};
+								storage.session('plateStorage',data);
+								this.$router.push({path:'../pickingList/plateStorage',query:this.$route.query});
+							}
+						},
+						{name:'返回',className:'info',type:4,
+							fn:()=>{
+								// this.$emit('throwWinResult',false);
+								this.$store.commit('setPageTools',{});
+								storage.session('numType',{num:1});
+								this.$router.push({path:'../pickingList',query:this.$route.query});
+							}
+						},
+					];
 					this.$store.commit('setPageTools',arr);
 					this.getDetailByOwner();
 				}

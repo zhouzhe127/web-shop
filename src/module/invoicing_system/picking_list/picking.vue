@@ -10,7 +10,7 @@
 			<div class="row">
 				<span class="left required">领料原因</span>
 				<div class="right">
-					<input type="text" placeholder="请输入领料原因" maxlength="20" v-model="pickData.reason">
+					<el-input placeholder="请输入领料原因" maxlength="20" v-model="pickData.reason" style="width:210px;"></el-input>
 					<div class="tips"><i class="icon"></i><i>限20字以内</i></div>
 				</div>
 			</div>

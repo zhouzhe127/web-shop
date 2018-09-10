@@ -22,7 +22,7 @@
         <div>
             <div class="block-box" >
             	<div class="inline-box" >
-	            	<el-select v-model="dynamic" placeholder="请选择调度状态" @change="getStatus" style="width:200px;">
+	            	<el-select v-model="dynamic" placeholder="请选择调度状态" @change="getStatus">
 					    <el-option
 							v-for="item in allStatus"
 							:key="item.value"
@@ -32,22 +32,34 @@
 					</el-select>
 				</div>
 				<div class="inline-box" >
-					<el-input v-model="receiptNumber" placeholder="请输入调度单号" style="width:200px;"></el-input>
+					<el-input v-model="receiptNumber" placeholder="请输入调度单号"></el-input>
 				</div>
                 <div class="inline-box" >
-                	<el-input v-model="createName" placeholder="请输入操作人" style="width:200px;"></el-input>
+                	<el-input v-model="createName" placeholder="请输入操作人"></el-input>
                 </div>
             </div>
             <div class="block-box" >
 	            <div class="inline-box" >
 	            	<span>出货仓库：</span>
-                    <select-store class="inline-box" @emit="getOutId" :sorts="allWarehouse" :tipName="'请选择仓库'" >
-                    </select-store>
+                    <el-select v-model="outWarehouse" placeholder="请选择仓库" @change="getOutId" multiple collapse-tags>
+					    <el-option
+							v-for="item in allWarehouse"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+					    </el-option>
+					</el-select>
 	            </div>
 	            <div class="inline-box">
 	            	<span>入货仓库：</span>
-                    <select-store class="inline-box" @emit="getIntoId" :sorts="allWarehouse" :tipName="'请选择仓库'" >
-                    </select-store>
+                    <el-select v-model="intoWarehouse" placeholder="请选择仓库" @change="getIntoId" multiple collapse-tags>
+					    <el-option
+							v-for="item in allWarehouse"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+					    </el-option>
+					</el-select>
 	            </div>
 	            <div class="inline-box">
 	                <el-button @click="searchClick" type="success">筛选</el-button>
@@ -55,23 +67,42 @@
 	            </div>
             </div>
         </div>
-        <!--这是用表单组件更改新页面的部分-->
-        <tableCom :listHeight="60" :listName="'调度记录'" :introData="dispatchingRecord" :titleData="titleList" :allTotal="count"
-        	:listWidth="1200">
-            <div slot="con-0" slot-scope="props" @click="dispatchingDetail" class="table-detail" :data-index="props.index">
-                <em v-if="props.data.dynamic != 1" class="detail">查看详情</em>
-                <em v-if="props.data.dynamic == 2" class="yellow-btn enter"><i></i>入货</em>
-                <em v-if="props.data.dynamic == 1" class="yellow-btn confirm-out">确认出货</em>
-            </div>
-            <div slot="con-5" slot-scope="props">{{timeConversion(props.data.createTime)}}</div>
-        </tableCom>
-        <el-pagination @current-change="pageClick" @size-change="sizeChange"
-			:current-page="page"
-			background
-			layout="sizes,total,prev, pager, next"
-			:page-sizes="[10, 20, 50]"
-			:total="count">
-		</el-pagination>
+        <el-table :data="dispatchingRecord" stripe border style="width: 100%">
+		    <el-table-column prop="dispatchingRecordType" label="调度状态">
+		    </el-table-column>
+		    <el-table-column prop="receiptNumber" label="调度单号">
+		    </el-table-column>
+		    <el-table-column prop="outWname" label="出货仓库">
+		    </el-table-column>
+		    <el-table-column prop="intoWname" label="入货仓库">
+		    </el-table-column>
+		    <el-table-column label="创建时间">
+		    	<template slot-scope="scope">
+		        	{{timeConversion(scope.row.createTime)}}
+		      	</template>
+		    </el-table-column>
+		    <el-table-column prop="createName" label="操作人">
+		    </el-table-column>
+		    <el-table-column label="BOM类型" align="center">
+		    	<template slot-scope="scope" fixed="right" width="180" >
+		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic != 1"
+		        		type="text" size="small">查看详情</el-button>
+		        	<el-button @click="dispatchingDetail(scope.row,2)" v-if="scope.row.dynamic == 2"
+		        		type="text" size="small" style='color:#D34A2B'>入货</el-button>
+		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic == 1"
+		        		type="text" size="small" style='color:#D34A2B'>确认出货</el-button>
+		      	</template>
+		    </el-table-column>
+	  	</el-table>
+	  	<div class="page-box">
+	  		<el-pagination @current-change="(res)=>{pageClick(res,1)}" @size-change="pageClick"
+				:current-page="page"
+				background
+				layout="sizes,total,prev, pager, next"
+				:page-sizes="[10, 20, 50]"
+				:total="count">
+			</el-pagination>
+	  	</div>
     </div>
 </template>
 
@@ -165,35 +196,24 @@ export default {
 			this.page = 1;
 			this.search();
 		},
-		pageClick(res) {
-			this.page = res;
+		pageClick(res,type) { //分页 获取页数
 			if(this.allWarehouseData.length) {
-				this.search();
-			}
-		},
-		sizeChange(res){
-			this.num = res;
-			if(this.allWarehouseData.length) {
+				if(type){
+					this.page = res;
+				}else{
+					this.num = res;
+				}
 				this.search();
 			}
 		},
 		getStatus(res) {
 			this.dynamic = res;
 		},
-		getOutId(arr) { //获取出货仓库id
-			this.setWareIdEach(arr, 'outWarehouse');
+		getOutId(res) { //获取出货仓库id
+			this.outWarehouse = res;
 		},
 		getIntoId(arr) { //获取出货仓库id
-			this.setWareIdEach(arr, 'intoWarehouse');
-		},
-		setWareIdEach(arr, name) {
-			let strArr = [];
-			for(let item of arr) {
-				if(item.selected == true) {
-					strArr.push(item.id);
-				}
-			}
-			this[name] = strArr.join(',');
+			this.intoWarehouse = res;
 		},
 		//获取仓库
 		async getWarehouse() {
@@ -205,15 +225,14 @@ export default {
 				arrId = [];
 			for(let item of res) {
 				let obj = {
-					name: item.name,
-					id: item.id,
-					selected: true,
+					label: item.name,
+					value: item.id,
 				};
 				arrObj.push(obj);
 				arrId.push(item.id);
 			}
 			this.allWarehouse = arrObj;
-			this.allWarehouseId = arrId.toString();
+			this.allWarehouseId = arrId;
 			this.resWareId(); //重置仓库id集合
 			this.totalList = res.length;
 			this.search();
@@ -241,11 +260,11 @@ export default {
 				this.myAlert('开始时间不能大于结束时间');
 				return;
 			}
-			if(!this.outWarehouse) {
+			if(!this.outWarehouse.length) {
 				this.myAlert('请选择出货仓库');
 				return;
 			}
-			if(!this.intoWarehouse) {
+			if(!this.intoWarehouse.length) {
 				this.myAlert('请选择入货仓库');
 				return;
 			}
@@ -255,8 +274,8 @@ export default {
 				dynamic: this.dynamic,
 				receiptNumber: this.receiptNumber,
 				createName: this.createName,
-				outWarehouse: this.outWarehouse,
-				intoWarehouse: this.intoWarehouse,
+				outWarehouse: this.outWarehouse.join(','),
+				intoWarehouse: this.intoWarehouse.join(','),
 				page: this.page,
 				num: this.num
 			};
@@ -290,28 +309,22 @@ export default {
 			this.num = 10;
 			this.search();
 		},
-		dispatchingDetail(event) { //调度记录详情-入货-确认出货
-			let target = event.target,
-				current = event.currentTarget;
-			if(target.tagName.toLocaleLowerCase() == 'em') {
-				let index = current.getAttribute('data-index');
-				let item = this.dispatchingRecord[index];
-				let className = target.className;
+		dispatchingDetail(res,type) { //调度记录详情-入货-确认出货
+			let item = res;
+			this.$route.query.id = item.id;
+			if(type==1) { //查看详情
+				storage.session('operationRequest', this.requestObj);
 				this.$route.query.id = item.id;
-				if(className.includes('detail') || className.includes('confirm-out')) { //查看详情
-					storage.session('operationRequest', this.requestObj);
-					this.$route.query.id = item.id;
-					this.$router.push({
-						path: '/admin/operation/operationDetail',
-						query: this.$route.query
-					});
-				} else if(className.includes('enter')) { //入货
-					storage.session('operationRequest', this.requestObj);
-					this.$router.push({
-						path: '/admin/operation/enterGoods',
-						query: this.$route.query
-					});
-				}
+				this.$router.push({
+					path: '/admin/operation/operationDetail',
+					query: this.$route.query
+				});
+			}else{ //入货
+				storage.session('operationRequest', this.requestObj);
+				this.$router.push({
+					path: '/admin/operation/enterGoods',
+					query: this.$route.query
+				});
 			}
 		},
 		getSaveRequest() { //获取缓存的请求参数
@@ -408,16 +421,12 @@ export default {
 <style lang='less' scoped>
 .operation{
     .oprationTime{width: 80px;height:100%;line-height:40px;font-size:15px;float: left}
-    .chooseTime{width: 100%;margin-top: 20px;
+    .chooseTime{width: 100%;margin-top: 15px;margin-bottom: 15px;
         .box{display: inline-block;vertical-align: middle;}
         &:after{content: '';clear: both;zoom: 1;display: block;}
     }
-    .block-box{display: inline-block;padding-top: 20px;
-        .input{ width: 174px;height: 40px;padding: 0 10px;border: 1px solid #B3B3B3;
-            &:focus{outline: none;}
-        }
-    }
-    .inline-box{display: inline-block;margin-right: 10px;
+    .block-box{display: inline-block;}
+    .inline-box{display: inline-block;margin-right: 10px;margin-bottom: 15px;
         span{vertical-align: middle;}
         ul{width: 100%;max-height: 200px;margin: 0;position: absolute;
             top: 43px;left: 0;z-index: 10;background: #fff;overflow-y: auto;border-bottom: 1px solid #ccc;
@@ -447,5 +456,6 @@ export default {
         .yellow-btn{color: #ffa627;}
     }
     .buttonBox{width: 90px;height: 40px;line-height: 40px;}
+    .page-box{padding: 15px 0;}
 }
 </style>
