@@ -87,13 +87,13 @@
                 </el-table-column>
                 <el-table-column prop="changeAfter" width="150px" label="操作后数量/重量" >
                 </el-table-column>
-                <el-table-column  label="成本金额" >
+                <el-table-column  label="成本金额" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
 						{{row.cost}}
 					</template>	  
                 </el-table-column>
-                <el-table-column label="售卖价格" >
+                <el-table-column label="售卖价格" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowPrice,'arrow-down':!row.arrowPrice}"></span>
 						{{row.price}}
@@ -298,13 +298,13 @@ export default {
 
 
                 ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
-                ele.change = Math.abs(ele.change);
+                // ele.change = Math.abs(ele.change);
 
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
-                ele.cost = Math.abs(ele.cost);
+                // ele.cost = Math.abs(ele.cost);
 
                 ele.arrowPrice = ele.price > 0;
-                ele.price = Math.abs(ele.price);
+                // ele.price = Math.abs(ele.price);
 
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
@@ -328,8 +328,8 @@ export default {
 
         //是否可以查看批次详情
         canviewBatchDetail(id){
-            let cannot = [7,8,14,15,16,19,20];
-            return cannot.includes(Number(id));
+            let can = [1,2,3,4,5,6,9,12,13,17,18];
+            return !can.includes(Number(id));
         },
         //是否可以查看记录
         canViewHistory(id){
@@ -337,10 +337,11 @@ export default {
             return cannot.includes(Number(id));
         },
 
+
         //查看记录
         viewHistory(item){
             let obj = {};
-            switch(item.id+''){
+            switch(item.type+''){
                 case '1'://入库,
                 case '4'://上架(库存)
                 case '5'://下架到库存(老批次)
@@ -351,12 +352,19 @@ export default {
                 case '12'://下架到库存新批次
                 case '15'://入库并上架
                 case '16'://盘点货架
+                case '19'://上架货架
+                case '20'://下架到库存(货架)
                     return;
                 case '2'://调入->入货单
                     obj.path = '/admin/operation/enterGoods';
 
+                    obj.query = {
+                        id:893,
+                        intoId:1,
+                        logTab:2,
+                        logType:1,
+                    };
                     //1).这条调度单的id
-                    obj.query = {id:893};
 
                     //2).入货单id
 
@@ -367,68 +375,44 @@ export default {
                     //路由传参
                     break;
                 case '3'://调出->出货单
+                    obj.path = '/admin/operation/enterGoods';
 
-
-                    //1)    logTab = 1 (出货单)  2:入货单
-                    //2)    logType = 1 (商品)  2:物料
-                case '17'://出货回库                
-                    obj.path = '/admin/operation/operationDetail';
-                    obj.query = {id:899};
-
-                case '13'://导入入库
-                case '14'://导入上架
-                    obj.path = '/admin/wareImport';
+                    obj.query = {
+                        logTab:1,
+                        logType:1,
+                    };                    
+                    break;
+                case '13'://导入入库 ->导入记录页面
+                    break;
+                case '14'://导入上架 ->导入记录页面
+                    break;
+                case '17'://取消调度回库 ->出货单                
+                    obj.path = '/admin/operation/enterGoods';
+                    obj.query = {
+                        logTab:1,
+                        logType:1,
+                    };  
                     break;
                 case '18'://批量盘库记录
-                    obj.path = '/admin/goodsCountHistory';
-                    obj.query = {id:item.id};
+                    obj.path = '/admin/goodsCountDetail';
+                    obj.query = {id:item.other.logId};
                     break;
+                case '19':
             }
+            console.log(obj);
+            this.$router.push(obj);
         },
         //查看批次详情
-        viewBatchDetail(){
+        viewBatchDetail(item){
             let obj = {};
-            switch(item.id+''){
-                case '7'://下架到耗损
-                case '8'://售出
-                case '14'://导入上架
-                case '15'://入库并上架
-                case '16'://盘点货架
-                case '19'://上架货架
-                case '20'://下架到库存(货架)
-                    return;
-
-                case '1'://跳转到批次详情(新)-->入库,  未标注
-                case '2'://调入出
-                case '3'://调入
-                case '6'://仓库耗损
-                case '9'://售出退货
-                case '13'://导入入库
-                case '17'://取消调度会哭
-                case '18'://批量盘库
-                    break;
-
-                case '4'://上架库存 -> 进入批次详情
-                    break;
-
-                case '5'://下架到库存（老批次）-->进入批次详情
-                    break;
-
-                case '12'://下架到库存(新批次) ->下架页面(下架到新建批次)
-
-
-
-                case '18':
-                    obj.path = '/admin/inventoryManagement/detail';
-                    
-                    break;
-                case '2':
-
-                    break;
-                case '3':
-                    
+            let can = [1,2,3,4,5,6,9,12,13,17,18];
+            if(can.includes(Number(item.type))){
+                obj.path = '/admin/goodsBatchTotalLogDetail';
+                obj.query = {gid:item.itemId,logId:item.id};
+                this.$router.push(obj);
             }
         },
+
 
 
         //获取分类
@@ -449,7 +433,7 @@ export default {
             }
         },
     },
-    async mounted(){
+    mounted(){
         this.initData();
         this.initPageObj();
         this.initCondition();
@@ -459,7 +443,7 @@ export default {
         this.getWarehouseList();
 
         this.filterReset('reset');
-
+        console.log(process);
     },
     /*
     beforeRouteEnter(to,from,next){

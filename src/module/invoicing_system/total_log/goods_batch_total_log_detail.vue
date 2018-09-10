@@ -50,14 +50,6 @@
         </div>
 
         <div class="content">
-            <el-select v-model="unitArr" placeholder="单位切换" clearable>
-                <el-option
-                v-for="item in unitArr"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-                </el-option>
-            </el-select>
             <div class="operation-type">
                 操作类型:{{typeName}}
             </div>
@@ -66,28 +58,28 @@
         <div class="table">
             <div class="table-head">
                 批次列表
-                <i class="circle"></i>共 <span class="num">2</span> 个条目
+                <i class="circle"></i>共 <span class="num">{{tableData.length}}</span> 个条目
             </div>
             <el-table :data="tableData" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
                 <el-table-column prop="itemIndex"  label="序号">
                 </el-table-column>
-                <el-table-column prop="barcode" width="150px" label="批次编码" >
+                <el-table-column prop="batchCode" width="150px" label="批次编码" >
                 </el-table-column>
-                <el-table-column prop="operationType" width="150px" label="生产日期" >
+                <el-table-column prop="createTime" width="150px" label="生产日期" >
                 </el-table-column>
-                <el-table-column prop="before" width="150px" label="供应商" >
+                <el-table-column prop="supplier" width="150px" label="供应商" >
                 </el-table-column>
-                <el-table-column prop="change" width="150px" label="变化量" >
+                <el-table-column width="150px" label="变化量" >
                     <template slot-scope="{row,col,index}">
-						<span class="arrow" :class="{'arrow-up':row.arrow,'arrow-down':!row.arrow}"></span>
-						{{row.change}}
+						<span class="arrow" :class="{'arrow-up':row.arrowNum,'arrow-down':!row.arrowNum}"></span>
+						{{row.num}}
                     </template>
                 </el-table-column>
-                <el-table-column prop="after" width="150px" label="进价" >
+                <el-table-column prop="distributionPrice" width="150px" label="进价" >
                 </el-table-column>
-                <el-table-column prop="cost" width="150px" label="仓库" >
+                <el-table-column prop="aName" width="150px" label="仓库" >
                 </el-table-column>
-                <el-table-column prop="cost" width="150px" label="备注" >
+                <el-table-column prop="remark" width="150px" label="备注" >
                 </el-table-column>
             </el-table>           
         </div>
@@ -108,28 +100,66 @@ export default {
                 {id:0,name:'月'},
                 {id:1,name:'日'},
                 {id:2,name:'年'},
-            ],
+            ],          
+            logId:null,                 //日志id
+            goodsId:null,               //商品id
+            
             materialInfo:{},
-            typeName:'',            //操作类型
             tableData:[],
             operationList:[],
-            unitArr:[],
-            goodsId:1,               //商品id
-            logId:1,                 //日志id
+            typeName:'',            //操作类型  
         };
     },
     methods: {
+        //获取商品详情
         async getGoodsDetail(){
             let info = {};
             info = await this.getHttp('InvoicingGetGoodsDetail',{gid:this.goodsId,wid:0});
             if(!info || typeof info != 'object') info = {};
-            info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
+            info.validityTypeName = this.getAttr(this.valiDate,info.validityType,'id','name');
             this.materialInfo = info;
+        },
+        //获取批次列表
+        async getBatchDetail(){
+            let retData = {},
+                detail = {},
+                types = [],
+                arr = [];
+                
+            arr = [
+                this.getHttp('InvoicingGetLogBatchDetail',{id:this.logId}),
+                this.getHttp('invoicing_getInventoryLogType'),
+            ];
+
+            retData = await Promise.all(arr);
+            [detail,types] = retData;
+            if(Array.isArray(types)){
+                this.operationList = types;
+            }
+            if(Array.isArray(detail.list)){
+                this.tableData = detail.list;
+            }
+            if(!detail || typeof detail != 'object') detail = {};
+            this.typeName = this.getAttr(this.operationList,detail.type,'type','typeName');
+            this.initTableData();
+        },
+        initTableData(){
+            this.tableData = this.tableData.map((ele,index)=>{
+                index += 1;
+                ele.itemIndex = index > 9 ? index : '0'+index;
+                
+                ele.createTime = this.generatorDate(ele.productionTime * 1000).dateTime;
+                ele.arrowNum = ele.num > 0;
+                ele.num = '' + ele.num + this.materialInfo.unit;
+                ele.distributionPrice = `${ele.distributionPrice}元/ ${this.materialInfo.unit}`;
+                return ele;
+            });
         },
 
 
-		getAttr(arr,val,attr='type'){
-			let getAttr = 'typeName';
+        //匹配元素值
+		getAttr(...args){
+            let [arr=[],val,attr='type',getAttr='typeName'] = args;
 			if(!Array.isArray(arr)) arr = [];
 			for(let ele of arr){
 				if(ele[attr] == val) return ele[getAttr];
@@ -168,24 +198,38 @@ export default {
             date.dateTime = `${year}-${month}-${day}`;
 			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
 			return date;
-		},
+        },
+		initBtn(){
+			this.$store.commit('setPageTools',[
+				{
+					name: '返回',
+					type:'5',
+					className:'plain',
+					fn:()=>{
+						this.$router.go(-1);
+					}
+				}
+			]);
+		}
     },
     components: {
 
     },
     async mounted(){
-        let typeName = '';
-        let retData = {};
-        
-        this.getGoodsDetail();
+        let {logId,gid:goodsId} = this.$route.query;
+        this.logId = Number(logId);
+        this.goodsId = Number(goodsId);
 
-        retData = await this.getHttp('InvoicingGetLogBatchDetail',{id:this.logId});
-        if(!retData || typeof retData != 'object') retData = {};
+        this.initBtn();
 
-        this.operationList = await this.getHttp('invoicing_getInventoryLogType');
-        console.log(retData.type);
-        this.typeName = this.getAttr(this.operationList,retData.type);
+        if(typeof this.goodsId == 'number'){
+            await this.getGoodsDetail();
+        }
+        if(typeof this.logId == 'number'){
+            await this.getBatchDetail();
+        }
     },
+
 };
 </script>
 <style lang='less' scoped>
@@ -248,7 +292,7 @@ export default {
             .operation-type{
                 display: inline-block;
                 height:40px;
-                color:#303133;
+                color:#606266;
                 padding-left: 20px;
             }
         }
