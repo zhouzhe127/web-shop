@@ -20,6 +20,14 @@
 			<el-radio-group v-model="packageType" @change = "changePackageType">
 				<el-radio-button v-for="item in packageMenu" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
 			</el-radio-group>
+			<div v-if="selectTab==1" class="boxTop" style="display:inline-block">
+				<span v-if="ischain=='1'||ischain=='2'" class="aSpan">
+					<i class="aI" style=""></i>品牌指派
+				</span>
+				<span v-if="ischain=='1'||ischain=='2'" class="aSpan" style="color:#2ea7e0;">
+					<i class="aI" style="background:#2ea7e0;"></i>门店自建
+				</span>
+			</div>
 			<!-- <div class="place fl" style="height:auto;margin-top:25px;">
 				<span v-for="(item,index) in packageMenu" :key="index" v-bind:class='{"on":packageType==item.id}'  v-on:click="changePackageType(item.id,index)">{{item.name}}</span>
 			</div> -->
@@ -520,7 +528,7 @@ export default{
 		this.initSyncBtn();
 		this.syncRequest();
 		// this.windowResize();
-		window.addEventListener('resize',this.windowResize,false);
+		// window.addEventListener('resize',this.windowResize,false);
 	},
 	components:{
 		addEdit:()=> import (/*webpackChunkName:'package_add_edit_win'*/'./package_com/package_add_edit_win'),
@@ -534,6 +542,24 @@ export default{
 </script>
 <style type="text/less" lang="less" scoped>
 	/*列表的显示*/
+	.boxTop{
+		// height:40px;line-height: 40px;
+		padding:0 5px;
+		.aSpan {
+			font-size: 16px;
+			color: #fe9200;
+			margin-right: 20px;
+			.aI {
+				background: #fe9200;
+				display: inline-block;
+				width: 16px;
+				height: 16px;
+				border-radius: 8px;
+				margin-right: 10px;
+				vertical-align: middle;
+			}
+		}
+	}
 	.meal-container {
 		.whb(@width,@height,@border:none){
 			width:@width;
