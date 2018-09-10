@@ -89,7 +89,7 @@
 			</el-form-item>
 			<el-form-item label="启用交接班班次 ">
 				<el-switch v-model="showShift" active-color="#13ce66" inactive-color="#ff4949" style="float: left;margin-top:10px;margin-right:10px;"></el-switch>
-				<el-checkbox  v-for="(item,index) in shiftList" :key="index" v-model="item.selected" :label="item.name" border size="medium"></el-checkbox>
+				<el-checkbox v-if="showShift" v-for="(item,index) in shiftList" :key="index" v-model="item.selected" :label="item.name" border size="medium"></el-checkbox>
 			</el-form-item>
 			<el-form-item label="">
 				<el-button style="width: 290px;" @click="send" type="primary">修改店铺信息</el-button>
