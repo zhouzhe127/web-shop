@@ -100,22 +100,29 @@
 						<span v-if="scope.row.type=='2'">自定义套餐</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isDiscount" label="参与优惠">
+				<el-table-column min-width = "80" align="center" prop="status" label="状态">
+					<template slot-scope="scope">
+						<span v-if="scope.row.status=='0'">正常</span>
+						<span v-if="scope.row.status=='1'">已估清</span>
+						<span v-if="scope.row.status=='2'">已下架</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" align="center" prop="isDiscount" label="参与优惠">
 					<template slot-scope="scope">
 						<span :class="scope.row.isDiscount=='0'?'el-icon-close':'el-icon-check'"></span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="serviceCharge" label="服务费">
+				<el-table-column min-width = "80" align="center" prop="serviceCharge" label="服务费">
 					<template slot-scope="scope">
 						<span :class="scope.row.serviceCharge=='0'?'el-icon-close':'el-icon-check'"></span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isRecommend" label="推荐菜">
+				<el-table-column min-width = "80" align="center" prop="isRecommend" label="推荐菜">
 					<template slot-scope="scope">
 						<span :class="scope.row.isRecommend=='0'?'el-icon-close':'el-icon-check'"></span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isVip" label="参与会员">
+				<el-table-column min-width = "80" align="center" prop="isVip" label="参与会员">
 					<template slot-scope="scope">
 						<span :class="scope.row.isVip=='0'?'el-icon-close':'el-icon-check'"></span>
 					</template>
