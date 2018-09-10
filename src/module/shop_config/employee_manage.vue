@@ -43,7 +43,7 @@
 				</span>
 			</div>
 			<el-table class="list" :data="pagedList" border style="width: 100%;" stripe :header-cell-style = "{'background-color':'#f5f7fa'}">
-				<el-table-column fixed align="center" min-width = "120" max-width = "200" :render-header="renderHeader" label="操作">
+				<el-table-column fixed align="center" min-width = "120" :render-header="renderHeader" label="操作">
 					<template slot-scope="scope">
 						<div class="optionWrap">
 							<template v-if="!batch" >
@@ -57,22 +57,22 @@
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" label="序号">
+				<el-table-column align="center" min-width = "120" label="序号">
 					<template slot-scope="scope">
 						<span>{{(scope.$index+1)+(page-1)*10}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column show-overflow-tooltip  align="center" label="员工名称" prop="name"></el-table-column>
-				<el-table-column align="center" label="职位名称" prop="roleName">
+				<el-table-column show-overflow-tooltip  min-width = "120" align="center" label="员工名称" prop="name"></el-table-column>
+				<el-table-column align="center" min-width = "120" label="职位名称" prop="roleName">
 					<template slot-scope="scope">
 						<span v-if="scope.row.roleId*1>=100000||scope.row.roleId*1==0" :style="{color:ischain=='1'||ischain=='2'?'#fe9200':'#333'}">{{scope.row.roleName}}</span>
 						<span v-if="scope.row.roleId* 1> 0&&scope.row.roleId* 1< 100000" :style="{color:ischain=='1'||ischain=='2'?'#29abe2':'#333'}">{{scope.row.roleName}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" label="手机号码" prop="mobile"></el-table-column>
+				<el-table-column align="center" min-width = "120" label="手机号码" prop="mobile"></el-table-column>
 			</el-table>
 		</div>
-		<div class="pageWrap" v-if="!batch">
+		<div v-if="!batch">
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size = "pagenum" layout="sizes, prev, pager, next" :page-count="totalPage" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
 		<employee-win v-if="showWin" @throwWinResult="doThrowWinResult" :isAdd="isAdd" :employeeId="employeeId" :employeeIndex="employeeIndex" :list="pagedList" :jobList="jobList.slice(1)" :ischain="+ischain"></employee-win>
@@ -430,6 +430,7 @@ export default {
 						content: '新增员工成功',
 						autoHideTime: 1000
 					});
+					this.getUserList();
 				} else if (!this.isAdd) {
 					this.getUserList();
 					this.$store.commit('setWin', {
@@ -539,33 +540,33 @@ export default {
 		min-width: 710px;
 		color: #424149;
 		.sdRed{color: @sdRed}
-		nav{
-			// height: 40px;
-			// line-height: 40px;
-			// margin-bottom: 20px;
-			vertical-align: middle;
-			transition: height 0.3s;
+		// nav{
+		// 	// height: 40px;
+		// 	// line-height: 40px;
+		// 	// margin-bottom: 20px;
+		// 	vertical-align: middle;
+		// 	transition: height 0.3s;
 
-			&.sdHidden{
-				height: 0;
-			}
-			input{
-				margin:0 5px;
-				width: 180px;
-				height: 40px;
-				border: 1px solid #e3e3e3;
-				border-radius: 2px;
-				padding: 0 5px;
-				outline: none;
-			}
-			a{
-				vertical-align: middle;
-				width: 90px;
-				height: 40px;
-				line-height: 40px;
-				margin-left:10px;
-			}
-		}
+		// 	&.sdHidden{
+		// 		height: 0;
+		// 	}
+		// 	input{
+		// 		margin:0 5px;
+		// 		width: 180px;
+		// 		height: 40px;
+		// 		border: 1px solid #e3e3e3;
+		// 		border-radius: 2px;
+		// 		padding: 0 5px;
+		// 		outline: none;
+		// 	}
+		// 	a{
+		// 		vertical-align: middle;
+		// 		width: 90px;
+		// 		height: 40px;
+		// 		line-height: 40px;
+		// 		margin-left:10px;
+		// 	}
+		// }
 		.aBox{
 			width:100%;border-bottom:none;margin:10px 0;
 			.boxTop{
@@ -621,104 +622,104 @@ export default {
 				vertical-align: middle;
 			}
 		}
-		ul.tas-variety{
-			position: relative;
-			z-index: 9;// 比下拉少1
-			border: 1px solid #d2d2d2;
-			>li{
-				width: 100%;
-				height: 60px;
-				border-bottom: 1px solid #f7f7f7;
-				background-color: #fff;
-				ul{
-					width: 100%;
-					height: 45px;
-					overflow: hidden;
-					li{
-						height: 60px;
-						line-height: 60px;
-						float: left;
-						text-align: center;
-						span{
-							color: @sdRed;
-							display: inline-block;
-							padding:0 20px;
-							cursor: pointer;
-							&:first-child{
-								color: @sdOrange;
-							}
-						}
-						i{
-							display: inline-block;
-							width: 20px;
-							height: 20px;
-							border: 1px solid #949494;
-							border-radius: 50%;
-							cursor: pointer;
-							&.select{
-								background-color: @sdBlue;
-								background-image: url(../../res/images/checkbox-on.png);
-								border:none;
-							}
-						}
-					}
-				}
-			}
-			>li:first-child{
-				height: 45px;
-				div{
-					font-size: 16px;
-					line-height: 45px;
-					span{
-						line-height: 45px;
-						display: block;
-						width: 14px;
-						height: 14px;
-						border-radius: 50%;
-						float: left;
-						background-color: @sdOrange;
-						margin: 16px 10px 0 0;
+		// ul.tas-variety{
+		// 	position: relative;
+		// 	z-index: 9;// 比下拉少1
+		// 	border: 1px solid #d2d2d2;
+		// 	>li{
+		// 		width: 100%;
+		// 		height: 60px;
+		// 		border-bottom: 1px solid #f7f7f7;
+		// 		background-color: #fff;
+		// 		ul{
+		// 			width: 100%;
+		// 			height: 45px;
+		// 			overflow: hidden;
+		// 			li{
+		// 				height: 60px;
+		// 				line-height: 60px;
+		// 				float: left;
+		// 				text-align: center;
+		// 				span{
+		// 					color: @sdRed;
+		// 					display: inline-block;
+		// 					padding:0 20px;
+		// 					cursor: pointer;
+		// 					&:first-child{
+		// 						color: @sdOrange;
+		// 					}
+		// 				}
+		// 				i{
+		// 					display: inline-block;
+		// 					width: 20px;
+		// 					height: 20px;
+		// 					border: 1px solid #949494;
+		// 					border-radius: 50%;
+		// 					cursor: pointer;
+		// 					&.select{
+		// 						background-color: @sdBlue;
+		// 						background-image: url(../../res/images/checkbox-on.png);
+		// 						border:none;
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// 	>li:first-child{
+		// 		height: 45px;
+		// 		div{
+		// 			font-size: 16px;
+		// 			line-height: 45px;
+		// 			span{
+		// 				line-height: 45px;
+		// 				display: block;
+		// 				width: 14px;
+		// 				height: 14px;
+		// 				border-radius: 50%;
+		// 				float: left;
+		// 				background-color: @sdOrange;
+		// 				margin: 16px 10px 0 0;
 						
-					}
-					float: left;
-					padding: 0 20px;
-					&:last-child span{
-						background-color: @sdBlue;
-					}
-					em{
-						font-size: 16px;
-					}
-				}
+		// 			}
+		// 			float: left;
+		// 			padding: 0 20px;
+		// 			&:last-child span{
+		// 				background-color: @sdBlue;
+		// 			}
+		// 			em{
+		// 				font-size: 16px;
+		// 			}
+		// 		}
 
-			}
-			>li:nth-child(2){
-				height: 45px;
-				line-height: 45px;
-				ul{
-					background-color: #f2f2f2;
-					li{
-						line-height: 45px;
-					}
-				}
-			}
-		}
-		.w5{ width: 5%;}
-		.w10{width: 10%;}
-		.w15{width: 15%;}
-		.w20{width: 20%;}
-		.w25{width: 25%;}
-		.w30{width: 30%;}
-		.w35{width: 35%;}
-		.pageWrap{
-			height: 65px;
-			// padding-top: 20px;
-			margin-bottom: 100px;
-		}
-		.noResult{
-			text-align: center;
-			color: #aaa;
-			line-height: 45px;
-		}
+		// 	}
+		// 	>li:nth-child(2){
+		// 		height: 45px;
+		// 		line-height: 45px;
+		// 		ul{
+		// 			background-color: #f2f2f2;
+		// 			li{
+		// 				line-height: 45px;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// .w5{ width: 5%;}
+		// .w10{width: 10%;}
+		// .w15{width: 15%;}
+		// .w20{width: 20%;}
+		// .w25{width: 25%;}
+		// .w30{width: 30%;}
+		// .w35{width: 35%;}
+		// .pageWrap{
+		// 	height: 65px;
+		// 	// padding-top: 20px;
+		// 	margin-bottom: 100px;
+		// }
+		// .noResult{
+		// 	text-align: center;
+		// 	color: #aaa;
+		// 	line-height: 45px;
+		// }
 		// /deep/ .sdBlue{
 		// 	color: @sdBlue
 		// }

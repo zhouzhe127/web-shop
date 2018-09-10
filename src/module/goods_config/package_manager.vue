@@ -6,6 +6,16 @@
 <div id="package_container">
 	<!-- 显示列表 -->
 	<div id="package-list" v-cloak>
+		<div style="margin:10px 0;">
+			<el-radio-group v-model="selectTab" @change="typeChange">
+				<el-radio-button label="1">
+					<span><i class="el-icon-tickets"></i> 列表</span>
+				</el-radio-button>
+				<el-radio-button label="0">
+					<span><i class="el-icon-picture"></i> 图片</span>
+				</el-radio-button>
+			</el-radio-group>
+		</div>
 		<div style="margin:20px 0;">
 			<el-radio-group v-model="packageType" @change = "changePackageType">
 				<el-radio-button v-for="item in packageMenu" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
@@ -15,7 +25,7 @@
 			</div> -->
 		</div>
 
-		<div class="meal-container" >
+		<div v-if="selectTab==0" class="meal-container" >
 			<div class="media-div" ref ='addGoods'>
 				<div class="meal-item" :style="{'height':lineHeight+'px'}" v-on:click='openDetailWin(null,null)'>
 					<div class="commodityAdd">
@@ -26,7 +36,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="media-div" v-for="(item,index) in nowPackages" :key="index">
+			<div class="media-div" v-for="(item,index) in lists" :key="index">
 				<div class="meal-item" :style="{'height':lineHeight+'px'}" v-on:click="openDetailWin(item,index)" :key="index">
 					<img v-if="!!item.imageName" :src="imgHost+item.imageName" class="cname imgClass" />
 					<img v-if="!item.imageName" src="../../res/food/test.jpg" class="imgClass" />
@@ -60,6 +70,80 @@
 				</div>
 			</div>
 		</div>
+		<div v-if="selectTab==1">
+			<el-table
+				stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
+				:data="lists"
+				border
+				style="width: 100%">
+				<el-table-column fixed min-width = "160" show-overflow-tooltip align="center" prop="packageName" label="名称">
+					<template slot-scope="scope">
+						<span v-if="ischain=='1'||ischain=='2'" @click="openDetailWin(scope.row)" :style="{color:scope.row.id<10000?'#fe9200':'#2ea7e0',cursor:'pointer'}">{{scope.row.packageName}}</span>
+						<span v-if="ischain=='0'||ischain=='3'" @click="openDetailWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.packageName}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
+				<el-table-column min-width = "100" sortable sort-by="price" show-overflow-tooltip align="center" prop="price" label="价格" >
+					<!-- <template slot-scope="scope">
+						<span>{{parseFloat(scope.row.price).toFixed(2)}}</span>
+					</template> -->
+				</el-table-column>
+				<el-table-column min-width = "100" sortable show-overflow-tooltip align="center" prop="cost" label="成本" >
+					<!-- <template slot-scope="scope">
+						<span>{{parseFloat(scope.row.cost).toFixed(2)}}</span>
+					</template> -->
+				</el-table-column>
+				<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="type" label="类型">
+					<template slot-scope="scope">
+						<span v-if="scope.row.type=='0'">固定套餐</span>
+						<span v-if="scope.row.type=='1'">可选套餐</span>
+						<span v-if="scope.row.type=='2'">自定义套餐</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isDiscount" label="参与优惠">
+					<template slot-scope="scope">
+						<span :class="scope.row.isDiscount=='0'?'el-icon-close':'el-icon-check'"></span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="serviceCharge" label="服务费">
+					<template slot-scope="scope">
+						<span :class="scope.row.serviceCharge=='0'?'el-icon-close':'el-icon-check'"></span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isRecommend" label="推荐菜">
+					<template slot-scope="scope">
+						<span :class="scope.row.isRecommend=='0'?'el-icon-close':'el-icon-check'"></span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isVip" label="参与会员">
+					<template slot-scope="scope">
+						<span :class="scope.row.isVip=='0'?'el-icon-close':'el-icon-check'"></span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="vipPrice" label="会员优惠">
+					<template slot-scope="scope">
+						<span v-if="scope.row.isVip=='0'" class="el-icon-close"></span>
+						<span v-if="scope.row.isVip=='1'">{{scope.row.vipPrice}}</span>
+						<span v-if="scope.row.isVip=='2'">会员折扣</span>
+					</template>
+				</el-table-column>
+				<el-table-column fixed="right" width="150" align="center" prop="totalDay" label="操作">
+					<template slot-scope="scope">
+						<span style="color: #FE8D2C;cursor:pointer" @click="openDetailWin(scope.row)">编辑</span>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<span v-if="scope.row.status=='2'" style="color:rgb(108, 194, 230);cursor:pointer" @click="updownWin(scope.row)">上架</span>
+						<span v-else style="color: #FD3F1F;cursor:pointer" @click="updownWin(scope.row)">下架</span>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
+		<div style="margin-top:10px;">
+			<el-pagination v-if="selectTab=='1'" background @size-change="numChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50]"></el-pagination>
+			<el-pagination v-if="selectTab=='0'" background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="prev, pager, next"></el-pagination>
+		</div>
+		<!-- <div style="margin-top:10px;">
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="currentPage" :page-size = "num" layout="sizes, prev, pager, next" :page-count="totalNum" :page-sizes="[10, 20, 30]"></el-pagination>
+		</div> -->
 	</div>
 	<transition name="fade">
 		<component
@@ -96,8 +180,8 @@ export default{
 		return {
 			packageMenu:[
 				{id:-1,name:'全部分类'},
-				{id:1,name:'可选套餐'},
 				{id:0,name:'固定套餐'},
+				{id:1,name:'可选套餐'},
 				{id:2,name:'自定义套餐'},
 				{id:3,name:'下架套餐'},
 			],
@@ -119,10 +203,70 @@ export default{
 			packageList:[],      //存储所有的套餐列表
 			goodsList:[],        //所有商品
 
-			lineHeight:200,      //
+			lineHeight:200,
+			num: 14, // 每页展示的数量
+			currentPage: 1, //当前展示的页数
+			selectTab:1,//默认表格模式
 		};
 	},
+	computed: {
+		totalNum() {
+			return Math.ceil(this.nowPackages.length / this.num);
+		},
+		lists() {
+			let startIndex = (this.currentPage - 1) * this.num;
+			let endIndex = this.currentPage * this.num;
+			return this.nowPackages.slice(startIndex, endIndex);
+		}
+	},
 	methods:{
+		//切换图片时计算宽度
+		typeChange(res){
+			if(res==0&&this.num!=14){
+				this.numChange(14);
+				this.windowResize();
+			}
+			this.initSyncBtn();
+		},
+		//分页点击
+		pageClick: function(e) {
+			this.currentPage = e;
+		},
+		//每页显示多少行
+		numChange(e){
+			this.num = e;
+			this.currentPage = 1;
+		},
+		//上下架
+		updownWin(item){
+			let atr = item.status =='0'||item.status =='1'?'下架':'上架'
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				winType: 'confirm',
+				content: '确定'+atr+'“ ' + item.packageName + ' ”?',
+				callback: delRes => {
+					if (delRes == 'ok') {
+						this.upOrDownShelf(item, atr);
+					}
+				}
+			});
+		},
+		async upOrDownShelf(item,atr){
+			let res =await http.upOrDownShelf({
+				data:{
+					packageId:item.id,
+					status:item.status =='0'||item.status =='1'?'2':'0'
+				}
+			});
+			if(res){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alert',
+					content: atr+'成功'
+				});
+				this.closeAddEditWin('update');
+			}
+		},
 		//--------------弹窗----------------
 		//获取一级窗口点击的结果
 		closeAddEditWin(flag){
@@ -173,6 +317,7 @@ export default{
 		//----事件---------
 		//套餐分类的切换
 		changePackageType(flag){
+			this.currentPage = 1;
 			this.packageType=flag;
 			// if(typeof index == 'number') this.search='';
 			let temp =null;
@@ -245,6 +390,24 @@ export default{
 					this.funSearchPackage();
 				}}                    
 			];
+			//添加商品，如果是表格模式，显示添加按钮
+			if(this.selectTab==1){
+				arr.push({
+					name:'添加',
+					class:'pick',
+					// style:{backgroundColor:'#ff9800',color:'#fff',marginLeft:'15px'},
+					fn:()=>{
+						this.comObj={
+								status:null,
+								packageId:null,
+								goodsList:this.goodsList, 
+								title:'添加套餐',
+								isAddPack:true
+							};   
+						this.showCom='addEdit';  
+					}
+				});
+			}
 			if(this.isBrand){
 				arr.push({
 					name:'同步',
@@ -263,6 +426,11 @@ export default{
 		async getPack(){
 			let packageList= await http.getpackagelist({data:{shopId:this.shopId,page:1,num:9999}});
 			storage.session('packList',packageList);
+			for(let i=0;i<packageList.length;i++){
+				packageList[i].price = +packageList[i].price; 
+				packageList[i].cost = +packageList[i].cost; 
+				packageList[i].sort = +packageList[i].sort; 
+			}
 			return packageList;
 		},
 		async getpackagelist(flag,ver){
@@ -344,7 +512,7 @@ export default{
 		this.initData();
 		this.initSyncBtn();
 		this.syncRequest();
-		this.windowResize();
+		// this.windowResize();
 		window.addEventListener('resize',this.windowResize,false);
 	},
 	components:{

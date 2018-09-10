@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 18:12:37
+ * @Last Modified time: 2018-09-06 18:37:38
  * @Module:商品管理
 **/
 
@@ -108,7 +108,7 @@
 				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
 				</el-input>
-				<el-input v-if="industry != 1" placeholder="请输入名称/简码" v-model="search" @change="funSearchkeyUp(null)" style="width:200px;">
+				<el-input v-if="industry != 1" placeholder="请输入名称/简码" clearable v-model="search" @change="funSearchkeyUp(null)" style="width:210px;">
 					<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp(null)"></el-button>
 				</el-input>
 			</section>
@@ -314,7 +314,8 @@
 		</section>
 
 		<div v-show="goodsList.length>0">
-			<el-pagination background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" ></el-pagination>
+			<el-pagination v-if="selectTab=='1'" background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50, 100]"></el-pagination>
+			<el-pagination v-if="selectTab=='0'" background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="prev, pager, next"></el-pagination>
 			<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
 		</div>
 
@@ -378,7 +379,6 @@ export default {
 
 			brandList: null, //品牌列表
 
-			isBrand: null, //是否是品牌
 			ischain: null,
 			brandId: null,
 			shopId: null, //店铺id
@@ -437,7 +437,8 @@ export default {
 	methods: {
 		//切换图片时计算宽度
 		typeChange(res){
-			if(res==0){
+			if(res==0&&this.num!=14){
+				this.sizeChange(14);
 				this.windowResize();
 			}
 			this.initSyncBtn();
@@ -775,6 +776,12 @@ export default {
 				}
 			}
 		},
+		sizeChange(e){
+			this.num = e;
+			this.currentPage = 1;
+			this.initPage(this.pageGoods);
+		},
+
 		//分页点击
 		async pageClick(p) {
 			this.currentPage = p;
@@ -969,11 +976,6 @@ export default {
 			for (let key of ['industry', 'brandId', 'ischain']) {
 				this[key] = userData.currentShop[key];
 			}
-			this.isBrand =
-				userData.currentShop.ischain == '1' ||
-				userData.currentShop.ischain == '2'
-					? false
-					: true;
 		},
 		//获取分类
 		async getCate() {
