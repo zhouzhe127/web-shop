@@ -172,8 +172,8 @@ let config = [
 				let obj = {};
 				obj.path = '/admin/operation/enterGoods';
 				obj.query = {
-					id:893,
-					intoId:1,
+					id:item.other.dispatchId,
+					intoId:item.other.dispatchInfoId,
 					logTab:2,
 					logType:2,      
 				};

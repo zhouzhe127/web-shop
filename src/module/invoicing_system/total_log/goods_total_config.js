@@ -41,8 +41,8 @@ let config = [
 				};
 				
 				obj.query = {
-					id:893,				//调度单id
-					intoId:1,			//入货单id
+					id:item.other.dispatchId,									//调度单id
+					intoId:item.other.dispatchInfoId,			//入货单id
 					logTab:2,
 					logType:1,
 				};
