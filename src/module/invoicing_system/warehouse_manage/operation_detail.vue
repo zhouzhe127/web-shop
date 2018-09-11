@@ -303,7 +303,7 @@ export default {
 			this.dialogVisible = true;
 		},
 		handleClose() {
-			this.dialogVisible = null;
+			this.dialogVisible = false;
 		},
 		getEmit() { //获取打印传值
 			this.printShow = false;

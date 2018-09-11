@@ -52,7 +52,7 @@
 		    	:data="currentList" stripe border style="width: 100%">
 			    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
 			    </el-table-column>
-			    <el-table-column label="姓名" width="180">
+			    <el-table-column label="操作类型" width="180">
 			    	<template slot-scope="scope">{{scope.row.type==1?'领料':'领料盘库'}}</template>
 			    </el-table-column>
 			    <el-table-column prop="creatorName" label="操作人">
@@ -195,11 +195,18 @@
 			},
 			//查看详情
 			toSee(item){
-				let arr={currentList:this.currentList,total:this.total,rows:this.rows,
-					page:this.page,num:this.num,type:this.type,startTime:this.startTime,
-					endTime:this.endTime,creatorName:this.creatorName
+				let arr={
+					currentList:this.currentList,
+					total:this.total,
+					rows:this.rows,
+					page:this.page,
+					num:this.num,
+					type:this.type,
+					startTime:this.startTime,
+					endTime:this.endTime,
+					creatorName:this.creatorName,
 				};
-				storage.session('listDetail',item);
+				this.$route.query.id = item.id;
 				storage.session('saveDataBack',arr);
 				if(item.type==1){
 					this.$router.push({path:'pickingList/checkDetails',query:this.$route.query});

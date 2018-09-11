@@ -10,18 +10,18 @@
 		<div v-if="isPickerDetail">
 			<div class="ic-title">
 				<div class="text">
-				  {{fromPicking?'领料详情':'领料人详情'}}
+				  {{recordId?'领料详情':'领料人详情'}}
 				</div>
 				<div class="dashed"></div>
 			</div>
-			<template v-if="!fromPicking">
+			<template v-if="!recordId">
 				<section class="ic-contern">
 					<div class="all-contern">
 						<span class="span_contern">领料人：{{info.name}}</span>
 					</div>
 				</section>
 			</template>
-			<template v-if="fromPicking">
+			<template v-if="recordId">
 				<section class="ic-contern">
 					<div class="all-contern">
 						领料原因：{{detail.reason}}
@@ -48,7 +48,7 @@
 						<li>分类</li>
 						<li>类型</li>
 						<li>领料单位选择</li>
-						<li>{{fromPicking?'领料数量/重量':'剩余数量/重量'}}</li>
+						<li>{{recordId?'领料数量/重量':'剩余数量/重量'}}</li>
 					</ul>
 					<ul v-if="detailList.length==0" style="width: 100%;color: orange;">
 						<li style="height: 50px;line-height: 50px;text-align: center;">无记录</li>
@@ -82,7 +82,7 @@
 									<li>供应商</li>
 									<li>进价</li>
 									<li>所属仓库</li>
-									<li>{{fromPicking?'领料数量/重量':'剩余数量/重量'}}</li>
+									<li>{{recordId?'领料数量/重量':'剩余数量/重量'}}</li>
 								</ul>
 								<ul class="oulThd" v-for="(info,i) in item.batch" :key="i">
 									<li>批次{{i+1}}</li>
@@ -111,7 +111,7 @@
 		data(){
 			return{
 				detailList:[], //领料详情列表
-				fromPicking:{}, //领料记录页面传递的值
+				recordId:'', //领料记录页面传递的值
 				isChangeList:false,  //列表的展开与隐藏
 				isPickerDetail: true, //盘库详情
 				item: {},          //保存点击的该条信息
@@ -121,21 +121,18 @@
 		},
 		// props:['info'],
 		mounted(){
-			this.fromPicking = storage.session('listDetail');
+			this.recordId = this.$route.query.id;
 			this.info = storage.session('info');
 			this.initBtn();
 		},
-		destroyed(){
-			storage.session('listDetail',null);
-		},
 		methods:{
 			initBtn(){
-				if(this.fromPicking){
+				if(this.recordId){
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
 					let arr = [{name:'返回',className: 'info',type:4,fn:()=>{
 						storage.session('listDetail',null);
 						storage.session('isBackPickingRecord',true);   //是否点击返回
-						this.$router.push({path:'../pickingList',query:this.$route.query});
+						window.history.go(-1);
 					}}];
 					this.$store.commit('setPageTools',arr);
 					this.initOne();
@@ -152,7 +149,6 @@
 						},
 						{name:'返回',className:'info',type:4,
 							fn:()=>{
-								// this.$emit('throwWinResult',false);
 								this.$store.commit('setPageTools',{});
 								storage.session('numType',{num:1});
 								this.$router.push({path:'../pickingList',query:this.$route.query});
@@ -267,7 +263,7 @@
 			// 获取领料详情
 			async initOne(){
 				let res=await http.MaterialreceiveGetLogDetail({
-					data:{id:this.fromPicking.id}
+					data:{id:this.recordId}
 				});
 				if(res){
 					this.detail=res;
