@@ -170,7 +170,8 @@
 			heardBtn() {
 				this.$store.commit('setPageTools', [{
 						name: '导出模板',
-						className: ['wearhouse create float'],
+						className: 'success',
+						type:5,
 						fn: () => {
 							if (this.tabactive == 1) {
 								window.location.href = this.cdn + '/suppliestemple.xlsx?v=1';
@@ -182,34 +183,34 @@
 					},
 					{
 						name: '入库导入',
-						className: ['wearhouse handle refoin'],
+						className: 'success',
 						inputName: 'file',
+						type:1,
 						fn: async () => { //e
-								let data = await http.invoicing_warehouseImport({
-									data: {
-										shopId: this.shopId
-									},
-									timeout: 60000,
-									formId: 'form_import_good'
-								});
-								this.checkFile = data;
-								this.time = Timer.add(this.checkUp, 2000, 200);
-								this.$store.commit('setWin', {
-									title: '提示',
-									winType: 'alert',
-									content: '正在上传....',
-									maskShow: false,
-									callback: (str) => {
-										if (str != 'ok') {
-											Timer.clear(this.time);
-										} else {
-											this.checkAlert = true;
-										}
+							let data = await http.invoicing_warehouseImport({
+								data: {
+									shopId: this.shopId
+								},
+								timeout: 60000,
+								formId: 'form_import_good'
+							});
+							this.checkFile = data;
+							this.time = Timer.add(this.checkUp, 2000, 200);
+							this.$store.commit('setWin', {
+								title: '提示',
+								winType: 'alert',
+								content: '正在上传....',
+								maskShow: false,
+								callback: (str) => {
+									if (str != 'ok') {
+										Timer.clear(this.time);
+									} else {
+										this.checkAlert = true;
 									}
-								});
+								}
+							});
 
-							},
-							type: 1
+						},
 					}
 				]);
 			},
