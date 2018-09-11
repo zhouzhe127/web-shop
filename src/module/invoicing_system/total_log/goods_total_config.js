@@ -1,5 +1,4 @@
 import storage from 'src/verdor/storage';
-//intoId,下架到库存新批次
 //批次详情默认跳转页
 function defaultBatchClick(context,item){
 	let obj = {
@@ -139,12 +138,7 @@ let config = [
 			"batchDescripe": "进入下架页面（下架到新建批次，下架到库存）",
 			"canViewHistory": false,
 			"canViewBatch": true,
-			"batchClick": function(context,item){
-				let obj = {
-					path : '',
-				};
-				context.$router.push(obj);				
-			},
+			"batchClick": defaultBatchClick,
 			"historyClick":forbiddenClick		
 		},
 		{
