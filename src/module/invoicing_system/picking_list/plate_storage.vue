@@ -181,30 +181,24 @@
 			setInitData(){
 				for(let j = 0; j < this.infoList.length; j++){
 					let infoItem = this.infoList[j];
-					let options = [];
+					let options = [],index = 0;
 					for(let i = 0; i < infoItem.materialUnit.length; i++){
 						let item = infoItem.materialUnit[i];
 						let obj={
 							value:item.muId,
 							label:item.name,
 						};
-						if(item.isDefault == 1){
-							options.unshift(obj);
-							infoItem.materialUnit.unshift(item);
-							infoItem.materialUnit.splice(i+1,1);
-						}else{
-							options.push(obj);
-						}
+						options.push(obj);
 						if(item.isMin == 1){
 							infoItem.isMin = item.name;
 							infoItem.minUnit = item;
 						}
 						if(item.isDefault == 1){
 							infoItem.isDefault = item.name;
+							this.$set(infoItem,'index',item.muId);
 						}
 					}
 					this.$set(infoItem,'options',options);
-					this.$set(infoItem,'index',options[0].value);
 				}
 				for(let infoItem of this.infoList){
 					for(let unitItem of infoItem.materialUnit){

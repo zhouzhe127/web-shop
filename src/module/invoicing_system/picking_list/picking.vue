@@ -73,11 +73,13 @@
 									</el-select>
 								</span>
 								<span class="end">
-									<div class="input-cell" v-if="item.unitList[item.index]!=item.minName">
-										<input type="text" placeholder="输入数字" v-model="item.oneNum" :onkeyup="getmin(item)">
-										<i :title="item.oneName">{{item.oneName}}</i>
-										<span>+</span>
-									</div>
+									<template v-if="item.selUnit.name!=item.minName">
+										<div class="input-cell">
+											<input type="text" placeholder="输入数字" v-model="item.oneNum" :onkeyup="getmin(item)">
+											<i :title="item.oneName">{{item.oneName}}</i>
+										</div>
+										<div class="add-icon">+</div>
+									</template>
 									<div class="input-cell">
 										<input type="text" placeholder="输入数字" v-model="item.twoNum" :onkeyup="getmin(item)">
 										<i :title="item.twoName">{{item.twoName}}</i>
@@ -92,7 +94,7 @@
 					</div>
 				</div>
 			</div>
-			<batchwin @getWin="getWin" v-if="showBatch" :batchInfo="info" :winIndex="winIndex" :type="false"></batchwin>
+			<batchwin @getWin="getWin" v-if="showBatch" :batchInfo="info" :type="false"></batchwin>
 		</div>
 		<matter v-else @select="getMatter" :sleSupplies="sleSupplies" :addBtn="true"></matter>
 		<div>
@@ -142,7 +144,6 @@
 				info: '', //查看详情该物料信息
 				item:{ },   //
 				isOneName:true,   //是否只有最小单位
-				winIndex: 0,
 				sleSupplies: '', // 保存选中的物料，回传组件
 			};
 		},
@@ -200,7 +201,7 @@
 					}
 				}
 				this.pickData.owner = this.pickerId;
-				this.handleClose();
+				this.dialogVisible = false;
 			},
 			handleClose(){
 				this.dialogVisible = false;
@@ -274,7 +275,6 @@
 						obj.unitList.push(unitObj);
 					}
 					obj.unitData = res[i].unit;
-
 					obj.number = res[i].goodsNum.surplus;
 					obj.num = res[i].goodsNum.surplus;
 					this.pickData.materialInfo.push(obj);
@@ -284,6 +284,7 @@
 			},
 			unitConversion(detailList){
 				for(let matItem of detailList){
+					let index = 0;
 					for(let unitItem of matItem.unitData){
 						if(unitItem.isDefault==1){
 							matItem.defaultName=unitItem.name;  //默认单位名
@@ -291,17 +292,12 @@
 							matItem.oneName=unitItem.name;
 							matItem.showValue=unitItem.value;  //展示单位的换算关系
 							matItem.defaultValue=unitItem.value;  //默认单位的换算关系
+							this.$set(matItem,'selUnit',unitItem);
+							this.$set(matItem,'index',unitItem.muId);
 						}
 						if(unitItem.isMin==1){
 							matItem.minName=unitItem.name;  //最小单位
 							matItem.twoName=unitItem.name;
-						}
-					}
-					for(let i=0;i<matItem.unitList.length;i++){
-						let item = matItem.unitList[i];
-						if(item.isDefault==1){
-							let obj = matItem.unitList.splice(i,1);
-							matItem.unitList.unshift(obj);
 						}
 					}
 					matItem.comNum=matItem.num;     //保存comNum，用于计算
@@ -325,29 +321,22 @@
 			//改变数值
 			backItem(item,res){
 				let showName='';      //展示的单位名称
-				for(let k=0;k<item.unitData.length;k++){
-					if(item.muId==res){
-						item.showValue=item.unitData[k].value;
-						showName = item.unitData[k].name;
+				for(let unitItem of item.unitData){
+					if(unitItem.muId==res){
+						item.showValue = unitItem.value;
+						item.selUnit = unitItem;
+						showName = unitItem.name;
 						break;
 					}
 				}
+				console.log(item.selUnit.name);
+				item.index = res;
 				item.oneName=showName;
 				item.number=global.comUnit(item.comNum,item.showValue,showName,item.minName);
 				if(Number(item.minNumber)){
 					let backObj=global.comUnit(Number(item.minNumber),item.showValue,showName,item.minName,true);
 					item.oneNum=backObj.oNull;
 					item.twoNum=backObj.tNull;
-				}
-			},
-			selOn(res){ //选择领料人
-				this.index =res;
-				if(res != 0){
-					this.pickData.owner = this.pickerList[this.index-1].id;
-					this.pickData.ownerName = this.pickerList[this.index-1].name;
-				}else{
-					this.pickData.owner = '';
-					this.pickData.ownerName = '';
 				}
 			},
 			//批次选择
@@ -365,7 +354,6 @@
 			getWin(res,backData,index){
 				this.showBatch = false;
 				if(res == 'ok'){
-					this.winIndex = index;
 					let data = this.pickData.materialInfo;
 					for(let i = 0; i < data.length; i++){
 						data[i].minNumber = 0;
@@ -380,11 +368,10 @@
 								if(backData[j].minNumber){
 									data[i].batch.push(backData[j]);
 								}
-								this.backItem(data[i],index);
+								this.backItem(data[i],data[i].selUnit.muId);
 							}
 						}
 					}
-					this.backItem(this.item,index);
 				}
 			},
 			//取消
@@ -667,10 +654,9 @@
 		height: 70px;
 		line-height: 70px;
 	}
-	.input-cell{}
 	.list .content .end{
+		.add-icon{height: 40px;line-height: 40px;padding: 0 5px;display: inline-block;vertical-align: middle;}
 		.input-cell{display: inline-block;vertical-align: middle;overflow: hidden;
-			span{height: 40px;line-break: 40px;padding: 0 5px;}
 			i{
 				float: left;
 				width: 40px;
