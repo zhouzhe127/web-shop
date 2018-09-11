@@ -93,6 +93,17 @@ const batchLogDetail = (resolve) =>
 const batchLogPrint = (resolve) =>
     import ( /*webpackChunkName:'batch_log_print'*/ 'src/module/invoicing_system/batch_log/batch_log_print'); //批量调度,审核日志详情打印
 
+//总日志
+const goodsTotalLog = (resolve) =>
+    import ( /*webpackChunkName:'goods_total_log'*/ 'src/module/invoicing_system/total_log/goods_total_log'); //批量调度,审核日志详情打印
+const materialTotalLog = (resolve) =>
+    import ( /*webpackChunkName:'material_total_log'*/ 'src/module/invoicing_system/total_log/material_total_log'); //批量调度,审核日志详情打印
+const bomConsumeDetail = (resolve) =>
+    import ( /*webpackChunkName:'bom_consume_detail'*/ 'src/module/invoicing_system/total_log/bom_consume_detail'); //批量调度,审核日志详情打印
+const goodsBatchTotalLogDetail = (resolve) =>
+    import ( /*webpackChunkName:'goods_batch_total_log_detail'*/ 'src/module/invoicing_system/total_log/goods_batch_total_log_detail'); //批量调度,审核日志详情打印
+
+
 const suppliesDetail = (resolve) =>
     import ( /* webpackChunkName:"supplies_detail" */ 'src/module/invoicing_system/invoicing/supplies_detail'); //进销存详情物料详情   
 const putstroage = (resolve) =>
@@ -1787,6 +1798,37 @@ export default [{
                             }
                         },
                     ]
+                },
+                //总日志
+                {
+                    path:'goodsTotalLog',
+                    components:{
+                        details_con:goodsTotalLog
+                    },
+                    meta:{
+                        keepAlive:true,
+                    }
+                },
+                {
+                    path:'materialTotalLog',
+                    components:{
+                        details_con: materialTotalLog
+                    },
+                    meta:{
+                        keepAlive:true,
+                    }
+                },
+                {
+                    path:'bomConsumeDetail',
+                    components:{
+                        details_con: bomConsumeDetail
+                    },
+                },
+                {
+                    path:'goodsBatchTotalLogDetail',
+                    components:{
+                        details_con: goodsBatchTotalLogDetail
+                    },
                 },
                 {
                     path: 'materialCount', //批量盘库-物料盘库

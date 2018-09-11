@@ -214,23 +214,25 @@ export default {
 	},
 	methods: {
 		initBtn() {
-			this.btnArr = [{name: '返回',className: 'info',type:4,
-				fn: () => {
-					storage.session('operationRequestDestroy', true);
-					this.$router.go(-1);
-				}
-			},
-			{name: '打印',className: 'warning',type:5,
-				fn: () => {
-					if(this.disType == 1) {
-						this.printShow = true;
-					} else if(this.disType == 2) {
-						this.printShowInto = true;
+			this.btnArr = [
+				{name: '打印',className: 'warning',type:5,
+					fn: () => {
+						if(this.disType == 1) {
+							this.printShow = true;
+						} else if(this.disType == 2) {
+							this.printShowInto = true;
+						}
+						this.mainShow = false;
+						this.$store.commit('setPageTools', []);
 					}
-					this.mainShow = false;
-					this.$store.commit('setPageTools', []);
-				}
-			}];
+				},
+				{name: '返回',className: 'info',type:4,
+					fn: () => {
+						storage.session('operationRequestDestroy', true);
+						this.$router.go(-1);
+					}
+				},
+			];
 			this.$store.commit('setPageTools', this.btnArr);
 		},
 		totalLog(){//从总日志进入时，设置tab切换
@@ -253,7 +255,7 @@ export default {
 			}
 		},
 		setInitBtn() { //等待接口返回后 显示按钮
-			this.btnArr.splice(2);
+			this.initBtn();
 			if(this.isExamine) return; //审核页面不出现以下按钮
 			if(this.dynamic == 1) {
 				let addArr = [{
@@ -270,7 +272,7 @@ export default {
 						this.confirmMethod(); //确认
 					}
 				}];
-				this.btnArr.push(...addArr);
+				this.btnArr.unshift(...addArr);
 			}
 			if(this.dynamic == 2) { //this.dynamic==2
 				let addArr = [{
@@ -283,7 +285,7 @@ export default {
 						});
 					}
 				}];
-				this.btnArr.push(...addArr);
+				this.btnArr.unshift(...addArr);
 			}
 			this.$store.commit('setPageTools', this.btnArr);
 		},
@@ -625,10 +627,10 @@ export default {
 	position: relative;
 	.color-size {color: #333;font-size: 16px;}
 	.head {
-		padding-left: 15px;height: 30px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 30px;color: #333;
+		padding-left: 15px;height: 20px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 20px;color: #333;
 		position: relative;
 		&:after {
-			content: "";display: inline-block;width: 100%;margin-left: 25px;border: 1px dashed #ccc;position: absolute;top: 10px;
+			content: "";display: inline-block;width: 100%;border: 1px dashed #ccc;position: absolute;top: 10px;
 			left: 100px;
 		}
 	}

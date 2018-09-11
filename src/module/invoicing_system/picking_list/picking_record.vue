@@ -50,7 +50,7 @@
 		<div class="list-box">
 			<el-table
 		    	:data="currentList" stripe border style="width: 100%">
-			    <el-table-column type="index" label="序号" width="150">
+			    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
 			    </el-table-column>
 			    <el-table-column label="姓名" width="180">
 			    	<template slot-scope="scope">{{scope.row.type==1?'领料':'领料盘库'}}</template>
@@ -62,12 +62,12 @@
 			    </el-table-column>
 			    <el-table-column label="操作" fixed="right" width="150">
 			    	<template slot-scope="scope">
-			        <el-button @click="toSee(scope.row)" type="text" size="small">查看详情</el-button>
-			      </template>
+			        	<el-button @click="toSee(scope.row)" type="text" size="small">查看详情</el-button>
+			      	</template>
 			    </el-table-column>
 		  	</el-table>
 		</div>
-		<el-pagination @current-change="pageChange" @size-change="sizeChange"
+		<el-pagination @current-change="(res)=>{pageChange(res,1)}" @size-change="pageChange"
 			:current-page="page"
 			background
 			layout="sizes,total,prev, pager, next"
@@ -182,13 +182,16 @@
 				this.num=10;
 				this.searchTime();
 			},
-			sizeChange(res){
-				this.num = res;
+			pageChange(res,type){
+				if(type){
+					this.page=res;
+				}else{
+					this.num = res;
+				}
 				this.init();
 			},
-			pageChange(res){
-				this.page=res;
-				this.init();
+			indexMethod(index){
+				return this.num*(this.page-1)+index+1;
 			},
 			//查看详情
 			toSee(item){

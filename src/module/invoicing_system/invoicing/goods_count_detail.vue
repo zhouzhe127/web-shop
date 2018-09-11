@@ -26,8 +26,7 @@
 						{{row.change}}
 					</template>						
 				</el-table-column>
-				<el-table-column label="成本价" align="center" prop="空"></el-table-column>
-				<el-table-column label="售价" align="center" prop="空"></el-table-column>
+				<el-table-column label="成本价" align="center" prop="cost"></el-table-column>
 			</el-table>
 
 			<!-- 物料盘库记录 -->
@@ -45,7 +44,7 @@
 					</template>						
 				</el-table-column>
 				<!-- 单店内有调入的有分销价的按分销价计算 -->
-				<el-table-column label="成本金额" align="center" prop="空"></el-table-column>
+				<el-table-column label="成本金额" align="center" prop="cost"></el-table-column>
 			</el-table>
 			
 			<!-- 批量审核日志详情 -->
@@ -61,12 +60,13 @@
 				<el-table-column label="申请人" align="center" prop="applicant"></el-table-column>
 				<el-table-column label="申请时间" align="center" prop="zh_applicationTime"></el-table-column>
 			</el-table>
+			
 		</div>
 		<div class="bottom" v-if="tab != 3">
 			<el-pagination
 				:pager-count="pageObj.pagerCount"
 				:page-size="pageObj.pageSize"
-				layout="sizes,prev, pager, next,jumper,total"
+				layout="total,sizes,prev, pager, next,jumper"
 				:background="true"
 				:total="pageObj.total"
 				@size-change="(res)=>{funGetPage('size-change',res)}"
@@ -94,15 +94,6 @@ import utils from 'src/verdor/utils';
 export default {
 	data () {
 		return {
-			tableTitle:[
-				{titleName:'序号',dataName:'itemIndex'},
-				{titleName:'商品名',dataName:'itemName'},
-				{titleName:'条码',dataName:'barCode'},
-				{titleName:'仓库所属',dataName:'storeName'},
-				{titleName:'盘库前',dataName:'before'},
-				{titleName:'盘库后',dataName:'after'},
-				{titleName:'变化量',dataName:'change'},
-			],
 			tableData:[],
 			info:[],
 			logId:'',				//记录id
@@ -117,10 +108,6 @@ export default {
 			type:[String,Number],			//1:展示商品详情,0:展示物料详情
 			default:1		
 		}
-	},
-	activated(){
-		this.initBtn();
-		this.initPageObj();
 	},
 	async mounted(){
 		this.logId = Number(this.$route.query.id);
@@ -219,7 +206,6 @@ export default {
 						ele.zh_applicationTime = date.str;
 						return ele;
 					});
-
 			}
 		},
 		initInfo(retData){
