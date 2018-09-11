@@ -173,6 +173,7 @@
 			},
 			unitChang(id){
 				let sel = '';
+				console.log(id);
 				for(let item of this.goodsUnit){
 					if(id){
 						if(item.muId==id){
@@ -189,6 +190,7 @@
 				this.selList.map(v=>{
 					v.changeNum = this.comUnit(v.num,sel.value,sel.name,this.minName);
 				});
+				this.selList = utils.deepCopy(this.selList);
 			},
 			//单位换算
 			comUnit(...args) {
