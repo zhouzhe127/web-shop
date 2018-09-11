@@ -3,10 +3,11 @@ import storage from 'src/verdor/storage';
 //批次详情默认跳转页
 function defaultBatchClick(context,item){
 	let obj = {
-		path : '/admin/goodsBatchTotalLogDetail',
+		path : '/admin/inventoryManagement/supbranchDetail',
 		query:{
-			gid: item.itemId,
-			logId: item.id
+			id: item.itemId,
+			logId: item.id,
+			recordName:item.itemName
 		}
 	};
 	context.$router.push(obj);
@@ -122,7 +123,7 @@ let config = [
 				let obj = {};
 				obj.path = '/admin/pickingList/checkDetails';
 				obj.query = {
-					id:item.itemId
+					id:item.receiveLogId
 				};
 				context.$router.push(obj);
 				
