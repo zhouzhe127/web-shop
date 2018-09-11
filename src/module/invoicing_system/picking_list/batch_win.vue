@@ -7,7 +7,7 @@
  */
  <template>
 	<div>
-		<win @winEvent="getData" :align="'center'" :width="1000" :height="600" :ok="okstyle">
+		<win @winEvent="getData" :align="'center'" :width="1024" :height="600" :ok="okstyle">
 			<span slot="title">{{title}}</span>
 			<div id = "tan" slot="content"  v-cloak>
 				<section class="title">
@@ -34,7 +34,6 @@
 					</div>
 					<span class="blue btn" @click="search">筛选</span>
 					<span class="gray btn" @click="reset">重置</span>
-					<selectbtn style="background:#fff;margin-top:5px" @selOn="selOn" :sorts="info.unitList" :width="180" :name="unitName"></selectbtn>
 				</section>
 				<section class="content">
 					<div class="top">
@@ -56,13 +55,21 @@
 								<li>{{transFormDate(item.productionTime*1000)}}</li>
 								<li :title="item.supplier">{{item.supplier}}</li>
 								<li :title="item.wName">{{item.wName}}</li>
-								<li :title="comUnit(Number(item.surplus),info.defaultValue,info.defaultName,info.minName)">{{comUnit(Number(item.surplus),info.defaultValue,info.defaultName,info.minName)}}</li>
+								<li :title="comUnit(Number(item.surplus),selUnit.value,selUnit.name,info.minName)">
+									{{comUnit(Number(item.surplus),selUnit.value,info.selUnit.name,info.minName)}}
+								</li>
 								<li>
-									<template v-if="info.defaultName!=info.minName">
-										<input type="text" placeholder="输入数字" v-model="item.oneNum" :onkeyup="getmin(item,j)"><i :title="info.defaultName">{{info.defaultName}}</i>
-										+
+									<template v-if="selUnit.name!=info.minName">
+										<div class="input-cell">
+											<input type="text" placeholder="输入数字" v-model="item.oneNum" :onkeyup="getmin(item,j)">
+											<i :title="selUnit.name">{{selUnit.name}}</i>
+										</div>
+										<div class="add-icon">+</div>
 									</template>
-									<input type="text" placeholder="输入数字" v-model="item.twoNum" :onkeyup="getmin(item,j)"><i :title="info.minName">{{info.minName}}</i>
+									<div class="input-cell">
+										<input type="text" placeholder="输入数字" v-model="item.twoNum" :onkeyup="getmin(item,j)">
+										<i :title="info.minName">{{info.minName}}</i>
+									</div>
 								</li>
 							</ul>
 						</div>
@@ -109,19 +116,20 @@
 					2: '年'
 				},
 				name: '', //默认单位
+				selUnit:{},
 			};
 		},
-		props: ['batchInfo','winIndex','wid','winType'],
+		props: ['batchInfo','wid','winType'],
 		mounted(){
 			this.title = '批次选择';
 			this.info = utils.deepCopy(this.batchInfo);
 			this.name = utils.deepCopy(this.info.defaultName);
 			this.info.unitName = '';
+			this.selUnit = this.info.selUnit;
 			for(let i = 0; i < this.info.unitData.length; i++){
 				this.info.unitName += this.info.unitData[i].name + ',';
 			}
 			this.info.unitName = this.info.unitName.slice(0,this.info.unitName.length-1);
-			// this.showName = this.info.defaultName
 			this.getMaterialBatch();
 		},
 		components:{
@@ -193,11 +201,6 @@
 					}
 				}
 			},
-			//单位选择
-			selOn(res){
-				this.index=res;
-				this.backItem(res);
-			},
 			//获取最小值
 			getmin(item,j){
 				item.oneNum != '' ? item.oneNum = (item.oneNum+'').replace(/[^\d.]/g,'') : item.oneNum = '';
@@ -217,7 +220,7 @@
 				}
 				for(let k=0;k<this.backData.length;k++){
 					if(Number(this.backData[k].minNumber)){
-						let backObj=global.comUnit(Number(this.backData[k].minNumber),this.info.defaultValue,showName,this.info.minName,true);
+						let backObj=global.comUnit(Number(this.backData[k].minNumber),this.selUnit.value,showName,this.info.minName,true);
 						this.backData[k].oneNum=backObj.oNull;
 						this.backData[k].twoNum=backObj.tNull;
 					}
@@ -268,7 +271,7 @@
 	};
  </script>
 
- <style scoped>
+ <style scoped lang="less">
 	#tan {
 		height: 100%;
 		background: #F7F7F7;
@@ -351,6 +354,25 @@
 	}
 	#tan .content{
 		background: #F7F7F7;
+		.add-icon{height: 40px;line-height: 40px;display: inline-block;vertical-align: middle;}
+		.input-cell{display: inline-block;vertical-align: middle;overflow: hidden;
+			i{
+				float: left;
+				width: 40px;
+				height: 40px;
+				line-height: 38px;
+				border: 1px solid #D5D5D5;
+				border-left: none;
+				background: #fff;
+			}
+			input{
+				width: 65px;
+				height: 40px;
+				padding-left: 7px;
+				border: 1px solid #D5D5D5;
+				float: left;
+			}
+		}
 	}
 	#tan .list li,
 	#tan .list i,
@@ -384,23 +406,6 @@
 	#tan .content ul li:nth-child(7){
 		width: 233px;
 		border-right: none;
-	}
-	#tan .content .list input{
-		width: 65px;
-		height: 39px;
-		padding-left: 7px;
-		border: 1px solid #D5D5D5;
-		vertical-align: middle;
-	}
-	#tan .content .list i{
-		display: inline-block;
-		width: 40px;
-		height: 39px;
-		border: 1px solid #ccc;
-		vertical-align: middle;
-		line-height: 39px;
-		background: #fff;
-		border-left: none;
 	}
 	#tan .content .list ul li{
 		height: 60px;
