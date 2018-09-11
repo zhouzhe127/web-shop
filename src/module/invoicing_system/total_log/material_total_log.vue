@@ -219,8 +219,8 @@ export default {
             dialog:{
                 title:'物料信息',
                 show:false
-            }
-            
+            },
+            tabFlag : 'material'			//商品还是物料
         };
     },
     methods: {
@@ -315,107 +315,6 @@ export default {
             this.materialInfo = info;            
         },
 
-
-        //是否可以查看批次详情
-        canviewBatchDetail(id){
-            let can = [1,2,3,5,6,7,8,9,11,13,14,16,19];
-            return !can.includes(Number(id));
-        },
-        //是否可以查看记录
-        canViewHistory(id){
-            let cannot = [1,2,3,4,18];
-            return cannot.includes(Number(id));
-        },
-
-
-        //查看记录
-        viewHistory(item){
-            let obj = {};
-            switch(item.type+''){
-                case '1'://单个盘库
-                case '2'://入库
-                case '3'://耗损
-                case '4'://新建物料
-                case '18'://删除物料
-                    return;                
-                case '5'://BOM单消耗->跳转到BOM单消耗详情页面（子页面）
-                    obj.path = '/admin/bomConsumeDetail';
-                    obj.query = {mid:item.itemId,logId:item.id};
-                    break;
-                case '6'://调出->点击进入调度出货单，出货单表格在出货数量后边增加，出货成本总额。           
-                    obj.path = '/admin/operation/enterGoods';
-                    obj.query = {
-                        logTab:1,
-                        logType:2,
-                    };      
-                    break;
-                case '7'://调入->点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额。（商品跳商品，物料跳物料）
-                    obj.path = '/admin/operation/enterGoods';
-                    obj.query = {
-                        id:893,
-                        intoId:1,
-                        logTab:2,
-                        logType:2,      
-                    };
-                    break;
-                case '8'://领料->点击进入该条领料记录
-                    obj.path = '/admin/pickingList';
-                    break;
-                case '9'://领料回库->点击进入该条领料盘库记录。领料盘库中，增加一条剩余数量，消耗数量自动计算
-                    obj.path = '/admin/pickingList';                    
-                    break;
-                case '10'://修改物料信息->跳转到修改物料
-                    obj.path = '/admin/inventoryManagement/materialEdit';
-                    obj.query = {id:item.itemId};
-                    break;
-                case '11'://取消回库->点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额
-                    obj.path = '/admin/operation/enterGoods';
-                    obj.query = {
-                        id:893,
-                        intoId:1,
-                        logTab:2,
-                        logType:2,      
-                    };
-                    break;
-                case '13'://加工入库->点击进入该条加工记录
-                    obj.path = '/admin/processHistory/detail';
-                    obj.query = {id:item.other.logId};
-                    break;
-                case '14'://加工消耗->点击进入该条加工记录
-                    obj.path = '/admin/processHistory/detail';
-                    obj.query = {id:item.other.logId};                
-                    break;
-                case '15'://修改物料单位->跳转到修改物料单位
-                    obj.path = '/admin/inventoryManagement/revampUnit';
-                    obj.query = {id:item.itemId,name:item.itemName};                      
-                    break;
-                case '16'://导入入库->导入入库，跳转到导入入库列表
-
-                    break;
-                case '19'://批量盘库->批量盘库记录
-                    obj.path = '/admin/materialCountDetail';
-                    obj.query = {id:item.other.logId};
-                    break;
-            }
-            this.$router.push(obj);
-        },
-        //查看批次详情
-        viewBatchDetail(item){
-            let obj = {};
-            let can = [1,2,3,5,6,7,8,9,11,13,14,16,19];
-            let flag = false;
-            flag = can.includes(Number(item.type));
-            if(flag){
-                this.$router.push({
-                    path:'inventoryManagement/supbranchDetail',
-                    query:{
-                        id:item.itemId,
-                        logId:item.id,
-                        recordName:item.operationType
-                    }
-                });
-            }
-        },
 
 
         //匹配

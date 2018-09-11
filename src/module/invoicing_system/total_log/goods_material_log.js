@@ -1,6 +1,8 @@
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
+import gConfig from './goods_total_config';
+import mConfig from './material_total_config'
 
 export default {
     data(){
@@ -111,6 +113,41 @@ export default {
 				return ele[attr] == this.shopId;
 			});
 		},
+        //查看记录
+        viewHistory(item){
+			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
+			
+            let temp = {};
+            temp = this.getEle(config,item.type,'type');
+            temp['historyClick'](this,item);
+            console.log(temp);
+        },
+        //查看批次详情
+        viewBatchDetail(item){
+			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
+			
+            let temp = {};
+            temp = this.getEle(config,item.type,'type');
+            temp['batchClick'](this,item);
+            console.log(temp);
+		},
+        //是否可以查看批次详情
+        canviewBatchDetail(id){
+			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
+			
+            let temp = null;
+            temp = this.getAttr(config,id,'type','canViewBatch');
+            return !temp;
+
+        },
+        //是否可以查看记录
+        canViewHistory(id){
+			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
+			
+            let temp = null;
+            temp =  this.getAttr(config,id,'type','canViewHistory');
+            return !temp;
+        },
 		
 
         //初始化对象的属性
@@ -174,8 +211,10 @@ export default {
 			let res = await http[url]({data:obj});
 			return res;
 		},
-		getAttr(arr,val,attr='id'){
-			let getAttr = 'name';
+		getAttr(...args){
+			let [arr,val,attr='id',getAttr='name'] = args;
+			// arr,val,attr='id'
+			// let getAttr = 'name';
 			if(!Array.isArray(arr)) arr = [];
 			for(let ele of arr){
 				if(ele[attr] == val) return ele[getAttr];
@@ -189,6 +228,16 @@ export default {
 			temp = arr.map((ele)=>{
 				return ele[attr]
 			});
+			return temp;
+		},
+		getEle(arr,val,attr){
+			let temp = {};
+			for(let ele of arr){
+				if(ele[attr] == val){
+					temp = ele;
+					break;
+				}
+			}
 			return temp;
 		},
     },

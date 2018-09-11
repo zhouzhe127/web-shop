@@ -202,10 +202,6 @@ import storage from 'src/verdor/storage';
 import common from './goods_material_log.js'
 import global from 'src/manager/global';
 import http from 'src/manager/http';
-
-
-// import Mock from 'mockjs';
-// import template from 'src/mock/mock';
 /*
         
         商品:
@@ -252,6 +248,8 @@ export default {
                 show:false
             },
             materialInfo:{},            //商品详情
+            tabFlag : 'goods'			//商品还是物料
+
         };
     },
     methods: {
@@ -326,94 +324,6 @@ export default {
             this.dialog.show = true;
         },
 
-        //是否可以查看批次详情
-        canviewBatchDetail(id){
-            let can = [1,2,3,4,5,6,9,12,13,17,18];
-            return !can.includes(Number(id));
-        },
-        //是否可以查看记录
-        canViewHistory(id){
-            let cannot = [1,4,5,6,7,8,9,12,15,16];
-            return cannot.includes(Number(id));
-        },
-
-
-        //查看记录
-        viewHistory(item){
-            let obj = {};
-            switch(item.type+''){
-                case '1'://入库,
-                case '4'://上架(库存)
-                case '5'://下架到库存(老批次)
-                case '6'://仓库耗损
-                case '7'://下架到耗损
-                case '8'://售出
-                case '9'://售出退货
-                case '12'://下架到库存新批次
-                case '15'://入库并上架
-                case '16'://盘点货架
-                case '19'://上架货架
-                case '20'://下架到库存(货架)
-                    return;
-                case '2'://调入->入货单
-                    obj.path = '/admin/operation/enterGoods';
-
-                    obj.query = {
-                        id:893,
-                        intoId:1,
-                        logTab:2,
-                        logType:1,
-                    };
-                    //1).这条调度单的id
-
-                    //2).入货单id
-
-                    //3).logTab = 1 (出货单)  2:入货单
-                    
-                    //4).logType = 1 (商品)  2:物料
-
-                    //路由传参
-                    break;
-                case '3'://调出->出货单
-                    obj.path = '/admin/operation/enterGoods';
-
-                    obj.query = {
-                        logTab:1,
-                        logType:1,
-                    };                    
-                    break;
-                case '13'://导入入库 ->导入记录页面
-                    break;
-                case '14'://导入上架 ->导入记录页面
-                    break;
-                case '17'://取消调度回库 ->出货单                
-                    obj.path = '/admin/operation/enterGoods';
-                    obj.query = {
-                        logTab:1,
-                        logType:1,
-                    };  
-                    break;
-                case '18'://批量盘库记录
-                    obj.path = '/admin/goodsCountDetail';
-                    obj.query = {id:item.other.logId};
-                    break;
-                case '19':
-            }
-            console.log(obj);
-            this.$router.push(obj);
-        },
-        //查看批次详情
-        viewBatchDetail(item){
-            let obj = {};
-            let can = [1,2,3,4,5,6,9,12,13,17,18];
-            if(can.includes(Number(item.type))){
-                obj.path = '/admin/goodsBatchTotalLogDetail';
-                obj.query = {gid:item.itemId,logId:item.id};
-                this.$router.push(obj);
-            }
-        },
-
-
 
         //获取分类
         async getCategoryList(){
@@ -443,7 +353,6 @@ export default {
         this.getWarehouseList();
 
         this.filterReset('reset');
-        console.log(process);
     },
     /*
     beforeRouteEnter(to,from,next){
