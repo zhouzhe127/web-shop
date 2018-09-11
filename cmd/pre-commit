@@ -49,7 +49,9 @@ exec('git diff --cached --name-only --diff-filter=ACMR -- src/',(error, stdout, 
 	//获取到修改的文件
     if(stdout.length){
         let allFile = stdout.split("\n");
-		
+		allFile = allFile.filter((item)=>{
+			return /\.(js|vue)/g.test(item);
+		})
 		let report = cli.executeOnFiles(allFile);
 
 		if(Number(report.errorCount) > 0 || Number(report.warningCount) > 0){
