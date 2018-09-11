@@ -108,7 +108,6 @@
 			this.mid = this.$route.query.id;//物料id
 			this.logId = this.$route.query.logId;//日志id
 			this.recordName = this.$route.query.recordName;//操作类型
-            this.mid = 8;
 			this.$store.commit('setPageTools', [{name: '返回',className: '',type:4,
 				fn: () => {
 					window.history.go(-1);
