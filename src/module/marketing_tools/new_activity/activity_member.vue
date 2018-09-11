@@ -427,7 +427,7 @@ export default {
 				data: {
 					activityId: item.id,
 					type: item.type,
-					mouldType: item.mouldType					
+					mouldType: item.mouldType
 				}
 			});
 			if (data) {
@@ -530,7 +530,7 @@ export default {
 		let activityDetail = storage.session('activityDetail');
 		if (activityDetail) {
 			this.isactivityDetail = false;
-		}		
+		}
 		if (activityInfo) {
 			this.editId = activityInfo.id;
 			this.getActivityDetail(activityInfo);

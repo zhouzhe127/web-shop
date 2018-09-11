@@ -12,14 +12,52 @@
 				</div>
 			</div>
 			<section style="margin-bottom:20px;">
-				<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
+				<!-- <com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
 					<div slot="con-11" slot-scope="props" @click="openPayment(props.data,'one')">
 						{{props.data.totalOtherPay}}
 					</div>
-				</com-table>
+				</com-table> -->
+				<el-table :data="staticLists" border style="width: 1400px;margin-bottom: 20px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column fixed prop="days" label="天数" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #ff9800">{{scope.row.days}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="rechargePersonNum" label="充值人数" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="rechargeNum" label="充值次数" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalRecharge" label="充值总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalPayment" label="支付总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalCash" label="现金" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalCard" label="银行卡" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalWeChat" label="微信" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalAliPay" label="支付宝" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalZXWeChat" label="中信微信" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalZXAliPay" label="中信支付宝" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalOtherPay" label="自定义支付" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'one')">{{scope.row.totalOtherPay}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="totalGiftAmount" label="赠送总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalGiftPoint" label="赠送积分" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalGiftCoupon" label="赠送优惠券" width="111" align="center">
+					</el-table-column>
+				</el-table>
 			</section>
 			<section>
-				<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="formList">
+				<!-- <com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="formList">
 					<div slot="con-0" slot-scope="props" @click="getDetail(props.data)">
 						查看详情
 					</div>
@@ -29,12 +67,58 @@
 					<div slot="con-15" slot-scope="props" @click="openDiscount(props.data)">
 						{{props.data.totalGiftCoupon}}
 					</div>
-				</com-table>
+				</com-table> -->
+				<el-table :data="formList" border style="width: 1400px;margin-bottom: 20px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column fixed label="操作" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #27a8e0;" @click="getDetail(scope.row)">查看详情</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="时间" prop="day" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="rechargePersonNum" label="充值人数" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="rechargeNum" label="充值次数" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalRecharge" label="充值总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalPayment" label="支付总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalCash" label="现金" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalCard" label="银行卡" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalWeChat" label="微信" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalAliPay" label="支付宝" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalZXWeChat" label="中信微信" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalZXAliPay" label="中信支付宝" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalOtherPay" label="自定义支付" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'one')">{{scope.row.totalOtherPay}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="totalGiftAmount" label="赠送总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalGiftPoint" label="赠送积分" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalGiftCoupon" label="赠送优惠券" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #27a8e0;" @click="openDiscount(scope.row)">{{scope.row.totalGiftCoupon}}</span>
+						</template>
+					</el-table-column>
+				</el-table>
 			</section>
 			<!-- 翻页 -->
-			<section class="turn-page">
+			<!-- <section class="turn-page">
 				<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-			</section>
+			</section> -->
+			<div class="pageWrap" v-if="endTotal >= 1">
+				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
+			</div>
 			<!-- 优惠券详情的弹窗 -->
 			<coupon-detail v-if='showWin' @getAppliedWin='getResult' :CouponDetails='CouponDetails'></coupon-detail>
 			<!-- 其他支付方式的弹窗 -->
@@ -54,155 +138,7 @@ export default {
 			page: 1,
 			num: 10,
 			endTotal: 1,
-			titleList: [{
-				titleName: '天数',
-				dataName: 'days',
-			},
-			{
-				titleName: '充值人数',
-				dataName: 'rechargePersonNum',
-			},
-			{
-				titleName: '充值次数',
-				dataName: 'rechargeNum',
-			},
-			{
-				titleName: '充值总额',
-				dataName: 'totalRecharge',
-			},
-			{
-				titleName: '支付总额 ',
-				dataName: 'totalPayment',
-			},
-			{
-				titleName: '现金',
-				dataName: 'totalCash',
-			},
-			{
-				titleName: '银行卡',
-				dataName: 'totalCard',
-			},
-			{
-				titleName: '微信',
-				dataName: 'totalWeChat',
-			},
-			{
-				titleName: '支付宝',
-				dataName: 'totalAliPay',
-			},
-			{
-				titleName: '中信微信',
-				dataName: 'totalZXWeChat',
-			},
-			{
-				titleName: '中信支付宝',
-				dataName: 'totalZXAliPay',
-			},
-			{
-				titleName: '自定义支付',
-				dataName: 'totalOtherPay',
-				titleStyle: {
-					fontSize: 16 + 'px'
-				},
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '赠送总额',
-				dataName: 'totalGiftAmount',
-			},
-			{
-				titleName: '赠送积分',
-				dataName: 'totalGiftPoint',
-			},
-			{
-				titleName: '赠送优惠券',
-				dataName: 'totalGiftCoupon',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			}
-			],
 			staticLists: [], //数据
-			shoptitleList: [{
-				titleName: '操作 ',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '时间',
-				dataName: 'day',
-			},
-			{
-				titleName: '充值人数',
-				dataName: 'rechargePersonNum',
-			},
-			{
-				titleName: '充值次数',
-				dataName: 'rechargeNum',
-			},
-			{
-				titleName: '充值总额 ',
-				dataName: 'totalRecharge',
-			},
-			{
-				titleName: '支付总额',
-				dataName: 'totalPayment',
-			},
-			{
-				titleName: '现金',
-				dataName: 'totalCash',
-			},
-			{
-				titleName: '银行卡',
-				dataName: 'totalCard',
-			},
-			{
-				titleName: '微信',
-				dataName: 'totalWeChat',
-			},
-			{
-				titleName: '支付宝',
-				dataName: 'totalAliPay',
-			},
-			{
-				titleName: '中信微信',
-				dataName: 'totalZXWeChat',
-			},
-			{
-				titleName: '中信支付宝',
-				dataName: 'totalZXAliPay',
-			},
-			{
-				titleName: '自定义支付',
-				dataName: 'totalOtherPay',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '赠送总额',
-				dataName: 'totalGiftAmount',
-			},
-			{
-				titleName: '赠送积分',
-				dataName: 'totalGiftPoint',
-			},
-			{
-				titleName: '赠送优惠券',
-				dataName: 'totalGiftCoupon',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			}
-			],
 			allFormList: [], //店铺查询的所有数据 
 			formList: [], //展示的数据
 			showType: 'static',
@@ -230,9 +166,18 @@ export default {
 		returnStore: function() {
 			this.$emit('throwWinResult', 'all');
 		},
-		getPageNum: function(obj) {
-			this.page = obj.page;
-			this.num = obj.num;
+		// getPageNum: function(obj) {
+		// 	this.page = obj.page;
+		// 	this.num = obj.num;
+		// 	this.getRechargeData();
+		// },
+		handleSizeChange(p) {
+			this.num = p;
+			this.getRechargeData();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
 			this.getRechargeData();
 		},
 		getDetail: function(item) {

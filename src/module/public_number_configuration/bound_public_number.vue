@@ -7,7 +7,7 @@
 -->
 <template>
 	<div id="weChatBinding">
-		<!-- <template v-if='isAuth'>
+		<template v-if='isAuth'>
 			<div class="wx-showBox">
 				<span>微信公众号</span>
 				<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">重新授权</a>
@@ -17,11 +17,11 @@
 				<span>公众号昵称</span>
 				<p>{{authMiniAppName}}</p>
 			</div>
-		</template> -->
-	<!-- 	<div class="wx-showBox" v-else>
+		</template>
+		<div class="wx-showBox" v-else>
 			<span></span>
 			<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">添加微信公众号</a>
-		</div> -->
+		</div>
 		<div class="wx-showBox">
 			<span class="required">AppId</span>
 			<input type="text" placeholder="请输入AppId" v-model="appIds" maxlength="32" />
@@ -49,11 +49,11 @@ export default {
 	mounted() {
 		this.userData = storage.session('userShop');
 		this.getConfig();
-		// let auth_code = this.GetQueryString('auth_code');
-		// console.log(auth_code)
-		// if (auth_code && auth_code != null) {
-		// 	this.setAuth(auth_code);
-		// }
+		let auth_code = this.GetQueryString('auth_code');
+		console.log(auth_code);
+		if (auth_code && auth_code != null) {
+			this.setAuth(auth_code);
+		}
 	},
 	methods: {
 		// 获取公众号配置
@@ -66,11 +66,11 @@ export default {
 			if (res) {
 				this.appId = res.appId;
 				this.appSecret = res.appSecret;
-				// this.isAuth = false;
-				// if (res.authorizerAppId != '') {
-				// 	this.isAuth = true;
-				// 	this.authMiniAppName = res.authMiniAppName;
-				// }
+				this.isAuth = false;
+				if (res.authorizerAppId != '') {
+					this.isAuth = true;
+					this.authMiniAppName = res.authMiniAppName;
+				}
 			}
 		},
 		// 设置公众号配置
