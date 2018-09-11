@@ -69,7 +69,7 @@ export default {
 				this.isAuth = false;
 				if (res.authorizerAppId != '') {
 					this.isAuth = true;
-					this.authMiniAppName = res.authMiniAppName;
+					this.authMiniAppName = res.authorizerAppName;
 				}
 			}
 		},
@@ -206,6 +206,7 @@ export default {
 			border-radius: 5px;
 			height: 45px;
 			line-height: 45px;
+			margin-right:10px;
 		}
 		span {
 			display: block;
