@@ -125,6 +125,8 @@ export default {
                 //出成率
                 retData.yield = retData.yield * 100 + '%';   
                 retData.change = global.comUnit(retData.change, info.defUnitVal, info.defUnitName, info.minUnitName);   
+            }else{
+                retData = {};
             }
             this.operationInfo = retData;
         },
