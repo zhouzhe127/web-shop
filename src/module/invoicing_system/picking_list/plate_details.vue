@@ -109,7 +109,7 @@
 		data(){
 			return{
 				detailList:[],              //详情列表
-				fromPicking:{}, //领料记录页面传递的值
+				recordId:'', //领料记录页面传递的值
 				isChangeList:false,  //列表的展开与隐藏
 				item:{},
 				detail:{}
@@ -120,14 +120,11 @@
 			let arr = [{name:'返回',className:'info',type:4,fn:()=>{
 				storage.session('listDetail',null);
 				storage.session('isBackPickingRecord',true);   //是否点击返回
-				this.$router.push({path:'../pickingList',query:this.$route.query});
+				window.history.go(-1);
 			}}];
 			this.$store.commit('setPageTools',arr);
-			this.fromPicking = storage.session('listDetail');
+			this.recordId = this.$route.query.id;
 			this.initOne();
-		},
-		destroyed(){
-			storage.session('listDetail',null);
 		},
 		methods:{
 			//列表的展开与隐藏
@@ -213,7 +210,7 @@
 			},
 			async initOne(){
 				let res=await http.getCheckMaterialRecord({
-					data:{id:this.fromPicking.id}
+					data:{id:this.recordId}
 				});
 				if(res){
 					this.detail=utils.deepCopy(res);

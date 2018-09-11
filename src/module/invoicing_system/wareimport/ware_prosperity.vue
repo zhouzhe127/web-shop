@@ -52,6 +52,9 @@
 			this.init();
 			this.heardBtn();
 		},
+		destroyed(){
+			storage.session('detailNeed',null);
+		},
 		methods: {
 			async init() {
 				let setUrl = this.tabactive == 1 ? this.failLog : this.successLog;

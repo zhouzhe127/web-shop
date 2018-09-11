@@ -10,14 +10,15 @@
 			<div class="row">
 				<span class="left required">领料原因</span>
 				<div class="right">
-					<input type="text" placeholder="请输入领料原因" maxlength="20" v-model="pickData.reason">
+					<el-input placeholder="请输入领料原因" maxlength="20" v-model="pickData.reason" class="el-input"></el-input>
 					<div class="tips"><i class="icon"></i><i>限20字以内</i></div>
 				</div>
 			</div>
 			<div class="row">
 				<span class="left required">领料人</span>
 				<div class="right">
-					<selectbtn @selOn="selOn" :sorts="picker" :width="210" :index="index"></selectbtn>
+					<el-button @click="selPicker" icon="el-icon-plus" type="primary" class="el-input">选择领料人</el-button>
+					<span class="picker-name">{{pickData.ownerName}}</span>
 				</div>
 			</div>
 			<div class="row">
@@ -29,64 +30,86 @@
 			<div class="row">
 				<span class="left">备注</span>
 				<div class="right">
-					<textarea style="padding-left:17px" type="text" placeholder="请输入备注" maxlength="40" v-model="pickData.remarks"></textarea>
+					<el-input type="textarea" placeholder="请输入备注" rows="4" maxlength="40" v-model="pickData.remarks" class="el-input"></el-input>
 					<div class="tips"><i class="icon"></i><i>限40字以内</i></div>
 				</div>
 			</div>
 			<div class="row">
 				<span class="left required">所领物料</span>
-				<div @click="addMatter" class="right" style="cursor:pointer">
-					<span class="matter"><i class="add"></i><i>添加物料</i></span>
+				<div class="right">
+					<el-button @click="addMatter" icon="el-icon-plus" type="primary" class="el-input">添加物料</el-button>
 				</div>
 			</div>
 			<div class="list" v-if="pickData.materialInfo.length != 0">
 				<div class="head">
 					<span>物料列表 · 共<em>{{pickData.materialInfo.length}}</em>个条目</span>
 				</div>
-				<div class="title" style="height:60px">
-					<span>操作</span>
-					<span>领料单位选择</span>
-					<span>领料数量/重量</span>
-					<span>物料名称</span>
-					<span>库存数量/重量</span>
-					<span>领料批次数</span>
-					<span>类型</span>
-				</div>
-				<ul class="title content">
-					<li v-for="(item,index) in pickData.materialInfo" :key="index">
-						<span>
-							<em class="under-line del" @click="delStaff(index)">删除</em>
-							<em class="line"></em>
-							<em class="under-line edit" @click="checkDetail(item)">批次选择</em>
-						</span>
-						<span style="overflow:visible" @click="backItem(item,item.index)">
-							<selectbtn @selOn="getMatterNuit" :sorts="item.unitList" :width="80" :index="item.index"></selectbtn>
-						</span>
-						<span class="end">
-							<template v-if="item.unitList[item.index]!=item.minName">
-								 <input type="text" placeholder="输入数字" v-model="item.oneNum" :onkeyup="getmin(item)"><i :title="item.oneName">{{item.oneName}}</i>
-								+
-							</template>
-							<input type="text" placeholder="输入数字" v-model="item.twoNum" :onkeyup="getmin(item)"><i :title="item.twoName">{{item.twoName}}</i>
-						</span>
-						<span :title="item.materialName">{{item.materialName}}</span>
-						<span :title="item.number">{{item.number}}</span>
-						<span>{{item.batchNum}}</span>
-						<span>{{matterType[item.materialType]}}</span>
-					</li>
-				</ul>
-			</div>
-			<div class="row">
-				<span class="left"></span>
-				<div class="right">
-					<span @click="cancel" class="btn gray">取消</span>
-					<span @click="again" class="continue btn">继续添加</span>
-					<span @click="enter" class="btn yellow">确定</span>
+				<div class="scroll-box">
+					<div class="list-box">		
+						<div class="title">
+							<span>操作</span>
+							<span>领料单位选择</span>
+							<span>领料数量/重量</span>
+							<span>物料名称</span>
+							<span>库存数量/重量</span>
+							<span>领料批次数</span>
+							<span>类型</span>
+						</div>
+						<ul class="title content">
+							<li v-for="(item,index) in pickData.materialInfo" :key="index">
+								<span>
+									<em class="under-line del" @click="delStaff(index)">删除</em>
+									<em class="line"></em>
+									<em class="under-line edit" @click="checkDetail(item)">批次选择</em>
+								</span>
+								<span class="sel-cell">
+									<el-select v-model="item.index" @change="(res)=>{getMatterNuit(item,res)}" class="el-sel">
+									    <el-option
+											v-for="elItem in item.unitList"
+											:key="elItem.value"
+											:label="elItem.label"
+											:value="elItem.value">
+									    </el-option>
+									</el-select>
+								</span>
+								<span class="end">
+									<div class="input-cell" v-if="item.unitList[item.index]!=item.minName">
+										<input type="text" placeholder="输入数字" v-model="item.oneNum" :onkeyup="getmin(item)">
+										<i :title="item.oneName">{{item.oneName}}</i>
+										<span>+</span>
+									</div>
+									<div class="input-cell">
+										<input type="text" placeholder="输入数字" v-model="item.twoNum" :onkeyup="getmin(item)">
+										<i :title="item.twoName">{{item.twoName}}</i>
+									</div>
+								</span>
+								<span :title="item.materialName">{{item.materialName}}</span>
+								<span :title="item.number">{{item.number}}</span>
+								<span>{{item.batchNum}}</span>
+								<span>{{matterType[item.materialType]}}</span>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<batchwin @getWin="getWin" v-if="showBatch" :batchInfo="info" :winIndex="winIndex" :type="false"></batchwin>
 		</div>
 		<matter v-else @select="getMatter" :sleSupplies="sleSupplies" :addBtn="true"></matter>
+		<div>
+			<el-dialog
+			  title="选择领料人"
+			  :visible.sync="dialogVisible"
+			  width="250"
+			  :close="handleClose">
+			  <div class="radio-box" v-for="(item,index) in pickerList" :key="index">
+			  	<el-radio v-model="pickerId" :label="item.id" border>{{item.name}}</el-radio>
+			  </div>
+			  <span slot="footer" class="dialog-footer">
+			  	<el-button @click="handleClose">取消</el-button>
+			    <el-button type="primary" @click="pickerConfirm">确 定</el-button>
+			  </span>
+			</el-dialog>
+		</div>
 	</div>
  </template>
 
@@ -97,7 +120,7 @@
 	export default {
 		data(){
 			return {
-				picker: ['请选择领料人'],  //领料人列表
+				dialogVisible:false,
 				pickerList: [],
 				matterList: [1,2,3],
 				showBatch: false, //弹窗显示
@@ -109,10 +132,12 @@
 					materialInfo: [], //领料详情
 					creatorName: '', //操作人名
 				},
-				index: 0,//选择领料人
+				pickerId: 0,//选择领料人
 				isMatter: false, //添加物料
 				matterType: {
-					0: '物料'
+					0: '成品',
+					1: '半成品',
+					2: '普通物料',
 				},  //类型
 				info: '', //查看详情该物料信息
 				item:{ },   //
@@ -122,6 +147,7 @@
 			};
 		},
 		mounted(){
+			this.initBtn();
 			this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'领料'}]});
 			this.getPicker();
 			this.pickData.creatorName = storage.session('userShop').user.name;
@@ -132,18 +158,54 @@
 			matter: ()=> import (/*webpackChunkName: 'output_select_supplies'*/ '../warehouse_manage/output_select_supplies')
 		},
 		methods:{
+			initBtn(){//初始化按钮
+				let arr = [
+					{
+						name: '确定',
+						className: 'success',type:4,
+						fn: () => {
+							this.enter(); //确认
+						}
+					},
+					{
+						name: '继续添加',
+						className: 'success',type:5,
+						fn: () => {
+							this.again(); //确认
+						}
+					},
+					{
+						name: '取消',
+						className: 'info',type:4,
+						fn: () => {
+							this.cancel(); //确认
+						}
+					}
+				];
+				this.$store.commit('setPageTools', arr);
+			},
 			//获取领料人
 			async getPicker(){
 				let res = await http.getPickerList();
-				for(let key of res){
-					this.picker.push(key.name);
-				}
 				this.pickerList = res;
 			},
-			//领料操作保存
-			// async invoicingReceive(){
-			// 	await http.invoicingReceive({data:this.pickData});
-			// },
+			selPicker(){//选择领料人
+				this.dialogVisible = true;
+			},
+			pickerConfirm(){//领料人选择完毕
+				for(let item of this.pickerList){
+					if(item.id == this.pickerId){
+						this.pickData.ownerName = item.name;
+						break;
+					}
+				}
+				this.pickData.owner = this.pickerId;
+				this.handleClose();
+			},
+			handleClose(){
+				this.dialogVisible = false;
+				this.pickerId = this.pickData.owner;
+			},
 			//添加物料
 			addMatter(){
 				this.isMatter = true;
@@ -205,7 +267,11 @@
 					obj.materialCategory = obj.materialCategory.slice(0,obj.materialCategory.length-1);
 					obj.materialCategoryName = obj.materialCategoryName.slice(0,obj.materialCategoryName.length-1);
 					for(let key of res[i].unit){
-						obj.unitList.push(key.name);
+						let unitObj={
+							value:key.muId,
+							label:key.name,
+						};
+						obj.unitList.push(unitObj);
 					}
 					obj.unitData = res[i].unit;
 
@@ -217,40 +283,37 @@
 				this.unitConversion(this.pickData.materialInfo);
 			},
 			unitConversion(detailList){
-				for(let i=0;i<detailList.length;i++){
-					let unitList=[];
-					for(let j=0;j<detailList[i].unitData.length;j++){
-						if(detailList[i].unitData[j].isDefault==1){
-							this.pickData.materialInfo[i].defaultName=detailList[i].unitData[j].name;  //默认单位名
-							this.pickData.materialInfo[i].showName=detailList[i].unitData[j].name;  //展示单位名
-							this.pickData.materialInfo[i].oneName=detailList[i].unitData[j].name;
-							this.pickData.materialInfo[i].showValue=detailList[i].unitData[j].value;  //展示单位的换算关系
-							this.pickData.materialInfo[i].defaultValue=detailList[i].unitData[j].value;  //默认单位的换算关系
+				for(let matItem of detailList){
+					for(let unitItem of matItem.unitData){
+						if(unitItem.isDefault==1){
+							matItem.defaultName=unitItem.name;  //默认单位名
+							matItem.showName=unitItem.name;  //展示单位名
+							matItem.oneName=unitItem.name;
+							matItem.showValue=unitItem.value;  //展示单位的换算关系
+							matItem.defaultValue=unitItem.value;  //默认单位的换算关系
 						}
-						if(detailList[i].unitData[j].isMin==1){
-							this.pickData.materialInfo[i].minName=detailList[i].unitData[j].name;  //最小单位
-							this.pickData.materialInfo[i].twoName=detailList[i].unitData[j].name;
+						if(unitItem.isMin==1){
+							matItem.minName=unitItem.name;  //最小单位
+							matItem.twoName=unitItem.name;
 						}
-						unitList=unitList.concat(detailList[i].unitData[j].name);        //单位列表
-						for(let b=0;b<unitList.length;b++){                                      //把默认单位放到数组第一位
-							if(unitList[b]==detailList[i].showName){
-								let str = unitList.splice(b,1);
-								unitList.unshift(str[0]);
-							}
-						}
-						this.pickData.materialInfo[i].unitList=unitList;
 					}
-					this.pickData.materialInfo[i].comNum=detailList[i].num;     //保存comNum，用于计算
+					for(let i=0;i<matItem.unitList.length;i++){
+						let item = matItem.unitList[i];
+						if(item.isDefault==1){
+							let obj = matItem.unitList.splice(i,1);
+							matItem.unitList.unshift(obj);
+						}
+					}
+					matItem.comNum=matItem.num;     //保存comNum，用于计算
 					//换位默认单位数据
-					if(detailList[i].num != 0){
-						this.pickData.materialInfo[i].number=global.comUnit(detailList[i].num,this.pickData.materialInfo[i].showValue,this.pickData.materialInfo[i].showName,this.pickData.materialInfo[i].minName);
+					if(matItem.num != 0){
+						matItem.number=global.comUnit(matItem.num,matItem.showValue,matItem.showName,matItem.minName);
 					}
-
 				}
 			},
 			//领料单位选择
-			getMatterNuit(index){
-				this.backItem(this.item,index);
+			getMatterNuit(item,res){
+				this.backItem(item,res);
 			},
 			//获取最小值
 			getmin(item){
@@ -260,16 +323,16 @@
 				item.minNumber=minNumber;
 			},
 			//改变数值
-			backItem(item,index){
-				this.item=item;
-				item.index=index;
-				let showName=item.unitList[index];      //展示的单位名称
-				item.oneName=showName;
+			backItem(item,res){
+				let showName='';      //展示的单位名称
 				for(let k=0;k<item.unitData.length;k++){
-					if(item.unitData[k].name==showName){
+					if(item.muId==res){
 						item.showValue=item.unitData[k].value;
+						showName = item.unitData[k].name;
+						break;
 					}
 				}
+				item.oneName=showName;
 				item.number=global.comUnit(item.comNum,item.showValue,showName,item.minName);
 				if(Number(item.minNumber)){
 					let backObj=global.comUnit(Number(item.minNumber),item.showValue,showName,item.minName,true);
@@ -442,9 +505,18 @@
 	};
  </script>
 
- <style scoped>
+ <style scoped lang="less">
 	#picking {
 		margin-top: 20px;
+		.radio-box{display: inline-block;padding: 7px;}
+		.picker-name{padding-left: 10px;color: #666;}
+		textarea{border: 1px solid #dcdfe6;padding: 10px;width: 210px;}
+		.el-input{width: 210px;}
+		.el-sel{width: 80px;}
+		.scroll-box{overflow: auto;
+			.list-box{min-width: 1200px;}
+		}
+		.sel-cell>*{line-height: normal;}
 	}
 	#picking .row{
 		margin-bottom: 24px;
@@ -533,12 +605,15 @@
 		margin-left: 20px;
 		margin-bottom: 50px;
 	}
-	.list .title span{
-		float: left;
-		width: 12%;
-		height: 60px;
-		line-height: 60px;
-		text-align: center;
+	.list .title{
+		overflow: hidden;
+		span{
+			float: left;
+			width: 12%;
+			height: 50px;
+			line-height: 50px;
+			text-align: center;
+		}	
 	}
 	.list .title i {
 		overflow: hidden;
@@ -589,34 +664,39 @@
 		background: #fff;
 	}
 	.list .content span{
-		height: 60px;
-		line-height: 60px;
+		height: 70px;
+		line-height: 70px;
 	}
-	.list .content .end i{
-		display: inline-block;
-		width: 40px;
-		height: 39px;
-		line-height: 39px;
-		border: 1px solid #D5D5D5;
-		vertical-align: middle;
-		border-left: none;
-		background: #fff;
-	}
-	.list .content .end input{
-		width: 65px;
-		height: 39px;
-		padding-left: 7px;
-		border: 1px solid #D5D5D5;
-		vertical-align: middle;
+	.input-cell{}
+	.list .content .end{
+		.input-cell{display: inline-block;vertical-align: middle;overflow: hidden;
+			span{height: 40px;line-break: 40px;padding: 0 5px;}
+			i{
+				float: left;
+				width: 40px;
+				height: 40px;
+				line-height: 38px;
+				border: 1px solid #D5D5D5;
+				border-left: none;
+				background: #fff;
+			}
+			input{
+				width: 65px;
+				height: 40px;
+				padding-left: 7px;
+				border: 1px solid #D5D5D5;
+				float: left;
+			}
+		}
 	}
 	.list ul li{
 		/* overflow: hidden; */
-		height: 60px;
+		height: 70px;
 		border-bottom: 2px solid #F7F7F7;
 	}
 	.list ul li span{
-		height: 60px;
-		line-height: 60px;
+		height: 70px;
+		line-height: 70px;
 	}
 	.list .title .under-line{
 		color: #F8931F;
@@ -626,7 +706,7 @@
 	}
 	.list ul li span em{
 		/* margin-right: 10px; */
-		font-size: 16px;
+		font-size: 14px;
 	}
 	.list .title .edit {
 		color: #FE8D2C;
@@ -634,7 +714,7 @@
 	.list .title .line {
 		display: inline-block;
 		width: 2px;
-		height: 18px;
+		height: 14px;
 		background: #CECECE;
 		vertical-align: middle;
 		margin: 0 2px;
