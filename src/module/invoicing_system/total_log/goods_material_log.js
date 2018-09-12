@@ -84,7 +84,6 @@ export default {
                     obj.cid = condition.category[1];                    
                 }   
             }
-			console.log(obj);
             return obj;
 		},
 		initData() {

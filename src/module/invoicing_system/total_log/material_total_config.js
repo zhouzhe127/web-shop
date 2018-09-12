@@ -123,7 +123,7 @@ let config = [
 				let obj = {};
 				obj.path = '/admin/pickingList/checkDetails';
 				obj.query = {
-					id:item.receiveLogId
+					id:item.other.receiveLogId
 				};
 				context.$router.push(obj);
 				
@@ -141,7 +141,7 @@ let config = [
 				let obj = {};
 				obj.path = '/admin/pickingList/plateDetails';
 				obj.query = {
-					id:item.itemId
+					id:item.other.logId
 				};
 				context.$router.push(obj);
 			}

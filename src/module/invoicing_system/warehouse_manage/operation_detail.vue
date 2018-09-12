@@ -75,7 +75,7 @@
 					<el-dialog
 					  title="仓库信息"
 					  :visible.sync="dialogVisible"
-					  width="250"
+					  width="600px"
 					  :close="handleClose">
 					  <div class="ware-detail">
 					  	<span>仓库名称：{{this.wareDetail.name}}</span>
