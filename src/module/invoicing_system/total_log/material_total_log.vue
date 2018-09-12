@@ -62,8 +62,8 @@
             </div>
 
             <div class="in-block" style="padding-left:10px;">
-                <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
-                <el-button type="info" @click="filterReset('reset')">重置</el-button>
+                <el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
+                <el-button type="info" @click="filterReset('reset',null)">重置</el-button>
             </div>
         </div>
 
@@ -225,12 +225,12 @@ export default {
     },
     methods: {
         //筛选重置
-        filterReset(flag){
+        filterReset(flag,page){
             if(flag == 'reset'){
                 this.initPageObj();
                 this.initCondition();
             }else{
-                this.pageObj.currentPage = 1;
+                this.pageObj.currentPage = page || 1;
             }
             this.getList();
         },
@@ -286,8 +286,13 @@ export default {
                 this.initObject(ele,['changeBefore','change','changeAfter']);
 
                 ele.changeBefore = global.comUnit(ele.changeBefore, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                if(!ele.changeBefore) ele.changeBefore = '--';
+
                 ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                if(!ele.change) ele.change = '--';    
+
                 ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                if(!ele.changeAfter) ele.changeAfter = '--';    
 
                 return ele;
             });
@@ -398,7 +403,7 @@ export default {
         this.getOperationList('material');
         this.getCategoryList();
         this.getWarehouseList();
-        this.filterReset('reset');
+        this.filterReset('filter',this.pageObj.currentPage);
     },
 };
 </script>

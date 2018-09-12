@@ -98,7 +98,7 @@
 						</li>
 						<li>{{item.productionTime | formatTimeStamp}}</li>
 						<li class="big-li">{{item.supplier}}</li>
-						<li>{{item.purchasePrice}}&nbsp;/&nbsp;{{item.purchaseUnit ? item.purchaseUnit.name : '进价单位不存在'}}</li>
+						<li>{{item.purchasePrice}}&nbsp;/&nbsp;{{item.purchaseUnit ? item.purchaseUnit.name : '--'}}</li>
 						<li>{{item.wName}}&nbsp;/&nbsp;{{item.aName}}</li>
 					</div>
 				</div>
