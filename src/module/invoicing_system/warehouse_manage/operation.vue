@@ -297,14 +297,14 @@ export default {
 			this.allWarehouse = arr;
 		},
 		resetSearch() { //重置
-			this.startTime = new Date().setHours(0, 0, 0, 0);
+			this.startTime = new Date().setHours(0, 0, 0, 0)-30*3600*24*1000;
 			this.endTime = new Date().setHours(23, 59, 59, 999);
-			this.dynamic = '';
+			this.timeDate = [new Date(Date.parse(new Date())-30*3600*24*1000),new Date()];
+			this.dynamic = 0;
 			this.receiptNumber = '';
 			this.createName = '';
 			this.resWareArr();
 			this.resWareId(); //outWareId intoWarehouse
-			this.dynamicIndex = 0;
 			this.page = 1;
 			this.num = 10;
 			this.search();
