@@ -393,12 +393,11 @@ export default {
         this.initData();
         this.initCondition();
         this.initPageObj();
+    },
+    activated(){
         this.getOperationList('material');
         this.getCategoryList();
         this.getWarehouseList();
-        this.filterReset('reset');
-    },
-    activated(){
         this.filterReset('reset');
     },
 };
