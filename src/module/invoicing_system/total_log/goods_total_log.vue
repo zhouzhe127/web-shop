@@ -347,14 +347,11 @@ export default {
         this.initData();
         this.initPageObj();
         this.initCondition();
-
+    },
+    activated(){
         this.getOperationList();
         this.getCategoryList();
         this.getWarehouseList();
-
-        this.filterReset('reset');
-    },
-    activated(){
         this.filterReset('reset');
     },
     /*
