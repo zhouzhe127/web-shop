@@ -77,7 +77,7 @@
                 </el-table-column>
                 <el-table-column prop="distributionPrice" width="150px" label="进价" >
                 </el-table-column>
-                <el-table-column prop="aName" min-width='150px' label="仓库" >
+                <el-table-column prop="storeName" min-width='150px' label="仓库" >
                 </el-table-column>
                 <el-table-column prop="remark" min-width='150px' label="备注" >
                 </el-table-column>
@@ -152,6 +152,8 @@ export default {
                 ele.arrowNum = ele.num > 0;
                 ele.num = '' + ele.num + this.materialInfo.unit;
                 ele.distributionPrice = `${ele.distributionPrice}元/ ${this.materialInfo.unit}`;
+
+                ele.storeName = ele.wName + '/' + ele.aName;
                 return ele;
             });
         },
