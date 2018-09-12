@@ -348,7 +348,9 @@ export default {
 		wholeOffCom: function() {
 			if (this.areaIndex[0]) {
 				for (let i = 0; i < this.selectgoods.length; i++) {
-					this.goodsIndex.splice(0, this.goodsIndex.length);
+					this.goodsIndex = this.goodsIndex.filter(x=>{
+						return x!=this.selectgoods[i].goodsId;
+					})
 				}
 			}
 		}
