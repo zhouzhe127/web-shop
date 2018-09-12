@@ -43,9 +43,9 @@
                 <li>耗损:{{materialInfo.lossNum}}</li>
             </div>
             <div class="col">
-                <li>仓库数量/重量:{{materialInfo.surplus}}</li>
-                <li>上架数量:{{materialInfo.shelveNum}}</li>
-                <li>总量:{{materialInfo.total}}</li>
+                <li>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</li>
+                <li>上架数量:{{materialInfo.shelveNum}}{{materialInfo.unit}}</li>
+                <li>总量:{{materialInfo.total}}{{materialInfo.unit}}</li>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
                 <i class="circle"></i>共 <span class="num">{{tableData.length}}</span> 个条目
             </div>
             <el-table :data="tableData" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
-                <el-table-column prop="itemIndex"  label="序号">
+                <el-table-column prop="itemIndex" width="150px" label="序号">
                 </el-table-column>
                 <el-table-column prop="batchCode" width="150px" label="批次编码" >
                 </el-table-column>
@@ -77,9 +77,9 @@
                 </el-table-column>
                 <el-table-column prop="distributionPrice" width="150px" label="进价" >
                 </el-table-column>
-                <el-table-column prop="aName" width="150px" label="仓库" >
+                <el-table-column prop="aName"  label="仓库" >
                 </el-table-column>
-                <el-table-column prop="remark" width="150px" label="备注" >
+                <el-table-column prop="remark" label="备注" >
                 </el-table-column>
             </el-table>           
         </div>

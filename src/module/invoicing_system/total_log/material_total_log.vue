@@ -398,6 +398,9 @@ export default {
         this.getWarehouseList();
         this.filterReset('reset');
     },
+    activated(){
+        this.filterReset('reset');
+    },
 };
 </script>
 <style lang='less' scoped>
