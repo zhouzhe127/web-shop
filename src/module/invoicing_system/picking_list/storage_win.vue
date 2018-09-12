@@ -145,7 +145,6 @@
 			// this.type ? this.title = '批次分配' : this.title = '批次选择';
 			this.title = '批次分配';
 			this.infoList = utils.deepCopy(this.batchInfo);
-			console.log(this.infoList);
 			this.batchList = this.infoList.batch;
 			this.list = utils.deepCopy(this.infoList.batch);
 			this.options = this.infoList.options.map((res)=>{
