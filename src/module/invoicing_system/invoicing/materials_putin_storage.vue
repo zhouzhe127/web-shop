@@ -147,7 +147,7 @@
 					</section>
 					<section>
 						<h6>进价:</h6>
-						<span>{{existingBatchInfo.purchasePrice}}元{{"/"}}{{getpiceunit(existingBatchInfo.purchaseUnit)}}</span>
+						<span>{{existingBatchInfo.distributionPrice}}元{{"/"}}{{getpiceunit(existingBatchInfo.distributionUnit)}}</span>
 					</section>
 				</li>
 				<li>
@@ -400,7 +400,7 @@
 					});
 					this.successInfo = res;
 				} else if (this.getInfo.type == 2) {
-					this.listenValue();
+					// this.listenValue();
 					let res = await http.goodsinventoryAddNum({
 						data: {
 							itemId: this.existingBatchInfo.itemId,
@@ -415,13 +415,15 @@
 				}
 
 			},
-			listenValue() {
-				for (let i = 0; i < this.UnitDataInfo.length; i++) {
-					if (this.existingBatchInfo.purchaseUnit.name == this.UnitDataInfo[i].name) {
-						this.conversion = this.UnitDataInfo[i].value;
-					}
-				}
-			},
+			// listenValue() {
+			// 	console.log(this.existingBatchInfo.purchaseUnit)
+			// 	console.log(this.UnitDataInfo)
+			// 	for (let i = 0; i < this.UnitDataInfo.length; i++) {
+			// 		if (this.existingBatchInfo.purchaseUnit.name == this.UnitDataInfo[i].name) {
+			// 			this.conversion = this.UnitDataInfo[i].value;
+			// 		}
+			// 	}
+			// },
 			wareEvent(str) {
 				console.log(str);
 				this.wareshow = false;

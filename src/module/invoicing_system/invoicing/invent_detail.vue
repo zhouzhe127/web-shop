@@ -220,7 +220,7 @@
 				},
 				{
 					titleName: '进价',
-					dataName: 'purchasePrice'
+					dataName: 'distributionPrice'
 				},
 				{
 					titleName: '所属仓库'
