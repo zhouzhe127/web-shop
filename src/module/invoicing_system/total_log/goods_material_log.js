@@ -61,7 +61,7 @@ export default {
                 condition = this.condition;
 
             obj.type = condition.operationType;
-            obj.name = condition.operationUser;
+            obj.name = condition.goodsName;
             obj.barCode = condition.code;
             obj.wid = condition.wid;
             obj.page = this.pageObj.currentPage;
@@ -84,7 +84,7 @@ export default {
                     obj.cid = condition.category[1];                    
                 }   
             }
-
+			console.log(obj);
             return obj;
 		},
 		initData() {
