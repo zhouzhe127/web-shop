@@ -13,7 +13,6 @@
 	                <li><span>物料简码：</span><span>{{goodsDetail.BC}}</span></li>
 	                <li><span>品牌：</span><span>{{goodsDetail.brandName||'无'}}</span></li>
 	                <li><span>批次数：</span><span>{{goodsDetail.batchNum}}</span></li>
-					<li><span>备注：</span><span></span></li>
                 </ul>
                 <ul>
                     <li><span>物料类型：</span><span>{{typeValue[Number(goodsDetail.type)]}}</span></li>
@@ -43,7 +42,7 @@
 				</div> -->
                 <el-table :data="selList" style="width: 100%;" row-class-name='a' border stripe>
 					<el-table-column :label="`批次列表 · 共${selList.length}个条目`" class-name='tabletop'>
-						<el-table-column label="序号" width="180" type="index"></el-table-column>
+						<el-table-column label="序号" width="80" type="index"></el-table-column>
 						<el-table-column label="批次编码" prop="batchCode">
 							<!-- <template slot-scope="scope">
 								<div>{{getTime(scope.row.createTime)}}</div>
@@ -62,10 +61,15 @@
 						</el-table-column>
 						<el-table-column label="进价">
 							<template slot-scope="scope">
-								<div>{{scope.row.distributionPrice}}元/{{scope.row.distributionUnit}}</div>
+								<div>{{scope.row.distributionPrice}}元/{{getunitid(scope.row.distributionUnit)}}</div>
 							</template>
 						</el-table-column>
-						<el-table-column label="仓库" prop="wName"></el-table-column>
+						<el-table-column label="仓库" prop="wName">
+							<template slot-scope="scope">
+								<div>{{scope.row.wName}}/{{scope.row.aName}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="备注" prop="remark"></el-table-column>
 					</el-table-column>
                 </el-table>
 			</div>
@@ -164,6 +168,13 @@
 				let key = type == 1 ? 'isDefault' : 'isMin';
 				for(let item of arr) {
 					if(item[key] == 1) {
+						return item.name;
+					}
+				}
+			},
+			getunitid(id) {
+				for(let item of this.goodsUnit) {
+					if(item.muId == id) {
 						return item.name;
 					}
 				}

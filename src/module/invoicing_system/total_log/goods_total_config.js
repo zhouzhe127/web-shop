@@ -36,11 +36,11 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {
-					path: '/admin/operation/enterGoods',
+					path: '/admin/operation/operationDetail',
 				};
 				
 				obj.query = {
-					id:item.other.dispatchId,									//调度单id
+					id:item.other.dispatchId,					//调度单id
 					intoId:item.other.dispatchInfoId,			//入货单id
 					logTab:2,
 					logType:1,
@@ -63,10 +63,11 @@ let config = [
 			"historyClick":function(context,item){
 				let obj = {};
 
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					logTab:1,
 					logType:1,
+					id:item.other.dispatchId
 				}; 
 				context.$router.push(obj);				
 			}
