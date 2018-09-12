@@ -183,7 +183,6 @@
 						}
 					}
 				];
-				console.log('1212');
 				this.$store.commit('setPageTools', arr);
 			},
 			//获取领料人
@@ -397,10 +396,11 @@
 			//领料操作确定
 			async invoicingReceive(data,type){
 				let res = await http.invoicingReceive({data: data});
-				this.$store.commit('setWin',{winType:'alert',content:'添加成功'});
+				this.$message({message: '添加成功',type: 'success'});
 				if(type !== true){
+					this.$message({message: '领料成功',type: 'success'});
 					storage.session('listDetail',res);
-					this.$router.push({path:'checkDetails',query:this.$route.query});
+					this.$router.push({path:'checkDetails'});
 				}
 			},
 			//确定
