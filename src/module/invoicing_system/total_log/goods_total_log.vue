@@ -170,9 +170,9 @@
                             </template>                        
                         </div>
                     </div>
-                    <div>仓库数量/重量:{{materialInfo.surplus}}</div>
-                    <div>上架数量:{{materialInfo.shelveNum}}</div>
-                    <div>总量:{{materialInfo.total}}</div>
+                    <div>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</div>
+                    <div>上架数量:{{materialInfo.shelveNum}}{{materialInfo.unit}}</div>
+                    <div>总量:{{materialInfo.total}}{{materialInfo.unit}}</div>
                 </div>
             </div>
             <div class="dialog-content" v-if="false">
@@ -352,6 +352,9 @@ export default {
         this.getCategoryList();
         this.getWarehouseList();
 
+        this.filterReset('reset');
+    },
+    activated(){
         this.filterReset('reset');
     },
     /*
