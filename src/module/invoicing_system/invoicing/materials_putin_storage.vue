@@ -111,7 +111,7 @@
 					<!-- <selectBtn @selOn="getUnit" :sorts="allUnit" :name="unitName" :width="'100'" style="float:left;margin-left:10px;"></selectBtn> -->
 					<span>{{unitName}}</span>
 					<span v-if="unitName!=smallUnit">+</span>
-					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:200px;" v-model="weight" maxlength="10">
+					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:150px;" v-model="weight" maxlength="10">
 					<div v-if="unitName!=smallUnit" class="weightNum-unit">{{smallUnit}}</div>
 				</div>
 				<div class="note">
@@ -180,7 +180,7 @@
 					<div v-if="existingBatchInfo.purchaseUnit.name!=smallUnit" class="weightNum-unit">{{smallUnit}}</div> -->
 					<span>{{unitName}}</span>
 					<span v-if="unitName!=smallUnit">+</span>
-					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:200px;" v-model="weight" maxlength="10">
+					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:150px;" v-model="weight" maxlength="10">
 					<div v-if="unitName!=smallUnit" class="weightNum-unit">{{smallUnit}}</div>
 				</div>
 				<div class="note">
