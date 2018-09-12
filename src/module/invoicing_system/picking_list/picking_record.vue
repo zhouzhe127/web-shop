@@ -57,6 +57,8 @@
 			    </el-table-column>
 			    <el-table-column prop="creatorName" label="操作人">
 			    </el-table-column>
+			    <el-table-column prop="ownerName" label="领料人">
+			    </el-table-column>
 			    <el-table-column label="操作时间">
 			    	<template slot-scope="scope">{{transformTime(scope.row.createTime)}}</template>
 			    </el-table-column>
