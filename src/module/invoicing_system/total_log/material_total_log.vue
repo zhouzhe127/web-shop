@@ -286,8 +286,13 @@ export default {
                 this.initObject(ele,['changeBefore','change','changeAfter']);
 
                 ele.changeBefore = global.comUnit(ele.changeBefore, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                if(!ele.changeBefore) ele.changeBefore = '--';
+
                 ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                if(!ele.change) ele.change = '--';    
+
                 ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                if(!ele.changeAfter) ele.changeAfter = '--';    
 
                 return ele;
             });
