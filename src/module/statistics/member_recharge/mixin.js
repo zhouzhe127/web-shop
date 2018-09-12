@@ -46,7 +46,7 @@ export const mixin = {
 				this.preferentialBounced = false;
 			}
 		},
-		openPayment: function(item, type) { //打开其他支付方式的弹窗
+		openPayment: function(index,item, type) { //打开其他支付方式的弹窗
 			this.preferentialBounced = true;
 			this.paymentShopId = item.shopId;
 			this.otherPayDetail = item.otherPayDetail;

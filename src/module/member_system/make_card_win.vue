@@ -252,7 +252,7 @@
 			//选择店铺
 			choseShop() {
 				if(this.cradTypeIndex == -1){
-					this.errorShow('请关联卡类型!')
+					this.errorShow('请关联卡类型!');
 					return false;
 				}
 				this.shopShow = true;

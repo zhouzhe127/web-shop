@@ -145,7 +145,7 @@
 				</label>
 				<p class="limit">
 					<img class="icon-i" src="../../../res/images/handle-tips.png" />限150字以内</p>
-			</div> -->
+				</div> -->
 		<div class="agift-content" style="padding-left: 60px;">
 			<a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a>
 			<template v-if='isactivityDetail'>
@@ -188,13 +188,13 @@ export default {
 			}],
 			selects: [], //选中的状态
 			durationList: [{ //活动期限
-					name: '无',
-					id: 0
-				},
-				{
-					name: '电子优惠劵',
-					id: 1
-				}
+				name: '无',
+				id: 0
+			},
+			{
+				name: '电子优惠劵',
+				id: 1
+			}
 			],
 			durationId: 0,
 			durationName: '无', //状态
@@ -205,29 +205,29 @@ export default {
 			activityDetail: {},
 			memberContent: '', //内容设置
 			parameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				},
-				{
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				},
-				{
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				},
-				{
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				},
-				{
-					'name': '【注册时间】',
-					'id': '{registerTime}'
-				}
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			},
+			{
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			},
+			{
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			},
+			{
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			},
+			{
+				'name': '【注册时间】',
+				'id': '{registerTime}'
+			}
 			],
 			showRang: false,
 			showCoupon: false,
-			isactivityDetail: true,//是否查看详情
+			isactivityDetail: true, //是否查看详情
 			shopList: [], //店铺选择的列表
 			selectsList: [], //门店列表选中的
 			selectCoupon: [],
@@ -535,6 +535,7 @@ export default {
 
 
 
+
 /*活动名称的输入框*/
 
 #member-agift .online-box .rightHalf .name {
@@ -810,6 +811,7 @@ input:focus {
 	bottom: 15px;
 	right: -10px;
 }
+
 
 
 /*.limit {

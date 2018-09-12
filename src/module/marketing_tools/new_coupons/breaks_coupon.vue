@@ -189,7 +189,7 @@
 						</div>
 					</div>
 					<!-- <input type="text" maxlength="2" class="fl" placeholder="0" style="width: 149px;height: 36px;padding: 0;border-color: #999;text-indent: 10px;outline: none; margin-left:10px;" v-model="maxCeiling" />
-					<div style="border:1px solid #999;width: 38px;float: left;height: 38px;border-left: none;text-align: center;line-height: 38px;">张</div> -->
+						<div style="border:1px solid #999;width: 38px;float: left;height: 38px;border-left: none;text-align: center;line-height: 38px;">张</div> -->
 				</div>
 			</template>
             <!-- 优惠共享 -->
