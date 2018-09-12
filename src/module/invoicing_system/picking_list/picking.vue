@@ -18,7 +18,7 @@
 				<span class="left required">领料人</span>
 				<div class="right">
 					<el-button @click="selPicker" icon="el-icon-plus" type="primary" class="el-input">选择领料人</el-button>
-					<span class="picker-name">{{pickData.ownerName}}</span>
+					<span class="picker-name">{{pickData.ownerName?'已选择：':''}}{{pickData.ownerName}}</span>
 				</div>
 			</div>
 			<div class="row">
@@ -101,7 +101,7 @@
 			<el-dialog
 			  title="选择领料人"
 			  :visible.sync="dialogVisible"
-			  width="250"
+			  width="600px"
 			  :close="handleClose">
 			  <div class="radio-box" v-for="(item,index) in pickerList" :key="index">
 			  	<el-radio v-model="pickerId" :label="item.id" border>{{item.name}}</el-radio>
@@ -183,6 +183,7 @@
 						}
 					}
 				];
+				console.log('1212');
 				this.$store.commit('setPageTools', arr);
 			},
 			//获取领料人
@@ -213,74 +214,75 @@
 			},
 			//获取添加的物料
 			getMatter(res){
-				if(res){
-					this.sleSupplies = res;
-				}
-				for(let i = 0; i < res.length; i++){
-					let isHave = false;  //判断是否已添加该物料
-					for(let k of this.pickData.materialInfo){
-						if(k.materialId == res[i].id){
-							isHave = true;
-						}
-					}
-					if(isHave){
-						continue;
-					}
-					let obj =  {
-						materialBC: '',
-						materialId: '',// 物料id
-						materialName: '', //物料名
-						materialType: '', //物料类型
-						materialCategory: '', //物料分类id
-						materialCategoryName: '', //物料分类名
-						unitData: '', //所有单位信息
-						unit: '', //选择的单位
-						batch: [], //批次
-						validity: '', //保质期
-						validityType: '', //保质期类型
-
-						number: '', //领料量
-						num: '', //原始库存量
-						unitList: [], //单位列表
-						index: 0, //单位选择的索引
-						minName:'', //最小单位名
-						defaultName:'',    //默认单位名
-						defaultValue:'',   //默认单位的转换关系
-						oneNum:'',      //第一个输入框
-						twoNum:'',      //第二个输入框
-						oneName:'',
-						twoName:'',
-						showName:'', //展示单位名
-						showValue:'',   //展示单位换算关系
-						minNumber:''     //最小单位的数量
-					};
-					obj.materialBC = res[i].BC;
-					obj.materialId = res[i].id;
-					obj.materialName = res[i].name;
-					obj.materialType = res[i].type;
-					obj.validity = res[i].validity;
-					obj.validityType = res[i].validityType;
-					obj.batchNum = res[i].goodsNum.batch;
-					for(let key of res[i].cate){
-						obj.materialCategory += key.cid + ',';
-						obj.materialCategoryName += key.name + ',';
-					}
-					obj.materialCategory = obj.materialCategory.slice(0,obj.materialCategory.length-1);
-					obj.materialCategoryName = obj.materialCategoryName.slice(0,obj.materialCategoryName.length-1);
-					for(let key of res[i].unit){
-						let unitObj={
-							value:key.muId,
-							label:key.name,
-						};
-						obj.unitList.push(unitObj);
-					}
-					obj.unitData = res[i].unit;
-					obj.number = res[i].goodsNum.surplus;
-					obj.num = res[i].goodsNum.surplus;
-					this.pickData.materialInfo.push(obj);
-				}
 				this.isMatter = false;
-				this.unitConversion(this.pickData.materialInfo);
+				this.initBtn();
+				if(res.length){
+					this.sleSupplies = res;
+					for(let i = 0; i < res.length; i++){
+						let isHave = false;  //判断是否已添加该物料
+						for(let k of this.pickData.materialInfo){
+							if(k.materialId == res[i].id){
+								isHave = true;
+							}
+						}
+						if(isHave){
+							continue;
+						}
+						let obj =  {
+							materialBC: '',
+							materialId: '',// 物料id
+							materialName: '', //物料名
+							materialType: '', //物料类型
+							materialCategory: '', //物料分类id
+							materialCategoryName: '', //物料分类名
+							unitData: '', //所有单位信息
+							unit: '', //选择的单位
+							batch: [], //批次
+							validity: '', //保质期
+							validityType: '', //保质期类型
+	
+							number: '', //领料量
+							num: '', //原始库存量
+							unitList: [], //单位列表
+							index: 0, //单位选择的索引
+							minName:'', //最小单位名
+							defaultName:'',    //默认单位名
+							defaultValue:'',   //默认单位的转换关系
+							oneNum:'',      //第一个输入框
+							twoNum:'',      //第二个输入框
+							oneName:'',
+							twoName:'',
+							showName:'', //展示单位名
+							showValue:'',   //展示单位换算关系
+							minNumber:''     //最小单位的数量
+						};
+						obj.materialBC = res[i].BC;
+						obj.materialId = res[i].id;
+						obj.materialName = res[i].name;
+						obj.materialType = res[i].type;
+						obj.validity = res[i].validity;
+						obj.validityType = res[i].validityType;
+						obj.batchNum = res[i].goodsNum.batch;
+						for(let key of res[i].cate){
+							obj.materialCategory += key.cid + ',';
+							obj.materialCategoryName += key.name + ',';
+						}
+						obj.materialCategory = obj.materialCategory.slice(0,obj.materialCategory.length-1);
+						obj.materialCategoryName = obj.materialCategoryName.slice(0,obj.materialCategoryName.length-1);
+						for(let key of res[i].unit){
+							let unitObj={
+								value:key.muId,
+								label:key.name,
+							};
+							obj.unitList.push(unitObj);
+						}
+						obj.unitData = res[i].unit;
+						obj.number = res[i].goodsNum.surplus;
+						obj.num = res[i].goodsNum.surplus;
+						this.pickData.materialInfo.push(obj);
+					}
+					this.unitConversion(this.pickData.materialInfo);
+				}
 			},
 			unitConversion(detailList){
 				for(let matItem of detailList){
@@ -329,7 +331,6 @@
 						break;
 					}
 				}
-				console.log(item.selUnit.name);
 				item.index = res;
 				item.oneName=showName;
 				item.number=global.comUnit(item.comNum,item.showValue,showName,item.minName);
@@ -452,11 +453,11 @@
 						}
 						returnData.push(obj);
 						if(obj.number > this.pickData.materialInfo[i].comNum){
-							this.$store.commit('setWin',{winType:'alert',content:'物料：' + obj.materialName + '领料数量不能大于当前数量'});
+							this.$message({message: `物料: ${obj.materialName} 领料数量不能大于当前数量`,type: 'error'});
 							return false;
 						}
 						if(!obj.number){
-							this.$store.commit('setWin',{winType:'alert',content:'物料：' + obj.materialName + '请填写领料数量'});
+							this.$message({message: `物料: ${obj.materialName} 请填写领料数量`,type: 'error'});
 							return false;
 						}
 					}
@@ -479,14 +480,10 @@
 					this.errorShow('请选择领料人');
 					return false;
 				}
-				// if(!this.pickData.remarks){
-				//     this.errorShow('请输入备注');
-				//     return false
-				// }
 				return true;
 			},
 			errorShow(content){
-				this.$store.commit('setWin',{winType:'alert',content:content});
+				this.$message({message: content,type: 'error'});
 			}
 		}
 	};
@@ -496,7 +493,7 @@
 	#picking {
 		margin-top: 20px;
 		.radio-box{display: inline-block;padding: 7px;}
-		.picker-name{padding-left: 10px;color: #666;}
+		.picker-name{padding-left: 10px;color: #666;display: inline-block;height: 40px;line-height: 40px;vertical-align: middle;}
 		textarea{border: 1px solid #dcdfe6;padding: 10px;width: 210px;}
 		.el-input{width: 210px;}
 		.el-sel{width: 80px;}
@@ -506,10 +503,11 @@
 		.sel-cell>*{line-height: normal;}
 	}
 	#picking .row{
-		margin-bottom: 24px;
+		margin-bottom: 20px;
+		overflow: hidden;
 	}
 	#picking .row .left{
-		display: inline-block;
+		float: left;
 		width: 100px;
 		height: 40px;
 		vertical-align: top;
@@ -518,7 +516,7 @@
 		text-align: right;
 	}
 	#picking .row .right{
-		display: inline-block;
+		float: left;
 		margin-left: 20px;
 	}
 	#picking .row .right input{
@@ -526,11 +524,13 @@
 		height: 40px;
 		padding-left: 17px;
 		border-color: #b3b3b3;
+		vertical-align: middle;
 	}
 	#picking .row .right .operator{
 		display: inline-block;
 		height: 40px;
 		line-height: 40px;
+		color: #666;
 	}
 	#picking .row .right textarea{
 		width: 210px;
