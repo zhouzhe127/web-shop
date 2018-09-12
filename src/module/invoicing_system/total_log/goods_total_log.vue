@@ -63,8 +63,8 @@
             </div>
 
             <div class="in-block" style="padding-left:10px;">
-                <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
-                <el-button type="info" @click="filterReset('reset')">重置</el-button>
+                <el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
+                <el-button type="info" @click="filterReset('reset',null)">重置</el-button>
             </div>
         </div>
 
@@ -263,12 +263,12 @@ export default {
             this.getList();
         },
         //筛选重置
-        filterReset(flag){
+        filterReset(flag,page){
             if(flag == 'reset'){
                 this.initPageObj();
                 this.initCondition();
             }else{
-                this.pageObj.currentPage = 1;
+                this.pageObj.currentPage = page || 1;
             }
             this.getList();
         },
@@ -352,7 +352,7 @@ export default {
         this.getOperationList();
         this.getCategoryList();
         this.getWarehouseList();
-        this.filterReset('reset');
+        this.filterReset('filter',this.pageObj.currentPage);
     },
     /*
     beforeRouteEnter(to,from,next){
