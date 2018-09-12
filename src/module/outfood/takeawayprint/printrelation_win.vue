@@ -329,7 +329,6 @@ export default {
 			this.selectgoods = arr;
 		},
 		wholeOnCom: function() {
-			this.goodsIndex = [];
 			if (this.areaIndex[0]) {
 				for (let i = 0; i < this.selectgoods.length; i++) {
 					this.goodsIndex.push(this.selectgoods[i].goodsId);
