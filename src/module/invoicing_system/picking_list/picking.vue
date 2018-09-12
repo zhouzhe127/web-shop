@@ -399,6 +399,7 @@
 				this.$message({message: '添加成功',type: 'success'});
 				if(type !== true){
 					this.$message({message: '领料成功',type: 'success'});
+					storage.session('info',{id:this.pickData.owner,name:this.pickData.ownerName});
 					storage.session('listDetail',res);
 					this.$router.push({path:'checkDetails'});
 				}
