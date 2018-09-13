@@ -39,8 +39,16 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
-				<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span>
+				<!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
+				<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
+				<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
+				<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
+				<el-tooltip class="item" effect="dark" content="Right Center 用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
+					<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
+				</el-tooltip>
+				<div class="memberinner">
+					(已关联会员{{member}}人,粉丝{{fans}}人)
+				</div>
 			</div>
 		</div>
 		<!-- 营销规则设置 -->
@@ -77,26 +85,6 @@
 							</section>
 						</div>
 					</div>
-					<!-- <div class="agift-content" style="overflow: initial;height: 40px;margin-top: 20px;">
-						<span class="fl">最低消费</span>
-						<div class="fl selectList" @click="openSelect('1')">
-							{{consumeName}}
-							<ul v-if="isConsumeList">
-								<li v-for="(item,index) in consumeList" :key='index' @click="getListDetail(item,index,'1')">{{item.name}}</li>
-							</ul>
-						</div>
-						<span class="fl moreBtn" style="border: 1px solid #CCCCCC;border-left: none;cursor: pointer;" @click="openSelect('1')">
-							<i></i>
-						</span>
-						<template v-if="minConsume == 1">
-							<input type="text" class="fl" placeholder="请输入金额" maxlength="6" style="width: 100px;margin-left: 10px;" v-model="minConsumess" />
-						</template>
-					</div> -->
-					<!-- <div class="agift-content">
-						<span class="fl">最高消费</span>
-						<input type="text" placeholder="请输入金额" style="width: 138px;height:40px" maxlength="6" v-model="maxConsumes" class="fl" />
-						<span class="fl moreBtn" style="border: 1px solid #CCCCCC;border-left: none;cursor: pointer;text-align: center;color: #999999;">元</span>
-					</div> -->
 					<!-- 最高消费 -->
 					<div class="online-box clearfix">
 						<span class="online-sub fl">最高消费</span>
@@ -269,10 +257,10 @@ export default {
 				name: '微信',
 				id: '1'
 			},
-				// {
-				// 	name: '短信',
-				// 	id: '2'
-				// }
+			// {
+			// 	name: '短信',
+			// 	id: '2'
+			// }
 			],
 			selects: [],
 			msmStatus: false,
@@ -374,11 +362,14 @@ export default {
 			indexCustom: 0, //活动对象选中的
 			showVip: false, //打开高级筛选	
 			member: '0', //筛选出来的人数
+			fans: '0', //粉丝的人数
 			memfilter: '', //筛选的条件
 			memberStatus: true,
 			isactivityDetail: true,
 			ruleIndex: 0, //点中的第几个  
-			selectCoupon: [] //选中的优惠券
+			selectCoupon: [], //选中的优惠券
+			checkedMember: false, //会员选中的
+			checkedFans: false //粉丝选中的
 		};
 	},
 	methods: {
@@ -684,6 +675,10 @@ export default {
 				this.valiData('请选择活动范围');
 				return false;
 			}
+			if (!this.checkedMember && !this.checkedFans) {
+				this.valiData('请关联活动对象!');
+				return false;
+			}
 			for (let i = 0; i < this.ruleList.length; i++) {
 				if (this.ruleList[i].durationId == 1 && this.ruleList[i].minConsumess == '') {
 					this.valiData(`规则${i+1}请填写最低消费金额`);
@@ -706,85 +701,6 @@ export default {
 		},
 		async addActivity(type) {
 			if (!this.checkForm()) return;
-			// 新建活动
-			// if (this.title.trim() == '') {
-			// 	this.$store.commit('setWin', {
-			// 		content: '请填写活动标题',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	return false;
-			// }
-			// if (utils.isEmptyObject(this.selectsList)) {
-			// 	this.$store.commit('setWin', {
-			// 		content: '请选择活动范围',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	return false;
-			// }
-
-			// 监听最低消费 and 最高消费
-			// if (
-			// 	Number(this.maxConsume) >= 1 &&
-			// 	this.minConsumes > Number(this.maxConsume)
-			// ) {
-			// 	this.$store.commit('setWin', {
-			// 		content: '最低消费不能大于最高消费',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	this.minConsumes = 0;
-			// 	this.ruleLists[this.ruleIndex].minConsume = this.minConsumes;
-			// 	return false;
-			// }
-			// if (
-			// 	Number(this.maxConsume) >= 1 &&
-			// 	Number(this.maxConsume) < Number(this.minConsumes)
-			// ) {
-			// 	this.$store.commit('setWin', {
-			// 		content: '最高消费不能小于最低消费',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	this.maxConsume = 0;
-			// 	this.ruleLists[this.ruleIndex].maxConsume = this.maxConsume;
-			// 	return false;
-			// }
-
-			// 循环ruleLists
-			// this.ruleLists[this.ruleIndex] = this.ruleObj;
-			// this.ruleLists[this.ruleIndex].memberRights = Number(!(this.memberRights));
-
-			// if (this.ruleIndex == 0 && this.ruleLists.length == 0) {
-			// 	this.ruleLists.push(this.ruleObj);
-			// }
-
-			// let rule = utils.deepCopy(this.ruleLists);
-			// for (let i = 0; i < rule.length; i++) {
-			// 	rule[i].isLoop = Number(rule[i].isLoop);
-			// 	rule[i].couponIds = rule[i].couponIds;
-			// 	if (rule[i].pushChannel) {
-			// 		rule[i].pushChannel = Number(
-			// 			rule[i].pushChannel.toString().replace(/,/g, '')
-			// 		);
-			// 	}
-			// 	if (
-			// 		rule[i].minConsume >= 1 &&
-			// 		rule[i].maxConsume >= 1 &&
-			// 		Number(rule[i].minConsume) > Number(rule[i].maxConsume)
-			// 	) {
-			// 		this.$store.commit('setWin', {
-			// 			content: '规则' + (i + 1) + '最低消费大于最高消费,请修改！'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	if (
-			// 		rule[i].minConsume >= 1 &&
-			// 		rule[i].maxConsume >= 1 &&
-			// 		Number(rule[i].maxConsume) < Number(rule[i].minConsume)
-			// 	) {
-			// 		this.$store.commit('setWin', {
-			// 			content: '规则' + (i + 1) + '最高消费小于最低消费,请修改！'
-			// 		});
-			// 		return false;
-			// 	}
 			let rule = [];
 			for (let item of this.ruleList) { //整合数据
 				let obj = {
@@ -822,9 +738,10 @@ export default {
 						type: 3,
 						name: this.title,
 						mouldType: 0,
-						objectType: this.memberStatus ? (this.integralOn == 0 ? '2' : this.integralOn) : 4, //活动对象
+						objectType: this.memberStatus ? 4 : 1, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
+						selectFans: this.fans, //粉丝的数量
 						startTime: Math.round(this.startObj.time / 1000),
 						endTime: Math.round(this.endObj.time / 1000),
 						isAuto: type,
@@ -901,10 +818,6 @@ export default {
 				};
 				this.ruleList.push(obj);
 			}
-
-
-
-
 			// this.ruleObj.pushChannel = String(this.ruleObj.pushChannel).split('');
 			// this.ruleObj.isLoop = (Number(this.ruleObj.isLoop));
 			// this.minthiss = this.ruleObj.minthis;
@@ -912,14 +825,21 @@ export default {
 			// this.maxthis = this.ruleObj.maxthis;
 			// this.memberRights = Number(!(Number(this.ruleObj.memberRights)));
 			// this.onListName = this.memberRights == 0 ? '电子优惠劵' : '无';
-			if (activityDetail.objectType == '4') {
-				this.integralOn = 1;
-				this.memberStatus = false;
-			} else {
-				this.integralOn = activityDetail.objectType == '2' ? 0 : activityDetail.objectType; //活动群体
-			}
+			// if (activityDetail.objectType == '1') {
+			// 	this.checkedMember = true;
+			// 	this.memberStatus = false;
+			// } else {
+			// 	this.integralOn = activityDetail.objectType == '2' ? 0 : activityDetail.objectType; //活动群体
+			// }
 			this.memfilter = activityDetail.memberIds; //筛选条件
 			this.member = activityDetail.sendProgress.split(',')[0]; //会员人数
+			if (this.member && Number(this.member) > 0) {
+				this.checkedMember = true;
+			}
+			if (activityDetail.selectFans && activityDetail.selectFans != '') { //筛选的粉丝的数量
+				this.fans = activityDetail.selectFans;
+				this.checkedFans = true;
+			}
 			this.edit = true;
 			// this.ruleList = [];
 			// for (let i = 0; i < activityDetail.rule.length; i++) {
@@ -970,8 +890,39 @@ export default {
 				this.member = obj.member;
 				this.memfilter = obj.memfilter;
 			}
+			this.$store.commit('setPageTools', [{
+				name: '<返回活动列表',
+				className: ['activity'],
+				fn: () => {
+					this.closePage();
+				}
+			}]);
+			//console.log('11111');
 			this.showVip = false;
 		},
+		async getSubscribeFansCount() {
+			let data = await http.getSubscribeFansCount({});
+			if (data) {
+				this.fans = data;
+			}
+		},
+		toSinglemember: function(item) {
+			if (item) {
+				if (this.memberStatus) {
+					this.addVip();
+				}
+			} else {
+				this.member = 0; //会员选中的人数
+				this.memfilter = ''; //会员筛选的条件
+			}
+		},
+		toSinglefans: function(item) {
+			if (item) {
+				this.getSubscribeFansCount();
+			} else {
+				this.fans = 0;
+			}
+		}
 	},
 	computed: {
 		titles: {
@@ -1026,7 +977,19 @@ export default {
 				});
 				this.explain = this.explain.substr(0, 150);
 			}
-		}
+		},
+		// checkedMember: function(Value, oldValue, ) {
+		// 	if (this.checkedMember && this.memberStatus) {
+		// 		this.addVip();
+		// 	}
+		// },
+		// checkedFans:function(){
+		// 	if(this.checkedFans){
+		// 		this.getSubscribeFansCount();
+		// 	}else{
+		// 		this.fans = 0;
+		// 	}
+		// }
 	},
 	components: {
 		calendar: () =>
@@ -1058,7 +1021,7 @@ export default {
 		this.getShopList();
 		let memberIds = storage.session('memberIds'); //获取是否有会员信息
 		if (memberIds) {
-			this.integralOn = 1; //让其默认选中会员
+			this.checkedMember = true; //让其默认选中会员
 			this.member = memberIds.length;
 			this.memfilter = memberIds.join(',');
 			this.memberStatus = false; //会员标识
@@ -1141,31 +1104,6 @@ export default {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*活动名称的输入框*/
 
 .member-agift .online-box .rightHalf .name {
@@ -1210,6 +1148,12 @@ export default {
 	border: 1px solid #28a8e0;
 	margin: 11px 8px;
 	float: left;
+}
+
+.member-agift .online-box .rightHalf .memberinner {
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
 }
 
 .handle-tips {
@@ -1348,6 +1292,15 @@ export default {
 
 
 
+
+
+
+
+
+
+
+
+
 /*.member-agift,
 .main_Box {
 	width: 100%;
@@ -1400,6 +1353,15 @@ export default {
 	margin-bottom: 20px;
 	overflow: hidden;
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1518,6 +1480,15 @@ export default {
 
 
 
+
+
+
+
+
+
+
+
+
 /*.moreBtn {
 	width: 50px !important;
 	position: relative;
@@ -1557,6 +1528,15 @@ export default {
 .tips {
 	background: url(../../../res/images/handle-tips.png) left center no-repeat;
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1660,6 +1640,15 @@ label i {
 
 
 
+
+
+
+
+
+
+
+
+
 /*
 input[type="checkbox"],
 input[type="radio"] {
@@ -1735,6 +1724,15 @@ input[type="radio"]:checked:disabled+i {
 .chckOn {
 	background: #2489c5;
 }
+
+
+
+
+
+
+
+
+
 
 
 
