@@ -246,7 +246,7 @@
 							item.selectValue = 1;
 							for (let list of data.material) {
 								if (list.importId == item.itemId) {
-									item.id = list.exportId;
+									item.itemId = list.exportId;
 									check = false;
 									if (item.unitRelation) {
 										for (let unit of item.unitRelation) { //处理单位换算
@@ -327,6 +327,9 @@
 					} else {
 						this.comObj.owner = res;
 						this.outWare = res;
+						this.detailData.outWare = this.outWare;
+						storage.session('details',this.detailData);
+						this.comObj = this.detailData.comObj;
 						this.init();
 					}
 				}
