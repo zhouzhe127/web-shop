@@ -1,19 +1,17 @@
-import Ajax from "src/verdor/ajax";
-import storage from "src/verdor/storage";
-import utils from "src/verdor/utils";
-import httpConfig from "src/config/http/http_config";
+import Ajax from 'src/verdor/ajax';
+import storage from 'src/verdor/storage';
+import httpConfig from 'src/config/http/http_config';
 import {
 	store
-} from "src/manager/store";
-import exportFile from "src/verdor/exportFile";
-import httpMd5 from "src/manager/httpMd5";
-import uploadfile from "src/verdor/uploadfile";
-import global from "src/manager/global";
+} from 'src/manager/store';
+import httpMd5 from 'src/manager/httpMd5';
+import uploadfile from 'src/verdor/uploadfile';
+import global from 'src/manager/global';
 //let model = {};
 let http = {};
 
 export let globalData = {
-	format: "json"
+	format: 'json'
 };
 
 // if (Proxy != null) {
@@ -24,9 +22,9 @@ export let globalData = {
 //             if (obj) {
 //                 //单条请求
 //                 return getOne(key, obj);
-//             } else if (key === "All") {
+//             } else if (key === 'All') {
 //                 //多条请求同时进行时
-//                 // http.All([{httpId:"",data:{data:{ name:"123",phone:"2222" }}}])
+//                 // http.All([{httpId:'',data:{data:{ name:'123',phone:'2222' }}}])
 //                 return getAll();
 //             }
 //             return Reflect.get(target, propKey, receiver);
@@ -36,35 +34,39 @@ export let globalData = {
 for (let str in httpConfig) {
 	let obj = httpConfig[str];
 	//分为file接口和ajax请求
-	// if (obj.type == "file") {
+	// if (obj.type == 'file') {
 	// 	//下载文件
 	// 	http[str] = function (o = {}) {
 	// 		console.log(
 	// 			Object.assign(o, obj, {
-	// 				token: storage.session("token"),
-	// 				shopId: storage.session("shopId") || ""
+	// 				token: storage.session('token'),
+	// 				shopId: storage.session('shopId') || ''
 	// 			})
 	// 		);
 	// 		exportFile(
 	// 			Object.assign(o, obj, {
-	// 				token: storage.session("token"),
-	// 				shopId: storage.session("shopId") || ""
+	// 				token: storage.session('token'),
+	// 				shopId: storage.session('shopId') || ''
 	// 			})
 	// 		);
 	// 	};
 	// } else 
-	if (obj.type == "upload") {
+	if (obj.type == 'upload') {
 		//上传文件
-		http[str] = async function (o = {}) {
+		http[str] = async function(o = {}) {
 			let data = null;
+			let temp = Object.create(null);
+			for (let str in obj) {
+				temp[str] = obj[str];
+			}
 			try {
 				data = await uploadfile.crosrouteroMain(
-					Object.assign(obj, o, {
-						shopId: storage.session("shopId") || ""
+					Object.assign(temp, o, {
+						shopId: storage.session('shopId') || ''
 					})
 				);
 			} catch (e) {
-				store.commit("setWin", {
+				store.commit('setWin', {
 					content: e
 				});
 				return Promise.reject(e);
@@ -82,18 +84,18 @@ let hm = new httpMd5();
 // }
 
 function setGlobalData() {
-	globalData.token = storage.session("token") || "token";
+	globalData.token = storage.session('token') || 'token';
 	globalData.sdTime = hm.time;
 	globalData.sdSig = hm.sig;
-	globalData.shopId = storage.session("shopId") || "";
+	globalData.shopId = storage.session('shopId') || '';
 }
 
 function getOne(key, obj = null) {
-	var obj = obj || httpConfig[key];
+	obj = obj || httpConfig[key];
 	//第一参数是请求的参数
 	//第二参数是请求者是否自己提供处理错误的方式
-	return async function (dataObj = {}, hasError = false, full = false) {
-		// store.commit("setLoad",true);
+	return async function(dataObj = {}, hasError = false, full = false) {
+		// store.commit('setLoad',true);
 		setGlobalData();
 		//解決出现引用问题
 		let o = Object.create(null);
@@ -104,9 +106,10 @@ function getOne(key, obj = null) {
 		Object.assign(o, dataObj, {
 			globalData
 		});
-		store.dispatch("debugCont", "准备发送请求: " + obj.url);
-		
+		store.dispatch('debugCont', '准备发送请求: ' + obj.url);
+
 		//模拟数据数据劫持
+		//eslint-disable-next-line
 		if (httpConfig[key].fake && process.env.NODE_ENV === 'development') {
 			let Mock = await
 			import ( /*webpackChunkName: 'mockjs'*/ 'src/verdor/mock');
@@ -123,10 +126,10 @@ function getOne(key, obj = null) {
 		return new Promise((resolve, reject) => {
 			Ajax(o)
 				.then(json => {
-					let staus = "";
+					let staus = '';
 
 					if (json.data !== undefined) {
-						if (json.time){
+						if (json.time) {
 							hm.st = json.time;
 							hm.lt = Date.now();
 						}
@@ -136,20 +139,20 @@ function getOne(key, obj = null) {
 						//                          model[key] = json.data;
 					}
 					if (json.error) {
-						if (json.error.code + "" === "1002") {
-							global.router.push("/");
+						if (json.error.code + '' === '1002') {
+							global.router.push('/');
 							return false;
 						}
-						if (json.error.code + "" === "1204") {
+						if (json.error.code + '' === '1204') {
 							sessionStorage.clear();
-							store.commit("setWin", {
-								content: "请勿随意更改本地时间，请刷新页面!"
+							store.commit('setWin', {
+								content: '请勿随意更改本地时间，请刷新页面!'
 							});
 							return false;
 						}
 						staus = '失败,原因为:' + json.error.message;
 						!hasError &&
-							store.commit("setWin", {
+							store.commit('setWin', {
 								content: json.error.message
 							});
 						hasError && reject({
@@ -158,44 +161,44 @@ function getOne(key, obj = null) {
 						});
 						console.log(
 							json.error.message +
-							"   **** ajax error: *** fail url in :" +
+							'   **** ajax error: *** fail url in :' +
 							obj.url
 						);
 
 
 					}
-					
-					store.dispatch("debugCont", "请求结束: " + json.method + " 状态为:" + staus);
-					// store.commit("setLoad",false);
+
+					store.dispatch('debugCont', '请求结束: ' + json.method + ' 状态为:' + staus);
+					// store.commit('setLoad',false);
 				})
 				.catch(error => {
 					hasError && reject({
 						status: 500,
 						error
 					});
-					!hasError && store.commit("setWin", {
+					!hasError && store.commit('setWin', {
 						content: error.message
 					});
 					console.log(
 						JSON.stringify(error) +
-						"  **** ajax error: *** fail url in :" +
+						'  **** ajax error: *** fail url in :' +
 						obj.url
 					);
-					// store.commit("setLoad",false);
+					// store.commit('setLoad',false);
 				});
 		});
 	};
 }
 
 function getAll() {
-	return function (dataObj) {
+	return function(dataObj) {
 		let queue = [];
-		// globalData.token=storage.session("token") || "token";
+		// globalData.token=storage.session('token') || 'token';
 		setGlobalData();
-		dataObj.forEach(function (item) {
+		dataObj.forEach(function(item) {
 			let sourceObj = httpConfig[item.httpId];
 			if (!sourceObj)
-				throw new Error("httpId: " + item.httpId + ",没有配置,请查看配置");
+				throw new Error('httpId: ' + item.httpId + ',没有配置,请查看配置');
 			Object.assign(sourceObj, {
 				globalData
 			}, item);

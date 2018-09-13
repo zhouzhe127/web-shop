@@ -35,7 +35,7 @@ let uploadfile = {
 	checkFile(file, fn) {
 		file = file.files[0];
 		let val = true;
-		file && (val = fn(file));
+		file && fn && (val = fn(file));
 		if (!val) return false;
 		let type = file.type;
 		if (type.indexOf('image') > -1) {
@@ -151,6 +151,7 @@ let uploadfile = {
 				//eslint-disable-next-line
 				data.timerStr = timer.add(function() {}, 10000, 1, false, () => {
 					if (data.iframe) data.iframe.remove();
+					
 					this.Queue[obj.oid].reject('timeout!');
 					delete this.Queue[data.oid];
 					if (!(Object.keys(this.Queue) + '')) {
