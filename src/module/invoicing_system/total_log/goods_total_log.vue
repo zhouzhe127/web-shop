@@ -158,7 +158,6 @@
                 <div class="column">
                     <div>规格:{{materialInfo.specifications}}</div>
                     <div>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</div>
-                    <div>耗损:{{materialInfo.lossNum}}</div>
                     <div class="column-container">
                         <div class="label">货架位置:</div>
                         <div class="">
@@ -315,12 +314,10 @@ export default {
         //查看商品详情
         async viewDetail(row,column){
             let info = {};
-            if(this.materialInfo.gid != row.itemId){
-                info = await this.getHttp('InvoicingGetGoodsDetail',{gid:row.itemId,wid:0});
-                if(!info || typeof info != 'object') info = {};
-                info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
-                this.materialInfo = info;
-            }
+            info = await this.getHttp('InvoicingGetGoodsDetail',{gid:row.itemId,wid:0});
+            if(!info || typeof info != 'object') info = {};
+            info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
+            this.materialInfo = info;
             this.dialog.show = true;
         },
 
