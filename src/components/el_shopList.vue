@@ -392,7 +392,7 @@ export default {
 			cursor: pointer;
 			display: inline-block;
 			width: 200px;
-			height: 38px;
+			height: 40px;
 			border: 1px solid #dcdfe6;
 			border-radius: 4px;
 			line-height: 40px;
