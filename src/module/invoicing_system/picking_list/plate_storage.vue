@@ -329,7 +329,7 @@
 				if(res == false){
 					this.$message({message: '盘库失败',type: 'error'});
 				}else{
-					storage.session('listDetail',res);
+					this.$route.query.id = res.id;
 					this.$router.push({path:'plateDetails',query:this.$route.query});
 				}
 			},
