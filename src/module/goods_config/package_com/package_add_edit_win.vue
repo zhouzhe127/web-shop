@@ -611,6 +611,7 @@
 						description: this.bag.description,
 						status: Number(this.bag.status), // 0:正常 1:估清  2:下架
 						packageTag: packageTag,
+						newPackageTag:newPackage,
 						imageName: this.bag.imageName ? this.bag.imageName : '',
 					},
 				});

@@ -24,10 +24,10 @@
 							<el-input v-else v-model="info.name" maxlength="14" placeholder = "请输入姓名" style = "width:280px;"></el-input>
 						</el-form-item>
 						<el-form-item v-show="isAdd && phoneStatus!= 2" required label="设置登录密码">
-							<el-input :disabled="phoneStatus==0|| phoneStatus== 3?true:false" type="password" v-model="info.password" maxlength="20" placeholder = "请输入姓名" style = "width:280px;"></el-input>
+							<el-input :disabled="phoneStatus==0|| phoneStatus== 3?true:false" type="password" v-model="info.password" maxlength="20" placeholder = "请输入登录密码" style = "width:280px;"></el-input>
 						</el-form-item>
 						<el-form-item v-show="isAdd && phoneStatus!= 2" required label="确认登录密码">
-							<el-input :disabled="phoneStatus==0|| phoneStatus== 3?true:false" type="password" v-model="repeatPwd" maxlength="20" placeholder = "请输入姓名" style = "width:280px;"></el-input>
+							<el-input :disabled="phoneStatus==0|| phoneStatus== 3?true:false" type="password" v-model="repeatPwd" maxlength="20" placeholder = "请输入登录密码" style = "width:280px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="职位">
 							<template v-if="jobList[index]">
