@@ -7,7 +7,10 @@ const configs = require('./base')
 
 const path = require("path");
 let publicPath = configs.devServerPath;
-
+let eslintVue = [
+    path.resolve(__dirname, "../",'src/config/http/http_marketing_tools'),
+    path.resolve(__dirname, "../",'src/module/marketing_tools/new_coupons'),
+    ]
 module.exports = merge(baseWebpackConfig, {
     mode: "development",
     // cheap-module-eval-source-map is faster for development
@@ -18,15 +21,15 @@ module.exports = merge(baseWebpackConfig, {
     module:{
         //为项目加上eslint规范检测
         rules:[
-            // {
-            //     test: /\.(js|vue)$/,
-            //     loader: 'eslint-loader',
-            //     enforce: "pre",
-            //     include: [path.resolve(__dirname, "../",'src/module')], // 指定检查的目录
-            //     options: { // 这里的配置项参数将会被传递到 eslint 的 CLIEngine 
-            //         formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
-            //     }
-            // }
+            {
+                test: /\.(js|vue)$/,
+                loader: 'eslint-loader',
+                enforce: "pre",
+                include: eslintVue, // 指定检查的目录
+                options: { // 这里的配置项参数将会被传递到 eslint 的 CLIEngine 
+                    formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
+                }
+            }
         ]
     },
     plugins: [

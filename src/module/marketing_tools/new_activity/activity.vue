@@ -11,8 +11,8 @@
 					<span class="down" style=""></span>
 				</div>
 				<a class="fl searchBtn" v-on:click="searchlist" href="javascript:void(0)">
-						<span class="search"></span>
-					</a>
+					<span class="search"></span>
+				</a>
 				<!--选择卡属门店-->
 				<div class="filtrate fl">
 					<input type="text" v-model="activityTitle" class="fl" placeholder="请输入活动名称" />
@@ -121,11 +121,11 @@ export default {
 				value: '0'
 			}, ],
 			customList: [{
-					'name': '店内'
-				},
-				{
-					'name': '会员'
-				}
+				'name': '店内'
+			},
+			{
+				'name': '会员'
+			}
 			],
 			goodsType: [{
 				'name': '微信',
@@ -142,37 +142,37 @@ export default {
 			pageTotal: 1, //总页数
 			page: 1,
 			titleList: [{
-					titleName: '活动类型',
-					titleStyle: {
-						width: '100px',
-						flex: 'none',
-						fontSize: 16 + 'px'
-					},
-					dataName: 'id',
+				titleName: '活动类型',
+				titleStyle: {
+					width: '100px',
+					flex: 'none',
+					fontSize: 16 + 'px'
 				},
-				{
-					titleName: '活动名称',
-					dataName: 'name'
-				},
-				{
-					titleName: '创建时间',
-					dataName: 'createTime'
-				},
-				{
-					titleName: '活动期限'
-				},
-				{
-					titleName: '券发放数量'
-				},
-				{
-					titleName: '每日发放上限'
-				},
-				{
-					titleName: '对象'
-				},
-				{
-					titleName: '操作'
-				},
+				dataName: 'id',
+			},
+			{
+				titleName: '活动名称',
+				dataName: 'name'
+			},
+			{
+				titleName: '创建时间',
+				dataName: 'createTime'
+			},
+			{
+				titleName: '活动期限'
+			},
+			{
+				titleName: '券发放数量'
+			},
+			{
+				titleName: '每日发放上限'
+			},
+			{
+				titleName: '对象'
+			},
+			{
+				titleName: '操作'
+			},
 			],
 			activityType: '', //活动类型的type
 			shopsList: [], // 卡属门店
@@ -437,7 +437,7 @@ export default {
 					type: this.activityType, //活动类型
 					activityName: this.activityTitle
 				}
-			})
+			});
 			this.activityList = data.list;
 			this.pageTotal = data.total;
 		},
@@ -476,19 +476,19 @@ export default {
 		},
 		setTitle: function() { //设置标题
 			this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: ['fd-white'],
-					fn: () => {
-						this.returnActivity();
-					}
-				},
-				{
-					name: '新建活动',
-					className: ['fd-yellow'],
-					fn: () => {
-						this.addActivity();
-					}
+				name: '返回',
+				className: ['fd-white'],
+				fn: () => {
+					this.returnActivity();
 				}
+			},
+			{
+				name: '新建活动',
+				className: ['fd-yellow'],
+				fn: () => {
+					this.addActivity();
+				}
+			}
 			]);
 		},
 		returnActivity: function() { //返回活动首页

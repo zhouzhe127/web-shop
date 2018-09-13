@@ -45,7 +45,7 @@
 				<span v-if="promotersCoupon.length > 0">(已关联{{promotersCoupon.length}}张)</span>
 			</div>
 		</div>
-<!-- 推广者获的积分 -->
+		<!-- 推广者获的积分 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">推广者获得积分</span>
 			<div class="rightHalf">
@@ -55,7 +55,7 @@
 				</section>
 				<span>(只有当其微信用户通过本推广者分享的【推广者二维码】而满足公众号的情况下,才能获得相应积分奖励)</span>
 			</div>
-		</div>		
+		</div>
 		<!-- 获券上限 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">获券上限</span>
@@ -74,7 +74,7 @@
 				<span v-if="followersCoupon.length > 0">(已关联{{followersCoupon.length}}张)</span>
 			</div>
 		</div>
-<!-- 关注者获的积分 -->
+		<!-- 关注者获的积分 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">关注者获得积分</span>
 			<div class="rightHalf">
@@ -84,7 +84,7 @@
 				</section>
 				<span>(不管是通过推广者的专属二维码,还是通过公众号二维码,公众号名称,他人分享链接等,都可以获得相应积分)</span>
 			</div>
-		</div>		
+		</div>
 		<!-- 取消保存 -->
 		<div class="online-box clearfix" style="padding-left:60px;">
 			<a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a>
@@ -126,7 +126,7 @@ export default {
 			editId: '', //编辑任务的id
 			ruleId: '', //规则ID
 			isclick: false, //只能保存一次
-			isactivityDetail:true
+			isactivityDetail: true
 		};
 	},
 	watch: {
@@ -202,7 +202,7 @@ export default {
 				this.valiData('活动标题不能为空!');
 				return false;
 			}
-			if(this.isclick){
+			if (this.isclick) {
 				this.valiData('请勿重复保存!');
 				return false;
 			}
@@ -240,13 +240,13 @@ export default {
 					rule: JSON.stringify(arr)
 				}
 			});
-			this.isclick = true;//只能保存一次
+			this.isclick = true; //只能保存一次
 			let message = (type == '0') ? '保存成功' : '发布成功';
 			this.valiData(message);
 			this.closePage();
 		},
 		async ediConfig(type) {
-			let activityDetail = {};//data
+			let activityDetail = {}; //data
 			activityDetail.type = 4;
 			activityDetail.mouldType = 0;
 			activityDetail.name = this.activityName;
@@ -271,10 +271,10 @@ export default {
 			await http.fissionActivity({
 				data: {
 					activityId: this.editId, //任务Id
-					data:JSON. stringify(activityDetail)
+					data: JSON.stringify(activityDetail)
 				}
 			});
-			this.isclick = true;//只能保存一次
+			this.isclick = true; //只能保存一次
 			this.valiData('保存成功');
 			this.closePage();
 		},
@@ -284,7 +284,7 @@ export default {
 				data: {
 					activityId: item.id,
 					type: item.type,
-					mouldType: item.mouldType					
+					mouldType: item.mouldType
 				}
 			});
 			if (data) {
@@ -321,7 +321,7 @@ export default {
 		let activityDetail = storage.session('activityDetail');
 		if (activityDetail) {
 			this.isactivityDetail = false;
-		}		
+		}
 		if (activityInfo) {
 			this.editId = activityInfo.id;
 			this.getActivityDetail(activityInfo);

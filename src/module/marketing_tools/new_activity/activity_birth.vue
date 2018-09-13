@@ -124,17 +124,17 @@ export default {
 			editId: '', //编辑id
 			actName: '', //生日活动名称
 			durationList: [{ //活动期限
-					name: '永久',
-					id: 0
-				},
-				{
-					name: '一年',
-					id: 1
-				},
-				{
-					name: '二年',
-					id: 2
-				}
+				name: '永久',
+				id: 0
+			},
+			{
+				name: '一年',
+				id: 1
+			},
+			{
+				name: '二年',
+				id: 2
+			}
 			],
 			durationId: -1,
 			durationName: '全部', //状态
@@ -237,7 +237,7 @@ export default {
 		selpushtime: function(i) { //推送时间
 			this.pushNum = this.pushtimeList[i].name; //点击对应的名字
 		},
-		addParameter: function(index, type) { //添加参数
+		addParameter: function(index) { //添加参数
 			this.contentSetting += this.parameter[index].id;
 		},
 		winEvent(obj) {
@@ -273,20 +273,20 @@ export default {
 		},
 		checkForm: function() {
 			if (!global.checkData({
-					isclick: {
-						cond: '$$!==true',
-						pro: '请勿重复保存'
-					},
-					actName: '活动名称未设置',
-					selectCoupon: {
-						cond: '$$.length!=0',
-						pro: '请关联优惠券'
-					},
-					pushdateNum: {
-						reg: /^([0-9]|(1[0-9])|(2[0-9])|(3[0-1]))$/,
-						pro: '请填写推送日期，推送日期必须为0~31的正整数'
-					}
-				}, this)) return false;
+				isclick: {
+					cond: '$$!==true',
+					pro: '请勿重复保存'
+				},
+				actName: '活动名称未设置',
+				selectCoupon: {
+					cond: '$$.length!=0',
+					pro: '请关联优惠券'
+				},
+				pushdateNum: {
+					reg: /^([0-9]|(1[0-9])|(2[0-9])|(3[0-1]))$/,
+					pro: '请填写推送日期，推送日期必须为0~31的正整数'
+				}
+			}, this)) return false;
 			return true;
 		},
 		async birthSave(type) {
@@ -306,7 +306,7 @@ export default {
 						name: this.actName, //活动名
 						advanceTime: this.pushdateNum + ',' + this.pushNum, //生日活动 自定义提前推送时间  天数,推送整点
 						explain: this.explain, //活动说明
-						objectType: 1, //活动对象
+						objectType: 2, //活动对象
 						//shopIds: this.shopList.toString(), //关联门店
 						limit: this.durationId, //活动期限
 						getType: 0, //获得方式
@@ -452,6 +452,8 @@ export default {
 	height: auto;
 	float: left;
 }
+
+
 /*活动名称的输入框*/
 
 .birth_act .online-box .rightHalf .name {
@@ -504,6 +506,7 @@ export default {
 	background: url(../../../res/icon/i.png) 0 center no-repeat;
 	color: #999999;
 }
+
 
 
 

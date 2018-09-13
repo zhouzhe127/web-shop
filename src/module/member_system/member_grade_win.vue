@@ -89,12 +89,12 @@
 					<div class="win-box" style="height: 200px;border-bottom: none;">
 						<span class="fl required">设置图片</span>
 						<span class="fl" style="width: 110px;background-color: #fff;border: 1px solid #ccc;color: #666;cursor: pointer;position: relative;" id="image">
-						提交图片
-						<form enctype="multipart/form-data" id="comForm">
-							<input @change="fileNameChange" type="file" id="file_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image"
-							style="position:absolute;bottom: 0;height: 40px;width: 90px;opacity: 0;cursor: pointer;left: 0;" />
-						</form>
-					</span>
+							提交图片
+							<form enctype="multipart/form-data" id="comForm">
+								<input @change="fileNameChange" type="file" id="file_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image"
+								style="position:absolute;bottom: 0;height: 40px;width: 90px;opacity: 0;cursor: pointer;left: 0;" />
+							</form>
+						</span>
 						<span class="fl" style="width: 250px;color: #666;">图片大小请小于1M(750 x 400最佳)</span>
 						<div class="win-imgShow" v-if="fileName">
 							<img id="imgs" :src="imgHost+fileName">
@@ -145,18 +145,17 @@ export default {
 			integral: false,
 			result: 0, //积分获取选中的
 			list: [{
-					name: '按比例',
-					id: 0
-				},
-				{
-					name: '按积分规则',
-					id: 1
-				}
+				name: '按比例',
+				id: 0
+			},
+			{
+				name: '按积分规则',
+				id: 1
+			}
 			],
 			cash: '', //积分比例现金
 			point: '', //积分比例积分
 			multiple: '', //倍数
-
 		};
 	},
 	props: {

@@ -1,60 +1,70 @@
 <template>
 	<div class='mall-box' id='proedit'>
-		<div class='proHead'>
-			<div class='headCont'>
-				<span>
-					<div>
-						<img src='../../res/images/probg.png' />
-					</div>
-					<span>底图背景</span>
-					<form id='imageUpForm' enctype='multipart/form-data'>
-						<input type='file' id='file_upload' accept='image/jpeg,image/png,image/gif,image/tiff' @change='fileNameChange' name='image'
-						    style='position: absolute;left:0;top:0;cursor:pointer;opacity: 0;width: 100px;height: 100px;' />
-					</form>
-				</span>
-				<span @click='() => isShowName = true ' id='name'>
-					<div>
-						<img src='../../res/images/font.png' />
-					</div>
-					<span>昵称</span>
-				</span>
-				<span @click='() => isShowHead = true' id='head'>
-					<div>
-						<img src='../../res/images/head.png' />
-					</div>
-					<span>头像</span>
-				</span>
-				<span @click='() => isShowWx = true' style='margin-right: 0;' id='wx'>
-					<div>
-						<img src='../../res/images/wx.png' />
-					</div>
-					<span>二维码</span>
-				</span>
+		<div class="title">
+			<span>基础配置</span>
+		</div>
+		<div class="name">
+			<div class="sub">素材名称</div>
+			<el-input v-model="name" class="text" placeholder="输入名称"></el-input>
+		</div>
+		<div class="type">
+			<div class="sub">素材编辑器</div>
+			<div class="container">
+				<div :class="{button:true,disable:!isname,able:isname}" @click="toggle('name')">
+					<span>添加昵称</span>
+					<i class="el-icon-close"></i>
+				</div>
+				<div :class="{button:true,disable:!islogo,able:islogo}" @click="toggle('logo')">
+					<span>添加头像</span>
+					<i class="el-icon-close"></i>
+				</div>
+				<div :class="{button:true,disable:!isqr,able:isqr}" @click="toggle('qr')">
+					<span>添加二维码</span>
+					<i class="el-icon-close"></i>
+				</div>
+			</div>
+			<div class="nameConfig">
+				<div class="font">
+					<div class="tips">昵称字号</div>
+					<el-input-number :style="{fontSize}" v-model="fontSize" controls-position="right" :step="2" :min="12" :max="64"></el-input-number>
+				</div>
+				<div class="color">
+					<div class="tips">昵称颜色</div>
+					<el-color-picker v-model="color" :color-format="'rgb'"></el-color-picker>
+				</div>
 			</div>
 		</div>
-		<div class='proContenr'>
-			<div class='proHad'>
-				<input type='text' v-model='name' placeholder='请输入推广素材名称' maxlength='30' />
+		<div class="upload">
+			<div class="sub">上传图片</div>
+			<form id='imageUpForm' enctype='multipart/form-data' style="position:absolute">
+				<input type='file' id='file_upload' accept='image/jpeg,image/png,image/gif,image/tiff' @change='fileNameChange' name='image' style='opacity: 0;' />
+			</form>
+			<el-button type="primary" class="upload_but" style="position:relative">
+				<label for="file_upload" style="position:absolute;width:100%;height:100%;left:0;top:0;cursor: pointer;"></label>
+				<i class="el-icon-plus el-icon--left"></i>上传图片
+			</el-button>
+
+		</div>
+		<div class="alertTips">
+			<i class="el-icon-info" style="color:rgb(216,219,227)"></i>
+			<span>底图尺寸：大小不能超过300KB，微信昵称的设计字号为24px</span>
+		</div>
+		<div ref='editContent' class='editCont'>
+			<div v-if='isname' v-moves class='names' data-name="name" ref='names' :style="{fontSize:fontSize + 'px',color:color,top:editConfig['name'].y,left:editConfig['name'].x}">昵称</div>
+			<div v-if='islogo' v-moves class='edit-head' data-name="logo" :style="{lineHeight:editConfig['logo'].h,width:editConfig['logo'].w,height:editConfig['logo'].h,top:editConfig['logo'].y,left:editConfig['logo'].x}" ref='editHead'>
+				头像
+				<div></div>
 			</div>
-			<div class='pContenr fl' style='position: relative;'>
-				<div ref='editContent' class='editCont'>
-					<div v-if='isShowName' v-moves class='names' ref='names'>昵称</div>
-					<div v-if='isShowHead' v-moves class='edit-head' ref='editHead'>头像</div>
-					<div v-if='isShowWx' v-moves class='prowx' ref='prowx'>二维码</div>
-					<img :src='imgHost + fileName' v-if='fileName != null' />
-				</div>
+			<div v-if='isqr' v-moves class='prowx' data-name="qr" ref='prowx' :style="{lineHeight:editConfig['qr'].h,width:editConfig['qr'].w,height:editConfig['qr'].h,top:editConfig['qr'].y,left:editConfig['qr'].x}">
+				二维码
+				<div></div>
 			</div>
-			<div class='proinfo fr'>
-				<p style='color: #333;'>尺寸规格：</p>
-				<p>1.底图的设置尺寸为750*1334px(大小不能超过300kb)</p>
-				<p>2.微信昵称的设计字号为24px</p>
-				<!--<p>3.微信头像的设计尺寸为108px*108px</p>
-					<p>4.二维码的设计尺寸为400px*400px</p>-->
-				<div class='prooperate' style='margin-top: 80px;'>
-					<a href='javascript:void(0);' class='fl yellow' style='width: 105px;margin-right: 10px;' @click='openPro'>关闭</a>
-					<a href='javascript:void(0);' class='fl yellow' style='width: 105px;margin-left: 10px;' @click='onPro'>保存</a>
-				</div>
-			</div>
+			<img :src='imgHost + fileName' v-if='fileName != null' v-bind:style="imgStyle" class="centerImg" />
+		</div>
+
+		<div class="submitBut">
+			<el-button type="info" @click="openPro">关闭</el-button>
+			<el-button type="primary" @click="onPro">保存</el-button>
 		</div>
 	</div>
 </template>
@@ -63,6 +73,8 @@
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
+	import utils from 'src/verdor/utils';
+
 
 	export default {
 		data() {
@@ -73,9 +85,40 @@
 				name: null,
 				pid: null,
 				uid: '',
-				isShowName: false,
-				isShowHead: false,
-				isShowWx: false
+				isname: false,
+				islogo: false,
+				isqr: false,
+				color: 'rgb(255,255,255)',
+				imgStyle: {
+					width: 0,
+					height: 0
+				},
+				imgRang: {
+					top: 0,
+					left: 0
+				},
+				imgScale: 1, //图片缩放比例
+				fontSize: 24,
+				editConfig: {
+					name: {
+						x: 0,
+						y: 0,
+						w: 60 + 'px',
+						h: 28 + 'px'
+					},
+					logo: {
+						w: 64 + 'px',
+						h: 64 + 'px',
+						x: 0,
+						y: 0
+					},
+					qr: {
+						w: 64 + 'px',
+						h: 64 + 'px',
+						x: 0,
+						y: 0
+					}
+				}
 			};
 		},
 		props: {
@@ -85,74 +128,196 @@
 			}
 		},
 		methods: {
+			handleChange(value) {
+				this.fontSize = value + 'px';
+			},
+			toggle(str) {
+				if (!this.fileName) {
+					this.$store.commit('setWin', {
+						content: '请先上传背景图'
+					});
+					return;
+				}
+
+				this['is' + str] = !this['is' + str];
+				if (!this['is' + str]) {
+					if (str == 'name') {
+						this.color = '#fff';
+						this.fontSize = 24;
+					}
+				} else {
+
+					this.editConfig[str].x = parseFloat(this.imgRang.left) + 'px';
+					this.editConfig[str].y = parseFloat(this.imgRang.top) + 'px';
+
+				}
+			},
+			reset() {
+				this.color = 'rgb(255,255,255)';
+				this.fontSize = 24;
+				this.imgStyle = {
+					width: 0,
+					height: 0
+				};
+				this.imgRang = {
+					top: 0,
+					left: 0
+				};
+				this.imgScale = 1;
+			},
 			openPro() {
 				this.$emit('closePedit');
+			},
+			loadImg(str) {
+				return new Promise((res) => {
+					let img = new Image();
+					img.src = str.indexOf('base64') > -1 ? str : this.imgHost + str;
+					img.onload = function() {
+						res(img);
+						img = null;
+					};
+				});
+			},
+			readFile(file) {
+
+				return new Promise((res) => {
+					let ready = new FileReader();
+					ready.readAsDataURL(file);
+					ready.onload = function() {
+						res(this.result);
+					};
+				});
+
+			},
+			countScale(width, height) {
+
+				let w = 0;
+				let h = 0;
+				if (width < 750 && height < 750) {
+					w = width;
+					h = height;
+				} else if (width > height) {
+					this.imgScale = width / 750;
+					h = height / this.imgScale;
+					w = 750;
+				} else if (height > width) {
+					this.imgScale = height / 750;
+					w = width / this.imgScale;
+					h = 750;
+				}
+				this.imgStyle = {
+					width: w + 'px',
+					height: h + 'px'
+				};
+				this.imgRang = {
+					width: w,
+					height: h,
+					top: (750 - h) / 2 + 'px',
+					left: (750 - w) / 2 + 'px'
+				};
+			},
+			async preFn(file) {
+
+				let re = await this.readFile(file);
+				let img = await this.loadImg(re);
+				let {
+					width,
+					height
+				} = img;
+
+				if (width < 100 || height < 100) {
+					this.$store.commit('setWin', {
+						content: '宽和高必须要大于100px'
+					});
+					return false;
+				}
+				if (width > 3000 || height > 3000) {
+					this.$store.commit('setWin', {
+						content: '宽或者高不能大于3000px'
+					});
+					return false;
+				}
+				this.reset();
+				this.countScale(width, height);
 			},
 			async fileNameChange() {
 				let res = await http.uploadImg({
 					data: {
 						type: 6,
-						shopId: storage.session('shopId')
+						shopId: storage.session('shopId'),
 					},
+					fn: this.preFn,
 					formId: 'imageUpForm'
 				});
+
 				this.imgData = res;
 				this.fileName = res;
+
+
+			},
+			countSize(pos, size, type) {
+
+				if (pos) {
+					pos.push(parseInt(parseFloat(this.editConfig[type].x) * this.imgScale - parseFloat(this.imgRang.left)));
+					pos.push(parseInt(parseFloat(this.editConfig[type].y) * this.imgScale - parseFloat(this.imgRang.top)));
+				}
+				if (size) {
+					size.push(parseInt(parseFloat(this.editConfig[type].w) * this.imgScale));
+					size.push(parseInt(parseFloat(this.editConfig[type].h) * this.imgScale));
+				}
+
 			},
 			async onPro() {
-				// debugger
+
 				let names = [];
+				let namesSize = [];
 				let heads = [];
+				let headsSize = [];
 				let wxs = [];
+				let wxsSize = [];
+
 				if (!global.checkData(
 					{
 						name: {
 							cond: `$$.toString().trim() != '' && $$.toString().trim() != 0`,
 							pro: '请输入正确格式的素材名称!'
-						},
-						fileName: {
-							cond: `$$.trim() != ''`,
-							pro: '请上传素材底图!'
-						},
-						isShowName: {
-							cond: '$$ == true',
-							pro: '请选择昵称位置!'
-						},
-						isShowHead: {
-							cond: '$$ == true',
-							pro: '请选择头像位置!'
-						},
-						isShowWx: {
-							cond: '$$ == true',
-							pro: '请选择二维码位置!'
 						}
-					},this)) {
+					}, 
+					this)) {
 					return false;
 				}
-				if (this.isShowName && this.isShowHead && this.isShowWx) {
-					let name = this.$refs.names;
-					let editHead = this.$refs.editHead;
-					let prowx = this.$refs.prowx;
-					names.push(name.offsetTop * 2);
-					names.push(name.offsetLeft * 2);
 
-					heads.push(editHead.offsetTop * 2);
-					heads.push(editHead.offsetLeft * 2);
-
-					wxs.push(prowx.offsetTop * 2);
-					wxs.push(prowx.offsetLeft * 2);
+				if (this.isname) {
+					this.countSize(names, null, 'name');
+					let obj = utils.getDOMPosition(this.$refs.names);
+					namesSize.push(obj.w, obj.h);
 				}
+				if (this.islogo) {
+					this.countSize(heads, headsSize, 'logo');
+				}
+				if (this.isqr) {
+					this.countSize(wxs, wxsSize, 'qr');
+				}
+
+				let sourceObj = {
+					name: this.name.toString(),
+					imageName: this.fileName,
+					positionName: names.toString(),
+					positionNameSize: namesSize.toString(),
+					positionNameFontSize: this.fontSize,
+					positionNameColor: this.color,
+					positionHead: heads.toString(),
+					positionHeadSize: headsSize.toString(),
+					positionQR: wxs.toString(),
+					positionQRSize: wxsSize.toString(),
+					uid: this.uid
+				};
+
 				if (this.position) {
 					await http.ActivityEdit({
-						data: {
+						data: Object.assign(sourceObj, {
 							id: this.pid,
-							name: this.name.toString(),
-							imageName: this.fileName,
-							positionName: names.toString(),
-							positionHead: heads.toString(),
-							positionQR: wxs.toString(),
-							uid: this.uid
-						}
+						})
 					});
 					this.$store.commit('setWin', {
 						title: '操作提示',
@@ -167,14 +332,7 @@
 					});
 				} else {
 					await http.ActivityAdd({
-						data: {
-							name: this.name,
-							imageName: this.fileName,
-							positionName: names.toString(),
-							positionHead: heads.toString(),
-							positionQR: wxs.toString(),
-							uid: this.uid
-						}
+						data: sourceObj
 					});
 					this.$store.commit('setWin', {
 						title: '操作提示',
@@ -189,58 +347,160 @@
 					});
 				}
 			},
-			initPosition(val) {
-				this.isShowName = true;
-				this.isShowHead = true;
-				this.isShowWx = true;
+			async initPosition(val) {
+
+				this.islogo = true;
+				this.isqr = true;
+
+				this.color = val.positionNameColor;
+				this.fontSize = val.positionNameFontSize;
 				this.fileName = val.imageName;
 				this.name = val.name;
 				this.pid = val.id;
 
-				this.$nextTick().then(() => {
-					let names = this.$refs.names;
-					let editHead = this.$refs.editHead;
-					let prowx = this.$refs.prowx;
-					this.initStyle(names, val.positionName);
-					this.initStyle(editHead, val.positionHead);
-					this.initStyle(prowx, val.positionQR);
-				});
+				if (this.fileName) {
+					let img = await this.loadImg(this.fileName);
+					let {
+						width,
+						height
+					} = img;
+					this.countScale(width, height);
+				}
+
+				if (val.positionName.length > 0) {
+					this.isname = true;
+					this.$nextTick().then(() => {
+						this.initStyle('name', val.positionName, '');
+					});
+				}
+				if (val.positionHead.length > 0) {
+					this.islogo = true;
+					this.$nextTick().then(() => {
+						this.initStyle('logo', val.positionHead, val.positionHeadSize);
+					});
+				}
+				if (val.positionQR.length > 0) {
+					this.isqr = true;
+					this.$nextTick().then(() => {
+						this.initStyle('qr', val.positionQR, val.positionQRSize);
+					});
+				}
+
 			},
-			initStyle(el, sty) {
-				el.style.top = sty.split(',')[0] / 2 + 'px';
-				el.style.left = sty.split(',')[1] / 2 + 'px';
+			initStyle(type, position, size) {
+
+				let pos = position.split(',');
+
+				let x = 0;
+				let y = 0;
+				let w = 0;
+				let h = 0;
+				if (pos.length > 0) {
+					x = (parseFloat(this.imgRang.left) + parseInt(pos[0]) * this.imgScale);
+					y = (parseFloat(this.imgRang.top) + parseInt(pos[1]) * this.imgScale);
+				}
+
+				let s = '';
+				if (size && (s = size.split(',')) && s.length > 0) {
+					w = parseInt(s[0] * this.imgScale);
+					h = parseInt(s[1] * this.imgScale);
+				}
+
+				if ((x + w) > parseFloat(this.imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(this.imgRang.left) + parseFloat(this.imgStyle.height) || x < parseFloat(this.imgRang.left) || y < parseFloat(this.imgRang.top)) {
+					this.editConfig[type].x = this.imgRang.left;
+					this.editConfig[type].y = this.imgRang.top;
+					this.$store.commit('setWin', {
+						content: '坐标位置出现问题,已经重置,\n建议重新新建素材.'
+					});
+				} else {
+					let item = this.editConfig[type];
+					item.x = x + 'px';
+					item.y = y + 'px';
+					item.w = w + 'px';
+					item.h = h + 'px';
+				}
+
 			}
 		},
 		directives: {
 			moves: {
 				bind(el, binding, vNode) {
+
+					let editContent = vNode.context.imgRang;
+
 					el.addEventListener(
 						'mousedown',
 						e => {
-							let editContent = vNode.context.$refs.editContent.getBoundingClientRect();
+							// let editContent = vNode.context.$refs.editContent.getBoundingClientRect();
+
 							let disX = e.clientX - el.offsetLeft;
 							let disY = e.clientY - el.offsetTop;
-							document.onmousemove = function (ev) {
+							let name = el.getAttribute('data-name');
+
+							document.onmousemove = function(ev) {
 								let l = ev.clientX - disX;
 								let t = ev.clientY - disY;
 								let divT = el.getBoundingClientRect();
-								if (l <= 0) l = 0;
-								if (l > editContent.width - divT.width)
-									l = editContent.width - divT.width;
-								if (t < 0) t = 0;
-								if (t > editContent.height - divT.height)
-									t = editContent.height - divT.height;
-								el.style.left = l + 'px';
-								el.style.top = t + 'px';
+
+								if (l <= parseFloat(editContent.left)) l = editContent.left;
+								if (l > editContent.width - divT.width + parseFloat(editContent.left))
+									l = editContent.width - divT.width + parseFloat(editContent.left);
+								if (t < parseFloat(editContent.top)) t = editContent.top;
+								if (t > editContent.height - divT.height + parseFloat(editContent.top))
+									t = editContent.height - divT.height + parseFloat(editContent.top);
+
 								el.style.cursor = 'move';
+								vNode.context.editConfig[name].x = l + 'px';
+								vNode.context.editConfig[name].y = t + 'px';
 							};
-							document.onmouseup = function () {
+							document.onmouseup = function() {
 								document.onmousemove = null;
 								document.onmouseup = null;
 							};
 						},
 						false
 					);
+
+					let img = el.children[0];
+					if (img) {
+						img.addEventListener(
+							'mousedown',
+							e => {
+								e.stopPropagation();
+								let name = el.getAttribute('data-name');
+								let tempL = 0;
+								document.onmousemove = function(ev) {
+									let l = ev.clientX - e.clientX;
+									let source = parseFloat(utils.getDOMPosition(el).w);
+									let scale = ((tempL > 0 ? (l - tempL) * 0.5 : l) + source) / source;
+
+									let w = source * scale;
+									let h = source * scale;
+
+									if (w < 24 || h < 24) return;
+
+									let tempLeft = el.offsetLeft - parseFloat(editContent.left);
+									let tempTop = el.offsetTop - parseFloat(editContent.top);
+
+									if (tempLeft + w >= editContent.width || tempTop + h >= editContent.height) {
+										return;
+									}
+
+									el.style.lineHeight = `${h}px`;
+									tempL = l;
+									vNode.context.editConfig[name].w = w + 'px';
+									vNode.context.editConfig[name].h = w + 'px';
+
+								};
+								document.onmouseup = function() {
+									document.onmousemove = null;
+									document.onmouseup = null;
+								};
+							}
+						);
+					}
+
+
 				}
 			}
 		},
@@ -259,163 +519,208 @@
 		width: 100%;
 		min-width: 750px;
 		height: auto;
+		margin-left: 10px;
 	}
 
-	.proHead {
-		height: 100px;
-		width: 100%;
-		background-color: #d0d0d0;
-		margin-bottom: 10px;
-	}
-
-	.headCont {
-		width: 500px;
-		height: 100px;
-		font-size: 0;
-		margin: 0 auto;
-		overflow: hidden;
-	}
-
-	.headCont>span {
-		display: inline-block;
-		height: 100px;
-		width: 100px;
-		text-align: center;
-		font-size: 14px;
-		cursor: pointer;
-		position: relative;
-		transition: 0.2s background-color ease-in;
-		margin-right: 33.3px;
-	}
-
-	.headCont>span:hover {
-		background-color: #29a7e1;
-	}
-
-	.headCont>span div {
-		display: table-cell;
-		text-align: center;
-		vertical-align: middle;
-		height: 75px;
-		width: 100px;
-	}
-
-	.headCont>span span {
-		display: block;
-		height: 25px;
-		line-height: 25px;
-		color: #fff;
-	}
-
-	.proContenr {
-		background-color: #f2f2f2;
-		height: 1000px;
-		width: 100%;
+	.title {
+		font-size: 16px;
+		color: #303133;
 		position: relative;
 	}
 
-	.proHad {
-		width: 100%;
-		height: 50px;
-		border-bottom: 1px solid #ccc;
+	.title::before {
+		content: "";
+		width: 4px;
+		height: 16px;
+		background: #E1BB4A;
+		position: absolute;
 	}
 
-	.proHad input {
-		outline: none;
-		height: 40px;
-		line-height: 40px;
-		width: 300px;
-		margin-top: 5px;
-		padding: 0;
-		padding-left: 30px;
-		color: #666;
-		border: none;
-		box-sizing: border-box;
-		position: relative;
-		left: 50%;
-		top: 0;
-		transform: translate(-50%, 0);
-		/* IE 9 */
-		-ms-transform: translate(-50%, 0);
-		/* Firefox */
-		-moz-transform: translate(-50%, 0);
-		/* Safari 和 Chrome */
-		-webkit-transform: translate(-50%, 0);
-		/* Opera */
-		-o-transform: translate(-50%, 0);
+	.title::after {
+		content: "";
+		width: calc(100% - 350px);
+		border: 1px dashed #DCDFE6;
+		position: absolute;
+		margin-left: 10px;
+		margin-top: 6px;
 	}
 
-	.pContenr {
-		background: url(../../res/images/iphone.png) no-repeat;
-		background-position: 20px 20px;
-		width: 450px;
-		height: 900px;
-		margin-left: 10%;
+	.title span{
+		padding-left: 10px;
+	}
+	.name {
+		margin-top: 20px;
+
+		.sub {
+			display: inline-block;
+			width: 70px;
+			text-align: right;
+		}
+
+		.text {
+			display: inline-block;
+			width: 240px;
+			height: 40px;
+			margin-left: 20px;
+		}
+
 	}
 
-	.proinfo {
-		float: right;
-		margin-right: 10%;
-		margin-top: 20%;
+	.type {
+		margin-top: 20px;
+
+		.sub {
+			display: inline-block;
+			width: 70px;
+			text-align: right;
+		}
+
+		.container {
+			display: inline-block;
+			margin-left: 20px;
+
+			.button {
+				background-color: transparent;
+				height: 30px;
+				border-radius: 100px;
+				vertical-align: middle;
+				line-height: 30px;
+				text-align: center;
+				display: inline-block;
+				margin-right: 10px;
+				cursor: pointer;
+			}
+
+			.disable {
+				border-color: #DCDFE6;
+				border: 1px solid #909399;
+				color: #909399;
+				width: 94px;
+
+				i {
+					display: none;
+				}
+			}
+
+			.able {
+				width: 103px;
+				color: #E1BB4A;
+				border: 1px solid #E1BB4A;
+				border-color: #E1BB4A;
+
+				i {
+					display: inline;
+				}
+			}
+		}
+
+		.nameConfig {
+			margin: 20px 0 0 95px;
+
+			.font {
+				display: inline-block;
+				vertical-align: middle;
+
+				&>.tips {
+					margin-bottom: 10px;
+				}
+			}
+
+			.color {
+				display: inline-block;
+				vertical-align: middle;
+
+				&>.tips {
+					margin-bottom: 10px;
+				}
+
+				margin-left: 20px;
+			}
+		}
 	}
 
-	.proinfo p {
-		height: 40px;
-		line-height: 40px;
-		color: #999;
+	.upload {
+		margin-top: 20px;
+
+		.sub {
+			display: inline-block;
+			width: 70px;
+			text-align: right;
+		}
+
+		.upload_but {
+			display: inline-block;
+			width: 138px;
+			height: 36px;
+			margin-left: 20px;
+		}
+
 	}
 
-	.prooperate {
-		/*position: absolute;
-	left: 70%;
-	bottom: 10%;*/
-		width: 230px;
+	.alertTips {
+		margin: 15px 0 15px 95px;
+		font-size: 12px;
+		color: #909399;
+		letter-spacing: 0;
+		line-height: 20px;
 	}
 
 	.editCont {
-		width: 375px;
-		height: 667px;
-		position: absolute;
-		left: 45px;
-		top: 120px;
-	}
-
-	.editCont img {
-		display: block;
-		height: 100%;
-		width: 100%;
+		width: 750px;
+		height: 750px;
+		background: #ECEDF2;
+		margin-left: 95px;
+		position: relative;
 	}
 
 	.editCont div {
 		display: block;
 		cursor: pointer;
-		left: 0;
-		top: 0;
 		position: absolute;
 		z-index: 999;
 	}
 
+	.editCont .centerImg {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+	}
+
 	.edit-head {
-		height: 64px;
-		line-height: 64px;
 		color: #333;
-		width: 64px;
 		background-color: #fff;
 		text-align: center;
 		border: 2px solid #ccc;
 		user-select: none;
 		cursor: move;
+		position: relative;
+		transform-origin: top left;
 	}
 
 	.prowx {
+		color: #333;
 		background: #fff;
-		width: 64px;
-		height: 64px;
-		line-height: 64px;
 		text-align: center;
 		border: 2px solid #ccc;
 		user-select: none;
 		cursor: move;
+		position: relative;
+		transform-origin: top left;
+
+	}
+
+	.prowx div,
+	.edit-head div {
+
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 10px;
+		height: 10px;
+		cursor: nwse-resize;
 	}
 
 	.names {
@@ -426,11 +731,12 @@
 		cursor: move;
 	}
 
-	.win-mask {
-		z-index: 3 !important;
-	}
+	.submitBut {
+		margin: 20px 0 10px 95px;
 
-	.win.center {
-		z-index: 4 !important;
+		button {
+			width: 120px;
+			height: 40px;
+		}
 	}
 </style>

@@ -212,25 +212,25 @@ export default {
 			payCash: 0, //支付金额
 			preferential: false, //优惠设置
 			titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: 150 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '序列',
-					titleStyle: {
-						width: 150 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '订单金额(元)'
-				},
-				{
-					titleName: '减免金额(元)'
+				titleName: '操作',
+				titleStyle: {
+					width: 150 + 'px',
+					flex: 'none'
 				}
+			},
+			{
+				titleName: '序列',
+				titleStyle: {
+					width: 150 + 'px',
+					flex: 'none'
+				}
+			},
+			{
+				titleName: '订单金额(元)'
+			},
+			{
+				titleName: '减免金额(元)'
+			}
 			],
 			formList: [], //展示的数据
 			editId: '', //编辑的id
