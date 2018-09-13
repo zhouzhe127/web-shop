@@ -301,10 +301,8 @@ export default {
 
         //查看物料详情
         async viewDetail(row,column){
-            if(this.materialInfo.id != row.itemId){
-                this.materialInfo = await this.getHttp('MaterialGetMaterialDetail',{mid:row.itemId,wid:0,isDistribution:0});
-                this.initMaterialInfo();
-            }
+            this.materialInfo = await this.getHttp('MaterialGetMaterialDetail',{mid:row.itemId,wid:0,isDistribution:0});
+            this.initMaterialInfo();
             this.dialog.show = true;    
         },
         initMaterialInfo(){
