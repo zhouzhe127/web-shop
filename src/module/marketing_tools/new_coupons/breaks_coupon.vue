@@ -1,9 +1,9 @@
 <!--
-    **减免优惠券
-    *
-    * 
-    * *miaochuan.sha
-    *
+	**减免优惠券
+	*
+	* 
+	* *miaochuan.sha
+	*
 -->
 <template>
 	<section>
@@ -192,31 +192,27 @@
 						<div style="border:1px solid #999;width: 38px;float: left;height: 38px;border-left: none;text-align: center;line-height: 38px;">张</div> -->
 				</div>
 			</template>
-            <!-- 优惠共享 -->
-            <div class="left ">
+			<!-- 优惠共享 -->
+			<div class="left ">
 				<div class="text required">
 					优惠共享
 				</div>
 			</div> 
 			<div class="right" style="text-align:left;padding-left:10px;">
 				<select-btn :name='isSharing' :sorts="isSharingList.map(v=>v.name)" :width="190" @selOn="getSharing"></select-btn> 
-                 <div class="and" v-if="isSharingId == 1"> 
-                    <span> 且</span> 
-                    <select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn>
-                </div> 
-                
-                <div class="icon" @click="showText()">
+				 <div class="and" v-if="isSharingId == 1"> 
+					<span> 且</span> 
+					<select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn>
+				</div>  
+				<div class="icon" @click="showText()">
 					<div class="detDiv" v-if="hiddenText">
 						<i class="detI triright"></i>
-                            <h3 class="detH3">
-                                “与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用 “不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受 “不可与其他优惠共享”则也包含“不与会员卡优惠共用”。
-                            </h3>
-                        </div> 
-                    </div>
-				</div>  
-               
-                
-		
+						<h3 class="detH3">
+							“与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用 “不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受 “不可与其他优惠共享”则也包含“不与会员卡优惠共用”。
+						</h3> 
+					</div> 
+				</div>
+			</div>  
 
 			<!-- 其他设置 -->
 			<div class="set-line" style="float: left;">
@@ -733,7 +729,7 @@ export default {
 					return false;
 				}
 			}
-			//
+			
 			if (this.isSharingId == '') {
 				this.valiData('请选择优惠券共享方式');
 				return false;
@@ -774,7 +770,7 @@ export default {
 				obj.reckoningPrice = ''; //结算金额
 				obj.tastePrice = '';
 
-				//优惠券共享
+				// 优惠券共享
 				if (this.isSharingId === 0) {
 					obj.sharingStatus = 0;
 				} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
@@ -868,7 +864,7 @@ export default {
 	color: #fff;
 } 
 #breakCoupon .icon{
-    display: inline-block;
+	display: inline-block;
 	width: 18px;
 	height: 18px;
 	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
@@ -915,11 +911,11 @@ export default {
 	border-left: 10px solid transparent;
 }
 #breakCoupon .and{
-    display: inline-block;
+	display: inline-block;
 }
 #breakCoupon .and span{
-    color: #000000;
-    padding:0 10px; 
+	color: #000000;
+	padding:0 10px; 
 }
 #breakCoupon .set-line {
 	width: 1000px;
