@@ -197,9 +197,9 @@
 			},
 			async getData() {
 				if (!this.validate()) return;
-				let sendStart='',sendEnd='';
+				let sendStart='',sendEnd='',endTime='';
 				if(this.endTime){//页面加载的第一次执行
-					let endTime = new Date(this.endTime).setHours(23, 59, 59, 0);
+					endTime = new Date(this.endTime).setHours(23, 59, 59, 0);
 					sendStart = parseInt(this.startTime / 1000);
 					sendEnd = parseInt(endTime / 1000);
 				}

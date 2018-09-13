@@ -107,7 +107,7 @@
 		methods: {
 			initBtn() {
 				let arr = [
-					{name: '确认',className: ['fd-yellow'],
+					{name: '确认',className: 'primary',type:4,
 						fn: () => {
 							delete this.$route.query.id;
 							this.$router.push({
@@ -116,7 +116,7 @@
 							});
 						}
 					},
-					{name: '打印',className: ['wearhouse all'],
+					{name: '打印',className: 'primary',type:5,
 						fn: () => {
 							this.printShow = !this.printShow;
 							this.$store.commit('setPageTools', []);
@@ -139,13 +139,18 @@
 					item.serialNumCus = Number(i) + 1; //序号
 					item.typeNameCus = item.type == 0 ? '普通商品' : '称重商品'; //商品类型
 					item.outGoodsNumCus = item.num + item.unit; //重量/数量
+					let costTotal = 0;//成本总额
 					for(let n in item.batchInfo) {
 						let detail = item.batchInfo[n];
+						let cost = 0;
 						detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 						detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 						detail.priceAndName = detail.purchasePrice + '元/' + item.unit; //进价
 						detail.outGoodsNumCus = detail.num + item.unit; //重量/数量
+						cost = detail.purchasePrice*detail.num;
+						costTotal += cost;
 					}
+					item.costTotal = costTotal+'元';
 				}
 				return goodList;
 			},
@@ -161,14 +166,19 @@
 					item.cateCus = cateArr.join(','); //物料分类
 					item.outMatNumCus = this.setUnit(item.unitData, item.num, item.selectUnitName); //重量 数量
 					item.matType = this.matTypeHash[item.type];
+					let costTotal = 0;//成本总额
 					for(let n in item.batchInfo) {
 						let detail = item.batchInfo[n];
+						let cost = 0;
 						detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 						detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 						detail.priceAndName = detail.purchasePrice + '元/' + this.getUnitName(item.unitData,detail.purchaseUnit); //进价
 						detail.outMatNumCus = this.setUnit(item.unitData, detail.num, item.selectUnitName); //重量/数量
 						if(this.isBrand) detail.distributionStr = detail.distributionPrice +'元/'+ this.getUnitName(item.unitData,detail.distributionUnit);//分销价
+						cost = detail.num/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
+						costTotal += cost;
 					}
+					item.costTotal = costTotal+'元';
 				}
 				return materialList;
 			},

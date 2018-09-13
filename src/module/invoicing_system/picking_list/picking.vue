@@ -194,6 +194,7 @@
 				this.dialogVisible = true;
 			},
 			pickerConfirm(){//领料人选择完毕
+				this.dialogVisible = false;
 				for(let item of this.pickerList){
 					if(item.id == this.pickerId){
 						this.pickData.ownerName = item.name;
@@ -201,7 +202,6 @@
 					}
 				}
 				this.pickData.owner = this.pickerId;
-				this.dialogVisible = false;
 			},
 			handleClose(){
 				this.dialogVisible = false;
