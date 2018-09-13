@@ -7,7 +7,7 @@ function defaultBatchClick(context,item){
 		query:{
 			id: item.itemId,
 			logId: item.id,
-			recordName:item.itemName
+			recordName:item.operationType
 		}
 	};
 	context.$router.push(obj);
