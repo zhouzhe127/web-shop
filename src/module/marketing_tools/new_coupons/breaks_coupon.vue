@@ -730,8 +730,8 @@ export default {
 				}
 			}
 			
-			if (this.isSharingId == '') {
-				this.valiData('请选择优惠券共享方式');
+			if (this.isSharingId === '') {
+				this.valiData('请选择优惠券共享方式');this.valiData('请选择优惠券共享方式');
 				return false;
 			}
 			if (this.annotation.length > 20) {

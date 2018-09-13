@@ -721,7 +721,7 @@ export default {
 					return false;
 				}
 			}
-			if (this.isSharingId == '') {
+			if (this.isSharingId === '') {
 				this.valiData('请选择优惠券共享方式');
 				return false;
 			}
