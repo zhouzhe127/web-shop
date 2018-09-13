@@ -2,27 +2,34 @@
 	<div id="statistics-recharge">
 		<section v-if="showtype == 'all'">
 			<div class="timeSearch">
-				<div class="selectDate">
+				<div class="selectDate fl">
 					<div class="activation fl">
 						时间筛选
 					</div>
 					<div class="inp-box inp-start fl">
-						<calendar :time="startTime" :type="0" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
+						<!-- <calendar :time="startTime" :type="0" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar> -->
+						<el-date-picker v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+						</el-date-picker>
 					</div>
 					<span class="line"> - </span>
 					<div class="inp-box inp-start fl">
-						<calendar :time="endTime" :type="0" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
+						<!-- <calendar :time="endTime" :type="0" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar> -->
+						<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+						</el-date-picker>
 					</div>
-					<span class="order-order-searchA" @click="rechargeQuery">
+					<el-button type="primary" icon="el-icon-search" @click="rechargeQuery"></el-button>
+					<!-- <span class="order-order-searchA" @click="rechargeQuery">
 						<span class="order-order-search" href="javascript:void(0)"></span>
-					</span>
+					</span> -->
 				</div>
 				<!-- 按手机号查找 -->
 				<div class="enquiries">
-					<input class="inputBox" type="text" placeholder="按手机号查询" v-model="orderNumber" maxlength="11" />
+					<!-- <input class="inputBox" type="text" placeholder="按手机号查询" v-model="orderNumber" maxlength="11" />
 					<a class="order-order-searchA" @click="getPhone('phone')">
 						<span class="order-order-search"></span>
-					</a>
+					</a> -->
+					<el-input class="fl" v-model="orderNumber" placeholder="请输入内容" style="width:202px;"></el-input>
+					<el-button class="fl" type="primary" icon="el-icon-search" @click="getPhone('phone')"></el-button>
 				</div>
 			</div>
 			<!-- head -->
@@ -32,43 +39,55 @@
 					<div class="operateStore_l">
 						充值来源
 					</div>
-					<div class="operateStore_r fl detLi" @click.stop.prevent="openShop($event)">
+					<selStore :shopIds="'10062'"></selStore>
+				<!-- 	<div class="operateStore_r fl detLi" @click.stop.prevent="openShop($event)">
 						<selectStore v-if="isBrand" @emit="clickShopList" :sorts="shopsList" :tipName="selectName"></selectStore>
 						<template v-else>
 							<div class="operateStore_r_l">{{selectName}}</div>
 							<div class="select_d">
 								<i></i>
 							</div>
-						</template>
+						</template> -->
 						<!-- 单店下的警示弹窗 -->
-						<div class="constructions" v-if="constructionsBtn">
+					<!-- 	<div class="constructions" v-if="constructionsBtn">
 							<i class="sharpCorners"></i> 单店模式下，店铺只有一家！
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<!-- 卡类型 -->
 				<div class="fl mb15" style="margin-right: 12px;height: 40px;">
-					<section class="statisticsLists">
+					<!-- <section class="statisticsLists">
 						<select-btn :name='cardhigh' :sorts="cardList.map(v=>v.name)" :width="157" @selOn="selCard"></select-btn>
-					</section>
+					</section> -->
+					<el-select v-model="cardhigh" placeholder="请选择" @change="selCard">
+						<el-option v-for="item in cardList" :key="item.id" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
 				</div>
 				<!-- 按天数 -->
 				<div class="fl mb15" style="margin-right: 12px;">
-					<section class="statisticsLists">
+					<!-- <section class="statisticsLists">
 						<select-btn :name="datahigh" :sorts="dataList.map(v=>v.name)" :width="157" @selOn="selData"></select-btn>
-					</section>
+					</section> -->
+					<el-select v-model="datahigh" placeholder="请选择" @change="selData">
+						<el-option v-for="item in dataList" :key="item.id" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
 				</div>
 				<!-- 按营业时间 -->
 				<div class="zw mb15">
-					<div class="businessHours">
+					<!-- <div class="businessHours">
 						<div @click="selectBusinessHours" :class="{'active':isOpenTime}"></div>
 						<span>按营业时间</span>
-					</div>
+					</div> -->
+					<el-checkbox v-model="isOpenTime" size="mini">按营业时间</el-checkbox>
 				</div>
 				<!-- 筛选 -->
-				<a class="blue fl screenings mb15" href="javascript:void(0);" @click="rechargeQuery">筛选</a>
+				<!-- <a class="blue fl screenings mb15" href="javascript:void(0);" @click="rechargeQuery">筛选</a> -->
+				<el-button type="primary" @click="rechargeQuery">筛选</el-button>
 				<!-- 重置 -->
-				<a class="gray fl reset mb15" href="javascript:void(0);" @click="filterReset">重置</a>
+				<!-- <a class="gray fl reset mb15" href="javascript:void(0);" @click="filterReset">重置</a> -->
+				<el-button type="info" @click="filterReset">重置</el-button>
 			</div>
 			<!-- 选择店铺 -->
 			<div class="theSelected">
@@ -77,14 +96,104 @@
 			</div>
 			<!-- body -->
 			<section v-if='!phone'>
-				<section style="margin-bottom:20px;">
+				<!-- <section style="margin-bottom:20px;">
 					<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
 						<div slot="con-11" slot-scope="props" @click="openPayment(props.data,'all')">
 							{{props.data.totalOtherPay}}
 						</div>
 					</com-table>
-				</section>
-				<section>
+				</section> -->
+				<el-table :data="staticLists" border style="width: 1400px;margin-bottom: 20px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column fixed prop="days" label="天数" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #ff9800">{{scope.row.days}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="rechargePersonNum" label="充值人数" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="rechargeNum" label="充值次数" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalRecharge" label="充值总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalCash" label="现金" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalCard" label="银行卡" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalWeChat" label="微信" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalAliPay" label="支付宝" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalZXWeChat" label="中信微信" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalZXAliPay" label="中信支付宝" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalOtherPay" label="自定义支付" width="111" align="center">
+						<template slot-scope="scope">
+							<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'all')">{{scope.row.totalOtherPay}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="totalGiftAmount" label="赠送总额" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalGiftPoint" label="赠送积分" width="111" align="center">
+					</el-table-column>
+					<el-table-column prop="totalGiftCoupon" label="赠送优惠券" width="111" align="center">
+					</el-table-column>
+				</el-table>
+				<!-- 下面的表格 -->
+				<div class="box">
+					<div class="list_title">
+						<div class="list_title_l fl">
+							<span>会员充值统计</span>
+							<span></span>
+							<span>共
+								<a href="javascript:;">{{allFormList.length}}</a>条记录</span>
+						</div>
+						<div class="list_title_r fr">
+						</div>
+					</div>
+					<el-table :data="formList" border style="width: 1500px;margin-bottom: 20px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
+						<el-table-column fixed prop="shopId" label="来源名称" width="211" align="center">
+							<template slot-scope="scope">
+								<span style="color: #27a8e0" @click="showoneshopDetail(scope.row)">{{getshopName(scope.row.shopId)}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="rechargePersonNum" label="充值人数" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="rechargeNum" label="充值次数" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalRecharge" label="充值总额" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalPayment" label="支付总额" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalCash" label="现金" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalCard" label="银行卡" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalWeChat" label="微信" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalAliPay" label="支付宝" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalZXWeChat" label="中信微信" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalZXAliPay" label="中信支付宝" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalOtherPay" label="自定义支付" width="111" align="center">
+							<template slot-scope="scope">
+								<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'one')">{{scope.row.days}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="totalGiftAmount" label="赠送总额" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalGiftPoint" label="赠送积分" width="111" align="center">
+						</el-table-column>
+						<el-table-column prop="totalGiftCoupon" label="赠送优惠券" width="111" align="center">
+							<template slot-scope="scope">
+								<span style="color: #27a8e0;" @click="openDiscount(scope.row)">{{scope.row.totalGiftCoupon}}</span>
+							</template>
+						</el-table-column>
+					</el-table>
+				</div>
+				<!-- <section>
 					<com-table :listHeight='80' :listWidth="1400" :showHand="true" :titleData="shoptitleList" :introData="formList" :listName="'会员充值统计'" :key="index" :showTitle='1' :allTotal="allFormList.length">
 						<div slot="con-0" slot-scope="props" @click="showoneshopDetail(props.data)">
 							{{getshopName(props.data.shopId)}}
@@ -96,7 +205,7 @@
 							{{props.data.totalGiftCoupon}}
 						</div>
 					</com-table>
-				</section>
+				</section> -->
 				<!-- 优惠券详情的弹窗 -->
 				<coupon-detail v-if='showWin' @getAppliedWin='getResult' :CouponDetails='CouponDetails'></coupon-detail>
 				<!-- 其他支付方式的弹窗 -->
@@ -106,9 +215,12 @@
 			</section>
 			<recharge-phone v-else :count='count' :phonelist='phonelist' :phonetotal='phonetotal'></recharge-phone>
 			<!-- 翻页 -->
-			<section class="turn-page">
+			<!-- <section class="turn-page">
 				<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-			</section>
+			</section> -->
+			<div class="pageWrap">
+				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
+			</div>
 		</section>
 		<oneshoprecharge v-if="showtype == 'one'" @throwWinResult="getDetailShow" :constructionsName="constructionsName" :startTime="startTime" :endTime="endTime" :isOpenTime="isOpenTime" :constructionsId="constructionsId" :taskId='taskId' :shopsList='shopsList'>
 		</oneshoprecharge>
@@ -169,152 +281,7 @@ export default {
 			ischain: '', // 当前店铺的ischain
 			selectShopId: '', //选择门店
 			index: null,
-			titleList: [{
-				titleName: '天数',
-				dataName: 'days',
-			},
-			{
-				titleName: '充值人数',
-				dataName: 'rechargePersonNum',
-			},
-			{
-				titleName: '充值次数',
-				dataName: 'rechargeNum',
-			},
-			{
-				titleName: '充值总额',
-				dataName: 'totalRecharge',
-			},
-			{
-				titleName: '支付总额 ',
-				dataName: 'totalPayment',
-			},
-			{
-				titleName: '现金',
-				dataName: 'totalCash',
-			},
-			{
-				titleName: '银行卡',
-				dataName: 'totalCard',
-			},
-			{
-				titleName: '微信',
-				dataName: 'totalWeChat',
-			},
-			{
-				titleName: '支付宝',
-				dataName: 'totalAliPay',
-			},
-			{
-				titleName: '中信微信',
-				dataName: 'totalZXWeChat',
-			},
-			{
-				titleName: '中信支付宝',
-				dataName: 'totalZXAliPay',
-			},
-			{
-				titleName: '自定义支付',
-				dataName: 'totalOtherPay',
-				titleStyle: {
-					fontSize: 16 + 'px'
-				},
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '赠送总额',
-				dataName: 'totalGiftAmount',
-			},
-			{
-				titleName: '赠送积分',
-				dataName: 'totalGiftPoint',
-			},
-			{
-				titleName: '赠送优惠券',
-				dataName: 'totalGiftCoupon',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			}
-			],
 			staticLists: [],
-			shoptitleList: [{
-				titleName: '来源名称',
-				dataName: 'payTimes',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '充值人数',
-				dataName: 'rechargePersonNum',
-			},
-			{
-				titleName: '充值次数',
-				dataName: 'rechargeNum',
-			},
-			{
-				titleName: '充值总额 ',
-				dataName: 'totalRecharge',
-			},
-			{
-				titleName: '支付总额',
-				dataName: 'totalPayment',
-			},
-			{
-				titleName: '现金',
-				dataName: 'totalCash',
-			},
-			{
-				titleName: '银行卡',
-				dataName: 'totalCard',
-			},
-			{
-				titleName: '微信',
-				dataName: 'totalWeChat',
-			},
-			{
-				titleName: '支付宝',
-				dataName: 'totalAliPay',
-			},
-			{
-				titleName: '中信微信',
-				dataName: 'totalZXWeChat',
-			},
-			{
-				titleName: '中信支付宝',
-				dataName: 'totalZXAliPay',
-			},
-			{
-				titleName: '自定义支付',
-				dataName: 'totalOtherPay',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '赠送总额',
-				dataName: 'totalGiftAmount',
-			},
-			{
-				titleName: '赠送积分',
-				dataName: 'totalGiftPoint',
-			},
-			{
-				titleName: '赠送优惠券',
-				dataName: 'totalGiftCoupon',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			}
-			],
 			allFormList: [], //所有店铺的数据的数据
 			formList: [], //展示店铺的数据
 			isloadingstatus: false, //延时处理
@@ -422,20 +389,22 @@ export default {
 			this.selectShopId = idArr.join(',');
 		},
 		// 选择电子卡或实体卡
-		selCard: function(i) {
-			this.cardhigh = this.cardList[i].name; //点击卡类型对应的名字
-			this.cardId = this.cardList[i].id; //点击卡类型对应的id
+		selCard: function(value) {
+			this.cardId = value;
+			// this.cardhigh = this.cardList[i].name; //点击卡类型对应的名字
+			// this.cardId = this.cardList[i].id; //点击卡类型对应的id
 		},
 		// 按天数或详情
-		selData: function(i) {
-			this.datahigh = this.dataList[i].name; //点击卡类型对应的名字
-			this.dataId = this.dataList[i].id; //点击卡类型对应的id
+		selData: function(value) {
+			this.dataId = value;
+			// this.datahigh = this.dataList[i].name; //点击卡类型对应的名字
+			// this.dataId = this.dataList[i].id; //点击卡类型对应的id
 		},
 		// 选择电子卡的类型
-		selCardType: function(i) {
-			this.cardTypehigh = this.cardTypeList[i].name; //点击卡类型对应的名字
-			this.cardTypeId = this.cardTypeList[i].id; //点击卡类型对应的id
-		},
+		// selCardType: function(i) {
+		// 	this.cardTypehigh = this.cardTypeList[i].name; //点击卡类型对应的名字
+		// 	this.cardTypeId = this.cardTypeList[i].id; //点击卡类型对应的id
+		// },
 		async rechargeQuery() {
 			if (!this.checkData()) return;
 			this.loading = true;
@@ -510,9 +479,27 @@ export default {
 				});
 			}
 		},
-		getPageNum: function(obj) {
-			this.page = obj.page;
-			this.num = obj.num;
+		// getPageNum: function(obj) {
+		// 	this.page = obj.page;
+		// 	this.num = obj.num;
+		// 	if (this.phone) {
+		// 		this.getPhone();
+		// 	} else {
+		// 		this.setPage();
+		// 	}
+		// },
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.num = p;
+			if (this.phone) {
+				this.getPhone();
+			} else {
+				this.setPage();
+			}
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
 			if (this.phone) {
 				this.getPhone();
 			} else {
@@ -679,6 +666,8 @@ export default {
 			import ( /*webpackChunkName: "member_recharges_phone"*/ './member_recharges_phone'),
 		paymentWin: () =>
 			import ( /*webpackChunkName: "payment_win"*/ './payment_win'),
+		selStore: () =>
+			import ( /*webpackChunkName:"el_shopList" */ 'src/components/el_shopList'),	
 	},
 };
 </script>
@@ -689,30 +678,29 @@ export default {
 	.inp-box {
 		display: inline-block; // border: 1px solid #b3b3b3;
 		vertical-align: top;
-		position: relative;
-		input {
-			z-index: 2;
-			position: relative;
-			background: none;
-			height: 38px;
-			cursor: pointer;
-			i {
-				position: absolute;
-				left: 0;
-				top: 0;
-				display: block;
-				height: 38px;
-				width: 40px;
-				line-height: 38px;
-				text-align: center;
-				opacity: 0.5;
-				&.right {
-					right: 0;
-					left: auto;
-					border-left: 1px solid #b3b3b3;
-				}
-			}
-		}
+		position: relative; // input {
+		// 	z-index: 2;
+		// 	position: relative;
+		// 	background: none;
+		// 	height: 38px;
+		// 	cursor: pointer;
+		// 	i {
+		// 		position: absolute;
+		// 		left: 0;
+		// 		top: 0;
+		// 		display: block;
+		// 		height: 38px;
+		// 		width: 40px;
+		// 		line-height: 38px;
+		// 		text-align: center;
+		// 		opacity: 0.5;
+		// 		&.right {
+		// 			right: 0;
+		// 			left: auto;
+		// 			border-left: 1px solid #b3b3b3;
+		// 		}
+		// 	}
+		// }
 	}
 	.statisticsLists {
 		position: relative;
@@ -952,6 +940,7 @@ export default {
 			width: 119px;
 			height: 42px;
 			margin-right: 28px;
+			line-height: 42px;
 		}
 		.businessHours {
 			float: left;
@@ -1033,6 +1022,9 @@ export default {
 			}
 		}
 	}
+	.box {
+		width: 1500px;
+	}
 	.pages {
 		padding-top: 20px;
 	}
@@ -1062,51 +1054,56 @@ export default {
 	overflow-y: auto;
 }
 
+.box .list_title {
+	width: 100%;
+	height: 50px;
+	border: 1px solid #ebeef5;
+	border-bottom: none;
+	padding-left: 11px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 搜索图标的公共样式 */
-
-.order-order-searchA,
-.order-order-search {
-	display: inline-block;
+.box .list_title .list_title_l,
+.box .list_title .list_title_r {
+	width: 50%;
+	height: 100%;
 	float: left;
-	width: 40px;
-	height: 40px;
-	background-color: #29a7e1;
+	line-height: 45px;
+}
+
+.box .list_title .list_title_l span {
+	font-size: 16px;
+	color: #333;
+}
+
+.box .list_title .list_title_l span:first-child {
+	margin-right: 11px;
+}
+
+.box .list_title .list_title_l span:nth-child(2) {
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #000;
+	margin-right: 11px;
+	vertical-align: middle;
+}
+
+.box .list_title .list_title_l span:last-child a {
+	font-size: 16px;
+	color: #ff3c05;
+}
+
+.box .list_title .list_title_r span {
+	color: #28a8e0;
+	font-size: 16px;
+	float: right;
+	padding-right: 46px;
 	cursor: pointer;
-	/* margin-right: 20px; */
 }
 
-.order-order-search {
-	background: url(../../../res/images/search.png) center center no-repeat;
-}
-
-.order-order-searchA:hover {
-	background-color: #1878a5;
-	transition: background-color ease-in-out 0.2s;
-}
-
-.order-order-searchA:active {
-	background-color: #154961;
+.pageWrap {
+	height: 65px; // padding-top: 20px;
+	margin-bottom: 100px;
 }
 </style>

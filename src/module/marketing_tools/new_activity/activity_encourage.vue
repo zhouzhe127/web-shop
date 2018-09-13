@@ -245,7 +245,7 @@ import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
 
 // 限制输入数字
-let intReg = /[^\d]/g;
+//let intReg = /[^\d]/g;
 
 // 验证中文
 // let Chinese = /[^\u4E00-\u9FA5]|[\uFE30-\uFFA0]/g;
@@ -266,9 +266,9 @@ export default {
 			dates: new Date().getTime(), //当前时间
 			returnInt: 1, //相差天数
 			list: [{
-					name: '微信',
-					id: '1'
-				},
+				name: '微信',
+				id: '1'
+			},
 				// {
 				// 	name: '短信',
 				// 	id: '2'
@@ -277,24 +277,24 @@ export default {
 			selects: [],
 			msmStatus: false,
 			interestList: [{ //会员权益
-					name: '无',
-					id: 1
-				},
-				{
-					name: '电子优惠券',
-					id: 2
-				}
+				name: '无',
+				id: 1
+			},
+			{
+				name: '电子优惠券',
+				id: 2
+			}
 			],
 			interestName: '无',
 			interestId: 1,
 			durationList: [{ //活动期限
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定额度',
-					id: 1
-				}
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定额度',
+				id: 1
+			}
 			],
 			durationId: 0,
 			durationName: '不设限制', //状态
@@ -321,7 +321,6 @@ export default {
 				msgContent: '' //内容设置
 			}],
 			ischain: 0, //3为品牌 0为单店
-			ruleIndex: 0,
 			title: '', //标题
 			maxConsume: '', //最高消费
 			minConsumes: '', //最低消费
@@ -341,35 +340,35 @@ export default {
 			activityDetail: {},
 			explain: '', //内容设置
 			parameter: [{
-					name: '【会员姓名】',
-					id: '{memberName}'
-				},
-				{
-					name: '【优惠券名称】',
-					id: '{couponName}'
-				},
-				{
-					name: '【优惠券数量】',
-					id: '{couponNum}'
-				},
-				{
-					name: '【活动名称】',
-					id: '{activityName}'
-				},
-				{
-					name: '【消费日期】',
-					id: '{salesTime}'
-				}
+				name: '【会员姓名】',
+				id: '{memberName}'
+			},
+			{
+				name: '【优惠券名称】',
+				id: '{couponName}'
+			},
+			{
+				name: '【优惠券数量】',
+				id: '{couponNum}'
+			},
+			{
+				name: '【活动名称】',
+				id: '{activityName}'
+			},
+			{
+				name: '【消费日期】',
+				id: '{salesTime}'
+			}
 			],
 			showRang: false,
 			showCoupon: false,
 			selectsList: [],
 			integralList: [{
-					name: '默认全部'
-				},
-				{
-					name: '会员筛选'
-				}
+				name: '默认全部'
+			},
+			{
+				name: '会员筛选'
+			}
 			],
 			integralOn: 0, //活动对象的选择
 			indexCustom: 0, //活动对象选中的
@@ -490,7 +489,7 @@ export default {
 			if (item.durationId == 1) {
 				item.isLoop = !item.isLoop;
 			} else {
-				this.valiData('请选择并填写最低消费金额')
+				this.valiData('请选择并填写最低消费金额');
 			}
 			// if (this.minConsume == 1) {
 			// 	//            this.Loops = !this.Loops;
@@ -542,7 +541,7 @@ export default {
 				couponIds: [], //优惠券
 				pushChannel: [], //消息推送渠道
 				msgContent: '' //内容设置
-			}
+			};
 			this.ruleList.push(obj);
 			// if (this.minConsume == '1' && this.ruleObj.minConsume < 1) {
 			// 	this.$store.commit('setWin', {
@@ -640,7 +639,7 @@ export default {
 			// 	this.valiData('请至少保留一条规则!');
 			// 	return false;
 			// }
-			console.log(index)
+			//console.log(index);
 			this.ruleList.splice(index, 1);
 			// for (let i = 0; i < this.ruleList.length; i++) {
 			// 	this.ruleList[i].name = '规则' + (i + 1);
@@ -796,7 +795,7 @@ export default {
 					couponIds: item.interestId == 2 ? item.couponIds : [], //优惠券
 					pushChannel: item.pushChannel.join(','), //规则
 					msgContent: item.msgContent //内容设置
-				}
+				};
 				if (item.id && item.id != '') {
 					obj.id = item.id;
 				}
@@ -897,9 +896,9 @@ export default {
 					interestName: interestName, //会员权益
 					interestId: interestId,
 					couponIds: couponIds, //优惠券
-					pushChannel: item.pushChannel.split(","), //消息推送渠道
+					pushChannel: item.pushChannel.split(','), //消息推送渠道
 					msgContent: item.msgContent //内容设置
-				}
+				};
 				this.ruleList.push(obj);
 			}
 
@@ -1166,6 +1165,7 @@ export default {
 
 
 
+
 /*活动名称的输入框*/
 
 .member-agift .online-box .rightHalf .name {
@@ -1347,6 +1347,7 @@ export default {
 
 
 
+
 /*.member-agift,
 .main_Box {
 	width: 100%;
@@ -1399,6 +1400,7 @@ export default {
 	margin-bottom: 20px;
 	overflow: hidden;
 }
+
 
 
 
@@ -1515,6 +1517,7 @@ export default {
 
 
 
+
 /*.moreBtn {
 	width: 50px !important;
 	position: relative;
@@ -1554,6 +1557,7 @@ export default {
 .tips {
 	background: url(../../../res/images/handle-tips.png) left center no-repeat;
 }
+
 
 
 
@@ -1655,6 +1659,7 @@ label i {
 
 
 
+
 /*
 input[type="checkbox"],
 input[type="radio"] {
@@ -1730,6 +1735,7 @@ input[type="radio"]:checked:disabled+i {
 .chckOn {
 	background: #2489c5;
 }
+
 
 
 

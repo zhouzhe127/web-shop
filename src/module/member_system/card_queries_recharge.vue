@@ -81,19 +81,19 @@ export default {
 			cardId: '',
 			regu: /^[0-9]\d*$/,
 			payWays: [{
-					id: 0,
-					name: '批量修改余额',
-					tip: '批量修改余额至'
-				},
-				{
-					id: 1,
-					name: '批量充值余额',
-					tip: '批量充值'
-				}, {
-					id: 2,
-					name: '批量减少余额',
-					tip: '批量减少'
-				}
+				id: 0,
+				name: '批量修改余额',
+				tip: '批量修改余额至'
+			},
+			{
+				id: 1,
+				name: '批量充值余额',
+				tip: '批量充值'
+			}, {
+				id: 2,
+				name: '批量减少余额',
+				tip: '批量减少'
+			}
 			], //类型
 			payType: 0, //批量选中的
 			showTip: '批量修改余额至' //显示
@@ -197,11 +197,11 @@ export default {
 			}
 		},
 		async exportFailCard(id) {//下载失败人数
-			let data = await http.exportFailCard({
+			await http.exportFailCard({
 				data: {
 					memberCardIds: id
 				}
-			})
+			});
 		},
 		changeRadio: function(item) {
 			//选择渠道
