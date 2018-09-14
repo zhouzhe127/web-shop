@@ -225,6 +225,7 @@
 							for (let list of data.goods) {
 								if (list.importId == item.itemId) {
 									item.id = list.exportId;
+									item.itemId = list.exportId;
 									this.getGoods.push(item);
 									check = false;
 									break;
@@ -241,28 +242,29 @@
 						this.goodsArr = [...this.getGoods, ...loseGoods];
 					}
 					if (data.material && getSupplies) { //处理物料数据
-						for (let item of getSupplies) {
+						for (let sptm of getSupplies) {
 							let check = true;
-							item.selectValue = 1;
+							sptm.selectValue = 1;
 							for (let list of data.material) {
-								if (list.importId == item.itemId) {
-									item.itemId = list.exportId;
+								if (list.importId == sptm.itemId) {
+									sptm.itemId = list.exportId;
 									check = false;
-									if (item.unitRelation) {
-										for (let unit of item.unitRelation) { //处理单位换算
-											if (item.unitName == unit.name) {
-												item.selectValue = unit.value;
+									if (sptm.unitRelation) {
+										for (let unit of sptm.unitRelation) { //处理单位换算
+											if (sptm.unitName == unit.name) {
+												sptm.selectValue = unit.value;
 											}
 										}
 									}
-									this.getSupplies.push(item);
+									console.log(sptm);
+									this.getSupplies.push(sptm);
 									break;
 								}
 							}
 							if (check) {
-								item.errResion = '无法匹配';
-								this.setErr(data.materialError, item, '物料');
-								loseSupplies.push(item);
+								sptm.errResion = '无法匹配';
+								this.setErr(data.materialError, sptm, '物料');
+								loseSupplies.push(sptm);
 							}
 						}
 						this.setOutNum(this.getSupplies, true, 'itemName');
@@ -508,7 +510,7 @@
 				let url = type == 1 ? 'invent_getGoodsNum' : 'invoiv_getMaterialNum';
 				let arr = [];
 				for (let item of adArr) {
-					arr.push(item.id);
+					arr.push(item.itemId);
 				}
 				let sendObj = type == 1 ? {
 					gids: arr.join(',')
@@ -797,7 +799,6 @@
 				}
 			},
 			picestyleChange(sle) {
-				console.log(sle);
 				this.suppliesArr.map(v => {
 					let check = true;
 					v.distributionId = Number(sle);
@@ -893,6 +894,7 @@
 							id: item.itemId,
 							name: item.itemName
 						};
+						console.log(item);
 						this.itemList.material.push(obj);
 					}
 				}
