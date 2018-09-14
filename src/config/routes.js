@@ -1801,22 +1801,30 @@ export default [{
                 },
                 //总日志
                 {
-                    path:'goodsTotalLog',
+                    path:'totalLog',
                     components:{
-                        details_con:goodsTotalLog
+                        details_con: details_con
                     },
-                    meta:{
-                        keepAlive:true,
-                    }
-                },
-                {
-                    path:'materialTotalLog',
-                    components:{
-                        details_con: materialTotalLog
-                    },
-                    meta:{
-                        keepAlive:true,
-                    }
+                    children:[
+                        {
+                            path:'',
+                            components:{
+                                details_con:goodsTotalLog
+                            },
+                            meta:{
+                                keepAlive:true,
+                            }
+                        },
+                        {
+                            path:'materialTotalLog',
+                            components:{
+                                details_con: materialTotalLog
+                            },
+                            meta:{
+                                keepAlive:true,
+                            }
+                        },
+                    ],
                 },
                 {
                     path:'bomConsumeDetail',
