@@ -82,10 +82,12 @@ let config = [
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
+				let obj = {};
 				obj.path = '/admin/operation/enterGoods';
 				obj.query = {
 					logTab:1,
 					logType:2,
+					id:item.other.dispatchId
 				}; 
 				context.$router.push(obj);
 			}			
@@ -166,10 +168,34 @@ let config = [
 			"typeName": "取消调度物料回库",
 			"historyDescripe": "点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额。",
 			"batchDescripe": "",
-			"canViewHistory": true,
-			"canViewBatch": true,
-			"batchClick": defaultBatchClick,
+			"canViewHistory": function(item){
+				let dispatchId = item.other.dispatchId;
+				return Boolean(dispatchId);
+			},
+			"canViewBatch": function(item){
+				let dispatchId = item.other.dispatchId;
+				return Boolean(dispatchId);
+			},
+			"batchClick": function(context,item){
+				let dispatchId = item.other.dispatchId;
+				if(!dispatchId){
+					return;
+				}
+				let obj = {
+					path : '/admin/inventoryManagement/supbranchDetail',
+					query:{
+						id: item.itemId,
+						logId: item.id,
+						recordName:item.operationType
+					}
+				};
+				context.$router.push(obj);
+			},
 			"historyClick":function(context,item){
+				let dispatchId = item.other.dispatchId;
+				if(!dispatchId){
+					return;
+				}
 				let obj = {};
 				obj.path = '/admin/operation/enterGoods';
 				obj.query = {

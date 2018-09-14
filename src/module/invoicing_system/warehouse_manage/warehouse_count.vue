@@ -98,7 +98,7 @@
 						</li>
 						<li>{{item.productionTime | formatTimeStamp}}</li>
 						<li class="big-li">{{item.supplier}}</li>
-						<li>{{item.purchasePrice}}&nbsp;/&nbsp;{{item.purchaseUnit ? item.purchaseUnit.name : '--'}}</li>
+						<li>{{item.distributionPrice}}&nbsp;/&nbsp;{{item.distributionUnitName}}</li>
 						<li>{{item.wName}}&nbsp;/&nbsp;{{item.aName}}</li>
 					</div>
 				</div>
@@ -467,6 +467,7 @@
 				for(let i = 0, len = materialList.length; i < len; i++) {
 					let temp = materialList[i];
 					temp.NewSurplus = global.comUnit(temp.surplus, this.selectUnit.value, this.selectUnit.name, this.materialMinUnit.name);
+					temp.distributionUnitName = this.getAttr(this.relationUnit,temp.distributionUnit,'muId','name');
 					temp.maxNum = '';
 					temp.minNum = '';
 				}
@@ -545,6 +546,15 @@
 			},
 			alert(content){
 				this.$store.commit('setWin',{content,title:'温馨提示'});
+			},
+			getAttr(...args){
+				let [arr,val,attr='id',getAttr='name'] = args;
+				// arr,val,attr='id'
+				// let getAttr = 'name';
+				if(!Array.isArray(arr)) arr = [];
+				for(let ele of arr){
+					if(ele[attr] == val) return ele[getAttr];
+				}
 			},
 		},
 		mounted() {
