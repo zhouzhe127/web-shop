@@ -295,7 +295,7 @@ export default {
                     ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
                 }
                 if(!ele.createUName){
-                    ele.ele.createUName = this.placeholder;
+                    ele.createUName = this.placeholder;
                 }
 
                 if(!ele.wName){

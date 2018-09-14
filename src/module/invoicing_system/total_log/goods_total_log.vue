@@ -305,7 +305,7 @@ export default {
                 ele.changeAfter = ele.changeAfter + ele.itemUnit;
 
                 if(!ele.createUName){
-                    ele.ele.createUName = this.placeholder;
+                    ele.createUName = this.placeholder;
                 }
                 return ele;
             });
