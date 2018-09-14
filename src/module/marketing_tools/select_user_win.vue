@@ -15,6 +15,7 @@
 					</li>
 				</ul>
 			</div>
+			
 			<footer class="user_footer">
 				<!-- 翻页 -->
 				<section class="turn-page">
