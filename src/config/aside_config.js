@@ -451,7 +451,7 @@ let need = {
 			name:'batchLog'
 		},
 		getGoodsLogList:{//总日志列表
-			name:'goodsTotalLog'
+			name:'totalLog'
 		}
 	}
 };
