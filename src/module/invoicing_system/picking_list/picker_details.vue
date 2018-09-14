@@ -117,6 +117,7 @@
 				item: {},          //保存点击的该条信息
 				detail:{},
 				info: '',
+				isBack:true,
 			};
 		},
 		// props:['info'],
@@ -130,7 +131,6 @@
 				if(this.recordId){
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
 					let arr = [{name:'返回',className: 'info',type:4,fn:()=>{
-						storage.session('listDetail',null);
 						storage.session('isBackPickingRecord',true);   //是否点击返回
 						window.history.go(-1);
 					}}];
