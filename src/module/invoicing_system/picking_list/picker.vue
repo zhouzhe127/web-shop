@@ -12,7 +12,7 @@
 				<el-input v-model="name" placeholder="请输入领料人"></el-input>
 			</div>
 			<div class="inline-box">
-				<el-button type="success" @click="search">筛选</el-button>
+				<el-button type="primary" @click="search">筛选</el-button>
 				<el-button type="info" @click="reset">重置</el-button>
 			</div>
 		</div>

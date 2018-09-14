@@ -62,7 +62,7 @@
 					</el-select>
 	            </div>
 	            <div class="inline-box">
-	                <el-button @click="searchClick" type="success">筛选</el-button>
+	                <el-button @click="searchClick" type="primary">筛选</el-button>
 	                <el-button @click="resetSearch" type="info">重置</el-button>
 	            </div>
             </div>
@@ -123,12 +123,14 @@ export default {
 			createName: '', //操作人
 			allStatus: [
 				{value:0,label:'全部调度状态'},
-				{value:1,label:'未出货'},
-				{value:2,label:'待入货'},
-				{value:3,label:'调度中'},
-				{value:4,label:'已取消'},
-				{value:5,label:'已完成'},
-				{value:6,label:'已完成(异常)'},
+				{value:1,label:'未调度'},
+				{value:2,label:'配货中'},
+				{value:3,label:'未出货'},
+				{value:4,label:'全部取消'},
+				{value:5,label:'待入货'},
+				{value:6,label:'已完成'},
+				{value:7,label:'已完成(异常)'},
+				{value:8,label:'配货完成'},
 			], //所有状态
 			dynamic: 0, //选择状态的id
 			OutboundWarehouse: '全部', //出货仓库
@@ -181,7 +183,7 @@ export default {
 	methods: {
 		initBtn() {
 			let arr = [
-				{name: '快速调度',className: 'success',type:5,
+				{name: '快速调度',className: 'primary',type:5,
 					fn: () => {
 						this.$router.push({
 							path: 'warehouseList/outputStore',

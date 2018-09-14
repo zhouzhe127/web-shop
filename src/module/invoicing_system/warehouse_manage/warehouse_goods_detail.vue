@@ -11,16 +11,15 @@
 					<li><span>商品名：</span><span>{{goodsDetail.gName}}</span></li>
 					<li><span>条形码：</span><span>{{goodsDetail.barCode}}</span></li>
 					<li><span>品牌：</span><span>{{getString(goodsDetail.brandName)||"无"}}</span></li>
-					<li><span>序号：</span><span>{{goodsTitle.numerical}}</span></li>
+					<li><span>分类：</span><span>{{getString(goodsDetail.cate,"name")}}</span></li>
 				</ul>
 				<ul>
-					<li><span>分类：</span><span>{{getString(goodsDetail.cate,"name")}}</span></li>
 					<li><span>单位：</span><span>{{goodsDetail.unit}}</span></li>
 					<li><span>规格：</span><span>{{goodsDetail.specifications}}</span></li>
 					<li><span>批次数：</span><span>{{goodsDetail.batchNum}}</span></li>
+					<li><span>保质期：</span><span>{{goodsDetail.validity}}{{dateType[goodsDetail.validityType]}}</span></li>
 				</ul>
 				<ul>
-					<li><span>保质期：</span><span>{{goodsDetail.validity}}{{dateType[goodsDetail.validityType]}}</span></li>
 					<li>
 						<span>库存数量/重量：</span>
 						<span>{{goodsDetail.surplus}}{{goodsDetail.unit}}</span>
