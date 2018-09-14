@@ -44,7 +44,7 @@
 		<!-- 支付方式 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">支付方式</span>
-			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'80px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
+			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'100px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
 			<div class="fl handle-tips">
 				<i></i> 使用时需在支付门店支付方式内开启微信或支付宝
 			</div>
