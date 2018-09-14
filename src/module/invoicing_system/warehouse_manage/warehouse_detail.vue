@@ -313,7 +313,7 @@ export default {
 				page:this.mPage,
 				num:this.mShowNum,
 				name:this.mName,
-				cid:this.mCid,
+				cid:this.mCid>0?this.mCid:'',
 				type:this.matType,
 			}});
 			this.materialList = data.list;
