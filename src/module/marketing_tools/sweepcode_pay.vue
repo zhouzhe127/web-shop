@@ -7,6 +7,7 @@
 -->
 <template>
 	<div id="sweepCode">
+		
 		<!-- 扫码支付基本配置 -->
 		<div class="set-line">
 			<div class="titles">基础配置</div>
