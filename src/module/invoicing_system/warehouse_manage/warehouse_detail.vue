@@ -223,7 +223,7 @@ export default {
 			oneSort:[],//一级分类列表
 			mCid:'',//分类id
 			mCidOne:'',//一级分类id
-			cidSel:[],//选中的分类id
+			cidSel:[-1],//选中的分类id
 			goodsData:[],//商品列表-未拼接数量
 			goodsList:[],//商品列表
 			materialData:'',//物料数据
@@ -352,7 +352,6 @@ export default {
 					delete one.children;
 				}
 			}
-			this.cidSel = [-1];
 		},
 		getSortSel(res){
 			if(res.length>1){
