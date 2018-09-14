@@ -91,7 +91,7 @@
                 <el-table-column  label="成本金额" >
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
-						{{row.cost}}
+						{{Number(row.cost)}}
 					</template>	                    
                 </el-table-column>
                 <el-table-column prop="createTime" label="日期" width="150px">
@@ -220,7 +220,8 @@ export default {
                 title:'物料信息',
                 show:false
             },
-            tabFlag : 'material'			//商品还是物料
+            tabFlag : 'material',			//商品还是物料
+            placeholder:'--',
         };
     },
     methods: {
@@ -277,23 +278,26 @@ export default {
                 ele.operationType = this.getAttr(this.operationList,ele.type);          //操作类型
 
                 ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
-                // ele.change = Math.abs(ele.change);
+
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
-                // ele.cost = Math.abs(ele.cost);
 
                 this.getMaterialUnitInfo(ele,null,'relation');
                 
-                this.initObject(ele,['changeBefore','change','changeAfter']);
+                this.initObject(ele,['changeBefore','change','changeAfter'],0);
 
-                ele.changeBefore = global.comUnit(ele.changeBefore, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
-                if(!ele.changeBefore) ele.changeBefore = '--';
+                if(ele.changeBefore){
+                    ele.changeBefore = global.comUnit(ele.changeBefore, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                } 
+                if(ele.change){
+                    ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                }
+                if(ele.changeAfter){
+                    ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                }
 
-                ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
-                if(!ele.change) ele.change = '--';    
-
-                ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
-                if(!ele.changeAfter) ele.changeAfter = '--';    
-
+                if(!ele.wName){
+                    ele.wName = this.placeholder;
+                }
                 return ele;
             });
         },
@@ -310,7 +314,14 @@ export default {
             if(this.toRaw(info,'Object')){
                 this.getMaterialUnitInfo(info,null,'unit');
                 info.typeName = this.getAttr(this.materialType,info.type);
-                info.sumStoreNum = global.comUnit(info.num, info.selUnitVal, info.selUnitName, info.minUnitName);
+                if(info.selUnitId){
+                    info.sumStoreNum = global.comUnit(info.num, info.selUnitVal, info.selUnitName, info.minUnitName);
+                }else{
+                    info.sumStoreNum = this.placeholder;
+                }
+                if(info.brandName){
+                    info.brandName = this.placeholder;
+                }
                 info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
             }else{
                 info = {};
@@ -362,6 +373,11 @@ export default {
                 ele.selUnitName = ele.defUnitName;
                 ele.selUnitVal = ele.defUnitVal;
             }
+            if(!ele.selUnitName) ele.selUnitName = this.placeholder;
+            if(!ele.defUnitName) ele.defUnitName = this.placeholder;
+            if(!ele.minUnitName) ele.minUnitName = this.placeholder;
+            if(!ele.selUnitVal) ele.selUnitVal = 1;
+            if(!ele.defUnitVal) ele.defUnitVal = 1;
          
         },
         toRaw(val,type){

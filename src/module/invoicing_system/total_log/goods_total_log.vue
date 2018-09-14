@@ -90,13 +90,13 @@
                 <el-table-column  label="成本金额" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
-						{{row.cost}}
+						{{Number(row.cost)}}
 					</template>	  
                 </el-table-column>
                 <el-table-column label="售卖价格" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowPrice,'arrow-down':!row.arrowPrice}"></span>
-						{{row.price}}
+						{{Number(row.price)}}
 					</template>	  
                 </el-table-column>
                 <el-table-column prop="createTime" label="日期" width="150px">
@@ -295,13 +295,10 @@ export default {
 
 
                 ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
-                // ele.change = Math.abs(ele.change);
 
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
-                // ele.cost = Math.abs(ele.cost);
 
                 ele.arrowPrice = ele.price > 0;
-                // ele.price = Math.abs(ele.price);
 
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
