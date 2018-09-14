@@ -336,5 +336,9 @@ export default {
 	'deleteStaffScanPay':{
 		url: w + 'Scanpayconfig/deleteStaffScanPay', //刪除員工支付碼
 		method: 'post'
+	},
+	'addStaffScanPay':{
+		url: w + 'Scanpayconfig/addStaffScanPay', //新增員工支付碼
+		method: 'post'
 	}
 };
