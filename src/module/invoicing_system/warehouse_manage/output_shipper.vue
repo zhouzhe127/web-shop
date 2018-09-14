@@ -150,7 +150,7 @@
 						cost = detail.purchasePrice*detail.num;
 						costTotal += cost;
 					}
-					item.costTotal = costTotal+'元';
+					item.costTotal = this.setNumfloat(costTotal)+'元';
 				}
 				return goodList;
 			},
@@ -178,7 +178,7 @@
 						cost = detail.num/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
 						costTotal += cost;
 					}
-					item.costTotal = costTotal+'元';
+					item.costTotal = this.setNumfloat(costTotal)+'元';
 				}
 				return materialList;
 			},

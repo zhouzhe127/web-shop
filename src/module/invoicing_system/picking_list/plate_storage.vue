@@ -141,7 +141,7 @@
 		methods:{
 			initBtn(){
 				let arr=[
-					{name: '确认',className: 'success',type:4,
+					{name: '确认',className: 'primary',type:4,
 						fn: () => {
 							this.enter();
 						}

@@ -163,14 +163,14 @@
 				let arr = [
 					{
 						name: '确定',
-						className: 'success',type:4,
+						className: 'primary',type:4,
 						fn: () => {
 							this.enter(); //确认
 						}
 					},
 					{
 						name: '继续添加',
-						className: 'success',type:5,
+						className: 'primary',type:5,
 						fn: () => {
 							this.again(); //确认
 						}
