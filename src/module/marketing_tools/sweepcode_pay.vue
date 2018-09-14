@@ -120,7 +120,8 @@
 				<div class="fans" v-for="(item,index) in userSelect" :key="index">
 					<img :src="item.imageUrl" />
 					<span>{{item.name}}</span>
-					<i class="del" @click="deluser(index)"></i>
+					<i @click="deluser(index)" class="delete"> <img src="../../res/images/yichu.png" alt=""> <span>移除</span>
+					</i>
 				</div>
 			</section>
 		</div>
@@ -728,11 +729,15 @@
 		width: 100px;
 		height: 120px;
 		text-align: center;
-		border: 1px solid #d2d2d2;
+		border: 1px solid #eaeaea;
 		float: left;
 		margin-right: 20px;
 		margin-bottom: 20px;
 		position: relative;
+		border-radius: 4px;
+	}
+	#sweepCode .online-box .fans:hover{
+		border:1px solid #e9c048;
 	}
 
 	#sweepCode .online-box .fans img {
@@ -751,7 +756,7 @@
 
 	.active {
 		background: url(../../res/icon/selected.png) center center no-repeat,
-			#28a8e0;
+			/* #28a8e0; */
 	}
 
 	.employeeColor {
@@ -760,5 +765,31 @@
 
 	.alink_color {
 		color: #E1BB4A;
+	}
+	.delete{
+		position: absolute;
+		right: 27px;
+		bottom: -34px;
+		background-position: center center;
+		background-repeat: no-repeat;
+		cursor: pointer;
+		width: 44px;
+		display: flex;
+		flex: 1;
+		align-items: center;
+		display: none;
+
+	}
+	#sweepCode .online-box .fans .delete img{
+		width: 14px;
+		height:14px;
+		float: left;
+		
+	}
+		#sweepCode .online-box .fans .delete span{
+		float: left;
+		position: relative;
+		top: 16px;
+		left: 2px;
 	}
 </style>
