@@ -131,21 +131,28 @@ export default {
             console.log(temp);
 		},
         //是否可以查看批次详情
-        canviewBatchDetail(id){
+        canviewBatchDetail(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
 			
             let temp = null;
-            temp = this.getAttr(config,id,'type','canViewBatch');
-            return !temp;
-
+			temp = this.getAttr(config,item.type,'type','canViewBatch');
+			if(typeof temp == 'function'){
+				return !temp(item);
+			}else{
+				return !temp;				
+			}
         },
         //是否可以查看记录
-        canViewHistory(id){
+        canViewHistory(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
 			
             let temp = null;
-            temp =  this.getAttr(config,id,'type','canViewHistory');
-            return !temp;
+			temp =  this.getAttr(config,item.type,'type','canViewHistory');
+			if(typeof temp == 'function'){
+				return !temp(item);
+			}else{
+				return !temp;				
+			}
         },
 		
 
@@ -160,9 +167,9 @@ export default {
 		//商品物料导航的切换
         navigateTo(navigate){
 			if(navigate == 'goods'){
-				this.$router.push({path:'/admin/materialTotalLog'});
+				this.$router.push({path:'/admin/totalLog/materialTotalLog',query:this.$route.query});
 			}else{
-				this.$router.push({path:'/admin/goodsTotalLog'});				
+				this.$router.push({path:'/admin/totalLog/',query:this.$route.query});				
 			}
 		},
 		generatorDate(time){
