@@ -8,7 +8,7 @@
 			return{
 				onoff:null,
 				name:null
-			}
+			};
 		},
 		props:{
 			status:null,
@@ -35,23 +35,23 @@
 				this.initData();
 			}
 		}
-	}
+	};
 </script>
 
 <style lang='less' scoped>
 .check-span {
 	display: block;
-	width: 88px;
+	width: 101px;
 	height: 40px;
 	cursor: pointer;
-	background: url("../res/images/off.png") no-repeat;
+	background: url("../res/images/close-btn.png") no-repeat;
 	transition: background-position 0.25s ease-in;
 	overflow: hidden; 
 }
 .check-span.off {
-    background-position: 0 0; 
+    background-position: -101px 0; 
 }
 .check-span.on {
-    background-position: -48px 0; 
+    background-position: -0 0; 
 }
 </style>
