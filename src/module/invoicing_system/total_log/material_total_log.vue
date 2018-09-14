@@ -102,8 +102,8 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column,index}">
-                        <span class="view view-detail" @click="viewHistory(row)" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
-                        <span class="view" :class="{'view-detail-disable':canviewBatchDetail(row.type)}"  @click="viewBatchDetail(row)">批次详情</span>
+                        <span class="view view-detail" @click="viewHistory(row)" :class="{'view-detail-disable':canViewHistory(row)}">查看记录</span>
+                        <span class="view" :class="{'view-detail-disable':canviewBatchDetail(row)}"  @click="viewBatchDetail(row)">批次详情</span>
                     </template>
                 </el-table-column>
 
