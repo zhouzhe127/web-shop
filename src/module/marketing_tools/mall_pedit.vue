@@ -305,7 +305,7 @@
 					positionName: names.toString(),
 					positionNameSize: namesSize.toString(),
 					positionNameFontSize: this.fontSize,
-					positionNameColor: this.color,
+					positionNameColor: this.color.replace(/rgb\(|\)/g,''),
 					positionHead: heads.toString(),
 					positionHeadSize: headsSize.toString(),
 					positionQR: wxs.toString(),
