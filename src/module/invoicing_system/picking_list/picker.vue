@@ -17,7 +17,7 @@
 			</div>
 		</div>
 		<el-table :data="pickerList" stripe border style="width: 100%">
-		    <el-table-column type="index" label="序号" width="150">
+		    <el-table-column type="index" label="序号" width="100">
 		    </el-table-column>
 		    <el-table-column prop="name" label="领料人">
 		    </el-table-column>

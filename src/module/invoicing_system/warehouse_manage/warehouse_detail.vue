@@ -85,16 +85,16 @@
 				</div>
 			</template>
 			<div class="block-box inline-box button-box">
-				<span class="blue" @click="filterClick">筛选</span>
-				<span class="gray" @click="resetGoods" v-if="tabIndex==1">重置</span>
-				<span class="gray" @click="reset" v-if="tabIndex==2">重置</span>
+				<el-button type="primary" @click="filterClick">筛选</el-button>
+				<el-button type="info" @click="resetGoods" v-if="tabIndex==1">重置</el-button>
+				<el-button type="info" @click="reset" v-if="tabIndex==2">重置</el-button>
 			</div>
 		</div>
 		<div class="main">
 			<template v-if="tabIndex==1">
 				<div class="list">
 					<el-table :data="goodsList" stripe border style="width: 100%" :key="1">
-						<el-table-column type="index" :index="indexMethod" label="序号">
+						<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 					    </el-table-column>
 					    <el-table-column prop="goodsName" label="商品名称">
 					    </el-table-column>
@@ -134,7 +134,7 @@
 			<template v-if="tabIndex==2">
 				<div class="list">
 					<el-table :data="materialList" stripe border style="width: 100%" :key="2">
-						<el-table-column type="index" :index="indexMethodMat" label="序号">
+						<el-table-column type="index" :index="indexMethodMat" label="序号" width="100">
 					    </el-table-column>
 					    <el-table-column prop="name" label="物料名称">
 					    </el-table-column>
@@ -192,24 +192,22 @@ export default {
 			detail:{area:[]},//仓库详情
 			gPage:1,//商品分页
 			gShowNum:10,
-			gPageTotal:1,
 			gLength:0,
 			mPage:1,//物料分页
 			mShowNum:10,
-			mPageTotal:1,
 			mLength:0,
 			dropList:['10','20'],
 			tabIndex:1,//tab切换下标
 			configIndex:0,//1商品 2物料 0商品+物料
 			typeNameArr:[
-				{value: -1,label:'全部类型'},
+				{value: -1,label:'全部商品类型'},
 				{value: 0,label:'普通商品'},
 				{value: 1,label:'称重商品'},
 			],//商品类型下拉列表
 			goodsType:-1,//选中商品类型
 			goodsName:'',//商品名称
 			matTypeList:[
-				{value:'-1',label:'全部类型'},
+				{value:'-1',label:'全部物料类型'},
 				{value:'0',label:'成品'},
 				{value:'1',label:'半成品'},
 				{value:'2',label:'普通物料'},
@@ -260,7 +258,7 @@ export default {
 	methods: {
 		initBtn(){
 			let arr = [
-				{name: '返回',className: 'info',type:5,
+				{name: '返回',className: 'info',type:4,
 					fn: () => {
 						storage.session('warehouseListsDestroy',true);
 						storage.session('warehouseDetail',null);
@@ -292,7 +290,6 @@ export default {
 				num:this.gShowNum,
 			}});
 			this.goodsList = data.list;
-			this.gPageTotal = Number(data.total);
 			this.gLength = Number(data.count);
 		},
 		async filterGoodsNum(){//筛选商品列表
@@ -304,7 +301,6 @@ export default {
 				type:this.goodsType,
 			}});
 			this.goodsList = data;
-			this.gPageTotal = 1;
 			this.gLength = data.length?data.length:0;
 		},
 		async getMaterialList(){//获取物料列表
@@ -317,7 +313,6 @@ export default {
 				type:this.matType,
 			}});
 			this.materialList = data.list;
-			this.mPageTotal = Number(data.total);
 			this.mLength = Number(data.count);
 		},
 		async deleteReq(){
@@ -337,7 +332,7 @@ export default {
 					one.push({value:item.id,label:item.name,children:[]});
 				}
 			}
-			one.unshift({value:-1,label:'全部类型'});
+			one.unshift({value:-1,label:'全部分类'});
 			this.oneSort = one;
 			for(let one of this.oneSort){
 				let two = [];
@@ -390,12 +385,6 @@ export default {
 			this.cidSel.push(this.mCid);
 			storage.session('warehouseDetailDestroy',null);
 			storage.session('warehouseDetailRequest',null);
-		},
-		twoSortClick(){
-			if(!this.twoSort.length){
-				this.$refs.towSortDom.sortShow = false;
-				this.$store.commit('setWin',{title:'提示信息',content:'请选择一级分类'});
-			}
 		},
 		setWlSort(arr){//设置物料分类
 			let arrSort = [],str='';
@@ -500,13 +489,6 @@ export default {
 			this.filterObj = utils.deepCopy(obj);
 			this.filterObj.tabIndex = 2;
 		},
-		clearSort(arr){
-			let arrSort = utils.deepCopy(arr);
-			for(let item of arrSort){
-				item.selected = false;
-			}
-			return arrSort;
-		},
 		resetGoods(){//商品列表重置
 			for(let item of this.veri){
 				this[item]='';
@@ -517,13 +499,12 @@ export default {
 			this.getGoodsList();
 		},
 		reset(){//物料重置
-			this.oneSort = this.clearSort(this.oneSort);
-			this.twoSort = [];
+			this.cidSel = [-1]
+			this.matType = '-1';
 			this.mName = '';
 			this.mCid = '';
 			this.mPage = 1;
 			this.mShowNum = 10;
-			this.tabIndex = 2;
 			this.filter();
 		},
 		codeInput(event){//限制文本框输入 只能输入数字
