@@ -294,7 +294,7 @@
 					</section>
 					<!--直营店明细-->
 					<section v-if='!isJoinShop' style="width:100%;height:100%;">
-						<div class="area" v-if="newAreaList.length > 0" style="position:relative;">
+						<div class="area" ref="contentBox"  v-if="newAreaList.length > 0" style="position:relative;">
 							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
 							<div class="areabox">
 								<div class="box" ref="content" :style="{left: leftWidth +'px'}">
@@ -703,7 +703,6 @@ export default {
 				}
 				res.unshift({name: '全部', areaShopIds: shopIds});
 				res.push({id: 0,name: '无区域', areaShopIds: noArea});
-				// console.log(noArea);
 			}
 			this.newAreaList = res;
 			if(this.newAreaList.length > 0){

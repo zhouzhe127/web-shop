@@ -18,7 +18,8 @@
 				</div>
 				<div class="popupList">
 					<h3 class="popupListBefore">排序</h3>
-					<subadd :bindnum="num" :maxnum="255" :minnum="1" :sign='false' @toClick="change"></subadd>
+					<el-input-number v-model="num"  :min="1" :max="255" ></el-input-number>
+					<!--<subadd :bindnum="num" :maxnum="255" :minnum="1" :sign='false' @toClick="change"></subadd>-->
 				</div>
 			</section>
 		</div>
@@ -48,9 +49,9 @@ export default {
 	},
 	methods: {
 		//排序
-		change(res) {
-			this.num = res;
-		},
+//		change(res) {
+//			this.num = res;
+//		},
 		//获取退菜原因详情
 		async getReason() {
 			let res = await http.getReasonBy({
@@ -128,8 +129,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		subadd: () =>
-			import(/*webpackChunkName: "subadd"*/ 'src/components/subadd')
+//		subadd: () =>
+//			import(/*webpackChunkName: "subadd"*/ 'src/components/subadd')
 	}
 };
 </script>

@@ -491,7 +491,7 @@
 		},
 		components: {
 			addRelative: () =>
-				import ( /*webpackChunkName:"goods_package_win"*/ '../common/good_package_win'),
+				import ( /*webpackChunkName:"good_package_win"*/ '../common/good_package_win'),
 			subAdd: () =>
 				import ( /*webpackChunkName:"subadd"*/ 'src/components/subadd'),
 			win: () =>

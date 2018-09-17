@@ -242,6 +242,10 @@ export default {
 					return '中信微信支付';
 				case 7:
 					return '中信支付宝支付';
+				case 23:
+					return '上海中信';
+				case 24:
+					return '上海中信支付宝';		
 			}
 		},
 	},
