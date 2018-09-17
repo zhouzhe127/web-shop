@@ -198,6 +198,19 @@
 				}
 				return res;
 			},
+			setNumfloat(num){//设置三位浮点型数字
+				let str = num+'';
+				let reg = /\.\d{4,}/;
+				if(reg.test(str)){//小数点后四位以上
+					let repNum = str.substr(str.indexOf('.')+3,1);
+					if(repNum>0){//大于0则切掉
+						str = str.replace(/(\d+\.\d{2})(\d*)/,'$1'+repNum);
+					}else{//等于0则+1
+						str = str.replace(/(\d+\.\d{2})(\d*)/,'$1'+'1');
+					}
+				}
+				return str;
+			},
 			listClick(index) { //列表点击事件 用于获取操作的列表index
 				this.listIndex = index;
 			},
