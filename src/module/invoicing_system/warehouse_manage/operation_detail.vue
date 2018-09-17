@@ -257,7 +257,7 @@ export default {
 		setInitBtn() { //等待接口返回后 显示按钮
 			this.initBtn();
 			if(this.isExamine) return; //审核页面不出现以下按钮
-			if(this.dynamic == 1) {
+			if(this.dynamic == 3) {
 				let addArr = [{
 					name: '取消调度',
 					className: 'danger',type:5,
@@ -274,7 +274,7 @@ export default {
 				}];
 				this.btnArr.unshift(...addArr);
 			}
-			if(this.dynamic == 2) { //this.dynamic==2
+			if(this.dynamic == 5) { //this.dynamic==2
 				let addArr = [{
 					name: '入货',
 					className: 'primary',type:4,

@@ -85,11 +85,11 @@
 		    </el-table-column>
 		    <el-table-column label="操作" align="center">
 		    	<template slot-scope="scope" fixed="right" width="180" >
-		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic != 1"
+		        	<el-button @click="dispatchingDetail(scope.row,3)" v-if="scope.row.dynamic != 3"
 		        		type="text" size="small">查看详情</el-button>
-		        	<el-button @click="dispatchingDetail(scope.row,2)" v-if="scope.row.dynamic == 2"
+		        	<el-button @click="dispatchingDetail(scope.row,5)" v-if="scope.row.dynamic == 5"
 		        		type="text" size="small" style='color:#D34A2B'>入货</el-button>
-		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic == 1"
+		        	<el-button @click="dispatchingDetail(scope.row,3)" v-if="scope.row.dynamic == 3"
 		        		type="text" size="small" style='color:#D34A2B'>确认出货</el-button>
 		      	</template>
 		    </el-table-column>
@@ -314,7 +314,7 @@ export default {
 		dispatchingDetail(res,type) { //调度记录详情-入货-确认出货
 			let item = res;
 			this.$route.query.id = item.id;
-			if(type==1) { //查看详情
+			if(type==3) { //查看详情
 				storage.session('operationRequest', this.requestObj);
 				this.$route.query.id = item.id;
 				this.$router.push({
