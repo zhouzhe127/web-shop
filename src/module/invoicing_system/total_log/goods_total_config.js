@@ -128,8 +128,8 @@ let config = [
 			"historyDescripe":"",
 			"batchDescripe": "",
 			"canViewHistory": false,
-			"canViewBatch": true,
-			"batchClick": defaultBatchClick,
+			"canViewBatch": false,
+			"batchClick": forbiddenClick,
 			"historyClick": forbiddenClick
 		},
 		{
