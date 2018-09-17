@@ -13,7 +13,13 @@ routStr = routStr.replace(/\$"|"\$|\\r|\\n/g, ''); //去除分号
 let template = fs.readFileSync('cmd/route_template.js', 'utf-8');
 template = template.replace(/'\$\{const\}'/g, importStr);
 template = template.replace(/'\$\{Array\}'/g, routStr);
-template = template.replace(/'\$\{redirect\}'/g, JSON.stringify(redirect));
+
+if(process.argv[2] == '--dev'){
+	template = template.replace(/'\$\{redirect\}'/g, JSON.stringify(redirect));
+}else{
+	template = template.replace(/,\s'\$\{redirect\}'/g, "");
+}
+
 fs.writeFileSync('src/config/routes.js', template);
 //文件遍历方法
 function readConfig() {
