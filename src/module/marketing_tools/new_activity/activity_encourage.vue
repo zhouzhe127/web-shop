@@ -734,7 +734,7 @@ export default {
 			} else {
 				await http.fissionActivity({
 					data: {
-						shopIds: this.selectsList.toString(),
+						shopIds: this.ischain == '3' ? this.selectsList.toString() : this.shopId,
 						type: 3,
 						name: this.title,
 						mouldType: 0,
@@ -1018,6 +1018,7 @@ export default {
 		this.userData = storage.session('userShop');
 		this.ischain = this.userData.currentShop.ischain;
 		this.shopName = this.userData.currentShop.name;
+		this.shopId = this.userData.currentShop.id;
 		this.getShopList();
 		let memberIds = storage.session('memberIds'); //获取是否有会员信息
 		if (memberIds) {
