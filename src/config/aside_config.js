@@ -438,20 +438,20 @@ let need = {
 		WorkingBOM: {
 			name: 'processbomList'
 		}, //加工BOM单
-		materialWorking:{
-			name:'processHistory'
+		materialWorking: {
+			name: 'processHistory'
 		},
-		balanceAdjustRecord:{ //余额调整记录
-			name:'balanceAdjustRecord'
+		balanceAdjustRecord: { //余额调整记录
+			name: 'balanceAdjustRecord'
 		},
-        storeArea:{//区域门店
-			name:'storeArea'
+		storeArea: { //区域门店
+			name: 'storeArea'
 		},
-		getDispatchLogList:{//批量日志
-			name:'batchLog'
+		getDispatchLogList: { //批量日志
+			name: 'batchLog'
 		},
-		getGoodsLogList:{//总日志列表
-			name:'goodsTotalLog'
+		getGoodsLogList: { //总日志列表
+			name: 'goodsTotalLog'
 		}
 	}
 };

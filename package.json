@@ -4,12 +4,15 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "prestart":"node cmd/genhook.js",
+	"profile":"webpack --config config/webpack.prod.conf.js --profile --json > compilation-stats.json",
+	"prestart": "node cmd/genhook.js & node cmd/generate_route_config.js --dev",
     "start": "webpack-dev-server --config config/webpack.dev.conf.js",
     "build": "webpack -p --config config/webpack.prod.conf.js",
-    "buildDev": "webpack --config config/webpack.prod.conf.js",
-    "postbuild": "node Attachment/ClearFile.js",
-    "profile":"webpack --config config/webpack.prod.conf.js --profile --json > compilation-stats.json"
+    "buildDev": "webpack -p --config config/webpack.prod.conf.js",
+    "prebuild": "node cmd/generate_route_config.js --pro",
+    "prebuildDev": "node cmd/generate_route_config.js --pro",
+    "postbuild": "node Attachment/ClearFile.js"
+
   },
   "author": "ruixin",
   "license": "ISC",
