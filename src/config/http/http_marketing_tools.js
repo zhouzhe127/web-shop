@@ -5,7 +5,6 @@ import {
 } from 'src/config/host_var';
 
 export default {
-    },
 	'getCouponList': { //  获取优惠券列表
 		url: w + 'coupon/getCouponListData',
 		method: 'get'
