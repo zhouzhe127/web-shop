@@ -44,7 +44,7 @@
 		<!-- 支付方式 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">支付方式</span>
-			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'80px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
+			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'100px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
 			<div class="fl handle-tips">
 				<i></i> 使用时需在支付门店支付方式内开启微信或支付宝
 			</div>
@@ -120,7 +120,8 @@
 				<div class="fans" v-for="(item,index) in userSelect" :key="index">
 					<img :src="item.imageUrl" />
 					<span>{{item.name}}</span>
-					<i class="del" @click="deluser(index)"></i>
+					<i @click="deluser(index)" class="delete"> <img src="../../res/images/yichu.png" alt=""> <span>移除</span>
+					</i>
 				</div>
 			</section>
 		</div>
@@ -134,7 +135,7 @@
 		<com-table :listHeight='80' :showHand="false" :listName="'员工码'" :showTitle='2' :listWidth="672" :introData="taList" :titleData="titleList">
 			<div slot="con-1" slot-scope="props">
 				<a @click="downloadCode(props.data)" download :href="downloadUrls" class="alink_color">下载二维码</a>
-				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,$index)" style="width: 32%;">删除</a>
+				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,props.$index)" style="width: 32%;">删除</a>
 
 			</div>
 		</com-table>
@@ -728,11 +729,15 @@
 		width: 100px;
 		height: 120px;
 		text-align: center;
-		border: 1px solid #d2d2d2;
+		border: 1px solid #eaeaea;
 		float: left;
 		margin-right: 20px;
 		margin-bottom: 20px;
 		position: relative;
+		border-radius: 4px;
+	}
+	#sweepCode .online-box .fans:hover{
+		border:1px solid #e9c048;
 	}
 
 	#sweepCode .online-box .fans img {
@@ -751,7 +756,7 @@
 
 	.active {
 		background: url(../../res/icon/selected.png) center center no-repeat,
-			#28a8e0;
+			/* #28a8e0; */
 	}
 
 	.employeeColor {
@@ -760,5 +765,31 @@
 
 	.alink_color {
 		color: #E1BB4A;
+	}
+	.delete{
+		position: absolute;
+		right: 27px;
+		bottom: -34px;
+		background-position: center center;
+		background-repeat: no-repeat;
+		cursor: pointer;
+		width: 44px;
+		display: flex;
+		flex: 1;
+		align-items: center;
+		display: none;
+
+	}
+	#sweepCode .online-box .fans .delete img{
+		width: 14px;
+		height:14px;
+		float: left;
+		
+	}
+		#sweepCode .online-box .fans .delete span{
+		float: left;
+		position: relative;
+		top: 16px;
+		left: 2px;
 	}
 </style>

@@ -332,5 +332,13 @@ export default {
 	'newgetActivityDetail': {
 		url: w + 'activityconfig/getActivityDetail', //获取活动列表详情
 		method: 'get'
+	},
+	'deleteStaffScanPay':{
+		url: w + 'Scanpayconfig/deleteStaffScanPay', //刪除員工支付碼
+		method: 'post'
+	},
+	'addStaffScanPay':{
+		url: w + 'Scanpayconfig/addStaffScanPay', //新增員工支付碼
+		method: 'post'
 	}
 };
