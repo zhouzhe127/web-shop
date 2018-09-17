@@ -1,18 +1,10 @@
 
 #packTan .oBox[data-v-d54bf9d6] {
-  height: 75px;
+  height: 60px;
   width: 100%;
+  margin-top: 15px;
   border-bottom: 1px solid #ddd;
   font-size: 14px;
-  background-color: #f2f2f2;
-}
-#packTan .meal-space[data-v-d54bf9d6] {
-  padding-left: 35px;
-  padding-right: 35px;
-  padding-top: 18px;
-  text-align: left;
-  width: 100%;
-  height: auto;
 }
 #packTan .oCont .Box[data-v-d54bf9d6] {
   width: 180px;
@@ -129,7 +121,6 @@
   width: 100%;
   height: 100%;
   padding: 10px 15px;
-  background-color: #f2f2f2;
   min-height: 560px;
 }
 #packTan .configBox .aUl[data-v-d54bf9d6] {
@@ -137,26 +128,7 @@
   height: auto;
   overflow: auto;
   padding: 10px;
-}
-#packTan .configBox .aUl .aLi[data-v-d54bf9d6] {
-  padding: 0 15px;
-  height: 40px;
-  line-height: 40px;
-  cursor: pointer;
-  text-align: center;
-  margin: 5px 10px;
-  float: left;
-  color: #919191;
-}
-#packTan .configBox .aUl .aLi .shoName-select[data-v-d54bf9d6] {
-  border-color: #ff9800;
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAVCAYAAAC+NTVfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQNJREFUeNpi/P//P8OAgJmMASwDYKkAkFwAxP5M9PYtkHwAshjEZaG3b5GFmejtW2TAQm/f0t7neHxLO58T4Vva+JxI31LX58T61moCA8PbCwwMNxdQyefE+tYRaKFuPgPDzw9U8DkpcQuyWC2egeFAItCZGyiMc1LiFtlipOAm3XKQb2cygpy+Hoj5wWImDQwMIcB4ZBMg2WLiLcfl2/tAt/AqMDD4HUB1ABEWgwAj3iqVmLgVNoBY/hnotk0ODAzWE4iyGL/lEN8ugAcxPgBzAAiw8RNlMXbLSSyl4EAK6GsHoLazDURZjGk5Kb6lAmChyLcUAsb/MxhgFgvQu0UFEGAAwkZhpDEtycMAAAAASUVORK5CYII=) right bottom no-repeat;
-}
-#packTan .configBox .aUl .aLi .input-content[data-v-d54bf9d6] {
-  border: 1px solid #ddd;
-  width: 40px;
-  height: 30px;
-  margin: 5px 12px;
+  margin-left: 10px;
 }
 #packTan .configBox .aUl .onecate[data-v-d54bf9d6] {
   width: 100%;
@@ -165,8 +137,6 @@
   overflow: hidden;
 }
 #packTan .configBox .aUl .onecate .onecataTitle[data-v-d54bf9d6] {
-  width: 115px;
-  float: left;
   overflow: hidden;
 }
 #packTan .configBox .aUl .onecate .twoI[data-v-d54bf9d6] {
@@ -177,21 +147,20 @@
   float: left;
 }
 #packTan .configBox .aUl .onecate .twoTitle[data-v-d54bf9d6] {
-  width: 70px;
   height: 50px;
   line-height: 50px;
   float: left;
   font-weight: 800;
   color: #9f9f9f;
-  overflow: hidden;
-  vertical-align: middle;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 #packTan .configBox .aUl .onecate .oneI[data-v-d54bf9d6] {
   background-color: #049fef;
 }
 #packTan .configBox .aUl .onecate .oneTitle[data-v-d54bf9d6] {
   color: #049fef;
+}
+#packTan .labItem[data-v-d54bf9d6] {
+  margin-bottom: 5px;
+  margin-left: 0!important;
 }
 

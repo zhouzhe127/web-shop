@@ -42,14 +42,9 @@
   padding-top: 16px;
   padding-bottom: 16px;
 }
-#output-select-goods .search-module .search-input[data-v-1c35d6af] {
-  height: 40px;
-  color: #a5a5a5;
-  font-size: 14px;
-  line-height: 40px;
-  text-indent: 15px;
-  padding: 0;
-  outline: none;
+#output-select-goods .search-module .sleType[data-v-1c35d6af] {
+  width: 170px;
+  display: inline-block;
   margin-right: 15px;
 }
 #output-select-goods .search-module .sleBtn[data-v-1c35d6af] {

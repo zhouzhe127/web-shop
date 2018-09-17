@@ -10,6 +10,13 @@
   width: 100%;
   margin-bottom: 15px;
 }
+#weChatBinding .wx-showBox .addnumber[data-v-b8f3e3a4] {
+  width: 150px;
+  border-radius: 5px;
+  height: 45px;
+  line-height: 45px;
+  margin-right: 10px;
+}
 #weChatBinding .wx-showBox span[data-v-b8f3e3a4] {
   display: block;
   height: 45px;
@@ -19,6 +26,10 @@
   color: #666;
   margin-right: 20px;
   float: left;
+  font-size: 16px;
+}
+#weChatBinding .wx-showBox p[data-v-b8f3e3a4] {
+  font-size: 16px;
 }
 #weChatBinding .wx-showBox input[data-v-b8f3e3a4] {
   float: left;

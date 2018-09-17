@@ -3,141 +3,178 @@
   width: 100%;
   min-width: 750px;
   height: auto;
+  margin-left: 10px;
 }
-.proHead[data-v-5bd54c83] {
-  height: 100px;
-  width: 100%;
-  background-color: #d0d0d0;
+.title[data-v-5bd54c83] {
+  font-size: 16px;
+  color: #303133;
+  position: relative;
+}
+.title[data-v-5bd54c83]::before {
+  content: "";
+  width: 4px;
+  height: 16px;
+  background: #E1BB4A;
+  position: absolute;
+}
+.title[data-v-5bd54c83]::after {
+  content: "";
+  width: calc(100% - 350px);
+  border: 1px dashed #DCDFE6;
+  position: absolute;
+  margin-left: 10px;
+  margin-top: 6px;
+}
+.title span[data-v-5bd54c83] {
+  padding-left: 10px;
+}
+.name[data-v-5bd54c83] {
+  margin-top: 20px;
+}
+.name .sub[data-v-5bd54c83] {
+  display: inline-block;
+  width: 70px;
+  text-align: right;
+}
+.name .text[data-v-5bd54c83] {
+  display: inline-block;
+  width: 240px;
+  height: 40px;
+  margin-left: 20px;
+}
+.type[data-v-5bd54c83] {
+  margin-top: 20px;
+}
+.type .sub[data-v-5bd54c83] {
+  display: inline-block;
+  width: 70px;
+  text-align: right;
+}
+.type .container[data-v-5bd54c83] {
+  display: inline-block;
+  margin-left: 20px;
+}
+.type .container .button[data-v-5bd54c83] {
+  background-color: transparent;
+  height: 30px;
+  border-radius: 100px;
+  vertical-align: middle;
+  line-height: 30px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.type .container .disable[data-v-5bd54c83] {
+  border-color: #DCDFE6;
+  border: 1px solid #909399;
+  color: #909399;
+  width: 94px;
+}
+.type .container .disable i[data-v-5bd54c83] {
+  display: none;
+}
+.type .container .able[data-v-5bd54c83] {
+  width: 103px;
+  color: #E1BB4A;
+  border: 1px solid #E1BB4A;
+  border-color: #E1BB4A;
+}
+.type .container .able i[data-v-5bd54c83] {
+  display: inline;
+}
+.type .nameConfig[data-v-5bd54c83] {
+  margin: 20px 0 0 95px;
+}
+.type .nameConfig .font[data-v-5bd54c83] {
+  display: inline-block;
+  vertical-align: middle;
+}
+.type .nameConfig .font > .tips[data-v-5bd54c83] {
   margin-bottom: 10px;
 }
-.headCont[data-v-5bd54c83] {
-  width: 500px;
-  height: 100px;
-  font-size: 0;
-  margin: 0 auto;
-  overflow: hidden;
-}
-.headCont > span[data-v-5bd54c83] {
+.type .nameConfig .color[data-v-5bd54c83] {
   display: inline-block;
-  height: 100px;
-  width: 100px;
-  text-align: center;
-  font-size: 14px;
-  cursor: pointer;
-  position: relative;
-  -webkit-transition: 0.2s background-color ease-in;
-  transition: 0.2s background-color ease-in;
-  margin-right: 33.3px;
-}
-.headCont > span[data-v-5bd54c83]:hover {
-  background-color: #29a7e1;
-}
-.headCont > span div[data-v-5bd54c83] {
-  display: table-cell;
-  text-align: center;
   vertical-align: middle;
-  height: 75px;
-  width: 100px;
+  margin-left: 20px;
 }
-.headCont > span span[data-v-5bd54c83] {
-  display: block;
-  height: 25px;
-  line-height: 25px;
-  color: #fff;
+.type .nameConfig .color > .tips[data-v-5bd54c83] {
+  margin-bottom: 10px;
 }
-.proContenr[data-v-5bd54c83] {
-  background-color: #f2f2f2;
-  height: 1000px;
-  width: 100%;
-  position: relative;
+.upload[data-v-5bd54c83] {
+  margin-top: 20px;
 }
-.proHad[data-v-5bd54c83] {
-  width: 100%;
-  height: 50px;
-  border-bottom: 1px solid #ccc;
+.upload .sub[data-v-5bd54c83] {
+  display: inline-block;
+  width: 70px;
+  text-align: right;
 }
-.proHad input[data-v-5bd54c83] {
-  outline: none;
-  height: 40px;
-  line-height: 40px;
-  width: 300px;
-  margin-top: 5px;
-  padding: 0;
-  padding-left: 30px;
-  color: #666;
-  border: none;
-  box-sizing: border-box;
-  position: relative;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, 0);
-  /* IE 9 */
-  -ms-transform: translate(-50%, 0);
-  /* Firefox */
-  -moz-transform: translate(-50%, 0);
-  /* Safari 和 Chrome */
-  -webkit-transform: translate(-50%, 0);
-  /* Opera */
-  -o-transform: translate(-50%, 0);
+.upload .upload_but[data-v-5bd54c83] {
+  display: inline-block;
+  width: 138px;
+  height: 36px;
+  margin-left: 20px;
 }
-.proinfo[data-v-5bd54c83] {
-  float: right;
-  margin-right: 10%;
-  margin-top: 20%;
-}
-.proinfo p[data-v-5bd54c83] {
-  height: 40px;
-  line-height: 40px;
-  color: #999;
-}
-.prooperate[data-v-5bd54c83] {
-  /*position: absolute;
-left: 70%;
-bottom: 10%;*/
-  width: 230px;
+.alertTips[data-v-5bd54c83] {
+  margin: 15px 0 15px 95px;
+  font-size: 12px;
+  color: #909399;
+  letter-spacing: 0;
+  line-height: 20px;
 }
 .editCont[data-v-5bd54c83] {
-  width: 375px;
-  height: 667px;
-  position: absolute;
-  left: 45px;
-  top: 120px;
-}
-.editCont img[data-v-5bd54c83] {
-  display: block;
-  height: 100%;
-  width: 100%;
+  width: 750px;
+  height: 750px;
+  background: #ECEDF2;
+  margin-left: 95px;
+  position: relative;
 }
 .editCont div[data-v-5bd54c83] {
   display: block;
   cursor: pointer;
-  left: 0;
-  top: 0;
   position: absolute;
   z-index: 999;
 }
+.editCont .centerImg[data-v-5bd54c83] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
 .edit-head[data-v-5bd54c83] {
-  height: 64px;
-  line-height: 64px;
   color: #333;
-  width: 64px;
   background-color: #fff;
   text-align: center;
   border: 2px solid #ccc;
   -webkit-user-select: none;
           user-select: none;
   cursor: move;
+  position: relative;
+  -webkit-transform-origin: top left;
+          transform-origin: top left;
 }
 .prowx[data-v-5bd54c83] {
+  color: #333;
   background: #fff;
-  width: 64px;
-  height: 64px;
-  line-height: 64px;
   text-align: center;
   border: 2px solid #ccc;
   -webkit-user-select: none;
           user-select: none;
   cursor: move;
+  position: relative;
+  -webkit-transform-origin: top left;
+          transform-origin: top left;
+}
+.prowx div[data-v-5bd54c83],
+.edit-head div[data-v-5bd54c83] {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
 }
 .names[data-v-5bd54c83] {
   color: #fff;
@@ -147,10 +184,11 @@ bottom: 10%;*/
           user-select: none;
   cursor: move;
 }
-.win-mask[data-v-5bd54c83] {
-  z-index: 3 !important;
+.submitBut[data-v-5bd54c83] {
+  margin: 20px 0 10px 95px;
 }
-.win.center[data-v-5bd54c83] {
-  z-index: 4 !important;
+.submitBut button[data-v-5bd54c83] {
+  width: 120px;
+  height: 40px;
 }
 

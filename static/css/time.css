@@ -99,6 +99,9 @@
 #timems .timebox .calendar-time span.calendar-minute1[data-v-1de49e3d]:hover {
   background-color: #eee;
 }
+#timems .timebox .calendar-time span.calendar-seleted[data-v-1de49e3d] {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABOBAMAAAB8hD0uAAAAGFBMVEUAAADzmAH1nhD0nw32ngn1oBLzmADymQB3uszUAAAABnRSTlMAzL3AxbvWyktDAAAA+UlEQVRIx43QwQmEQBQE0UbZFPRsCIZgMmMGM+mvUAFU/4s0PGSo/I5R3Ezu1cBkP7/PskvydP/L/r1wFi7Xawq3nbNyuUfntqNzuVbndn1huGeO1503xHlDHA3d0dAdDdV5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfENQ3Z3pDtDZnekOkNWd6Q5Q0Z3pChDXHeEOcNcd4Q5w1x3hDnDXFFw1R34YqG6e4p3Zby/rodP88jvW/3AAAAAElFTkSuQmCC) no-repeat right -62px;
+}
 #timems .timebox .calendar-bar[data-v-1de49e3d] {
   width: 100%;
   height: 40px;

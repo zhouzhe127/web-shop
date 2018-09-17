@@ -16,11 +16,11 @@
   height: 100%;
   line-height: 50px;
   font-weight: bold;
-  color: #5ebee8;
+  color: #909399;
   cursor: pointer;
 }
 .conHeader .conHeaderLeft .barTitle li[data-v-66ae265e]:first-child {
-  color: #2980b9;
+  color: #44404A;
 }
 .conHeader .conHeaderLeft .barTitle li[data-v-66ae265e]::after {
   content: ">";

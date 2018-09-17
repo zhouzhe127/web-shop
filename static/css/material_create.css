@@ -25,6 +25,14 @@
 #material-create .label-content[data-v-ec2e2eb2] {
   padding-bottom: 20px;
 }
+#material-create .label-content .inline-box[data-v-ec2e2eb2] {
+  display: inline-block;
+  margin-right: 20px;
+}
+#material-create .label-content .input-box[data-v-ec2e2eb2] {
+  display: inline-block;
+  width: 210px;
+}
 #material-create .label-content .label[data-v-ec2e2eb2] {
   color: #333;
   height: 40px;

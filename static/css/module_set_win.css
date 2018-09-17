@@ -9,7 +9,7 @@
 	height: 1px;
 	background-color: #FFFFFF;
 	float: left;
-	margin-top: 60px;
+	/*margin-top: 60px;*/
 	margin-bottom: 14px;
 }
 #msnmodel-window .width350[data-v-1209e8e8] {
@@ -37,7 +37,7 @@
 	width: 550px;
 	margin-left: 10px;
 	line-height: 40px;
-	height: 40px;
+	/*height: 40px;*/
 	text-align: center;
 	margin-top: 10px;
 	float: left;

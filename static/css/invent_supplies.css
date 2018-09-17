@@ -2,14 +2,9 @@
 .search-module[data-v-19e6cb7c] {
   margin-top: 20px;
 }
-.search-module .search-input[data-v-19e6cb7c] {
-  height: 40px;
-  color: #a5a5a5;
-  font-size: 14px;
-  line-height: 40px;
-  text-indent: 15px;
-  padding: 0;
-  outline: none;
+.search-module .sleType[data-v-19e6cb7c] {
+  width: 170px;
+  display: inline-block;
   margin-right: 15px;
 }
 .search-module .sleBtn[data-v-19e6cb7c] {

@@ -33,7 +33,7 @@
 				</section>
 			</section>
 			<section class="comList" v-if="selectgoods.length>0">
-				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
+				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='areaIndex[0]==2?"shelfId":"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
 			</section>
 		</section>
 
@@ -77,9 +77,15 @@ export default {
 	},
 	methods: {
 		getRelation: function(res) {
-			if (res.length > 0) {
-				this.goodsIndex = res;
+			if(res[res.length-1]>=0){
+				if (res.length > 0) {
+					this.goodsIndex = res;
+				}
+			}else{
+				res.pop();
+				this.$message.error('该商品未关联！');
 			}
+			
 		},
 		getWinClickResult: function(res) {
 			if (res == 'ok') {
@@ -109,7 +115,7 @@ export default {
 						}
 					} else if (this.areaIndex[0] == 2) {
 						for (let j = 0; j < this.mtgoods.length; j++) {
-							if (this.goodsIds[i] == this.mtgoods[j].goodsId) {
+							if (this.goodsIds[i] == this.mtgoods[j].shelfId) {
 								let packageIds = [];
 								if (this.mtgoods[j].packageIds != '') {
 									packageIds.push(this.mtgoods[j].packageIds);
@@ -118,7 +124,7 @@ export default {
 									packageIds
 								);
 								this.packageIds = allPackageIds.toString();
-								goods[this.goodsIds[i] + ''] = this.mtgoods[
+								goods[this.mtgoods[j].goodsId + ''] = this.mtgoods[
 									j
 								].specId;
 							}
@@ -145,6 +151,7 @@ export default {
 						}
 					}
 				}
+				console.log(goods)
 				this.goods = JSON.stringify(goods);
 			}
 			this.goodsIndex = utils.unique(this.goodsIndex);
@@ -293,6 +300,7 @@ export default {
 				}
 			} else if (this.areaIndex[0] == 2) {
 				for (let i = 0; i < this.mtgoods.length; i++) {
+					this.mtgoods[i].shelfId = this.mtgoods[i].specId[0]||-i+1;
 					if (id === undefined || id === '全部') {
 						let item = this.mtgoods[i];
 						if (!(item.categoryName instanceof Array)) {
@@ -308,6 +316,7 @@ export default {
 						}
 					}
 				}
+				console.log(arr);
 			} else if (this.areaIndex[0] == 3) {
 				for (let i = 0; i < this.baidugoods.length; i++) {
 					if (id === undefined || id === '全部') {
@@ -329,7 +338,6 @@ export default {
 			this.selectgoods = arr;
 		},
 		wholeOnCom: function() {
-			this.goodsIndex = [];
 			if (this.areaIndex[0]) {
 				for (let i = 0; i < this.selectgoods.length; i++) {
 					this.goodsIndex.push(this.selectgoods[i].goodsId);
@@ -340,12 +348,15 @@ export default {
 		wholeOffCom: function() {
 			if (this.areaIndex[0]) {
 				for (let i = 0; i < this.selectgoods.length; i++) {
-					this.goodsIndex.splice(0, this.goodsIndex.length);
+					this.goodsIndex = this.goodsIndex.filter(x=>{
+						return x!=this.selectgoods[i].goodsId;
+					})
 				}
 			}
 		}
 	},
 	mounted() {
+		console.log(this.pObj.areaIndex);
 		this.areaIndex = this.pObj.areaIndex;
 		this.goodsIds = this.pObj.goodsIds;
 		this.eleShopId = this.pObj.eleShopid;

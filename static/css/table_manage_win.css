@@ -1,42 +1,10 @@
 
 #table-window[data-v-7a215b04] {
-  width: 580px;
-  height: 669px;
-  background-color: #f2f2f2;
-  text-align: center;
+  padding: 20px 0;
 }
-#table-window .table-window-show[data-v-7a215b04] {
-  width: 540px;
-  height: 400px;
-  display: inline-block;
-  margin-top: 20px;
-  font-size: 0;
-}
-#table-window .table-window-show ul li[data-v-7a215b04] {
-  margin-bottom: 14px;
-}
-#table-window .table-window-show ul li p[data-v-7a215b04] {
-  width: 80px;
-  height: 40px;
-  line-height: 40px;
-  text-align: right;
-  font-size: 14px;
-}
-#table-window .table-window-show ul li span.table-span[data-v-7a215b04] {
-  display: inline-block;
-  width: 420px;
-  text-align: left;
-  height: 40px;
-}
-#table-window .table-window-show ul li .input[data-v-7a215b04] {
-  background-color: #ffffff;
-  margin-left: -8px;
-}
-#table-window .table-window-show ul li .describe[data-v-7a215b04] {
-  width: 400px;
-  padding: 10px;
-  font-size: 14px;
-  background-color: #fff;
-  margin-left: -20px;
+#table-window .labItem[data-v-7a215b04] {
+  margin-bottom: 5px;
+  margin-left: 0!important;
+  margin-right: 10px;
 }
 
