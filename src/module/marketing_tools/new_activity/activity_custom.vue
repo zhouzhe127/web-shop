@@ -16,8 +16,25 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<singleSelect class="fl" :index='indexCustom' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="customList" :name="'name'" :key='"id"'></singleSelect>
-				<span class="fl associated" v-if="indexCustom == 1">(已关联{{member}}人)</span>
+				<!-- <singleSelect class="fl" :index='indexCustom' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="customList" :name="'name'" :key='"id"'></singleSelect>
+				<span class="fl associated" v-if="indexCustom == 1">(已关联{{member}}人)</span> -->
+				<el-radio v-model="indexCustom" label="1" border>店内</el-radio>
+				<el-radio v-model="indexCustom" label="2" border>线上</el-radio>
+				<template v-if="indexCustom == '2'">
+					<div class="innermember">
+						<span class="required">线上</span>
+					</div>
+					<div class="innermember">
+						<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
+						<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
+						<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
+							<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
+						</el-tooltip>
+					</div>
+					<div class="innermember">
+						<span>已关联会员:{{member}}人|已关联粉丝:{{fans}}人</span>
+					</div>
+				</template>
 			</div>
 		</div>
 		<!-- 关联优惠券 -->
@@ -165,7 +182,8 @@ export default {
 			customExplain: '', //自定义活动说明
 			customIds: [], //自定义设置店内选中优惠券
 			selectCoupon: [], //自定义设置会员选中优惠券
-			member: 0,
+			member: 0, //会员关联的人数
+			fans: 0, //粉丝关联的人数
 			memfilter: '',
 			customList: [{
 				name: '店内'
@@ -174,7 +192,7 @@ export default {
 				name: '会员'
 			}
 			],
-			indexCustom: 0, //活动对象选中的
+			indexCustom: '1', //活动对象选中的
 			goodsType: [{
 				'name': '微信',
 				'id': '1'
@@ -214,7 +232,9 @@ export default {
 			couponList: [], //优惠券列表
 			showVip: false,
 			memberStatus: true, //是否有从会员页面筛选过来的会员
-			isactivityDetail: true
+			isactivityDetail: true,
+			checkedMember: false, //会员选中的
+			checkedFans: false //粉丝选中的
 		};
 	},
 	watch: {
@@ -242,6 +262,33 @@ export default {
 		},
 		'startObj.time': 'timeChange',
 		'endObj.time': 'timeChange',
+		indexCustom: function() {
+			if (this.indexCustom == 1) {
+				this.selectCoupon = this.miCount;
+				this.num = true;
+			} else if (this.indexCustom == 2) {
+				this.selectCoupon = this.memberCoupon;
+				this.num = false;
+			}
+			//this.abc();
+		},
+		// checkedMember: function(Value, oldValue, ) { //选择会员
+		// 	if (this.checkedMember) {
+		// 		if (this.memberStatus) {
+		// 			this.addVip();
+		// 		}
+		// 	} else {
+		// 		this.member = 0; //会员选中的人数
+		// 		this.memfilter = ''; //会员筛选的条件
+		// 	}
+		// },
+		// checkedFans: function() { //选择粉丝
+		// 	if (this.checkedFans) {
+		// 		this.getSubscribeFansCount();
+		// 	} else {
+		// 		this.fans = 0;
+		// 	}
+		// }
 	},
 	methods: {
 		valiData: function(content, title, winType) { //弹窗提示格式化
@@ -258,7 +305,7 @@ export default {
 			} else if (this.indexCustom == 1) {
 				this.selectCoupon = this.memberCoupon;
 			}
-			this.abc();
+			//this.abc();
 		},
 		getStartTime(str) {
 			this.startObj.time = str;
@@ -293,7 +340,7 @@ export default {
 		},
 		//自定义活动对象切换
 		abc: function() {
-			if (this.indexCustom == 1) {
+			if (this.indexCustom == 2) {
 				//打开会员弹窗
 				if (this.memberStatus) {
 					this.addVip();
@@ -312,13 +359,13 @@ export default {
 			if (obj.status == 'ok') {
 				this.selectCoupon = obj.data.select;
 				this.couponList = obj.data.list;
-				if (this.indexCustom == 0) {
+				if (this.indexCustom == 1) {
 					this.miCount = obj.data.select;
 					for (let i = 0; i < this.miCount.length; i++) {
 						this.$set(this.micsel, i, 0);
 						this.$set(this.micselimit, i, 0);
 					}
-				} else if (this.indexCustom == 1) {
+				} else if (this.indexCustom == 2) {
 					this.memberCoupon = obj.data.select;
 				}
 			}
@@ -379,9 +426,9 @@ export default {
 				}
 			}
 			this.couponList = coupons;
-			if (this.indexCustom == 0) {
+			if (this.indexCustom == 1) {
 				this.selectCoupon = this.miCount;
-			} else if (this.indexCustom == 1) {
+			} else if (this.indexCustom == 2) {
 				this.selectCoupon = this.memberCoupon;
 			}
 			this.showCoupon = true;
@@ -400,6 +447,10 @@ export default {
 				},
 
 			}, this)) return false;
+			if (this.indexCustom == 2 && !this.checkedMember && !this.checkedFans) {
+				this.valiData('请关联活动对象!');
+				return false;
+			}
 			if (this.startObj.time - this.endObj.time > 0) {
 				this.valiData('时间选择范围错误!');
 				return false;
@@ -412,7 +463,7 @@ export default {
 				let arr = [];
 				let obj = {
 					//活动对象为店内和活动对象为会员时传递的优惠券不一样
-					couponIds: this.indexCustom == 0 ? this.miCount : this.memberCoupon,
+					couponIds: this.indexCustom == 1 ? this.miCount : this.memberCoupon,
 					minConsume: '',
 					maxConsume: '',
 					isLoop: '0',
@@ -429,9 +480,10 @@ export default {
 						name: this.customName, //活动名
 						explain: this.customExplain, //活动说明
 						//`objectType` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '活动对象。0：表示店内，1：表示会员 ，2表示全体会员 3.微分店，4.具体会员IDS',
-						objectType: this.memberStatus ? this.indexCustom : 4, //活动对象
+						objectType: this.memberStatus ? 4 : 1, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
+						selectFans: this.fans, //粉丝的数量
 						startTime: parseInt(this.startObj.time / 1000), //开始时间
 						endTime: parseInt(this.endObj.time / 1000), //结束时间
 						getType: 0, //获得方式
@@ -439,15 +491,20 @@ export default {
 					}
 				});
 			} else {
-				if (this.indexCustom == 0) { //优惠券
+				if (this.indexCustom == 1) { //优惠券
 					this.activityDetail.rule[0].couponIds = this.miCount;
-				} else if (this.indexCustom == 1) {
+				} else if (this.indexCustom == 2) {
 					this.activityDetail.rule[0].couponIds = this.memberCoupon;
 				}
 				this.activityDetail.name = this.customName; //活动名称
 				this.activityDetail.explain = this.customExplain; //活动说明
 				//活动对象编辑的时候不会牵扯到固定会员发放活动
-				this.activityDetail.objectType = this.indexCustom; //活动对象
+				if (this.indexCustom == '1') {
+					this.activityDetail.objectType = 0;
+				} else {
+					this.activityDetail.objectType = 4;
+				}
+				//this.activityDetail.objectType = this.indexCustom; //活动对象
 				this.activityDetail.startTime = parseInt(this.startObj.time / 1000); //开始时间
 				this.activityDetail.endTime = parseInt(this.endObj.time / 1000); //结束时间
 				this.activityDetail.rule[0].pushChannel = this.customSelect.toString().replace(/,/g, ''); //消息推送渠道
@@ -487,28 +544,42 @@ export default {
 			this.customSelect = data.rule[0].pushChannel.length > 1 ? data.rule[0].pushChannel.split(
 				'').toString().split(',') : data.rule[0].pushChannel.split(','); //消息推送渠道 
 			this.customExplain = data.explain; //活动说明
-			if (data.objectType == '4') {
-				this.indexCustom = 1;
+			if (data.objectType == '1') {
+				this.indexCustom = '2';
 				this.memberStatus = false;
-			} else {
-				this.indexCustom = parseInt(data.objectType);
+			} else if (data.objectType == '0') {
+				this.indexCustom = '1';
+			} else if (data.objectType == '4') {
+				this.indexCustom = '2';
 			}
-			if (this.indexCustom == 0) {
+			if (this.indexCustom == '1') {
 				this.num = true;
 			} else {
 				this.num = false;
 			}
+			if (data.selectFans && data.selectFans != '') { //筛选的粉丝的数量
+				this.fans = data.selectFans;
+				this.checkedFans = true;
+			}
 			this.startObj.time = data.startTime * 1000;
 			this.endObj.time = data.endTime * 1000;
 			this.selectCoupon = data.rule[0].couponIds;
-			this.miCount = data.rule[0].couponIds;
+			if (this.indexCustom == '1') {
+				this.miCount = this.selectCoupon;
+			} else {
+				this.memberCoupon = this.selectCoupon;
+			}
+			//this.miCount = data.rule[0].couponIds;
 			this.member = data.sendProgress.split(',')[0]; //会员的筛选数量
 			this.memfilter = data.memberIds; //会员的筛选条件
-			if (this.activityDetail.objectType == '0') {
-				this.customIds = this.activityDetail.rule[0].couponIds;
-			} else {
-				this.customIds1 = this.activityDetail.rule[0].couponIds;
+			if (this.member && Number(this.member) > 0) {
+				this.checkedMember = true;
 			}
+			// if (this.activityDetail.objectType == '0') {
+			// 	this.customIds = this.activityDetail.rule[0].couponIds;
+			// } else {
+			// 	this.customIds1 = this.activityDetail.rule[0].couponIds;
+			// }
 			this.$nextTick(() => {
 				setTimeout(() => {
 					let list = this.$refs.autoDay;
@@ -536,6 +607,29 @@ export default {
 					}
 				}, 300);
 			});
+		},
+		async getSubscribeFansCount() {
+			let data = await http.getSubscribeFansCount({});
+			if (data) {
+				this.fans = data;
+			}
+		},
+		toSinglemember: function(item) {
+			if (item) {
+				if (this.memberStatus) {
+					this.addVip();
+				}
+			} else {
+				this.member = 0; //会员选中的人数
+				this.memfilter = ''; //会员筛选的条件
+			}
+		},
+		toSinglefans: function(item) {
+			if (item) {
+				this.getSubscribeFansCount();
+			} else {
+				this.fans = 0;
+			}
 		}
 	},
 	beforeCreate() {
@@ -564,7 +658,7 @@ export default {
 		this.ischain = this.brandId = currentShop.ischain;
 		let memberIds = storage.session('memberIds'); //获取是否有会员信息
 		if (memberIds) {
-			this.indexCustom = 1; //让其默认选中会员
+			this.indexCustom = '2'; //让其默认选中会员
 			this.member = memberIds.length;
 			this.memfilter = memberIds.join(',');
 			this.memberStatus = false; //从会员管理页面过来的 无法重新筛选会员的标识
@@ -659,6 +753,15 @@ export default {
 
 
 
+
+
+
+
+
+
+
+
+
 /*活动名称的输入框*/
 
 .custom .online-box .rightHalf .name {
@@ -705,6 +808,16 @@ export default {
 	text-align: center;
 	margin-right: 0;
 	line-height: 40px;
+}
+
+.custom .online-box .rightHalf .innermember {
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
+}
+
+.custom .online-box .rightHalf .innermember span {
+	display: block;
 }
 
 .custom .online-box .rightHalf .returnInt {

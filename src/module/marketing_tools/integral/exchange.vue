@@ -1,30 +1,52 @@
 /** * @file * * 积分商城兑换管理 * * @author zhengu.jiang */
 <template>
 	<div id="user">
-        <div class="firstFun">
-        	<div class="firstTitle fl" style="width: 450px;">
-        		<p class="fl">状态：</p>
-        		<span v-for="(item,i) in statusList" :key="i" class="fl mar" :class="{'ons':item.status == 1 }" @click="staTooge(item.id)">{{item.name}}</span>
-        	</div>
-        </div>
-        <div class="integralInfo">
-        	<span class="fl">已消费：{{usedNum}}份</span>
-        	<span class="fl">未消费：{{useNum}}份</span>
-        </div>
-        <com-table :listHeight='80' :showHand="false" :showTitle='2' :listWidth="1400" :introData="useLists" :titleData="titleList">
-        	<div class="imgshow" slot="con-2" slot-scope="props">
-        		<img :src=" imgHost + props.data.gimage"/>
-        	</div>
- 			<div class="imgshow" slot="con-10" slot-scope="props">
-        		{{getshopName(props.data.shopId)}}
-        	</div> 
+		<!-- 日期搜索 -->
+		<div class="filter">
+			<div class="filbox fl clearfix">
+				<!--日期组件 开始时间-->
+				<span class="fl line">创建时间</span>
+				<calendar :time="startTime" class="data-box fl" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar>
+				<span class="fl line">-</span>
+				<!--日期组件 开始时间-->
+				<calendar :time="endTime" class="data-box fl" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar>
+				<span class="order-order-searchA fl" @click="searchList">
+                    <span class="order-order-search" href="javascript:void(0)"></span>
+				</span>
+			</div>
+			<div class="filbox fl clearfix">
+				<span class="fl line">商品名称</span>
+				<input type="text" class="name" placeholder="请输入商品名称" v-model='actName' maxlength="10" />
+			</div>
+			<!-- 筛选 重置 -->
+			<div class="filbox fl">
+				<a class="fl blue " href="javascript:void(0)" @click="searchList">筛选</a>
+			</div>
+		</div>
+		<div class="firstFun">
+			<div class="firstTitle fl" style="width: 450px;">
+				<p class="fl">状态：</p>
+				<span v-for="(item,i) in statusList" :key="i" class="fl mar" :class="{'ons':item.status == 1 }" @click="staTooge(item.id)">{{item.name}}</span>
+			</div>
+		</div>
+		<div class="integralInfo">
+			<span class="fl">已消费：{{usedNum}}份</span>
+			<span class="fl">未消费：{{useNum}}份</span>
+		</div>
+		<com-table :listHeight='80' :showHand="false" :showTitle='2' :listWidth="1400" :introData="useLists" :titleData="titleList">
+			<div class="imgshow" slot="con-2" slot-scope="props">
+				<img :src=" imgHost + props.data.gimage" />
+			</div>
+			<div class="imgshow" slot="con-10" slot-scope="props">
+				{{getshopName(props.data.shopId)}}
+			</div>
 			<div class="imgshow" slot="con-11" slot-scope="props">
-        		{{staffList[props.data.updateUid]}}
-        	</div>         	       	
-        </com-table>
-        <page v-if="total > 1" @pageNum="getListByShopId" :page.sync="pages" :total.sync='total' :isNoJump='true' :isNoPaging='true' style="float: left;margin-bottom: 100px;"></page>
-        <changewin v-if="isWin" @getWin="code"></changewin>
-    </div>
+				{{staffList[props.data.updateUid]}}
+			</div>
+		</com-table>
+		<page v-if="total > 1" @pageNum="getListByShopId" :page.sync="pages" :total.sync='total' :isNoJump='true' :isNoPaging='true' style="float: left;margin-bottom: 100px;"></page>
+		<changewin v-if="isWin" @getWin="code"></changewin>
+	</div>
 </template>
 <script>
 import http from 'src/manager/http';
@@ -42,80 +64,84 @@ export default {
 			pages: 1,
 			len: null,
 			statusList: [{
-				'id': '1',
-				'name': '全部',
-				'status': '1'
-			},
-			{
-				'id': '2',
-				'name': '未消费',
-				'status': '0'
-			},
-			{
-				'id': '3',
-				'name': '已消费',
-				'status': '0'
-			}
+					'id': '1',
+					'name': '全部',
+					'status': '1'
+				},
+				{
+					'id': '2',
+					'name': '未核销',
+					'status': '0'
+				},
+				{
+					'id': '3',
+					'name': '已核销',
+					'status': '0'
+				}
 			],
 			types: 'all',
 			exportUrl: '',
 			isWin: false,
 			// isFlag:false
 			titleList: [{
-				titleName: '序号',
-				titleStyle: {
-					width: '100px',
-					flex: 'none'
+					titleName: '序号',
+					titleStyle: {
+						width: '100px',
+						flex: 'none'
+					},
+					dataName: 'id'
 				},
-				dataName: 'id'
-			},
-			{
-				titleName: '商品名称',
-				dataName: 'gname'
-			},
-			{
-				titleName: '展示图片'
-			},
-			{
-				titleName: '创建时间',
-				dataName: 'createTime'
-			},
-			{
-				titleName: '消费时间',
-				dataName: 'updateTime'
-			},
-			{
-				titleName: '兑换积分',
-				dataName: 'point'
-			},
-			{
-				titleName: '兑换金额',
-				dataName: 'price'
-			},							
-			{
-				titleName: '兑换人',
-				dataName: 'mname'
-			},
-			{
-				titleName: '状态',
-				dataName: 'state'
-			},
-			{
-				titleName: '劵码',
-				dataName: 'code'
-			},
-			{
-				titleName: '领取门店',
-				dataName: 'code'
-			},
-			{
-				titleName: '核销人',
-				dataName: 'code'
-			}							
+				{
+					titleName: '商品名称',
+					dataName: 'gname'
+				},
+				{
+					titleName: '展示图片'
+				},
+				{
+					titleName: '创建时间',
+					dataName: 'createTime'
+				},
+				{
+					titleName: '消费时间',
+					dataName: 'updateTime'
+				},
+				{
+					titleName: '兑换积分',
+					dataName: 'point'
+				},
+				{
+					titleName: '兑换金额',
+					dataName: 'price'
+				},
+				{
+					titleName: '兑换人',
+					dataName: 'mname'
+				},
+				{
+					titleName: '状态',
+					dataName: 'state'
+				},
+				{
+					titleName: '劵码',
+					dataName: 'code'
+				},
+				{
+					titleName: '领取门店',
+					dataName: 'code'
+				},
+				{
+					titleName: '核销人',
+					dataName: 'code'
+				}
 			],
 			allTotal: 0,
-			staffList:{}, //操作人列表
-			shopsList:[] //店铺列表
+			staffList: {}, //操作人列表
+			shopsList: [], //店铺列表
+			startTime: new Date().setDate(1) -
+				(new Date().getTime() - new Date().setHours(0, 0, 0, 0)), //获取当月一号的零点时间戳
+			endTime: new Date().setHours(23, 59, 59, 59), //结束时间
+			actName: '' //商品名臣
 		};
 	},
 	props: [
@@ -161,7 +187,7 @@ export default {
 			this.useNum = res.numList.useNum;
 			this.usedNum = res.numList.usedNum;
 			this.useLists = res.list;
-			this.staffList = res.staffList;//领取人
+			this.staffList = res.staffList; //领取人
 			this.total = res.total;
 			this.total < 10 ? this.len = this.total : this.len = 10;
 			let uses = this.useLists;
@@ -260,15 +286,27 @@ export default {
 				}
 			}
 			return shopName;
-		},				
+		},
+		searchList: function() {
+			// this.page = 1;
+			// this.adjustRecord();
+		},
+		startTimeChange(time) {
+			//开始时间
+			this.startTime = time;
+		},
+		endTimeChange(time) {
+			//结束时间
+			this.endTime = new Date(time).setHours(23, 59, 59, 999);
+		},
 	},
 	components: {
 		page: () =>
-		import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
+			import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 		changewin: () =>
-		import ( /*webpackChunkName: 'exchange_win'*/ './exchange_win'),
+			import ( /*webpackChunkName: 'exchange_win'*/ './exchange_win'),
 		comTable: () =>
-		import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 	},
 	destroyed() {
 		this.$store.commit('setPageTools', {});
@@ -491,5 +529,59 @@ export default {
 	padding-left: 10px;
 	width: 190px;
 	box-sizing: border-box;
+}
+/* 搜索图标的公共样式 */
+
+.order-order-searchA,
+.order-order-search {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	background-color: #29a7e1;
+	cursor: pointer;
+	vertical-align: middle;
+	margin-top: 1px;
+}
+
+.order-order-search {
+	background: url(../../../res/images/search.png) center center no-repeat;
+}
+
+.order-order-searchA:hover {
+	background-color: #1878a5;
+	transition: background-color ease-in-out 0.2s;
+}
+
+.order-order-searchA:active {
+	background-color: #154961;
+}
+
+.filter {
+	margin-bottom: 20px;
+}
+
+.filter .filbox {
+	height: 40px;
+	margin: 0 20px 20px 0;
+	line-height: 40px;
+}
+
+.filter .line {
+	margin: 0 5px;
+	font-size: 16px;
+	line-height: 40px;
+}
+
+.filter .name {
+	width: 200px;
+	height: 40px;
+	background-color: #ffffff;
+	border: solid 1px #cecdcd;
+	text-indent: 15px;
+}
+.filter .filbox a {
+    width: 80px;
+    height: 40px;
+    line-height: 40px;
 }
 </style>

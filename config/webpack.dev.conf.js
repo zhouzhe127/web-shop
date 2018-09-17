@@ -8,9 +8,14 @@ const configs = require('./base')
 const path = require("path");
 let publicPath = configs.devServerPath;
 let eslintVue = [
-    path.resolve(__dirname, "../",'src/config/http/http_marketing_tools'),
-    path.resolve(__dirname, "../",'src/module/marketing_tools/new_coupons'),
-    ]
+path.resolve(__dirname, "../",'src/module/member_system'),
+path.resolve(__dirname, "../",'src/module/marketing_tools'),
+path.resolve(__dirname, "../",'src/module/public_number_configuration'),
+path.resolve(__dirname, "../",'src/module/statistics/member_recharge'),
+path.resolve(__dirname, "../",'src/config/http/http_marketing_tools.js'),
+path.resolve(__dirname, "../",'src/config/routes.js'),
+]
+
 module.exports = merge(baseWebpackConfig, {
     mode: "development",
     // cheap-module-eval-source-map is faster for development

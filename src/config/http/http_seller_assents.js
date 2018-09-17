@@ -233,5 +233,13 @@ export default {
 	"batchBinding": { //批量绑定客户
 		url: w + 'Assistantstaff/batchBinding',
 		method: 'get'
+	},
+	"getShopStockList": { //获取库存
+		url: w + 'Assistantbuyhistory/getShopStockList',
+		method: 'get'
+	},
+	"getUserLists": { //获取库存
+		url: w + 'Assistantbuyhistory/getUserList',
+		method: 'get'
 	}
 }

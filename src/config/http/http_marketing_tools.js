@@ -1,6 +1,11 @@
-import {s,w,b} from 'src/config/host_var';
+import {
+	s,
+	w,
+	b
+} from 'src/config/host_var';
 
 export default {
+    },
 	'getCouponList': { //  获取优惠券列表
 		url: w + 'coupon/getCouponListData',
 		method: 'get'
@@ -164,7 +169,7 @@ export default {
 		url: s + 'activity/downActivity' //下架活动
 	},
 	'deleteActivity': {
-		url: s + 'activity/deleteActivity' //删除活动
+		url: w + 'Activityconfig/deleteActivity' //删除活动
 	},
 	'addActivity': {
 		url: s + 'Activity/addActivity', //保存发布活动
@@ -340,5 +345,9 @@ export default {
 	'addStaffScanPay':{
 		url: w + 'Scanpayconfig/addStaffScanPay', //新增員工支付碼
 		method: 'post'
+	},
+	'getSubscribeFansCount': {
+		url: w + 'Activityfans/getSubscribeFansCount', //获取活动粉丝
+		method: 'get'
 	}
 };

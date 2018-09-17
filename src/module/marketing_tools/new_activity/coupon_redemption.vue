@@ -65,9 +65,9 @@
 	</div>
 </template>
 <script>
-import http from "src/manager/http";
-import storage from "src/verdor/storage";
-import utils from "src/verdor/utils";
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
 // import global from 'src/manager/global';
 export default {
 	data() {
@@ -84,73 +84,73 @@ export default {
 				// width: 170
 			}, //日期组件的结束时间
 			expirationTimeList: [{
-					//过期时间
-					name: '全部',
-					id: 3
-				},
-				{
-					name: '未发布',
-					id: 0
-				},
-				{
-					name: '已发布',
-					id: 1
-				},
-				{
-					name: '发布中',
-					id: 2
-				},
-				{
-					name: '已下架',
-					id: -1
-				},
-				{
-					name: '已结束',
-					id: -2
-				}
+				//过期时间
+				name: '全部',
+				id: 3
+			},
+			{
+				name: '未发布',
+				id: 0
+			},
+			{
+				name: '已发布',
+				id: 1
+			},
+			{
+				name: '发布中',
+				id: 2
+			},
+			{
+				name: '已下架',
+				id: -1
+			},
+			{
+				name: '已结束',
+				id: -2
+			}
 			],
 			expirationTimeId: 3,
 			expirationTime: '全部', //状态
 			index: null,
 			titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: '180px',
-						flex: 'none',
-					}
-				},
-				{
-					titleName: '下载二维码'
-				},
-				{
-					titleName: '生成链接'
-				},
-				{
-					titleName: '名称',
-					dataName: 'name'
-				},
-				{
-					titleName: '创建时间'
-				},
-				{
-					titleName: '活动时间',
-					titleStyle: {
-						width: '300px',
-						flex: 'none',
-					}
-				},
-				{
-					titleName: '领券总量',
-					dataName: 'giveTotal'
-				},
-				{
-					titleName: '销售金额',
-					dataName: 'priceTotal'
-				},
-				{
-					titleName: '状态',
-					dataName: 'shopNames'
-				},
+				titleName: '操作',
+				titleStyle: {
+					width: '180px',
+					flex: 'none',
+				}
+			},
+			{
+				titleName: '下载二维码'
+			},
+			{
+				titleName: '生成链接'
+			},
+			{
+				titleName: '名称',
+				dataName: 'name'
+			},
+			{
+				titleName: '创建时间'
+			},
+			{
+				titleName: '活动时间',
+				titleStyle: {
+					width: '300px',
+					flex: 'none',
+				}
+			},
+			{
+				titleName: '领券总量',
+				dataName: 'giveTotal'
+			},
+			{
+				titleName: '销售金额',
+				dataName: 'priceTotal'
+			},
+			{
+				titleName: '状态',
+				dataName: 'shopNames'
+			},
 			],
 			count: 0, //总条数
 			userList: [], //数据
@@ -160,7 +160,7 @@ export default {
 			shortUrlPreFix: '', //二维码前缀
 			activityTitle:'', //活动标题
 			now: new Date().getTime() / 1000
-		}
+		};
 	},
 	created: function() {
 		let obj1 = {
@@ -190,19 +190,19 @@ export default {
 		},
 		setTitle: function() { //设置标题
 			this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: ['fd-white'],
-					fn: () => {
-						this.returnActivity();
-					}
-				},
-				{
-					name: '新建',
-					className: ['fd-blue'],
-					fn: () => {
-						this.addActivity();
-					}
+				name: '返回',
+				className: ['fd-white'],
+				fn: () => {
+					this.returnActivity();
 				}
+			},
+			{
+				name: '新建',
+				className: ['fd-blue'],
+				fn: () => {
+					this.addActivity();
+				}
+			}
 			]);
 		},
 		returnActivity: function() { //返回活动首页
@@ -222,7 +222,7 @@ export default {
 					type: 7, //活动类型
 					activityName:this.activityTitle
 				}
-			})
+			});
 			this.userList = data.list; //活动列表
 			this.shortUrlPreFix = data.shortUrlPreFix; //二维码前缀
 			this.count = data.count; //条数
@@ -231,7 +231,7 @@ export default {
 			// this.pageTotal = data.total;
 		},
 		downloadCode: function(item) { //下载二维码
-			console.log('11111')
+			//console.log('11111');
 			let url = this.shortUrlPreFix + item.urlCode;
 			this.downloadUrl = this.qrcode.getQrBase64(url, {
 				padding: 15,
@@ -288,7 +288,7 @@ export default {
 					item.standStatus = false;
 					item.downName = '';
 					item.downType = 0;
-					return '发布中'
+					return '发布中';
 				}
 			}
 			if (item.status == '-1') {
@@ -322,7 +322,7 @@ export default {
 					mouldType: item.mouldType,
 					isRelease: item.downType //1代表上架 0代表下架
 				}
-			})
+			});
 			if (data) {
 				this.$store.commit('setWin', {
 					title: '提示信息',
@@ -351,7 +351,7 @@ export default {
 		this.newgetActivityList(); //获取活动列表
 	}
 
-}
+};
 </script>
 <style type="text/css" scoped>
 #redemption .filter {

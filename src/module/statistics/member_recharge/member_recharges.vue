@@ -39,20 +39,20 @@
 					<div class="operateStore_l">
 						充值来源
 					</div>
-					<selStore :shopIds="'10062'"></selStore>
-				<!-- 	<div class="operateStore_r fl detLi" @click.stop.prevent="openShop($event)">
+					<!-- <selStore :shopIds="'10062'"></selStore> -->
+					<div class="operateStore_r fl detLi" @click.stop.prevent="openShop($event)">
 						<selectStore v-if="isBrand" @emit="clickShopList" :sorts="shopsList" :tipName="selectName"></selectStore>
 						<template v-else>
 							<div class="operateStore_r_l">{{selectName}}</div>
 							<div class="select_d">
 								<i></i>
 							</div>
-						</template> -->
+						</template>
 						<!-- 单店下的警示弹窗 -->
-					<!-- 	<div class="constructions" v-if="constructionsBtn">
+						<div class="constructions" v-if="constructionsBtn">
 							<i class="sharpCorners"></i> 单店模式下，店铺只有一家！
 						</div>
-					</div> -->
+					</div>
 				</div>
 				<!-- 卡类型 -->
 				<div class="fl mb15" style="margin-right: 12px;height: 40px;">
@@ -84,9 +84,38 @@
 				</div>
 				<!-- 筛选 -->
 				<!-- <a class="blue fl screenings mb15" href="javascript:void(0);" @click="rechargeQuery">筛选</a> -->
-				<el-button type="primary" @click="rechargeQuery">筛选</el-button>
 				<!-- 重置 -->
 				<!-- <a class="gray fl reset mb15" href="javascript:void(0);" @click="filterReset">重置</a> -->
+			</div>
+			<div class="sta_head">
+				<!-- 操作店铺 -->
+				<div class="operateStore">
+					<div class="operateStore_l fl">
+						充值方案
+					</div>
+					<prepaid-plan :shopIds="planId" :isSingle="false" @chooseShop="backShopId"></prepaid-plan>
+				</div>
+				<div class="operateStore">
+					<div class="operateStore_l fl">
+						实付区间
+					</div>
+					<el-input class="fl" v-model="intervalLeft" placeholder="请输入金额" style="width:150px;" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="6"></el-input>
+					<div class="operateStore_l fl" style="margin-left:10px;">
+						元~
+					</div>
+					<el-input class="fl" v-model="intervalRight" placeholder="请输入金额" style="width:150px;" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="6"></el-input>
+					<div class="operateStore_l fl" style="margin-left:10px;">
+						元
+					</div>
+					<div class="operateStore_l fl">
+						<el-tooltip placement="top">
+							<div slot="content">筛选用户实际支付金额区间,不输入则此项不参与筛选。
+								<br/>仅输入前输入框代表仅筛选填写金额以上数据（包含）,<br/>仅输入后输入框代表仅筛选0至填写金额的数据（包含）。</div>
+							<i class="el-icon-question"></i>
+						</el-tooltip>
+					</div>
+				</div>
+				<el-button type="primary" @click="rechargeQuery">筛选</el-button>
 				<el-button type="info" @click="filterReset">重置</el-button>
 			</div>
 			<!-- 选择店铺 -->
@@ -295,6 +324,9 @@ export default {
 			phone: false, //按手机号查找
 			phonetotal: [],
 			phonelist: [],
+			planId: [], //充值方案Id集合
+			intervalLeft: '', //实付区间1
+			intervalRight: '' //实付区间2
 		};
 	},
 	created: function() {
@@ -307,24 +339,24 @@ export default {
 			this.isBrand = false;
 		}
 		this.getshopIdorshopName();
-		let obj1 = {
-			titleStyle: {
-				fontSize: 16 + 'px'
-			}
-		};
-		let obj2 = {
-			conStyle: {
-				'color': '#ff9800'
-			}
-		};
-		for (let item of this.titleList) {
-			if (item.dataName != 'totalOtherPay') {
-				Object.assign(item, obj1, obj2);
-			}
-		}
-		for (let item of this.shoptitleList) {
-			Object.assign(item, obj1);
-		}
+		// let obj1 = {
+		// 	titleStyle: {
+		// 		fontSize: 16 + 'px'
+		// 	}
+		// };
+		// let obj2 = {
+		// 	conStyle: {
+		// 		'color': '#ff9800'
+		// 	}
+		// };
+		// for (let item of this.titleList) {
+		// 	if (item.dataName != 'totalOtherPay') {
+		// 		Object.assign(item, obj1, obj2);
+		// 	}
+		// }
+		// for (let item of this.shoptitleList) {
+		// 	Object.assign(item, obj1);
+		// }
 	},
 	methods: {
 		startTimeChange: function(data) {
@@ -417,6 +449,9 @@ export default {
 					isDay: this.dataId, //按天或详情
 					startTime: parseInt(this.startTime / 1000), //开始时间 
 					endTime: parseInt(this.endTime / 1000), //结束时间
+					depositPlanIds: this.planId.join(','), //方案的IDs
+					max: this.intervalLeft, //充值实付最大
+					min: this.intervalRight //充值实付最小
 				}
 			});
 			if (data) {
@@ -597,7 +632,7 @@ export default {
 					endTime: parseInt(this.endTime / 1000), //结束时间
 					page: this.page,
 					num: this.num,
-					mobile: this.orderNumber
+					mobile: this.orderNumber,
 				}
 			});
 			this.phonetotal = [];
@@ -630,6 +665,11 @@ export default {
 					isExport: 1
 				}
 			});
+		},
+		//组件返回店铺Id
+		backShopId(id) {
+			//console.log(id);
+			this.planId = id;
 		},
 	},
 	mounted: function() {
@@ -666,8 +706,8 @@ export default {
 			import ( /*webpackChunkName: "member_recharges_phone"*/ './member_recharges_phone'),
 		paymentWin: () =>
 			import ( /*webpackChunkName: "payment_win"*/ './payment_win'),
-		selStore: () =>
-			import ( /*webpackChunkName:"el_shopList" */ 'src/components/el_shopList'),	
+		'prepaid-plan': () =>
+			import ( /*webpackChunkName:"prepaid_phone_plan" */ './prepaid_phone_plan.vue'),
 	},
 };
 </script>
@@ -938,7 +978,7 @@ export default {
 		.zw {
 			float: left;
 			width: 119px;
-			height: 42px;
+			height: 40px;
 			margin-right: 28px;
 			line-height: 42px;
 		}
