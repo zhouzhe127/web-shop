@@ -28,17 +28,43 @@
 			</div>
 		</div>
 		<div class="main">
-			<!--table组件-->
-			<tableCom :listName="'调度记录'" :introData="selList" :titleData="titleList" :listWidth="1000" :allTotal="totalPage">
-				<div slot="con-0" slot-scope="props">{{props.index}}</div>
-				<div slot="con-2" slot-scope="props">{{getTime(props.data.productionTime)}}</div>
-				<div slot="con-4" slot-scope="props">{{props.data.surplus}}{{goodsDetail.unit}}</div>
-				<div slot="con-5" slot-scope="props">{{props.data.purchasePrice}}{{goodsDetail.unit}}</div>
-				<div slot="con-6" slot-scope="props">{{props.data.wName}}
-					<template v-if="props.data.wName && props.data.aName">-</template>{{props.data.aName}}</div>
-			</tableCom>
+			<el-table :data="selList" stripe border style="width: 100%" >
+				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+			    </el-table-column>
+			    <el-table-column prop="batchCode" label="批次编号">
+			    </el-table-column>
+			    <el-table-column label="生产日期">
+			    	<template slot-scope="scope">
+			        	{{getTime(scope.row.productionTime)}}
+			      	</template>
+			    </el-table-column>
+			    <el-table-column prop="supplier" label="供应商">
+			    </el-table-column>
+			    <el-table-column label="数量/重量">
+			    	<template slot-scope="scope">
+			        	{{scope.row.surplus}}{{goodsDetail.unit}}
+			      	</template>
+			    </el-table-column>
+			    <el-table-column label="进价">
+			    	<template slot-scope="scope">
+			    		{{scope.row.purchasePrice}}元/{{goodsDetail.unit}}
+			    	</template>
+			    </el-table-column>
+			    <el-table-column label="所属仓库">
+			    	<template slot-scope="scope">
+			    		{{scope.row.wName}}
+			    		<template v-if="scope.row.wName && scope.row.aName">-</template>
+			    		{{scope.row.aName}}
+			    	</template>
+			    </el-table-column>
+		  	</el-table>
 			<div class="page-box">
-				<page-btn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-btn>
+				<el-pagination @current-change="pageChange"
+					:current-page="page"
+					background
+					layout="total,prev, pager, next"
+					:total="count">
+				</el-pagination>
 			</div>
 		</div>
 	</div>
@@ -57,23 +83,13 @@ export default {
 			pageTotal: 1,
 			typeList: ['全部类型', '普通商品', '称重商品'],
 			allGoods: '全部类型',
-			allList: '',
-			selList: '',
+			allList: [],
+			selList: [],
 			gid: '',
 			goodsDetail: '',
 			goodsTitle: '',
 			dateType: ['月', '日', '年'],
-			// table组件涉及的对象
-			titleList: [
-				{titleName:'序号'},
-				{titleName:'批次编码',dataName:'batchCode'},
-				{titleName:'生产日期'},
-				{titleName:'供应商',dataName:'supplier'},
-				{titleName:'数量/重量'},
-				{titleName:'进价'},
-				{titleName:'所属仓库'},
-			],
-			totalPage: 0,
+			count: 0,
 		};
 	},
 	components: {
@@ -88,7 +104,8 @@ export default {
 		}
 		this.$store.commit('setPageTools', [{
 			name: '返回',
-			className: ['back'],
+			className: 'info',
+			type:4,
 			fn: () => {
 				storage.session('warehouseDetailDestroy', true);
 				window.history.go(-1);
@@ -109,11 +126,11 @@ export default {
 				data: obj
 			});
 			this.allList = list;
-			this.totalPage = this.allList.length;
+			this.count = Number(this.allList.length);
 			this.pageTotal = Math.ceil(list.length / this.showNum);
 			this.selList = this.allList.slice(
 				(this.page - 1) * 10,
-				(this.page - 1) * 10 + 10
+				(this.page) * 10
 			);
 		},
 		async getDetail() {
@@ -127,27 +144,18 @@ export default {
 			});
 			this.goodsDetail = data;
 		},
+		indexMethod(index){
+			return 10*(this.page-1)+index+1;
+		},
 		pageChange(page) {
-			this.page = page.page;
+			this.page = page;
 			this.selList = this.allList.slice(
 				(this.page - 1) * 10,
-				(this.page - 1) * 10 + 10
+				(this.page) * 10
 			);
 		},
 		getTime(time) {
 			return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
-		},
-		addCount(num) {
-			num += '';
-			//清除字符串开头的0
-			if(/^0+/.test(num)) num = num.replace(/^0+/, '');
-			//为整数字符串在末尾添加.000
-			if(!/\./.test(num)) num += '.000';
-			//字符以.开头时,在开头添加0
-			if(/^\./.test(num)) num = '0' + num;
-			num += '000'; //在字符串末尾补零
-			num = num.match(/([+-]?)\d+\.\d{3}/)[0];
-			return num;
 		},
 		getString(arr, key) {
 			if(typeof(arr) == 'string' || !arr) {
@@ -171,7 +179,6 @@ export default {
 
 <style lang='less' scoped>
 	.warehouse-lists {
-		// min-width: 1300px;
 		.heander {
 			margin-bottom: 20px;
 			.title {

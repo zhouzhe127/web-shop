@@ -50,7 +50,7 @@
 		<div class="list-box">
 			<el-table
 		    	:data="currentList" stripe border style="width: 100%">
-			    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
+			    <el-table-column type="index" :index="indexMethod" label="序号" width="100">
 			    </el-table-column>
 			    <el-table-column label="操作类型" width="180">
 			    	<template slot-scope="scope">{{scope.row.type==1?'领料':'领料盘库'}}</template>
