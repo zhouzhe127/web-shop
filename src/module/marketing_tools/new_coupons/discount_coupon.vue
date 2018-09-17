@@ -174,6 +174,27 @@
 					</div>
 				</div>
 			</template>
+            <!-- 优惠共享 -->
+            <div class="left ">
+				<div class="text required">
+					优惠共享
+				</div>
+			</div> 
+			<div class="right" style="text-align:left;padding-left:10px;">
+				<select-btn :name='isSharing' :sorts="isSharingList.map(v=>v.name)" :width="190" @selOn="getSharing"></select-btn> 
+                 <div class="and" v-if="isSharingId == 1"> 
+                    <span> 且</span> 
+                    <select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn>
+                </div>  
+                <div class="icon" @click="showText()">
+					<div class="detDiv" v-if="hiddenText">
+						<i class="detI triright"></i>
+                        <h3 class="detH3">
+                            “与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用 “不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受 “不可与其他优惠共享”则也包含“不与会员卡优惠共用”。
+                        </h3> 
+                    </div> 
+                </div>
+            </div>  
 			<!-- 其他设置 -->
 			<div class="set-line" style="float: left;">
 				<div class="title">其他设置</div>
@@ -231,8 +252,9 @@ import utils from 'src/verdor/utils';
 
 export default {
 	data() {
-		return {
+		return{
 			ischain: '', //0 单店 3 品牌
+			hiddenText: false,
 			goodlist: [{ // 判断单品减免和整单减免
 				'typeId': 0,
 				'name': '单品折扣'
@@ -321,7 +343,32 @@ export default {
 			annotation: '', //备注
 			useKnow: '', //使用须知
 			editCoupon: false, //修改的标示
-			shopList: [] //店铺
+			shopList: [], //店铺
+			isSharingId: '',
+			isSharing:'请选择',
+			isSharingList: [
+				{ //是否优惠共享
+					name:'不与其它优惠共享',
+					id: 0
+				},
+				{
+					name:'可与其他优惠共享',
+					id: 1
+				}
+			],
+			concessionSharingId: 0,
+			concessionSharing: '',
+			concessionSharingList: [
+				{ //优惠共享
+					name:'不与会员卡优惠共用',
+					id: 0
+				},
+				{
+					name:'可与会员卡优惠共用',
+					id: 1
+				}
+			],
+			sharingStatus: '',
 		};
 	},
 	props: {
@@ -384,6 +431,23 @@ export default {
 				this.useThresholdId = 1;
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
+			
+			//判断优惠共享更改的状态
+			if (couponDetail.sharingStatus == 0) {
+				this.isSharingId = 0;
+				this.isSharing = '不与其它优惠共享';
+			} else if (couponDetail.sharingStatus == 1) {
+				this.isSharingId = 1;
+				this.concessionSharingId = 0;
+				this.isSharing = '可与其他优惠共享';
+				this.concessionSharing = '不与会员卡优惠共用';
+			} else if (couponDetail.sharingStatus == 2) {
+				this.isSharingId = 1;
+				this.concessionSharingId = 1;
+				this.isSharing = '可与其他优惠共享';
+				this.concessionSharing = '可与会员卡优惠共用';
+			}
+
 			this.annotation = couponDetail.annotation; //备注
 			this.useKnow = couponDetail.useKnow; //使用须知
 
@@ -404,6 +468,9 @@ export default {
 			import ( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
 	},
 	methods: {
+		showText() {
+			this.hiddenText = !this.hiddenText;
+		},
 		tabTypes: function(item, index) { //选择减免方式 整单 单品
 			this.typeId = index;
 		},
@@ -463,6 +530,14 @@ export default {
 		selexpirationTime: function(i) { //领取生效
 			this.validTime = this.validTimeList[i].name; //点击卡类型对应的名字
 			this.validTimeId = this.validTimeList[i].id; //点击卡类型对应的id
+		},
+		getSharing: function (i) {
+			this.isSharing = this.isSharingList[i].name; //点击卡类型对应的名字
+			this.isSharingId = this.isSharingList[i].id; //点击卡类型对应的id
+		},
+		getconcession: function (i) {
+			this.concessionSharing = this.concessionSharingList[i].name;
+			this.concessionSharingId = this.concessionSharingList[i].id;
 		},
 		getResult: function(val) { //使用时间段
 			this.useDate = val;
@@ -646,6 +721,10 @@ export default {
 					return false;
 				}
 			}
+			if (this.isSharingId === '') {
+				this.valiData('请选择优惠券共享方式');
+				return false;
+			}
 			if (this.annotation.length > 20) {
 				this.valiData('备注字数不能大于20');
 				return false;
@@ -680,6 +759,15 @@ export default {
 				obj.billPrice = ''; //入账金额
 				obj.reckoningPrice = ''; //结算金额
 				obj.tastePrice = '';
+				//优惠券共享
+				if (this.isSharingId === 0) {
+					obj.sharingStatus = 0;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
+					obj.sharingStatus = 1;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
+					obj.sharingStatus = 2;
+				}
+
 				if (this.useThresholdId == 0) { //指定门槛金额
 					obj.lowestConsume = 0;
 				} else {
@@ -769,6 +857,60 @@ export default {
 #breakCoupon .type div.selected {
 	background-color: #28a8e0;
 	color: #FFF;
+}
+#breakCoupon .icon{
+    display: inline-block;
+	width: 18px;
+	height: 18px;
+	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
+	position: relative;
+	vertical-align: middle;
+	cursor: pointer;
+}
+#breakCoupon .icon .detDiv {
+	display: inline-block;
+	width: 460px;
+	background: #45404b;
+	position: absolute;
+	top: -10px;
+	left: 35px;
+	padding: 10px;
+	box-shadow: 3px 2px 10px #ccc;
+	z-index: 100;
+}
+#breakCoupon .icon  .detDiv .detI {
+	width: 0;
+	height: 0;
+	line-height: 0;
+	position: absolute;
+	top: 10px;
+	left: -20px;
+	right: 30%;
+	border-width: 10px;
+	border-top: 0px;
+	border-style: solid; 
+	border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
+}
+
+#breakCoupon .icon .detDiv .detH3 {
+	line-height: 22px;
+	color: #e6e6e7;
+}
+
+#breakCoupon .icon .detDiv .triright {
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #45404b;
+	border-left: 10px solid transparent;
+}
+#breakCoupon .and{
+    display: inline-block;
+}
+#breakCoupon .and span{
+    color: #000000;
+    padding:0 10px; 
 }
 
 #breakCoupon .set-line {

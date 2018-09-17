@@ -94,63 +94,64 @@
   color: #29a8e0;
   cursor: pointer;
 }
+#bom-detail .table .scroll-box[data-v-f5eee8a0] {
+  overflow: auto;
+}
 #bom-detail .table .table-head[data-v-f5eee8a0] {
   height: 40px;
+  min-width: 1000px;
   background-color: #f2f2f2;
   overflow: hidden;
 }
-#bom-detail .table .table-head li[data-v-f5eee8a0] {
-  list-style: none;
+#bom-detail .table .table-head span[data-v-f5eee8a0] {
   color: #333;
   height: 40px;
   line-height: 40px;
   font-size: 16px;
   min-width: 100px;
-  width: 19.5%;
-  display: inline-block;
+  width: 14.28%;
+  float: left;
   text-align: center;
   vertical-align: middle;
-  margin-left: -2px;
 }
 #bom-detail .table .table-row[data-v-f5eee8a0] {
+  min-width: 1000px;
   border: 1px solid #f2f2f2;
+  overflow: hidden;
 }
-#bom-detail .table .table-row li[data-v-f5eee8a0] {
-  list-style: none;
+#bom-detail .table .table-row .cell[data-v-f5eee8a0] {
   color: #666666;
   height: 70px;
   line-height: 70px;
   font-size: 14px;
-  display: inline-block;
-  min-width: 100px;
-  width: 19.5%;
+  float: left;
+  width: 14.28%;
   border-bottom: 2px solid #f7f7f7;
   text-align: center;
   vertical-align: middle;
-  margin-left: -2px;
 }
-#bom-detail .table .table-row li[data-v-f5eee8a0]:last-child {
+#bom-detail .table .table-row .cell[data-v-f5eee8a0]:last-child {
   border: none;
 }
-#bom-detail .table .table-row li .unit-div[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div[data-v-f5eee8a0] {
   display: inline-block;
   vertical-align: middle;
   cursor: pointer;
   position: relative;
 }
-#bom-detail .table .table-row li .unit-div .block-btn[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div .block-btn[data-v-f5eee8a0] {
   border: 1px solid #ccc;
   width: 80px;
   height: 40px;
 }
-#bom-detail .table .table-row li .unit-div .unit-trangile[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div .unit-trangile[data-v-f5eee8a0] {
   width: 40px;
   height: 38px;
   font-size: 14px;
   color: #333;
   line-height: 38px;
 }
-#bom-detail .table .table-row li .unit-div .unit[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div .unit[data-v-f5eee8a0] {
   width: 40px;
   height: 38px;
   font-size: 14px;
@@ -161,7 +162,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#bom-detail .table .table-row li .unit-div .trangile[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div .trangile[data-v-f5eee8a0] {
   width: 40px;
   height: 38px;
   font-size: 14px;
@@ -170,13 +171,13 @@
   width: 38px;
   float: right;
 }
-#bom-detail .table .table-row li .unit-div .trangile i[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div .trangile i[data-v-f5eee8a0] {
   border: 6px solid transparent;
   border-top: 10px solid #bbb;
   display: inline-block;
   margin-top: 15px;
 }
-#bom-detail .table .table-row li .unit-div ul[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div ul[data-v-f5eee8a0] {
   background: #fff;
   margin: 0;
   border: 1px solid #ccc;
@@ -188,7 +189,7 @@
   width: 80px;
   background-color: #fff;
 }
-#bom-detail .table .table-row li .unit-div ul li[data-v-f5eee8a0] {
+#bom-detail .table .table-row .cell .unit-div ul li[data-v-f5eee8a0] {
   width: 100% !important;
   display: block;
   padding: 0;
@@ -204,13 +205,13 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-#bom-detail .table .table-row li .unit-div ul li[data-v-f5eee8a0]:last-child {
+#bom-detail .table .table-row .cell .unit-div ul li[data-v-f5eee8a0]:last-child {
   border-bottom: none;
 }
 #bom-detail .table .table-row .area-detail[data-v-f5eee8a0] {
   display: block;
 }
-#bom-detail .table .table-row .area-detail li[data-v-f5eee8a0] {
+#bom-detail .table .table-row .area-detail .area-cell[data-v-f5eee8a0] {
   line-height: 75px;
   text-align: left;
   vertical-align: middle;
@@ -221,7 +222,7 @@
   color: #999999;
   font-size: 16px;
 }
-#bom-detail .table .table-row .area-detail li span[data-v-f5eee8a0] {
+#bom-detail .table .table-row .area-detail .area-cell span[data-v-f5eee8a0] {
   border-radius: 50%;
   display: inline-block;
   height: 33px;

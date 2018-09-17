@@ -1,0 +1,85 @@
+@import url('../warehouse_manage/z_less.less');
+.in-block{
+    margin-bottom:20px;
+    display: inline-block;             
+}
+//箭头
+.arrow{
+    display: inline-block;
+    height: 16px;
+    width: 8px;
+    vertical-align: middle;
+}
+.arrow-up{
+    background: url('../../../res/images/arrow-up.png') no-repeat;
+}
+.arrow-down{
+    background: url('../../../res/images/arrow-down.png') no-repeat;		
+}
+//查看详情
+.view{
+    color:@ey;
+    display: inline-block;
+    height:40px;   
+    line-height: 40px;   
+    cursor: pointer;  
+}
+.view-detail{
+    padding-right: 10px;
+}
+.view-detail-disable{
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.yellow-font{
+    color:#E1BB4A;
+    width: 100%;
+    display: inline-block;
+    cursor: pointer;
+}
+.view-batch{
+    color:@ey;
+    display: inline-block;
+    height:40px;
+}
+.goods-total-log{
+    .search-header{
+        margin-top:20px;
+        width:90%;
+    }
+}
+.footer{
+    margin-top:37px;
+}
+.content{
+    padding-right:100px;
+    width:95%;
+}
+.component{
+    .dialog-content{
+        padding:20px;
+        border-top:1px solid #E4E7ED;
+        display: flex;
+        flex-flow: row nowrap;
+        .column{
+            width:50%;
+            &>div{
+                flex-grow:1;
+                margin-bottom:20px;
+            }
+        }
+        .column-container{
+            display: flex;
+            flex-flow:row nowrap;
+            div{
+                flex: 0 0 auto;
+                p{
+                    padding-bottom:5px;
+                }
+            }
+            .label{
+                padding-right:5px; 
+            }
+        }
+    }
+}

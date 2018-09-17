@@ -10,12 +10,19 @@
   padding: 10px 20px;
   background-color: #eeeeee;
 }
+#suppliesDetaile .headBox .headTitle a[data-v-580d73b3] {
+  font-size: 14px;
+  -webkit-text-decoration: #29a8e0 underline;
+          text-decoration: #29a8e0 underline;
+  color: #29a8e0;
+  cursor: pointer;
+}
 #suppliesDetaile .headBox .innerBox[data-v-580d73b3] {
   padding: 20px 0 20px 40px;
 }
 #suppliesDetaile .headBox .innerBox ul[data-v-580d73b3] {
   display: inline-block;
-  width: 32%;
+  width: 23%;
   vertical-align: top;
 }
 #suppliesDetaile .headBox .innerBox ul li[data-v-580d73b3] {
@@ -32,8 +39,8 @@
 #suppliesDetaile .headBox .search[data-v-580d73b3] {
   display: inline-block;
   position: absolute;
-  top: 160px;
-  right: 0;
+  bottom: 15px;
+  right: 25px;
 }
 #suppliesDetaile .headBox .search .search-btn[data-v-580d73b3] {
   width: 100px;
@@ -57,6 +64,40 @@
   display: inline-block;
   text-align: center;
   border-radius: 5px;
+}
+#suppliesDetaile .area-detail[data-v-580d73b3] {
+  display: block;
+  border: 1px #ccc solid;
+  border-top: none;
+  padding-left: 40px;
+}
+#suppliesDetaile .area-detail li[data-v-580d73b3] {
+  line-height: 75px;
+  text-align: left;
+  vertical-align: middle;
+  display: inline-block;
+  border: none;
+  width: 33.2%;
+  color: #999999;
+  font-size: 16px;
+}
+#suppliesDetaile .area-detail li span[data-v-580d73b3] {
+  border-radius: 50%;
+  display: inline-block;
+  height: 33px;
+  width: 33px;
+  background-color: #f2f2f2;
+  color: #333;
+  vertical-align: middle;
+  line-height: 33px;
+  margin-right: 10px;
+  text-align: center;
+}
+#suppliesDetaile .area-detail li i[data-v-580d73b3] {
+  display: inline-block;
+  width: 65%;
+  line-height: normal;
+  vertical-align: text-top;
 }
 #suppliesDetaile .tebBox[data-v-580d73b3] {
   display: inline-block;

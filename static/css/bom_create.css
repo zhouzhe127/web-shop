@@ -45,7 +45,7 @@
   overflow: hidden;
 }
 #create-bom .consume-list .list .title span[data-v-1469c6db] {
-  width: 17.5%;
+  width: 14%;
   height: 40px;
   line-height: 40px;
   text-align: center;
@@ -63,14 +63,14 @@
   float: left;
   height: 70px;
   line-height: 70px;
-  width: 17.5%;
+  width: 14%;
 }
 #create-bom .consume-list .list .item .unit .handle-btn[data-v-1469c6db] {
   display: inline-block;
   height: 18px;
   vertical-align: middle;
   line-height: normal;
-  padding: 0 15px;
+  padding: 0 10px;
   cursor: pointer;
 }
 #create-bom .consume-list .list .item .unit .delete[data-v-1469c6db] {

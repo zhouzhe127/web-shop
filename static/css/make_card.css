@@ -307,6 +307,7 @@
 	width: 95px;
 	height: 40px;
 	line-height: 40px;
+	margin-right:10px;
 }
 @media screen and (min-width:1024px) and (max-width:1440px) {
 #card-printing .searchBox[data-v-8cf61d22] {

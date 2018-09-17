@@ -25,6 +25,14 @@
 #material-edit .label-content[data-v-10a12775] {
   padding-bottom: 20px;
 }
+#material-edit .label-content .inline-box[data-v-10a12775] {
+  display: inline-block;
+  margin-right: 20px;
+}
+#material-edit .label-content .input-box[data-v-10a12775] {
+  display: inline-block;
+  width: 210px;
+}
 #material-edit .label-content .label[data-v-10a12775] {
   color: #333;
   height: 40px;

@@ -135,6 +135,10 @@
 .calendar .calendar-main .list li.next-month[data-v-793fe74a]:hover {
   color: #999;
 }
+.calendar .calendar-main .list li.active[data-v-793fe74a] {
+  border: 1px solid #ccc;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABOBAMAAAB8hD0uAAAAGFBMVEUAAADzmAH1nhD0nw32ngn1oBLzmADymQB3uszUAAAABnRSTlMAzL3AxbvWyktDAAAA+UlEQVRIx43QwQmEQBQE0UbZFPRsCIZgMmMGM+mvUAFU/4s0PGSo/I5R3Ezu1cBkP7/PskvydP/L/r1wFi7Xawq3nbNyuUfntqNzuVbndn1huGeO1503xHlDHA3d0dAdDdV5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfEeUOcN8R5Q5w3xHlDnDfENQ3Z3pDtDZnekOkNWd6Q5Q0Z3pChDXHeEOcNcd4Q5w1x3hDnDXFFw1R34YqG6e4p3Zby/rodP88jvW/3AAAAAElFTkSuQmCC) #fafafa no-repeat right -70px;
+}
 .calendar .calendar-main .list-day li[data-v-793fe74a] {
   width: 14.28%;
 }
@@ -249,7 +253,6 @@
 }
 .canlandar-multi .content ul li .startOrend {
   bottom: 2px;
-  right: -8px;
   font-size: 8px!important;
   width: 54px;
   color: #FFFFFF;

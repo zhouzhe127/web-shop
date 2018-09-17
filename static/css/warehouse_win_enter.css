@@ -2,16 +2,17 @@
 #house[data-v-9faba02e] {
   padding: 20px;
 }
+#house section[data-v-9faba02e] {
+  width: 100%;
+}
 #house .sousuo input[data-v-9faba02e] {
   width: 180px;
   height: 40px;
-  float: left;
-  margin-left: 80px;
+  display: inline-block;
   margin-bottom: 20px;
-  padding-left: 15px;
-}
-#house .sousuo input[data-v-9faba02e]::-webkit-input-placeholder {
-  padding-left: 5px;
+  padding: 0 10px;
+  margin-right: 20px;
+  border-radius: 4px;
 }
 #house .sousuo .res[data-v-9faba02e] {
   width: 100px;
@@ -39,8 +40,9 @@
 }
 #house .sel[data-v-9faba02e] {
   display: inline-block;
-  width: 180px;
   height: 40px;
+  padding: 0 20px;
+  min-width: 100px;
   font-size: 16px;
   background: #f2f2f2;
   border-radius: 3px;
@@ -57,32 +59,10 @@
   background: #28a8e0;
   color: #fff;
 }
-#house .selectbtns span[data-v-9faba02e] {
-  display: inline-block;
-  width: 180px;
-  height: 40px;
-  line-height: 40px;
-  margin-right: 9px;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  background-color: #f2f2f2;
-}
 #house .dian[data-v-9faba02e] {
-  width: 10px;
   height: 1px;
-  border-top: 1px solid #E1E1E1;
-  margin: 20px 5px;
-  float: left;
-}
-#house .selectbtns[data-v-9faba02e] {
+  border-top: 1px dashed #E1E1E1;
+  margin: 30px 5px;
   width: 100%;
-}
-.selectbtns span[data-v-9faba02e] {
-  width: 180px;
-  height: 40px;
 }
 

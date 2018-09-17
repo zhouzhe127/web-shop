@@ -1,0 +1,1 @@
+module.exports={"path":"memberStoredValueScheme","children":[{"path":"","url":"src/module/marketing_tools/member_store"},{"path":"solution","url":"src/module/marketing_tools/member_store_solution"}]}

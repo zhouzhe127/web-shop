@@ -5,20 +5,21 @@ import {
 } from 'src/config/host_var';
 
 export default {
+    },
 	'getCouponList': { //  获取优惠券列表
-		url: s + 'coupon/getCouponList',
+		url: w + 'coupon/getCouponListData',
 		method: 'get'
 	},
 	'deleteCoupon': { // 删除优惠券
-		url: s + 'coupon/deleteCoupon',
+		url: w + 'coupon/deleteCoupon',
 		method: 'get'
 	},
 	'getCouponById': { // 修改优惠券
-		url: s + 'coupon/getCouponById',
+		url: w + 'Coupon/getCouponDetail',
 		method: 'get'
 	},
 	'editCoupon': { //  编辑优惠券
-		url: s + 'Coupon/editCoupon',
+		url: w + 'Coupon/editCoupon',
 		method: 'post'
 	},
 	'getLossList': { //  获取货品信息
@@ -229,7 +230,7 @@ export default {
 		method: 'get'
 	},
 	'addCoupon': {
-		url: s + 'Coupon/addCoupon',
+		url: w + 'Coupon/addCoupon',
 		method: 'post'
 	},
 	'exportCouponStatics': {
@@ -336,6 +337,14 @@ export default {
 	'newgetActivityDetail': {
 		url: w + 'activityconfig/getActivityDetail', //获取活动列表详情
 		method: 'get'
+	},
+	'deleteStaffScanPay':{
+		url: w + 'Scanpayconfig/deleteStaffScanPay', //刪除員工支付碼
+		method: 'post'
+	},
+	'addStaffScanPay':{
+		url: w + 'Scanpayconfig/addStaffScanPay', //新增員工支付碼
+		method: 'post'
 	},
 	'getSubscribeFansCount': {
 		url: w + 'Activityfans/getSubscribeFansCount', //获取活动粉丝

@@ -2,6 +2,7 @@
 /*这里不需要讲.output-print包裹在样式表最外层，因为print-page将会被提取 移动到body 包裹了.output-print会导致没有样式*/
 .printHtml *[data-v-35ac9ce4] {
   color: #000;
+  font-family: Arial, Verdana, Sans-serif;
 }
 .print-page[data-v-35ac9ce4] {
   width: 714px;
@@ -163,17 +164,18 @@
 .main .list-two .item-two .narrow[data-v-35ac9ce4] {
   width: 10%;
 }
-.main .material .list-two span[data-v-35ac9ce4] {
-  width: 15% !important;
+.main .list-two.brand span[data-v-35ac9ce4] {
+  width: 13% !important;
 }
-.main .material .list-two .narrow[data-v-35ac9ce4] {
-  width: 10% !important;
+.main .list-two.brand .narrow[data-v-35ac9ce4] {
+  width: 9% !important;
 }
 
 /*a4纸的宽度按96dip计算,with:794px,height:1123px*/
 /*这里不需要讲.output-print包裹在样式表最外层，因为print-page将会被提取 移动到body 包裹了.output-print会导致没有样式*/
 .printHtml *[data-v-9e91f5be] {
   color: #000;
+  font-family: Arial, Verdana, Sans-serif;
 }
 .print-page[data-v-9e91f5be] {
   width: 714px;

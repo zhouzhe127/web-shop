@@ -93,6 +93,7 @@
 	height: 168px;
 	resize: none;
 	border-color: #CECDCD;
+	padding:10px;
 }
 #msnmodel .online-box .rightHalf .sample[data-v-52d700a4] {
 	color: #A5A5A5;

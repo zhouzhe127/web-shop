@@ -75,7 +75,6 @@
   margin-left: 5px;
 }
 #purchase-requisition .table-container[data-v-af88fc4a] {
-  padding-bottom: 40px;
   overflow-x: auto;
 }
 #purchase-requisition .table-delete[data-v-af88fc4a] {
@@ -184,7 +183,7 @@
   text-align: center;
 }
 #purchase-requisition .table-footer[data-v-af88fc4a]:after {
-  content: '\672A\9009\62E9\6761\76EE';
+  content: '';
   display: inline-block;
   line-height: 70px;
   color: #666;

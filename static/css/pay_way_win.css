@@ -28,6 +28,7 @@
 /*.............开关...................*/
 #editInfomation .payShowList .switch[data-v-3f5ef7da] {
 	float: left; /*margin-top: 7px;*/
+	line-height: 40px;
 }
 #editInfomation .zxbox[data-v-3f5ef7da] {
 	height: 50px;
@@ -50,7 +51,7 @@
 #upload_file[data-v-3f5ef7da],
 #download_file[data-v-3f5ef7da] {
 	height: 42px;
-	width: 100px;
+	width: 120px;
 	position: absolute;
 	top: 0;
 	z-index: 10;
@@ -91,5 +92,8 @@
 	-moz-transform: translate(-50%, 0);
 	-webkit-transform: translate(-50%, 0);
 	-o-transform: translate(-50%, 0);
+}
+#editInfomation .inputWidth[data-v-3f5ef7da]{
+	width: 220px;
 }
 

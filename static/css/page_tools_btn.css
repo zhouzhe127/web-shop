@@ -48,6 +48,7 @@ a[data-v-5185b6ef] {
   background-color: #22aae0;
   float: left;
   position: relative;
+  margin-left: 5px;
   -webkit-transition: background-color 0.7s;
   transition: background-color 0.7s;
   cursor: pointer;
@@ -296,6 +297,15 @@ a[data-v-5185b6ef] {
 }
 #tools .fd-yellow[data-v-5185b6ef]:hover {
   background: #bd823e;
+}
+#tools .fd-white[data-v-5185b6ef] {
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: solid 1px #b3b3b3;
+  background: #fff;
+  color: #b3b3b3;
 }
 .btn[data-v-5185b6ef] {
   width: 80px;

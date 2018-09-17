@@ -2,31 +2,32 @@
 .print-form[data-v-57144eec] {
 	width: 580px;
 	height: auto;
-	background-color: #f2f2f2;
+	/* background-color: #f2f2f2; */
 	padding: 20px 40px;
 	overflow: hidden;
 	padding-bottom: 100px;
 }
-.print-form label[data-v-57144eec] {
-	width: 100%;
-	overflow: hidden;
+.print-form .labItem[data-v-57144eec] {
+	margin-bottom: 5px;
+	margin-left: 0!important;
+	margin-right: 10px;
 }
-.print-form label span.printName[data-v-57144eec] {
+/* .print-form label span.printName {
 	height: 40px;
 	line-height: 40px;
 	width: 80px;
 	text-align: right;
 	margin-right: 20px;
-}
-.print-form label input.printText[data-v-57144eec] {
+} */
+/* .print-form label input.printText {
 	outline: none;
 	border: none;
 	background-color: #fff;
 	width: 385px;
 	height: 40px;
 	padding-left: 10px;
-}
-.print-form label input[data-v-57144eec]:focus {
+} */
+/* .print-form label input:focus {
 	box-shadow: none;
-}
+} */
 

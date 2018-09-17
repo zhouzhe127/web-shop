@@ -7,14 +7,26 @@
  */
  <template>
 	<section id="picker">
-		<div>
-			<div class="box fl" v-for="(item,index) in pickerList" :key="index">
-				<span class="name">{{item.name}}</span>
-				<span class="num">{{index+1}}</span>
-				<span class="detail" @click="showDetail(item)"><i>查看详情</i></span>
+		<div class="filter">
+			<div class="inline-box">
+				<el-input v-model="name" placeholder="请输入领料人"></el-input>
+			</div>
+			<div class="inline-box">
+				<el-button type="success" @click="search">筛选</el-button>
+				<el-button type="info" @click="reset">重置</el-button>
 			</div>
 		</div>
-		<!-- <pickerDetail v-else @throwWinResult="getResult" :info="item"></pickerDetail> -->
+		<el-table :data="pickerList" stripe border style="width: 100%">
+		    <el-table-column type="index" label="序号" width="150">
+		    </el-table-column>
+		    <el-table-column prop="name" label="领料人">
+		    </el-table-column>
+		    <el-table-column label="操作" fixed="right" width="150">
+		    	<template slot-scope="scope">
+		        	<el-button @click="showDetail(scope.row)" type="text" size="small">查看详情</el-button>
+		      	</template>
+		    </el-table-column>
+	  	</el-table>
 	</section>
  </template>
 
@@ -24,9 +36,11 @@
 	export default {
 		data() {
 			return {
+				allList:[],
 				pickerList: [],
 				isShow: false,
 				item:null,
+				name:'',//领料人
 			};
 		},
 		mounted(){
@@ -50,7 +64,21 @@
 					}
 				}
 				res.unshift(user);
+				this.allList = res;
 				this.pickerList = res;
+			},
+			search(){//搜索
+				let arr = [];
+				for(let item of this.allList){
+					if(item.name.includes(this.name)){
+						arr.push(item);
+					}
+				}
+				this.pickerList = arr;
+			},
+			reset(){//重置
+				this.name = '';
+				this.pickerList = this.allList;
 			},
 			//获取详情
 			showDetail(item){
@@ -66,9 +94,14 @@
 	};
  </script>
 
- <style scoped>
+ <style scoped lang="less">
 	#picker{
-		margin-top: 20px;
+		margin-top: 15px;
+		.filter{margin-bottom: 15px;
+			.inline-box{
+				display: inline-block;margin-right: 10px;
+			}
+		}
 	}
 	#picker .box{
 		width: 300px;

@@ -137,46 +137,43 @@
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
-#select-batch .table .table-head li[data-v-1f7205fd] {
-  list-style: none;
+#select-batch .table .table-head span[data-v-1f7205fd] {
   border-right: 1px solid #ccc;
   height: 40px;
   line-height: 40px;
   color: #333;
   float: left;
   font-size: 14px;
-  width: 13%;
+  width: 11.5%;
   text-align: center;
 }
-#select-batch .table .table-head li[data-v-1f7205fd]:first-child {
-  width: 9%;
+#select-batch .table .table-head span[data-v-1f7205fd]:first-child {
+  width: 8%;
 }
-#select-batch .table .table-head li[data-v-1f7205fd]:last-child {
+#select-batch .table .table-head span[data-v-1f7205fd]:last-child {
   border-right: 0;
 }
 #select-batch .table .table-body[data-v-1f7205fd] {
   height: 320px;
-  overflow: scroll;
+  overflow: auto;
 }
 #select-batch .table .table-body .table-row[data-v-1f7205fd] {
   overflow: hidden;
   border-bottom: 1px solid #ccc;
 }
-#select-batch .table .table-body .table-row li[data-v-1f7205fd] {
-  list-style: none;
+#select-batch .table .table-body .table-row .cell[data-v-1f7205fd] {
   height: 62px;
   line-height: 62px;
   color: #666;
   float: left;
   font-size: 14px;
-  width: 13%;
+  width: 11.5%;
   text-align: center;
-  overflow: hidden;
 }
-#select-batch .table .table-body .table-row li[data-v-1f7205fd]:first-child {
-  width: 9%;
+#select-batch .table .table-body .table-row .cell[data-v-1f7205fd]:first-child {
+  width: 8%;
 }
-#select-batch .table .table-body .table-row li .input-num[data-v-1f7205fd] {
+#select-batch .table .table-body .table-row .cell .input-num[data-v-1f7205fd] {
   width: 100px;
   height: 40px;
   text-indent: 15px;

@@ -188,6 +188,7 @@
   padding: 0 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
 }
 .singleStic .tabList .listData .w3[data-v-25009da7] {
   width: 3%;

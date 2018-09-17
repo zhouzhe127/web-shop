@@ -106,7 +106,6 @@
 }
 #check-material .main[data-v-cc397de4] {
   border: 1px solid #ccc;
-  min-width: 1200px;
 }
 #check-material .main .head[data-v-cc397de4] {
   height: 50px;
@@ -118,9 +117,13 @@
   color: #ff3c04;
   padding: 0 2px;
 }
+#check-material .main .scroll-box[data-v-cc397de4] {
+  overflow: auto;
+}
 #check-material .main .title[data-v-cc397de4] {
   overflow: hidden;
   background: #e6e6e6;
+  min-width: 1300px;
 }
 #check-material .main .title span[data-v-cc397de4] {
   float: left;
@@ -134,6 +137,7 @@
 }
 #check-material .main .list-item[data-v-cc397de4] {
   border-bottom: 1px solid #ddd;
+  min-width: 1300px;
 }
 #check-material .main .list-item .cell[data-v-cc397de4] {
   float: left;

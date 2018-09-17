@@ -1,7 +1,7 @@
 <template>
 	<div class="selectbtns">
-		<span v-for="(item,i) in ownList" :style="styles" :key="i" v-bind:class="{sign:isSelected(i,item) }" v-on:click="clickHandle(i,item)" :title="item.name">{{getValue(item)}}</span>
-		<span v-for="(int,ind) in unlist" class="unsign" :key="ind - 1" :title="int.name">{{getValue(int)}}</span>
+		<span v-for="(item,i) in ownList" :class="{sign_1:isSelected(i,item)}" :style="styles" :key="i" v-on:click="clickHandle(i,item)" :title="item.name"> <i v-bind:class="{sign:isSelected(i,item),nsign:''}"></i>{{getValue(item)}}</span>
+		<span v-for="(int,ind) in unlist" class="unsign" :key="ind - 1" :title="int.name"><i></i>{{getValue(int)}}</span>
 	</div>
 </template>
 <script type="text/javascript">
@@ -17,126 +17,148 @@
 	 */
 
 	export default {
-	    props: ['list', 'selects', 'name', 'keys', 'isradio', 'unlist', 'styles'],
-	    data() {
-	        return {
-	            onSelects: [],
-	            ownList: []
-	        }
-	    },
-	    watch: {
-	        onSelects: function() {
-	            if(this.onSelects&&this.onSelects.length>0) this.$emit('selOn', this.onSelects);
-	        },
-			selects(){
-				this.onSelects = this.selects;
-	        	this.ownList = this.list;
-			}
-	    },
-	    methods: {
-	        getValue: function(item) {
-	            if (this.name) {
-	                return item[this.name];
-	            } else {
-	                return item;
-	            }
-	        },
-	        clickHandle: function(i, item) {
-	            if (this.onSelects) {
-	                //					var id = i;
-	                var id = item.id
-
-	                if (this.keys) {
-	                    [id = i] = [item[this.keys]];
-	                }
-	                var find = false;
-	                for (var i = 0; i < this.onSelects.length; i++) {
-	                    if (this.onSelects[i] + '' == id + '') {
-	                        find = true;
-	                        break;
-	                    }
-	                }
-	                if (find) {
-	                    this.onSelects.splice(this.onSelects.indexOf(id), 1);
-	                } else {
-
-	                    if (this.isradio) {
-	                        this.onSelects.splice(0, 1, id)
-	                    } else {
-	                        this.onSelects.push(id);
-	                    }
-	                }
-	                this.$emit('selOn', this.onSelects);
-	            }
-	        },
-	        isSelected: function(i, item) {
-	            if (this.onSelects) {
-	                var id = item.id
-	                //					var id = i;
-	                if (this.keys) {
-
-
-	                    id = item[this.keys] || i;
-
-	                }
-	                for (var i = 0; i < this.onSelects.length; i++) {
-	                    if (this.onSelects[i] + '' == id + '') {
-	                        return true;
-	                    }
-	                }
-	            }
-	            return false;
-	        }
-	    },
-	    mounted: function() {
-	        this.onSelects = this.selects;
-	        this.ownList = this.list;
-	        //生命周期问题 导致onSelects不会每次都初始化，导致记住了先前选中的值
+		props: ['list', 'selects', 'name', 'keys', 'isradio', 'unlist', 'styles'],
+		data() {
+			return {
+				onSelects: [],
+				ownList: []
+			};
 		},
-	    beforeUpdate: function() {
-	        //每一次数据的更新都会执行该方法
-	        this.onSelects = this.selects;
-	        this.ownList = this.list;
+		watch: {
+			onSelects: function() {
+				if (this.onSelects && this.onSelects.length > 0) this.$emit('selOn', this.onSelects);
+			},
+			selects() {
+				this.onSelects = this.selects;
+				this.ownList = this.list;
+			}
+		},
+		methods: {
+			getValue: function(item) {
+				if (this.name) {
+					return item[this.name];
+				} else {
+					return item;
+				}
+			},
+			clickHandle: function(i, item) {
+				if (this.onSelects) {
+					//et id = i;
+					let id = item.id;
 
-	        //this.onSelects = this.selects所指向的内存是一致的
-	    }
-	}
+					if (this.keys) {
+						[id = i] = [item[this.keys]];
+					}
+					let find = false;
+					for (let i = 0; i < this.onSelects.length; i++) {
+						if (this.onSelects[i] + '' == id + '') {
+							find = true;
+							break;
+						}
+					}
+					if (find) {
+						this.onSelects.splice(this.onSelects.indexOf(id), 1);
+					} else {
+
+						if (this.isradio) {
+							this.onSelects.splice(0, 1, id);
+						} else {
+							this.onSelects.push(id);
+						}
+					}
+					this.$emit('selOn', this.onSelects);
+				}
+			},
+			isSelected: function(i, item) {
+				if (this.onSelects) {
+					let id = item.id;
+					//let id = i;
+					if (this.keys) {
+
+
+						id = item[this.keys] || i;
+
+					}
+					for (let i = 0; i < this.onSelects.length; i++) {
+						if (this.onSelects[i] + '' == id + '') {
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		},
+		mounted: function() {
+			this.onSelects = this.selects;
+			this.ownList = this.list;
+			//生命周期问题 导致onSelects不会每次都初始化，导致记住了先前选中的值
+		},
+		beforeUpdate: function() {
+			//每一次数据的更新都会执行该方法
+			this.onSelects = this.selects;
+			this.ownList = this.list;
+
+			//this.onSelects = this.selects所指向的内存是一致的
+		}
+	};
 </script>
 <style lang="less" scoped>
 	.selectbtns {
-	    width: auto;
-	    height: auto;
-	    overflow: hidden;
+		width: auto;
+		height: auto;
+		overflow: hidden;
 	}
 
 	.selectbtns span {
-	    display: inline-block;
-	    height: 40px;
-	    line-height: 38px;
-	    padding-left: 18px;
-	    padding-right: 18px;
-	    background-color: #FFFFFF;
-	    text-align: center;
-	    cursor: pointer;
-	    margin: 1px;
-	    max-width: 350px;
-	    word-wrap: break-word;
-	    white-space: nowrap;
-	    overflow: hidden;
-	    text-overflow: ellipsis;
-	    vertical-align: middle;
-	    border: 1px solid #ccc;
+		display: inline-block;
+		height: 40px;
+		line-height: 38px;
+		padding-left: 18px;
+		padding-right: 18px;
+		background-color: #FFFFFF;
+		text-align: center;
+		cursor: pointer;
+		margin: 1px;
+		max-width: 350px;
+		word-wrap: break-word;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		vertical-align: middle;
+		border: 1px solid #ccc;
 	}
 
 	.selectbtns span:hover {
-	    background-color: #eeeeee;
+		background-color: #eeeeee;
 	}
-	.sign {
-	    background: url("../res/images/sign.png") right bottom no-repeat;
-	    border-color: #f8941f !important;
-	    color: #f8941f !important;
+
+	.selectbtns i.sign {
+		background: url(../res/images/c-2.png) left center no-repeat;
+		display: inline-block;
+		width: 14px;
+		height: 14px;
+		background-size: 100%;
 	}
+
 	.selectbtns .unsign {
-	    background-color: #918686;
+		background-color: #918686;
+	}
+
+	.selectbtns .sign_1 {
+		border-color: #e9c048 !important;
+		color: #e9c048 !important;
+
+	}
+
+	.selectbtns i {
+		background: url(../res/images/c-1.png) left center no-repeat;
+		border-color: #e9c048 !important;
+		color: #e9c048 !important;
+		display: inline-block;
+		width: 14px;
+		height: 14px;
+		background-size: 100%;
+		float: left;
+		margin-top: 12px;
 	}
 </style>

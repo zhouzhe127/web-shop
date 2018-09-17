@@ -1,4 +1,15 @@
 
+#shipment .input-num[data-v-9d6d0356] {
+  width: 60px;
+  display: inline-block;
+  text-indent: 2px;
+  outline: none;
+  margin-left: 10px;
+}
+#shipment .moveright[data-v-9d6d0356] {
+  position: relative;
+  right: -3px;
+}
 #shipment .topBox .title[data-v-9d6d0356] {
   width: 98%;
   height: 40px;
@@ -63,8 +74,8 @@
 }
 #shipment .tebBox li[data-v-9d6d0356] {
   width: 120px;
-  height: 35px;
-  line-height: 35px;
+  height: 40px;
+  line-height: 40px;
   text-align: center;
   border: 1px orange solid;
   display: inline-block;
@@ -72,6 +83,11 @@
 #shipment .tebBox .active[data-v-9d6d0356] {
   background-color: orange;
   color: #ffffff;
+}
+#shipment .tebBox .piceType[data-v-9d6d0356] {
+  display: inline-block;
+  width: 200px;
+  margin-left: 15px;
 }
 #shipment .inputBox[data-v-9d6d0356] {
   display: -webkit-box;
@@ -100,15 +116,6 @@
   margin-right: 5px;
   line-height: 14px;
 }
-#shipment .inputBox .input-num[data-v-9d6d0356] {
-  width: 60px;
-  height: 40px;
-  text-indent: 2px;
-  outline: none;
-  margin-left: 10px;
-  position: relative;
-  right: -2px;
-}
 #shipment .inputBox .active[data-v-9d6d0356] {
   background-color: #e5e5e0;
 }
@@ -119,7 +126,8 @@
   display: inline-block;
   width: 40px;
   height: 40px;
-  border: 1px #cccccc solid;
+  border: 1px #dcdfe6 solid;
+  border-radius: 0 4px 0 4px;
   text-align: center;
   line-height: 36px;
   border-left: none;
@@ -127,11 +135,19 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+#shipment .boxpice[data-v-9d6d0356] {
+  display: inline-block;
+  width: 100px;
+}
 #shipment .surplusBox[data-v-9d6d0356] {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+#shipment .dispice .slebox[data-v-9d6d0356] {
+  width: 120px;
+  display: inline-block;
 }
 #shipment .line[data-v-9d6d0356] {
   text-decoration: underline;

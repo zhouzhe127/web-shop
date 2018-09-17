@@ -55,55 +55,55 @@ export default {
 			isWin: false, //添加积分商品弹窗
 			editInfos: '', //保存编辑信息
 			titleList: [{
-				titleName: '序号',
-				titleStyle: {
-					width: '100px',
-					flex: 'none'
+					titleName: '序号',
+					titleStyle: {
+						width: '100px',
+						flex: 'none'
+					},
+					dataName: 'id'
 				},
-				dataName: 'id'
-			},
-			{
-				titleName: '商品类型'
-			},
-			{
-				titleName: '商品名称',
-				dataName: 'name'
-			},
-			{
-				titleName: '展示图片',
-				dataName: 'imageName'
-			},
-			{
-				titleName: '创建时间',
-				dataName: 'createTime'
-			},
-			{
-				titleName: '兑换所需积分',
-				dataName: 'price'
-			},
-			{
-				titleName: '兑换所需现金',
-				dataName: 'cash'
-			},
-			{
-				titleName: '库存',
-				dataName: 'inventory'
-			},
-			{
-				titleName: '已兑换数量',
-				dataName: 'exchangeNum'
-			},
-			{
-				titleName: '排序',
-				dataName: 'sort'
-			},
-			{
-				titleName: '状态',
-				dataName: 'status'
-			},
-			{
-				titleName: '操作'
-			}
+				{
+					titleName: '商品类型'
+				},
+				{
+					titleName: '商品名称',
+					dataName: 'name'
+				},
+				{
+					titleName: '展示图片',
+					dataName: 'imageName'
+				},
+				{
+					titleName: '创建时间',
+					dataName: 'createTime'
+				},
+				{
+					titleName: '兑换所需积分',
+					dataName: 'price'
+				},
+				{
+					titleName: '兑换所需现金',
+					dataName: 'cash'
+				},
+				{
+					titleName: '库存',
+					dataName: 'inventory'
+				},
+				{
+					titleName: '已兑换数量',
+					dataName: 'exchangeNum'
+				},
+				{
+					titleName: '排序',
+					dataName: 'sort'
+				},
+				{
+					titleName: '状态',
+					dataName: 'status'
+				},
+				{
+					titleName: '操作'
+				}
 			],
 			allTotal: 100,
 			page: 1,
@@ -293,7 +293,9 @@ export default {
 		addwin: () =>
 			import ( /*webpackChunkName: 'addintegral_win'*/ './addintegral_win'),
 		comTable: () =>
-			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table')
+			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+		calendar: () =>
+			import ( /*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
 	},
 	destroyed() {
 		this.$store.commit('setPageTools', {});
@@ -304,9 +306,6 @@ export default {
 .operate {
 	padding: 0;
 }
-
-
-
 
 
 /* @import url("./warecom"); */
@@ -325,7 +324,6 @@ export default {
 .firstFun {
 	height: 40px;
 	line-height: 40px;
-	float: left;
 	margin-bottom: 15px;
 }
 

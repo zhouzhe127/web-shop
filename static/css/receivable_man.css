@@ -1,10 +1,26 @@
 
-.allList .aSpan[data-v-47863ee2] {
+.allList[data-v-47863ee2] {
+  width: 100%;
+}
+.allList .oBox[data-v-47863ee2] {
+  width: 100%;
+  border: 1px solid #ebeef5;
+  border-bottom: none;
+  padding: 1px;
+  margin: 10px 0;
+}
+.allList .oBox .boxTop[data-v-47863ee2] {
+  height: 50px;
+  line-height: 50px;
+  border-bottom: 1px solid #ebeef5;
+  padding: 0 5px;
+}
+.allList .oBox .boxTop .aSpan[data-v-47863ee2] {
   font-size: 16px;
   color: #fe9200;
   margin-right: 20px;
 }
-.allList .aSpan .aI[data-v-47863ee2] {
+.allList .oBox .boxTop .aSpan .aI[data-v-47863ee2] {
   background: #fe9200;
   display: inline-block;
   width: 16px;
