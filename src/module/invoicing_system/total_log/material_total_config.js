@@ -169,18 +169,11 @@ let config = [
 			"historyDescripe": "点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额。",
 			"batchDescripe": "",
 			"canViewHistory": function(item){
-				let dispatchId = item.other.dispatchId;
+				let dispatchId = Number(item.other.dispatchId);
 				return Boolean(dispatchId);
 			},
-			"canViewBatch": function(item){
-				let dispatchId = item.other.dispatchId;
-				return Boolean(dispatchId);
-			},
+			"canViewBatch": true,
 			"batchClick": function(context,item){
-				let dispatchId = item.other.dispatchId;
-				if(!dispatchId){
-					return;
-				}
 				let obj = {
 					path : '/admin/inventoryManagement/supbranchDetail',
 					query:{
@@ -192,7 +185,7 @@ let config = [
 				context.$router.push(obj);
 			},
 			"historyClick":function(context,item){
-				let dispatchId = item.other.dispatchId;
+				let dispatchId = Number(item.other.dispatchId);
 				if(!dispatchId){
 					return;
 				}
