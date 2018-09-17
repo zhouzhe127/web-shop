@@ -143,6 +143,7 @@ let global = {
 
     hasBaiduMap: null,
     getBaiduMapApi() {
+<<<<<<< HEAD
         if (this.hasBaiduMap) return Promise.resolve();
         return new Promise((resolve, reject) => {
 
@@ -151,6 +152,16 @@ let global = {
 
 
             s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c`;
+=======
+        if(this.hasBaiduMap) return Promise.resolve();
+        return new Promise((resolve,reject)=>{
+            
+            let s = document.createElement("script",true);
+            let proto = window.location.protocol;//判断协议
+            
+            
+            s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c&plugin=AMap.PolyEditor,AMap.CircleEditor`;
+>>>>>>> fb13ad10d6dad6b941259228d49738e337d96f04
 
             document.head.appendChild(s);
 
@@ -194,12 +205,16 @@ let global = {
     //     "pos": "http://v5.ishandian.com.cn/pos/"
     // },
     // qa
+<<<<<<< HEAD
     "host": {
         "shop": "http://v5.qa.ishandian.com.cn/shop/",
         "bc": "http://bc.api.qa.ishandian.com.cn/api/",
         "wx": "http://wx.qa.ishandian.com.cn/api/",
         "pos": "http://v5.qa.ishandian.com.cn/pos/"
     },
+=======
+     "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
+>>>>>>> fb13ad10d6dad6b941259228d49738e337d96f04
     // pre
     // "host": {
     //     "shop": "http://v5pre.ishandian.net/shop/",

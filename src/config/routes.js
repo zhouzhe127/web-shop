@@ -317,7 +317,7 @@ const shopNotice = (resolve) =>
 const boundPublicNumber = (resolve) =>
     import ( /* webpackChunkName:"bound_public_number" */ 'src/module/public_number_configuration/bound_public_number'); //绑定公众号
 const smallProgramBinding = (resolve) =>
-    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/small_program_binding'); //小程序绑定
+    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/program_config/small_program'); //小程序绑定
 const moduleSet = (resolve) =>
     import ( /* webpackChunkName:"module_set" */ 'src/module/public_number_configuration/module_set'); //模板设置
 const menuSet = (resolve) =>
@@ -378,7 +378,9 @@ const freeGoods = (resolve) =>
 const OrderBillList = () =>
     import ( /* webpackChunkName:"order_bill_list" */ 'src/module/statistics/order_bill_list'); //挂账统计
 const Handover = () =>
-    import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接班
+    import ( /* webpackChunkName:"handover_brand" */ 'src/module/statistics/handover_brand'); //交接班统计品牌
+const handoverShop = () =>
+	import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接班统计单店
 const MemberRecharge = () =>
     import ( /* webpackChunkName:"member_recharge" */ 'src/module/statistics/member_recharge/member_recharges'); //会员充值统计
 const reservationManager = (resolve) =>
@@ -468,7 +470,7 @@ const activityFullreduce = () =>
 const activityCoupon = () =>
     import ( /* webpackChunkName:"activity_coupon" */ 'src/module/marketing_tools/new_activity/activity_coupon'); //领券活动   
 const selfHelpMode = () =>
-    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help_mode'); //自助模式
+    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help/self_help_mode'); //自助模式
 const weixinOnfiguration = () =>
     import ( /* webpackChunkName:"weixin_onfiguration" */ 'src/module/marketing_tools/weixin_onfiguration'); //微信首页配置
 const CommentConfig = () =>
@@ -1256,10 +1258,22 @@ export default [{
                     }
                 },
                 {
-                    path: 'handover', //挂账统计
-                    components: {
-                        details_con: Handover
-                    }
+					path: 'handover', //交接班统计
+					components: {
+						details_con: details_con
+					},
+					children: [{
+						path: '',
+						components: {
+							details_con: Handover //品牌
+						}
+					},
+					{
+							path: 'handoverShop', //单店
+							components: {
+								details_con: handoverShop
+							}
+                    }]
                 },
                 {
                     path: 'memberRecharge', //挂账统计

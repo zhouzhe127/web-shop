@@ -7,35 +7,25 @@
 -->
 <template>
 	<section>
-		<div class="picName">
-			<div class="line">
-				<section class="fl">
-					<label class="commodity-name  fl">开启服务费</label>
-					<on-off :status="on" @statusChange="getIsDiscountToggle"></on-off>
-				</section>
-			</div>
-			<div class="line">
-				<section class="fl">
-					<span class="required feeRoute" style="">服务费使用规范</span>
-					<span class="fl">
-						<radioBtn @selOn="doThrowWinResult" :list="list" :index="index" :name='"name"'></radioBtn>
-					</span>
-				</section>
-			</div>
-			<div class="line">
-				<label class="required fl feeSet" style="">服务费费率设置</label>
-				<label>
-					<input type="text" class="input feeInput" :disabled="disabled" v-model="percent" placeholder="输入费率">%
-				</label>
-			</div>
-			<div class="line">
-				<label class="fl feeGoods">选择服务费菜品</label>
-				<span class="fl spanCom">已选择商品:{{goodsLength}}道, 套餐:{{packagesLength}}个</span>
-				<a href="javascript:void(0);" v-on:click="addList" class="addclassify" style="width:180px;">添加关联菜品</a>
-			</div>
-		</div>
+		<el-form label-width="130px">
+			<el-form-item label="开启服务费" >
+				<el-switch v-model="on"  active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+			</el-form-item>
+			<el-form-item required label="服务费使用规范" >
+				<el-radio-group v-model="rule">
+					<el-radio v-for="item in list" :key="item.id" :label="item.id" border>{{item.name}}</el-radio>
+				</el-radio-group>
+			</el-form-item>
+			<el-form-item required label="服务费费率设置" >
+				<el-input :disabled="on?false:true" v-model="percent" maxlength="5" placeholder = "输入费率" style="width:120px;"></el-input>
+				<i>%</i>
+			</el-form-item>
+			<el-form-item label="选择服务费菜品">
+				<span class="fl spanCom" style="margin-right:15px;">已选择商品{{goodsLength}}道,套餐：{{packagesLength}}个</span>
+				<el-button @click="addList" type="primary" style="width:150px;">添加关联菜品</el-button>
+			</el-form-item>
+		</el-form>
 		<el-button @click="keepOn" type="primary" style="width:150px;height:45px;">保存</el-button>
-		<!-- <a href="javascript:void(0);" v-on:click="keepOn" :class="percent!== '' ?'yellow':'gray'" style="margin:10px 0;width:250px;">保存</a> -->
 		<goodListWin v-if="isGoodsShow" @goodListWin="doThrowWinGoods" :goodsIds="goodsIds" :isGoods="true" :packages="packages" :goInName="'isMain'"></goodListWin>
 	</section>
 </template>
@@ -66,7 +56,8 @@ export default {
 			goodsIds: [],
 			packages: [],
 			packagesLength: 0, //关联套餐
-			userData: Object
+			userData: Object,
+			rule:0
 		};
 	},
 	mounted() {
@@ -74,14 +65,6 @@ export default {
 		this.init();
 	},
 	methods: {
-		//开关组件返回
-		getIsDiscountToggle(res) {
-			this.on = res;
-		},
-		//单选组件返回
-		doThrowWinResult(res) {
-			this.index = res;
-		},
 		//获取服务费接口
 		async init() {
 			let res = await http.getServiceCharge({
@@ -94,7 +77,7 @@ export default {
 				this.packagesLength = res.packageIds.length;
 				this.on = Number(res.charge.chargeStatus);
 				this.on = Boolean(this.on);
-				this.index = Number(res.charge.chargeRule);
+				this.rule = Number(res.charge.chargeRule);
 				this.percent = res.charge.chargePercent;
 			}
 		},
@@ -121,7 +104,7 @@ export default {
 						winType: 'alter',
 						content: '服务费率只能为数字，请正确输入'
 					});
-					this.percent = 0;
+					// this.percent = 0;
 					return false;
 				} else if (this.percent*1 > 100 || this.percent*1 < 1) {
 					this.$store.commit('setWin', {
@@ -137,8 +120,8 @@ export default {
 				data: {
 					shopId: this.userData.currentShop.id, //店铺ID
 					status: Number(this.on), //开启服务费 0：不开；1：开
-					rule: Number(this.index), //规则 0：打折前；1：打折后
-					percent: parseInt(this.percent), //服务费率 (0至100)
+					rule: Number(this.rule), //规则 0：打折前；1：打折后
+					percent: this.percent, //服务费率 (0至100)
 					uid: this.userData.user.id, //用户id
 					goodsIds: goodsIds, //商品ID，逗号分隔，例：1,2,3
 					packageIds: packageIds //套餐ID，逗号分隔，例：1,2,3
@@ -156,13 +139,6 @@ export default {
 				});
 			}
 		},
-		ons() {
-			if (!this.on) {
-				this.disabled = true;
-			} else {
-				this.disabled = false;
-			}
-		},
 		//商品点击返回
 		doThrowWinGoods(res, item) {
 			if (res == 'ok') {
@@ -174,79 +150,9 @@ export default {
 			this.isGoodsShow = false;
 		}
 	},
-	watch: {
-		on: 'ons'
-	},
 	components: {
-		onOff: () =>
-			import(/* webpackChunkName:"on_off" */ 'src/components/on_off'),
 		goodListWin: () =>
 			import(/* webpackChunkName:"good_list_win" */ 'src/components/good_list_win'),
-		radioBtn: () =>
-			import(/* webpackChunkName:"radio_btn" */ 'src/components/radio_btn')
 	}
 };
 </script>
-
-<style scoped lang="less" >
-.picName {
-	width: 100%;
-	min-width: 600px;
-	padding-top: 10px;
-	overflow: hidden;
-	.line {
-		display: block;
-		width: 100%;
-		height: 40px;
-		line-height: 40px;
-		margin: 10px 0;
-		float: left;
-		.commodity-name {
-			width: 100px;
-			height: 40px;
-			line-height: 40px;
-			text-align: right;
-			margin-right: 38px;
-		}
-		.feeRoute {
-			display: block;
-			width: 130px;
-			line-height: 40px;
-			margin-right: 10px;
-			float: left;
-		}
-		input {
-			width: 100px;
-			line-height: 25px;
-			padding: 5px;
-			margin: 0;
-		}
-		.feeSet {
-			width: 130px;
-			line-height: 40px;
-			margin-right: 10px;
-		}
-		.feeInput {
-			width: 120px;
-			height: 30px;
-			border: 1px solid #ccc;
-		}
-		.feeGoods {
-			width: 130px;
-			line-height: 40px;
-			margin-right: 10px;
-		}
-		.spanCom {
-			height: 40px;
-			line-height: 40px;
-			text-align: left;
-			margin-right: 10px;
-		}
-	}
-}
-</style>
-<style>
-.picName .line span .selectbtns span {
-	background-color: #f2f2f2;
-}
-</style>

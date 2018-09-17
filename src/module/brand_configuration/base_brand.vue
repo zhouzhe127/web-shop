@@ -440,7 +440,7 @@
 		max-height: 500px;
 		width: 100%;
 		min-width: 500px;
-		border: 1px solid #ccc;
+		border: 1px solid #ebeef5;
 		height: auto;
 		overflow: auto;
 		margin-top: 20px;

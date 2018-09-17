@@ -52,7 +52,13 @@
 							<on-off @statusChange="(val)=> isService = val" :status="isService"></on-off>
 						</div>
 					</div>
-					<div class="win-box">
+					<div class="win-box" v-if="memberInfo && memberInfo.status == '2'">
+						<span class="fl">享有会员价</span>
+						<div class="win-toggle fl">
+							<on-off @statusChange="(val)=> memberPrice = val" :status="memberPrice"></on-off>
+						</div>
+					</div>
+					<div class="win-box" v-if="memberInfo && memberInfo.status != '2'">
 						<span class="fl">升级规则</span>
 						<div class="win-toggle fl">
 							<on-off @statusChange="(val)=> isNext = val" :status="isNext"></on-off>
@@ -121,33 +127,36 @@ export default {
 			isDiscount: false, // 是否开启折扣
 			isService: false, //是否开启免服务费
 			isNext: false, //下个等级
+			memberPrice: false, //粉丝卡 默认享有会员价
 			gradeIndex: null, //等级index
 			gradeCName: '', //选择的等级名称
 			gradeId: null, //等级id
+			levelStatus: '', //默认等级状态 1 基础卡 2 粉丝卡
 			isDefault: false,
 			isDefaultVip: false,
 			fileName: this.wfileName,
 			imgHosts: this.imgHost,
 			gradeWin: false, // 是否显示等级弹框
 			index: [-1],
-			gradeLists: this.gradeList,
+			gradeLists: [],
 			ischain: '',
 			content: '', // 规则内容
 			configure: [], // 支付规则
 			integral: false,
 			result: 0, //积分获取选中的
 			list: [{
-				name: '按比例',
-				id: 0
-			},
-			{
-				name: '按积分规则',
-				id: 1
-			}
+					name: '按比例',
+					id: 0
+				},
+				{
+					name: '按积分规则',
+					id: 1
+				}
 			],
 			cash: '', //积分比例现金
 			point: '', //积分比例积分
-			multiple: '' //倍数
+			multiple: '', //倍数
+
 		};
 	},
 	props: {
@@ -320,7 +329,7 @@ export default {
 				if (this.isDefault == true) {
 					for (let i = 0; i < this.gradeList.length; i++) {
 						if (this.gradeList[i].id != this.gid) {
-							if (this.gradeList[i].status == '1') {
+							if (this.gradeList[i].status == this.levelStatus) {
 								this.validata('已有默认等级,不能再次设置！');
 								return false;
 							}
@@ -351,8 +360,10 @@ export default {
 						content: '确认删除会员等级？',
 						winType: 'confirm',
 						title: '提示信息',
-						callback: str => {
-							str == 'ok' && this.delLevel(); // 删除会员等级配置
+						callback: (res) => {
+							if (res == 'ok') {
+								this.delLevel();
+							}
 						}
 					});
 				} else {
@@ -361,29 +372,31 @@ export default {
 			}
 		},
 		async delLevel() {
+			//console.log('1111')
 			// 删除会员等级
-			if (this.memberInfo.status == '1') {
-				this.validata('该会员等为默认等级,不可删除');
-				return false;
-			} else {
-				let res = await http.delMemberlevel({
-					data: {
-						id: this.gid
-					}
-				});
-				this.$emit('isChangeEdit', {
-					type: 'splice',
-					payload: {
-						data: res
-					}
-				});
-				this.$store.commit('setWin', {
-					content: '删除成功,1秒后关闭窗口！',
-					title: '提示信息',
-					winType: 'alert',
-					timerPowerOff: 1000
-				});
-			}
+			// if (this.memberInfo.status == '1') {
+			// 	this.validata('该会员等为默认等级,不可删除');
+			// 	return false;
+			// } else {
+			//console.log('2222')
+			let res = await http.delMemberlevel({
+				data: {
+					id: this.gid
+				}
+			});
+			this.$emit('isChangeEdit', {
+				type: 'splice',
+				payload: {
+					data: res
+				}
+			});
+			this.$store.commit('setWin', {
+				content: '删除成功,1秒后关闭窗口！',
+				title: '提示信息',
+				winType: 'alert',
+				timerPowerOff: 1000
+			});
+			// }
 		},
 		async addLevel() {
 			// 添加会员等级
@@ -434,6 +447,7 @@ export default {
 						discount: Number(this.isDiscount) == 0 ? '100' : this.discount,
 						isService: Number(this.isService),
 						isNext: Number(this.isNext),
+						isVipPrice: Number(this.memberPrice), //粉丝享有会员价
 						totalCharge: this.totalCharge,
 						nextLevel: this.gradeId,
 						isDefault: Number(this.isDefault),
@@ -461,6 +475,7 @@ export default {
 			this.totalCharge = res.totalCharge;
 			this.isDiscount = Boolean(Number(res.isDiscount));
 			this.isService = Boolean(Number(res.isService));
+			this.levelStatus = res.status; //0 粉丝 1 基础卡
 			this.isDefault = Boolean(Number(res.status));
 			this.isDefaultVip = res.status == '1' ? true : false;
 			let arr = [];
@@ -485,6 +500,7 @@ export default {
 				this.configure = res.interests.split('!#!'); //获取相应的支付规则
 			}
 			this.integral = Boolean(Number(res.isDouble)); //积分是否翻倍
+			this.memberPrice = Boolean(Number(res.isVipPrice)); //粉丝享有会员价
 			this.result = Number(res.pointType); //按比例和按积分规则
 			this.point = res.point; //积分
 			this.cash = res.cash; //现金
@@ -493,6 +509,13 @@ export default {
 		openGrade() {
 			//  选出默认被选中的会员等级
 			this.gradeWin = true;
+			this.gradeLists = [];
+			let membergrade = this.gradeList;
+			for (let item of membergrade) {
+				if (item.status != '2') {
+					this.gradeLists.push(item);
+				}
+			}
 			for (let i = 0; i < this.gradeLists.length; i++) {
 				if (this.gradeLists[i].id == this.gradeId) {
 					this.index = [i];
@@ -509,7 +532,7 @@ export default {
 			//  上传图片
 			let res = await http.fileUpload({
 				data: {
-					type: 7,
+					type: 8,
 					shopId: storage.session('shopId')
 				},
 				formId: 'comForm'

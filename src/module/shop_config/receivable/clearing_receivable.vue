@@ -315,6 +315,7 @@ export default {
 		//每页显示多少行
 		numChange(e){
 			this.num = e;
+			this.currentPage = 1;
 		},
 		//初始化改变表格头部要显示的数据
 		clearDetial() {

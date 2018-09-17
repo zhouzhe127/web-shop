@@ -17,231 +17,215 @@
 				<li v-if="!isBrand">
 					<!--日期选择和搜索框-->
 					<section class="statisticsList fl">
-						<section class="tableListInp">
-							<calendar :pObj="startObj" @throwTime="getStartTime" style="width: 245px;height: 41px;float: left;"></calendar>
-						</section>
+						<el-date-picker
+							v-model="startTime"
+							type="datetime"
+							placeholder="选择日期">
+						</el-date-picker>
+						<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
+						<el-date-picker
+							v-model="endTime"
+							type="datetime"
+							placeholder="选择日期">
+						</el-date-picker>
+						<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 					</section>
-					<span style="float: left; width: 25px;line-height: 40px;text-align: center;">至</span>
-					<section class="statisticsList fl">
-						<section class="tableListInp">
-							<calendar :pObj="endObj" @throwTime="getEndTime" style="width: 245px;height: 41px;float: left;"></calendar>
-						</section>
-					</section>
-					<span class="order-order-searchA" style="margin-right:15px;">
-						<span v-on:click="sreachOrderInDays" class="order-order-search" href="javascript:void(0)"></span>
-					</span>
 				</li>
 				<li v-if="!isBrand" style="line-height: 46px;">
 					<div v-on:click="selectBusinessHours" :class="{'selected':isOpenTime}" style="width:20px;height:20px;cursor: pointer;border:1px solid #28A8E0;margin:13px 10px;float: left;"></div>
 					<span style="font-size: 16px;">按营业时间</span>
 				</li>
-				<li v-if="!isBrand">
-					<span>
-						<input type="text" placeholder="请输入订单号" v-model="orderNumber" maxlength="18" style="height: 40px;line-height: 40px;" />
-						<a class="order-order-searchA" v-on:click="getInfoByOrder">
-							<span class="order-order-search"></span>
-						</a>
-					</span>
-				</li>
-				<li v-if="isBrand">
-					<input type="text" v-model="orderNumber" maxlength="18" placeholder="请输入订单号" style="width:170px;height: 40px;line-height: 40px;float: left;padding-left: 10px;" />
-					<a class="order-order-searchA" v-on:click="getInfoByOrder">
-						<span class="order-order-search"></span>
-					</a>
+				<li>
+					<section class="oDe" style="width:250px;float:left;">
+						<el-input placeholder="请输入订单号" maxlength="18" v-model="orderNumber" clearable class="input-with-select" >
+							<el-button slot="append" icon="el-icon-search" @click="getInfoByOrder"></el-button>
+						</el-input>
+					</section>
 				</li>
 			</ul>
 		</div>
-		<div class="table-container">
-			<section style="height: auto;position: relative;border:1px solid #d2d2d2;box-shadow: 7px 7px 15px #ccc; ">
-				<div class="aLeft">
-					<ul class="aUl" style="background-color: #f2f2f2;">
-						<li class="aLi" style="width: 100px;"></li>
-						<li class="aLi" style="width: 150px;">天数</li>
-					</ul>
-					<ul class="aUl" style="background-color: #ffffff;">
-						<li class="aLi" style="width: 100px;"></li>
-						<li class="aLi" style="color: #F8941F;width:150px;">{{payTotalNum.totalDay}}</li>
-					</ul>
-					<div>
-						<!--时间段里所有订单列表显示 start-->
-						<section style="width:100%;overflow: auto;margin-top:30px;">
-							<div style="width:100%;height:50px;text-align: center;line-height: 50px;border-top: 1px solid #d2d2d2;">订单统计·共
-								<span style="color: red;">{{orderListInDays.length}}</span>条记录</div>
-							<ul class="aUl" style="background-color: #f2f2f2;">
-								<li class="aLi" style="width: 100px;">操作</li>
-								<li class="aLi" style="width: 150px;">日期</li>
-							</ul>
-							<template v-if="orderListInDays.length > 0 " v-for='(item,index) in orderListInDays'>
-								<ul class="aUl" style="background: #ffffff;border-bottom:1px solid #d2d2d2 ;" :key="index">
-									<li class="width100">
-										<a v-on:click="openDayDetial(item.date)" href="javascript:void(0);" style="width: 100%;color: #23b4e9;">查看详情</a>
-									</li>
-									<li class="width150">{{item.date}}</li>
-								</ul>
+		<div>
+			<el-table
+				stripe :row-style ="{color:'#f8941f'}" :header-cell-style = "{'background-color':'#f5f7fa'}" @header-click ="headClick"
+				:data="newpayTotalNum"
+				border
+				style="width: 100%">
+				<el-table-column width="250" align="center" prop="totalDay" label="天数"></el-table-column>
+				<el-table-column min-width = "100" align="center" prop="orderNum" label="订单数"></el-table-column>
+				<el-table-column min-width = "80" align="center" prop="person" label="人数" ></el-table-column>
+				<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="goodsTotalNum" label="商品总数"></el-table-column>
+				<el-table-column min-width = "100" :render-header="renderHeader" show-overflow-tooltip align="center" prop="salesNum" label="销量" ></el-table-column>
+				<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="freeNum" label="赠品总数" ></el-table-column>
+					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="freePrice" label="赠品总额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.freePrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+				<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="returnNum" label="退品总数" ></el-table-column>
+				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="returnPrice" label="退品总额" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.returnPrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" property="discount" label="优惠总额" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.discount).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="orderNum" label="代金券" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.cashCoupon.price).toFixed(2) +'('+scope.row.cashCoupon.num+'张)'}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="profit" label="利润" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.profit).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<template v-for='(item,index) in paymentList'>
+					<el-table-column min-width = "120" show-overflow-tooltip :key="index" align="center" :label="item.paymentName" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(paymentList[index].num).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+				</template>
+				<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="chargePrice" label="服务费" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.chargePrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="change" label="找零" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.change).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="bitPrice" label="系统取整" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.bitPrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" :render-header="renderHeader" align="center" show-overflow-tooltip prop="originalPrice" label="消费总额" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.originalPrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="waitPrice" label="实收总额" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.waitPrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="paymentPrice" label="入账总额" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.paymentPrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" :render-header="renderHeader" align="center" prop="memberRecharge" label="会员充值" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.memberRecharge).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额" >
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.settlePrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+			</el-table>
+			<section style="margin-top:20px;">
+				<el-table
+					stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
+					:data="orderListInDays"
+					border
+					style="width: 100%">
+					<el-table-column fixed width="100" align="center" prop="shopName" label="操作">
+						<template slot-scope="scope">
+							<span style="color:#00AAE7;cursor: pointer;" @click="openDayDetial(scope.row.date)">查看详情</span>
+						</template>
+					</el-table-column>
+					<el-table-column fixed width="150" align="center" prop="date" label="日期"></el-table-column>
+					<el-table-column min-width = "100" align="center" prop="orderNum" label="订单数"></el-table-column>
+					<el-table-column min-width = "80" align="center" prop="person" label="人数" ></el-table-column>
+					<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="goodsTotalNum" label="商品数"></el-table-column>
+					<el-table-column min-width = "100" :render-header="renderHeader" show-overflow-tooltip align="center" prop="salesNum" label="销量" ></el-table-column>
+					<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="freeNum" label="赠品数" ></el-table-column>
+					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="freePrice" label="赠品金额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.freePrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="returnNum" label="退品数" ></el-table-column>
+					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="returnPrice" label="退品金额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.returnPrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" property="discount" label="优惠金额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.discount).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="orderNum" label="代金券" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.cashCoupon.price).toFixed(2) +'('+scope.row.cashCoupon.num+'张)'}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="profit" label="利润" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.profit).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<template v-for='(item,index) in paymentList'>
+						<el-table-column min-width = "120" show-overflow-tooltip :key="index" align="center" :label="item.paymentName" >
+							<template slot-scope="scope">
+								<span>{{parseFloat(scope.row.payLists[index].num).toFixed(2)}}</span>
 							</template>
-							<template v-if="orderListInDays.length == 0">
-								<ul class="" style="background-color: #fff;">
-									<li class="width100"></li>
-									<li class="width150"></li>
-								</ul>
-							</template>
-						</section>
-					</div>
-				</div>
-				<div class="aRight" style="height: auto;padding-left: 250px;overflow: auto;">
-					<section v-bind:style="{width:showWidth + 'px'}">
-						<ul class="aUl" style="background-color: #f2f2f2;">
-							<li class="width70">订单数</li>
-							<li class="width70">人数</li>
-							<li class="width100 detLi">商品总数
-								<detailsDes :title="'该时间段的商品总数包含了订单中所有的商品数量（包括赠品和退品）'"></detailsDes>
-							</li>
-							<li class="width70 detLi">销量
-								<detailsDes :title="'该时间段已销售的数量（不包含退品数）公式：商品总数-退品数=销量'"></detailsDes>
-							</li>
-							<li class="width70">退品数</li>
-							<li class="width100">退品总额</li>
-							<li v-on:click="openDiscount(payTotalNum)" class="width100 detLi">优惠总额
-								<img class="detImg" src="../../res/icon/discount_all.png" />
-							</li>
-							<li class="width100">利润</li>
-							<template v-if='payLsZero'>
-								<template v-for='item in allPayList'>
-									<li class="width100 overHid" v-if="!isZero(item.id)" :key="item.id">{{item.paymentName}}</li>
-								</template>
-							</template>
-							<li class="width100">找零</li>
-							<li class="width100">系统取整</li>
-							<!--营业额-->
-							<li v-if="status !== 3" class="width100 detLi">消费总额
-								<detailsDes :title="'该时段内所有商品原价的金额总计（不计入退品金额）'"></detailsDes>
-							</li>
-							<li class="width100 ">实收总额</li>
-							<li v-if="status == 3 && payTotalNum && payTotalNum.waitPrice*1 != 0" class="width100">未结账金额</li>
-							<li class="width100 detLi">入账总额
-								<detailsDes :title="'该时间段中实际收入的金额（不计入未入实账的支付方式的金额）'"></detailsDes>
-							</li>
-							<li class="width100 detLi">会员充值
-								<detailsDes :title="'该时段内会员充值总计(不计入消费总额及入账总额中)'"></detailsDes>
-							</li>
-							<li class="width100 detLi">挂账结清金额
-								<!-- <detailsDes :title="'该时段内会员充值总计(不计入消费总额及入账总额中)'"></detailsDes> -->
-							</li>
-						</ul>
-						<!--取出总计数组里面的数据-->
-						<ul style="color: #333333;overflow: hidden;width:100%;background: #ffffff;" class="order-content-show">
-							<li style="color: #F8941F;" class="width70">{{payTotalNum.orderNum}}</li>
-							<li style="color: #F8941F;" class="width70">{{payTotalNum.person}}</li>
-							<li style="color: #F8941F;" class="width100">{{payTotalNum.goodsTotalNum}}</li>
-							<li style="color: #F8941F;" class="width70">{{payTotalNum.salesNum}}</li>
-							<li style="color: #F8941F;" class="width70">{{payTotalNum.returnNum}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.returnPrice).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.discount).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.profit).toFixed(2)}}</li>
-							<template v-if='payLsZero'>
-								<template v-for='item in payTotalNum.paymentList'>
-									<li style="color: #F8941F;" class="width100" v-if="!isZero(item.id)" :key="item.id">{{parseFloat(item.num).toFixed(2)}}</li>
-								</template>
-							</template>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.change).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.bitPrice).toFixed(2)}}</li>
-							<li v-if="status !== 3" style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.originalPrice).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.waitPrice).toFixed(2)}}</li>
-							<li v-if="status == 3 && payTotalNum && payTotalNum.waitPrice*1 != 0" style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.waitPrice).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.paymentPrice).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.memberRecharge).toFixed(2)}}</li>
-							<li style="color: #F8941F;" class="width100">{{parseFloat(payTotalNum.settlePrice).toFixed(2)}}</li>
-						</ul>
-					</section>
-					<!--总的列表-->
-					<div v-bind:style="{width:showWidth + 'px'}">
-						<section style="width:100%;overflow: auto;margin-top:30px;">
-							<div style="width:100%;height:50px;border-top: 1px solid #d2d2d2;"></div>
-							<!--时间段里所有订单列表显示 start-->
-							<ul style="background-color: #f2f2f2;">
-								<li class="width70">订单数</li>
-								<li class="width70">人数</li>
-								<!--商品数量-->
-								<li class="width100 detLi">商品总数
-									<detailsDes :title="'该日商品总数包含了订单中所有的商品数量（包括赠品和退品）'"></detailsDes>
-								</li>
-								<!--销量-->
-								<li class="width70 detLi">销量
-									<detailsDes :title="'该日已销售的数量（不包含退品数）公式：商品总数-退品数=销量'"></detailsDes>
-								</li>
-								<li class="width70">赠品数</li>
-								<li class="width100">赠品金额</li>
-								<li class="width70">退品数</li>
-								<li class="width100">退品金额</li>
-								<!--优惠金额-->
-								<li class="width100 detLi">优惠总额
-									<detailsDes :title="'该日所有的优惠金额总计'"></detailsDes>
-								</li>
-								<li class="width100">代金券</li>
-								<li class="width100">利润</li>
-								<template v-if='payLsZero'>
-									<template v-for='item in allPayList'>
-										<li class="width100 overHid" v-if="!isZero(item.id)" :key="item.id">{{item.paymentName}}</li>
-									</template>
-								</template>
-								<li class="width100">找零</li>
-								<li class="width100">系统取整</li>
-								<!--消费金额-->
-								<li class="width100 detLi">消费金额
-									<detailsDes :title="'该日所有商品原价的金额总计（不计入退品金额）'"></detailsDes>
-								</li>
-								<li class="width100">实收金额</li>
-								<li class="width100 detLi">入账金额
-									<detailsDes :title="'该日实际收入的金额（不计入未入实账的支付方式的金额）'"></detailsDes>
-								</li>
-								<li class="width100 detLi">挂账结清金额
-									<!-- <detailsDes :title="'该时段内会员充值总计(不计入消费总额及入账总额中)'"></detailsDes> -->
-								</li>
-							</ul>
-							<!--订单列表存在数据就显示-->
-							<template v-if="orderListInDays.length > 0 ">
-								<template v-for='(item,index) in orderListInDays'>
-									<ul :key="index" style="overflow: hidden;width:100%;background: #ffffff;border-bottom: 1px solid #d2d2d2;">
-										<li class="width70">{{item.orderNum}}</li>
-										<li class="width70">{{item.person}}</li>
-										<li class="width100">{{item.goodsTotalNum}}</li>
-										<li class="width70">{{item.salesNum}}</li>
-										<li class="width70">{{item.freeNum}}</li>
-										<li class="width100">{{parseFloat(item.freePrice).toFixed(2)}}</li>
-										<li class="width70">{{item.returnNum}}</li>
-										<li class="width100">{{parseFloat(item.returnPrice).toFixed(2)}}</li>
-										<li class="width100">{{parseFloat(item.discount).toFixed(2)}}</li>
-										<li class="width100" :title="parseFloat(item.cashCoupon.price).toFixed(2) +'('+item.cashCoupon.num+'张)'" style="cursor: pointer;vertical-align: middle;text-overflow: ellipsis; white-space: nowrap;overflow: hidden;">{{parseFloat(item.cashCoupon.price).toFixed(2) +'('+item.cashCoupon.num+'张)'}}</li>
-										<li class="width100">{{parseFloat(item.profit).toFixed(2)}}</li>
-										<template v-if='payLsZero'>
-											<template v-for='pay in item.paymentList'>
-												<li class="width100" :key="pay.id" v-if="!isZero(pay.id)">{{parseFloat(pay.num).toFixed(2)}}</li>
-											</template>
-										</template>
-										<li class="width100">{{parseFloat(item.change).toFixed(2)}}</li>
-										<li class="width100">{{parseFloat(item.bitPrice ).toFixed(2)}}</li>
-										<li class="width100">{{parseFloat(item.originalPrice).toFixed(2)}}</li>
-										<li class="width100">{{parseFloat(item.waitPrice).toFixed(2)}}</li>
-										<li class="width100">{{parseFloat(item.paymentPrice).toFixed(2)}}</li>
-										<li class="width100">{{parseFloat(item.settlePrice).toFixed(2)}}</li>
-									</ul>
-								</template>
-							</template>
-							<ul v-else style="width:100%;height: 50px;">
-								<li style="color:orange; text-align:left;width: 100%;padding-left:200px ;">该时间段并没有订单数据</li>
-							</ul>
-						</section>
-					</div>
-					<!--显示当天的所有订单 end-->
-				</div>
+						</el-table-column>
+					</template>
+					<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="chargePrice" label="服务费" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.chargePrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="change" label="找零" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.change).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="bitPrice" label="系统取整" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.bitPrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" :render-header="renderHeader" align="center" show-overflow-tooltip prop="originalPrice" label="消费金额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.originalPrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="waitPrice" label="实收总额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.waitPrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="paymentPrice" label="入账金额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.paymentPrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额" >
+						<template slot-scope="scope">
+							<span>{{parseFloat(scope.row.settlePrice).toFixed(2)}}</span>
+						</template>
+					</el-table-column>
+				</el-table>
 			</section>
+			
 		</div>
 		<!--分页-->
-		<div>
+		<div style="margin:20px 0;">
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="allDayPage.page" :page-count="allDayPage.pageNum" :page-size = "allDayPage.num" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
-		<div style="float: left;margin-left: 30px;margin-top:20px;">
+		<!-- <div style="float: left;margin-left: 30px;margin-top:20px;">
 			<pageElement @pageNum="getOrderListMonPage" :page="allDayPage.page+1" :total="allDayPage.pageNum" :num="allDayPage.num" :isNoJump='true'></pageElement>
-		</div>
+		</div> -->
 		<!-- <div class="order-operation">
 			<div style="">
 				<a v-on:click='exportOrder($event)' :href="exportUrl" class="blue" style="width:100px;text-align: center;height: 40px;line-height: 40px;">导出</a>
@@ -260,39 +244,103 @@ import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
-			userData: {},
+			// userData: {},
 			dataDetial: {},
 			orderMore: {},
 			titleDetial: {},
 			order: {},
 			shopId: '',
 			isBrand: '', //品牌判断
-			startTime: '', //日期组件的开始时间
-			endTime: '', //日期组件的结束时间
-			newStartTime: '', //点击日历组件获取的开始时间
-			newEndTime: '', //点击日历组件获取的结束时间
+			startTime: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
+			endTime: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
 			allDayPage: {
-				page: 0,
+				page: 1,
 				num: 10,
 				pageNum: 1
 			}, //多天分页信息
 			isOpenTime: '', //是否按营业时间，默认 false 0 否
 			orderNumber: null, //订单号
 			payTotalNum: {}, //当天或者多天的数据总和
+			newpayTotalNum:[],//当天或者多天的数据总和
 			orderListInDays: [], //时间段内每天的订单列表
-			showWidth: 2140, //长度
+			// showWidth: 2140, //长度
 
-			payLsZero: false, //所有的支付方式是否显示
+			// payLsZero: false, //所有的支付方式是否显示
 			status: 4, //订单状态(3:未结账，4 ： 已结账， 6 ： 挂账)
 			exportUrl: 'javascript:void(0);',
-			isZeroPays: [], //支付方式和为0的列表
+			// isZeroPays: [], //支付方式和为0的列表
 			preferentialBounced: false, //优惠弹框
 			title: null, //优惠详情的弹框标题
-			startObj: {},
-			endObj: {}
+			// startObj: {},
+			// endObj: {},
+			paymentList: [{num:0,paymentName:''}],
 		};
 	},
 	methods: {
+		renderHeader(h,{column,$index}){
+			let titleName = "";
+			let label = column.label;
+			let property = column.property;
+			if(label == "商品总数" && property == "goodsTotalNum"){
+				titleName = '该时间段的商品总数包含了订单中所有的商品数量（包括赠品和退品）';
+			}if(label=="商品数"&&property=="goodsTotalNum"){
+				titleName = '该日的商品数包含了订单中所有的商品数量（包括赠品和退品）';
+			}else if(label=="销量"&&property=="salesNum"){
+				titleName = '该时间段已销售的数量（不包含退品数）公式：商品总数-退品数=销量';
+			}else if(label=="优惠总额"&&property=="discount"){
+				return h("div", [
+					h("span",{},column.label),
+					// h("el-popover", {}, [
+						h("span", {
+							class: 'el-icon-document',
+							slot:"reference",
+							style: 'font-size: 18px;margin-left:5px;',
+						})
+					// ])
+				]);
+			}else if(label=="优惠金额"&&property=="discount"){
+				titleName = '该日所有的优惠金额总计';
+			}else if(label=="消费总额"&&property=="originalPrice"){
+				titleName = '该时段内所有商品原价的金额总计（不计入退品金额）';
+			}else if(label=="消费金额"&&property=="originalPrice"){
+				titleName = '该日内所有商品原价的金额总计（不计入退品金额）';
+			}else if(label=="入账总额"&&property=="paymentPrice"){
+				titleName = '该时间段中实际收入的金额（不计入未入实账的支付方式的金额）';
+			}else if(label=="入账金额"&&property=="paymentPrice"){
+				titleName = '该日中实际收入的金额（不计入未入实账的支付方式的金额）';
+			}else if(label=="会员充值"&&property=="memberRecharge"){
+				titleName = '该时段内会员充值总计(不计入消费总额及入账总额中)';
+			}else{
+
+			}
+			return h("div", [
+				h("span",{},column.label),
+				h("el-popover", {
+					attrs: {
+						class: "item",
+						effect: "dark",
+						content: titleName,
+						placement: "bottom",
+						width:'300',
+						// on:{
+						// 	click:this.abc(column)
+						// }
+					}
+				}, [
+					h("span", {
+						class: 'el-icon-question',
+						slot:"reference",
+						style: 'font-size: 18px;margin-left:5px;',
+						// title:"标题",
+					})
+				])
+			])
+		},
+		headClick(column){
+			if(column.label=="优惠总额"&&column.property=="discount"){
+				this.openDiscount(this.payTotalNum);
+			}
+		},
 		initBtn(flag) {
 			let arr = [];
 			if (!flag) {
@@ -337,8 +385,8 @@ export default {
 			let detial = {}; //要传的数据
 			detial = {
 				name: 'takeout', //外卖的关键表示
-				startTime: this.startTime,
-				endTime: this.endTime,
+				startTime: new Date(this.startTime).getTime(),
+				endTime: new Date(this.endTime).getTime(),
 				isOpenTime: this.isOpenTime
 			};
 			storage.session('orderTakeout', detial);
@@ -354,46 +402,41 @@ export default {
 				query: this.$route.query
 			});
 		},
-		//选择开始时间
-		getStartTime: function(receiveTime) {
-			this.newStartTime = receiveTime;
-		},
-		//选择结束时间
-		getEndTime: function(receiveTime) {
-			this.newEndTime = receiveTime;
-		},
 		//转化时间戳，兼容谷歌 IE
-		getTime: function(day) {
-			let re = /(\d{4})(?:-(\d{1,2})(?:-(\d{1,2}))?)?(?:\s+(\d{1,2}):(\d{1,2}):(\d{1,2}))?/.exec(
-				day
-			);
-			return (
-				new Date(
-					re[1],
-					(re[2] || 1) - 1,
-					re[3] || 1,
-					re[4] || 0,
-					re[5] || 0,
-					re[6] || 0
-				).getTime() / 1000
-			);
-		},
+		// getTime: function(day) {
+		// 	let re = /(\d{4})(?:-(\d{1,2})(?:-(\d{1,2}))?)?(?:\s+(\d{1,2}):(\d{1,2}):(\d{1,2}))?/.exec(
+		// 		day
+		// 	);
+		// 	return (
+		// 		new Date(
+		// 			re[1],
+		// 			(re[2] || 1) - 1,
+		// 			re[3] || 1,
+		// 			re[4] || 0,
+		// 			re[5] || 0,
+		// 			re[6] || 0
+		// 		).getTime() / 1000
+		// 	);
+		// },
 		//时间戳转年月日
 		timeToday: function(time) {
 			return utils.format(new Date(time), 'yyyy年MM月dd日');
 		},
 		//选择时间查询订单
 		sreachOrderInDays: function() {
-			let timer = 3 * 31 * 24 * 60 * 60 * 1000;
-			if (this.newEndTime - this.newStartTime > timer) {
+			let timer = 3 * 30 * 24 * 60 * 60 * 1000;
+			this.startTime = new Date(this.startTime).getTime()
+			this.endTime = new Date(this.endTime).getTime()
+			if (this.endTime - this.startTime > timer) {
 				this.$store.commit('setWin', {
 					title: '操作提示',
 					content: '最大只能查询三个月时间!'
 				});
+				// this.startTime = this.endTime - timer + 24 * 60 * 60 * 1000 + 1000;
 				return false;
 			} else if (
-				parseInt(this.newStartTime / 1000) -
-					parseInt(this.newEndTime / 1000) >
+				parseInt(this.startTime / 1000) -
+					parseInt(this.endTime / 1000) >
 				0
 			) {
 				this.$store.commit('setWin', {
@@ -402,11 +445,8 @@ export default {
 				});
 				return false;
 			}
-			this.startTime = this.newStartTime;
-			this.endTime = this.newEndTime;
-			this.allDayPage.page = 0; //搜索日期按钮，页数为0
+			this.allDayPage.page = 1; //搜索日期按钮，页数为0
 			this.getOrderListInDays();
-			this.isZero();
 		},
 		//点击按营业时间
 		selectBusinessHours: function() {
@@ -460,14 +500,8 @@ export default {
 		},
 		//获取时间段内 订单列表
 		async getOrderListInDays() {
-			let startTime =
-				this.throwTime == null
-					? new Date(this.startTime)
-					: new Date(this.throwTime);
-			let endTime =
-				this.throwTime == null
-					? new Date(this.endTime)
-					: new Date(this.throwTime);
+			let startTime =new Date(this.startTime).getTime();
+			let endTime =new Date(this.endTime).getTime();
 			this.startH = utils.format(startTime, 'hh');
 			this.startM = utils.format(startTime, 'mm');
 			this.startS = utils.format(startTime, 'ss');
@@ -489,49 +523,46 @@ export default {
 					trueShopId: this.dataDetial
 						? this.dataDetial.itemDetial.shopId
 						: this.shopId,
-					startTime: parseInt(this.startTime / 1000),
-					endTime: parseInt(this.endTime / 1000),
+					startTime: parseInt(startTime / 1000),
+					endTime: parseInt(endTime / 1000),
 					isOpenTime: Number(this.isOpenTime),
-					page: this.allDayPage.page + 1,
+					page: this.allDayPage.page,
 					num: this.allDayPage.num
 				}
 			});
-			let ArrZero = [];
-			let ArrAllPayList = [];
 			let ArrNoZero = [];
+			this.newpayTotalNum = [];
 			if (res && res.total && res.total.paymentList) {
 				this.payTotalNum = res.total;
+				this.newpayTotalNum.push(this.payTotalNum);
 				this.allDayPage.pageNum = res.pageNum;
 				this.orderListInDays = res.list;
 				//对支付方式为0的进行操作
 				let arr = res.total.paymentList;
 				for (let i = 0; i < arr.length; i++) {
 					if (arr[i].num == 0) {
-						ArrZero.push(arr[i].id);
-						ArrAllPayList.push(arr[i]);
-					} else if (arr[i].num > 0) {
+
+					} else if(arr[i].paymentName =='该支付方式被删除'){
+						arr.splice(i,1);
+						i--;
+					}else if (arr[i].num > 0) {
 						ArrNoZero.push(arr[i]);
-						this.payLsZero = true;
 					}
 				}
-				this.isZeroPays = ArrZero;
-				this.allPayList = ArrNoZero;
-				this.showWidth = ArrNoZero.length * 100 + 1620;
-			}
-		},
-		//对支付金额为0的支付方式做处理
-		isZero: function(id) {
-			let arr = this.isZeroPays;
-			let obj = {};
-			for (let i = 0; i < arr.length; i++) {
-				if (!obj[arr[i]]) {
-					obj[arr[i]] = '110';
+				this.paymentList = ArrNoZero;
+				for (let i = 0; i < res.list.length; i++) {
+					this.$set(res.list[i],'payLists',[]);
+					let listItem = res.list[i];
+					for(let j=0;j<listItem.paymentList.length;j++){
+						let payitem = listItem.paymentList[j];
+						for(let m=0;m<ArrNoZero.length;m++){
+							if(payitem.paymentName == ArrNoZero[m].paymentName && payitem.id == ArrNoZero[m].id){
+								res.list[i].payLists.push(payitem);
+							}
+						}
+					}
 				}
-			}
-			if (obj[id]) {
-				return true;
-			} else {
-				return false;
+				// console.log(res.list);
 			}
 		},
 		//打开优惠详情
@@ -560,17 +591,6 @@ export default {
 			if (res) {
 				this.preferentialBounced = false;
 			}
-		},
-		//获得所有的支付方式
-		async getAllPayList() {
-			let res = await http.getCondition({
-				data: {
-					trueShopId: this.dataDetial
-						? this.dataDetial.itemDetial.shopId
-						: this.shopId
-				}
-			});
-			this.allPayList = res.paymentList;
 		},
 		init: function() {
 			//如果存在从品牌进入、单天返回则请求多天接口，else进行时间判断
@@ -607,7 +627,6 @@ export default {
 						allDayPage: this.allDayPage //多天分页信息
 					};
 					storage.session('orderOne', detial);
-					// global.orderData.orderOne = detial;
 					this.$router.push({
 						path: '/admin/orderStatistics/orderOne',
 						query: this.$route.query
@@ -719,10 +738,13 @@ export default {
 				}
 			});
 		},
-		//天数数据翻页效果,展示当前页
-		getOrderListMonPage: function(res) {
-			this.allDayPage.num = res.num;
-			this.allDayPage.page = res.page - 1;
+		numChange(res){
+			this.allDayPage.num = res;
+			this.allDayPage.page = 1;
+			this.getOrderListInDays();
+		},
+		pageClick(res){
+			this.allDayPage.page = res;
 			this.getOrderListInDays();
 		},
 		//通过多天的查看详情进入当天页面
@@ -764,10 +786,8 @@ export default {
 	},
 	mounted() {
 		let userData = storage.session('userShop');
-		// let token;
 		let shopId;
 		if (userData && userData.accessToken && userData.currentShop) {
-			// token = userData.accessToken;
 			shopId = userData.currentShop.id;
 		}
 
@@ -775,7 +795,7 @@ export default {
 		let endTime = new Date().setHours(23, 59, 59, 999);
 		let isOpenTime = true;
 		let allDayPage = {
-			page: 0,
+			page: 1,
 			num: 10,
 			pageNum: 1
 		};
@@ -817,8 +837,6 @@ export default {
 		}
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.newStartTime = startTime;
-		this.newEndTime = endTime;
 		this.isOpenTime = isOpenTime;
 		this.dataDetial = dataDetial;
 		this.orderMore = orderMore;
@@ -827,9 +845,6 @@ export default {
 		this.isBrand = userData.currentShop.ischain == '3' ? true : false;
 		this.allDayPage = allDayPage;
 		this.shopId = shopId;
-		this.startObj = { time: this.startTime };
-		this.endObj = { time: this.endTime };
-		// this.getAllPayList(); //获取所有的支付方式
 		console.log('走了多日界面');
 		this.init(); //获取当前时间段内的所有数据
 		sessionStorage.removeItem('orderTakeout');
@@ -838,14 +853,14 @@ export default {
 		this.initBtn();
 	},
 	components: {
-		calendar: () =>
-			import(/*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
+		// calendar: () =>
+		// 	import(/*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
 		orderWin: () =>
 			import(/*webpackChunkName: "order_win"*/ 'src/module/statistics/order_win'),
-		detailsDes: () =>
-			import(/*webpackChunkName: "details_des"*/ 'src/components/details_des'),
-		pageElement: () =>
-			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element')
+		// detailsDes: () =>
+		// 	import(/*webpackChunkName: "details_des"*/ 'src/components/details_des'),
+		// pageElement: () =>
+		// 	import(/*webpackChunkName:"page_element"*/ 'src/components/page_element')
 	}
 };
 </script>
@@ -861,201 +876,6 @@ export default {
 .order-order-data ul li {
 	float: left;
 	margin-right: 20px;
-	height: 46px;
-}
-
-.order-order-data ul li span input {
-	width: 174px;
-	height: 43px;
-	text-align: center;
-	border: 1px solid #b3b3b3;
-	float: left;
-}
-
-.order-order-searchA,
-.order-order-search {
-	display: inline-block;
-	// float: left;
-	width: 40px;
-	height: 40px;
-	background-color: #29a7e1;
-	cursor: pointer;
-}
-
-.order-order-search {
-	background: url(../../res/images/search.png) center center no-repeat;
-}
-
-.order-order-searchA:hover {
-	background-color: #1878a5;
-	transition: background-color ease-in-out 0.2s;
-}
-
-.order-order-searchA:active {
-	background-color: #154961;
-}
-
-.detLi {
-	position: relative;
-	cursor: pointer;
-}
-
-.detLi .detImg {
-	position: absolute;
-	right: 0px;
-	top: 15px;
-}
-
-.detLi .detDiv {
-	width: 250px;
-	height: 80px;
-	position: absolute;
-	top: 45px;
-	right: 0;
-	padding: 10px;
-	box-shadow: 3px 2px 10px #ccc;
-	z-index: 9;
-	background-color: #45404b;
-}
-
-.detLi .detDiv .detI {
-	width: 0;
-	height: 0;
-	line-height: 0;
-	position: absolute;
-	top: -10px;
-	right: 20px;
-	border-width: 10px;
-	border-top: 0px;
-	border-style: solid;
-	border-color: #e6e6e6 #e6e6e6 #45404b #e6e6e6;
-}
-
-.detLi .detDiv .detH3 {
-	height: 30px;
-	line-height: 30px;
-	color: #818181;
-	text-align: left;
-	color: #e6e6e7;
-}
-
-.order-operation {
-	position: absolute;
-	right: 60px;
-	top: 10px;
-	z-index: 2;
-	width: 400px;
-	height: 44px;
-}
-
-.order-operation div {
-	display: inline-block;
-	width: 100px;
-	height: 40px;
-	// float: right;
-	margin-left: 10px;
-	line-height: 38px;
-	text-align: center;
-}
-
-.statistics-order {
-	width: 100%;
-	overflow-y: auto;
-	height: auto;
-}
-
-.width70 {
-	width: 70px;
-}
-
-.width100 {
-	width: 100px;
-}
-
-.width150 {
-	width: 150px;
-}
-
-.width200 {
-	width: 200px;
-}
-
-#statistics-order .tableListInp {
-	color: #666666;
-	height: 43px;
-	cursor: pointer;
-	box-sizing: border-box;
-}
-
-#statistics-order .tableListInp div {
-	width: 41px;
-	height: 41px;
-	position: relative;
-	z-index: 5;
-	/*border: #b3b3b3 solid 1px; */
-}
-
-#statistics-order .tableListInp div i {
-	height: 10px;
-	width: 10px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -5px;
-	margin-left: -5px;
-	border-top: 10px solid #b3b3b3;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	box-sizing: border-box;
-}
-
-#statistics-order .statisticsList {
-	position: relative;
-	line-height: 41px;
-}
-
-#statistics-order .statisticsList input {
-	text-align: center;
-	display: block;
-	float: left;
-	height: 41px;
-	width: 158px;
-	outline: none;
-	border: 0;
-}
-
-.tableName {
-	width: 47px;
-	height: 40px;
-	line-height: 40px;
-	float: left;
-	font-size: 16px;
-	text-align: center;
-}
-
-#statistics-order .statisticsList ul {
-	width: 100%;
-	margin: 0;
-	position: absolute;
-	top: 43px;
-	left: 0;
-	z-index: 10;
-	background: #fff;
-}
-
-#statistics-order .statisticsList ul li {
-	text-align: center;
-	height: 41px;
-	border: 1px #b3b3b3 solid;
-	border-top: 0;
-	background: #fff;
-	cursor: pointer;
-}
-
-#statistics-order .overHid {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 #statistics-order .selected {
@@ -1076,60 +896,5 @@ export default {
 .button a.select {
 	background: orange;
 	color: #fff;
-}
-
-.order-paging {
-	width: auto;
-	height: 45px;
-	margin-top: 40px;
-	margin-bottom: 50px;
-	float: right;
-}
-
-.paging-infor {
-	width: 160px;
-	height: 45px;
-	line-height: 45px;
-	float: left;
-}
-
-.paging-infor span {
-	float: left;
-}
-
-.paging-box {
-	position: relative;
-}
-
-.paging-box select {
-	width: 50px;
-	height: 35px;
-	font-size: 18px;
-	margin: 5px;
-	cursor: pointer;
-	float: left;
-}
-
-.aLeft {
-	width: 250px;
-	height: auto;
-	float: left;
-	position: absolute;
-	left: 0;
-	z-index: 3;
-	background-color: #fff;
-}
-
-ul {
-	color: #333333;
-	width: 100%;
-	height: 60px;
-}
-
-ul li {
-	float: left;
-	height: 60px;
-	text-align: center;
-	line-height: 60px;
 }
 </style>
