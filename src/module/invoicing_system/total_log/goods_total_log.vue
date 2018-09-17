@@ -303,6 +303,10 @@ export default {
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
                 ele.changeAfter = ele.changeAfter + ele.itemUnit;
+
+                if(!ele.createUName){
+                    ele.createUName = this.placeholder;
+                }
                 return ele;
             });
         },
