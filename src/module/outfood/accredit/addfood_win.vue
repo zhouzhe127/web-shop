@@ -363,8 +363,7 @@ export default {
 	height: 150px;
 	background: url(../../../res/images/upload.png) center 40px no-repeat #ddd;
 	a {
-		background-color: rgba(27, 21, 21,.6);
-		// background: url(../../../res/images/a50.png) repeat;
+		background: url(../../../res/images/a50.png) repeat;
 		height: 40px;
 		line-height: 40px;
 		position: absolute;

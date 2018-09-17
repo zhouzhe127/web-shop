@@ -7,18 +7,17 @@
 -->
 <template>
 	<div id="weChatBinding">
-		<!-- <template v-if='isAuth'>
+		<!-- <template v-if ='isAuth'>
 			<div class="wx-showBox">
 				<span>微信公众号</span>
 				<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">重新授权</a>
-				<a href="javascript:void(0)" class="gray addnumber fl" @click="deleteAuth">解除授权</a>
 			</div>
 			<div class="wx-showBox">
 				<span>公众号昵称</span>
-				<p>{{authMiniAppName}}</p>
+				<p>闪店科技</p>
 			</div>
-		</template> -->
-	<!-- 	<div class="wx-showBox" v-else>
+		</template>
+		<div class="wx-showBox" v-else>
 			<span></span>
 			<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">添加微信公众号</a>
 		</div> -->
@@ -42,8 +41,7 @@ export default {
 			appId: '',
 			appSecret: '',
 			userData: Object,
-			isAuth: false, //是否已授权
-			authMiniAppName: ''
+			isAuth: false //是否已授权
 		};
 	},
 	mounted() {
@@ -66,11 +64,7 @@ export default {
 			if (res) {
 				this.appId = res.appId;
 				this.appSecret = res.appSecret;
-				// this.isAuth = false;
-				// if (res.authorizerAppId != '') {
-				// 	this.isAuth = true;
-				// 	this.authMiniAppName = res.authMiniAppName;
-				// }
+				//this.isAuth = Boolean(res.isAuth);
 			}
 		},
 		// 设置公众号配置
@@ -111,31 +105,29 @@ export default {
 		async addWeChat() { //添加微信公众号
 			let data = await http.getAuthUrl({
 				data: {
-					shopId: this.userData.currentShop.id,
-					redirect_uri: document.location.toString(),
-					auth_type: 1
+					shopId: this.userData.currentShop.id
 				}
-			});
+			})
 			if (data) {
 				window.location.href = data;
 				// window.open(data);
 			}
 		},
 		GetQueryString: function(paraName) { //获取url参数
-			let url = document.location.toString();
-			let arrObj = url.split('?');
-			if (arrObj.length > 1) {
-				let arrPara = arrObj[1].split('&');
-				let arr = [];
-				for (let i = 0; i < arrPara.length; i++) {
-					arr = arrPara[i].split('=');
-					if (arr != null && arr[0] == paraName) {
-						return unescape(arr[1]);
-					}
-				}
-				return '';
-			} else {
-				return '';
+			let url = document.location.toString();　　　　
+			let arrObj = url.split("?");　　
+			if (arrObj.length > 1) {　　　　　　
+				let arrPara = arrObj[1].split("&");　　　　　　
+				let arr;　　　　　　
+				for (let i = 0; i < arrPara.length; i++) {　　　　　　　　
+					arr = arrPara[i].split("=");
+					if (arr != null && arr[0] == paraName) {　　　　　　　　　　
+						return unescape(arr[1]);　
+					}　　　　　　
+				}　　　　　　
+				return "";　　　　
+			} else {　　　　　　
+				return "";　
 			}
 		},
 		async setAuth(id) { //授权
@@ -143,29 +135,14 @@ export default {
 				data: {
 					auth_code: id
 				}
-			});
+			})
 			if (data) {
-				//this.isAuth = true;
+				this.isAuth = true;
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',
 					content: '授权成功',
 				});
-			}
-		},
-		async deleteAuth() { //取消授权
-			let data = await http.deleteAuth({
-				data: {
-					type: 1
-				}
-			});
-			if (data) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					winType: 'alter',
-					content: '解除授权成功',
-				});
-				this.getConfig();
 			}
 		}
 	},
@@ -219,7 +196,8 @@ export default {
 			font-size: 16px;
 		}
 		p {
-			font-size: 16px;
+			font-size: 24px;
+			font-weight: bold;
 		}
 		input {
 			float: left;

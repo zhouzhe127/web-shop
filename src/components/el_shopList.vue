@@ -1,15 +1,15 @@
 /**
  * @Author: zhengu.jiang
  * @Date: 2018-08-13 11:04:36 
- * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-03 17:38:43
+ * @Last Modified by: zhigang.li
+ * @Last Modified time: 2018-08-21 15:07:50
  * @Module: 品牌下选择门店下拉
  */
 
 <template>
 	<div id="elShop" >
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible" @hide="hide">
-			<el-button slot="reference" plain class="el-dropdown-link el-dropdown-selfdefine shopbox">
+			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
 				<span v-if="isSingle" style="color:#c0c4cc">
 					<i class="name">{{singleName | divide}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
@@ -18,7 +18,7 @@
 					<i class="name">{{title}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
-			</el-button>
+			</span>
 			<div @click.stop class="detDivBox elshop">
 				<i class="detI" style="left: 150px;"></i>
 				<div class="searchbox">
@@ -122,6 +122,7 @@ export default {
 	 delShopId展示店铺id(过滤了部分的)
 	* */
 	created(){
+		console.log(this.shopIds);
 		this.getShopList();
 	},
 	filters:{
@@ -161,6 +162,7 @@ export default {
 		},
 		//处理数据
 		init() {
+			console.log(this.shopIds);
 			let showNo=false;//是否添加无区域
 			let res=utils.deepCopy(this.allShop);
 			if(this.isSingle){//单选
@@ -387,7 +389,6 @@ export default {
 	#elShop{
 		display: inline-block;
 		.shopbox{
-<<<<<<< HEAD
 			cursor: pointer;
 			display: inline-block;
 			width: 200px;
@@ -395,15 +396,6 @@ export default {
 			border: 1px solid #dcdfe6;
 			border-radius: 4px;
 			line-height: 40px;
-=======
-			// cursor: pointer;
-			// display: inline-block;
-			// width: 200px;
-			// height: 42px;
-			// border: 1px solid #dcdfe6;
-			// border-radius: 4px;
-			// line-height: 40px;
->>>>>>> fb13ad10d6dad6b941259228d49738e337d96f04
 			.name{
 				display: inline-block;
 				width: 160px;

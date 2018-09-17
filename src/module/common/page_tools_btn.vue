@@ -69,7 +69,6 @@ export default {
 			oldBtn: {
 				leadIn: new Btn('导入', 'import-form', '', 1, {}, 'goods'),
 				leadOut: new Btn('导出', 'export-btn'),
-				addGood: new Btn('添加', 'pick'),
 				filter: new Btn('筛选'),
 				createScheme: new Btn('创建方案'),
 				back: new Btn('返回'),
@@ -92,7 +91,7 @@ export default {
 				completeBatchOperation: new Btn('完成操作', ['addStaff', 'export-btn']),
 				openCode: new Btn('验证商品劵码', ['btn', 'firstBtn']),
 				setTemplateType: new Btn('模板设置', ['setTemp', 'firstBtn']),
-				addIntegral: new Btn('添加积分商品', ['btn', 'firstBtn']),
+				addIntegral: new Btn('添加积分商城', ['btn', 'firstBtn']),
 				addNewType: new Btn('新建', ['userLabel']),
 				createSpeech: new Btn('新建话术组', ['technique']),
 				newPath: new Btn('新建路径链接', ['technique']),
@@ -183,7 +182,6 @@ a {
 		border-radius: 4px;
 		display: inline-block;
 		position: relative;
-		margin-left: 5px;
 		transition: background-color 0.7s;
 		cursor: pointer;
 		.import-input {

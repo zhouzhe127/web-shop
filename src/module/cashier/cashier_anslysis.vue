@@ -6,10 +6,7 @@
 			<!-- 时间类型选择 -->
 			<section @click="fadeAway" class="top-box fl">
 				<span class="wordSize">时间类型：</span>
-				<!--<selectBtn @emit="selectType" :sorts.sync="options" :name.sync="selectedName" class="select-btn"></selectBtn>-->
-				<el-select v-model="selectedType">
-					<el-option v-for="(item,i) in options" :key="i" :label="item" :value="i"></el-option>
-				</el-select>
+				<selectBtn @emit="selectType" :sorts.sync="options" :name.sync="selectedName" class="select-btn"></selectBtn>
 			</section>
 			<section @click="fadeAway" class="top-box fl" style="margin-right: 0">
 				<section class="cala chairFix">
@@ -25,9 +22,7 @@
 			<!-- 时间段筛选 -->
 			<section @click="fadeAway" class="top-box fl">
 				<span class="wordSize">时间段筛选：</span>
-				<el-time-picker  style="width: 200px;" is-range :clearable="false" v-model="hourMinute" value-format="HH-mm">
-				</el-time-picker>
-				<!--<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>-->
+				<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>
 			</section>
 			<section style="display:inline-block">
 				<!--品牌店铺选择-->
@@ -45,7 +40,6 @@
 					<!-- 表头设置 -->
 				</section>
 			</section>
-			<!--表头设置-------------------->
 			<section class="detLi ">
 				<div v-if="formHead" class="detDiv formHead" @click.stop style="width: 600px;top: 0;position: absolute;z-index: 100;">
 					<i class="detI" style="left: 450px;"></i>
@@ -63,7 +57,6 @@
 			</section>
 		</section>
 		<section class="nav">
-			<!--数据、图表-->
 			<div class="formType light">
 				<span class="typeTotal" v-bind:class="{'typeOn': chartList.flag == index}" v-for="(item, index) in chartList.list" :key="index"
 				    @click="changeChart(index)">{{item.name}}</span>
@@ -74,16 +67,17 @@
 			<div class="light" v-else>
 				<span class="sel" v-for="(item, index) in chartType.list" :key="index" v-bind:class="{'on': chartType.flag == index}" @click="changeCtype(index)">{{item.name}}</span>
 			</div>
-			<div class="selectName" v-if="shopName!= '请选择店铺' && chartList.flag == 0">
+			<div class="selectName" v-if="shopName != '请选择店铺' && chartList.flag == 0">
 				<span style="font-size: 16px;line-height:20px">选择店铺：{{shopName}}</span>
 			</div>
 		</section>
 		<dataform v-show="chartList.flag === 0" @back="getBack" :num="num" :shopId="shopId" :exportIndex="exportIndex" :width="showWidth"
 		    :loading="loading" :headList="headList" :reportList="orderList" :selShopid="selShopid" :selectedType="typeFlag" :selHead="selHead"
 		    :flag="buttonList.flag" :isBack="isBack"></dataform>
-		<datacharts v-if="chartList.flag === 1" @search="chartSearch" :num="num"  :loading="loading"
+		<datacharts v-if="chartList.flag === 1" @search="chartSearch" :num="num" :chartType="chartType.flag" :loading="loading"
 		    :ChartShop="ChartShopName" :selShopid="selShopid" :chartFlag="chartType.flag" :typeFlag="typeFlag"
 		    :reportList="orderList" :flag="buttonList.flag" :headList="headList"></datacharts>
+		<!-- <datacharts v-if="chartList.flag === 1" ></datacharts> -->
 		<loading v-if="!loading" :totalCount="totalCount" :taskCountTotal="taskCountTotal" :taskCount="taskCount"></loading>
 	</div>
 </template>
@@ -98,36 +92,29 @@
 				shopId: null,
 				options: ['日报表', '周报表', '月报表', '季度报表', '年报表'],
 				selectedType: 0, //对应循序  0:日, 1:周, 2:月, 3:季度, 4:年
-//				selectedName: '日报表',
-
+				selectedName: '日报表',
 				startTime: '',
 				timeStart: '', // 周 月 季度 年 开始时间
 				timeEnd: '', // 周 月 季度 年 结束时间
 				endTime: '',
-
-//				start: {
-//					hour: '00',
-//					minute: '00'
-//				},
-//				end: {
-//					hour: '23',
-//					minute: '59'
-//				},
-				hourMinute:["00-00", "23-59"], //时分
+				start: {
+					hour: '00',
+					minute: '00'
+				},
+				end: {
+					hour: '23',
+					minute: '59'
+				},
 				index: 0, //用于时间段筛选的重置
-
 				shopList: [], //所有店铺列表
 				selects: [], //选中的店铺
 				reset: 1, //用于店铺重置
-
 				shopName: '请选择店铺', //选中的店铺名称
 				backList: false, //选择固定对比后 返回按钮
 				isBack: false, //子组件判断是否返回
-
 				formHead: false, //表头设置是否展开
 				headList: [], //表头列表
 				selHead: [], //选中的表头
-
 				showWidth: 0, //选中的表头个数改变表格的长度
 				chartsHead: '', // 图表表头
 				chartList: {
@@ -220,7 +207,11 @@
 		mounted() {
 			let userData = storage.session('userShop');
 			this.shopId = userData.currentShop.id;
+			// document.addEventListener('click', ()=>{
+			//     this.formHead = false;
+			// })
 			this.shopList = storage.session('shopList');
+			// this.getShopList();
 			this.getReportHead();
 			this.initBtn();
 		},
@@ -252,6 +243,15 @@
 				}
 				this.$store.commit('setPageTools', arr);
 			},
+			//获取品牌下的店铺
+			async getShopList() {
+				let res = await http.getShopList({
+					data: {
+						shopId: this.shopId
+					}
+				});
+				this.shopList = res;
+			},
 			//获取表头
 			async getReportHead() {
 				let res = await http.getReportHead({
@@ -259,7 +259,6 @@
 						shopId: this.shopId
 					}
 				});
-				console.log(res);
 				for (let i = 0; i < res.length; i++) {
 					res[i].selected = true;
 				}
@@ -336,7 +335,6 @@
 					for(let i = 0; i < data.list.length; i++){
 						data.list[i]['selected'] = false;
 					}
-					console.log(data);
 					this.orderList = utils.deepCopy(data);
 					this.list = utils.deepCopy(data);
 				});
@@ -344,13 +342,12 @@
 			fadeAway() {
 				this.hide++;
 			},
-//			selectType(index) {
-//				this.selectedType = index;
-//			},
-			//开始时间
-			startTimeChange(time, timer) {
-				console.log(time)
-				console.log(timer)
+			selectType(index) {
+				this.selectedType = index;
+				// this.startTimeChange();
+				// this.endTimeChange();
+			},
+			startTimeChange(time, timer) { //开始时间
 				this.startTime = time;//日报表时间
 				if(this.selectedType == 2){// 月报表时间
 					this.timeStart = new Date(time).getFullYear() + '年' + (new Date(time).getMonth()+1);
@@ -363,10 +360,7 @@
 					this.timeStart = this.timeStart.replace(/\s/g, '');
 				}
 			},
-			//结束时间
-			endTimeChange(time, timer) {
-				console.log(time)
-				console.log(timer)
+			endTimeChange(time, timer) { //结束时间
 				this.endTime = time; //日报表时间
 				if(this.selectedType == 2){ // 月报表时间
 					this.timeEnd = new Date(time).getFullYear() + '年' + (new Date(time).getMonth()+1);
@@ -379,12 +373,12 @@
 					this.timeEnd = this.timeEnd.replace(/\s/g, '');
 				}
 			},
-//			getTime(time) {
-//				this.start.hour = time.start.hour;
-//				this.start.minute = time.start.minute;
-//				this.end.hour = time.end.hour;
-//				this.end.minute = time.end.minute;
-//			},
+			getTime(time) {
+				this.start.hour = time.start.hour;
+				this.start.minute = time.start.minute;
+				this.end.hour = time.end.hour;
+				this.end.minute = time.end.minute;
+			},
 			//根据店铺id匹配店铺名
 			getShopname: function () {
 				if (this.shopName != '请选择店铺') {
@@ -485,9 +479,7 @@
 						break;
 				}
 				//时间段
-//				let timeBetween = this.start.hour + ':' + this.start.minute + '-' + this.end.hour + ':' + this.end.minute;
-				let timeBetween = this.hourMinute[0].substring(0,2)+':'+this.hourMinute[0].substring(3,5)+ '-' +
-					this.hourMinute[1].substring(0,2) + ':' + this.hourMinute[1].substring(3,5);
+				let timeBetween = this.start.hour + ':' + this.start.minute + '-' + this.end.hour + ':' + this.end.minute;
 				this.orderReportAnalysis(timeBetween);
 				this.typeFlag = this.selectedType;
 				//控制表格一页显示多少条数据 根据选择的店铺数控制
@@ -510,7 +502,7 @@
 			},
 			//重置
 			resetAll() {
-//				this.options = ['日报表', '周报表', '月报表', '季度报表', '年报表'];
+				this.options = ['日报表', '周报表', '月报表', '季度报表', '年报表'];
 				this.shopName = '请选择店铺';
 				this.reset++;
 				this.selects = [];
@@ -518,20 +510,33 @@
 				this.startTime = new Date().setHours(0, 0, 0, 0);
 				this.endTime = new Date().setHours(0, 0, 0, 0);
 				this.index++;
-//				this.start = {
-//					hour: '00',
-//					minute: '00'
-//				};
-//				this.end = {
-//					hour: '23',
-//					minute: '59'
-//				};
-				this.hourMinute=["00-00", "23-59"];
+				this.start = {
+					hour: '00',
+					minute: '00'
+				};
+				this.end = {
+					hour: '23',
+					minute: '59'
+				};
 				this.selShopid = [];
 			},
+			// close(event) {
+			// 	let setHead = this.$refs.setHead;
+			// 	if (event.target != setHead) {
+			// 		this.formHead = false;
+			// 		document.removeEventListener('click', this.close);
+			// 	}
+			// },
 			//展开表头设置
 			showHead() {
-				this.formHead = true;
+				this.hide++;
+				if (!this.formHead) {
+					this.formHead = true;
+					// document.addEventListener('click',this.close);
+				} else {
+					this.formHead = false;
+					// document.removeEventListener('click',this.close);
+				}
 				this.headList = utils.deepCopy(this.selHead);
 			},
 			//导出
@@ -586,7 +591,6 @@
 					});
 					return false;
 				}
-				this.formHead = false;
 				this.chartList.flag = index;
 				this.orderList = utils.deepCopy(this.list);
 				if (index == 1) {
@@ -840,16 +844,16 @@
 					position: absolute;
 					top: -50px;
 				}
-				/*.back {*/
-					/*width: 90px;*/
-					/*height: 40px;*/
-					/*line-height: 40px;*/
-					/*position: absolute;*/
-					/*top: -50px;*/
-					/*left: -100px;*/
-					/*color: #B3B3B3;*/
-					/*border: 1px solid #B3B3B3;*/
-				/*}*/
+				.back {
+					width: 90px;
+					height: 40px;
+					line-height: 40px;
+					position: absolute;
+					top: -50px;
+					left: -100px;
+					color: #B3B3B3;
+					border: 1px solid #B3B3B3;
+				}
 				.out {
 					right: 0;
 				}

@@ -5,6 +5,7 @@
  * @Last Modified time: 2018-08-13 10:45:47
  * @Module:  收银分析 图表
  */
+
 <template>
 	<div id="charts-order">
 		<div v-show="!loading" style="width: 128px;margin: 200px auto;">
@@ -12,7 +13,6 @@
 		</div>
 
 		<section v-show="loading" style="text-align: center;width:100%">
-            <!--表头-->
 			<div style="height: 50px;border-bottom: 2px solid #ccc;">
 				<div style="margin: 0 auto;">
 					<span v-for="(item, index) in chartsTitle.list" :key="index" class="titleChart" v-bind:style="{'width': (100/chartsTitle.list.length) + '%'}">
@@ -20,24 +20,21 @@
 					</span>
 				</div>
 			</div>
-            <!--图表-->
-			<div ref="percent" v-if="flag == 1 || flag == 2 || flag == 3 || flag == 4" style="height: 400px;width:100%;min-width:700px" id="chart"></div>
+			<div ref="percent" v-if="flag == 1 || flag == 2 || flag == 3 || flag == 4" style="height: 400px;width:100%;min-width:700px"
+			    id="chart"></div>
 			<div ref="myflow" v-if="flag === 0" style="height: 400px;width:100%;min-width:700px" id="chart"></div>
-            <!--选择店铺-->
 			<div style="display: inline-block;margin: 0 auto;">
 				<div class="hide" @click="chartShop(item)" v-for="(item, index) in ChartShopName" :key="index" style="height: 55px;width: auto;display: inline-block;margin-left: 10px;cursor: pointer;">
 					<div :class="[item.className,{chactive:item.className}]" style="width: 15px;height: 15px;margin: 0 auto;border: 1px solid #69676F;border-radius: 3px;"></div>
 					<div style="display: inline-block;height: 40px;line-height: 40px;">{{item.name}}</div>
 				</div>
 			</div>
-            <!--数据类型切换按钮-->
 			<div style="width: 750px;margin-bottom: 10px;">
 				<div style="margin-bottom: 20px;display: inline-block;margin: 0 auto;">
 					<span class="sel" v-for="(item,index) in buttonList.list" :key="index" v-bind:class="{'on': flag == index}" @click="light(index)">{{item.name}}</span>
 				</div>
 			</div>
-            <!--数据表格-->
-            <el-table :header-cell-style="rowClass" :data="chartsPageList" :summary-method="getSummaries" show-summary border style="width: 100%;" :head-align="'center'" stripe v-if="isTrue">
+            <el-table :header-cell-style="rowClass" :data="chartsPageList" :summary-method="getSummaries" show-summary border style="width: 100%;" :head-align="'center'" stripe>
                 <el-table-column fixed label="时间" align="center" :show-overflow-tooltip="true" width="150px" style="text-align:center">
                     <template slot-scope="scope">
                         <ul>
@@ -69,16 +66,16 @@
                     </template>
                 </el-table-column>
                 <template v-for="(item,index) in chartsTitle.list">
-                    <el-table-column v-if="item.selected" :key="index+'list'" align="center"  :prop="item.column" :label="item.name">
+                    <el-table-column :key="index+'list'" align="center" :prop="item.column" :label="item.name">
                         <template slot-scope="scope" style="text-align:center">
                             <span v-for="(f,e) in scope.row.list" :key="e">
                                 <span :class="{line: e != scope.row.list.length-1}" class="title" style="height: 50px;line-height:50px;display: inline-block;width: 100%;vertical-align: bottom">
                                     <span v-if="flag != 3 && flag != 4">
                                         <i>{{f[item.column]}}</i>
-                                        <i v-if="(flag == 1 || flag == 2) && item.column != 'orderNum' &&  item.column != 'goodsNum' &&  item.column != 'originalPrice'&& item.column != 'paidIn' && item.column != 'vouchersCash' && item.column != 'vouchersNum'">%</i>
+                                        <i v-if="(flag == 1 || flag == 2) && item.column != 'orderNum' &&  item.column != 'goodsNum' &&  item.column != 'originalPrice'">%</i>
                                     </span>
                                     <span v-else>
-                                        <span v-bind:class="{numGreen: f[item.column][1]<0,numRed: f[item.column][1]>0}" style="display: block;height: 10px;line-height: 30px;">{{f[item.column][1]}}{{item.name}}</span>
+                                        <span v-bind:class="{numGreen: f[item.column][1]<0,numRed: f[item.column][1]>0}" style="display: block;height: 10px;line-height: 30px;">{{f[item.column][1]}}</span>
                                         <span v-bind:class="{numRed: f[item.column][0]>0, numGreen: f[item.column][0]<0}">{{f[item.column][0]}}
                                             <span v-if="f[item.column][0] != '-'">%</span>
                                             <span v-if="f[item.column][0]<0 || f[item.column][1]<0">↓</span>
@@ -116,6 +113,7 @@
 				backList: false,
 				chartTotalList: '', //图表表格总计
 				page: 1,
+				// num: 0,
 				len: 0,
 				total: 0,
 				buttonList: {
@@ -147,8 +145,6 @@
 				chartsHead: [], //表头
                 titleList: [], //表格头部
                 ChartShopName: [],
-
-				isTrue:true,  //刷新表格
 			};
 		},
 		props: {
@@ -159,37 +155,37 @@
 			// totalList: Array, //总计
 			typeFlag: Number, //报表日期类型
 			selShopid: Array, //选中的门店
+			chartFlag: Number,
 			ChartShop: Array, //获取门店名称
 			flag: Number, //报表类型
-			num: Number,
-
-			chartFlag: Number, //选中的图表、表格的表头数据
+            chartType: Number, //选中的类型数据
+            num: Number
 		},
 		watch: {
 			chartFlag(val) {
-				console.log(val);
                 this.changeCtype(val);
-                console.log(this.chartsTitle);
 			},
 			reportList() {
                 this.ChartShopName = this.ChartShop;
                 this.ChartSelShop = this.ChartShop.slice(0, 3);
                 this.chartsOrder = utils.deepCopy(this.reportList.list);
-
                 this.pageChange(this.page);
-                this.changeCtype(this.chartFlag);
+                // this.getTitle(0);
+				// this.dataList();
+                this.getTitle(0);
+                this.changeCtype(this.chartType);
 			}
 		},
 		async mounted() {
 			echarts = await import ( /*webpackChunkName: 'echarts'*/ 'src/verdor/echarts'),
             this.ChartShopName = this.ChartShop;
-
+			// this.dataList();
 			this.chartsHead = utils.deepCopy(this.headList);
             this.ChartSelShop = this.ChartShop.slice(0, 3);
             this.chartsOrder = utils.deepCopy(this.reportList.list);
-
-            this.pageChange(this.page);   //分页
-			this.changeCtype(0);          //图表、表格的表头数据
+            this.pageChange(this.page);
+            this.getTitle(0);
+			this.changeCtype(0);
 		},
 		methods: {
             rowClass(row){
@@ -220,42 +216,38 @@
 
 				return sums;
 			},
-			//图表\表格查看数据切换
-			changeCtype(index) {
-				this.chartIndex = 0;
-				this.chartsTitle.list = utils.deepCopy(this.getTitle(index));
-				this.changeTitlechart(0, this.chartsTitle.list[0]);    //图表二级数据切换，默认为第一个
-				console.log(this.chartsTitle);
-				this.isTrue=false;
-				this.$nextTick(()=>{     //表格中chartsTitle.list数据不改变，刷新表格使数据改变
-					this.isTrue=true;
-				})
-			},
             //获取图表表头
             getTitle(index){
                 let list = this.headList;
 				let title = [];
 				for (let i = 0; i < list.length; i++) {
-					if (index === 0 && (list[i].column == 'orderNum' || list[i].column == 'originalPrice' || list[i].column == 'price' || list[i].column == 'paymentPrice')) {
+					let arr = {};
+					if (index === 0 && (list[i].column == 'orderNum' || list[i].column == 'originalPrice' || list[i].column == 'price' ||
+						list[i].column == 'paymentPrice')) {
                         title.push(list[i]);
-					}
-					else if (index == 1 && (list[i].name.indexOf('数量') > -1 && list[i].column != 'freeNum' && list[i].column != 'returnNum' || (list[i].column == 'goodsNum' || list[i].column == 'salesNum'))){
+					} else if (index == 1 && (list[i].name.indexOf('数量') > -1 && list[i].column != 'freeNum' && list[i].column !=
+						'returnNum' || (list[i].column == 'goodsNum' || list[i].column == 'salesNum'))) {
                         title.push(list[i]);
-					}
-					else if (index == 2 && list[i].name.indexOf('金额') > -1 && list[i].column != 'discountPrice' && list[i].column != 'freePrice' && list[i].column != 'returnPrice'){
+					} else if (index == 2 && list[i].name.indexOf('金额') > -1 && list[i].column != 'discountPrice' && list[i].column !=
+						'freePrice' && list[i].column != 'returnPrice') {
                         title.push(list[i]);
-					}
-					else if (index == 3 && (list[i].column == 'discountPrice' || list[i].column == 'freeNum' || list[i].column == 'freePrice')){
+					} else if (index == 3 && (list[i].column == 'discountPrice' || list[i].column == 'freeNum' || list[i].column ==
+						'freePrice')) {
                         title.push(list[i]);
-					}
-					else if (index == 4 && (list[i].column == 'returnNum' || list[i].column == 'returnPrice' || list[i].column == 'goodsNum' || list[i].column == 'originalPrice')) {
+
+					} else if (index == 4 && (list[i].column == 'returnNum' || list[i].column == 'returnPrice' || list[i].column ==
+						'goodsNum' || list[i].column == 'originalPrice')) {
                         title.push(list[i]);
-					}
-					else if (index == 5 && (list[i].column == 'change' || list[i].column == 'bitPrice' || list[i].column == 'chargePrice' || list[i].column == 'profit' || list[i].column == 'originalPrice')) {
+
+					} else if (index == 5 && (list[i].column == 'change' || list[i].column == 'bitPrice' || list[i].column ==
+						'chargePrice' || list[i].column == 'profit' || list[i].column == 'originalPrice')) {
                         title.push(list[i]);
-					}
-					else if (index == 6 && (list[i].column == 'cash' || list[i].column == 'bank' || list[i].column == 'wx' || list[i].column == 'ali' || list[i].column == 'vip' || list[i].column == 'zxwx' || list[i].column == 'zxali' || list[i].column == 'other' || list[i].column == 'price')) {
+
+					} else if (index == 6 && (list[i].column == 'cash' || list[i].column == 'bank' || list[i].column == 'wx' || list[i]
+						.column == 'ali' || list[i].column == 'vip' || list[i].column == 'zxwx' || list[i].column == 'zxali' || list[i].column ==
+						'other' || list[i].column == 'price')) {
                         title.push(list[i]);
+
 					}
                 }
 				return title;
@@ -292,10 +284,12 @@
 					}
 				}
 			},
-
-
-
-
+			//图表查看数据切换
+			changeCtype(index) {
+				this.chartIndex = 0;
+				this.chartsTitle.list = this.getTitle(index);
+				this.changeTitlechart(0, this.chartsTitle.list[0]);
+			},
 			//设置图表显示的颜色
 			changeColor: function () {
 				for (let j = 0; j < this.selSeries.length; j++) {
@@ -505,7 +499,7 @@
 				myChart.setOption(option, true);
 			},
 			//改变图表头部导航
-			changeTitlechart(index, item) {
+			changeTitlechart: function (index, item) {
                 this.chartsTitle.flag = index;
 				this.getCharts(item.column);
 				this.dataTime = this.dataTime.reverse();
@@ -620,7 +614,6 @@
 			//翻页
 			pageChange(page) {
 				this.chartsPageList = this.chartsOrder.slice((page - 1) * this.num, (page - 1) * this.num + this.num);
-				console.log(this.chartsPageList)
 			},
 			//时间戳转日期
 			timeTodate: function (time) {
@@ -680,7 +673,6 @@
 <style>
 	#charts-order .el-table .cell{
 		padding: 0;
-        line-height: 40px;
 	}
 	#charts-order .el-table td{
 		padding: 0;

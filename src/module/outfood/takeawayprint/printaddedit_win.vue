@@ -587,7 +587,7 @@ export default {
 		onOff: () =>
 			import(/*webpackChunkName: "on_off"*/ 'src/components/on_off'),
 		printerRelation: () =>
-			import(/*webpackChunkName: "printrelation_win"*/ 'src/module/outfood/takeawayprint/printrelation_win')
+			import(/*webpackChunkName: "good_package_win"*/ 'src/module/outfood/takeawayprint/printrelation_win')
 	}
 };
 </script>

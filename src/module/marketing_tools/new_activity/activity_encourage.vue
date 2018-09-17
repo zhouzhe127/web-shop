@@ -55,7 +55,7 @@
 				<ul>
 					<li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
 						规则{{index + 1}}
-						<i class="deletes" @click.stop="deleteRule(index)"></i>
+						<i class="deletes" @click.stop ="deleteRule(index)"></i>
 					</li>
 					<li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
 				</ul>
@@ -385,12 +385,6 @@ export default {
 	methods: {
 		haveIndex(i) { //活动对象选择
 			this.integralOn = i;
-			// console.log(this.integralOn)
-			if (this.integralOn == '1') {
-				if (this.memberStatus) {
-					this.addVip();
-				}
-			}
 			//this.abc();
 		},
 		selOnSend(arr) {
@@ -633,9 +627,9 @@ export default {
 			// 	}
 			// }
 			//console.log(this.ruleIndex)
-			if (this.ruleIndex >= index) {
-				this.ruleIndex = 0;
-			}
+			 if (this.ruleIndex >= index) {
+                this.ruleIndex = 0;
+            }
 			// if(this.ruleList.length <= 1){
 			// 	this.valiData('请至少保留一条规则!');
 			// 	return false;
@@ -1165,7 +1159,6 @@ export default {
 
 
 
-
 /*活动名称的输入框*/
 
 .member-agift .online-box .rightHalf .name {
@@ -1346,7 +1339,6 @@ export default {
 
 
 
-
 /*.member-agift,
 .main_Box {
 	width: 100%;
@@ -1399,7 +1391,6 @@ export default {
 	margin-bottom: 20px;
 	overflow: hidden;
 }
-
 
 
 
@@ -1514,7 +1505,6 @@ export default {
 
 
 
-
 /*.moreBtn {
 	width: 50px !important;
 	position: relative;
@@ -1554,7 +1544,6 @@ export default {
 .tips {
 	background: url(../../../res/images/handle-tips.png) left center no-repeat;
 }
-
 
 
 
@@ -1654,7 +1643,6 @@ label i {
 
 
 
-
 /*
 input[type="checkbox"],
 input[type="radio"] {
@@ -1730,7 +1718,6 @@ input[type="radio"]:checked:disabled+i {
 .chckOn {
 	background: #2489c5;
 }
-
 
 
 

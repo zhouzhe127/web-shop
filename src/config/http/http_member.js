@@ -34,7 +34,7 @@ export default {
         url: w + "Activitystatistics/getList", //获取活动列表
     },
     "getActivityMould": {
-        url: w + "Activityconfig/getActivityMould", //获取活动类型列表
+        url: s + "activity/getActivityMould", //获取活动类型列表
     },
     //---------------------来源统计--------------------------------------
     "getCountList": {
@@ -251,7 +251,7 @@ export default {
     "importCardSample": {
         url: w + "MemberCard/importCardSample", //实体卡会员样例表格下载
         type: "file",
-        method: "get"
+        method: "post"
     },
     "getImportCardList": {
         url: w + 'MemberCard/getImportCardList', // 获取历史导入记录

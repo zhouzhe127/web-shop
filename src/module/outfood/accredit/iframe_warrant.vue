@@ -46,8 +46,7 @@ export default {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background-color: rgba(27, 21, 21,.6);
-	// background: url(../../../res/images/a50.png) repeat;
+	background: url(../../../res/images/a50.png) repeat;
 	z-index: 1000;
 }
 .center {

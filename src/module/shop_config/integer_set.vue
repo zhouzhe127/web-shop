@@ -137,7 +137,7 @@ export default {
 	}
 	.picName {
 		ul {
-			// width: 602px;
+			width: 602px;
 			height: 50px;
 			float: left;
 			border: 1px solid #b1b1b1;

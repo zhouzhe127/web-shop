@@ -131,14 +131,7 @@ export default {
 		async getMemberList() {
 			// 获取所有会员等级
 			let data = await http.memberGetList({});
-			let membergrade = data;
-			this.expirationTimeList = [];
-			for (let item of membergrade) {
-				if (item.status != '2') {
-					this.expirationTimeList.push(item);
-				}
-			}
-			//this.expirationTimeList = utils.deepCopy(data);
+			this.expirationTimeList = utils.deepCopy(data);
 		},
 		checkForm: function() {
 			if (this.startObj.time > new Date().getTime()) {
@@ -222,11 +215,11 @@ export default {
 		this.mobile = memberInfo.mobile; //手机号
 		this.genderName = this.genderListname[memberInfo.gender]; //性别
 		this.genderId = memberInfo.gender; //性别id
-		if (memberInfo.birthday == null || memberInfo.birthday == '0000-00-00') {
+		if(memberInfo.birthday == null || memberInfo.birthday == '0000-00-00'){
 			this.tipstart.tipsValue = '';
-		} else {
+		}else{
 			this.tipstart.tipsValue = memberInfo.birthday;
-		} //生日
+		}//生日
 		this.expirationTimeId = memberInfo.levelId; //等级id
 		this.expirationTime = memberInfo.levelName; //等级名称
 		for (let item of memberInfo.tagData) { //标签选中的

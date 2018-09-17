@@ -4,90 +4,60 @@
 -->
 <!-- 口味显示列表 -->
 <div id="attr_manager">
+	<div class="taste-show">
+		<ul class="tas-variety" v-cloak>
+			<div class="media-div" ref="addGoods" >
+				<li :style="{'height':listHeight+'px'}" class="first-list" v-on:click="openAttrWin">
+					<div>
+						<span class="tas-add">
+							<img src="../../res/images/comadd.png"/>
+						</span>
+						<i class="taste-i">新建口味</i>
+					</div>
+				</li>
+			</div>
 
-	<section>
-		<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="showTaste" border style="width:90%">
-			<el-table-column fixed min-width = "100" align="center" label="操作">
-				<template slot-scope="scope">
-					<span style="color: #FE8D2C;cursor:pointer" @click="openAttrWin(scope.row)">编辑</span>
-					<span style="padding:0 5px;color: #D2D2D2">|</span>
-					<span style="color: #FD3F1F;cursor:pointer" @click="del(scope.row)">删除</span>
-				</template>
-			</el-table-column>
-			<el-table-column show-overflow-tooltip min-width = "50" align="center" prop="sort" label="排序"></el-table-column>
-			<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="name" label="口味分组"></el-table-column>
-			<el-table-column show-overflow-tooltip min-width = "50"  align="center" prop="optionsNum"  label="口味属性（个）"> </el-table-column>
-			<el-table-column show-overflow-tooltip min-width = "50"  align="center" prop="goodsNum"  label="关联菜品（个）"> </el-table-column>
-			<el-table-column  min-width="50" align="center" label="来源" v-if="ischain == 1 || ischain == 2">
-				<template slot-scope="scope">
-					<span v-if="scope.row.id <100000">品牌</span>
-					<span v-else>门店</span>
-				</template>
-			</el-table-column>
-		</el-table>
-	</section>
+			<div class="media-div" v-for="(value,index)  in taste" :key="index">
+				<li :style="{'height':listHeight+'px'}" class="taste-list" v-on:click="openAttrWin(value)">
+					<div class="split-line"></div>
 
-	<section style="margin-top: 10px">
-		<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size = "num"
-					   layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
-	</section>
-
-
-
-	<!--<div class="taste-show">-->
-		<!--<ul class="tas-variety" v-cloak>-->
-			<!--<div class="media-div" ref="addGoods" >-->
-				<!--<li :style="{'height':listHeight+'px'}" class="first-list" v-on:click="openAttrWin">-->
-					<!--<div>-->
-						<!--<span class="tas-add">-->
-							<!--<img src="../../res/images/comadd.png"/>-->
-						<!--</span>-->
-						<!--<i class="taste-i">新建口味</i>-->
-					<!--</div>-->
-				<!--</li>-->
-			<!--</div>-->
-
-			<!--<div class="media-div" v-for="(value,index)  in taste" :key="index">-->
-				<!--<li :style="{'height':listHeight+'px'}" class="taste-list" v-on:click="openAttrWin(value)">-->
-					<!--<div class="split-line"></div>-->
-
-					<!--<div class="attr-container">-->
-						<!--<span class="attr-name" :title="value.name">{{value.name}}</span>    -->
-						<!--<span class="attr-num">{{index+1}}</span>-->
-						<!--<section class="shopTag" v-if="ischain == 1 || ischain == 2">-->
-							<!--<span style="background-color: #fcaa30;color: #fff;" v-if="value.id < 100000">品牌</span>-->
-							<!--<span style="background-color: #6cc2e6;color: #fff;" v-else>门店</span>-->
-						<!--</section>  -->
-						<!--<div class="attr-details">-->
-							<!--<div class="attr-options">-->
-									<!--<div>-->
-										<!--口味属性（个）-->
-									<!--</div>-->
-								<!--<div class="attr-options-num">-->
-									<!--{{value.optionsNum}}-->
-								<!--</div>-->
-							<!--</div>-->
-							<!--<div class="attr-relative">-->
-								<!--<div>-->
-									<!--关联菜品（个）-->
-								<!--</div>-->
-								<!--<div class="attr-options-num">-->
-									<!--{{value.goodsNum}}-->
-								<!--</div>-->
-							<!--</div>-->
-						<!--</div>-->
-					<!--</div>-->
-				<!--</li>-->
-			<!--</div>-->
-		<!--</ul>-->
-	<!--</div>-->
-
+					<div class="attr-container">
+						<span class="attr-name" :title="value.name">{{value.name}}</span>    
+						<span class="attr-num">{{index+1}}</span>
+						<section class="shopTag" v-if="ischain == 1 || ischain == 2">
+							<span style="background-color: #fcaa30;color: #fff;" v-if="value.id < 100000">品牌</span>
+							<span style="background-color: #6cc2e6;color: #fff;" v-else>门店</span>
+						</section>  
+						<div class="attr-details">
+							<div class="attr-options">
+									<div>
+										口味属性（个）
+									</div>
+								<div class="attr-options-num">
+									{{value.optionsNum}}
+								</div>
+							</div>
+							<div class="attr-relative">
+								<div>
+									关联菜品（个）
+								</div>
+								<div class="attr-options-num">
+									{{value.goodsNum}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			</div>
+		</ul>
+	</div>
 	  <component
 		:is="showCom"
 		@throwAddAttrWin='closeGetAddAttrWin'
 		@throwSyncAttr="funGetSyncAttr"
 		:pObj="comObj"
 	  ></component>
+
 </div>
 </template>
 <script>
@@ -102,7 +72,6 @@
 	export default{
 		data:function(){
 			return {
-				showTaste:[],               //当前展示的口味列表
 				taste: [],                  //存储所有的口味
 				isBrand: null,              //判断是否是品牌,是否有同步功能
 				ischain:null,                 
@@ -113,81 +82,10 @@
 					editTasteId:null,       //当前编辑的口味
 					taste:null,             //所有的口味
 				},
-//				listHeight:200,
-
-				num: 10, //一页处理多少数据
-				total: 0, //总页数
-				page: 1, //当前第几页
-
-				userData:{},
+				listHeight:200,
 			};
 		},
-		created(){
-			//获取登录信息
-			this.userData = storage.session('userShop');
-			this.shopId=this.userData.currentShop.id;
-			this.ischain=this.userData.currentShop.ischain;
-			this.isBrand=(this.userData.currentShop.ischain =='1' || this.userData.currentShop.ischain =='2') ? true: false;
-			let arr = [{name:'新建口味',className:'pick',fn:()=>{
-				this.openAttrWin();
-			}}];
-			if(this.isBrand){
-				arr[1]={name:'同步',className:'pick',fn:()=>{this.showCom='attrAsync'}};
-			}
-			this.$store.commit('setPageTools',arr);
-		},
-		mounted:function(){
-			this.funGetAttr();
-//			this.windowResize();
-//			window.addEventListener('resize',this.windowResize,false);
-		},
-		methods:{
-			//删除
-			del(item){
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					winType: 'confirm',
-					content: `确认删除该口味？`,
-					callback: delRes => {
-						if (delRes == 'ok') {
-							this.delAttr(item)
-						}
-					}
-				});
-			},
-			async delAttr(item) {
-				let res = await http.delAttr({
-					data: {
-						shopId: this.userData.currentShop.id,
-						brandId: this.userData.currentShop.brandId,
-						id:item.id
-					}
-				});
-				if(res){
-					this.taste=this.taste.filter((ele)=>{
-						return ele.id!=item.id;
-					});
-					this.paging();
-				}
-			},
-			//分页
-			paging() {
-				this.total = Math.ceil(this.taste.length / this.num); //获取总页数
-				this.showTaste = this.taste.slice((this.page - 1) * this.num, (this.page - 1) * this.num + this.num
-				); //截取当前页数据
-			},
-			//每页显示几条数据
-			numChange(e){
-				this.num=e;
-				this.paging();
-				console.log(e);
-			},
-			//切换到第几页
-			pageClick(e){
-				this.page=e;
-				this.paging();
-				console.log(e)
-			},
+		methods:{       
 			//获取--编辑口味弹窗的结果
 			closeGetAddAttrWin(res,ret){
 				switch(res){
@@ -204,13 +102,12 @@
 					case 'add':
 						this.taste.push(ret);
 						this.taste=this.sortAttr(this.taste);
-						break;
+						break; 
 					case 'delete':
 						this.taste=this.taste.filter((ele)=>{
 							return ele.id!=ret;
-						});
+						});     
 				}
-				this.paging();
 				this.showCom='';
 			},
 			//关闭-----同步窗口
@@ -220,7 +117,6 @@
 			},
 			//添加,编辑口味
 			openAttrWin(item){
-				console.log(item);
 				this.showCom='attrAdd';
 				let id=null;
 				let title=null;
@@ -249,20 +145,38 @@
 				});
 				return temp;
 			},
+			//初始化数据
+			initData(){
+				//获取登录信息
+				let userData = storage.session('userShop');
+				this.shopId=userData.currentShop.id;
+				this.ischain=userData.currentShop.ischain;
+				this.isBrand=(userData.currentShop.ischain =='1' || userData.currentShop.ischain =='2') ? true: false;
+
+				if(this.isBrand){
+					this.$store.commit('setPageTools',{
+						sync:()=>{this.showCom='attrAsync'}
+					});
+				}
+			},
 			//获取口味列表
 			async funGetAttr(){
 				let res=await http.getAttr({data:
 					{shopId:this.shopId}
 				});
-				console.log(res);
 				this.taste=res;
 				this.taste=this.sortAttr(this.taste);
-				this.paging();
-			},
-//			windowResize(){
-//				let width = this.$refs.addGoods.offsetWidth-10;
-//				this.listHeight = width*2/3;
-//			}
+			},  
+			windowResize(){
+				let width = this.$refs.addGoods.offsetWidth-10;
+				this.listHeight = width*2/3;
+			}
+		},
+		mounted:function(){
+			this.initData();
+			this.funGetAttr();
+			this.windowResize();
+			window.addEventListener('resize',this.windowResize,false);
 		},
 		components:{
 			attrAdd:()=>import (/*webpackChunkName:'attr_add_win'*/'./attr_coms/attr_add_win'),
@@ -278,14 +192,14 @@
 				}
 			}
 		},
-//		beforeDestroy(){
-//			window.removeEventListener('resize',this.windowResize);
-//		}
+		beforeDestroy(){
+			window.removeEventListener('resize',this.windowResize);
+		}        
 	};
 </script>
 <style lang="less" scoped>
 #attr_manager{
-	/*padding-top:30px;*/
+	padding-top:30px;
 	position: relative;
 	.whb(@width,@height,@border:none){
 		height:@height;

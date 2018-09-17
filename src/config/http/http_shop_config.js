@@ -251,10 +251,6 @@ export default {
 		url: s + "shop/getAccessToken", //设置服务费接口
 		method: "post"
 	},
-	"getChangeShifts": {
-		url: s + "shop/getChangeShifts", //交接班班次信息
-		method: "GET"
-	},
 	//重置商家编号
 	"resetAccessToken": {
 		url: s + "shop/resetAccessToken", //设置服务费接口

@@ -1,10 +1,3 @@
-/**
- * @Author: 曾伟福 
- * @Date: 2018-09-05 14:59:43 
- * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 15:00:15
- * @Module: 商品套餐筛选弹框
-**/
 <template>
 	<win @winEvent="goodListWin" :align="'center'" :width="800" :height="560">
 		<span slot="title">{{title}}</span>
@@ -24,18 +17,7 @@
 					</div>
 
 					<!--商品分类展示 -->
-					<div v-if="toggle && type !=2" style="float: left;margin-left: 10px;">
-						<!--一级分类选择框-->
-						<elCategory v-if="showCategory==0 || showCategory==1" @selectCategory = "newselectOneArea" :itemIndex="oneArea.oneAreaIndex" :categoryArr="category" :itemArea = "oneArea"></elCategory>
-						<!--二级级分类选择框-->
-						<elCategory v-if="showCategory==2 || showCategory==0" @selectCategory = "newselectTwoArea" :itemIndex="twoArea.twoAreaIndex" :categoryArr="child"  :itemArea = "twoArea"></elCategory>	
-						
-						<!--搜索-->
-						<!-- <el-input placeholder="请输入名称" clearable v-model="search" @change="searchGoods" style="width:200px;">
-							<el-button slot="append" icon="el-icon-search" @click="searchGoods"></el-button>
-						</el-input> -->
-					</div>
-					<!-- <ul v-if="toggle && type !=2" style="width:550px;float: left;margin-left: 20px;" @click="catchEvent">
+					<ul v-if="toggle && type !=2" style="width:550px;float: left;margin-left: 20px;" @click="catchEvent">
 						<li style="width:210px;float: left;" v-if="showCategory==0 || showCategory==1">
 							<section class="staList fl detLi">
 								<section v-on:click="showOneArea" class="tableList">
@@ -53,6 +35,7 @@
 							</section>
 						</li>
 						<li style="width:210px;margin-left: 20px;float: left;" v-if="showCategory==2 || showCategory==0">
+							<!--二级级分类选择框-->
 							<section class="staList fl detLi">
 								<section v-on:click="showTwoArea" class="tableList">
 									<span class="oSpan">{{twoArea.name}}</span>
@@ -68,18 +51,12 @@
 								</div>
 							</section>
 						</li>
-					</ul> -->
+					</ul>
 
 					<!--套餐分类展示-->
 					<div v-show="!toggle" style="width:100%;height: 50px;overflow: hidden;padding-top:10px;">
-						<el-radio-group v-model="selectPackMenu" @change = "selectPack">
-							<el-radio-button label="-1">全部</el-radio-button>
-							<el-radio-button label="0">固定套餐</el-radio-button>
-							<el-radio-button label="1">可选套餐</el-radio-button>
-							<el-radio-button label="2">自定义套餐</el-radio-button>
-						</el-radio-group>
-						<!-- <a @click="selectPack(item,index)" v-for="(item,index) in packMenu" :key="index" :class="{'raduobtn':true,'selectbtn' : item.id == selectPackMenu}"
-						    href="javascript:void(0);">{{item.name}}</a> -->
+						<a @click="selectPack(item,index)" v-for="(item,index) in packMenu" :key="index" :class="{'raduobtn':true,'selectbtn' : item.id == selectPackMenu}"
+						    href="javascript:void(0);">{{item.name}}</a>
 					</div>
 
 				</section>
@@ -98,7 +75,7 @@
 					<!--商品的展示-->
 					<section v-if="toggle && oneArea.id!=-1">
 						<div class="onecate" style="" v-if="parentGoods && parentGoods.length>0">
-							<section>
+							<section class="onecataTitle">
 								<i :class="{'twoI':true,'oneI':true}"></i>
 								<li :class="{'twoTitle':true,'oneTitle':true}">{{oneArea.name}}</li>
 							</section>
@@ -109,7 +86,7 @@
 						</div>
 
 						<div class="onecate" v-for="(ch,chi) in nowChildGoods" :key="chi">
-							<section style="">
+							<section class="onecataTitle" style="">
 								<i class="twoI" style=""></i>
 								<li class="twoTitle" style="">{{ch.name}}</li>
 							</section>
@@ -144,13 +121,11 @@
 					name: '请选择一级分类',
 					id: -1, //选中的一级分类的id
 					show: false,
-					oneAreaIndex:-1,
 				},
 				twoArea: {
 					name: '请选择二级分类',
 					id: null, //选中的二级分类的id
 					show: false,
-					twoAreaIndex:-1,
 				},
 
 				packMenu: [{
@@ -164,10 +139,6 @@
 				{
 					id: 1,
 					name: '可选套餐'
-				},
-				{
-					id: 2,
-					name: '自定义套餐'
 				},
 				],
 				category: [], //所有的分类
@@ -268,33 +239,17 @@
 				this.oneArea.show = !this.oneArea.show;
 				this.twoArea.show = false;
 			},
-			//一级分类框返回
-			newselectOneArea(index) {
-				this.oneArea.oneAreaIndex = index;
-				this.twoArea.twoAreaIndex = -1;
-				let item = this.category[index];
-				this.selectOneArea(item);
-			},
-			//二级分类框返回
-			newselectTwoArea(index) {
-				this.twoArea.twoAreaIndex = index;
-				let item = this.child[index];
-				this.selectTwoArea(item);
-			},
 			//选择一级分类
 			selectOneArea(item) {
-				this.oneArea.id = item.id;
-				this.oneArea.name = item.name;
-				// this.oneArea = {
-				// 	id: item.id,
-				// 	name: item.name,
-				// 	show: false
-				// };
+				this.oneArea = {
+					id: item.id,
+					name: item.name,
+					show: false
+				};
 				this.twoArea = {
 					id: -2,
 					name: '请选择二级分类',
-					show: false,
-					twoAreaIndex:-1
+					show: false
 				};
 
 				this.child = item.child;
@@ -400,13 +355,13 @@
 
 			//-----------       套餐      -------------
 			//选择套餐类型
-			selectPack(id) {
-				this.selectPackMenu = id;
+			selectPack(item) {
+				this.selectPackMenu = item.id;
 				this.nowPackages = this.packages.filter((ele) => {
-					if (id == -1) {
+					if (item.id == -1) {
 						return true;
 					} else {
-						return ele.type == id;
+						return ele.type == item.id;
 					}
 				});
 			},
@@ -603,7 +558,9 @@
 						this.copyPack = this.copyData(temp);
 					}
 					this.packages = this.initSelect(this.packages, this.pGoodsList.selPack);
-					this.selectPack(this.selectPackMenu);
+					this.selectPack({
+						id: this.selectPackMenu
+					});
 					this.countPackages = this.initSelectNum(this.packages, 'pack');
 				});
 			},
@@ -747,27 +704,25 @@
 			},
 
 			//dom点击隐藏事件
-			// domClick() {
-			// 	this.twoArea.show = this.oneArea.show = false;
-			// },
+			domClick() {
+				this.twoArea.show = this.oneArea.show = false;
+			},
 			catchEvent(event) {
 				event.cancelBubble = true;
 			},
 		},
 		mounted() {
 			this.initData();
-			// console.log(this.type);
-			// document.addEventListener('click', this.domClick, false);
+			document.addEventListener('click', this.domClick, false);
 
 		},
 		components: {
-			elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
 			win: () =>
 				import ( /*webpackChunkName:'win'*/ 'src/components/win')
 		},
-		// beforeDestroy() {
-		// 	document.removeEventListener('click', this.domClick);
-		// }
+		beforeDestroy() {
+			document.removeEventListener('click', this.domClick);
+		}
 	};
 </script>
 <style scoped lang="less">
@@ -789,7 +744,7 @@
 
 			.Box {
 				width: 180px;
-				height: 40px;
+				height: 42px;
 				border: 1px solid #FF9801;
 				cursor: pointer;
 				box-sizing: border-box;
@@ -800,8 +755,8 @@
 			}
 			.oDe {
 				width: 50%;
-				height: 38px;
-				line-height: 38px;
+				height: 40px;
+				line-height: 40px;
 				text-align: center;
 				float: left;
 				border-left: 1px solid #FF9801;
@@ -1008,6 +963,11 @@
 			border-bottom: 1px solid #e3e3e3;
 			height: auto;
 			overflow: hidden;
+			.onecataTitle {
+				width: 115px;
+				float: left;
+				overflow: hidden;
+			}
 			.twoI {
 				width: 10px;
 				height: 10px;
@@ -1016,10 +976,10 @@
 				float: left;
 			}
 			.twoTitle {
-				// width: 70px;
+				width: 70px;
 				height: 50px;
 				line-height: 50px;
-				// float: left;
+				float: left;
 				font-weight: 800;
 				color: #9F9F9F;
 				overflow: hidden;
