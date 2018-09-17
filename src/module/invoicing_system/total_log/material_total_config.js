@@ -266,9 +266,34 @@ let config = [
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
-				let obj = {};
-				obj.path = '/admin/wareImport';
-				context.$router.push(obj);				
+				let obj = {},
+				other = item.other,
+				cdnUrl = '',
+				userDate = {},
+				temp = {};
+
+				userDate = storage.session('userShop');
+				
+				cdnUrl = userDate.cdnBaseUrl;
+
+				obj.path = '/admin/wareImport/wareProsperity';
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
+				storage.session('detailNeed',temp);
+				context.$router.push(obj);					
 			}
 		},
 		{
