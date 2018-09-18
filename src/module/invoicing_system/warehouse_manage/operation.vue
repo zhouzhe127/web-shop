@@ -85,11 +85,11 @@
 		    </el-table-column>
 		    <el-table-column label="操作" align="center">
 		    	<template slot-scope="scope" fixed="right" width="180" >
-		        	<el-button @click="dispatchingDetail(scope.row,3)" v-if="scope.row.dynamic != 3"
+		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic != 1"
 		        		type="text" size="small">查看详情</el-button>
-		        	<el-button @click="dispatchingDetail(scope.row,5)" v-if="scope.row.dynamic == 5"
+		        	<el-button @click="dispatchingDetail(scope.row,2)" v-if="scope.row.dynamic == 2"
 		        		type="text" size="small" style='color:#D34A2B'>入货</el-button>
-		        	<el-button @click="dispatchingDetail(scope.row,3)" v-if="scope.row.dynamic == 3"
+		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic == 1"
 		        		type="text" size="small" style='color:#D34A2B'>确认出货</el-button>
 		      	</template>
 		    </el-table-column>
@@ -123,14 +123,12 @@ export default {
 			createName: '', //操作人
 			allStatus: [
 				{value:0,label:'全部调度状态'},
-				{value:1,label:'未调度'},
-				{value:2,label:'配货中'},
-				{value:3,label:'未出货'},
-				{value:4,label:'全部取消'},
-				{value:5,label:'待入货'},
-				{value:6,label:'已完成'},
-				{value:7,label:'已完成(异常)'},
-				{value:8,label:'配货完成'},
+				{value:1,label:'未出货'},
+				{value:2,label:'待入货'},
+				{value:3,label:'调度中'},
+				{value:4,label:'已取消'},
+				{value:5,label:'已完成'},
+				{value:6,label:'已完成(异常)'},
 			], //所有状态
 			dynamic: 0, //选择状态的id
 			OutboundWarehouse: '全部', //出货仓库
@@ -314,7 +312,7 @@ export default {
 		dispatchingDetail(res,type) { //调度记录详情-入货-确认出货
 			let item = res;
 			this.$route.query.id = item.id;
-			if(type==3) { //查看详情
+			if(type==1) { //查看详情
 				storage.session('operationRequest', this.requestObj);
 				this.$route.query.id = item.id;
 				this.$router.push({

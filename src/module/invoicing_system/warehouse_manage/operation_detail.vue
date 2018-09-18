@@ -128,14 +128,12 @@ export default {
 			showCom: false, //是否展示详细内容
 			details: {}, //详情信息
 			allStatus: {
-				1:'未调度',
-				2:'配货中',
-				3:'未出货',
-				4:'全部取消',
-				5:'待入货',
-				6:'已完成',
-				7:'已完成（异常）',
-				8:'配货完成',
+				1:'未出货',
+				2:'待入货',
+				3:'调度中',
+				4:'已取消',
+				5:'已完成',
+				6:'已完成(异常)',
 			},
 			matTypeHash:{
 				0:'成品',
@@ -257,7 +255,7 @@ export default {
 		setInitBtn() { //等待接口返回后 显示按钮
 			this.initBtn();
 			if(this.isExamine) return; //审核页面不出现以下按钮
-			if(this.dynamic == 3) {
+			if(this.dynamic == 1) {
 				let addArr = [{
 					name: '取消调度',
 					className: 'danger',type:5,
@@ -274,7 +272,7 @@ export default {
 				}];
 				this.btnArr.unshift(...addArr);
 			}
-			if(this.dynamic == 5) { //this.dynamic==2
+			if(this.dynamic == 2) { //this.dynamic==2
 				let addArr = [{
 					name: '入货',
 					className: 'primary',type:4,
