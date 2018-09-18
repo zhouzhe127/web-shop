@@ -159,7 +159,7 @@ export default {
 		url: s + 'activity/releaseActivity' //发布活动
 	},
 	'closeActivity': {
-		url: s + 'activity/closeActivity' //关闭活动
+		url: w + 'activityconfig/closeActivity' //关闭活动
 	},
 	'upActivity': {
 		url: s + 'activity/upActivity' //上架活动

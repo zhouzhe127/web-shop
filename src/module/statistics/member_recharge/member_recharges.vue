@@ -208,7 +208,7 @@
 						</el-table-column>
 						<el-table-column prop="totalOtherPay" label="自定义支付" width="111" align="center">
 							<template slot-scope="scope">
-								<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'one')">{{scope.row.days}}</span>
+								<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'one')">{{scope.row.totalOtherPay}}</span>
 							</template>
 						</el-table-column>
 						<el-table-column prop="totalGiftAmount" label="赠送总额" width="111" align="center">

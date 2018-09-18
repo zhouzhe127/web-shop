@@ -18,11 +18,11 @@
 			<div class="date">
 				<!-- 选择卡属门店 -->
 				<div class="dateBox fl" v-if="cardTypeId == 1">
-					<selectStore :shopIds="belongsId" @chooseShop="backShopId"></selectStore>
+					<selectStore :showName="'请选择卡属门店'" :shopIds="belongsId" @chooseShop="backShopId"></selectStore>
 				</div>
 				<!-- 选择操作门店 -->
 				<div class="dateBox fl">
-					<selectStore :shopIds="storesId" @chooseShop="backstoresId"></selectStore>
+					<selectStore :showName="'请选择操作门店'" :shopIds="storesId" @chooseShop="backstoresId"></selectStore>
 				</div>
 				<!-- 选择交易类型 -->
 				<div class="dateBox fl">
@@ -40,7 +40,7 @@
 			<!-- 电子卡 实体卡 -->
 			<div class="date">
 				<el-radio-group v-model="cardTypeselect">
-					<el-radio-button v-for="(item,index) in cardTypeList" :key="index" :label="item.name" @click.native="selcardType(item)"></el-radio-button>
+					<el-radio-button v-for="(item,index) in cardTypeList" :key="index" :label="item.name" @change.native="selcardType(item)"></el-radio-button>
 				</el-radio-group>
 			</div>
 			<!-- 下面的表格 -->
@@ -58,8 +58,8 @@
 				<el-table :data="consumeList" border style="width:1400px;margin-bottom: 20px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column fixed prop="cardNumber" label="卡号" width="180" align="center">
 						<template slot-scope="scope">
-							<span v-if="cardTypeId == 0" style="color: #27a8e0">{{scope.row.mobile}}</span>
-							<span v-else @click="openDetail(scope.row)">{{scope.row.cardNumber}}</span>
+							<span v-if="cardTypeId == 0" style="color: #E1BB4A " @click="openDetail(scope.row)">{{scope.row.mobile}}</span>
+							<span v-else @click="openDetail(scope.row)" style="color: #E1BB4A ">{{scope.row.cardNumber}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="cardTypeName" label="卡类型" width="100" align="center">
@@ -75,7 +75,7 @@
 					</el-table-column>
 					<el-table-column prop="oid" label="订单" width="180" align="center">
 						<template slot-scope="scope">
-							<span @click="openOid(scope.row.oid,scope.row.belongToShop,scope.row.fromId)">{{(scope.row.oid == '' || scope.row.oid == '0')?'--':scope.row.oid}}</span>
+							<span @click="openOid(scope.row.oid,scope.row.belongToShop,scope.row.fromId)" style="color: #E1BB4A ">{{(scope.row.oid == '' || scope.row.oid == '0')?'--':scope.row.oid}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="卡属门店" width="140" align="center">
@@ -124,13 +124,18 @@
 				<span slot="con-9" slot-scope="props">{{isBrand?getshopName(scope.row.fromId):getshopName(scope.row.shopId)}}</span>
 			</comTable> -->
 			<section class="turn-page">
-				<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(TotalPage)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+				<!-- <pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(TotalPage)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
+				<div class="pageWrap">
+					<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="TotalPage" :page-sizes="[10, 20, 30]"></el-pagination>
+				</div>
 			</section>
 		</section>
 		<!-- 订单详情 -->
 		<orderDetail :detail="detail" :isDelete="false" v-if="isShow == 'order'" @detailShow="getDetailShow"></orderDetail>
 		<!-- 卡号详情 -->
 		<cardDetail v-if="isShow == 'detail'" @throwWinResult="getDetail" :cardNumber="cardNumber"></cardDetail>
+		<!-- 会员信息详情电子卡 -->
+		<memberDetail v-if="isShow == 'member'" :mid='mid' :shopsId='shopsId' @throwWinResult="getDetail"></memberDetail>
 	</div>
 </template>
 <script>
@@ -147,9 +152,9 @@ export default {
 			belongsList: [], //卡属店铺的列表
 			storesList: [], //操作店铺的列表
 			shopList: [], //店铺列表
-			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)],//时间控件
-			belongsId: '', //选中的店铺列表的id
-			storesId: '', //选中的店铺列表的id
+			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+			belongsId: [], //选中的店铺列表的id
+			storesId: [], //选中的店铺列表的id
 			trantypeList: [{ //交易类型
 				name: '全部',
 				id: 0
@@ -175,7 +180,7 @@ export default {
 			consumeList: [], //卡查询的数据列表
 			page: 1, //页码数
 			num: 10,
-			TotalPage: '', //总页数
+			TotalPage: 1, //总页数
 			count: 0, //数据的总的条数
 			titleData: [], //传给公共表格的表头数据
 			bannerStyle: null, //表格头部样式
@@ -189,7 +194,9 @@ export default {
 				name: '实体卡',
 				id: 1
 			}],
-			cardTypeId: 0 //选中的卡类型的ifd
+			cardTypeId: 0, //选中的卡类型的ifd
+			mid: '',
+			shopsId: ''
 		};
 	},
 	mounted() {
@@ -306,16 +313,8 @@ export default {
 			}
 		},
 		//交易查询
-		async getCardConsumeList() {
-			if (this.storesId.length == 0 && this.cardTypeId == 1) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					winType: 'alter',
-					content: '请选择卡属门店'
-				});
-				return false;
-			}
-			if (this.belongsId.length == 0) {
+		checkForm: function() {
+			if (this.storesId.length == 0) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',
@@ -323,6 +322,18 @@ export default {
 				});
 				return false;
 			}
+			if (this.belongsId.length == 0 && this.cardTypeId == 1) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '请选择卡属门店'
+				});
+				return false;
+			}
+			return true;
+		},
+		async getCardConsumeList() {
+			if(!this.checkForm()) return;
 			let res = await http.getCardConsumeList({
 				data: {
 					startTime: parseInt(this.valueTime[0] / 1000), //开始时间
@@ -450,7 +461,7 @@ export default {
 		},
 		//根据id获取店铺名称
 		getshopName(id) {
-			let shopName;
+			let shopName = '--';
 			for (let i = 0; i < this.shopList.length; i++) {
 				if (id == this.shopList[i].id) {
 					shopName = this.isBrand ? this.shopList[i].shopName : this.shopList[i].name;
@@ -504,16 +515,22 @@ export default {
 					page: this.page, //请求的页数
 					num: this.num, //请求的数据的条数
 					fromId: this.storesId, //操作门店门牌号
-					belongToShop: this.belongsId, //卡属门店
+					belongToShop: this.belongsId.join(','), //卡属门店
 					memberCardId: 0, //实体卡关联id
-					consumeType: this.trantypeId, //交易类型
+					consumeType: this.trantypeId.join(','), //交易类型
 					export: 1
 				}
 			});
 		},
 		openDetail: function(item) { //点击查看详情
-			this.cardNumber = item.cardNumber;
-			this.isShow = 'detail';
+			if (item.cardNumber == '') {
+				this.isShow = 'member';
+				this.mid = item.memberId;
+				this.shopsId = item.shopId;
+			} else {
+				this.cardNumber = item.cardNumber;
+				this.isShow = 'detail';
+			}
 		},
 		//子组件返回的事件
 		getDetail() { //从卡详情返回回来
@@ -538,9 +555,20 @@ export default {
 		},
 		selcardType(item) { //选择电子卡或者实体卡
 			this.page = 1;
-			this.getCardConsumeList();
 			this.cardTypeId = item.id;
-		}
+			this.getCardConsumeList();
+			//console.log(item.id)
+		},
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.num = p;
+			this.getCardConsumeList();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.getCardConsumeList();
+		},
 	},
 	components: {
 		orderDetail: () =>
@@ -556,6 +584,8 @@ export default {
 			import ( /*webpackChunkName: 'card_queries_detail'*/ './../card_queries_detail'),
 		selectStore: () =>
 			import ( /*webpackChunkName: 'transaction_shop'*/ './transaction_shop.vue'),
+		memberDetail: () =>
+			import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_manage_detail'),
 	}
 };
 </script>
@@ -582,6 +612,11 @@ export default {
 	padding-left: 17px;
 	padding-right: 68px;
 	border-bottom: none;
+}
+
+#transaction-enquiry .list .list_title .list_title_l a {
+	color: red;
+	font-size: 16px;
 }
 
 #transaction-enquiry .list .list_title span {
@@ -656,6 +691,13 @@ export default {
 
 
 
+
+
+
+
+
+
+
 /*三角形-所有的边框线*/
 
 .calendar-ctr {
@@ -683,6 +725,13 @@ export default {
 .statisticsLists {
 	border: 1px solid #cccccc;
 }
+
+
+
+
+
+
+
 
 
 
@@ -775,6 +824,13 @@ export default {
 
 
 
+
+
+
+
+
+
+
 /*搜索和重置*/
 
 #transaction-enquiry .content a {
@@ -826,6 +882,13 @@ export default {
 
 
 
+
+
+
+
+
+
+
 /*分页*/
 
 #transaction-enquiry .pages {
@@ -836,6 +899,13 @@ export default {
 	position: relative;
 	margin-bottom: 40px;
 }
+
+
+
+
+
+
+
 
 
 

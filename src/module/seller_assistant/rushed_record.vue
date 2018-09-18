@@ -221,6 +221,7 @@ export default {
 
 
 
+
 /*#rushedRecord .list {
 	width: 1410px;
 	min-height: 156px;

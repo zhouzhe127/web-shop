@@ -256,7 +256,7 @@ export default {
 				this.durationName = this.durationList[this.durationId].name;
 				if (key == 'coupons') {
 					if (this.editInfos.coupons && this.editInfos.coupons != '') {
-						this.selectCoupon = JSON.parse(this.editInfos.coupons);
+						this.selectCoupon = this.editInfos.coupons;
 					}
 				}
 			}

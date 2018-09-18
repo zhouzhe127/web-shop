@@ -73,7 +73,7 @@ export default {
 			singleId: [], //单选选中的id
 		};
 	},
-	props: ['shopIds'],
+	props: ['shopIds','showName'],
 	/*
 	 shopIds选中的店铺id   eg:['12','23']
 	 isSingle是否单选   默认为false
@@ -122,7 +122,7 @@ export default {
 					}
 				}
 			} else {
-				this.singleName = '请选择卡属门店';
+				this.singleName = this.showName;
 			}
 			// for (let i = 0; i < this.allShop.length; i++) {
 			// 	if (this.allShop[i].storeAreaId === 0) {
