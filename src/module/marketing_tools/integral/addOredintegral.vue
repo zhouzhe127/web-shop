@@ -187,7 +187,6 @@ export default {
 			selectCoupon: [], //选中的列表
 			name: '', //商品名称
 			price: '', //所需积分
-			// imageName : '',
 			inventory: '', //库存
 			sort: null, //商品排序
 			status: false,
@@ -200,13 +199,13 @@ export default {
 			bigName: null,
 			title: '',
 			cash: '0', //兑换所需的现金
-			showWin: false,
 			ass: '',
 			shopList: [], //店铺列表
 			isPopupwindow: '',
 			shopStock: '', //店铺库存
 			shopstock: [], //获取店铺库存
-			editInfos: ''
+			editInfos: '',
+			showWin: false,
 		};
 	},
 	mounted() {
