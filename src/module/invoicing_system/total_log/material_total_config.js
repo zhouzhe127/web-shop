@@ -169,18 +169,11 @@ let config = [
 			"historyDescripe": "点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额。",
 			"batchDescripe": "",
 			"canViewHistory": function(item){
-				let dispatchId = item.other.dispatchId;
+				let dispatchId = Number(item.other.dispatchId);
 				return Boolean(dispatchId);
 			},
-			"canViewBatch": function(item){
-				let dispatchId = item.other.dispatchId;
-				return Boolean(dispatchId);
-			},
+			"canViewBatch": true,
 			"batchClick": function(context,item){
-				let dispatchId = item.other.dispatchId;
-				if(!dispatchId){
-					return;
-				}
 				let obj = {
 					path : '/admin/inventoryManagement/supbranchDetail',
 					query:{
@@ -192,7 +185,7 @@ let config = [
 				context.$router.push(obj);
 			},
 			"historyClick":function(context,item){
-				let dispatchId = item.other.dispatchId;
+				let dispatchId = Number(item.other.dispatchId);
 				if(!dispatchId){
 					return;
 				}
@@ -266,9 +259,34 @@ let config = [
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
-				let obj = {};
-				obj.path = '/admin/wareImport';
-				context.$router.push(obj);				
+				let obj = {},
+				other = item.other,
+				cdnUrl = '',
+				userDate = {},
+				temp = {};
+
+				userDate = storage.session('userShop');
+				
+				cdnUrl = userDate.cdnBaseUrl;
+
+				obj.path = '/admin/wareImport/wareProsperity';
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
+				storage.session('detailNeed',temp);
+				context.$router.push(obj);					
 			}
 		},
 		{

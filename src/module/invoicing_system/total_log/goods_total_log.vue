@@ -103,7 +103,7 @@
                 </el-table-column>
                 <el-table-column prop="createUName" label="操作人" width="150px">
                 </el-table-column>
-                <el-table-column prop="wName" label="仓库" width="150px">
+                <el-table-column prop="wName" label="仓库/货架" width="150px">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column}">
@@ -303,6 +303,10 @@ export default {
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
                 ele.changeAfter = ele.changeAfter + ele.itemUnit;
+
+                if(!ele.createUName){
+                    ele.createUName = this.placeholder;
+                }
                 return ele;
             });
         },

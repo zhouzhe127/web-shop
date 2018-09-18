@@ -128,14 +128,12 @@ export default {
 			showCom: false, //是否展示详细内容
 			details: {}, //详情信息
 			allStatus: {
-				1:'未调度',
-				2:'配货中',
-				3:'未出货',
-				4:'全部取消',
-				5:'待入货',
-				6:'已完成',
-				7:'已完成（异常）',
-				8:'配货完成',
+				1:'未出货',
+				2:'待入货',
+				3:'调度中',
+				4:'已取消',
+				5:'已完成',
+				6:'已完成(异常)',
 			},
 			matTypeHash:{
 				0:'成品',
@@ -267,7 +265,7 @@ export default {
 				},
 				{
 					name: '确认出货',
-					className: 'success',type:4,
+					className: 'primary',type:4,
 					fn: () => {
 						this.confirmMethod(); //确认
 					}
@@ -277,7 +275,7 @@ export default {
 			if(this.dynamic == 2) { //this.dynamic==2
 				let addArr = [{
 					name: '入货',
-					className: 'success',type:4,
+					className: 'primary',type:4,
 					fn: () => {
 						this.$router.push({
 							path: '/admin/operation/enterGoods',
@@ -464,7 +462,7 @@ export default {
 					cost = detail.purchasePrice*detail.num;
 					costTotal += cost;
 				}
-				item.costTotal = costTotal+'元';
+				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return goodList;
 		},
@@ -492,7 +490,7 @@ export default {
 					cost = detail.num/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
 					costTotal += cost;
 				}
-				item.costTotal = costTotal+'元';
+				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return materialList;
 		},
@@ -552,7 +550,7 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
-				item.costTotal = costTotal+'元';
+				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return goodList;
 		},
@@ -586,7 +584,7 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
-				item.costTotal = costTotal+'元';
+				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return materialList;
 		},
@@ -607,6 +605,19 @@ export default {
 				}
 			}
 			return res;
+		},
+		setNumfloat(num){//设置三位浮点型数字
+			let str = num+'';
+			let reg = /\.\d{4,}/;
+			if(reg.test(str)){//小数点后四位以上
+				let repNum = str.substr(str.indexOf('.')+3,1);
+				if(repNum>0){//大于0则切掉
+					str = str.replace(/(\d+\.\d{2})(\d*)/,'$1'+repNum);
+				}else{//等于0则+1
+					str = str.replace(/(\d+\.\d{2})(\d*)/,'$1'+'1');
+				}
+			}
+			return str;
 		},
 		timeConversion(time, type) {
 			if(type) {

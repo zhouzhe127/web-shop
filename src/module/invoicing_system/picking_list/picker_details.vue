@@ -139,7 +139,7 @@
 				}else{
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'领料人详情'}]});
 					let arr = [
-						{name:'领料盘库',className:'success',type:4,
+						{name:'领料盘库',className:'primary',type:4,
 							fn:()=>{
 								this.isPickerDetail = false;
 								let data = {storageInfo:this.detailList,info:this.info};

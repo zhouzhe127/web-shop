@@ -42,7 +42,7 @@
 				<el-input v-model="creatorName" placeholder="请输入操作人" maxlength="10" style="width:180px;"></el-input>
 			</div>
 			<div class="input-box">
-				<el-button @click="searchTime" type="success">筛选</el-button>
+				<el-button @click="searchTime" type="primary">筛选</el-button>
 				<el-button @click="reset" type="info">重置</el-button>
 			</div>
 		</div>
@@ -50,7 +50,7 @@
 		<div class="list-box">
 			<el-table
 		    	:data="currentList" stripe border style="width: 100%">
-			    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
+			    <el-table-column type="index" :index="indexMethod" label="序号" width="100">
 			    </el-table-column>
 			    <el-table-column label="操作类型" width="180">
 			    	<template slot-scope="scope">{{scope.row.type==1?'领料':'领料盘库'}}</template>
@@ -121,7 +121,7 @@
 		},
 		methods:{
 			initBtn(){
-				let arr = [{name:'领料',className: 'success',type:5,fn:()=>{
+				let arr = [{name:'领料',className: 'primary',type:5,fn:()=>{
 					let data = {num:this.numType};
 					storage.session('numType',data);
 					this.getMaterial();

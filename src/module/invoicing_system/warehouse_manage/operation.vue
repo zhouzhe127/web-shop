@@ -62,7 +62,7 @@
 					</el-select>
 	            </div>
 	            <div class="inline-box">
-	                <el-button @click="searchClick" type="success">筛选</el-button>
+	                <el-button @click="searchClick" type="primary">筛选</el-button>
 	                <el-button @click="resetSearch" type="info">重置</el-button>
 	            </div>
             </div>
@@ -181,7 +181,7 @@ export default {
 	methods: {
 		initBtn() {
 			let arr = [
-				{name: '快速调度',className: 'success',type:5,
+				{name: '快速调度',className: 'primary',type:5,
 					fn: () => {
 						this.$router.push({
 							path: 'warehouseList/outputStore',

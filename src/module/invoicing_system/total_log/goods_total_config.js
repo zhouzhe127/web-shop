@@ -128,8 +128,8 @@ let config = [
 			"historyDescripe":"",
 			"batchDescripe": "",
 			"canViewHistory": false,
-			"canViewBatch": true,
-			"batchClick": defaultBatchClick,
+			"canViewBatch": false,
+			"batchClick": forbiddenClick,
 			"historyClick": forbiddenClick
 		},
 		{
@@ -152,14 +152,33 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {},
+					other = item.other,
+					cdnUrl = '',
+					userDate = {},
 					temp = {};
 
+				userDate = storage.session('userShop');
+				
+				cdnUrl = userDate.cdnBaseUrl;
+
 				obj.path = '/admin/wareImport/wareProsperity';
-				temp.successLog = item.other.success;
-				temp.failLog = item.other.fail;
-				temp.type = 1;						//1:商品 2:物料
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
 				storage.session('detailNeed',temp);
-				context.$router.push(obj);				
+				context.$router.push(obj);			
 				
 			}	
 		},
@@ -173,12 +192,30 @@ let config = [
 			"batchClick": forbiddenClick,
 			"historyClick":function(context,item){
 				let obj = {},
-				temp = {};
+					other = item.other,
+					cdnUrl = '',
+					userDate = {},
+					temp = {};
+
+				userDate = storage.session('userShop');
+				cdnUrl = userDate.cdnBaseUrl;
 
 				obj.path = '/admin/wareImport/wareProsperity';
-				temp.successLog = item.other.success;
-				temp.failLog = item.other.fail;
-				temp.type = 1;						//1:商品 2:物料
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
 				storage.session('detailNeed',temp);
 				context.$router.push(obj);					
 			}	
@@ -208,15 +245,21 @@ let config = [
 			"typeName": "取消调度回库",
 			"historyDescripe":"进入该条相关的调度记录。调入跳入入货单，调出跳入出货单（商品调跳商品，物料跳物料）。PS：删除调度单不可以查看记录，只能查看批次详情。取消调度单可以查看记录。",
 			"batchDescripe": "",
-			"canViewHistory": true,
+			"canViewHistory": function(item){
+				let dispatchId = Number(item.other.dispatchId);
+				return Boolean(dispatchId);
+			},
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
+				let dispatchId = Number(item.other.dispatchId);
+				if(!dispatchId) return;
 				let obj = {};
 				obj.path = '/admin/operation/enterGoods';
 				obj.query = {
 					logTab:1,
 					logType:1,
+					id:item.other.dispatchId
 				};  
 				context.$router.push(obj);				
 				

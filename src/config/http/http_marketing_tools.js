@@ -168,9 +168,9 @@ export default {
     "downActivity": {
         url: s + 'activity/downActivity' //下架活动
     },
-    "deleteActivity": {
-        url: s + 'activity/deleteActivity' //删除活动
-    },
+    'deleteActivity': {
+		url: w + 'Activityconfig/deleteActivity' //删除活动
+	},
     'addActivity': {
         url: s + 'Activity/addActivity', //保存发布活动
         method: 'post'
