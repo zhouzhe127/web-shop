@@ -1,25 +1,29 @@
 <template>
 	<win :width="589" :height="349" @winEvent="winEvent">
-		<span slot="title">选择用户</span>
+		<span slot="title">选择微信粉丝</span>
 		<div class="user_content" slot="content">
 			<header class="user_header">
-				<input type="text" v-model.trim="keyWords" placeholder="输入关键字">
-				<button @click="selectUser" class="select">筛选</button>
-				<button @click="resertUser" class="resert">重置</button>
+				<el-input class="input" v-model.trim="keyWords" clearable placeholder="输入关键字"></el-input>
+				<el-button v-on:click="selectUser" type="primary">筛选</el-button>
+				<el-button v-on:click="resertUser" type="info">重置</el-button>
 			</header>
 			<div class="user_list">
 				<ul>
 					<li @click="chooseUser(item)" :class="{'user_color': item.selected}" v-for="(item,index) in fansList" :key="index">
+						<i :class="item.selected?'point':'unpoint'"></i>
 						<img :src="item.imageUrl" alt="">
 						<span>{{item.name}}</span>
 					</li>
 				</ul>
 			</div>
-			
+
 			<footer class="user_footer">
 				<!-- 翻页 -->
+
 				<section class="turn-page">
-					<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+					<pageElement background layout="prev, pager, next" @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true">
+					</pageElement>
+					<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
 				</section>
 			</footer>
 		</div>
@@ -38,6 +42,7 @@
 				count: '',
 				userselects: [],
 				total: '',
+				seachValue: ''
 			};
 		},
 		props: {
@@ -96,7 +101,7 @@
 					});
 				}
 			},
-			chooseUser: function (item) {
+			chooseUser: function(item) {
 				if (this.userselects.length >= 10) {
 					this.$store.commit('setWin', {
 						title: '温馨提示',
@@ -133,6 +138,7 @@
 				this.page = 1;
 				this.getUserList(1, true);
 			},
+
 			resertUser() {
 				this.keyWords = '';
 				this.getUserList(1);
@@ -161,13 +167,15 @@
 <style lang="less" scoped>
 	.user_content {
 		padding: 15px 24px 0;
+
 		.user_header {
-			input {
+			.input {
 				width: 183px;
 				height: 42px;
-				padding: 0 17px;
+				// padding: 0 17px;
 				margin-right: 20px;
 			}
+
 			.select {
 				width: 101px;
 				height: 42px;
@@ -177,6 +185,7 @@
 				color: #fff;
 				font-size: 16px;
 			}
+
 			.resert {
 				width: 101px;
 				height: 42px;
@@ -186,26 +195,30 @@
 				color: #fff
 			}
 		}
+
 		.user_list {
 			ul {
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
 				align-items: center;
+
 				li {
 					width: 94px;
 					height: 121px;
-					border: 1px solid RGB(210, 210, 210);
+					border: 1px solid #eaeaea;
 					margin: 10px 10px 0 0;
 					display: flex;
 					flex-direction: column;
 					text-align: center;
+
 					img {
 						width: 60px;
 						height: 60px;
 						border-radius: 50%;
-						margin: 17px 20px
+						margin: 10px 20px;
 					}
+
 					span {
 						text-align: center;
 						color: RGB(51, 51, 51);
@@ -218,17 +231,45 @@
 				}
 			}
 		}
+
 		.user_footer {
 			text-align: left;
 			margin-top: 36px;
 			margin-left: 50px;
+
 			.turn-page {
 				margin: 10px 0 30px 0;
 			}
 		}
+
 		.user_color {
-			background: RGB(255, 237, 209) !important;
-			border: 1px solid RGB(255, 152, 0) !important;
+			border: 1px solid #e9c048 !important;
+		}
+
+		.point {
+			display: block;
+			width: 4px;
+			height: 4px;
+			background: #fff;
+			position: relative;
+			left: 38px;
+			top: 4px;
+			border-radius: 100px;
+			border: 4px solid #f4dfa3;
+			padding: 2px;
+		}
+
+		.unpoint {
+			display: block;
+			width: 4px;
+			height: 4px;
+			background: #fff;
+			position: relative;
+			left: 38px;
+			top: 4px;
+			border-radius: 100px;
+			border: 4px solid #fff;
+			padding: 2px;
 		}
 	}
 </style>

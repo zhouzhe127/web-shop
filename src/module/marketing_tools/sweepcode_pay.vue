@@ -736,8 +736,9 @@
 		position: relative;
 		border-radius: 4px;
 	}
-	#sweepCode .online-box .fans:hover{
-		border:1px solid #e9c048;
+
+	#sweepCode .online-box .fans:hover {
+		border: 1px solid #e9c048;
 	}
 
 	#sweepCode .online-box .fans img {
@@ -759,6 +760,7 @@
 			#28a8e0;
 	}
 
+
 	.employeeColor {
 		color: #e9c048;
 	}
@@ -766,7 +768,8 @@
 	.alink_color {
 		color: #E1BB4A;
 	}
-	.delete{
+
+	.delete {
 		position: absolute;
 		right: 27px;
 		bottom: -34px;
@@ -780,13 +783,15 @@
 		display: none;
 
 	}
-	#sweepCode .online-box .fans .delete img{
+
+	#sweepCode .online-box .fans .delete img {
 		width: 14px;
-		height:14px;
+		height: 14px;
 		float: left;
-		
+
 	}
-		#sweepCode .online-box .fans .delete span{
+
+	#sweepCode .online-box .fans .delete span {
 		float: left;
 		position: relative;
 		top: 16px;
