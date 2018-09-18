@@ -55,55 +55,55 @@ export default {
 			isWin: false, //添加积分商品弹窗
 			editInfos: '', //保存编辑信息
 			titleList: [{
-					titleName: '序号',
-					titleStyle: {
-						width: '100px',
-						flex: 'none'
-					},
-					dataName: 'id'
+				titleName: '序号',
+				titleStyle: {
+					width: '100px',
+					flex: 'none'
 				},
-				{
-					titleName: '商品类型'
-				},
-				{
-					titleName: '商品名称',
-					dataName: 'name'
-				},
-				{
-					titleName: '展示图片',
-					dataName: 'imageName'
-				},
-				{
-					titleName: '创建时间',
-					dataName: 'createTime'
-				},
-				{
-					titleName: '兑换所需积分',
-					dataName: 'price'
-				},
-				{
-					titleName: '兑换所需现金',
-					dataName: 'cash'
-				},
-				{
-					titleName: '库存',
-					dataName: 'inventory'
-				},
-				{
-					titleName: '已兑换数量',
-					dataName: 'exchangeNum'
-				},
-				{
-					titleName: '排序',
-					dataName: 'sort'
-				},
-				{
-					titleName: '状态',
-					dataName: 'status'
-				},
-				{
-					titleName: '操作'
-				}
+				dataName: 'id'
+			},
+			{
+				titleName: '商品类型'
+			},
+			{
+				titleName: '商品名称',
+				dataName: 'name'
+			},
+			{
+				titleName: '展示图片',
+				dataName: 'imageName'
+			},
+			{
+				titleName: '创建时间',
+				dataName: 'createTime'
+			},
+			{
+				titleName: '兑换所需积分',
+				dataName: 'price'
+			},
+			{
+				titleName: '兑换所需现金',
+				dataName: 'cash'
+			},
+			{
+				titleName: '库存',
+				dataName: 'inventory'
+			},
+			{
+				titleName: '已兑换数量',
+				dataName: 'exchangeNum'
+			},
+			{
+				titleName: '排序',
+				dataName: 'sort'
+			},
+			{
+				titleName: '状态',
+				dataName: 'status'
+			},
+			{
+				titleName: '操作'
+			}
 			],
 			allTotal: 100,
 			page: 1,
@@ -139,26 +139,14 @@ export default {
 					this.isTemplate = true;
 				},
 				addIntegral: () => {
+					//console.log('1111');
 					//添加积分商品
 					this.editInfos = '';
-					this.isWin = true;
+					// this.isWin = true;
+					this.$router.push('/admin/integralMall/addIntegralMall');
 				}
 			};
 			this.$store.commit('setPageTools', obj);
-		},
-		//修改商品
-		async ActivityGoodsedit(data) {
-			await http.ActivityGoodsedit({
-				data: data
-			});
-			this.getActivityGoodsList();
-		},
-		//添加商品
-		async ActivityGoodsadd(data) {
-			await http.ActivityGoodsadd({
-				data: data
-			});
-			this.getActivityGoodsList();
 		},
 		//获取列表
 		async getActivityGoodsList() {
@@ -260,27 +248,30 @@ export default {
 			for (let i = 0; i < this.goodLists.length; i++) {
 				if (this.goodLists[i].id == gid) {
 					this.editInfos = this.goodLists[i];
+					storage.session('editInfos', this.editInfos);
+					break;
 				}
 			}
-			this.isWin = true;
+			this.$router.push('/admin/integralMall/addIntegralMall');
+			// this.isWin = true;
 		},
 		//模板选择弹窗回调
 		templateResult() {
 			this.isTemplate = false;
 		},
 		//新增积分弹窗回调
-		getAdd(res, data) {
-			if (res == 'close') {
-				return false;
-			}
-			this.isWin = false;
-			if (res == 'ok') {
-				if (this.editInfos) {
-					this.ActivityGoodsedit(data);
-				} else {
-					this.ActivityGoodsadd(data);
-				}
-			}
+		getAdd() {
+			// if (res == 'close') {
+			// 	return false;
+			// }
+			// this.isWin = false;
+			// if (res == 'ok') {
+			// 	if (this.editInfos) {
+			// 		this.ActivityGoodsedit(data);
+			// 	} else {
+			// 		this.ActivityGoodsadd(data);
+			// 	}
+			// }
 		}
 	},
 	components: {
@@ -294,8 +285,6 @@ export default {
 			import ( /*webpackChunkName: 'addintegral_win'*/ './addintegral_win'),
 		comTable: () =>
 			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
-		calendar: () =>
-			import ( /*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
 	},
 	destroyed() {
 		this.$store.commit('setPageTools', {});

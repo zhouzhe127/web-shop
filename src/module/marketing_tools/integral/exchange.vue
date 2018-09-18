@@ -2,7 +2,7 @@
 <template>
 	<div id="user">
 		<!-- 日期搜索 -->
-		<div class="filter">
+		<div class="filter clearfix">
 			<div class="filbox fl clearfix">
 				<!--日期组件 开始时间-->
 				<span class="fl line">创建时间</span>
@@ -64,76 +64,76 @@ export default {
 			pages: 1,
 			len: null,
 			statusList: [{
-					'id': '1',
-					'name': '全部',
-					'status': '1'
-				},
-				{
-					'id': '2',
-					'name': '未核销',
-					'status': '0'
-				},
-				{
-					'id': '3',
-					'name': '已核销',
-					'status': '0'
-				}
+				'id': '1',
+				'name': '全部',
+				'status': '1'
+			},
+			{
+				'id': '2',
+				'name': '未核销',
+				'status': '0'
+			},
+			{
+				'id': '3',
+				'name': '已核销',
+				'status': '0'
+			}
 			],
 			types: 'all',
 			exportUrl: '',
 			isWin: false,
 			// isFlag:false
 			titleList: [{
-					titleName: '序号',
-					titleStyle: {
-						width: '100px',
-						flex: 'none'
-					},
-					dataName: 'id'
+				titleName: '序号',
+				titleStyle: {
+					width: '100px',
+					flex: 'none'
 				},
-				{
-					titleName: '商品名称',
-					dataName: 'gname'
-				},
-				{
-					titleName: '展示图片'
-				},
-				{
-					titleName: '创建时间',
-					dataName: 'createTime'
-				},
-				{
-					titleName: '消费时间',
-					dataName: 'updateTime'
-				},
-				{
-					titleName: '兑换积分',
-					dataName: 'point'
-				},
-				{
-					titleName: '兑换金额',
-					dataName: 'price'
-				},
-				{
-					titleName: '兑换人',
-					dataName: 'mname'
-				},
-				{
-					titleName: '状态',
-					dataName: 'state'
-				},
-				{
-					titleName: '劵码',
-					dataName: 'code'
-				},
-				{
-					titleName: '领取门店',
-					dataName: 'code'
-				},
-				{
-					titleName: '核销人',
-					dataName: 'code'
-				}
+				dataName: 'id'
+			},
+			{
+				titleName: '商品名称',
+				dataName: 'gname'
+			},
+			{
+				titleName: '展示图片'
+			},
+			{
+				titleName: '创建时间',
+				dataName: 'createTime'
+			},
+			{
+				titleName: '消费时间',
+				dataName: 'updateTime'
+			},
+			{
+				titleName: '兑换积分',
+				dataName: 'point'
+			},
+			{
+				titleName: '兑换金额',
+				dataName: 'price'
+			},
+			{
+				titleName: '兑换人',
+				dataName: 'mname'
+			},
+			{
+				titleName: '状态',
+				dataName: 'state'
+			},
+			{
+				titleName: '劵码',
+				dataName: 'code'
+			},
+			{
+				titleName: '领取门店',
+				dataName: 'code'
+			},
+			{
+				titleName: '核销人',
+				dataName: 'code'
+			}
 			],
 			allTotal: 0,
 			staffList: {}, //操作人列表
@@ -181,7 +181,10 @@ export default {
 				data: {
 					page: this.pages,
 					num: 10,
-					type: this.types
+					type: this.types,
+					start: parseInt(this.startTime / 1000), //开始时间
+					end: parseInt(this.endTime / 1000), //结束时间
+					name: this.actName
 				}
 			});
 			this.useNum = res.numList.useNum;
@@ -199,7 +202,7 @@ export default {
 						type: true,
 						format: 'yyyy.MM.dd'
 					}).format;
-					uses[i].state = uses[i].status == 0 ? '未消费' : '已消费';
+					uses[i].state = uses[i].status == 0 ? '未核销' : '已核销';
 				}
 				if (uses[i].status == 1 && uses[i].updateTime != '0') {
 					uses[i].updateTime = utils.getTime({
@@ -288,8 +291,9 @@ export default {
 			return shopName;
 		},
 		searchList: function() {
-			// this.page = 1;
-			// this.adjustRecord();
+			this.getListByShopId({
+				page: 1
+			});
 		},
 		startTimeChange(time) {
 			//开始时间
@@ -307,6 +311,8 @@ export default {
 			import ( /*webpackChunkName: 'exchange_win'*/ './exchange_win'),
 		comTable: () =>
 			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+		calendar: () =>
+			import ( /*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
 	},
 	destroyed() {
 		this.$store.commit('setPageTools', {});
@@ -314,9 +320,9 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-#user {
+/*#user {
 	margin-top: 60px;
-}
+}*/
 
 .mall-box {
 	width: 100%;
@@ -530,6 +536,8 @@ export default {
 	width: 190px;
 	box-sizing: border-box;
 }
+
+
 /* 搜索图标的公共样式 */
 
 .order-order-searchA,
@@ -579,9 +587,10 @@ export default {
 	border: solid 1px #cecdcd;
 	text-indent: 15px;
 }
+
 .filter .filbox a {
-    width: 80px;
-    height: 40px;
-    line-height: 40px;
+	width: 80px;
+	height: 40px;
+	line-height: 40px;
 }
 </style>

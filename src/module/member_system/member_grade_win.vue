@@ -109,7 +109,7 @@
 		<win v-if="gradeWin" :width="565" :height="300" :align="'center'" @winEvent="chooseGrand" :ok="{content: '保存'}">
 			<span slot="title">选择等级</span>
 			<div slot="content" style="padding: 20px;">
-				<mul-select @selOn="index=arguments[0]" :isradio="true" :list="gradeLists" :selects="index" :name='"name"' :keys='"asdaisdj"' :styles="{backgroundColor: 'rgb(236,236,236)',marginRight: '8px'}"></mul-select>
+				<mul-select @selOn="index=arguments[0]" :isradio="true" :list="gradeLists" :selects="index" :name='"name"' :keys='"asdaisdj"' :styles="{backgroundColor: 'rgb(236,236,236)',marginRight: '8px',marginBottom:'8px'}"></mul-select>
 			</div>
 		</win>
 	</div>
@@ -249,8 +249,8 @@ export default {
 			//  选择会员等级
 			if (str == 'ok') {
 				this.gradeIndex = this.index;
-				this.gradeCName = this.gradeList[this.index].name;
-				this.gradeId = this.gradeList[this.index].id;
+				this.gradeCName = this.gradeLists[this.index].name;
+				this.gradeId = this.gradeLists[this.index].id;
 				if (this.gradeId == this.gid) {
 					this.$store.commit('setWin', {
 						content: '不能选择自身等级！',
@@ -520,6 +520,7 @@ export default {
 					this.index = [i];
 				}
 			}
+			//console.log(JSON.stringify(this.gradeLists));
 		},
 		clean() {
 			// 取消会员等级
