@@ -71,7 +71,7 @@
 			</div>
 		</div>
 		<!-- 是否与会员折扣同享 -->
-		<div class="online-box clearfix">
+		<!-- <div class="online-box clearfix">
 			<span class="online-sub fl">是否与单品优惠券同享</span>
 			<div class="rightHalf">
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in list" :key="index" v-bind:class="{'presentActive':isItemShare == index }" @click="chooseIntegral('2',index)">{{item.name}}</span>
@@ -85,9 +85,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- 是否与会员折扣同享 -->
-		<div class="online-box clearfix">
+		<!-- <div class="online-box clearfix">
 			<span class="online-sub fl">是否与整单优惠券同享</span>
 			<div class="rightHalf">
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in list" :key="index" v-bind:class="{'presentActive':isWholeShare == index }" @click="chooseIntegral('3',index)">{{item.name}}</span>
@@ -101,7 +101,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- 默认规则 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">默认规则</span>
