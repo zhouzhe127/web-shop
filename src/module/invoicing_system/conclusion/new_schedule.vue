@@ -148,8 +148,8 @@
 				tabactive: 0,
 				tebData: ['商品', '物料'],
 				waremessage: false,
-				auditStatus: ['待审核', '已取消', '审核未通过', '审核通过'],
-				dispatchStatus: ['未调度', '调度中', '未出货', '全部取消', '带入货', '已完成', '已完成（异常）'],
+				auditStatus: ['审核中', '已取消', '审核未通过', '审核通过'],
+				dispatchStatus: ['未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
 				titleList: [{
 						titleName: '操作'
 					},
@@ -526,7 +526,7 @@
 					});
 					for (let i in adArr) {
 						for (let item of resNum) {
-							if (adArr[i].id == item.id) {
+							if (adArr[i].itemId == item.id) {
 								adArr[i].surplus = item.surplus;
 								if(type!=1) adArr[i].unitArr = item.unitData
 							}
