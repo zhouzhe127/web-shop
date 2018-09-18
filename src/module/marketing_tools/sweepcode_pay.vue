@@ -756,7 +756,7 @@
 
 	.active {
 		background: url(../../res/icon/selected.png) center center no-repeat,
-			/* #28a8e0; */
+			#28a8e0;
 	}
 
 	.employeeColor {
