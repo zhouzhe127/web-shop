@@ -241,8 +241,8 @@ export default {
 			//  选择会员等级
 			if (str == 'ok') {
 				this.gradeIndex = this.index;
-				this.gradeCName = this.gradeList[this.index].name;
-				this.gradeId = this.gradeList[this.index].id;
+				this.gradeCName = this.gradeLists[this.index].name;
+				this.gradeId = this.gradeLists[this.index].id;
 				if (this.gradeId == this.gid) {
 					this.$store.commit('setWin', {
 						content: '不能选择自身等级！',
