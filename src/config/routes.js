@@ -1,6 +1,4 @@
 import Login from 'src/module/login';
-const test10 = (resolve) =>
-    import ( /* webpackChunkName: "brand_audit" */ 'src/module/invoicing_system/wareimport/test');
 const brandAudit = (resolve) =>
     import ( /* webpackChunkName: "brand_audit" */ 'src/module/brand/brand_audit');
 const loginHead = (resolve) =>
@@ -95,6 +93,17 @@ const batchLogDetail = (resolve) =>
 const batchLogPrint = (resolve) =>
     import ( /*webpackChunkName:'batch_log_print'*/ 'src/module/invoicing_system/batch_log/batch_log_print'); //批量调度,审核日志详情打印
 
+//总日志
+const goodsTotalLog = (resolve) =>
+    import ( /*webpackChunkName:'goods_total_log'*/ 'src/module/invoicing_system/total_log/goods_total_log'); //批量调度,审核日志详情打印
+const materialTotalLog = (resolve) =>
+    import ( /*webpackChunkName:'material_total_log'*/ 'src/module/invoicing_system/total_log/material_total_log'); //批量调度,审核日志详情打印
+const bomConsumeDetail = (resolve) =>
+    import ( /*webpackChunkName:'bom_consume_detail'*/ 'src/module/invoicing_system/total_log/bom_consume_detail'); //批量调度,审核日志详情打印
+const goodsBatchTotalLogDetail = (resolve) =>
+    import ( /*webpackChunkName:'goods_batch_total_log_detail'*/ 'src/module/invoicing_system/total_log/goods_batch_total_log_detail'); //批量调度,审核日志详情打印
+
+
 const suppliesDetail = (resolve) =>
     import ( /* webpackChunkName:"supplies_detail" */ 'src/module/invoicing_system/invoicing/supplies_detail'); //进销存详情物料详情   
 const putstroage = (resolve) =>
@@ -142,9 +151,11 @@ const bomChange = (resolve) =>
 const checkMaterial = (resolve) =>
     import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/check_material'); //批量盘库-物料盘库-提交
 const editGoodsCountTemplate = (resolve) =>
-    import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_goods'); //批量盘库-编辑商品模板
+    import ( /* webpackChunkName:"add_goods" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_goods'); //批量盘库-编辑商品模板
 const editMaterialCountTemplate = (resolve) =>
-    import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_material'); //批量盘库-编辑物料模板
+    import ( /* webpackChunkName:"add_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_material'); //批量盘库-编辑物料模板
+const supbranchDetail = (resolve) =>
+    import ( /* webpackChunkName:"supbranch_detail" */ 'src/module/invoicing_system/invoicing/supbranch_detail'); //物料批次详情    
 const wareImport = (resolve) =>
     import ( /* webpackChunkName:"ware_import" */ 'src/module/invoicing_system/wareimport/ware_import'); //入库导入
 const wareProsperity = (resolve) =>
@@ -306,7 +317,7 @@ const shopNotice = (resolve) =>
 const boundPublicNumber = (resolve) =>
     import ( /* webpackChunkName:"bound_public_number" */ 'src/module/public_number_configuration/bound_public_number'); //绑定公众号
 const smallProgramBinding = (resolve) =>
-    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/program_config/small_program'); //小程序绑定
+    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/small_program_binding'); //小程序绑定
 const moduleSet = (resolve) =>
     import ( /* webpackChunkName:"module_set" */ 'src/module/public_number_configuration/module_set'); //模板设置
 const menuSet = (resolve) =>
@@ -367,9 +378,7 @@ const freeGoods = (resolve) =>
 const OrderBillList = () =>
     import ( /* webpackChunkName:"order_bill_list" */ 'src/module/statistics/order_bill_list'); //挂账统计
 const Handover = () =>
-    import ( /* webpackChunkName:"handover_brand" */ 'src/module/statistics/handover_brand'); //交接班统计品牌
-const handoverShop = () =>
-	import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接班统计单店
+    import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接班
 const MemberRecharge = () =>
     import ( /* webpackChunkName:"member_recharge" */ 'src/module/statistics/member_recharge/member_recharges'); //会员充值统计
 const reservationManager = (resolve) =>
@@ -459,7 +468,7 @@ const activityFullreduce = () =>
 const activityCoupon = () =>
     import ( /* webpackChunkName:"activity_coupon" */ 'src/module/marketing_tools/new_activity/activity_coupon'); //领券活动   
 const selfHelpMode = () =>
-    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help/self_help_mode'); //自助模式
+    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help_mode'); //自助模式
 const weixinOnfiguration = () =>
     import ( /* webpackChunkName:"weixin_onfiguration" */ 'src/module/marketing_tools/weixin_onfiguration'); //微信首页配置
 const CommentConfig = () =>
@@ -659,12 +668,6 @@ export default [{
                     path: 'storeOverview', //概况
                     components: {
                         details_con: homePage
-                    }
-                },
-                {
-                    path: 'test', //商品管理
-                    components: {
-                        details_con: test10
                     }
                 },
                 {
@@ -1253,22 +1256,10 @@ export default [{
                     }
                 },
                 {
-					path: 'handover', //交接班统计
-					components: {
-						details_con: details_con
-					},
-					children: [{
-						path: '',
-						components: {
-							details_con: Handover //品牌
-						}
-					},
-					{
-							path: 'handoverShop', //单店
-							components: {
-								details_con: handoverShop
-							}
-                    }]
+                    path: 'handover', //挂账统计
+                    components: {
+                        details_con: Handover
+                    }
                 },
                 {
                     path: 'memberRecharge', //挂账统计
@@ -1365,7 +1356,11 @@ export default [{
                             path: '',
                             components: {
                                 details_con: wareImport
+                            },
+                            meta: {
+                                keepAlive: true
                             }
+
                         },
                         {
                             path: 'wareProsperity', //入库导入成功
@@ -1528,6 +1523,13 @@ export default [{
                             path: 'warehouseCount',
                             components: {
                                 details_con: warehouseCount
+                            }
+                        },
+                        {
+                            //物料批次详情
+                            path: 'supbranchDetail',
+                            components: {
+                                details_con: supbranchDetail
                             }
                         }
                     ]
@@ -1796,6 +1798,45 @@ export default [{
                             }
                         },
                     ]
+                },
+                //总日志
+                {
+                    path:'totalLog',
+                    components:{
+                        details_con: details_con
+                    },
+                    children:[
+                        {
+                            path:'',
+                            components:{
+                                details_con:goodsTotalLog
+                            },
+                            meta:{
+                                keepAlive:true,
+                            }
+                        },
+                        {
+                            path:'materialTotalLog',
+                            components:{
+                                details_con: materialTotalLog
+                            },
+                            meta:{
+                                keepAlive:true,
+                            }
+                        },
+                    ],
+                },
+                {
+                    path:'bomConsumeDetail',
+                    components:{
+                        details_con: bomConsumeDetail
+                    },
+                },
+                {
+                    path:'goodsBatchTotalLogDetail',
+                    components:{
+                        details_con: goodsBatchTotalLogDetail
+                    },
                 },
                 {
                     path: 'materialCount', //批量盘库-物料盘库

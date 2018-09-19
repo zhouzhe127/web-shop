@@ -206,7 +206,6 @@
 				this.selectItem = this.selList.map((res)=>{
 					return {mid:res.id,aid:res.areaId};
 				});
-				console.log(this.matType);
 			},
 			filter() { //筛选 时间搜索公用
 				this.page = 1;
@@ -282,11 +281,13 @@
 				}
 			},
 			setCate(arr){//设置分类
-				let cateName = [];
-				for(let item of arr){
-					cateName.push(item.name);
+				if(arr && arr.length){
+					let cateName = [];
+					for(let item of arr){
+						cateName.push(item.name);
+					}
+					return cateName.join(', ');
 				}
-				return cateName.join(', ');
 			},
 			setSuprlus(num,unit){//换算库存数量
 				let def='',min='',value=1;

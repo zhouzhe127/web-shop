@@ -44,8 +44,8 @@
 				</ul>
 			</div>
 			<div class="search">
-				<div class="blue filter" @click="turnToEdit">修改</div>
-				<div class="gray reset" @click="deleteBom">删除</div>
+				<el-button type='success' @click="turnToEdit">修改</el-button>
+				<el-button type='danger' @click="deleteBom">删除</el-button>
 			</div>
 		</div>
 
@@ -70,7 +70,7 @@
 					<div class="table-row" v-for="(item,index) in bomDetail" :key="index">
 						<div class="cell">{{index+1}}</div>
 						<div class="cell">{{item.mName}}</div>
-						<div class="cell">
+						<div class="cell cell-sel">
 							<el-select v-model="item.unitShowId" placeholder="请选择bom单类型" @change="(res)=>{changeUnit(res,item,index)}" style="width:90px;">
 							    <el-option
 									v-for="unit in item.unit"
@@ -190,7 +190,8 @@
 			initBtn() {
 				this.$store.commit('setPageTools', [{
 					name: '返回',
-					className: ['back'],
+					className: 'info',
+					type:4,
 					fn: () => {
 						storage.session('bomListDestroy', true);
 						delete this.$route.query.id;
@@ -334,7 +335,7 @@
 		;
 		.headBox {
 			padding-bottom: 6px;
-			border: 1px #ccc solid;
+			border: 1px #dcdfe6 solid;
 			position: relative;
 			.headTitle {
 				padding: 10px 20px;
@@ -366,7 +367,7 @@
 				display: inline-block;
 				position: absolute;
 				top: 130px;
-				right: 0;
+				right: 20px;
 				.search-btn {
 					width: 100px;
 					height: 40px;
@@ -386,7 +387,7 @@
 		}
 		.table {
 			margin-top: 25px;
-			border: 1px solid #ccc;
+			border: 1px solid #dcdfe6;
 			.table-title {
 				.mixin(#333, 45px, 16px);
 				text-indent: 15px;
@@ -509,6 +510,7 @@
 						}
 					}
 				}
+				.cell-sel>*{line-height: normal;}
 				@store-width: 33.2%;
 				.area-detail {
 					display: block;

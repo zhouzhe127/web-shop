@@ -50,8 +50,10 @@
 				</div>
 			</div>
 			<div class="tab-box">
-				<span :class="{active:tabIndex==0}" @click="tabIndex=0">商品</span>
-				<span :class="{active:tabIndex==1}" @click="tabIndex=1">物料</span>
+				<el-radio-group v-model="tabIndex">
+				    <el-radio-button label="0">商品</el-radio-button>
+				    <el-radio-button label="1">物料</el-radio-button>
+				</el-radio-group>
 			</div>
 			<div class="consume-list" v-if="tabIndex==0">
 				<div class="head">商品列表 · 共 <em>{{enterGoods.success.list.length}}</em> 个条目</div>
@@ -262,12 +264,14 @@ export default {
 			showWareWin: null, //仓库详情弹窗
 			details: {}, //详情信息
 			allStatus: {
-				'1': '未出货',
-				'2': '待入货',
-				'3': '调度中',
-				'4': '已取消',
-				'5': '已完成',
-				'6': '已完成(异常)',
+				1:'未调度',
+				2:'配货中',
+				3:'未出货',
+				4:'全部取消',
+				5:'待入货',
+				6:'已完成',
+				7:'已完成（异常）',
+				8:'配货完成',
 			},
 			outWareId: '', //出库的仓库id
 			detailObj: {}, //详情列表对象
@@ -338,17 +342,19 @@ export default {
 	},
 	methods: {
 		initBtn() {
-			this.btnArr = [{name: '确认',style: 'background: #f8931f;border: 1px solid #f8931f;color: #fff;',
-				fn: () => {
-					this.confirm();
+			this.btnArr = [
+				{name: '确认',className:'success',type:4,
+					fn: () => {
+						this.confirm();
+					}
+				},
+				{name: '取消',className:'info',type:4,
+					fn: () => {
+						storage.session('operationRequestDestroy', true);
+						this.$router.go(-1);
+					}
 				}
-			},
-			{name: '取消',style: 'background: #B3B3B3;border: 1px solid #B3B3B3;color: #fff;',
-				fn: () => {
-					storage.session('operationRequestDestroy', true);
-					this.$router.go(-1);
-				}
-			}];
+			];
 			this.$store.commit('setPageTools', this.btnArr);
 		},
 		initTabIndex(){//设置初始化选项卡位置
@@ -802,9 +808,11 @@ export default {
 		position: relative;
 		.color-size {color: #333;font-size: 16px;}
 		.head-line {
-			padding-left: 15px;height: 30px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 30px;color: #333;
+			padding-left: 15px;height: 20px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 20px;color: #333;
+			position: relative;
 			&:after {
-				content: "";display: inline-block;width: 535px;margin-left: 25px;border: 1px dashed #ccc;position: relative;top: -5px;
+				content: "";display: inline-block;width: 100%;border: 1px dashed #ccc;position: absolute;top: 10px;
+				left: 60px;
 			}
 		}
 		.detail {overflow: hidden;padding-top: 20px;padding-left:5%;
@@ -829,7 +837,7 @@ export default {
 			}
 		}
 		.consume-list{
-			width: 100%;border: 1px solid #ccc;
+			width: 100%;border: 1px solid #dcdfe6;
 			.head{height: 45px;line-height: 45px;padding: 0 10px;font-size: 16px;
 				em{color: #ff3a05;}
 			}
@@ -842,7 +850,7 @@ export default {
 					.ware{padding-right: 30px;}
 					.narrow{width: 9%;}
 				}
-				.item{text-align: center;border-bottom: 2px solid #f7f7f7;width: 100%;
+				.item{text-align: center;border-bottom: 2px solid #dcdfe6;width: 100%;
 					.unit{width: 13%;float: left;height: 70px;line-height: 70px;
 						text-overflow: ellipsis;white-space: nowrap;overflow: hidden;
 						.handle-btn{display: inline-block;height: 18px;vertical-align: middle;line-height: normal;padding: 0 15px;cursor: pointer;
