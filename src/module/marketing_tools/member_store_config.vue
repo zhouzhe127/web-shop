@@ -18,7 +18,7 @@
 		<!-- 微店储值支付方式 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">微店储值支付方式</span>
-			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'80px',backgroundColor:'#fff',marginRight:'8px'}"
+			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{backgroundColor:'#fff',marginRight:'8px'}"
 			    :name='"name"' :key='"id"'></mulSelect>
 		</div>
 		<!-- 保存 -->

@@ -36,7 +36,7 @@
 			</div>
 			<div slot="con-3" slot-scope="props">
 				<div v-if="props.data.type == '0'">{{timeLimit[props.data.limit].name}}</div>
-				<div v-else>{{setEndTime(props.data.createTime,props.data.endTime)}}</div>
+				<div v-else>{{setEndTime(props.data.startTime,props.data.endTime)}}</div>
 			</div>
 			<div slot="con-4" slot-scope="props">
 				<div v-if="props.data.giveNum == '0'">无限制</div>

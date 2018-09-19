@@ -249,27 +249,27 @@ export default {
 		paymentWin: () =>
 			import ( /*webpackChunkName: "payment_win"*/ './payment_win'),
 	},
-	created() {
-		let obj1 = {
-			titleStyle: {
-				fontSize: 16 + 'px'
-			}
-		};
-		let obj2 = {
-			conStyle: {
-				'color': '#ff9800'
-			}
-		};
-		for (let item of this.titleList) {
-			if (item.dataName != 'totalOtherPay') {
-				Object.assign(item, obj1, obj2);
-			}
-		}
-		for (let item of this.shoptitleList) {
-			Object.assign(item, obj1);
-		}
+	// created() {
+	// 	let obj1 = {
+	// 		titleStyle: {
+	// 			fontSize: 16 + 'px'
+	// 		}
+	// 	};
+	// 	let obj2 = {
+	// 		conStyle: {
+	// 			'color': '#ff9800'
+	// 		}
+	// 	};
+	// 	for (let item of this.titleList) {
+	// 		if (item.dataName != 'totalOtherPay') {
+	// 			Object.assign(item, obj1, obj2);
+	// 		}
+	// 	}
+	// 	for (let item of this.shoptitleList) {
+	// 		Object.assign(item, obj1);
+	// 	}
 
-	},
+	// },
 	mounted() {
 		this.$store.commit('setPageTools', [{
 			name: '返回',

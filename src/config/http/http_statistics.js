@@ -419,5 +419,6 @@ export default {
 	},
 	'getScanPayOrderByCodes': {
 		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
+		method:'post'
 	},
 };

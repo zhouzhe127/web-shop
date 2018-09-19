@@ -9,7 +9,7 @@
 					</el-input>
 				</div>
 				<div class="paymentbox fl">
-					<el-button type="primary" style="width:120px;">筛选</el-button>
+					<el-button type="primary" style="width:120px;" @click="getScanPayOrderByCodes">筛选</el-button>
 					<el-button type="info" style="width:120px;">重置</el-button>
 				</div>
 			</div>
@@ -279,20 +279,35 @@ export default {
 				this.paymentCode = '请选择收款码';
 			}
 		},
-		async getScanPayOrderByCodes(){
+		async getScanPayOrderByCodes() {
+			if (this.dynamicTags.length == 0) {
+				this.$store.commit('setWin', {
+					content: '请选择收款码',
+					title: '操作提示',
+					winType: 'alert'
+				});
+				return false;
+			}
 			let codes = [];
-			for(let item of this.dynamicTags){
+			for (let item of this.dynamicTags) {
 				codes.push(item.staffId);
 			}
-			let data = await getScanPayOrderByCodes({
-				data:{
-					showShopId:this.constructionsId,
+			let data = await http.getScanPayOrderByCodes({
+				data: {
+					showShopId: this.constructionsId,
 					codes: codes.join(','),
 					taskId: this.taskId,
-					page:'',
-					num:''
+					showDay: ''
 				}
 			})
+			if (data) {
+				this.staticLists = [];
+				this.staticLists.push(data.total); //头部的数据
+				this.allFormList = data.list; //身体的数据
+				this.$nextTick(() => {
+					this.setPage();
+				});
+			}
 		}
 	},
 	components: {
@@ -383,5 +398,6 @@ export default {
 
 .el-tag+.el-tag {
 	margin-left: 10px;
+	margin-bottom: 10px;
 }
 </style>
