@@ -104,7 +104,7 @@ a {
   transition: background-color ease-in-out 0.2s;
 }
 input:disabled {
-  background-color: #e5e5e0 !important;
+  background-color: #f5f7fa !important;
 }
 .btn-concent button {
   font-size: 16px;

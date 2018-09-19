@@ -417,4 +417,7 @@ export default {
 	'getDepositPlanList': {
 		url: w + 'Depositplan/getDepositPlanList', //获取方案列表
 	},
+	'getScanPayOrderByCodes': {
+		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
+	},
 };

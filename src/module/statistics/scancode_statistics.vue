@@ -311,7 +311,7 @@ export default {
 					}
 					return false;
 				}
-			}, 10000);
+			}, 20000);
 			this.timerqueue.push(this.timeout);
 			if (data == true) {
 				clearInterval(this.timer);
@@ -411,7 +411,7 @@ export default {
 		comTable: () =>
 			import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 		oneshopStatics: () =>
-			import ( /*webpackChunkName: "scancode_shopstatistics"*/ './scancode_shopstatistics')
+			import ( /*webpackChunkName: "scancode_shopstatistics"*/ './scancode_shopstatistics'),	
 	},
 	created() {
 		let obj1 = {
