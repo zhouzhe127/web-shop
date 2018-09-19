@@ -1,11 +1,28 @@
 <template>
     <div id="unit">
-        <div class="split-title">
-            物料信息
-        </div>
-        <div class="mainName">
-            <span>物料名称:</span>
-            <span>{{materialInfo.name}}</span>
+        <div class="heander">
+            <div class="title"><span>库存详情</span></div>
+            <div class="innerBox">
+                <ul>
+                    <li><span>物料名称：</span><span>{{materialInfo.name}}</span></li>
+                    <li><span>物料简码：</span><span>{{materialInfo.BC}}</span></li>
+                    <li><span>品牌：</span><span>{{materialInfo.brandName||'无'}}</span></li>
+                    <li><span>批次数：</span><span>{{materialInfo.batchNum}}</span></li>
+                </ul>
+                <ul>
+                    <li><span>物料类型：</span><span>{{typeValue[Number(materialInfo.type)]}}</span></li>
+                    <li><span>物料单位：</span><span>{{getunit(materialInfo.unit)}}</span></li>
+                    <li><span>默认单位：</span><span v-if="materialInfo.unit">{{getdefUnit(materialInfo.unit,1)}}</span></li>
+                    <li><span>最小单位：</span><span v-if="materialInfo.unit">{{getdefUnit(materialInfo.unit,2)}}</span></li>
+
+                </ul>
+                <ul>
+                    <li><span>单位换算：</span><span>{{afterUnit}}</span></li>
+                    <li><span>分类：</span><span>{{getunit(materialInfo.cate)}}</span></li>
+                    <li><span>库存总量：</span><span>{{materialInfo.num}}{{getdefUnit(materialInfo.unit,2)}}</span></li>
+                    <li><span>保质期：</span><span>{{materialInfo.validity}}{{dataUnit[materialInfo.validityType]}}</span></li>
+                </ul>
+            </div>
         </div>
         <el-table :data="barmessage" style="width: 100%;margin-top:20px;white-space: pre !important;" stripe>
             <el-table-column :label="`修改单位 · 操作时间${getTime(detailList.createTime)}`" class-name='tabletop'>
@@ -31,7 +48,10 @@
     export default {
         data() {
             return {
-                barmessage: []
+                barmessage: [],
+                typeValue:['成品','半成品','普通物料'],
+                afterUnit:'',
+                dataUnit: ['月', '日', '年'],
             };
         },
         props: {
@@ -57,7 +77,16 @@
                     s.push(item.name);
                 }
                 return s.join(',');
-            }
+            },
+            getdefUnit(arr, type) {
+				//获取默认单位,最小单位
+				let key = type == 1 ? 'isDefault' : 'isMin';
+				for(let item of arr) {
+					if(item[key] == 1) {
+						return item.name;
+					}
+				}
+			}
         },
         mounted() {
             console.log(this.detailList);
@@ -82,6 +111,7 @@
 
                         item.unitname = '单位换算';
                         item.modifyAfter = this.relaUnit(item.modifyAfter);
+                        this.afterUnit = item.modifyAfter;
                         item.modifyBefore = this.relaUnit(item.modifyBefore);
                         break;
                 }
@@ -105,10 +135,12 @@
             line-height: @height;
             font-size: @size;
         }
+
         .sale {
             height: 25px;
             line-height: 25px;
             margin-top: 30px;
+
             .tips-icon {
                 width: 25px;
                 height: 25px;
@@ -116,53 +148,95 @@
                 margin-right: 5px;
                 background: url('../../../res/images/handle-tips.png') center center no-repeat;
             }
+
             .tips-word {
                 color: #a5a5a5;
                 font-size: 14px;
             }
         }
-        .bomName{
+
+        .bomName {
             margin-top: 20px;
-            span{
+
+            span {
                 display: inline-block;
-                margin-right: 15px; 
+                margin-right: 15px;
             }
-            a{
-                color: #E1BB4A; 
+
+            a {
+                color: #E1BB4A;
                 text-decoration: underline;
                 margin-right: 4px;
-                &::after{
+
+                &::after {
                     content: '|';
                     display: inline-block;
                     padding: 5px;
                 }
-                &:last-child{
-                    &::after{
+
+                &:last-child {
+                    &::after {
                         content: '';
                     }
                 }
             }
         }
-        .split-title {
-            text-indent: 15px;
-            border-left: 2px solid #29a8e0;
-            margin-bottom: 30px;
-            .mixin(#333,
-            20px,
-            16px);
-            &:after {
-                content: '';
-                display: inline-block;
-                border: 1px dashed #ddd;
-                width: 470px;
-                position: relative;
-                left: 20px;
-                top: -4px;
-            }
-        }
-        .mainName {
-            padding-left: 40px;
 
+        .heander {
+            margin-bottom: 20px;
+
+            .title {
+                height: 20px;
+                line-height: 20px;
+                border-left: 4px solid #E1BB4A;
+                padding-left: 20px;
+                margin-bottom: 30px;
+                position: relative;
+                padding-left: 100px;
+
+                span {
+                    color: #333;
+                    font-size: 16px;
+                    position: absolute;
+                    left: 10px;
+                    top: 0;
+                    height: 20px;
+                    line-height: 20px;
+                }
+
+                &:after {
+                    content: '';
+                    width: 100%;
+                    display: inline-block;
+                    vertical-align: middle;
+                    border-top: 2px dashed #ddd;
+                    position: relative;
+                }
+            }
+
+            .innerBox {
+                padding-left: 50px;
+
+                ul {
+                    display: inline-block;
+                    width: 32%;
+                    vertical-align: top;
+
+                    li {
+                        margin-bottom: 15px;
+
+                        span {
+                            font-size: 16px;
+                            display: inline-block;
+                            line-height: 20px;
+                            max-width: 70%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+            }
         }
     }
 </style>

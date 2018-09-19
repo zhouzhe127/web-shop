@@ -52,7 +52,7 @@
 					</section>
 					<section>
 						<h6>进价:</h6>
-						<span v-if="lossInfo.purchaseUnit">{{lossInfo.purchasePrice}}元/{{getpiceunit(lossInfo.purchaseUnit)}}</span>
+						<span v-if="lossInfo.distributionPrice">{{lossInfo.distributionPrice}}元/{{getpiceunit(lossInfo.distributionUnit)}}</span>
 					</section>
 				</li>
 				<li>

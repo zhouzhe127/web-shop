@@ -7,22 +7,47 @@
 -->
 <template>
 	<div class="warehouse-lists">
-        <ul class="choose-btn">
-            <li :class="{'select':toggleCom==0}" @click="toggleCom=0">仓库列表</li>
-            <li :class="{'select':toggleCom==1}" @click="toggleCom=1">操作记录</li>
-        </ul>
+        <div class="choose-btn">
+            <el-radio-group v-model="toggleCom">
+			    <el-radio-button label="0">仓库列表</el-radio-button>
+			    <el-radio-button label="1">操作记录</el-radio-button>
+			</el-radio-group>
+        </div>
 		<div v-if="toggleCom==0">
 			<div class="filter">
 				<div class="block">
 					<div class="inline-box">
-						<input type="text" placeholder="请输入仓库编号" v-model='code' @input="codeInput" @propertychange="codeInput"/>
+						<el-input v-model='code' placeholder="请输入仓库编号" class="el-input"></el-input>
 					</div>
 					<div class="inline-box">
-						<input type="text" placeholder="请输入仓库名称" v-model="name"/>
+						<el-input v-model='name' placeholder="请输入仓库名称" class="el-input"></el-input>
 					</div>
 					<div class="inline-box">
-						仓库所属：
-						<selectStore @emit="getDrop" :sorts="owner" :tipName="dropName" :isConfirm="true"></selectStore>
+						<span class="inline-span">仓库所属：</span>
+						<el-popover
+							placement="bottom"
+							width="500"
+							v-model="visible"
+							@hide="ownerClose"
+							trigger="click">
+							<div class="btn-box">
+								<el-checkbox-group v-model="ownerSel">
+									<div class="btn-cell" v-for="(item,index) in owner" :key="index">
+										<el-checkbox :label="item.id" border>{{item.name}}</el-checkbox>
+									</div>
+								</el-checkbox-group>
+							</div>
+							<div class="sel-all">
+								<el-button type="info" size="mini" @click="selOwnerAll">取消全部</el-button>
+								<el-button type="primary" size="mini" @click="selOwnerAll(1)">选择全部</el-button>
+							</div>
+							<div class="handle">
+								<el-button type="text" @click="ownerHandle">取消</el-button>
+								<el-button type="primary" size="mini" @click="ownerHandle(1)">确认</el-button>
+							</div>
+							<el-input slot="reference" suffix-icon="el-icon-arrow-down" v-model="ownerName"
+								 placeholder="请选择所属" class="el-input"></el-input>
+						</el-popover>
 					</div>
 				</div>
 				<div class="block">
@@ -31,65 +56,61 @@
 						<addressLinkage @emit="getAddress" :province="province" :city="city" :area="town"></addressLinkage>
 					</div>
 					<div class="inline-box">
-						<input type="text" placeholder="请输入详细地址" v-model="place"/>
+						<el-input v-model='place' placeholder="请输入详细地址" class="el-input"></el-input>
 					</div>
 					<div class="inline-box input-check select-ban">
 						<i @click="clickCheck" :class="{active:this.isShare === '0'}"></i>
 						非共享
 					</div>
 					<div class="inline-box button-box">
-						<span class="blue" @click="filterClick">筛选</span>
-						<span class="gray" @click="reset">重置</span>
+						<el-button type="primary" @click="filterClick">筛选</el-button>
+						<el-button type="info" @click="reset">重置</el-button>
 					</div>
 				</div>
 			</div>
 			<div class="main">
 				<div class="list">
-					<div class="head">
-						仓库列表 · 共<em> {{allList.length}} </em>条数据
-					</div>
-					<div class="list-box">
-						<div class="fixed" @click="listHandle">
-							<span class="fixed-title">操作</span>
-							<div class="fixed-list" v-for="(item,index) in list" :key="index">
-								<span class="detail" :data-index="index">查看详情</span>
-							</div>
-						</div>
-						<div class="title">
-							<span>仓库名称</span>
-							<span class="narrow">共享状态</span>
-							<span>仓库编号</span>
-							<span>仓库所属</span>
-							<span>区域总数</span>
-							<span>商品种类</span>
-							<span>物料种类</span>
-							<span>仓库地址</span>
-						</div>
-						<ul>
-							<li v-for="(item,index) in list" :key="index">
-								<!--仓库名称-->
-								<span>{{item.name}}</span>
-								<!--共享状态-->
-								<span class="narrow">{{setShared(item.isShared)}}</span>
-								<!--仓库编号-->
-								<span class="text-ellipsis" :title="item.code">{{item.code}}</span>
-								<!--仓库所属-->
-								<span class="text-ellipsis" :title="item.ownerName">{{item.ownerName}}</span>
-								<!--区域总数-->
-								<span>{{item.area.length}}</span>
-								<!--商品种类-->
-								<span>{{Number(item.KindWeightKg||item.kindWeightKg) + Number(item.kindGoods) + Number(item.kindWeightG)}}</span>
-								<!--物料种类-->
-								<span>{{item.kindMaterial}}</span>
-								<!--仓库地址-->
-								<span><em class="warp warp-three">{{item.provinceName}} {{item.cityName}} {{item.townName}} {{item.place}}</em></span>
-							</li>
-							<li class="empty" v-if="!list.length">- 暂无条目 -</li>
-						</ul>
-					</div>
+					<el-table :data="list" stripe border style="width: 100%">
+					    <el-table-column prop="name" label="仓库名称">
+					    </el-table-column>
+					    <el-table-column label="共享状态">
+					    	<template slot-scope="scope">
+					        	{{setShared(scope.row.isShared)}}
+					      	</template>
+					    </el-table-column>
+					    <el-table-column prop="code" label="仓库编号">
+					    </el-table-column>
+					    <el-table-column prop="ownerName" label="仓库所属">
+					    </el-table-column>
+					    <el-table-column prop="area.length" label="区域总数">
+					    </el-table-column>
+					    <el-table-column label="商品种类">
+					    	<template slot-scope="scope">
+					        	{{Number(scope.row.KindWeightKg||scope.row.kindWeightKg) + Number(scope.row.kindGoods) + Number(scope.row.kindWeightG)}}
+					      	</template>
+					    </el-table-column>
+					    <el-table-column prop="kindMaterial" label="物料种类">
+					    </el-table-column>
+					    <el-table-column label="仓库地址">
+					    	<template slot-scope="scope">
+					        	{{scope.row.provinceName}} {{scope.row.cityName}} {{scope.row.townName}} {{scope.row.place}}
+					      	</template>
+					    </el-table-column>
+					    <el-table-column label="操作" fixed="right" width="150">
+					    	<template slot-scope="scope">
+					        	<el-button @click="listHandle(scope.row)" type="text" size="small">查看详情</el-button>
+					      	</template>
+					    </el-table-column>
+				  	</el-table>
 				</div>
 				<div class="page-box">
-					<pageBtn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></pageBtn>
+					<el-pagination @current-change="(res)=>{pageChange(res,1)}" @size-change="pageChange"
+						:current-page="page"
+						background
+						layout="sizes,total,prev, pager, next"
+						:page-sizes="[10, 20, 50]"
+						:total="listLength">
+					</el-pagination>
 				</div>
 			</div>
 		</div>
@@ -122,6 +143,10 @@
 				place: '', //详细地址
 				isShare: '', //是否共享 ''都有 1共享 0非共享
 				owner: '', //仓库所属
+				ownerName:'',//选择的所属名称
+				ownerSel:[],//选择仓库所属
+				ownerArr:[],//用于筛选的仓库所属
+				visible:false,//选择所属是否显示
 				dropName: '请选择所属', //选择所属提示
 				code: '', //仓库编号
 				name: '', //仓库名称
@@ -137,7 +162,7 @@
 			addressLinkage: () =>
 				import( /*webpackChunkName: 'address_linkage'*/ 'src/components/address_linkage'),
 			selectStore: () =>
-				import( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
+				import( /*webpackChunkName: 'select_store'*/ 'src/components/el_shopList'),
 			operationCom: () =>
 				import( /*webpackChunkName: 'operation'*/ './warehouse_operation')
 		},
@@ -161,7 +186,7 @@
 		methods: {
 			initBtn() {
 				let arr = [
-					{name: '查看全部',className: ['wearhouse all'],
+					{name: '查看全部',className: 'primary',type:5,
 						fn: () => {
 							storage.session('warehouseListsRequest', this.filterObj);
 							this.$router.push({
@@ -170,7 +195,7 @@
 							});
 						}
 					},
-					{name: '新建仓库',className: ['wearhouse create'],
+					{name: '新建仓库',className: 'primary',type:4,
 						fn: () => {
 							this.$router.push({
 								path: 'warehouseList/create',
@@ -181,18 +206,13 @@
 				];
 				this.$store.commit('setPageTools', arr);
 			},
-			listHandle(event) { //列表点击操作
-				let target = event.target;
-				if(target.className.includes('detail')) { //进入详情
-					let index = target.getAttribute('data-index');
-					let id = this.list[index].id; //仓库id
-					storage.session('warehouseListsRequest', this.filterObj);
-					this.$route.query.id = id; //带上仓库id
-					this.$router.push({
-						path: 'warehouseList/warehouseDetail',
-						query: this.$route.query
-					});
-				}
+			listHandle(item) { //列表点击操作
+				storage.session('warehouseListsRequest', this.filterObj);
+				this.$route.query.id = item.id; //带上仓库id
+				this.$router.push({
+					path: 'warehouseList/warehouseDetail',
+					query: this.$route.query
+				});
 			},
 			async getOwners() { //获取仓库所属列表
 				let data = await http.invoicing_getOwners();
@@ -218,10 +238,47 @@
 					}
 				}
 				this.owner = arr;
+				this.ownerSel = this.owner.map((res)=>{
+					return res.id;
+				});
+				this.ownerArr = this.ownerSel;
+			},
+			ownerClose(){
+				this.visible = false;
+				this.ownerSel = this.ownerArr;
+			},
+			selOwnerAll(type){
+				if(type===1){//全选
+					this.ownerSel = this.owner.map((res)=>{
+						return res.id;
+					});
+				}else{//取消全选
+					this.ownerSel = [];
+				}
+			},
+			ownerHandle(type){
+				this.visible = false;
+				if(type===1){//确定
+					this.ownerArr = this.ownerSel;
+					this.page = 1;
+					this.filter();
+					if(this.ownerSel.length>1){
+						this.ownerName =` 已选中${this.ownerSel.length}个`;
+					}else if(this.ownerSel.length==1){
+						this.ownerName = this.owner.filter((res)=>{
+							return this.ownerSel[0]==res.id;
+						})[0].name;
+					}else{
+						this.ownerName = '';
+					}
+				}else{//取消
+					this.ownerSel = this.ownerArr;
+				}
 			},
 			async getList() { //获取仓库列表
 				let data = await http.warehouseWarehouseList();
 				this.allList = data;
+				this.listLength = data.length;
 				this.filter();
 			},
 			getRequest() { //获取缓存的请求参数
@@ -247,7 +304,7 @@
 				let obj = { //筛选条件 只适用于一级筛选 筛选key对应列表key
 					code: this.code,
 					name: this.name,
-					owner: this.owner,
+					owner: this.ownerArr,
 					province: this.province,
 					city: this.city,
 					town: this.town,
@@ -289,7 +346,7 @@
 							for(let item1 of obj.owner) {
 								for(let item2 of list) {
 									//条件匹配 推进新数组
-									if(item1.selected && item2.owner.includes(item1.id)) newList.push(item2);
+									if(item2.owner == item1) newList.push(item2);
 								}
 							}
 						} else {
@@ -303,23 +360,12 @@
 				}
 				this.filterList = list;
 			},
-			codeInput(event) { //限制文本框输入 只能输入数字和字母
-				let num = event.target.value;
-				num = num.replace(/[^A-Za-z0-9]/g, '');
-				this.code = num;
-				event.target.value = num;
-			},
 			setShared(num) { //点击 非共享 checkbox
 				if(num == 0) {
 					return '非共享';
 				} else if(num == 1) {
 					return '共享';
 				}
-			},
-			getDrop(arr) { //获取 选择所属 选中列表
-				this.owner = arr;
-				this.page = 1;
-				this.filter();
 			},
 			clickCheck() { //改变共享状态 这里用'1'/'0'表示，便于筛选
 				if(this.isShare === '0') {
@@ -330,9 +376,12 @@
 				this.page = 1;
 				this.filter();
 			},
-			pageChange(obj) { //点击翻页 触发
-				this.page = obj.page;
-				this.showNum = obj.num;
+			pageChange(res,type) { //点击翻页 触发
+				if(type){
+					this.page = res;
+				}else{
+					this.showNum = res;
+				}
 				this.filter();
 			},
 			async getAreaCn() { //异步加载 省市区插件
@@ -357,22 +406,19 @@
 	};
 </script>
 <style lang='less' scoped>
-	.warehouse-lists{padding-top: 15px;
-		.choose-btn{width: 240px;height: 40px;cursor: pointer;margin-bottom:15px;
-			li{width:50%;height:100%;text-align:center;line-height:38px;
-			color:#fe8d01;border: 1px solid #fe8d01;float: left;}
-			.select{background: #fe8d01;color: #ffffff}
+	.el-popper{
+		.handle{text-align: right;}
+		.btn-box{padding-bottom: 5px;overflow: hidden;
+			.btn-cell{padding-bottom: 10px;padding-right: 10px;float: left;}
 		}
+	}
+	.warehouse-lists{
+		.choose-btn{width: 100%;height: 40px;cursor: pointer;margin-bottom:15px;}
+		.el-input{width: 210px;}
 		.filter{width: 100%;
-			.block{display: inline-block;padding-bottom: 20px;}
-			.inline-box{display: inline-block;vertical-align: middle;margin-right: 10px;
-				input{width: 180px;height: 40px;padding: 0 10px;font-size: 14px;vertical-align: top;
-					&:focus{outline: none;}
-				}
-			}
-			.button-box{
-				span{display: inline-block;height: 40px;line-height: 40px;width: 80px;color: #fff;text-align: center;}
-				.blue{margin-right: 10px;}
+			.block{display: inline-block;}
+			.inline-box{display: inline-block;vertical-align: middle;margin-right: 10px;padding-bottom: 15px;
+				.inline-span{display: inline-block;}
 			}
 			.input-check{font-size: 16px;color: #333;
 				i{height: 20px;width: 20px;border-radius: 2px;margin-right: 5px;color: #444;cursor: pointer;display: inline-block;
@@ -382,42 +428,7 @@
 			}
 		}
 		.main{
-			.list{border: 1px solid #ccc;border-bottom: 2px solid #ddd;position: relative;
-				.head{height: 50px;line-height: 50px;padding: 0 10px;font-size: 16px;
-					em{color: #ff3c04;font-size: inherit;}
-				}
-				.list-box{max-width: 100%;overflow: auto;}
-				.fixed{position: absolute;left: 0;top: 50px;background: #fff;
-					.fixed-title{display: block;width: 150px;height: 40px;line-height: 40px;text-align: center;background: #e6e6e6;}
-					.fixed-list{border-bottom: 2px solid #ddd;
-						&:last-child{border-bottom: 0;}
-						span{display: block;height: 70px;line-height: 70px;line-height: 70px;text-align: center;color: #27a8e0;
-						cursor: pointer;}
-					}
-				}
-				.title{background: #e6e6e6;overflow: hidden;min-width: 1400px;width: 100%;padding-left: 150px;
-					span{float: left;height: 40px;line-height: 40px;text-align: center;width: 13%;}
-					.narrow{width: 9%;}
-				}
-				ul{min-width: 1400px;width: 100%;
-					li{overflow: hidden;border-bottom: 2px solid #ddd;padding-left: 150px;
-						&:last-child{border-bottom: 0;}
-						span{float: left;height: 70px;line-height: 70px;text-align: center;width: 13%;color: #555;padding: 0 5px;
-							.warp{line-height: normal;display: inline-block;vertical-align: middle;max-width: 100%;max-height: 38px;overflow: hidden;}
-							.warp-three{max-height: 57px;}
-						}
-						.narrow{width: 9%;}
-						.handle{
-							.detail{display: inline-block;padding: 0 5px;line-height: normal;cursor: pointer;vertical-align: middle;color: #27a8e0;
-								&:hover{text-decoration: underline;}
-							}
-						}
-					}
-					.empty{
-						line-height: 70px;text-align: center;color: #ccc;font-size: 20px;
-					}
-				}
-			}
+			.list{position: relative;}
 			.page-box{text-align: left;margin-top: 20px;padding-bottom: 80px;}
 		}
 	}
