@@ -161,6 +161,18 @@
 					<span :class="{'sign' : useThresholdId == index}" v-on:click="changeuseThreshold(item,index)">{{item.name}}</span>
 				</section>
 			</div>
+			<template v-if="typeId == 1">
+				<!-- 最大使用上限 -->
+				<div class="left ">
+					<div class="text required">
+						最大使用上限
+					</div>
+				</div>
+				<div class="right">
+					<input type="text" maxlength="2" class="fl" placeholder="0" style="width: 149px;height: 36px;padding: 0;border-color: #999;text-indent: 10px;outline: none; margin-left:10px;" v-model="maxCeiling" />
+					<div style="border:1px solid #999;width: 38px;float: left;height: 38px;border-left: none;text-align: center;line-height: 38px;">张</div>
+				</div>
+			</template>
 			<!-- 制定门槛的金额 -->
 			<template v-if="useThresholdId == 1">
 				<div class="left ">
@@ -172,24 +184,6 @@
 							元
 						</div>
 					</div>
-				</div>
-			</template>
-			<template v-if="typeId == 1">
-				<!-- 最大使用上限 -->
-				<div class="left ">
-					<div class="text required">
-						最大使用上限
-					</div>
-				</div>
-				<div class="right">
-					<div class="fl creditamount">
-						<input class="input reduceamount" placeholder="0" v-model="maxCeiling" maxlength="6" />
-						<div class="yuan">
-							张
-						</div>
-					</div>
-					<!-- <input type="text" maxlength="2" class="fl" placeholder="0" style="width: 149px;height: 36px;padding: 0;border-color: #999;text-indent: 10px;outline: none; margin-left:10px;" v-model="maxCeiling" />
-					<div style="border:1px solid #999;width: 38px;float: left;height: 38px;border-left: none;text-align: center;line-height: 38px;">张</div> -->
 				</div>
 			</template>
 			<!-- 其他设置 -->
@@ -253,13 +247,13 @@ export default {
 			editCoupon: false,
 			ischain: '', //0 单店 3 品牌
 			goodlist: [{ // 判断单品减免和整单减免
-					'typeId': 0,
-					'name': '单品减免'
-				},
-				{
-					'typeId': 1,
-					'name': '整单减免'
-				}
+				'typeId': 0,
+				'name': '单品减免'
+			},
+			{
+				'typeId': 1,
+				'name': '整单减免'
+			}
 			],
 			typeId: 0, //默认单品减免
 			couponName: '', //优惠券名称
@@ -270,24 +264,24 @@ export default {
 			selectGoods: [], //选中的商品
 			selectPackages: [], //选中的套餐
 			compulsoryCreditsList: [{
-					'compulsoryCredits': '0',
-					'name': '否'
-				},
-				{
-					'compulsoryCredits': '1',
-					'name': '是'
-				}
+				'compulsoryCredits': '0',
+				'name': '否'
+			},
+			{
+				'compulsoryCredits': '1',
+				'name': '是'
+			}
 			],
 			compulsoryCredits: '0', //是否强制减免
 			deratePrice: '', //减免金额 
 			validList: [{
-					'validType': '0',
-					'name': '相对时间'
-				},
-				{
-					'validType': '1',
-					'name': '指定时间'
-				}
+				'validType': '0',
+				'name': '相对时间'
+			},
+			{
+				'validType': '1',
+				'name': '指定时间'
+			}
 			],
 			validType: {
 				'index': 0, //0指定时间 1相对时间
@@ -296,33 +290,33 @@ export default {
 				'endTime': (new Date()).getTime(), //相对时间的结束时间
 			}, //券有效期 
 			validTimeList: [{ //过期时间
-					name: '领取后即刻生效',
-					id: 0
-				},
-				{
-					name: '领取1小时后生效',
-					id: 1
-				},
-				{
-					name: '领取2小时后生效',
-					id: 2
-				},
-				{
-					name: '领取3小时后生效',
-					id: 3
-				},
-				{
-					name: '领取6小时后生效',
-					id: 6
-				},
-				{
-					name: '领取12小时后生效',
-					id: 12
-				},
-				{
-					name: '领取24小时后生效',
-					id: 24
-				}
+				name: '领取后即刻生效',
+				id: 0
+			},
+			{
+				name: '领取1小时后生效',
+				id: 1
+			},
+			{
+				name: '领取2小时后生效',
+				id: 2
+			},
+			{
+				name: '领取3小时后生效',
+				id: 3
+			},
+			{
+				name: '领取6小时后生效',
+				id: 6
+			},
+			{
+				name: '领取12小时后生效',
+				id: 12
+			},
+			{
+				name: '领取24小时后生效',
+				id: 24
+			}
 			],
 			validTimeId: 0, //领取后选定时间内生效
 			validTime: '领取后即刻生效', //状态 
@@ -334,13 +328,13 @@ export default {
 				'show': false
 			}, //使用时段 
 			useThresholdList: [{ //指定门槛
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定门槛',
-					id: 1
-				},
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定门槛',
+				id: 1
+			},
 			],
 			useThresholdId: 0,
 			threshold: '', //指定门槛金额
@@ -441,7 +435,7 @@ export default {
 		},
 		closeGoodWin(res, item) { //  关闭商品弹框
 			if (res == 'ok') {
-				if (item.goodArr.length + item.packArr.length > 5) {
+				if(item.goodArr.length+item.packArr.length>5){
 					this.valiData('商品和套餐最多一共只能选择5个', '提示信息');
 					return false;
 				}
@@ -554,11 +548,11 @@ export default {
 			let reg = /^[0-9]*$/;
 			let reg2 = /^\d+(\.\d+)?$/;
 			if (!global.checkData({
-					couponName: {
-						cond: `$$.trim() !== '' && $$.length<=20`,
-						pro: '优惠券名称不能为空且不能超过20个字'
-					},
-				}, this)) {
+				couponName: {
+					cond: `$$.trim() !== '' && $$.length<=20`,
+					pro: '优惠券名称不能为空且不能超过20个字'
+				},
+			}, this)) {
 				return false;
 			}
 			if (this.ischain == '3') {

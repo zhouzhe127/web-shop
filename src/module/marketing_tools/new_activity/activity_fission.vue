@@ -175,9 +175,7 @@ export default {
 		//关联优惠券弹窗
 		async addCount(type) {
 			let data = await http.getGetCouponCondition({
-				data: {
 
-				}
 			});
 			let coupons = [];
 			for (let item of data) {

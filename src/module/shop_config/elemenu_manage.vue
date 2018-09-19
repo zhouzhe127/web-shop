@@ -7,60 +7,56 @@
  */
  <template>
 	<section id="picList">
-		<el-form label-width="220px">
-			<el-form-item label="电子菜单设备不被其他桌台共用">
-				<el-switch v-model="isShared" @change="getisShared" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-			</el-form-item>
-			<el-form-item label="验证授权码">
-				<el-switch v-model="isWarrant" @change="getisWarrant" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-				<img class="image" src="../../res/images/handle-tips.png" />
-				<span style="color: #dddddd;">点击“确认下单”开启授权码，建议开启</span>
-			</el-form-item>
-			<el-form-item label="电子菜单允许登录会员">
-				<el-switch v-model="islogin" @change="getLogin" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-				<div style="width:380px;display:inline-block;">
-					<el-checkbox-group  v-if="loginShow" @change="setLogin" v-model="loginSel">
-						<el-checkbox v-for="item in loginList" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
-					</el-checkbox-group>
-				</div>
-				<img v-if="loginShow" class="image" src="../../res/images/handle-tips.png" />
-				<span v-if="loginShow" style="color: #dddddd;">至少选择一项登录方式</span>
-			</el-form-item>
-			<el-form-item label="电子菜单点餐模式">
-				<div style="width:370px;display:inline-block;">
-					<el-checkbox-group @change="setOrder" v-model="orderSel">
-						<el-checkbox v-for="item in orderModel" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
-					</el-checkbox-group>
-				</div>
-				<img class="image" src="../../res/images/handle-tips.png" />
-				<span style="color: #dddddd;">至少选择一项登录方式</span>
-			</el-form-item>
-			<el-form-item label="置顶推荐区名称">
-				<el-input v-model="topData.topName" maxlength="6" placeholder="请输入名称" style = "width:250px;"></el-input>
-			</el-form-item>
-			<el-form-item label="自定义套餐首页推荐名称">
-				<el-input v-model="customPackageName" maxlength="6" placeholder="请输入名称" style = "width:250px;"></el-input>
-			</el-form-item>
-			<el-form-item label="置顶推荐区商品">
-				<el-button @click="menuConfig" type="primary" style="width:150px;">添加关联菜品</el-button>
-				<span v-if="topData.topGoods.length != 0 || topData.topPackages.length != 0">已配置
-					<i v-if="topData.topGoods.length != 0">{{topData.topGoods.length}}个商品</i>
-					<i v-if="topData.topPackages.length != 0">{{topData.topPackages.length}}个套餐</i>
-				</span>
-			</el-form-item>
-		</el-form>
-		<div style="padding:10px 70px;">
-			<el-radio-group v-model="buttonList.flag" @change = "light">
-				<el-radio-button v-for="item in buttonList.list" :key="item.index" :label="item.index">{{item.name}}</el-radio-button>
-			</el-radio-group>
+		<div class="line">
+			<span class="warp">电子菜单设备不被其他桌台共用</span>
+			<onoff class="button" @statusChange="getisShared" :status="isShared"></onoff>
 		</div>
-		<el-form label-width="120px">
-			<el-form-item v-if="buttonList.flag === 0" label="拓展页面名称：">
-				<el-input v-model="imageName" maxlength="10" placeholder="请输入拓展页面名称：" style = "width:250px;"></el-input>
-			</el-form-item>
+		<div class="line">
+			<span class="warp">验证授权码</span>
+			<onoff class="button" @statusChange="getisWarrant" :status="isWarrant"></onoff>
+			<img class="image" src="../../res/images/handle-tips.png" />
+			<span style="color: #dddddd;">点击“确认下单”开启授权码，建议开启</span>
+		</div>
+		<div class="line">
+			<span class="warp">电子菜单允许登录会员</span>
+			<onoff class="button" @statusChange="getLogin" :status="islogin"></onoff>
+			<section v-if="loginShow" style="display:inline-block;vertical-align:middle">
+				<mulselect @selOn="setLogin" :list="loginList" :name="'name'" :key="'id'" :selects="loginSel"></mulselect>
+			</section>
+			<img v-if="loginShow" class="image" src="../../res/images/handle-tips.png" />
+			<span v-if="loginShow" style="color: #dddddd;">至少选择一项登录方式</span>
+		</div>
+		<div class="line">
+			<span class="warp">电子菜单点餐模式</span>
+			<section style="display:inline-block;vertical-align:middle">
+				<mulselect @selOn="setOrder" :list="orderModel" :name="'name'" :keys="'id'" :selects="orderSel"></mulselect>
+			</section>
+			<img class="image" src="../../res/images/handle-tips.png" />
+			<span style="color: #dddddd;">至少选择一种点餐模式</span>
+		</div>
+		<div class="line">
+			<span class="warp">置顶推荐区名称:</span>
+			<input type="text" class="mes" v-model="topData.topName" placeholder="请输入名称" maxlength="6">
+		</div>
+		<div class="line">
+			<span class="warp">置顶推荐区商品:</span>
+			<a class="blue" style="width:100px;height:40px;line-height:40px;" @click="menuConfig">菜单配置</a>
+			<span v-if="topData.topGoods.length != 0 || topData.topPackages.length != 0">已配置
+				<i v-if="topData.topGoods.length != 0">{{topData.topGoods.length}}个商品</i>
+				<i v-if="topData.topPackages.length != 0">{{topData.topPackages.length}}个套餐</i>
+			</span>
+		</div>
+		<div class="light">
+			<span class="sel" v-for="(item,index) in buttonList.list" :key="index" v-bind:class="{'buttonOn': buttonList.flag == index}" @click="light(index)">{{item.name}}</span>
+		</div>
+		<div class="line" v-if="buttonList.flag === 0">
+			<span class="imageName">拓展页面名称：</span>
+			<input type="text" class="mes" v-model="imageName" placeholder="请输入名称" maxlength="10">
+		</div>
+		<div class="line">
 			<span class="typeName" v-if="buttonList.flag === 1">锁屏页面图片：</span>
 			<span class="typeName" v-else>拓展页面图片：</span>
-		</el-form>
+		</div>
 		<ul class="pic-list">
 			<li class="add-pic" @click="add">
 				<div class="addTo">
@@ -75,8 +71,8 @@
 			</li>
 
 		</ul>
-		<el-button @click="save" type="primary" style="width:150px;">保存</el-button>
-		<goodsWin @goodListWin="goGoodList" v-if="showGoods" :goInName="'menuConfig'" :goodsIds="topData.topGoods" :packages="topData.topPackages" :isGoods="true" :isPackType="'0,1'"></goodsWin>
+		<a @click="save" href="javascript:void(0);" class="yellow">保存</a>
+		<goodsWin @goodListWin="goGoodList" v-if="showGoods" :goInName="'menuConfig'" :goodsIds="topData.topGoods" :packages="topData.topPackages" :isGoods="true"></goodsWin>
 		<shufflingPicWin v-if="showWin" @shufflingPicWin="getResult" :index='index' :detial='detial' :types='types' :status=true :type='buttonList.flag'></shufflingPicWin>
 	</section>
 </template>
@@ -108,8 +104,7 @@ export default {
 			types: '', //添加或修改
 			loginList: [
 				{ id: '0', name: '手机号登录' },
-				{ id: '1', name: '卡号登录' },
-				{ id: '2', name: '扫码登录' },
+				{ id: '1', name: '卡号登录' }
 			],
 			orderModel: [
 				{ id: '0', name: '标准模式' },
@@ -129,16 +124,14 @@ export default {
 			topData: {
 				topName: '',
 				topGoods: [],
-				topPackages: [],
-			},
-			customPackageName:''//自定义套餐推荐名称
+				topPackages: []
+			}
 		};
 	},
 	mounted() {
 		let userData = storage.session('userShop');
 		this.shopId = userData.currentShop.id;
 		this.imgHost = userData.uploadUrl;
-		console.log(this.loginSel);
 		this.inte();
 	},
 	methods: {
@@ -162,7 +155,6 @@ export default {
 			}
 		},
 		setLogin(res) {
-			console.log(res);
 			if (res.length < 1) {
 				this.$store.commit('setWin', {
 					winType: 'alert',
@@ -276,7 +268,6 @@ export default {
 			});
 			this.isWarrant = data.isWarrant == 1 ? true : false;
 			this.isShared = data.isShared == 1 ? true : false;
-			this.customPackageName = data.customPackageName;
 			if (!data.elecMenuVip) {
 				this.getLogin(false);
 			}
@@ -335,8 +326,7 @@ export default {
 					elecMenuVip: this.islogin ? this.loginSel.join() : '', //登录会员
 					topPackages: this.topData.topPackages,
 					topGoods: this.topData.topGoods,
-					topName: this.topData.topName,
-					customPackageName: this.customPackageName,
+					topName: this.topData.topName
 				}
 			});
 			this.$store.commit('setWin', {
@@ -385,107 +375,278 @@ export default {
 };
 </script>
 
-<style scoped>
-	#picList .image {
-		vertical-align: middle;
-		margin-left: 10px;
-	}
-	#picList .typeName {
-		font-size: 16px;
-		padding-left: 10px;
-		padding-right: 10px;
-		display: inline-block;
-		width: 250px;
-		line-height: 30px;
-		color: #808080;
-	}
-	.pic-list {
-		width: 100%;
-		overflow: hidden;
-		list-style: none;
-	}
+ <style scoped>
+#picList {
+	text-align: left;
+}
+#picList .yellow {
+	width: 200px;
+	padding-left: 10px;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+#picList .line {
+	display: block;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	margin: 10px 0;
+}
+#picList .line .warp {
+	font-size: 16px;
+	padding-left: 10px;
+	padding-right: 10px;
+	display: inline-block;
+	text-align: right;
+	width: 250px;
+	color: #808080;
+}
+#picList .line .button {
+	display: inline-block;
+	vertical-align: middle;
+}
+#picList .line .image {
+	vertical-align: middle;
+	margin-left: 10px;
+}
+#picList .light {
+	margin-bottom: 10px;
+	display: inline-block;
+	margin-left: 10px;
+}
+#picList .imageName {
+	font-size: 16px;
+	padding-left: 10px;
+	padding-right: 10px;
+	color: #808080;
+}
+#picList .typeName {
+	font-size: 16px;
+	padding-left: 10px;
+	padding-right: 10px;
+	display: inline-block;
+	width: 250px;
+	color: #808080;
+}
+.sel {
+	display: inline-block;
+	width: 135px;
+	height: 40px;
+	font-size: 16px;
+	background: #f2f2f2;
+	border-radius: 3px;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+	margin-right: 10px;
+}
+.buttonOn {
+	background: #28a8e0;
+	color: #fff;
+}
+#picList .mes {
+	width: 200px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	resize: none;
+	height: 40px;
+	padding-left: 5px;
+}
+.pic-list {
+	width: 100%;
+	overflow: hidden;
+	list-style: none;
+}
 
-	.pic-list li {
-		width: 300px;
-		height: 200px;
-		float: left;
-		margin: 10px;
-		border: 1px solid #ccc;
-		box-sizing: border-box;
-	}
+.pic-list li {
+	width: 300px;
+	height: 200px;
+	float: left;
+	margin: 10px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
 
-	.pic-list .add-pic {
-		position: relative;
-		background: url('../../res/images/busis.png');
-	}
+.pic-list .add-pic {
+	position: relative;
+	background: url('../../res/images/busis.png');
+}
 
-	.pic-list li.li-pic {
-		position: relative;
-		padding: 0;
-	}
+.pic-list li.li-pic {
+	position: relative;
+	padding: 0;
+}
 
-	li.li-pic img {
-		width: 100%;
-		height: 100%;
-		position: absolute;
-	}
+li.li-pic img {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
 
-	li.li-pic h2 {
-		font-size: 38px;
-		color: #c0c0c0;
-	}
+li.li-pic h2 {
+	font-size: 38px;
+	color: #c0c0c0;
+}
 
-	li.li-pic p {
-		width: 298px;
-		height: 40px;
-		text-align: center;
-		line-height: 40px;
-		color: #fff;
-		padding: 0;
-		border: 0;
-		margin: 0;
-		background: rgba(0, 0, 0, 0.5);
-		position: absolute;
-		bottom: 0;
-	}
+li.li-pic p {
+	width: 298px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	color: #fff;
+	padding: 0;
+	border: 0;
+	margin: 0;
+	background: rgba(0, 0, 0, 0.5);
+	position: absolute;
+	bottom: 0;
+}
 
-	.pic-list h2 {
-		position: absolute;
-		top: 10px;
-		right: 20px;
-		z-index: 2;
-	}
-	.addTo {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		height: 50px;
-		background: rgba(0, 0, 0, 0.4);
-		text-align: center;
-		cursor: pointer;
-	}
-	.addTo span {
-		display: inline-block;
-		height: 50px;
-		line-height: 50px;
-		font-size: 16px;
-		color: white;
-		padding-left: 30px;
-		background: url('../../res/images/add.png') no-repeat 0;
-	}
-	.addTo input {
-		position: absolute;
-		left: 0px;
-		top: 0px;
-		height: 50px;
-		opacity: 0;
-		width: 100%;
-		cursor: pointer;
-	}
-	.addTo span {
-		width: 100px;
-		height: 50px;
-		line-height: 50px;
-	}
+.picLift {
+	display: none;
+	width: 570px;
+	height: 100%;
+	background: #f2f2f2;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.picLift .newC {
+	width: 100%;
+	height: 50px;
+	padding: 5px 10px;
+	color: #343434;
+	font-size: 18px;
+	line-height: 40px;
+	background: #e6e6e6;
+}
+
+.picLift .newC .closeBtn {
+	width: 16px;
+	height: 16px;
+	background: url(../../res/images/close.png) no-repeat;
+	float: right;
+	margin: 12px;
+}
+
+.picCon {
+	width: 100%;
+	height: 350px;
+	background: #f2f2f2;
+	margin: 0;
+	padding-top: 20px;
+	padding-left: 10px;
+}
+
+.picCon .picName {
+	width: 100%;
+	height: 40px;
+	padding: 10px;
+}
+
+.picCon .sortword {
+	margin-right: 25px;
+	font-size: 16px;
+}
+
+.picName input {
+	width: 60%;
+	height: 30px;
+	line-height: 25px;
+	padding: 5px;
+	border: none;
+	margin-left: 5px;
+}
+
+.picCon .picImg {
+	width: 100%;
+	height: 40px;
+	margin: 20px 10px;
+}
+
+p {
+	width: 97%;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	color: #898989;
+}
+
+.imgBox {
+	width: 300px;
+	height: 200px;
+	margin: 10px auto;
+	position: relative;
+}
+
+.imgBox img {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	width: 300px;
+	height: 200px;
+}
+.pic-list h2 {
+	position: absolute;
+	top: 10px;
+	right: 20px;
+	z-index: 2;
+}
+.icon-i {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+.sort {
+	width: 250px;
+	margin: 10px auto;
+}
+.addTo {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	background: rgba(0, 0, 0, 0.4);
+	text-align: center;
+	cursor: pointer;
+}
+.addTo span {
+	display: inline-block;
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	color: white;
+	padding-left: 30px;
+	background: url('../../res/images/add.png') no-repeat 0;
+}
+.addTo input {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 50px;
+	opacity: 0;
+	width: 100%;
+	cursor: pointer;
+}
+.addTo span {
+	width: 100px;
+	height: 50px;
+	line-height: 50px;
+}
+.title span {
+	display: inline-block;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	border: 1px solid #f8931f;
+	margin-left: 10px;
+	cursor: pointer;
+}
+.select {
+	background: #f8931f;
+	color: #fff;
+}
 </style>
  

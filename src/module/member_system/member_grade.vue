@@ -13,8 +13,7 @@
 					<section class="titles">享受折扣率为{{grade.discount}}%</section>
 				</section>
 				<section class="fl member-right">
-					<h2 v-if="grade.sortStatus == true && grade.status != '2'">{{i+1}}</h2>
-					<h3 v-if="grade.sortStatus == true && grade.status == '2'">粉丝</h3>
+					<h2 v-if="grade.sortStatus == true">{{i+1}}</h2>
 					<h2 v-if="grade.sortStatus == false">0</h2>
 				</section>
 			</section>
@@ -107,7 +106,7 @@ export default {
 			let i;
 			let arr = [];
 			for (i = 0; i < this.gradeList.length; i++) {
-				if (this.gradeList[i].status == '1' || this.gradeList[i].status == '2') {
+				if (this.gradeList[i].status == '1') {
 					arr = this.gradeList[i];
 				}
 			}
@@ -119,7 +118,6 @@ export default {
 				});
 			}
 		},
-		//默认卡状态  为1 和2
 		gradeSort(grouplist) {
 			let arr = [];
 			let start;
@@ -128,12 +126,7 @@ export default {
 			let findNext = function() {
 				for (let i = 0; i < list.length; i++) {
 					if (start === undefined) {
-						//默认卡的数组
 						for (let j = 0; j < list.length; j++) {
-							if(list[j].status == '2'){
-								arr.push(list[j]);
-								list.splice(j, 1);
-							}
 							if (list[j].status == '1') {
 								start = list[j];
 								arr.push(start);
@@ -142,7 +135,6 @@ export default {
 							}
 						}
 					} else {
-						//自己新建卡的数组
 						for (let j = 0; j < list.length; j++) {
 							if (start.nextLevel === list[j].id + '') {
 								start = list[j];
@@ -158,14 +150,10 @@ export default {
 			while (findNext()) {
 				console.log('111');
 			}
-			console.log(JSON.stringify(arr));
-			console.log(JSON.stringify(list));
 			if (list.length > 0) {
-				//自己新建的等级
 				for (let i = 0; i < list.length; i++) {
 					list[i].sortStatus = false;
 				}
-				//默认等级
 				for (let j = 0; j < arr.length; j++) {
 					arr[j].sortStatus = true;
 				}
@@ -241,10 +229,7 @@ export default {
 		font-size: 64px;
 		color: #dddddd;
 	}
-    .member-right h3{
-    	font-size: 36px;
-    	color: #dddddd;
-    }
+
 	.member-shade {
 		background: rgba(0, 0, 0, 0.5);
 		height: 100%;

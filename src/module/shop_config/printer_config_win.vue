@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 16:02:16
+ * @Last Modified time: 2018-08-16 15:05:57
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
@@ -21,8 +21,7 @@
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item required label="页脚内容" v-if="status==1 || status == 6">
-							<el-input type="textarea" v-model="footerContent" maxlength="500" :autosize="{minRows: 3, maxRows: 5}" placeholder = "请输入页脚内容" style="width:450px;"></el-input>
-							<!-- <el-input v-model="footerContent" placeholder = "请输入页脚内容" style = "width:350px;"></el-input> -->
+							<el-input v-model="footerContent" placeholder = "请输入页脚内容" style = "width:350px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="打印机">
 							<el-radio-group v-model="printerIndex">
@@ -107,13 +106,13 @@
 								</div>
 							</el-radio-group>
 						</el-form-item>
-						<el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
+						<!-- <el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
 							<el-switch
 								v-model="isQrcode"
 								active-color="#E1BB4A"
 								inactive-color="#e6e6e6">
 							</el-switch>
-						</el-form-item>
+						</el-form-item> -->
 					</el-form>
 				</section>
 			</div>

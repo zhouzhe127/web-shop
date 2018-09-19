@@ -4,12 +4,10 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "prestart":"node cmd/genhook.js",
     "start": "webpack-dev-server --config config/webpack.dev.conf.js",
     "build": "webpack -p --config config/webpack.prod.conf.js",
-    "buildDev": "webpack --config config/webpack.prod.conf.js",
-    "postbuild": "node Attachment/ClearFile.js",
-    "profile":"webpack --config config/webpack.prod.conf.js --profile --json > compilation-stats.json"
+    "buildDev": "webpack -p --config config/webpack.prod.conf.js",
+    "postbuild": "node Attachment/ClearFile.js"
   },
   "author": "ruixin",
   "license": "ISC",
@@ -52,13 +50,7 @@
     "webpack-parallel-uglify-plugin": "^1.1.0"
   },
   "dependencies": {
-    "async-validator": "^1.8.4",
-    "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-polyfill": "^6.26.0",
-    "element-ui": "^2.4.4",
-    "normalize-range": "^0.1.2",
-    "normalize-wheel": "^1.0.1",
-    "resize-observer-polyfill": "^1.5.0",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

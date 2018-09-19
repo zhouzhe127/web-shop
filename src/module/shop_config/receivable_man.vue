@@ -169,7 +169,6 @@ export default {
 		//每页显示多少行
 		handleSizeChange(e){
 			this.num = e;
-			this.currentPage = 1;
 		},
 		isTatle() {
 			let rools = [

@@ -13,38 +13,7 @@
 			<span slot="title">{{isAdd?'新建员工信息':'修改员工信息'}}</span>
 			<!--内容-->
 			<div slot="content">
-				<section style="padding:10px 20px;">
-					<el-form :model="info" ref="info" label-width="120px">
-						<el-form-item required label="手机号码">
-							<el-input :disabled="isAdd?false:true"  @input="checkMobile" v-model="mobile" maxlength="11" placeholder = "请输入手机号码" style = "width:280px;"></el-input>
-							<span v-if="phoneStatus==3" style="color:red;">该账户已经存在!</span>
-						</el-form-item>
-						<el-form-item required label="真实姓名">
-							<el-input v-if="isAdd" :disabled="phoneStatus!==1?true:false" v-model="info.name" maxlength="14" placeholder = "请输入姓名" style = "width:280px;"></el-input>
-							<el-input v-else v-model="info.name" maxlength="14" placeholder = "请输入姓名" style = "width:280px;"></el-input>
-						</el-form-item>
-						<el-form-item v-show="isAdd && phoneStatus!= 2" required label="设置登录密码">
-							<el-input :disabled="phoneStatus==0|| phoneStatus== 3?true:false" type="password" v-model="info.password" maxlength="20" placeholder = "请输入登录密码" style = "width:280px;"></el-input>
-						</el-form-item>
-						<el-form-item v-show="isAdd && phoneStatus!= 2" required label="确认登录密码">
-							<el-input :disabled="phoneStatus==0|| phoneStatus== 3?true:false" type="password" v-model="repeatPwd" maxlength="20" placeholder = "请输入登录密码" style = "width:280px;"></el-input>
-						</el-form-item>
-						<el-form-item required label="职位">
-							<template v-if="jobList[index]">
-								<span :class="ischain==0?'':jobList[index]&&(jobList[index].id>=100000||jobList[index].id==0)?'sdOrange':'sdBlue'">{{jobList[index]?jobList[index].name:''}}</span>
-								<i class="el-icon-edit-outline" @click="showJobFn" style="font-size: 23px;margin-left: 20px;line-height: 28px;color: #a0a0a0;"></i>
-							</template>
-							<el-button v-else :disabled="phoneStatus==0|| phoneStatus== 3?true:false" @click="showJobFn" type="primary" style="width:150px;">添加职位</el-button>
-						</el-form-item>
-						<el-form-item v-if="!isAdd && info.sellerRole" label="卖手职位">
-							<span>{{info.sellerRole}}</span>
-						</el-form-item>
-						<el-form-item v-if="isWarrantCode" label="授权码">
-							<el-input  maxlength="4" v-model="info.warrantCode" placeholder="请输入授权码" style = "width:180px;"></el-input>
-						</el-form-item>
-					</el-form>
-				</section>
-				<!-- <ul class="employmes" :class="{edit: !isAdd}">
+				<ul class="employmes" :class="{edit: !isAdd}">
 					<li>
 						<h2 class="tag" :class="{required:isAdd}">手机号码</h2>
 						<div class="mes">
@@ -60,7 +29,7 @@
 							<input type="text" v-else maxlength="14" v-model="info.name" placeholder="请输入姓名">
 						</div>
 					</li>
-					<template v-if="isAdd">
+					<template v-if="this.isAdd">
 						<li :class="{sdHidden: phoneStatus== 2}">
 							<h2 class="tag">设置登录密码</h2>
 							<div class="mes">
@@ -104,7 +73,7 @@
 							<input type="text" class="input" maxlength="4" v-model="info.warrantCode" placeholder="请输入授权码">
 						</div>
 					</li>
-				</ul> -->
+				</ul>
 			</div>
 		</win>
 		<select-job v-if="showJobs" @winEvent="jobWinFn" :jobList="jobList" :title="'选择员工职位'" :index="index" :ischain="+ischain">
@@ -455,103 +424,103 @@ export default {
 .sdBlue {
 	color: @sdBlue;
 }
-// ul {
-// 	width: 580px;
-// 	// min-height: 240px;
-// 	height: 380px;
-// 	padding-top: 20px;
-// 	background-color: #eee;
-// 	overflow: hidden;
-// 	li {
-// 		overflow: hidden;
-// 		margin-bottom: 10px;
-// 		transition: height 0.3s;
-// 		.tag {
-// 			float: left;
-// 			width: 120px;
-// 			height: 40px;
-// 			line-height: 40px;
-// 			text-align: right;
-// 		}
-// 		.mes {
-// 			margin-left: 120px;
-// 			padding-left: 15px;
-// 			text-indent: 0;
-// 			input {
-// 				background-color: #fff;
-// 				width: 249px;
-// 				height: 40px;
-// 				text-indent: 10px;
-// 				border: 1px solid #cdcdcd;
-// 				outline: none;
-// 			}
-// 			span {
-// 				display: inline-block;
-// 				height: 40px;
-// 				line-height: 40px;
-// 				padding-left: 18px;
-// 				padding-right: 18px;
-// 				background-color: #eee;
-// 				cursor: pointer;
-// 				margin: 1px;
-// 				border-radius: 2px;
-// 				text-align: center;
-// 				vertical-align: middle;
-// 			}
-// 			b {
-// 				color: red;
-// 				line-height: 40px;
-// 				vertical-align: middle;
-// 				text-indent: 10px;
-// 				display: inline-block;
-// 			}
-// 			.seller {
-// 				color: #a4a4a4;
-// 			}
-// 			.editJob {
-// 				background-color: #e8e8e8;
-// 				background-image: url('../../res/images/gray-revise.png');
-// 				width: 18px;
-// 				height: 19px;
-// 				margin: 11px 5px;
-// 				padding: 0;
-// 			}
-// 			.addJob {
-// 				width: 180px;
-// 				height: 40px;
-// 				background-color: @sdBlue;
-// 				border: 1px solid transparent;
-// 				overflow: hidden;
-// 				span {
-// 					background-color: @sdBlue;
-// 				}
-// 				img {
-// 					vertical-align: middle;
-// 				}
-// 				&.disabled {
-// 					background-color: #e5e5e0;
-// 					border: 1px solid #cdcdcd;
-// 					span {
-// 						background-color: #e5e5e0;
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// 	h2::after {
-// 		position: relative;
-// 		top: -8px;
-// 		right: -2px;
-// 		content: '*';
-// 		color: red;
-// 	}
-// 	&.edit {
-// 		h2::after {
-// 			content: ':';
-// 			position: static;
-// 			display: inline;
-// 			color: inherit;
-// 		}
-// 	}
-// }
+ul {
+	width: 580px;
+	// min-height: 240px;
+	height: 380px;
+	padding-top: 20px;
+	background-color: #eee;
+	overflow: hidden;
+	li {
+		overflow: hidden;
+		margin-bottom: 10px;
+		transition: height 0.3s;
+		.tag {
+			float: left;
+			width: 120px;
+			height: 40px;
+			line-height: 40px;
+			text-align: right;
+		}
+		.mes {
+			margin-left: 120px;
+			padding-left: 15px;
+			text-indent: 0;
+			input {
+				background-color: #fff;
+				width: 249px;
+				height: 40px;
+				text-indent: 10px;
+				border: 1px solid #cdcdcd;
+				outline: none;
+			}
+			span {
+				display: inline-block;
+				height: 40px;
+				line-height: 40px;
+				padding-left: 18px;
+				padding-right: 18px;
+				background-color: #eee;
+				cursor: pointer;
+				margin: 1px;
+				border-radius: 2px;
+				text-align: center;
+				vertical-align: middle;
+			}
+			b {
+				color: red;
+				line-height: 40px;
+				vertical-align: middle;
+				text-indent: 10px;
+				display: inline-block;
+			}
+			.seller {
+				color: #a4a4a4;
+			}
+			.editJob {
+				background-color: #e8e8e8;
+				background-image: url('../../res/images/gray-revise.png');
+				width: 18px;
+				height: 19px;
+				margin: 11px 5px;
+				padding: 0;
+			}
+			.addJob {
+				width: 180px;
+				height: 40px;
+				background-color: @sdBlue;
+				border: 1px solid transparent;
+				overflow: hidden;
+				span {
+					background-color: @sdBlue;
+				}
+				img {
+					vertical-align: middle;
+				}
+				&.disabled {
+					background-color: #e5e5e0;
+					border: 1px solid #cdcdcd;
+					span {
+						background-color: #e5e5e0;
+					}
+				}
+			}
+		}
+	}
+	h2::after {
+		position: relative;
+		top: -8px;
+		right: -2px;
+		content: '*';
+		color: red;
+	}
+	&.edit {
+		h2::after {
+			content: ':';
+			position: static;
+			display: inline;
+			color: inherit;
+		}
+	}
+}
 </style>

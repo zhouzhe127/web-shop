@@ -7,62 +7,39 @@
 -->
 <template>
 	<div id="area-show">
-
-		<section>
-			<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="showDataList" border style="width:90%">
-				<el-table-column fixed min-width = "120" align="center" label="操作">
-					<template slot-scope="scope">
-						<span style="color: #FE8D2C;cursor:pointer" @click="edit(scope.row)">编辑</span>
-						<span style="padding:0 5px;color: #D2D2D2">|</span>
-						<span style="color: #FD3F1F;cursor:pointer" @click="del(scope.row)">删除</span>
-					</template>
-				</el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "50"  align="center" prop="sort"  label="排序"> </el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="areaName" label="区域名称"></el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="tableTotal" label="总桌数(桌)"></el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "120"  align="center" prop="seatTotal"  label="总席位（个）"> </el-table-column>
-			</el-table>
-		</section>
-
-		<section style="margin-top: 10px">
-			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size = "num"
-						   layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
-		</section>
-
-
-		<!--<ul class="tas-variety" v-cloak>-->
-			<!--<li v-on:click="add">-->
-				<!--<span>-->
-					<!--<img src="../../res/images/comadd.png" alt="添加" style="margin-top: 30px;opacity:0.5;" />-->
-				<!--</span>-->
-				<!--新建区域-->
-			<!--</li>-->
-			<!--<li v-for="(item,i) in dataList" class="taste-list" v-on:click="edit(item.id,i)" :key="i">-->
-				<!--<div class="divOne"></div>-->
-				<!--<div class="divThree">-->
-					<!--<span class="spanName">{{item.areaName}}</span>-->
-					<!--<span class="spanIndex">{{i+1}}</span>-->
-				<!--</div>-->
-				<!--<div class="divTwo">-->
-					<!--<div class="jobDiv">-->
-						<!--<div>-->
-							<!--总桌数(桌)-->
-						<!--</div>-->
-						<!--<div class="divAll">-->
-							<!--{{item.tableTotal}}-->
-						<!--</div>-->
-					<!--</div>-->
-					<!--<div class="telDiv">-->
-						<!--<div>-->
-							<!--总席位（个）-->
-						<!--</div>-->
-						<!--<div class="divAll">-->
-							<!--{{item.seatTotal}}-->
-						<!--</div>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</li>-->
-		<!--</ul>-->
+		<ul class="tas-variety" v-cloak>
+			<li v-on:click="add">
+				<span>
+					<img src="../../res/images/comadd.png" alt="添加" style="margin-top: 30px;opacity:0.5;" />
+				</span>
+				新建区域
+			</li>
+			<li v-for="(item,i) in dataList" class="taste-list" v-on:click="edit(item.id,i)" :key="i">
+				<div class="divOne"></div>
+				<div class="divThree">
+					<span class="spanName">{{item.areaName}}</span>
+					<span class="spanIndex">{{i+1}}</span>
+				</div>
+				<div class="divTwo">
+					<div class="jobDiv">
+						<div>
+							总桌数(桌)
+						</div>
+						<div class="divAll">
+							{{item.tableTotal}}
+						</div>
+					</div>
+					<div class="telDiv">
+						<div>
+							总席位（个）
+						</div>
+						<div class="divAll">
+							{{item.seatTotal}}
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
 		<area-win v-if='showWin' @throwWinResult='doThrowWinResult' :isAdd='isAdd' :areaId='areaId' :shopId='shopId'></area-win>
 	</div>
 </template>
@@ -78,13 +55,8 @@ export default {
 			isAdd: true, //是添加还是编辑，true为添加
 			showWin: false,
 			dataList: [], //区域列表
-			showDataList:[], //展示的区域列表
-
 			areaId: '', //区域id
-
-			num: 10, //一页处理多少数据
-			total: 0, //总页数
-			page: 1, //当前第几页
+			areaIndex: '' //区域列表索引
 		};
 	},
 	mounted() {
@@ -92,70 +64,14 @@ export default {
 		this.shopId = userData.currentShop.id;
 		this.init();
 	},
-	created(){
-		let arr = [{name:'新建区域',className:'pick',fn:()=>{
-			this.add();
-		}}];
-		this.$store.commit('setPageTools',arr);
-	},
 	methods: {
-		//删除
-		del(item){
-			this.$store.commit('setWin', {
-				title: '操作提示',
-				winType: 'confirm',
-				content: `确认删除区域${item.areaName}？`,
-				callback: delRes => {
-					if (delRes == 'ok') {
-						this.deleteArea(item)
-					}
-				}
-			});
-		},
-		//删除区域
-		async deleteArea(item) {
-			let res=await http.deleteArea({
-				data: {
-					shopId: this.shopId,
-					id:item.id
-				}
-			});
-			if(res){
-				this.dataList=this.dataList.filter((ele)=>{
-					return ele.id!=item.id;
-				});
-				this.paging();
-			}
-		},
-		//分页
-		paging() {
-			this.total = Math.ceil(this.dataList.length / this.num); //获取总页数
-			this.showDataList = this.dataList.slice((this.page - 1) * this.num, (this.page - 1) * this.num + this.num
-			); //截取当前页数据
-		},
-		//每页显示几条数据
-		numChange(e){
-			this.num=e;
-			this.paging();
-			console.log(e);
-		},
-		//切换到第几页
-		pageClick(e){
-			this.page=e;
-			this.paging();
-			console.log(e)
-		},
-
-
 		//获取区域列表
 		async init() {
 			let res = await http.getArea({
 				data: { shopId: this.shopId }
 			});
-			console.log(res);
 			this.dataList = res;
 			this.sortList();
-			this.paging();
 		},
 		//添加
 		add() {
@@ -163,41 +79,33 @@ export default {
 			this.showWin = true;
 		},
 		//编辑
-		edit(item) {
-			console.log(item);
+		edit(id, i) {
 			this.isAdd = false;
-			this.areaId = item.id;
+			this.areaId = id;
+			this.areaIndex = i;
 			this.showWin = true;
 		},
-		//弹窗返回
 		doThrowWinResult(res, data) {
-			console.log(data);
 			//确定
 			if (res == 'ok') {
-				if (this.isAdd) {//添加
+				if (this.isAdd) {
+					//添加
 					this.dataList.push(data);
-				} else if (!this.isAdd) {//修改
-					for(let i=0;i<this.dataList.length;i++){
-						if(this.dataList[i].id==data.id){
-							this.dataList[i].areaName = data.areaName;
-					        this.dataList[i].description =data.description;
-					        this.dataList[i].sort = data.sort;
-					        break;
-						}
-					}
+				} else if (!this.isAdd) {
+					//修改
+					this.dataList[this.areaIndex].areaName = data.areaName;
+					this.dataList[this.areaIndex].description =
+						data.description;
+					this.dataList[this.areaIndex].sort = data.sort;
 				}
-				this.sortList();//排序
-				this.paging();//分页
+				this.sortList();
 				this.showWin = false;
 			}
 			if (res == 'cancel') {
 				if (!this.isAdd) {
 					//删除
-					this.dataList=this.dataList.filter((ele)=>{
-						return ele.id!=data.id;
-					});
+					this.dataList.splice(this.areaIndex, 1);
 				}
-				this.paging();//分页
 				this.showWin = false;
 			}
 			if (res == 'close') {
@@ -223,7 +131,7 @@ export default {
 
 <style lang="less" scoped>
 #area-show {
-	/*padding-top: 30px;*/
+	padding-top: 30px;
 	ul.tas-variety li {
 		&:first-child {
 			width: 300px;

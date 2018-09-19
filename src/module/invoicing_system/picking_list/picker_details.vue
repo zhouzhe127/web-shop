@@ -10,19 +10,18 @@
 		<div v-if="isPickerDetail">
 			<div class="ic-title">
 				<div class="text">
-				  {{fromPicking?'领料详情':'领料人详情'}}
+				  {{recordId?'领料详情':'领料人详情'}}
 				</div>
-				<div class="dashed">
-				</div>
+				<div class="dashed"></div>
 			</div>
-			<template v-if="!fromPicking">
+			<template v-if="!recordId">
 				<section class="ic-contern">
 					<div class="all-contern">
 						<span class="span_contern">领料人：{{info.name}}</span>
 					</div>
 				</section>
 			</template>
-			<template v-if="fromPicking">
+			<template v-if="recordId">
 				<section class="ic-contern">
 					<div class="all-contern">
 						领料原因：{{detail.reason}}
@@ -44,50 +43,59 @@
 						<span class="changeList" @click="changeList()">{{isChangeList?'简洁':'详细'}}</span>
 					</div>
 					<ul class="oUl oulFirst">
-						<li>序号</li>
+						<li class="narrow">序号</li>
 						<li>物料名</li>
 						<li>分类</li>
 						<li>类型</li>
 						<li>领料单位选择</li>
-						<li>{{fromPicking?'领料数量/重量':'剩余数量/重量'}}</li>
+						<li>{{recordId?'领料数量/重量':'剩余数量/重量'}}</li>
 					</ul>
 					<ul v-if="detailList.length==0" style="width: 100%;color: orange;">
 						<li style="height: 50px;line-height: 50px;text-align: center;">无记录</li>
 					</ul>
-					<section  v-if="detailList.length!=0" v-for="(item,j) in detailList" :key="j" style="clear: both">
-						<ul class="oUl oulSecond"  >
-							<li>
-								{{j+1}}
-							</li>
-							<li class="over_hide" :title="item.materialName">{{item.materialName}}</li>
-							<li class="over_hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
-							<li>{{getType(item.materialType)}}</li>
-							<li style="line-height: 0;margin-top: 15px" @click="backItem(item,item.indexDe)">
-								<selectBtn @emit="selectType"  :sorts="item.unitList" :index="item.indexDe" :width="'80'"></selectBtn>
-							</li>
-							<li class="over_hide" :title="item.showSurplus">{{item.showSurplus}}</li>
-						</ul>
-						<div  style="border-bottom: 3px solid #f7f7f7;">
-							<ul class="oulThd font16" v-if="isChangeList&&(item.batch&&item.batch.length!=0)">
-								<li>序号</li>
-								<li>批次编码</li>
-								<li>生产日期</li>
-								<li>供应商</li>
-								<li>进价</li>
-								<li>所属仓库</li>
-								<li>{{fromPicking?'领料数量/重量':'剩余数量/重量'}}</li>
+					<div class="scroll-box">
+						<section  v-if="detailList.length!=0" v-for="(item,j) in detailList" :key="j" class="list-box">
+							<ul class="oUl oulSecond"  >
+								<li class="narrow">
+									{{j+1}}
+								</li>
+								<li class="over_hide" :title="item.materialName">{{item.materialName}}</li>
+								<li class="over_hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
+								<li>{{getType(item.materialType)}}</li>
+								<li style="line-height: 0;padding-top: 15px">
+									<el-select v-model="item.indexDe" @change="(res)=>{backItem(item,res)}" style="width:100px;">
+									    <el-option
+											v-for="elItem in item.unitList"
+											:key="elItem.value"
+											:label="elItem.label"
+											:value="elItem.value">
+									    </el-option>
+									</el-select>
+								</li>
+								<li class="over_hide" :title="item.showSurplus">{{item.showSurplus}}</li>
 							</ul>
-							<ul class="oulThd" v-if="isChangeList&&(item.batch&&item.batch.length!=0)"   v-for="(info,i) in item.batch" :key="i">
-								<li>批次{{i+1}}</li>
-								<li class="over_hide" :title="info.batchCode">{{info.batchCode}}</li>
-								<li>{{transformTime(info.productionTime)}}</li>
-								<li class="over_hide" :title="info.supplier">{{info.supplier}}</li>
-								<li class="over_hide" :title="info.purchasePrice">{{info.purchasePrice}}</li>
-								<li class="over_hide" :title="info.warehouseName+'-'+info.areaName">{{info.warehouseName}}-{{info.areaName}}</li>
-								<li class="over_hide" :title="info.showSurplus">{{info.showSurplus}}</li>
-							</ul>
-						</div>
-					</section>
+							<div v-if="isChangeList&&(item.batch&&item.batch.length!=0)" class="sec-box">
+								<ul class="oulThd font16" >
+									<li>序号</li>
+									<li>批次编码</li>
+									<li>生产日期</li>
+									<li>供应商</li>
+									<li>进价</li>
+									<li>所属仓库</li>
+									<li>{{recordId?'领料数量/重量':'剩余数量/重量'}}</li>
+								</ul>
+								<ul class="oulThd" v-for="(info,i) in item.batch" :key="i">
+									<li>批次{{i+1}}</li>
+									<li class="over_hide" :title="info.batchCode">{{info.batchCode}}</li>
+									<li>{{transformTime(info.productionTime)}}</li>
+									<li class="over_hide" :title="info.supplier">{{info.supplier}}</li>
+									<li class="over_hide" :title="info.purchasePrice">{{info.purchasePrice}}</li>
+									<li class="over_hide" :title="info.warehouseName+'-'+info.areaName">{{info.warehouseName}}-{{info.areaName}}</li>
+									<li class="over_hide" :title="info.showSurplus">{{info.showSurplus}}</li>
+								</ul>
+							</div>
+						</section>
+					</div>
 				</section>
 			</div>
 		</div>
@@ -103,53 +111,50 @@
 		data(){
 			return{
 				detailList:[], //领料详情列表
-				fromPicking:{}, //领料记录页面传递的值
+				recordId:'', //领料记录页面传递的值
 				isChangeList:false,  //列表的展开与隐藏
 				isPickerDetail: true, //盘库详情
 				item: {},          //保存点击的该条信息
 				detail:{},
 				info: '',
+				isBack:true,
 			};
 		},
 		// props:['info'],
 		mounted(){
-			this.fromPicking = storage.session('listDetail');
+			this.recordId = this.$route.query.id;
 			this.info = storage.session('info');
 			this.initBtn();
 		},
-		destroyed(){
-			storage.session('listDetail',null);
-		},
 		methods:{
 			initBtn(){
-				if(this.fromPicking){
+				if(this.recordId){
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
-					let arr = [{name:'返回',className:'huiC',fn:()=>{
-						storage.session('listDetail',null);
+					let arr = [{name:'返回',className: 'info',type:4,fn:()=>{
 						storage.session('isBackPickingRecord',true);   //是否点击返回
-						this.$router.push({path:'../pickingList',query:this.$route.query});
+						window.history.go(-1);
 					}}];
 					this.$store.commit('setPageTools',arr);
 					this.initOne();
 				}else{
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'领料人详情'}]});
-					let arr = [{
-						name:'返回',
-						className:'huiC',
-						fn:()=>{
-							// this.$emit('throwWinResult',false);
-							this.$store.commit('setPageTools',{});
-							storage.session('numType',{num:1});
-							this.$router.push({path:'../pickingList',query:this.$route.query});
-						}},{
-						name:'领料盘库',
-						className:'pickCheck',
-						fn:()=>{
-							this.isPickerDetail = false;
-							let data = {storageInfo:this.detailList,info:this.info};
-							storage.session('plateStorage',data);
-							this.$router.push({path:'../pickingList/plateStorage',query:this.$route.query});
-						}}];
+					let arr = [
+						{name:'领料盘库',className:'primary',type:4,
+							fn:()=>{
+								this.isPickerDetail = false;
+								let data = {storageInfo:this.detailList,info:this.info};
+								storage.session('plateStorage',data);
+								this.$router.push({path:'../pickingList/plateStorage',query:this.$route.query});
+							}
+						},
+						{name:'返回',className:'info',type:4,
+							fn:()=>{
+								this.$store.commit('setPageTools',{});
+								storage.session('numType',{num:1});
+								this.$router.push({path:'../pickingList',query:this.$route.query});
+							}
+						},
+					];
 					this.$store.commit('setPageTools',arr);
 					this.getDetailByOwner();
 				}
@@ -168,17 +173,15 @@
 			changeList(){
 				this.isChangeList=!this.isChangeList;
 			},
-			selectType(index){
-				this.backItem(this.item,index);
-			},
-			backItem(item,index){
-				this.item=item;
-				item.indexDe=index;
-				let showName=item.unitList[index];      //展示的单位名称
+			backItem(item,id){
+				item.indexDe=id;
+				let showName = '';      //展示的单位名称
 				let value='';                                //换算关系
 				for(let k=0;k<item.materialUnit.length;k++){
-					if(item.materialUnit[k].name==showName){
+					if(item.materialUnit[k].muId==id){
 						value=item.materialUnit[k].value;
+						showName = item.materialUnit[k].name;
+						break;
 					}
 				}
 				item.showSurplus=global.comUnit(item.surplus,value,showName,item.minName);   //外层列表
@@ -199,16 +202,20 @@
 						if(this.detailList[i].materialUnit[j].isMin==1){
 							this.detailList[i].minName=this.detailList[i].materialUnit[j].name;  //最小单位
 						}
-						unitList=unitList.concat(this.detailList[i].materialUnit[j].name);        //单位列表
-						for(let b=0;b<unitList.length;b++){                                      //把默认单位放到数组第一位
-							if(unitList[b]==this.detailList[i].defaultName){
-								let str = unitList.splice(b,1);
-								unitList.unshift(str[0]);
-							}
-						}
-						this.detailList[i].unitList=unitList;
+						let obj={
+							value:this.detailList[i].materialUnit[j].muId,
+							label:this.detailList[i].materialUnit[j].name
+						};
+						unitList.push(obj);        //单位列表
 					}
-					this.detailList[i].indexDe=0;
+					for(let b=0;b<unitList.length;b++){                                      //把默认单位放到数组第一位
+						if(unitList[b].label==this.detailList[i].defaultName){
+							let str = unitList.splice(b,1);
+							unitList.unshift(str[0]);
+						}
+					}
+					this.$set(this.detailList[i],'unitList',unitList);
+					this.$set(this.detailList[i],'indexDe',unitList[0].value);
 					//显示默认单位值
 					this.detailList[i].showSurplus=global.comUnit(this.detailList[i].surplus,this.detailList[i].defaultValue,this.detailList[i].defaultName,this.detailList[i].minName);
 					if(this.detailList[i].batch&&this.detailList[i].batch.length!=0){
@@ -256,7 +263,7 @@
 			// 获取领料详情
 			async initOne(){
 				let res=await http.MaterialreceiveGetLogDetail({
-					data:{id:this.fromPicking.id}
+					data:{id:this.recordId}
 				});
 				if(res){
 					this.detail=res;
@@ -297,13 +304,13 @@
 <style scoped lang="less">
 	#people_del{
 		.ic-title {
-			width: 650px;
+			width: 100%;
 			height: 30px;
 			line-height: 30px;
 			position: relative;
 			.text {
 				font-size: 16px;
-				width: 120px;
+				width: 100px;
 				height: 20px;
 				line-height: 20px;
 				text-indent: 10px;
@@ -313,11 +320,11 @@
 				border-left: 2px solid rgba(40,168,224,1);
 			}
 			.dashed {
-				width: 535px;
+				width: 100%;
 				height: 10px;
-				border-top: 1px dashed rgb(228,229,230);
+				border-top: 2px dashed rgb(228,229,230);
 				position: absolute;
-				right: 0;
+				left: 120px;
 				top: 20px;
 			}
 		}
@@ -337,9 +344,15 @@
 		}
 		.list_num{
 			min-width: 780px;
-			border: 1px solid #D2D2D2;
+			border: 1px solid #ebeef5;
 			.totle{
 				background-color: #FFFFFF;
+				.scroll-box{
+					overflow: auto;
+					.list-box{min-width: 1000px;
+						.sec-box{border-bottom: 3px solid #ebeef5;}
+					}
+				}
 				.head{
 					height: 50px;
 					line-height: 50px;
@@ -351,7 +364,7 @@
 					}
 					.changeList{
 						color: #28A8E0;
-						font-size: 16px;
+						font-size: 14px;
 						margin-left: 20px;
 						cursor: pointer;
 					}
@@ -359,7 +372,7 @@
 				.oUl{
 					width:100%;
 					color:#333333;
-					border-bottom: 3px solid #f7f7f7;
+					border-bottom: 1px solid #ebeef5;
 					li{
 						text-align: center;
 						float: left;
@@ -370,14 +383,15 @@
 					width:100%;
 					height: 40px;
 					li{
-						font-size: 16px;
+						font-size: 14px;
 						color:#43414A;
-						width:16.6%;
+						width:18%;
 						height: 40px;
 						line-height: 40px;
 						text-align: center;
 						float: left;
 					}
+					.narrow{width: 10%;}
 				}
 				.oulSecond{
 					width:100%;
@@ -385,11 +399,12 @@
 					li{
 						font-size: 14px;
 						color: #666666;
-						width:16.6%;
+						width:18%;
 						height: 70px;
 						line-height: 70px;
 						float: left;
 					}
+					.narrow{width: 10%;}
 				}
 				.oulThd{
 					width:100%;

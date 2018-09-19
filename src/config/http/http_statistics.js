@@ -161,18 +161,9 @@ export default {
         url: w + "MemberConsume/getRechargeStatistics", // "会员充值统计" 导出
         type: 'file'
     },
-	"getChangeShiftsList": {
-		url: s + "Shiftsstatistics/getShiftsList", // 获取"交接班"的数据列表
-		method: "get"
-	},
-	"getShiftsDetail": {
-		url: s + "Shiftsstatistics/getShiftsDetail", // 获取"交接班"详情
-		method: "get"
-	},
-	"updateDifferPrice": {
-		url: s + "Shiftsstatistics/updateDifferPrice", //差额调整
-		method: "post"
-	},
+    "getChangeShiftsList": {
+        url: s + "Order/getChangeShiftsList", // 获取"交接班"的数据列表
+    },
     // "getBillDelite": {
     //     url: s + "Order/billDelite", // 根据订单号获取挂账的订单详情
     //     method: "post"

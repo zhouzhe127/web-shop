@@ -8,12 +8,10 @@
 <template>
 	<div id="joblist">
 		<section class="jobTop">
-			<el-input v-model="search" clearable placeholder="请输入职位名称" style="width:150px;"></el-input>
+			<el-input v-model="search" clearable placeholder="请输入职位名称" style="width:150px;float:left;"></el-input>
 			<!-- <input v-model="search" type="text" class="input" placeholder="请输入职位名称"> -->
-			<el-button @click="keyUp" type="primary">搜索</el-button>
-			<el-button @click="reset" type="info">重置</el-button>
-			<!-- <div v-on:click="keyUp" class="blue">筛选</div>
-			<div @click="reset" class="gray">重置</div> -->
+			<div v-on:click="keyUp" class="blue">筛选</div>
+			<div @click="reset" class="gray">重置</div>
 		</section>
 		<section class="allList">
 			<section class="oBox">
@@ -130,7 +128,6 @@ export default {
 		//每页显示多少行
 		numChange(e){
 			this.num = e;
-			this.currentPage = 1;
 		},
 		//筛选按钮点击
 		keyUp: function() {

@@ -111,7 +111,7 @@
 					<!-- <selectBtn @selOn="getUnit" :sorts="allUnit" :name="unitName" :width="'100'" style="float:left;margin-left:10px;"></selectBtn> -->
 					<span>{{unitName}}</span>
 					<span v-if="unitName!=smallUnit">+</span>
-					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:200px;" v-model="weight" maxlength="10">
+					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:150px;" v-model="weight" maxlength="10">
 					<div v-if="unitName!=smallUnit" class="weightNum-unit">{{smallUnit}}</div>
 				</div>
 				<div class="note">
@@ -147,7 +147,7 @@
 					</section>
 					<section>
 						<h6>进价:</h6>
-						<span>{{existingBatchInfo.purchasePrice}}元{{"/"}}{{getpiceunit(existingBatchInfo.purchaseUnit)}}</span>
+						<span>{{existingBatchInfo.distributionPrice}}元{{"/"}}{{getpiceunit(existingBatchInfo.distributionUnit)}}</span>
 					</section>
 				</li>
 				<li>
@@ -180,7 +180,7 @@
 					<div v-if="existingBatchInfo.purchaseUnit.name!=smallUnit" class="weightNum-unit">{{smallUnit}}</div> -->
 					<span>{{unitName}}</span>
 					<span v-if="unitName!=smallUnit">+</span>
-					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:200px;" v-model="weight" maxlength="10">
+					<input v-if="unitName!=smallUnit" type="text" placeholder="0" style="width:150px;" v-model="weight" maxlength="10">
 					<div v-if="unitName!=smallUnit" class="weightNum-unit">{{smallUnit}}</div>
 				</div>
 				<div class="note">
@@ -400,7 +400,7 @@
 					});
 					this.successInfo = res;
 				} else if (this.getInfo.type == 2) {
-					this.listenValue();
+					// this.listenValue();
 					let res = await http.goodsinventoryAddNum({
 						data: {
 							itemId: this.existingBatchInfo.itemId,
@@ -415,13 +415,15 @@
 				}
 
 			},
-			listenValue() {
-				for (let i = 0; i < this.UnitDataInfo.length; i++) {
-					if (this.existingBatchInfo.purchaseUnit.name == this.UnitDataInfo[i].name) {
-						this.conversion = this.UnitDataInfo[i].value;
-					}
-				}
-			},
+			// listenValue() {
+			// 	console.log(this.existingBatchInfo.purchaseUnit)
+			// 	console.log(this.UnitDataInfo)
+			// 	for (let i = 0; i < this.UnitDataInfo.length; i++) {
+			// 		if (this.existingBatchInfo.purchaseUnit.name == this.UnitDataInfo[i].name) {
+			// 			this.conversion = this.UnitDataInfo[i].value;
+			// 		}
+			// 	}
+			// },
 			wareEvent(str) {
 				console.log(str);
 				this.wareshow = false;

@@ -421,7 +421,7 @@ export default {
 					msgContent: this.customActivity //自定义活动内容设置
 				};
 				arr.push(obj);
-				await http.fissionActivity({
+				await http.addActivity({
 					data: {
 						rule: JSON.stringify(arr),
 						type: 1, //活动类别

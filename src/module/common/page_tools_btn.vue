@@ -8,7 +8,7 @@
 				<template v-if="v.type == 1">
 					<form id="form_import_good" :key="i+keyRan" enctype="multipart/form-data" :class='v.className' class="import-form">
 						<input type="file" @change='v.fn' accept=".xls,.xlsx" :name="v.inputName" :style='v.styles' :class='v.className' class="import-input" onclick="this.value = ''" />
-						<a href="javascript:;" class="import-btn" :class='v.className' :style='v.styles'>{{v.name}}</a>
+						<el-button @click="v.fn" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
 					</form>
 				</template>
 				<template v-if="v.type == 2">
@@ -69,7 +69,6 @@ export default {
 			oldBtn: {
 				leadIn: new Btn('导入', 'import-form', '', 1, {}, 'goods'),
 				leadOut: new Btn('导出', 'export-btn'),
-				addGood: new Btn('添加', 'pick'),
 				filter: new Btn('筛选'),
 				createScheme: new Btn('创建方案'),
 				back: new Btn('返回'),
@@ -92,7 +91,7 @@ export default {
 				completeBatchOperation: new Btn('完成操作', ['addStaff', 'export-btn']),
 				openCode: new Btn('验证商品劵码', ['btn', 'firstBtn']),
 				setTemplateType: new Btn('模板设置', ['setTemp', 'firstBtn']),
-				addIntegral: new Btn('添加积分商品', ['btn', 'firstBtn']),
+				addIntegral: new Btn('添加积分商城', ['btn', 'firstBtn']),
 				addNewType: new Btn('新建', ['userLabel']),
 				createSpeech: new Btn('新建话术组', ['technique']),
 				newPath: new Btn('新建路径链接', ['technique']),
@@ -179,30 +178,19 @@ a {
 		}
 	}
 	.import-form {
-		width: 76px;
 		background-color: @sdSkyBlue;
-		float: left;
+		border-radius: 4px;
+		display: inline-block;
 		position: relative;
-		margin-left: 5px;
 		transition: background-color 0.7s;
 		cursor: pointer;
-		.import-btn {
-			width: 76px;
-			display: inline-block;
-			height: 40px;
-			line-height: 40px;
-			cursor: pointer;
-		}
-		&:hover {
-			background-color: @sdDeepBlue;
-		}
 		.import-input {
 			opacity: 0;
 			position: absolute;
 			top: 0;
 			left: 0;
 			z-index: 2;
-			width: 76px;
+			width: 100%;
 			height: 40px;
 			display: inline-block;
 			cursor: pointer;

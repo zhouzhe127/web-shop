@@ -18,9 +18,9 @@
 				<el-table-column label="操作" width="250">
 					<template slot-scope="scope">
                         <span v-if="status!=-1" style="cursor: pointer">
-								<span style="color: #28A8E0;" @click="see()">查看详情</span>
+								<span style="color: #28A8E0;font-size: 16px" @click="see()">查看详情</span>
 								<span style="padding:0 10px;color: #D2D2D2;">|</span>
-								<span style="color: #FE8D2C;" @click="edit()">编辑</span>
+								<span style="color: #FE8D2C;font-size: 16px" @click="edit()">编辑</span>
 								<span style="padding:0 10px;color: #D2D2D2;">|</span>
 							    <span @click="toOn()">
 									<el-switch v-model="on" active-color="#13ce66" inactive-color="#ff4949" >
@@ -360,14 +360,14 @@ export default {
 					i--;
 				}
 			}
-			//给多规格主菜添加myId属性，myId即其所有子菜id。
+
 			for (let j=0;j<goodList.length;j++){
 			    if(goodList[j].isGroup==1){
                     goodList[j].myId=[];
                     for(let i=0;i<goodList.length;i++){
                         if(goodList[i].groupId==goodList[j].id){
                             goodList[j].myId.push(goodList[i].id);
-                            // console.log(goodList[j].myId);
+                            console.log(goodList[j].myId);
                         }
                     }
 				}
@@ -433,7 +433,7 @@ export default {
 		seeMenu: () =>
 			import(/* webpackChunkName:'see_menu_win' */ './multi_channel/see_menu_win'),
 		editMenu: () =>
-			import(/*webpackChunkName:'edit_menu_win'*/ './multi_channel/edit_menu_win'),
+			import(/*webpackChunkName:'good_package_win'*/ './multi_channel/edit_menu_win'),
 //        onOff: () =>
 //            import(/* webpackChunkName:"on_off" */ 'src/components/on_off'),
 	}

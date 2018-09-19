@@ -20,24 +20,54 @@
 						<section v-on:click="getGoodList(0)" class="oDe" :class="{'act' : !isPackage}" style="border-left: none;width:50%;">商品</section>
 						<section v-on:click="getGoodList(1)" class="oDe" :class="{'act' : isPackage}">套餐</section>
 					</div>
-					<div v-if="!isPackage" style="float: left;margin-left: 10px;">
-						<!--一级分类选择框-->
-						<elCategory @selectCategory = "newselectOneArea" :categoryArr="oneArea.oneAreaList" :itemIndex="oneArea.oneAreaIndex" :itemArea = "oneArea"></elCategory>
-						<!--二级级分类选择框-->
-						<elCategory @selectCategory = "newselectTwoArea" :categoryArr="twoArea.twoAreaList" :itemIndex="twoArea.twoAreaIndex" :itemArea = "twoArea"></elCategory>	
-						
+					<ul v-if="!isPackage" style="float: left;margin-left: 20px;">
+						<li style="width:210px;float: left;">
+							<!--一级分类选择框-->
+							<section class="staList fl detLi">
+								<section v-on:click="showOneArea" class="tableList">
+									<span class="oSpan">{{oneArea.oneAreaName}}</span>
+									<div class="fl">
+										<i></i>
+									</div>
+								</section>
+								<div v-if="oneArea.oneAreaBtn" class="detDiv">
+									<i class="detI"></i>
+
+									<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">
+										<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
+									</div>
+								</div>
+							</section>
+						</li>
+						<li style="width:210px;margin-left: 20px;float: left;">
+							<!--二级级分类选择框-->
+							<section class="staList fl detLi">
+								<section v-on:click="showTwoArea" class="tableList">
+									<span class="oSpan">{{twoArea.twoAreaName}}</span>
+									<div class="fl">
+										<i></i>
+									</div>
+								</section>
+								<div v-if="twoArea.twoAreaBtn" class="detDiv" style="left: -180px;">
+									<i class="detI" style="left: 290px;"></i>
+									<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">
+										<section v-for="(item,index) in twoArea.twoAreaList" :key="index" v-on:click='selectTwoArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>
+									</div>
+								</div>
+							</section>
+						</li>
 						<!--搜索-->
-						<el-input placeholder="请输入名称" clearable v-model="search" @change="searchGoods" style="width:200px;">
-							<el-button slot="append" icon="el-icon-search" @click="searchGoods"></el-button>
-						</el-input>
-					</div>
+						<li style="width:180px;margin-left: 20px;float: left;">
+							<div class='search'>
+								<input type="text" placeholder="请输入名称" class="search-input" v-model="search" />
+								<a href="javascript:void(0);" class="search-btn" @click="searchGoods()" style="background-color:#29A7E1;"></a>
+							</div>
+						</li>
+					</ul>
 					<div v-if="isPackage" style="width:100%;height: 50px;overflow: hidden;padding-top:10px">
-						<el-radio-group v-model="packBtn" @change = "selectPack">
-							<el-radio-button label="-1">全部</el-radio-button>
-							<el-radio-button v-if="!isPackType || isPackType.indexOf('0')>-1" label="0">固定套餐</el-radio-button>
-							<el-radio-button v-if="!isPackType || isPackType.indexOf('1')>-1" label="1">可选套餐</el-radio-button>
-							<el-radio-button v-if="!isPackType || isPackType.indexOf('2')>-1" label="2">自定义套餐</el-radio-button>
-						</el-radio-group>
+						<a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
+						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);" style="">固定套餐</a>
+						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);" style="">可选套餐</a>
 					</div>
 				</section>
 				<ul class="aUl" style="">
@@ -54,11 +84,11 @@
 					</section>
 					<section v-if="!allGood">
 						<div class="onecate" v-if=" oneGoodList.goodsList.length > 0" style="">
-							<section>
+							<section class="onecataTitle" style="">
 								<i class="twoI" :class="{'oneI':L2ID == '0'}"></i>
 								<li class="twoTitle " :class="{'oneTitle':L2ID == '0'}">{{oneGoodList.name}}</li>
 							</section>
-							<section style="padding-left:30px;">
+							<section style="width:600px;float: left;">
 								<template v-if="goInName=='goodsChoice'">
 									<li v-on:click="!item.isSynOk?choseGood(item):''" v-for="(item,index) in oneGoodList.goodsList" :key="index" class="aLi" :class="[{'shoName-select':item.selected&&!item.isSynOk},{'dis-type':item.isSynOk}]">{{item.goodsName ? item.goodsName : item.packageName}}</li>
 								</template>
@@ -68,11 +98,11 @@
 							</section>
 						</div>
 						<div v-if="category.goodsList.length > 0" class="onecate" v-for="(category,index) in oneGoodList.child" :key="index">
-							<section>
+							<section class="onecataTitle" style="">
 								<i class="twoI" style=""></i>
 								<li class="twoTitle" style="">{{category.name}}</li>
 							</section>
-							<section style="padding-left:30px;">
+							<section style="width:600px;float: left;">
 								<template v-if="goInName=='goodsChoice'">
 									<li v-on:click="!item.isSynOk?choseGood(item):''" v-for="(item,index) in category.goodsList" :key="index" class="aLi" :class="[{'shoName-select':item.selected&&!item.isSynOk},{'dis-type':item.isSynOk}]">{{item.goodsName ? item.goodsName : item.packageName}}</li>
 								</template>
@@ -108,22 +138,16 @@ export default {
 			printDetial: null,
 			createUid: '',
 			showTowWin: false, //关联商品的弹窗打开或关闭
-			// packageMenu:[
-			// 	{id:-1,name:'全部'},
-			// 	{id:1,name:'可选套餐'},
-			// 	{id:0,name:'固定套餐'},
-			// 	{id:2,name:'自定义套餐'},
-			// 	// {id:3,name:'下架套餐'},
-			// ],
+
 			oneArea: {
-				// oneAreaBtn: false, //一级分类
-				name: '请选择一级分类',
+				oneAreaBtn: false, //一级分类
+				oneAreaName: '请选择一级分类',
 				oneAreaIndex: -1, //分类下标
 				oneAreaList: [{ id: '0', name: '全部' }] //一级分类列表
 			},
 			twoArea: {
-				// twoAreaBtn: false, //二级分类
-				name: '请选择二级分类',
+				twoAreaBtn: false, //二级分类
+				twoAreaName: '请选择二级分类',
 				twoAreaIndex: -1, //分类下标
 				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
 			},
@@ -148,7 +172,6 @@ export default {
 		};
 	},
 	mounted() {
-		// console.log(this.goodsIds)
 		if (this.isCashier) {
 			this.reportName = this.reportSetName;
 		}
@@ -162,11 +185,11 @@ export default {
 			this.getGoodList(1);
 			// this.packCom = this.packlist;
 		}
-		// document.addEventListener('click', this.myClick);
+		document.addEventListener('click', this.myClick);
 	},
-	// destroyed() {
-	// 	// document.removeEventListener('click', this.myClick); //去除绑定
-	// },
+	destroyed() {
+		document.removeEventListener('click', this.myClick); //去除绑定
+	},
 	props: {
 		goodsIds: Array, //['0','1','2','3']这种格式
 		packages: Array, //['0','1','2','3']这种格式
@@ -179,18 +202,16 @@ export default {
 		allGid: Array, //所有配置过起售的商品id,可不传
 		asyncGoods: Array, //用于展示同步的品牌商品，可不传
 		isAllOrOther: Boolean, //是同步品牌商品的所有信息还是部分信息，可不传
-		categoryList: Array, //是分类列表，为了同步品牌商品，可不传
-		isPackType:String,//0:固定，1：可选，2：自定义，如果有这方面的需求筛选，传要求显示的如'1,2'：就是要求固定和可选
+		categoryList: Array //是分类列表，为了同步品牌商品，可不传
 	},
 	components: {
-		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
+		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
 	},
 	methods: {
-		// myClick() {
-		// 	this.oneArea.oneAreaBtn = false;
-		// 	this.twoArea.twoAreaBtn = false;
-		// },
+		myClick() {
+			this.oneArea.oneAreaBtn = false;
+			this.twoArea.twoAreaBtn = false;
+		},
 		//搜索功能
 		searchGoods() {
 			let secGoods = [];
@@ -202,11 +223,11 @@ export default {
 					secGoods.push(list[i]);
 				}
 			}
-			this.oneArea.name = '请选择一级分类';
+			this.oneArea.oneAreaName = '请选择一级分类';
 			this.L1ID == 0;
 			this.twoArea = {
-				// twoAreaBtn: false, //二级分类
-				name: '请选择二级分类',
+				twoAreaBtn: false, //二级分类
+				twoAreaName: '请选择二级分类',
 				twoAreaIndex: -1, //分类下标
 				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
 			};
@@ -283,6 +304,7 @@ export default {
 				res = false;
 				storage.session('httpGoodVersion', this.version);
 			}
+			// console.log(res)
 			//如果存在保存的商品数据
 			if (goodLists && res) {
 				goodList = goodLists;
@@ -356,7 +378,7 @@ export default {
 				goodList = goods;
 			} else if (this.goInName == 'isKitchen') {
 				//过滤下架和多规格主菜   后厨配置用到
-				// console.log('后厨配置用到');
+				console.log('后厨配置用到');
 				let goods = [];
 				for (let i = 0; i < goodList.length; i++) {
 					if (goodList[i].status != '2'&&goodList[i].isGroup != '1') {
@@ -479,17 +501,12 @@ export default {
 				storage.session('packList', packlist);
 			}
 			let obj = {}; //对套餐id做处理，避免多重循环
-			// console.log(this.isPackType);
 			for (let i = 0; i < packlist.length; i++) {
 				packlist[i].selected = false;
-				if (packlist[i].status == '2'||(this.isPackType && this.isPackType.indexOf(packlist[i].type)==-1)) {//下架的或者有需求要求显示的套餐
+				if (packlist[i].status == '2') {
 					packlist.splice(i, 1);
 					i--;
 				}
-				// if(){
-				// 	packlist.splice(i, 1);
-				// 	i--;
-				// }
 			}
 			// console.log(packlist);
 			for (let i = 0; i < packlist.length; i++) {
@@ -537,13 +554,6 @@ export default {
 		//商品和套餐的切换，商品index =0 ；套餐index = 1
 		getGoodList: function(index) {
 			this.allGood = true;
-			//切换商品-套餐，分类选择置空
-			this.oneArea.oneAreaIndex= -1;
-			this.oneArea.name= '请选择一级分类';
-			this.twoArea.twoAreaIndex= -1;
-			this.twoArea.name= '请选择二级分类';
-			this.twoArea.twoAreaList= [{ id: '0', name: '全部二级分类' }];
-
 			if (index == 0) {
 				this.isPackage = false;
 				this.goodsCom = this.goodList;
@@ -723,59 +733,46 @@ export default {
 			}
 		},
 		//显示一级分类
-		// showOneArea: function(e) {
-		// 	e.stopPropagation();
-		// 	this.twoArea.twoAreaBtn = false;
-		// 	this.oneArea.oneAreaBtn = !this.oneArea.oneAreaBtn;
-		// },
-		//显示二级分类
-		// showTwoArea: function(e) {
-		// 	e.stopPropagation();
-		// 	if (this.L1ID == 0) {
-		// 		this.$store.commit('setWin', {
-		// 			title: '温馨提示',
-		// 			winType: 'alert',
-		// 			content: '请先选择一个一级分类'
-		// 		});
-		// 		return false;
-		// 	}
-		// 	this.oneArea.oneAreaBtn = false;
-		// 	this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
-		// },
-		//一级分类框返回
-		newselectOneArea(index) {
-			this.oneArea.oneAreaIndex = index;
-			this.twoArea.twoAreaIndex = -1;
-			let item = this.oneArea.oneAreaList[index];
-			this.selectOneArea(index,item);
+		showOneArea: function(e) {
+			e.stopPropagation();
+			this.twoArea.twoAreaBtn = false;
+			this.oneArea.oneAreaBtn = !this.oneArea.oneAreaBtn;
 		},
-		//二级分类框返回
-		newselectTwoArea(index) {
-			this.twoArea.twoAreaIndex = index;
-			let item = this.twoArea.twoAreaList[index];
-			this.selectTwoArea(index,item);
+		//显示二级分类
+		showTwoArea: function(e) {
+			e.stopPropagation();
+			if (this.L1ID == 0) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alert',
+					content: '请先选择一个一级分类'
+				});
+				return false;
+			}
+			this.oneArea.oneAreaBtn = false;
+			this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
 		},
 		//选择一级分类
 		selectOneArea: function(index, item) {
 			this.search = '';
 			//判断选择的是否是全部商品
-			// for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
-			// 	this.oneArea.oneAreaList[i].selected = false;
-			// }
-			// item.selected = true;
-			// this.oneArea.oneAreaBtn = false;
+			for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
+				this.oneArea.oneAreaList[i].selected = false;
+			}
+			item.selected = true;
+			this.oneArea.oneAreaBtn = false;
 			//选择一级，清空所选二级
-			this.twoArea.name = '请选择二级分类';
+			this.twoArea.twoAreaName = '请选择二级分类';
 			this.L1ID = item.id;
 			this.L2ID = 0;
 			if (index == 0) {
 				//若选择一级分类下的全部，为选择全部商品，包含一级分类下的和二级分类下的商品
 				this.allGood = true;
 				this.goodsCom = this.goodList;
-				this.oneArea.name = '全部';
+				this.oneArea.oneAreaName = '全部';
 			} else {
 				this.allGood = false;
-				this.oneArea.name = item.name;
+				this.oneArea.oneAreaName = item.name;
 				this.oneArea.oneAreaIndex = index;
 				let goodList = this.goodList;
 				item.goodsList = [];
@@ -809,14 +806,14 @@ export default {
 		//选择二级分类
 		selectTwoArea: function(index, item) {
 			this.search = '';
-			this.twoArea.name = item.name;
+			this.twoArea.twoAreaName = item.name;
 			//单选
-			// let twoList = this.twoArea.twoAreaList;
-			// for (let i = 0; i < twoList.length; i++) {
-			// 	twoList[i].selected = false;
-			// }
-			// item.selected = true;
-			// this.twoArea.twoAreaBtn = false;
+			let twoList = this.twoArea.twoAreaList;
+			for (let i = 0; i < twoList.length; i++) {
+				twoList[i].selected = false;
+			}
+			item.selected = true;
+			this.twoArea.twoAreaBtn = false;
 			let dowArr = this.newOneGoodList;
 			let selectArr = {};
 			if (item.id == 0) {
@@ -895,15 +892,15 @@ export default {
 <style type="text/css" scoped>
 .oCont .Box {
 	width: 180px;
-	height: 40px;
+	height: 42px;
 	border: 1px solid #ff9801;
 	cursor: pointer;
 	box-sizing: border-box;
 }
 .oCont .oDe {
 	width: 50%;
-	height: 38px;
-	line-height: 38px;
+	height: 40px;
+	line-height: 40px;
 	text-align: center;
 	float: left;
 	border-left: 1px solid #ff9801;
@@ -913,6 +910,23 @@ export default {
 .oCont .Box .act {
 	background-color: #ff9801;
 	color: #fff;
+}
+.statisticsList ul {
+	width: 100%;
+	margin: 0;
+	position: absolute;
+	top: 43px;
+	left: 0;
+	z-index: 10;
+	background: #fff;
+}
+.statisticsList ul li {
+	text-align: center;
+	height: 41px;
+	border: 1px #b3b3b3 solid;
+	border-top: 0;
+	background: #fff;
+	cursor: pointer;
 }
 .overHid {
 	white-space: nowrap;
@@ -963,7 +977,7 @@ export default {
 	border-right: 5px solid transparent;
 	box-sizing: border-box;
 }
-/* .detLi {
+.detLi {
 	position: relative;
 	cursor: pointer;
 }
@@ -1001,7 +1015,7 @@ export default {
 	color: #818181;
 	text-align: left;
 	color: #e6e6e7;
-} */
+}
 .shoName {
 	height: 40px;
 	line-height: 40px;
@@ -1015,11 +1029,11 @@ export default {
 	border-color: #ff9800;
 	background: url(../res/images/sign.png?18274) right bottom no-repeat;
 }
-/* .shoName-select-one {
+.shoName-select-one {
 	border-color: #ff9800;
 	color: #ff9800;
-} */
-/* .return {
+}
+.return {
 	position: absolute;
 	right: 100px;
 	top: -50px;
@@ -1031,8 +1045,8 @@ export default {
 	color: #ff8c01;
 	cursor: pointer;
 	height: 40px;
-} */
-/* .raduobtn {
+}
+.raduobtn {
 	width: 100px;
 	height: 40px;
 	line-height: 40px;
@@ -1041,11 +1055,11 @@ export default {
 	margin-left: 10px;
 	background-color: #fff;
 	color: #333;
-} */
-/* .selectbtn {
+}
+.selectbtn {
 	background-color: #2fa8dd;
 	color: #fff;
-} */
+}
 
 #configTan {
 	width: 100%;
@@ -1058,7 +1072,7 @@ export default {
 	width: 100%;
 	height: auto;
 	overflow: auto;
-	padding: 10px 0;
+	padding: 10px;
 }
 #configTan .aUl .aLi {
 	padding: 0 15px;
@@ -1067,7 +1081,7 @@ export default {
 	cursor: pointer;
 	text-align: center;
 	background-color: #fff;
-	margin: 5px;
+	margin: 5px 10px;
 	float: left;
 	border: 1px solid #d2d2d2;
 	color: #919191;
@@ -1094,6 +1108,11 @@ export default {
 	height: auto;
 	overflow: hidden;
 }
+.onecate .onecataTitle {
+	width: 115px;
+	float: left;
+	overflow: hidden;
+}
 .onecate .twoI {
 	width: 10px;
 	height: 10px;
@@ -1102,10 +1121,10 @@ export default {
 	float: left;
 }
 .onecate .twoTitle {
-	/* width: 70px; */
+	width: 70px;
 	height: 50px;
 	line-height: 50px;
-	/* float: left; */
+	float: left;
 	font-weight: 800;
 	color: #9f9f9f;
 	overflow: hidden;

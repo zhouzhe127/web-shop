@@ -1,10 +1,3 @@
-/**
- * @Author: 百川-曾伟福 
- * @Date: 2018-09-05 14:59:08 
- * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 15:21:57
- * @Module:商品库存管理
-**/
 <template>
 	<!--
 	@file 商品库存管理
@@ -16,16 +9,10 @@
 		<section class="fl user-content">
 			<section class="user-function">
 				<section class=" fl" style="width:100%;height:50px;">
-					<!-- 分类选择 -->
-					<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea = "oneArea"></elCategory>
-					<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea = "twoArea"></elCategory>
-					<el-input placeholder="请输入名称" clearable v-model="search" @change="funSearchkeyUp()" style="width:210px;">
-						<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp()"></el-button>
-					</el-input>
-					<!-- <selectStore @emit="selectOne" :isSingle="true" :sorts="category" :tipName="'请选择一级分类'"></selectStore>
+					<selectStore @emit="selectOne" :isSingle="true" :sorts="category" :tipName="'请选择一级分类'"></selectStore>
 					<div style="display:inline-block;" @click="openTwo">
 						<selectStore @emit="selectTwo" :isSingle="true" :sorts="child" ref="towSortDom" :tipName="'请选择二级分类'"></selectStore>
-					</div> -->
+					</div>
 					<!-- <section class="class-Parent">
 						<span v-for="(item,index) in category" @click="funToggleCate(item)" :class="{'on':parentCate.id==item.id}" :key="index">{{item.name}}</span>
 					</section>
@@ -122,19 +109,7 @@ export default {
 			showCom: '', //组件的显示
 			comObj: {
 				good: Object //单个商品对象
-			},
-
-			oneArea: {
-				name: '请选择一级分类',
-				id: -1, //一级分类id
-			},
-			oneIndex:-1,//一级分类下标
-			twoArea: {
-				name: '请选择二级分类',
-				index: -2, //二级分类id
-			},
-			twoIndex:-1,//二级分类下标
-			search:''
+			}
 		};
 	},
 	mounted() {
@@ -142,21 +117,6 @@ export default {
 		this.syncRequest();
 	},
 	methods: {
-		funSearchkeyUp() {
-			this.search = this.search.trim();
-			this.oneArea.name = '请选择一级分类';
-			this.twoArea.name = '请选择二级分类';
-			this.oneIndex = -1;
-			this.twoIndex = -1;
-			let arr = [];
-			for(let i=0;i<this.goodsList.length;i++){
-				let goodItem = this.goodsList[i];
-				if (goodItem.goodsName && goodItem.goodsName.indexOf(this.search) > -1){
-					arr.push(goodItem);
-				}
-			}
-			this.nowGoods = arr;
-		},
 		async closeInvcontrolWin(res) {
 			if (res == 'edit') {
 				let versioin = await this.getHttp('ShopGetExtra');
@@ -186,31 +146,6 @@ export default {
 		},
 		//----------         分类切换       --------------------
 		//切换一级分类
-		newselectOneArea(index) {
-			this.search = '';
-			this.oneIndex = index;
-			this.twoIndex = -1;
-			let item = this.category[index];
-			this.oneArea = {
-				id: item.id,
-				name: item.name,
-			};
-			this.twoArea = {
-				id: -1,
-				name: '请选择二级分类',
-			};
-			this.funToggleCate(item);
-		},
-		newselectTwoArea(index){
-			this.search = '';
-			this.twoIndex = index;
-			let item = this.child[index];
-			this.twoArea = {
-				id: item.id,
-				name: item.name,
-			};
-			this.funToggleChild(item);
-		},
 		selectOne(arr) {
 			for (let i = 0; i < arr.length; i++) {
 				if (arr[i].selected == true) {
@@ -474,8 +409,8 @@ export default {
 		}
 	},
 	components: {
-		elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
-		// selectStore: () =>import(/*webpackChunkName: "select_store"*/ 'src/components/select_store'),
+		selectStore: () =>
+			import(/*webpackChunkName: "select_store"*/ 'src/components/select_store'),
 		setInvcontrol: () =>
 			import(/*webpackChunkName:'invcontrol_set_win'*/ './invcontrol/invcontrol_set_win')
 	}
