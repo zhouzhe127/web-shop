@@ -256,10 +256,9 @@
 
 			},
 			countSize(pos, size, type) {
-
 				if (pos) {
-					pos.push(parseInt(parseFloat(this.editConfig[type].x) * this.imgScale - parseFloat(this.imgRang.left)));
-					pos.push(parseInt(parseFloat(this.editConfig[type].y) * this.imgScale - parseFloat(this.imgRang.top)));
+					pos.push(parseInt( (parseFloat(this.editConfig[type].x) - parseFloat(this.imgRang.left))* this.imgScale ));
+					pos.push(parseInt( (parseFloat(this.editConfig[type].y) - parseFloat(this.imgRang.top) ) * this.imgScale ));
 				}
 				if (size) {
 					size.push(parseInt(parseFloat(this.editConfig[type].w) * this.imgScale));
@@ -312,7 +311,8 @@
 					positionQRSize: wxsSize.toString(),
 					uid: this.uid
 				};
-
+				console.log(sourceObj);
+				
 				if (this.position) {
 					await http.ActivityEdit({
 						data: Object.assign(sourceObj, {
@@ -348,7 +348,7 @@
 				}
 			},
 			async initPosition(val) {
-
+				console.log(val);
 				this.islogo = true;
 				this.isqr = true;
 
@@ -364,6 +364,7 @@
 						width,
 						height
 					} = img;
+					debugger;
 					this.countScale(width, height);
 				}
 
@@ -396,16 +397,16 @@
 				let w = 0;
 				let h = 0;
 				if (pos.length > 0) {
-					x = (parseFloat(this.imgRang.left) + parseInt(pos[0]) * this.imgScale);
-					y = (parseFloat(this.imgRang.top) + parseInt(pos[1]) * this.imgScale);
+					x = parseFloat(this.imgRang.left) + parseInt(pos[0]) / this.imgScale;
+					y = parseFloat(this.imgRang.top) + parseInt(pos[1]) / this.imgScale;
 				}
 
 				let s = '';
 				if (size && (s = size.split(',')) && s.length > 0) {
-					w = parseInt(s[0] * this.imgScale);
-					h = parseInt(s[1] * this.imgScale);
+					w = parseInt(s[0] / this.imgScale);
+					h = parseInt(s[1] / this.imgScale);
 				}
-
+				
 				if ((x + w) > parseFloat(this.imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(this.imgRang.left) + parseFloat(this.imgStyle.height) || x < parseFloat(this.imgRang.left) || y < parseFloat(this.imgRang.top)) {
 					this.editConfig[type].x = this.imgRang.left;
 					this.editConfig[type].y = this.imgRang.top;
@@ -441,7 +442,6 @@
 								let l = ev.clientX - disX;
 								let t = ev.clientY - disY;
 								let divT = el.getBoundingClientRect();
-
 								if (l <= parseFloat(editContent.left)) l = editContent.left;
 								if (l > editContent.width - divT.width + parseFloat(editContent.left))
 									l = editContent.width - divT.width + parseFloat(editContent.left);
