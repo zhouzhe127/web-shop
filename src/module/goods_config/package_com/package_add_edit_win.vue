@@ -4,128 +4,111 @@
 		<win :height="590" :width="680" :ok="btnOk" :cancel="btnCancel" @winEvent="closeSelfWin" :align="'right'">
 			<span slot="title">{{title}}</span>
 			<div id="bag-win" class="meal-set" v-cloak slot="content">
+				<div class="container" style="overflow: hidden;">
+					<section style="width:400px;float:left;">
+						<el-form :model="bag" ref="bag" label-width="80px">
+							<el-form-item required label="类型" prop="type">
+								<template v-if="pObj.isAddPack">
+									<el-radio-group v-model="bag.type" @change = "changePackageType">
+										<el-radio-button label="0">固定套餐</el-radio-button>
+										<el-radio-button label="1">可选套餐</el-radio-button>
+										<el-radio-button label="2">自定义套餐</el-radio-button>
+									</el-radio-group>
+								</template>
+								<template v-if="!pObj.isAddPack">
+									<el-radio-group v-model="bag.type">
+										<el-radio-button :label="bag.type">
+											<span v-if="bag.type==0">固定套餐</span>
+											<span v-if="bag.type==1">可选套餐</span>
+											<span v-if="bag.type==2">自定义套餐</span>
+										</el-radio-button>
+									</el-radio-group>
+								</template>
+							</el-form-item>
+							<el-form-item required label="名称">
+								<el-input v-model="bag.packageName" maxlength = "20" placeholder = "请输入套餐名称" style = "width:270px;"></el-input>
+							</el-form-item>
+							<el-form-item label="简码" prop="BC">
+								<el-input v-model="bag.BC" maxlength = "20" placeholder = "请输入套餐简码" style = "width:270px;"></el-input>
+							</el-form-item>
+							<el-form-item required label="排序">
+								<el-input-number v-model="bag.sort" @change="getPackageSort" style="width:150px;" :min="1" :max="255"></el-input-number>
+							</el-form-item>
+							<el-form-item v-if="bag.type!=2" required label="售价">
+								<el-input v-model="bag.price" maxlength = "10" placeholder = "请输入售价" style = "width:120px;"></el-input>
+								<span>元</span>
+								<span style="margin-left:10px;">成本价</span>
+								<el-input v-model="bag.cost" maxlength = "10" placeholder = "请输入成本价" style = "width:120px;"></el-input>
+							</el-form-item>
+						</el-form>
+					</section>
+					<section style="width:220px;float:right;margin-top:40px;margin-right:25px;">
+						<div style="position:relative; width:225px; height:150px;background:url(src/res/images/upload.png) center 40px no-repeat #ddd ;">
+							<img v-if="!!bag.imageName" :src="imgHost+ bag.imageName" width="225" height="150">
+							<img v-else src="../../../res/food/test.jpg" width="225" height="150">
+							<a class="edit-photo">编辑图片</a>
+							<form method="post" id="imageUpForm" enctype="multipart/form-data">
+								<input type="file" @change="fileNameChange" accept="image/jpeg,image/png,image/gif,image/tiff" id="fileInput" name="image"
+									style="position:absolute;bottom: 0;height: 40px;width: 225px;opacity: 0;cursor: pointer;" />
+							</form>
+						</div>
+					</section>
+				</div>
 				<div class="container">
-					<div class="line">
-						<label class="required fl" style="width: 50px;">类型</label>
-						<label class="radio fl" style="width: 234px;">
-							<span v-bind:class='{"sign":bag.type == 0}' v-on:click="changePackageType(0)">固定套装</span>
-							<span v-bind:class='{"sign":bag.type == 1}' v-on:click="changePackageType(1)">可选套餐</span>
-						</label>
-						<template>
-							<label class="required fl" style="width: 50px;">排序</label>
-							<sub-add :minnum='1' :bindnum="bag.sort" :sign='false' @toClick="getPackageSort"></sub-add>
-						</template>
-					</div>
-					<div style="width:100%; height:182px; padding-top: 14px;">
-						<div style="float:left; width:400px;height: 150px;">
-							<div class="line">
-								<label class="required fl" style="width: 50px;">名称</label>
-								<label>
-									<input type="text" class="input" maxlength="20" v-model="bag.packageName" style="width: 335px;height:40px; " placeholder="输入名称">
-								</label>
-							</div>
-							<div class="line" style="margin-top:15px ;">
-								<label class="fl" style="width: 50px;">简码</label>
-								<label>
-									<input type="text" v-model="bag.BC" maxlength="20" class="input" style="width: 335px;height:40px; " placeholder="输入简码">
-								</label>
-							</div>
-							<div class="line" style="margin-top:15px ;">
-								<span class="required fl" style="width: 50px;">售价</span>
-								<label class="fl" style="width: 143px;height:40px; position: relative; margin: 0; padding: 0; ">
-									<input type="text" class="input" style="width: 133px;height:40px;" maxlength="10" v-model="bag.price" placeholder="输入售价">
-									<span style="position: absolute; right: 10px;top:3px; z-index: 1;">元</span>
-								</label>
-								<span class="fl" style="width: 60px;margin: 0; padding: 0; text-align: center;">成本价</span>
-								<label class="fl" style="width: 132px;height:40px; position: relative; ">
-									<input type="text" class="input" style="width:122px; height:40px;" maxlength="10" v-model="bag.cost" placeholder="输入售价">
-									<span style="position: absolute; right: 10px; top:3px; z-index: 1;">元</span>
-								</label>
-							</div>
-						</div>
-						<div style="float:left; width:225px;height: 150px;">
-							<div style="position:relative; width:225px; height:150px;background:url(src/res/images/upload.png) center 40px no-repeat #ddd ;">
-								<img v-if="!!bag.imageName" :src="imgHost+ bag.imageName" width="225" height="150">
-								<img v-else src="../../../res/food/test.jpg" width="225" height="150">
-								<a class="edit-photo">编辑图片</a>
-								<form method="post" id="imageUpForm" enctype="multipart/form-data">
-									<input type="file" @change="fileNameChange" accept="image/jpeg,image/png,image/gif,image/tiff" id="fileInput" name="image"
-									    style="position:absolute;bottom: 0;height: 40px;width: 225px;opacity: 0;cursor: pointer;" />
-								</form>
-							</div>
-						</div>
-					</div>
-					<div style="width: 100%; height: auto; clear: both; ">
-						<div style="width: 68px;height: auto; float: left;">
-							<span style="line-height: 40px;position: relative;">套餐内容
-								<i style="color: red;position: absolute;top: -20px;right: -10px;">*</i>
-							</span>
-						</div>
-						<div class="seleted-center">
-							<template v-for="(item,i) in packageTag">
-								<div :class="{'tab':true, 'tab-selected':i==selectTagIndex}" v-on:click="changeTag(i,item)" :key="i">{{item.tagName}}</div>
+					<el-form :model="bag" ref="bag" label-width="80px">
+						<el-form-item required label="套餐内容">
+							<template v-if="bag.type =='2'">
+								<el-button @click="openEditTagWin" type="primary" style="width:150px;">配置自定义套餐</el-button>
+								<span v-if="packageTag && packageTag.length > 0">已配置{{packageTag[selectTagIndex].packageTagGoods.length}}个商品,必选数量 {{packageTag[selectTagIndex].totalNum}}</span>
 							</template>
-							<a href="javascript:void(0);" v-on:click="openAddTagWin" class="addclassify" style="width:132px;">添加标识</a>
-						</div>
-						<div class="seleted-right">
-							<!--显示标签中的商品-->
-							<div v-if="packageTag && packageTag.length > 0" class="seleted-container" :style="{'height':packageTag.length * 46.5+'px'}">
-								<div style="height: 5px;font-size: 0;line-height: 5px;"></div>
-								<span v-for="(item,index) in packageTag[selectTagIndex].packageTagGoods" :key="index">{{item.goodsName}}&nbsp;{{item.packageGoodsNum}}&nbsp;{{item.unit}};</span>
-							</div>
-							<a href="javascript:void(0);" v-on:click="openEditTagWin" class="addclassify" style="width:100%;background-position-x: 125px;">编辑该标识可选内容</a>
-						</div>
-						<div style="clear: both; font-size: 0px;width:100%;"></div>
-					</div>
-					<div class="line" style="margin-top: 14px;">
-						<label class="fl" style="width: auto;vertical-align:middle;margin-right:15px;">参与优惠
-							<on-off :status="bag.isDiscount==1" @statusChange="getIsDiscountToggle" style="display:inline-block;vertical-align:middle;margin-left:7px;"></on-off>
-						</label>
-
-						<label class="fl" style="width: auto;vertical-align:middle;margin-right:15px;">服务费
-							<on-off :status="bag.serviceCharge==1" @statusChange="getServiceChargeToggle" style="display:inline-block;vertical-align:middle;margin-left:7px;"></on-off>
-						</label>
-
-						<label class="fl" style="width: auto;vertical-align:middle;margin-right:15px;">估清
-							<on-off :status="bag.status==1" @statusChange="getStatusToggle" style="display:inline-block;vertical-align:middle;margin-left:7px;"></on-off>
-
-						</label>
-
-						<label class="fl" style="width: auto;vertical-align:middle;">推荐菜
-							<on-off :status="bag.isRecommend==1" @statusChange="getIsRecommendToggle" style="display:inline-block;vertical-align:middle;margin-left:7px;"></on-off>
-						</label>
-					</div>
-					<div class="line" style="margin-top: 14px;">
-						<label class="fl" style="width: auto;">会员专享
-							<on-off :status="bag.isVip !=0" @statusChange="getIsVip" style="display:inline-block;vertical-align:middle;margin-left:7px;"></on-off>
-						</label>
-
-						<label v-if="bag.isVip != 0" class="radio fl" style="width: auto; margin-left: 10px;">
-							<div style="background-color:#fff;height:40px;">
-								<radio-btn :list='vipPriceArr' :index="bag.isVip==1 ? 0 : 1" @selOn='getVipRadio'></radio-btn>
-							</div>
-						</label>
-						<template v-if="bag.isVip==1">
-							<label class="fl" style="width: 80px; text-align: right;  margin-right: 12px; ">会员价格</label>
-							<input class="input fl" maxlength="10" v-model="bag.vipPrice" type="text" placeholder="输入会员价" style="width: 158px; height: 40px; line-height: 40px; overflow: hidden;">
-						</template>
-						<!-- template v-if="isVip == 2">
-                    <label class="fl" style="width: 80px; text-align: right;  margin-right: 12px; ">会员折扣</label>
-                    <input class="input fl" maxlength="3" v-model="bg.vipDiscount" type="text" placeholder="输入会员折扣" style="width: 138px; height: 40px; line-height: 40px; overflow: hidden;">
-                    <label class="fl" style="width: 30px; text-align: center;  margin-right: 12px; ">%</label>
-                </template -->
-					</div>
-					<div style="width: 100%; height: 100px; margin-top: 14px; clear: both; ">
-						<div style="width: 50px;height: 90px; float: left;">
-							<span style="line-height: 40px;">描述</span>
-						</div>
-						<textarea v-model="bag.description" maxlength="100" class="describe" style="width:555px; height:98px; font-size:14px;" placeholder="输入描述"></textarea>
-
-					</div>
-					<div style="clear: both; height:20px;font-size: 0px;width:100%;"></div>
+							<template v-else>
+								<div class="seleted-center">
+									<template v-for="(item,i) in packageTag">
+										<div :class="{'tab':true, 'tab-selected':i==selectTagIndex}" v-on:click="changeTag(i,item)" :key="i">{{item.tagName}}</div>
+									</template>
+									<a href="javascript:void(0);" v-on:click="openAddTagWin" class="addclassify" style="width:132px;">添加标识</a>
+								</div>
+								<div class="seleted-right">
+									<!--显示标签中的商品-->
+									<div v-if="packageTag && packageTag.length > 0" class="seleted-container" :style="{'height':packageTag.length * 46.5+'px'}">
+										<div style="height: 5px;font-size: 0;line-height: 5px;"></div>
+										<span v-for="(item,index) in packageTag[selectTagIndex].packageTagGoods" :key="index">{{item.goodsName}}&nbsp;{{item.packageGoodsNum}}&nbsp;{{item.unit}};</span>
+									</div>
+									<a href="javascript:void(0);" v-on:click="openEditTagWin" class="addclassify" style="width:100%;background-position-x: 125px;">编辑该标识可选内容</a>
+								</div>
+								<div style="clear: both; font-size: 0px;width:100%;"></div>
+							</template>
+							
+						</el-form-item>
+						<el-form-item label="参与优惠 ">
+							<!-- <el-input-number v-model="bag.sort" @change="getPackageSort" style="width:150px;" :min="1" :max="255"></el-input-number> -->
+							<el-switch v-model="bag.isDiscount" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<template v-if="bag.type!='2'">
+								<span style="color:#606266;margin:0 20px;">服务费</span>
+								<el-switch v-model="bag.serviceCharge" @change="getServiceChargeToggle" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+								<span v-if="bag.status*1<2" style="color:#606266;margin:0 20px;">估清</span>
+								<el-switch v-if="bag.status*1<2" v-model="isStatus" @change="getStatusToggle" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+								<span style="color:#606266;margin:0 20px;">推荐菜 </span>
+								<el-switch v-model="bag.isRecommend" @change="getIsRecommendToggle" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							</template>
+						</el-form-item>
+						<el-form-item v-if="bag.type!='2'" label="会员专享 ">
+							<el-switch v-model="isVipShow"  @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<template v-if="isVipShow">
+								<el-radio @click="getVipRadio(1)" v-model="bag.isVip" label="1" border>会员价格</el-radio>
+    							<el-radio @click="getVipRadio(2)" v-model="bag.isVip" label="2" border>会员折扣</el-radio>
+							</template>
+							<template v-if="bag.isVip == 1">
+								<span style="color:#606266;margin:0 20px;">会员价格</span>
+								<el-input v-model="bag.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
+							</template>
+						</el-form-item>
+						<el-form-item label="描述" prop="description" style="width:550px;">
+							<el-input type="textarea" :autosize="{minRows: 3, maxRows: 6}" v-model="bag.description"></el-input>
+						</el-form-item>
+					</el-form>
 				</div>
 			</div>
-
 		</win>
 		<transition name="fade">
 			<component :is="showCom" :pObj="comObj" @throwTagWin="closeTagWin"></component>
@@ -162,13 +145,13 @@
 					type: 0, //1:可选套餐 0:固定套餐
 					cost: '',
 					price: '',
-					isDiscount: '',
+					isDiscount: '0',
 					isVip: '0',
 					vipPrice: '',
 					vipDiscount: '100',
 					imageName: '',
-					isRecommend: '',
-					serviceCharge: '',
+					isRecommend: '0',
+					serviceCharge: '0',
 					sort: '1',
 					description: '',
 					status: '0' // 0:上架 1:估清  2:下架
@@ -185,6 +168,8 @@
 				selectTagIndex: 0, //选中的tag标识索引
 
 				vipPriceArr: ['会员价格', '会员折扣'], //会员专享的操作
+				isVipShow:false,//是否VIP
+				isStatus:false,//是否估清
 			};
 		},
 		props: {
@@ -255,6 +240,7 @@
 					title: '添加标识',
 					packageType: this.bag.type,
 					selGoods: [],
+					goodsIds:[],
 					packageTag: this.packageTag,
 				};
 				this.showCom = 'addTag';
@@ -269,7 +255,6 @@
 
 
 				let tagName = this.packageTag[this.selectTagIndex].tagName;
-
 				let totalNum = 0;
 				if (this.bag.type == 0) {
 					this.packageTag[this.selectTagIndex].packageTagGoods.forEach((ele) => {
@@ -287,6 +272,11 @@
 						}
 					}
 				});
+				let arr =this.packageTag[this.selectTagIndex].packageTagGoods;
+				let goodIdArr = [];
+				for(let i=0;i<arr.length;i++){
+					goodIdArr.push(arr[i].gid);
+				}
 				this.comObj = {
 					goodsList: goods,
 					tagName: tagName,
@@ -294,6 +284,7 @@
 					title: '编辑该标识可选内容',
 					packageType: this.bag.type,
 					selGoods: this.packageTag[this.selectTagIndex].packageTagGoods,
+					goodsIds:goodIdArr,
 					packageTag: this.packageTag,
 
 				};
@@ -403,10 +394,10 @@
 						reg: /^[0-9A-Za-z]{0,20}$/g,
 						pro: '简码由由1-20位数字,英文组成!'
 					},
-					price: {
-						reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
-						pro: '请输入正确的售价格式且价格不能大于10万!'
-					},
+					// price: {
+					// 	reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+					// 	pro: '请输入正确的售价格式且价格不能大于10万!'
+					// },
 					description: {
 						cond: '$$.length<=100',
 						pro: '描述内容不能超过50字哦!'
@@ -418,7 +409,13 @@
 				},
 				this.bag
 				)) return;
-
+				let resconfig = /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/;
+				if (!resconfig.test(this.bag.price) && this.bag.type !='2') {
+					this.$store.commit('setWin', {
+						content: '请输入正确的售价格式且价格不能大于10万!!'
+					});
+					return;
+				}
 				if (Number(this.bag.price > 100000)) {
 					this.$store.commit('setWin', {
 						title: '提示信息',
@@ -481,38 +478,50 @@
 				this.bag.imageName = res;
 			},
 			//--------------开关--------------
+			openVipRadio(res){
+				console.log(res);
+				this.isVipShow = res;
+				if(this.isVipShow){
+					this.bag.isVip = '1';
+				}else{
+					this.bag.isVip = '0';
+				}
+			},
 			getVipRadio(res) {
-				this.bag.isVip = res + 1;
+				this.bag.isVip = res;
 			},
 			getPackageSort(res) {
 				this.bag.sort = res;
 			},
-			//获取点击的是会员折扣还是会员价格
 			changePackageType(flag) {
+				this.packageTag =[];//清空标识
+				this.bag.isDiscount = '0';
+				this.bag.isVip = '0';
+				this.bag.serviceCharge = '0';
+				this.bag.isRecommend = '0';
+				this.bag.price = '';
+				this.bag.cost = '';
+				this.bag.status = '0';
+				this.isVipShow = false;
+				this.isStatus = false;
 				this.bag.type = flag;
 			},
 			getIsDiscountToggle(res) {
-				this.bag.isDiscount = res ? 1 : 0;
+				this.bag.isDiscount = res;
 			},
 			getIsRecommendToggle(res) {
-				this.bag.isRecommend = res ? 1 : 0;
+				this.bag.isRecommend = res;
 			},
 			getServiceChargeToggle(res) {
-				this.bag.serviceCharge = res ? 1 : 0;
+				this.bag.serviceCharge = res;
 			},
 			getStatusToggle(res) {
-				if (this.bag.status == 2) {
-					this.$store.commit('setWin', {
-						title: '温馨提示',
-						content: '下架的套餐不能进行估清操作!'
-					});
-					return;
-				}
-				this.bag.status = res ? 1 : 0;
+				this.bag.status = Number(res);
+				this.isStatus = res;
 
 			},
 			getIsVip(res) {
-				this.bag.isVip = res ? 1 : 0;
+				this.bag.isVip = res;
 			},
 			//初始化按钮
 			initBtn() {
@@ -545,12 +554,20 @@
 				let userData = storage.session('userShop');
 				this.shopId = userData.currentShop.id;
 				this.imgHost = userData.uploadUrl;
+				// console.log(this.pObj);
 				for (let attr in this.pObj) {
 					this[attr] = this.pObj[attr];
 				}
 			},
 
 			async addPackage(packageTag) {
+				let packTag = [];
+				if(this.bag.type =='2'){
+					packTag.push(packageTag[this.selectTagIndex]);
+				}else{
+					packTag = packageTag;
+				}
+				//如果是先选的是多个标识，再点击自定义套餐则把其他的标识去掉，只允许存在一个
 				let res = await http.addPackage({
 					data: {
 						shopId: this.shopId,
@@ -559,16 +576,16 @@
 						type: this.bag.type, //1:可选套餐 0:固定套餐
 						cost: this.bag.cost,
 						price: this.bag.price,
-						isDiscount: this.bag.isDiscount,
-						isVip: this.bag.isVip,
+						isDiscount: Number(this.bag.isDiscount),
+						isVip: Number(this.bag.isVip),
 						vipPrice: this.bag.vipPrice,
 						vipDiscount: this.bag.vipDiscount,
-						isRecommend: this.bag.isRecommend,
-						serviceCharge: this.bag.serviceCharge,
+						isRecommend: Number(this.bag.isRecommend),
+						serviceCharge: Number(this.bag.serviceCharge),
 						sort: this.bag.sort,
 						description: this.bag.description,
-						status: this.bag.status, // 0:正常 1:估清  2:下架
-						packageTag: packageTag,
+						status: Number(this.bag.status), // 0:正常 1:估清  2:下架
+						packageTag: packTag,
 						imageName: this.bag.imageName ? this.bag.imageName : '',
 					},
 				});
@@ -584,17 +601,17 @@
 						type: this.bag.type, //1:可选套餐 0:固定套餐
 						cost: this.bag.cost,
 						price: this.bag.price,
-						isDiscount: this.bag.isDiscount,
-						isVip: this.bag.isVip,
+						isDiscount: Number(this.bag.isDiscount),
+						isVip: Number(this.bag.isVip),
 						vipPrice: this.bag.vipPrice,
 						vipDiscount: this.bag.vipDiscount,
-						isRecommend: this.bag.isRecommend,
-						serviceCharge: this.bag.serviceCharge,
+						isRecommend: Number(this.bag.isRecommend),
+						serviceCharge: Number(this.bag.serviceCharge),
 						sort: this.bag.sort,
 						description: this.bag.description,
-						status: this.bag.status, // 0:正常 1:估清  2:下架
+						status: Number(this.bag.status), // 0:正常 1:估清  2:下架
 						packageTag: packageTag,
-						newPackageTag: newPackage,
+						newPackageTag:newPackage,
 						imageName: this.bag.imageName ? this.bag.imageName : '',
 					},
 				});
@@ -627,7 +644,15 @@
 				this.getPackageById().then((res) => {
 					this.bag = res.package;
 					if (!this.bag) this.bag = [];
-
+					this.bag.isDiscount = Boolean(this.bag.isDiscount*1);
+					this.bag.serviceCharge = Boolean(this.bag.serviceCharge*1);
+					if(this.bag.status*1>0){
+						this.isStatus = true;
+					}
+					this.bag.isRecommend = Boolean(this.bag.isRecommend*1);
+					if(this.bag.isVip*1>0){
+						this.isVipShow = true;
+					}
 					this.packageTag = res.packageTag;
 					if (!this.packageTag) this.packageTag = [];
 
@@ -661,10 +686,10 @@
 				import ( /*webpackChunkName:'win'*/ 'src/components/win'),
 			subAdd: () =>
 				import ( /*webpackChunkName:'subadd'*/ 'src/components/subadd'),
-			onOff: () =>
-				import ( /*webpackChunkName:'on_off'*/ 'src/components/on_off'),
-			radioBtn: () =>
-				import ( /*webpackChunkName:'radio_btn'*/ 'src/components/radio_btn'),
+			// onOff: () =>
+			// 	import ( /*webpackChunkName:'on_off'*/ 'src/components/on_off'),
+			// radioBtn: () =>
+			// 	import ( /*webpackChunkName:'radio_btn'*/ 'src/components/radio_btn'),
 			addTag: () =>
 				import ( /*webpackChunkName:'package_add_tag_win'*/ './package_add_tag_win'),
 
@@ -675,12 +700,13 @@
 	/* 一级弹框样式 */
 
 	#bag-win {
-		background-color: #f1f1f1;
+		// background-color: #f1f1f1;
 		width: 700px;
 		height: auto;
 		min-height: 690px;
 		.edit-photo {
-			background: url(../../../res/images/a50.png) repeat;
+			background-color: rgba(27, 21, 21,.6);
+			// background: url(../../../res/images/a50.png) repeat;
 			height: 40px;
 			line-height: 40px;
 			position: absolute;
@@ -698,37 +724,14 @@
 			height: auto;
 			font-size: 14px;
 			text-align: left;
-			padding-bottom: 20px;
-			.radio {
-				line-height: 40px;
-				font-size: 0;
-				overflow: hidden;
-				span {
-					width: 100px;
-					height: 40px;
-					background-color: #fff;
-					cursor: pointer;
-					float: left;
-					font-size: 14px;
-					margin-right: 1px;
-					margin-bottom: 2px;
-					text-align: center;
-				}
-			}
-			.input {
-				border: none;
-				outline: none;
-				padding-left: 10px;
-				box-sizing: content-box;
-			}
+			// padding-bottom: 20px;
 			.tab {
 				height: 40px;
-				width: 146px;
+				width: 130px;
 				margin-bottom: 7px;
 				text-align: center;
 				line-height: 40px;
-				background-color: #e7e7e7;
-				border-right: 14px solid #f1f1f1;
+				background-color: #f2f2f2;
 				cursor: pointer;
 			}
 			.seleted-right {
@@ -736,7 +739,7 @@
 				float: left;
 				height: auto;
 				float: left;
-				background-color: #e7e7e7;
+				background-color: #f2f2f2;
 			}
 			.seleted-center {
 				width: 146px;
@@ -744,7 +747,7 @@
 				height: auto;
 				float: left;
 				.tab-selected {
-					background-color: #d2d2d2;
+					background-color: #dbdbdb;
 				}
 			}
 			.seleted-container {
@@ -761,52 +764,6 @@
 			}
 
 		}
-		.line {
-			width: 100%;
-			height: 40px;
-			line-height: 40px;
-		}
-
 	}
 
-
-	// .meal-set .container .radio span {
-	//   width: 100px;
-	//   height: 40px;
-	//   background-color: #fff;
-	//   cursor: pointer;
-	//   float: left;
-	//   font-size: 14px;
-	//   margin-right: 1px;
-	//   margin-bottom: 2px;
-	//   text-align: center;
-	// }
-	// .meal-set .container .seleted-right {
-	//   width: 412px;
-	//   float: left;
-	//   height: auto;
-	//   float: left;
-	//   background-color: #e7e7e7;
-	// }
-	// .meal-set .container .seleted-center {
-	//   width: 146px;
-	//   float: left;
-	//   height: auto;
-	//   float: left;
-	// }
-	// .meal-set .container .seleted-center .tab-selected{
-	//     background-color:#d2d2d2;
-	// }
-	// .meal-set .container .seleted-container {
-	//   height: auto;
-	// }
-	// .meal-set .container .seleted-container span {
-	//   float: left;
-	//   width: auto;
-	//   margin-left: 5px;
-	//   text-align: center;
-	//   height: 30px;
-	//   line-height: 30px;
-	//   overflow: hidden;
-	// }
 </style>

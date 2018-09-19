@@ -20,11 +20,11 @@
 							</div>
 							<div class="item ware">
 								<span>入货仓库：</span>
-								<p>{{details.intoWname}}<em @click="openWareWin(details.intoWarehouse)" class="el-icon-document"></em></p>
+								<p>{{details.intoWname}}<em @click="openWareWin(details.intoWarehouse)"></em></p>
 							</div>
 							<div class="item ware">
 								<span>出货仓库：</span>
-								<p>{{details.outWname}}<em @click="openWareWin(details.outWarehouse)" class="el-icon-document"></em></p>
+								<p>{{details.outWname}}<em @click="openWareWin(details.outWarehouse)"></em></p>
 							</div>
 						</div>
 						<div class="block">
@@ -71,29 +71,19 @@
 					</span>
 				</div>
 				<!-- 仓库详情弹窗 -->
-                <div>
-					<el-dialog
-					  title="仓库信息"
-					  :visible.sync="dialogVisible"
-					  width="600px"
-					  :close="handleClose">
-					  <div class="ware-detail">
-					  	<span>仓库名称：{{this.wareDetail.name}}</span>
-					  	<span>仓库所属：{{this.wareDetail.ownerName}}</span>
-					  	<span>仓库地址：{{this.wareDetail.provinceName}} {{this.wareDetail.cityName}} {{this.wareDetail.townName}}</span>
-					  </div>
-					  <span slot="footer" class="dialog-footer">
-					    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-					  </span>
-					</el-dialog>
-				</div>
+				<component
+                    :is="showWareWin"
+					:wid="wareId"
+                    @winEvent="wareWin"
+                    :width="550"
+                    :height="200"
+                ></component>
 				<!-- 调度详情-列表 -->
 				<detail-list
 				@emit="getDetailObj"
 				:detail="detailObj"
 				:detailInto="detailObjInto"
 				:type="disType"
-				:tabIndex="logObj.type"
 				></detail-list>
 			</template>
 			<!-- 打印 -->
@@ -126,14 +116,17 @@ export default {
 	data() {
 		return {
 			showCom: false, //是否展示详细内容
+			showWareWin: null, //仓库详情弹窗
 			details: {}, //详情信息
 			allStatus: {
-				1:'未出货',
-				2:'待入货',
-				3:'调度中',
-				4:'已取消',
-				5:'已完成',
-				6:'已完成(异常)',
+				1:'未调度',
+				2:'配货中',
+				3:'未出货',
+				4:'全部取消',
+				5:'待入货',
+				6:'已完成',
+				7:'已完成（异常）',
+				8:'配货完成',
 			},
 			matTypeHash:{
 				0:'成品',
@@ -166,14 +159,6 @@ export default {
 			uid: '', //操作人id
 			isExamine: false, //是否从审核进入该详情
 			isBrand:0,//0单店 1品牌
-			wareDetail:{},//仓库详情
-			dialogVisible:false,//仓库详情显示/隐藏
-			isTotalLog:false,//是否从总日志进入
-			logObj:{
-				id:'',
-				tab:'',
-				type:'',
-			},//总日志对象
 		};
 	},
 	components: {
@@ -183,17 +168,10 @@ export default {
 			import( /*webpackChunkName: 'output_shipper_print'*/ './output_shipper_print'),
 		outputPrintInto: () =>
 			import( /*webpackChunkName: 'output_shipper_print'*/ './output_shipper_print_into'),
+		warehouseWin: () =>
+			import( /*webpackChunkName: 'waremessage_win'*/ '../conclusion/waremessage_win'),
 		enterGoods: () =>
 			import( /*webpackChunkName: 'enter_goods'*/ './enter_goods'),
-	},
-	beforeRouteEnter (to, from, next) {
-		if(from.path=='/admin/inventoryManagement/publicDetails'){
-			next(function(self){
-				self.isTotalLog = true;
-			});
-		}else{
-			next();	
-		}
 	},
 	mounted() {
 		this.initBtn();
@@ -201,81 +179,59 @@ export default {
 		let userData = storage.session('userShop');
 		this.isBrand = userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌
 		let isExamine = storage.session('clusionToOperationDetail');
+		
 		if(isExamine) {
 			this.isExamine = isExamine;
 			storage.session('clusionToOperationDetail', null);
 		}
 		this.uid = userData.user.id;
-		this.init().then(()=>{
-			if(this.isTotalLog) this.totalLog();
-		});
+		this.init();
 	},
 	methods: {
 		initBtn() {
-			this.btnArr = [
-				{name: '打印',className: 'warning',type:5,
-					fn: () => {
-						if(this.disType == 1) {
-							this.printShow = true;
-						} else if(this.disType == 2) {
-							this.printShowInto = true;
-						}
-						this.mainShow = false;
-						this.$store.commit('setPageTools', []);
+			this.btnArr = [{name: '返回',className: ['back'],
+				fn: () => {
+					storage.session('operationRequestDestroy', true);
+					this.$router.go(-1);
+				}
+			},
+			{name: '打印',className: ['wearhouse all'],
+				fn: () => {
+					if(this.disType == 1) {
+						this.printShow = true;
+					} else if(this.disType == 2) {
+						this.printShowInto = true;
 					}
-				},
-				{name: '返回',className: 'info',type:4,
-					fn: () => {
-						storage.session('operationRequestDestroy', true);
-						this.$router.go(-1);
-					}
-				},
-			];
+					this.mainShow = false;
+					this.$store.commit('setPageTools', []);
+				}
+			}];
 			this.$store.commit('setPageTools', this.btnArr);
 		},
-		totalLog(){//从总日志进入时，设置tab切换
-			this.detailId = this.$route.query.id;
-			this.logObj={
-				id: this.$route.query.intoId,
-				tab:this.$route.query.logTab,
-				type:this.$route.query.logType,
-			};
-			
-			if(this.logObj.tab==1){//辨别出货单/入货单  1出货单  2入货单
-				this.selIndex = -1;
-			}else{
-				for(let i=0;i<this.enterList.length;i++){
-					let item = this.enterList[i];
-					if(this.logObj.id==item.id){
-						this.selIndex = i;
-					}
-				}
-			}
-		},
 		setInitBtn() { //等待接口返回后 显示按钮
-			this.initBtn();
+			this.btnArr.splice(2);
 			if(this.isExamine) return; //审核页面不出现以下按钮
 			if(this.dynamic == 1) {
 				let addArr = [{
 					name: '取消调度',
-					className: 'danger',type:5,
+					style: 'border: 1px solid #f03c3d;color: #f03c3d;background: #fff;',
 					fn: () => {
 						this.cancelMethod(); //取消
 					}
 				},
 				{
 					name: '确认出货',
-					className: 'primary',type:4,
+					style: 'border: 1px solid #fe8d01;color: #fff;background: #fe8d01;',
 					fn: () => {
 						this.confirmMethod(); //确认
 					}
 				}];
-				this.btnArr.unshift(...addArr);
+				this.btnArr.push(...addArr);
 			}
 			if(this.dynamic == 2) { //this.dynamic==2
 				let addArr = [{
 					name: '入货',
-					className: 'primary',type:4,
+					style: 'color: #fff;background: #22aae0;',
 					fn: () => {
 						this.$router.push({
 							path: '/admin/operation/enterGoods',
@@ -283,25 +239,16 @@ export default {
 						});
 					}
 				}];
-				this.btnArr.unshift(...addArr);
+				this.btnArr.push(...addArr);
 			}
 			this.$store.commit('setPageTools', this.btnArr);
 		},
-		async openWareWin(wid) {
+		openWareWin(wid) {
 			this.wareId = wid;
-			let data = await http.warehouseGetWarehouse({data:{
-				id:this.wareId,
-			}});
-			let res = await import ( /*webpackChunkName: 'area_cn'*/ 'src/verdor/area_cn');
-			let areaCn = res.default;
-			data.provinceName = areaCn.getNameByCode(data.province);
-			data.cityName = areaCn.getNameByCode(data.city);
-			data.townName = areaCn.getNameByCode(data.town);
-			this.wareDetail = data;
-			this.dialogVisible = true;
+			this.showWareWin = 'warehouseWin';
 		},
-		handleClose() {
-			this.dialogVisible = false;
+		wareWin() {
+			this.showWareWin = null;
 		},
 		getEmit() { //获取打印传值
 			this.printShow = false;
@@ -317,7 +264,7 @@ export default {
 		getDetailObj(obj) {
 			this.showCom = obj.showCom; //打印的时候 是否展示详细内容
 		},
-		tabClick(index) { //单据类型切换
+		tabClick(event) { //单据类型切换
 			let target = event.target;
 			if(target.tagName.toLocaleLowerCase() == 'span') {
 				let type = target.getAttribute('data-type');
@@ -451,18 +398,13 @@ export default {
 				item.serialNumCus = Number(i) + 1; //序号
 				item.typeNameCus = item.type == 0 ? '普通商品' : '称重商品'; //商品类型
 				item.outGoodsNumCus = item.num + item.unit; //重量/数量
-				let costTotal = 0;//成本总额
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
-					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + item.unit; //进价
 					detail.outGoodsNumCus = detail.num + item.unit; //重量/数量
-					cost = detail.purchasePrice*detail.num;
-					costTotal += cost;
 				}
-				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return goodList;
 		},
@@ -478,30 +420,21 @@ export default {
 				item.cateCus = cateArr.join(','); //物料分类
 				item.outMatNumCus = this.setUnit(item.unitData, item.num, item.selectUnitName); //重量 数量
 				item.matType = this.matTypeHash[item.type];
-				let costTotal = 0;//成本总额
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
-					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + this.getUnitName(item.unitData,detail.purchaseUnit); //进价
 					detail.outMatNumCus = this.setUnit(item.unitData, detail.num, item.selectUnitName); //重量/数量
 					if(this.isBrand) detail.distributionStr = detail.distributionPrice +'元/'+ this.getUnitName(item.unitData,detail.distributionUnit);//分销价
-					cost = detail.num/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
-					costTotal += cost;
 				}
-				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return materialList;
 		},
-		getUnitName(unit,id,isValue){//获取单位名称
+		getUnitName(unit,id){//获取单位名称
 			for(let item of unit){
 				if(item.muId==id){
-					if(isValue){//是否返回比例
-						return item.value;
-					}else{
-						return item.name;	
-					}
+					return item.name;
 				}
 			}
 		},
@@ -528,11 +461,9 @@ export default {
 				item.serialNumCus = Number(i) + 1; //序号
 				item.num = item.num + item.unit;
 				let into = 0,
-					consume = 0,
-					costTotal = 0;
+					consume = 0;
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
-					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + item.unit; //进价
@@ -541,8 +472,6 @@ export default {
 					detail.consumeNumDetail = detail.consumeNum + item.unit;
 					into = into + Number(detail.intoNum);
 					consume = consume + Number(detail.consumeNum);
-					cost = detail.intoNum*detail.purchasePrice;
-					costTotal += cost;
 				}
 				item.intoNum = into + item.unit;
 				item.consumeNum = consume + item.unit;
@@ -550,7 +479,6 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
-				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return goodList;
 		},
@@ -562,11 +490,9 @@ export default {
 				item.serialNumCus = Number(i) + 1; //序号
 				item.num = this.setUnit(item.unitData, item.num, item.unit);
 				let into = 0,
-					consume = 0,
-					costTotal = 0;
+					consume = 0;
 				for(let n in item.batchInfo) {
 					let detail = item.batchInfo[n];
-					let cost = 0;
 					detail.serialNumCus = '批次 ' + (Number(n) + 1); //序号
 					detail.timeCus = this.timeConversion(detail.productionTime); //出货时间
 					detail.priceAndName = detail.purchasePrice + '元/' + this.getUnitName(item.unitData,detail.purchaseUnit); //进价
@@ -575,8 +501,6 @@ export default {
 					detail.consumeNumDetail = this.setUnit(item.unitData, detail.consumeNum, item.unit);
 					into = into + Number(this.setUnitNum(item.unitData, detail.intoNum, item.unit));
 					consume = consume + Number(this.setUnitNum(item.unitData, detail.consumeNum, item.unit));
-					cost = detail.intoNum/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
-					costTotal += cost;
 				}
 				item.intoNum = into + item.unit;
 				item.consumeNum = consume + item.unit;
@@ -584,7 +508,6 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
-				item.costTotal = this.setNumfloat(costTotal)+'元';
 			}
 			return materialList;
 		},
@@ -606,19 +529,6 @@ export default {
 			}
 			return res;
 		},
-		setNumfloat(num){//设置三位浮点型数字
-			let str = num+'';
-			let reg = /\.\d{4,}/;
-			if(reg.test(str)){//小数点后四位以上
-				let repNum = str.substr(str.indexOf('.')+3,1);
-				if(repNum>0){//大于0则切掉
-					str = str.replace(/(\d+\.\d{2})(\d*)/,'$1'+repNum);
-				}else{//等于0则+1
-					str = str.replace(/(\d+\.\d{2})(\d*)/,'$1'+'1');
-				}
-			}
-			return str;
-		},
 		timeConversion(time, type) {
 			if(type) {
 				return utils.format(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss');
@@ -631,18 +541,13 @@ export default {
 };
 </script>
 <style scoped lang='less'>
-	.ware-detail{
-		span{display: block;padding: 10px 0;font-size: 16px;line-break: 1.5;}
-	}
 #output-shipper {
 	position: relative;
 	.color-size {color: #333;font-size: 16px;}
 	.head {
-		padding-left: 15px;height: 20px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 20px;color: #333;
-		position: relative;
+		padding-left: 15px;height: 30px;border-left: 2px solid #28a8e0;font-size: 16px;line-height: 30px;color: #333;
 		&:after {
-			content: "";display: inline-block;width: 100%;border: 1px dashed #ccc;position: absolute;top: 10px;
-			left: 100px;
+			content: "";display: inline-block;width: 535px;margin-left: 25px;border: 1px dashed #ccc;position: relative;top: -5px;
 		}
 	}
 	.detail {overflow: hidden;padding-top: 20px;padding-left:5%;
@@ -650,7 +555,8 @@ export default {
 			.item{font-size: 16px;position: relative;min-height:20px;padding-left: 80px;margin-bottom: 20px;
 				span{position: absolute;left: 0;top: 0;font-size: 16px;}
 				p{min-width: 30px;max-width: 100%;min-height: 20px;position: relative;display: inline-block;font-size: inherit;
-					em{display: block;font-size: 18px;color: #E1BB4A;position: absolute;right: -22px;top: 0;cursor: pointer;}
+					em{display: block;height: 18px;width: 18px;position: absolute;right: -22px;top: 0;cursor: pointer;
+						background: url(../../../res/images/examine.jpg) center;}
 				}
 			}
 			.narrow{padding-left: 50px;}
@@ -660,11 +566,10 @@ export default {
 	}
 	.tab-box{
 		overflow: hidden;display: inline-block;padding-left: 1px;
-		span{float: left;color: #606266;height: 40px;line-height: 38px;padding: 0 15px;text-align: center;margin-bottom: 10px;
-			cursor: pointer;border: 1px solid #dcdfe6;margin-left: -1px;
-			&.active{background: #E1BB4A;color: #fff;border: 1px solid #E1BB4A;}
-			&:first-child{border-top-left-radius: 4px;border-bottom-left-radius: 4px;}
-			&:last-child{border-top-right-radius: 4px;border-bottom-right-radius: 4px;}
+		span{float: left;color: #fe8d01;height: 35px;line-height: 33px;width: 120px;text-align: center;margin-bottom: 10px;
+			cursor: pointer;border: 1px solid #fe8d01;margin-left: -1px;
+			&:first-child{}
+			&.active{background: #fe8d01;color: #fff;}
 		}
 	}
 }

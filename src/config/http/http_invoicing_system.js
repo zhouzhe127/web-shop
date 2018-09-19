@@ -938,38 +938,9 @@ export default {
         method: 'get',
         type:'file',
     },
-
-    "MaterialGetUnitList": {
-        url: b + "Material/getUnitList", //获取物料的关联关系
-        method: 'get'
-    },
-    "invoicgetLogBatchDetail": {
-        url: b + "Invoicing/getLogBatchDetail", //日志查看批次详情
-        method: 'get'
-    },
-    "invoicingGetMaterialLogList":{
-        url:b+"invoicing/getMaterialLogList",                   //获取物料总日志列表
+    "MaterialGetUnitList":{
+        url:b+"Material/getUnitList",                           //获取物料的关联关系
         method:'get'
-    },
-    "materialGetUnitRelation":{
-        url:b+"material/getUnitRelation",                       //获取一个或多个物料的单位和关联
-        method:'get'
-    },
-    "InvoicingGetGoodsLogList":{
-        url:b+"Invoicing/getGoodsLogList",                      //获取商品日志列表
-        method:"get"
-    },
-    "InvoicingGetGoodsDetail": {
-        url: b + "Invoicing/getGoodsDetail",                    //进销存获取商品详情
-        method: "post"
-    },
-    "InvoicingGetLogBatchDetail":{                             //获取批次详情
-        url:b+"Invoicing/getLogBatchDetail",
-        method:"get"
-    },  
-    "InvoicingGetLogDetail":{                                  //获取bom单消耗详情
-        url:b+"Invoicing/getLogDetail",
-        method:"get"
     }
-
+    
 }

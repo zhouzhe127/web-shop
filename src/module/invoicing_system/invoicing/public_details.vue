@@ -285,12 +285,10 @@
 				this.operationRecordsTime = info.list.length ? info.list[0].creatTime : '';
 				let arrType = storage.session('operttypeList');
 				// let arrType = ['', '盘库', '入库', '耗损', '修改批次信息', '商品物料消耗', '出库（调库）', '入库（调库）', '领料', '回库', '修改物料信息'];
-				if(arrType){
-					for (let i of arrType) {
-						if (this.operationRecordsList.actId == i.type) {
-							this.operationRecordsList.typeName = i.typeName;
-							break;
-						}
+				for (let i of arrType) {
+					if (this.operationRecordsList.actId == i.type) {
+						this.operationRecordsList.typeName = i.typeName;
+						break;
 					}
 				}
 				console.log(this.operationRecordsList);

@@ -217,17 +217,16 @@ export default {
 		// }
 	},
 	mounted() {
+		console.log(this.sleSupplies);
 		if(this.sleCommodity) this.sleList = this.sleCommodity;
 		this.$store.commit('setPageTools', [{name: '确定',className: ['firstBtn wearhouse'],
 			fn: () => {
-				this.$store.commit('setPageTools',[]);
+				// this.sleSupplies = this.$refs.supplies.sleList;
 				this.$emit('select', this.sleList);
-				
 			}
 		},
 		{name: '取消',className: ['abrogate'],
 			fn: () => {
-				this.$store.commit('setPageTools',[]);
 				this.$emit('select', false);
 			}
 		}]);
@@ -241,6 +240,9 @@ export default {
 		// selectSupplies: () =>
 		//   import(/*webpackChunkName: 'output_select_supplies'*/ './output_select_supplies')
 	},
+	destroyed() {
+		this.$store.commit('setPageTools', []);
+	}
 };
 </script>
 <style lang="less" scoped>

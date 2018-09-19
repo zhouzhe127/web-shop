@@ -20,6 +20,9 @@
 				<el-table-column label="申请时间" align="center" prop="zh_applicationTime"></el-table-column>
 			</el-table>
 		</div>
+
+		<div class="bottom">
+		</div>
 	</div>
 </template>
 <script>
@@ -36,14 +39,13 @@ export default {
 	data () {
 		return {
 			tableData:[],
-			info:[],                //头部信息
-
 			pageObj:{
 				num: 10, 			// 每页展示的数量
 				currentPage: 1, 	//当前展示的页数
 				totalNum: 1, 		//总页数				
 				listNum:0			//总记录数
 			},
+			info:[],                //头部信息
 			logId:'',				//记录id
 		};
 	},
@@ -178,6 +180,10 @@ export default {
 		border-bottom:none;
 		border-radius:4px;
 		width:90%;
+    }
+	.bottom{
+		padding-top:10px;
+		padding-bottom: 15px;
     }
 }
 </style>

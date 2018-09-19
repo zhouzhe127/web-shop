@@ -21,8 +21,8 @@
 				<li v-for="(item,index) in showList" :key="index">
 					<div class="infoDetail">
 						<a href="javascript:void(0);" @click="showDetail(item)" style="color:#5ebee8;">入库</a>|
-						<a href="javascript:void(0);" @click="addListhouse(item)" style="color:red;">耗损</a>
-						<!-- <a href="javascript:void(0);" @click="openBar(item)" style="color:orange;">修改</a> -->
+						<a href="javascript:void(0);" @click="addListhouse(item)" style="color:red;">耗损</a>|
+						<a href="javascript:void(0);" @click="openBar(item)" style="color:orange;">修改</a>
 					</div>
 					<span class="wide handle">
 						{{(index+1)+(page-1)*10}}
@@ -32,7 +32,7 @@
 					<span>{{item.supplier||"--"}}</span>
 					<span v-if="goodsData.relation.length>0">{{comUnit(item.surplus,goodsData.relation[selUnit].value,goodsData.relation[selUnit].name,isMin.name)}}</span>
 					<span v-else>--</span>
-					<span>{{item.distributionPrice}}元/{{getpiceunit(Number(item.distributionUnit))}}</span>
+					<span>{{item.purchasePrice}}元/{{getpiceunit(item.purchaseUnit)}}</span>
 					<span>{{item.wName||"暂无"}}-{{item.aName||"暂无"}}</span>
 				</li>
 			</ul>

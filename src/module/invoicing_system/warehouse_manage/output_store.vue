@@ -309,6 +309,7 @@
 		methods: {
 			addGoods(type) { //添加商品-物料
 				if(!this.addVeri()) return;
+				console.log(this.sleMaterial);
 				if(type == 'goods') { //添加商品
 					this.showSleGoods = true;
 				} else if(type == 'material') { //添加商品
@@ -556,6 +557,7 @@
 						item.minName
 					);
 				}
+				console.log(detailList);
 			},
 			//单位换算
 			comUnit(...args) { //number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称

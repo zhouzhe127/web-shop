@@ -51,7 +51,7 @@
 			</div>
 			<div class="content-box">
 				<span class="right">货号</span>
-				<input v-model="artNo" type="text" placeholder="请填写货号" maxlength="10" />
+				<input v-model="artNo" type="text" placeholder="请填写进价" maxlength="10" />
 			</div>
 			<div class="content-box">
 				<span class="right">下架原因</span>

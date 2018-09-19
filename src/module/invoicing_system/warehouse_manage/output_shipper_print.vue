@@ -41,7 +41,6 @@
 						<span>条形码</span>
 						<span>类型</span>
 						<span>出货数量/重量</span>
-						<span>成本总额</span>
 					</div>
 					<!--一级列表-->
 					<div class="list-one" v-for="(item,index1) in goodsList" :key="index1">
@@ -51,7 +50,6 @@
 							<span><em>{{item.barCode}}</em></span>
 							<span><em>{{item.typeNameCus}}</em></span>
 							<span><em>{{item.outGoodsNumCus}}</em></span>
-							<span><em>{{item.costTotal}}</em></span>
 						</div>
 						<!--二级列表-->
 						<div class="list-two" v-if="open && item.batchInfo.length">
@@ -85,7 +83,6 @@
 						<span>分类</span>
 						<span>类型</span>
 						<span>出货数量/重量</span>
-						<span>成本总额</span>
 					</div>
 					<!--一级列表-->
 					<div class="list-one material" v-for="(item,index1) in materialList" :key="index1">
@@ -93,9 +90,8 @@
 							<span class="narrow">{{item.serialNumCus}}</span>
 							<span><em>{{item.itemName}}</em></span>
 							<span><em>{{item.cateCus}}</em></span>
-							<span><em>{{item.matType}}</em></span>
+							<span>物料</span>
 							<span><em>{{item.outMatNumCus}}</em></span>
-							<span><em>{{item.costTotal}}</em></span>
 						</div>
 						<!--二级列表-->
 						<div class="list-two" :class="{brand:orderDetail.isBrand}" v-if="open && item.batchInfo.length">
@@ -134,7 +130,6 @@
 							<span>条形码</span>
 							<span>类型</span>
 							<span>出货数量/重量</span>
-							<span>成本总额</span>
 						</div>
 						<!--一级列表-->
 						<div class="list-one" v-for="(item,index1) in type.goods" :key="index1">
@@ -144,7 +139,6 @@
 								<span>{{item.barCode}}</span>
 								<span>{{item.typeNameCus}}</span>
 								<span>{{item.outGoodsNumCus}}</span>
-								<span><em>{{item.costTotal}}</em></span>
 							</div>
 							<!--二级列表-->
 							<div class="list-two" v-if="open && item.batchInfo.length">
@@ -185,9 +179,8 @@
 								<span class="narrow">{{item.serialNumCus}}</span>
 								<span><em>{{item.itemName}}</em></span>
 								<span><em>{{item.cateCus}}</em></span>
-								<span><em>{{item.matType}}</em></span>
+								<span>物料</span>
 								<span><em>{{item.outMatNumCus}}</em></span>
-								<span><em>{{item.costTotal}}</em></span>
 							</div>
 							<!--二级列表-->
 							<div class="list-two" :class="{brand:orderDetail.isBrand}" v-if="open && item.batchInfo.length">
@@ -445,16 +438,16 @@ export default {
 		span{text-align: center;float: left;}
 		.head{height: 35px;line-height: 35px;padding: 0 10px;border-bottom: 1px solid #333;}
 		.title-one{overflow: hidden;border-bottom: 1px solid #333;
-			span{width: 18%;height: 25px;line-height: 25px;}
-			.narrow{width: 10%;}
+			span{width: 22%;height: 25px;line-height: 25px;}
+			.narrow{width: 12%;}
 		}
 		.list-one{
 			border-bottom: 1px dashed #000;
 			.item-one{overflow: hidden;
-				span{width: 18%;padding:10px 5px;font-size: 12px;color: #000;
+				span{width: 22%;padding:10px 5px;font-size: 12px;color: #000;
 					em{display: inline-block;vertical-align: middle;text-align: left;font-size: inherit;color: inherit;}
 				}
-				.narrow{width: 10%;}
+				.narrow{width: 12%;}
 			}
 		}
 		.list-one:last-child{border-bottom: 0;}

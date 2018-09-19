@@ -1,15 +1,9 @@
-/**
- * @Author: 孔伟研 
- * @Date: 2018-08-03 16:52:53 
- * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-08-03 16:53:47
- * @Module:
-**/
+
 /**
  * @Author: 孔伟研 
  * @Date: 2018-08-03 16:52:49 
- * @Last Modified by:   孔伟研 
- * @Last Modified time: 2018-08-03 16:52:49 
+ * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-08-31 14:27:09
  * @Module:打印队列
 **/
 <template>

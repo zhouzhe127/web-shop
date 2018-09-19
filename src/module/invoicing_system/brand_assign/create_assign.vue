@@ -250,6 +250,7 @@ export default{
 		this.$data._shopList = storage.session('shopList');
 	},
 	mounted(){
+		console.log('2');
 		this.initBtn();
 		this.requiredData();
 		this.userName = storage.session('userShop').user.name;

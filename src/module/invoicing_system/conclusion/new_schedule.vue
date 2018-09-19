@@ -148,8 +148,8 @@
 				tabactive: 0,
 				tebData: ['商品', '物料'],
 				waremessage: false,
-				auditStatus: ['审核中', '已取消', '审核未通过', '审核通过'],
-				dispatchStatus: ['未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
+				auditStatus: ['待审核', '已取消', '审核未通过', '审核通过'],
+				dispatchStatus: ['未调度', '调度中', '未出货', '全部取消', '带入货', '已完成', '已完成（异常）'],
 				titleList: [{
 						titleName: '操作'
 					},
@@ -225,7 +225,6 @@
 							for (let list of data.goods) {
 								if (list.importId == item.itemId) {
 									item.id = list.exportId;
-									item.itemId = list.exportId;
 									this.getGoods.push(item);
 									check = false;
 									break;
@@ -242,29 +241,28 @@
 						this.goodsArr = [...this.getGoods, ...loseGoods];
 					}
 					if (data.material && getSupplies) { //处理物料数据
-						for (let sptm of getSupplies) {
+						for (let item of getSupplies) {
 							let check = true;
-							sptm.selectValue = 1;
+							item.selectValue = 1;
 							for (let list of data.material) {
-								if (list.importId == sptm.itemId) {
-									sptm.itemId = list.exportId;
+								if (list.importId == item.itemId) {
+									item.id = list.exportId;
 									check = false;
-									if (sptm.unitRelation) {
-										for (let unit of sptm.unitRelation) { //处理单位换算
-											if (sptm.unitName == unit.name) {
-												sptm.selectValue = unit.value;
+									if (item.unitRelation) {
+										for (let unit of item.unitRelation) { //处理单位换算
+											if (item.unitName == unit.name) {
+												item.selectValue = unit.value;
 											}
 										}
 									}
-									console.log(sptm);
-									this.getSupplies.push(sptm);
+									this.getSupplies.push(item);
 									break;
 								}
 							}
 							if (check) {
-								sptm.errResion = '无法匹配';
-								this.setErr(data.materialError, sptm, '物料');
-								loseSupplies.push(sptm);
+								item.errResion = '无法匹配';
+								this.setErr(data.materialError, item, '物料');
+								loseSupplies.push(item);
 							}
 						}
 						this.setOutNum(this.getSupplies, true, 'itemName');
@@ -329,9 +327,6 @@
 					} else {
 						this.comObj.owner = res;
 						this.outWare = res;
-						this.detailData.outWare = this.outWare;
-						storage.session('details',this.detailData);
-						this.comObj = this.detailData.comObj;
 						this.init();
 					}
 				}
@@ -510,7 +505,7 @@
 				let url = type == 1 ? 'invent_getGoodsNum' : 'invoiv_getMaterialNum';
 				let arr = [];
 				for (let item of adArr) {
-					arr.push(item.itemId);
+					arr.push(item.id);
 				}
 				let sendObj = type == 1 ? {
 					gids: arr.join(',')
@@ -526,7 +521,7 @@
 					});
 					for (let i in adArr) {
 						for (let item of resNum) {
-							if (adArr[i].itemId == item.id) {
+							if (adArr[i].id == item.id) {
 								adArr[i].surplus = item.surplus;
 								if(type!=1) adArr[i].unitArr = item.unitData
 							}
@@ -799,6 +794,7 @@
 				}
 			},
 			picestyleChange(sle) {
+				console.log(sle);
 				this.suppliesArr.map(v => {
 					let check = true;
 					v.distributionId = Number(sle);
@@ -894,7 +890,6 @@
 							id: item.itemId,
 							name: item.itemName
 						};
-						console.log(item);
 						this.itemList.material.push(obj);
 					}
 				}

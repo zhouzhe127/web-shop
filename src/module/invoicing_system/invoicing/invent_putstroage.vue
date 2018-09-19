@@ -520,7 +520,7 @@
 						expiryTime: end,
 						batchCode: this.batchCode,
 						articleNo: this.artNo,
-						remark: this.remarks,
+						remarks: this.remarks,
 						purchaseUnit: 0,
 						purchasePrice: this.purchasePrice ? this.purchasePrice : 0
 					}
