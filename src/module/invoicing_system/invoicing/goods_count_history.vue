@@ -204,7 +204,7 @@ export default {
 						size:this.pageObj.num,
 						createUName:this.operaUser,
 						beginTime:parseInt(this.startTime.time/1000,10),
-						endTime:parseInt(this.endTime.time/1000,10)	+ 4					
+						endTime:parseInt(this.endTime.time/1000,10)						
 					};
 					obj = await this.getHttp(url,subObj);
 					if(obj.length == 0){

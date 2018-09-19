@@ -6,41 +6,22 @@
 	*
 -->
 <template>
-	<section class="return_be">
-		<section class="return_one">
-			<div v-on:click="addReason" class="btn-concent">
-				<button class="increase">添加</button>
-			</div>
-		</section>
-		<section class="return_two">
-			<section class="totle">
-				<ul class="oUl oulFirst">
-					<li>操作</li>
-					<li>排序</li>
-					<li>反结账原因</li>
-				</ul>
-				<ul v-if="refundFood.length == 0" class="ul-null">
-					<li>暂无反结账原因</li>
-				</ul>
-				<ul class="oUl oulSecond" v-else v-for="(print,index) in refundFood" :key="index">
-					<li style="cursor: pointer;">
-						<span v-if="print.isDefined==1">
-							<span style="color: #FE8D2C;" @click="editInfo(index,print)">编辑</span>
-							<span style="padding:0 20px;color: #D2D2D2;">|</span>
-							<span style="color: #FD3F1F;" @click="deleteRefundBtn(index,print)">删除</span>
+	<section>
+		<section>
+			<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="refundFood" border style="width:90%">
+				<el-table-column fixed min-width = "120" align="center" label="操作">
+					<template slot-scope="scope">
+						<span v-if="scope.row.isDefined==1">
+							<span style="color: #FE8D2C;cursor:pointer" @click="editInfo(scope.$index,scope.row)">编辑</span>
+						    <span style="padding:0 5px;color: #D2D2D2">|</span>
+						    <span style="color: #FD3F1F;cursor:pointer" @click="deleteRefundBtn(scope.$index,scope.row)">删除</span>
 						</span>
-						<!--编辑状态-->
 						<span v-else>不可操作</span>
-					</li>
-					<li>{{print.sort}}</li>
-					<li>{{print.reasonName}}</li>
-				</ul>
-				<ul class="oUl oulFirst">
-					<li>操作</li>
-					<li>排序</li>
-					<li>反结账原因</li>
-				</ul>
-			</section>
+					</template>
+				</el-table-column>
+				<el-table-column show-overflow-tooltip min-width = "50"  align="center" prop="sort"  label="排序"> </el-table-column>
+				<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="reasonName" label="反结账原因"></el-table-column>
+			</el-table>
 		</section>
 		<refund-win v-if="isShow" @throwWinResult="doThrowWinResult" :isAdd="isAdd" :refundReasonId="refundReasonId" :userData="userData">
 		</refund-win>
@@ -57,12 +38,16 @@ export default {
 			isAdd: true, //添加还是编辑，true为添加
 			isShow: false,
 			userData: Object,
-			refundFood: Array, //反结账理由列表
+			refundFood:[], //反结账理由列表
 			refundReasonId: '', //编辑的id
 			refundReasonIndex: '' //编辑索引
 		};
 	},
 	mounted() {
+		let arr = [{name:'添加反结账原因',className:'pick',fn:()=>{
+			this.addReason();
+		}}];
+		this.$store.commit('setPageTools',arr);
 		this.userData = storage.session('userShop');
 		this.init();
 	},
@@ -149,57 +134,4 @@ export default {
 	}
 };
 </script>
-
-<style scoped lang="less">
-.return_be {
-	.return_one {
-		margin-bottom: 15px;
-		.btn-concent {
-			width: 100px;
-		}
-	}
-	.return_two {
-		max-width: 1024px;
-		min-width: 780px;
-		border: 1px solid #d2d2d2;
-		margin-top: 20px;
-		background-color: #ffffff;
-		.oUl {
-			width: 100%;
-			color: #333333;
-			overflow: hidden;
-			border-bottom: 3px solid #f7f7f7;
-			li {
-				width: 33%;
-				height: 50px;
-				line-height: 50px;
-				text-align: center;
-				float: left;
-			}
-		}
-		.oulFirst {
-			background-color: #f2f2f2;
-			color: #434149;
-			li {
-				font-size: 16px;
-			}
-		}
-		.oulSecond {
-			color: #666666;
-			font-size: 14px;
-			li span span {
-				font-size: 16px;
-			}
-		}
-		.ul-null li {
-			display: inline-block;
-			width: 100%;
-			height: 50px;
-			line-height: 50px;
-			text-align: center;
-			color: orange;
-		}
-	}
-}
-</style >
 

@@ -80,14 +80,14 @@
 				<i>{{wa.distributionName}}&nbsp;:&nbsp;{{wa.value}}/<strong v-for="(u,i) in goodsDetail.unit" :key="i" v-if="u.muId==wa.unitId">{{u.name}}</strong></i>
 			</li>
 		</div>
-		<!-- <ul class="tebBox">
+		<ul class="tebBox">
 			<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
-		</ul> -->
-		<div style="margin:20px 0;">
+		</ul>
+		<div style="margin-bottom:20px;" v-show="tabactive==0">
 			<select-btn :sorts="goodsUnit" :name="'单位切换'" @selOn="selectList" ref="select"></select-btn>
 		</div>
-		<supplies-list :goodsData="goodsData" :selUnit="selUnit"></supplies-list>
-		<!-- <supplies-opert :mid="mid" v-if="mid" :unit="goodsDetail.unit" v-show="tabactive==1"></supplies-opert> -->
+		<supplies-list :goodsData="goodsData" :selUnit="selUnit" v-show="tabactive==0"></supplies-list>
+		<supplies-opert :mid="mid" v-if="mid" :unit="goodsDetail.unit" v-show="tabactive==1"></supplies-opert>
 	</div>
 </template>
 <script>
@@ -96,9 +96,9 @@
 	export default {
 		data() {
 			return {
-				// tebData: ['批次列表', '操作记录'],
+				tebData: ['批次列表', '操作记录'],
 				unitList: '', //单位列表
-				// tabactive: 0,
+				tabactive: 0,
 				mid: '',
 				goodsDetail: '',
 				dataUnit: ['月', '日', '年'],
@@ -171,9 +171,9 @@
 				}
 				this.setUnitList();
 			},
-			// tebClick(index) {
-			// 	this.tabactive = index;
-			// },
+			tebClick(index) {
+				this.tabactive = index;
+			},
 			getString(arr, key) {
 				if (typeof (arr) == 'string' || !arr) {
 					return arr;
@@ -359,20 +359,20 @@
 				font-size:16px;
 			}
 		}
-		// .tebBox {
-		// 	display: inline-block;
-		// 	color: orange;
-		// 	margin: 20px 0;
-		// 	cursor: pointer;
-		// 	li {
-		// 		border: 1px orange solid;
-		// 		display: inline-block;
-		// 		padding: 10px 35px;
-		// 	}
-		// 	.active {
-		// 		background-color: orange;
-		// 		color: #ffffff;
-		// 	}
-		// }
+		.tebBox {
+			display: inline-block;
+			color: orange;
+			margin: 20px 0;
+			cursor: pointer;
+			li {
+				border: 1px orange solid;
+				display: inline-block;
+				padding: 10px 35px;
+			}
+			.active {
+				background-color: orange;
+				color: #ffffff;
+			}
+		}
 	}
 </style>

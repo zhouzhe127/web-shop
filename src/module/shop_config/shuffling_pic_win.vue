@@ -34,7 +34,8 @@
 				<div class="sort">
 					<span class="sortword fl">排序</span>
 					<div class="fl" style="width: 185px;">
-						<subaddBtn :minnum='1' :bindnum="num" :maxnum="255" @toClick="changeNum" :sign='false'></subaddBtn>
+						<el-input-number v-model="num" @change="changeNum" style="width:150px;" :min="1" :max="255"></el-input-number>
+						<!-- <subaddBtn :minnum='1' :bindnum="num" :maxnum="255" @toClick="changeNum" :sign='false'></subaddBtn> -->
 					</div>
 				</div>
 			</div>
@@ -66,8 +67,7 @@ export default {
 	},
 	components: {
 		win,
-		subaddBtn: () =>
-			import(/* webpackChunkName:"radio_btn" */ 'src/components/subadd')
+		// subaddBtn: () => import(/* webpackChunkName:"radio_btn" */ 'src/components/subadd')
 	},
 	props: {
 		index: Number, //轮播图下标

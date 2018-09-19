@@ -8,10 +8,8 @@
 <template>
 	<div class="detail-list">
 		<ul class="chooseBtn">
-			<el-radio-group v-model="selectType">
-			    <el-radio-button label="0">商品</el-radio-button>
-			    <el-radio-button label="1">物料</el-radio-button>
-			</el-radio-group>
+			<li :class="{select:selectType==0}" @click="selectTab(0)">商品</li>
+			<li :class="{select:selectType==1}" @click="selectTab(1)">物料</li>
 		</ul>
 		<div class="table" v-if="selectType==0">
 			<div class="table-head">商品信息<span class="circle"></span>共<em>{{goodsDetails.length}}</em>个条目
@@ -25,13 +23,11 @@
 						<li>条形码</li>
 						<li>商品类型</li>
 						<li>出货数量/重量</li>
-						<li>成本总额</li>
 					</template>
 					<template v-if="detailType==2">
 						<li>出货数量</li>
 						<li>入货数量</li>
 						<li>耗损数量</li>
-						<li>成本总额</li>
 						<li>入货仓库</li>
 					</template>
 				</div>
@@ -44,13 +40,11 @@
 								<li>{{item.barCode}}</li>
 								<li>{{item.typeNameCus}}</li>
 								<li>{{item.outGoodsNumCus}}</li>
-								<li>{{item.costTotal}}</li>
 							</template>
 							<template v-if="detailType==2">
 								<li>{{item.num}}</li>
 								<li>{{item.intoNum}}</li>
 								<li>{{item.consumeNum}}</li>
-								<li>{{item.costTotal}}</li>
 								<li>{{item.wName}}-{{item.aName}}</li>
 							</template>
 						</div>
@@ -103,13 +97,11 @@
 						<li>分类</li>
 						<li>类型</li>
 						<li>出货数量/重量</li>
-						<li>成本总额</li>
 					</template>
 					<template v-if="detailType==2">
 						<li>出货数量</li>
 						<li>入货数量</li>
 						<li>耗损数量</li>
-						<li>成本总额</li>
 						<li>入货仓库</li>
 					</template>
 				</div>
@@ -122,13 +114,11 @@
 								<li>{{item.cateCus}}</li>
 								<li>{{item.matType}}</li>
 								<li>{{item.outMatNumCus}}</li>
-								<li>{{item.costTotal}}</li>
 							</template>
 							<template v-if="detailType==2">
 								<li>{{item.num}}</li>
 								<li>{{item.intoNum}}</li>
 								<li>{{item.consumeNum}}</li>
-								<li>{{item.costTotal}}</li>
 								<li>{{item.wName}}-{{item.aName}}</li>
 							</template>
 						</div>
@@ -188,7 +178,7 @@ export default {
 			isBrand:0,//0单店 1品牌
 		};
 	},
-	props: ['detail', 'detailInto', 'type','tabIndex'],
+	props: ['detail', 'detailInto', 'type'],
 	watch: {
 		'type': 'initData',
 		'detail': 'initData',
@@ -209,14 +199,10 @@ export default {
 				if(this.detailInto.goods) this.goodsDetails = this.detailInto.goods;
 				if(this.detailInto.material) this.materialDetails = this.detailInto.material;
 			}
-			if(this.tabIndex){
-				this.selectType = this.tabIndex-1;
+			if(!this.goodsDetails.length && this.materialDetails.length){
+				this.selectType = 1;
 			}else{
-				if(!this.goodsDetails.length && this.materialDetails.length){
-					this.selectType = 1;
-				}else{
-					this.selectType = 0;
-				}
+				this.selectType = 0;
 			}
 		},
 		openInfo() {
@@ -247,12 +233,12 @@ export default {
 		}
 	}
 	.table {
-		border: 1px solid #dcdfe6;width: 100%;margin-top: 10px;
+		border: 1px solid #ccc;width: 100%;margin-top: 10px;
 		.scroll-box{overflow: auto;}
 		.table-head {padding-left: 20px;height: 46px;line-height: 46px;
 			em{color: #fe8d01;display: inline-block;padding: 0 3px;}
 			.color-size;.detail-toggle {
-				color: #E1BB4A;margin-left: 20px;font-size: 16px;text-decoration: underline;cursor: pointer;
+				color: #28a8e0;margin-left: 20px;font-size: 16px;text-decoration: underline #28a8e0;cursor: pointer;
 			}
 			.circle {
 				display: inline-block;width: 4px;height: 4px;border: 1px solid #333;border-radius: 50%;margin: 0 15px;
@@ -265,28 +251,28 @@ export default {
 		.table-title {min-width: 1200px;
 			height: 40px;background-color: #f2f2f2;line-height: 40px;overflow: hidden;
 			li {
-				height: 40px;.table-li;.color-size;width: 18%;
+				height: 40px;.table-li;.color-size;width: 22.5%;
 				&:first-child{width: 10%;}
 			}
 		}
 		.enter{
-			li{width: 15%;
+			li{width: 18%;
 				&:first-child{width: 10%;}
 			}
 		}
 		.table-body {min-width: 1200px;
-			.table-item{border-bottom: 1px solid #dcdfe6;
+			.table-item{border-bottom: 2px solid #f7f7f7;
 				&:last-child{border-bottom: 0;}
 			}
 			.empty{height: 70px;line-height: 70px;width: 100%;text-align: center;color: #999;font-size: 20px;}
 			.one-item{overflow: hidden;
 				li {
-					.table-li;height: 70px;line-height: 70px;color: #666;font-size: 14px;width: 18%;
+					.table-li;height: 70px;line-height: 70px;color: #666;font-size: 14px;width: 22.5%;
 					&:first-child{width: 10%;}
 				}
 			}
 			.enter{
-				li{width: 15%;
+				li{width: 18%;
 					&:first-child{width: 10%;}
 				}
 			}

@@ -110,35 +110,35 @@ export default {
 				});
 				this.eleGoods = data;
 				//判断是否有关联菜品
-				// for (let j = 0; j < this.eleGoods.length; j++) {
-				// 	for (let k = 0; k < this.eleGoods[j].list.length; k++) {
-				// 		if (this.eleGoods[j].list[k].goodsId !== '') {
-				// 			this.edit = true;
-				// 		}
-				// 	}
-				// }
+				for (let j = 0; j < this.eleGoods.length; j++) {
+					for (let k = 0; k < this.eleGoods[j].list.length; k++) {
+						if (this.eleGoods[j].list[k].goodsId !== '') {
+							this.edit = true;
+						}
+					}
+				}
 				//没有关联自动关联
-				// if (!this.edit) {
-				// 	for (let i = 0; i < this.eleGoods.length; i++) {
-				// 		for (let j = 0; j < this.eleGoods[i].list.length; j++) {
-				// 			for (let k = 0; k < this.goods.length; k++) {
-				// 				let itemArr = this.eleGoods[i].list[
-				// 					j
-				// 				].specName.split('(');
-				// 				let goodsArr = this.goods[k].goodsName.split(
-				// 					'('
-				// 				);
-				// 				if (goodsArr[0] == itemArr[0]) {
-				// 					this.eleGoods[i].list[j].goodsId =
-				// 						itemArr[1] == ')'
-				// 							? this.goods[k].id
-				// 							: '';
-				// 					this.eleGoods[i].list[j].isPackage = 0;
-				// 				}
-				// 			}
-				// 		}
-				// 	}
-				// }
+				if (!this.edit) {
+					for (let i = 0; i < this.eleGoods.length; i++) {
+						for (let j = 0; j < this.eleGoods[i].list.length; j++) {
+							for (let k = 0; k < this.goods.length; k++) {
+								let itemArr = this.eleGoods[i].list[
+									j
+								].specName.split('(');
+								let goodsArr = this.goods[k].goodsName.split(
+									'('
+								);
+								if (goodsArr[0] == itemArr[0]) {
+									this.eleGoods[i].list[j].goodsId =
+										itemArr[1] == ')'
+											? this.goods[k].id
+											: '';
+									this.eleGoods[i].list[j].isPackage = 0;
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		async reqList(i) {
@@ -171,28 +171,28 @@ export default {
 						}
 					}
 					//判断是否有关联菜品
-					// for (let j = 0; j < goods[0].list.length; j++) {
-					// 	if (goods[0].list[j].goodsId !== '') {
-					// 		this.edit = true;
-					// 	}
-					// }
+					for (let j = 0; j < goods[0].list.length; j++) {
+						if (goods[0].list[j].goodsId !== '') {
+							this.edit = true;
+						}
+					}
 					//没有关联自动关联
-					// if (!this.edit) {
-					// 	for (let j = 0; j < goods[0].list.length; j++) {
-					// 		for (let n = 0; n < this.goods.length; n++) {
-					// 			let itemArr = goods[0].list[j].specName.split(
-					// 				'('
-					// 			);
-					// 			let goodsArr = this.goods[n].goodsName.split(
-					// 				'('
-					// 			);
-					// 			if (goodsArr[0] == itemArr[0]) {
-					// 				goods[0].list[j].goodsId = itemArr[1] == ')' ? this.goods[n].id : '';
-					// 				goods[0].list[j].isPackage = 0;
-					// 			}
-					// 		}
-					// 	}
-					// }
+					if (!this.edit) {
+						for (let j = 0; j < goods[0].list.length; j++) {
+							for (let n = 0; n < this.goods.length; n++) {
+								let itemArr = goods[0].list[j].specName.split(
+									'('
+								);
+								let goodsArr = this.goods[n].goodsName.split(
+									'('
+								);
+								if (goodsArr[0] == itemArr[0]) {
+									goods[0].list[j].goodsId = itemArr[1] == ')' ? this.goods[n].id : '';
+									goods[0].list[j].isPackage = 0;
+								}
+							}
+						}
+					}
 					this.eleGoods.unshift(goods[0]);
 				}
 				this.reqList(i - 1);

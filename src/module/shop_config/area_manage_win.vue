@@ -181,7 +181,7 @@ export default {
 						callback: delRes => {
 							if (delRes == 'ok') {
 								this.deleteArea().then(() => {
-									this.$emit('throwWinResult', res); //抛出一个事件给父组件
+									this.$emit('throwWinResult',res,this.getOneArea); //抛出一个事件给父组件
 								});
 							}
 						}

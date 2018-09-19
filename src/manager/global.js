@@ -143,39 +143,40 @@ let global = {
 
     hasBaiduMap: null,
     getBaiduMapApi() {
-        if (this.hasBaiduMap) return Promise.resolve();
-        return new Promise((resolve, reject) => {
-
-            let s = document.createElement("script", true);
-            let proto = window.location.protocol; //判断协议
-
-
-            s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c`;
+        if(this.hasBaiduMap) return Promise.resolve();
+        return new Promise((resolve,reject)=>{
+            
+            let s = document.createElement("script",true);
+            let proto = window.location.protocol;//判断协议
+            
+            
+            s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c&plugin=AMap.PolyEditor,AMap.CircleEditor`;
 
             document.head.appendChild(s);
 
             let d = document.createElement("div");
             d.id = 'allmap';
             document.body.appendChild(d);
-            window.HOST_TYPE = proto == 'https:' ? "1" : "0"; //开启https请求
+            window.HOST_TYPE = proto == 'https:' ? "1":"0";//开启https请求
+            
+            this.str = Timer.add(()=>{
 
-            this.str = Timer.add(() => {
-
-                try {
+                try{
                     let temp = AMap;
                     Timer.clear(this.str);
                     this.isHasMap = true;
                     resolve();
-                } catch (e) {
-
                 }
+                catch(e){
+                    
+                }
+                
+            },20,0,true)
 
-            }, 20, 0, true)
-
-            s.onload = () => {
-
+            s.onload = ()=>{
+                
             }
-            s.onerror = () => {
+            s.onerror = ()=>{
                 reject();
             }
 
@@ -191,22 +192,12 @@ let global = {
     //     "shop": 'http://v5.ishandian.com.cn/shop/',
     //     "bc": 'http://bc.api.ishandian.com.cn/Api/',
     //     "wx": 'http://zishi.ishandian.com.cn/api/',
-    //     "pos": "http://v5.ishandian.com.cn/pos/"
+    //     "pos":"http://v5.ishandian.com.cn/pos/"
     // },
     // qa
-    "host": {
-        "shop": "http://v5.qa.ishandian.com.cn/shop/",
-        "bc": "http://bc.api.qa.ishandian.com.cn/api/",
-        "wx": "http://wx.qa.ishandian.com.cn/api/",
-        "pos": "http://v5.qa.ishandian.com.cn/pos/"
-    },
+     "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
     // pre
-    // "host": {
-    //     "shop": "http://v5pre.ishandian.net/shop/",
-    //     "pos": "http://v5pre.ishandian.net/pos/",
-    //     "bc": "http://bc.api.pre.ishandian.net/api/",
-    //     "wx": "http://wxpre.ishandian.net/api/"
-    // },
+    // "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/"},
     // "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/"},
 
     groupFansList: {
@@ -229,10 +220,7 @@ let global = {
         let obj = {};
         if (showName == minName) {
             if (type) {
-                obj = {
-                    oNull: '',
-                    tNull: (number == 0.000 ? '' : number)
-                };
+                obj = { oNull: '', tNull: (number == 0.000 ? '' : number) };
                 return obj;
             } else {
                 showNum = number + minName;
@@ -243,10 +231,7 @@ let global = {
         let fltint = (number % value).toFixed(3) + ''; //小数
         if (integer == 0) {
             if (type) {
-                obj = {
-                    oNull: '',
-                    tNull: (fltint == 0.000 ? '' : fltint)
-                };
+                obj = { oNull: '', tNull: (fltint == 0.000 ? '' : fltint) };
                 return obj;
             } else {
                 showNum = fltint + minName;
@@ -254,10 +239,7 @@ let global = {
             }
         } else if (parseInt(fltint * 1000) == 0) {
             if (type) {
-                obj = {
-                    oNull: (integer == 0.000 ? '' : integer),
-                    tNull: ''
-                };
+                obj = { oNull: (integer == 0.000 ? '' : integer), tNull: '' };
                 return obj;
             } else {
                 showNum = integer + showName;
@@ -265,10 +247,7 @@ let global = {
             }
         } else {
             if (type) {
-                obj = {
-                    oNull: integer,
-                    tNull: fltint
-                };
+                obj = { oNull: integer, tNull: fltint };
                 return obj;
             } else {
                 if (Number(fltint) < 0) {

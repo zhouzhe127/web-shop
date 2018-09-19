@@ -342,6 +342,11 @@ export default {
 		selectStore: () =>
 			import( /*webpackChunkName: 'page'*/ 'src/components/select_store')
 	},
+	destroyed() {
+		if(!this.type) {
+			this.$store.commit('setPageTools', []);
+		}
+	}
 };
 </script>
 <style lang="less" scoped>

@@ -11,75 +11,41 @@
 			<span class="inline-span">创建时间：</span>
 			<div class="inline-box">
 				<!--日期组件 开始时间-->
-				<el-date-picker
-					v-model="timeDate"
-					type="daterange"
-					range-separator="-"
-					start-placeholder="开始日期"
-					end-placeholder="结束日期"
-					:clearable="false"
-					@change="timeChange">
-				</el-date-picker>
+				<calendar :time="startTime" :type="selectedType" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar>
+			</div>
+			<span class="inline-span">-</span>
+			<div class="inline-box date-box">
+				<!--日期组件 开始时间-->
+				<calendar :time="endTime" :type="selectedType" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar>
+				<em class="search-btn" @click="filter"></em>
 			</div>
 			<div class="block">
 				<div class="inline-box">
-					<el-input v-model="createName" placeholder="请输入创建人"></el-input>
+					<input type="text" placeholder="请输入创建人" v-model="createName" />
 				</div>
 				<div class="inline-box">
-					<el-input v-model="gName" placeholder="请输入商品名称/编码"></el-input>
+					<input type="text" placeholder="请输入商品名称/编码" v-model="gName" />
 				</div>
 				<div class="inline-box">
-					<el-input v-model="bomNum" placeholder="请输入bom单编号"></el-input>
+					<input type="text" placeholder="请输入bom单编号" v-model="bomNum" />
 				</div>
-				<div class="inline-box">
-					<el-select v-model="isPublic" placeholder="请选择仓库" @change="dropBomType">
-					    <el-option
-							v-for="item in options"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
-					    </el-option>
-					</el-select>
-				</div>
-				<div class="inline-box button-box">
-					<el-button @click="filter" type="success">筛选</el-button>
-               		<el-button @click="reset" type="info">重置</el-button>
+				<div class="inline-box setspeen">
+					<selectBtn @emit="dropBomType" :sorts="options" :index="bomTypeIndex"></selectBtn>
+					<div class="inline-box button-box">
+						<span class="blue" @click="filter">筛选</span>
+						<span class="gray" @click="reset">重置</span>
+					</div>
 				</div>
 			</div>
 		</div>
-		<el-table :data="list" stripe border style="width: 100%">
-		    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
-		    </el-table-column>
-		    <el-table-column prop="itemName" label="商品名称">
-		    </el-table-column>
-		    <el-table-column prop="createName" label="创建人">
-		    </el-table-column>
-		    <el-table-column label="创建时间">
-		    	<template slot-scope="scope">
-		        	{{formatTime(scope.row.createTime)}}
-		      	</template>
-		    </el-table-column>
-		    <el-table-column prop="bomNum" label="BOM单编号">
-		    </el-table-column>
-		    <el-table-column label="BOM类型">
-		    	<template slot-scope="scope">
-		        	{{setBomType(scope.row.isPublic)}}
-		      	</template>
-		    </el-table-column>
-		    <el-table-column label="操作" fixed="right" width="150">
-		    	<template slot-scope="scope">
-		        	<el-button @click="listHandle(scope.row)" type="text" size="small">查看详情</el-button>
-		      	</template>
-		    </el-table-column>
-	  	</el-table>
+		<com-table :listName="'BOM单列表'" :titleData="titleList" :allTotal="listLength" :introData="list">
+			<span class="detail" slot="con-0" slot-scope="props" @click="listHandle(props.data.id)">查看详情</span>
+			<span slot="con-1" slot-scope="props">{{(page-1)*pageShow+props.index>=9?(page-1)*pageShow+props.index+1:'0'+((page-1)*pageShow+props.index+1)}}</span>
+			<span slot="con-4" slot-scope="props">{{formatTime(props.data.createTime)}}</span>
+			<span slot="con-6" slot-scope="props">{{setBomType(props.data.isPublic)}}</span>
+		</com-table>
 		<div class="page-box">
-			<el-pagination @current-change="(res)=>{pageChange(res,1)}" @size-change="pageChange"
-				:current-page="page"
-				background
-				layout="sizes,total,prev, pager, next"
-				:page-sizes="[10, 20, 50]"
-				:total="listLength">
-			</el-pagination>
+			<pageBtn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></pageBtn>
 		</div>
 	</div>
 </template>
@@ -92,17 +58,15 @@
 	export default {
 		data() {
 			return {
-				timeDate:[],
-				startTime: '', //开始时间
-				endTime: '', //结束时间
+				startTime: new Date().setHours(0, 0, 0, 0), //开始时间
+				endTime: new Date().setHours(0, 0, 0, 0), //结束时间
 				cid: '', //用户id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
-				options: [
-					{value:0,label:'全部BOM单类型'},
-					{value:1,label:'公开'},
-					{value:-1,label:'私密'},
-				], //bom单类型 显示
+				selectedType: 0,
+				options: ['全部BOM单类型', '公开', '私密'], //bom单类型 显示
+				bomTypeList: [0, 1, -1], //bom单类型List
 				isPublic: 0, //bom单类型 是否公开 1公开 -1私密
+				bomTypeIndex: 0, //当前下拉框index
 				prevIndex: 0, //上一个下拉框index
 				page: 1, //当前页
 				pageShow: 10, //每页显示多少天数据
@@ -124,6 +88,7 @@
 					{titleName:'BOM类型'},
 				],
 				requestObj:{},
+				isInit:true,//是否按照初始模式请求
 			};
 		},
 		components: {
@@ -142,24 +107,18 @@
 			this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
 		},
 		mounted() {
-			this.initBtn();
+			this.$store.commit('setPageTools', {
+				bomCreate: () => {
+					this.$router.push({
+						path: 'bomList/bomCreate',
+						query: this.$route.query
+					});
+				}
+			});
 			this.initData();
 			this.getData();
 		},
 		methods: {
-			initBtn(){
-				let arr = [
-					{name: '新建BOM单',className: 'success',type:4,
-						fn: () => {
-							this.$router.push({
-								path: 'bomList/bomCreate',
-								query: this.$route.query
-							});
-						}
-					}
-				];
-				this.$store.commit('setPageTools', arr);
-			},
 			initData() {
 				this.shopType = this.isBrand;
 				let cache = storage.session('bomListCache');
@@ -172,12 +131,15 @@
 					storage.session('bomListDestroy', null);
 				}
 			},
-			timeChange(res){
-				this.startTime = new Date(res[0]).setHours(0,0,0,0);
-				this.endTime = new Date(res[1]).setHours(23,59,59,0);
+			startTimeChange(time) { //获取开始时间
+				this.startTime = time;
+			},
+			endTimeChange(time) { //获取结束时间
+				this.endTime = time;
 			},
 			dropBomType(index) { //获取bom类型
-				this.isPublic = index;
+				this.isPublic = this.bomTypeList[index];
+				this.bomTypeIndex = index;
 				this.filter();
 			},
 			setBomType(type) {
@@ -197,9 +159,12 @@
 			},
 			async getData() {
 				if (!this.validate()) return;
-				let sendStart='',sendEnd='',endTime='';
-				if(this.endTime){//页面加载的第一次执行
-					endTime = new Date(this.endTime).setHours(23, 59, 59, 0);
+				let sendStart='',sendEnd='';
+				let endTime = new Date(this.endTime).setHours(23, 59, 59, 0);
+				if(this.isInit){//页面加载的第一次执行
+					sendStart = '';
+					sendEnd = '';
+				}else{
 					sendStart = parseInt(this.startTime / 1000);
 					sendEnd = parseInt(endTime / 1000);
 				}
@@ -237,20 +202,26 @@
 					isPublic: this.isPublic,
 					bomNum: this.bomNum,
 					gName: this.gName,
+					bomTypeIndex: this.bomTypeIndex,
 					pageTotal: this.pageTotal,
 				};
 				storage.session('bomListCache', this.requestObj);
 			},
 			reset() { //重置
-				this.startTime = '';
-				this.endTime = '';
-				this.timeDate = [];
-				this.page = 1;
-				this.isPublic = 0;
-				this.pageShow = 10;
-				for(let item of ['createName','bomNum','gName']){
-					this[item] = '';
+				for (let i in this.requestObj) {
+					if (i == 'startTime' || i == 'endTime') {
+						this[i] = new Date().setHours(0, 0, 0, 0);
+					} else if (i == 'page') {
+						this[i] = 1;
+					} else if (i == 'bomTypeIndex') {
+						this[i] = 0;
+					} else if (i == 'pageShow') {
+						this[i] = 10;
+					} else if (i != 'pageTotal') {
+						this[i] = '';
+					}
 				}
+				this.isInit = true;
 				this.getData();
 			},
 			validate() { //日期验证
@@ -265,20 +236,14 @@
 				}
 				return true;
 			},
-			pageChange(res,type) { //分页 获取页数
-				if(type){
-					this.page = res;
-				}else{
-					this.pageShow = res;
-				}
+			pageChange(obj) { //分页 获取页数
+				this.page = obj.page;
+				this.pageShow = obj.num;
 				this.getData();
 			},
-			indexMethod(index){
-				return this.pageShow*(this.page-1)+index+1;
-			},
-			listHandle(res) { //列表操作
+			listHandle(id) { //列表操作
 				let obj = this.$route.query;
-				obj.id = res.id;
+				obj.id = id;
 				this.$router.push({
 					path: 'bomList/bomDetail',
 					query: obj
@@ -289,13 +254,17 @@
 </script>
 
 <style lang="less" scoped>
+	@media only screen and (max-width:1210px) {
+		.setspeen {
+			margin-top: 10px;
+		}
+	}
+
 	.bom-order {
 		.filter {
 			.inline-box {
 				display: inline-block;
 				vertical-align: middle;
-				margin-bottom: 15px;
-				margin-right: 10px;
 				.search-btn {
 					float: left;
 					height: 40px;
@@ -315,6 +284,10 @@
 			}
 			.block {
 				width: 100%;
+				padding-top: 20px;
+				.inline-box {
+					margin-right: 10px;
+				}
 			}
 			.date-box {
 				.calendar {
@@ -349,6 +322,5 @@
 			color: #27a8e0;
 			cursor: pointer;
 		}
-		.page-box{padding: 15px 0;}
 	}
 </style>

@@ -449,9 +449,6 @@ let need = {
 		},
 		getDispatchLogList:{//批量日志
 			name:'batchLog'
-		},
-		getGoodsLogList:{//总日志列表
-			name:'totalLog'
 		}
 	}
 };
