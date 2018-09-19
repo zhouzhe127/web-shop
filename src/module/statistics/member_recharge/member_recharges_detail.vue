@@ -26,6 +26,10 @@
 					<div slot="con-0" slot-scope="props" @click="openDetail(props.data)">
 						查看账户
 					</div>
+					<div slot="con-3" slot-scope="props">
+						<span v-if="props.data.cardNumber == ''">电子卡</span>
+						<span v-else>{{props.data.cardTypeName}}</span>
+					</div>					
 					<div slot="con-8" slot-scope="props">
 						{{getpaytypeName(props.data.payType) || payTypeList[props.data.payType].paymentName}}
 					</div>

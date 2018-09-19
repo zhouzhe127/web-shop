@@ -6,14 +6,14 @@
 			<span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span>
 		</div>
 		<!-- 商品类型 -->
-		<div class="online-box clearfix">
+		<div class="online-box clearfix" v-if='indexOn == 0'>
 			<span class="online-sub fl required">商品类型</span>
 			<div class="rightHalf">
 				<select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn>
 			</div>
 		</div>
 		<!-- 关联优惠券 -->
-		<div class="online-box clearfix" v-if="durationId == 1">
+		<div class="online-box clearfix" v-if="durationId == 1 && indexOn == 0">
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
 				<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount">选择关联优惠券</a>
@@ -359,7 +359,7 @@ export default {
 				type: this.indexOn, //类型 区分品牌商品和门店商品
 				shopStocks: this.shopStock, //门店的库存
 				goodsType: this.durationId,
-				coupons: this.selectCoupon //优惠券
+				coupons: this.indexOn == 0 ? this.selectCoupon : [] //优惠券
 			};
 			if (this.editInfos) {
 				this.ActivityGoodsedit(data);

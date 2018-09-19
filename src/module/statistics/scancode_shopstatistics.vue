@@ -2,6 +2,30 @@
 <template>
 	<div id="membercard">
 		<section v-if="showType =='static'">
+			<!-- 选择收款码 -->
+			<div class="payment clearfix">
+				<div class="paymentbox fl" @click="openPaycode">
+					<el-input placeholder="请选择收款码" v-model="paymentCode" :disabled="true" suffix-icon="el-icon-plus">
+					</el-input>
+				</div>
+				<div class="paymentbox fl">
+					<el-button type="primary" style="width:120px;" @click="getScanPayOrderByCodes">筛选</el-button>
+					<el-button type="info" style="width:120px;">重置</el-button>
+				</div>
+			</div>
+			<div class="choiceshop">
+				<div class="choiceshop_l">
+					收款码:
+				</div>
+				<div class="choiceshop_r" v-if="dynamicTags.length > 0">
+					<el-tag :key="index" v-for="(tag,index) in dynamicTags" closable :disable-transitions="false" @close="handleClose(tag)">
+						{{tag.staffName}}
+					</el-tag>
+				</div>
+				<div class="choiceshop_r" v-else>
+					请选择收款码
+				</div>
+			</div>
 			<!-- 已经选择的店铺 -->
 			<div class="choiceshop">
 				<div class="choiceshop_l">
@@ -32,6 +56,8 @@
 			<section class="turn-page">
 				<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
 			</section>
+			<!-- 员工码弹窗 -->
+			<paymentCode v-if="showCode" :shopIds="dynamicTags" :constructionsName='constructionsName' :constructionsId="constructionsId" @chooseShop="backShopId"></paymentCode>
 		</section>
 		<section v-if="showType =='order'">
 			<scancode-order @scanorderResult="getscanorder" :constructionsName="constructionsName" :startTime="startTime" :endTime='endTime' :constructionsId="constructionsId" :isOpenTime="isOpenTime" :oneData='oneData' :taskId="taskId"></scancode-order>
@@ -48,98 +74,102 @@ export default {
 			num: 10,
 			endTotal: 1,
 			titleList: [{
-				titleName: '天数',
-				dataName: 'days'
-			},
-			{
-				titleName: '支付次数',
-				dataName: 'payTimes'
-			},
-			{
-				titleName: '消费总额 ',
-				dataName: 'totalConsumption'
-			},
-			{
-				titleName: '优惠总额',
-				dataName: 'totalDiscount'
-			},
-			{
-				titleName: '代金券'
-			},
-			{
-				titleName: '实收总额',
-				dataName: 'totalPain'
-			},
-			{
-				titleName: '积分抵扣总额',
-				dataName: 'totalPointCash'
-			},
-			{
-				titleName: '会员消费总额',
-				dataName: 'totalMemberConsumption'
-			},
-			{
-				titleName: '微信支付总额',
-				dataName: 'totalWeChatPain'
-			},
-			{
-				titleName: '支付宝支付总额',
-				dataName: 'totalAliPayPain'
-			}
+					titleName: '天数',
+					dataName: 'days'
+				},
+				{
+					titleName: '支付次数',
+					dataName: 'payTimes'
+				},
+				{
+					titleName: '消费总额 ',
+					dataName: 'totalConsumption'
+				},
+				{
+					titleName: '优惠总额',
+					dataName: 'totalDiscount'
+				},
+				{
+					titleName: '代金券'
+				},
+				{
+					titleName: '实收总额',
+					dataName: 'totalPain'
+				},
+				{
+					titleName: '积分抵扣总额',
+					dataName: 'totalPointCash'
+				},
+				{
+					titleName: '会员消费总额',
+					dataName: 'totalMemberConsumption'
+				},
+				{
+					titleName: '微信支付总额',
+					dataName: 'totalWeChatPain'
+				},
+				{
+					titleName: '支付宝支付总额',
+					dataName: 'totalAliPayPain'
+				}
 			],
 			staticLists: [], //数据
 			shoptitleList: [{
-				titleName: '操作',
-				dataName: 'shopId',
-				conStyle: {
-					color: '#27a8e0',
-					cursor: 'pointer'
+					titleName: '操作',
+					dataName: 'shopId',
+					conStyle: {
+						color: '#27a8e0',
+						cursor: 'pointer'
+					}
+				},
+				{
+					titleName: '日期 ',
+					dataName: 'day'
+				},
+				{
+					titleName: '支付次数',
+					dataName: 'payTimes'
+				},
+				{
+					titleName: '消费总额 ',
+					dataName: 'totalConsumption'
+				},
+				{
+					titleName: '优惠总额',
+					dataName: 'totalDiscount'
+				},
+				{
+					titleName: '代金券'
+				},
+				{
+					titleName: '实收总额',
+					dataName: 'totalPain'
+				},
+				{
+					titleName: '积分抵扣总额',
+					dataName: 'totalPointCash'
+				},
+				{
+					titleName: '会员消费总额',
+					dataName: 'totalMemberConsumption'
+				},
+				{
+					titleName: '微信支付总额',
+					dataName: 'totalWeChatPain'
+				},
+				{
+					titleName: '支付宝支付总额',
+					dataName: 'totalAliPayPain'
 				}
-			},
-			{
-				titleName: '日期 ',
-				dataName: 'day'
-			},
-			{
-				titleName: '支付次数',
-				dataName: 'payTimes'
-			},
-			{
-				titleName: '消费总额 ',
-				dataName: 'totalConsumption'
-			},
-			{
-				titleName: '优惠总额',
-				dataName: 'totalDiscount'
-			},
-			{
-				titleName: '代金券'
-			},
-			{
-				titleName: '实收总额',
-				dataName: 'totalPain'
-			},
-			{
-				titleName: '积分抵扣总额',
-				dataName: 'totalPointCash'
-			},
-			{
-				titleName: '会员消费总额',
-				dataName: 'totalMemberConsumption'
-			},
-			{
-				titleName: '微信支付总额',
-				dataName: 'totalWeChatPain'
-			},
-			{
-				titleName: '支付宝支付总额',
-				dataName: 'totalAliPayPain'
-			}
 			],
 			allFormList: [], //店铺查询的所有数据
 			formList: [], //展示的数据
 			showType: 'static',
-			oneData: '' //一天的日期
+			oneData: '', //一天的日期
+			paymentCode: '', //选择的收款码
+			showCode: false, //打开员工码的弹窗
+			staffId: [], //选中的员工码
+			dynamicTags: [],
 		};
 	},
 	props: {
@@ -166,19 +196,19 @@ export default {
 		getscanorder: function(res) {
 			this.showType = res;
 			this.$store.commit('setPageTools', [{
-				name: '返回',
-				className: ['fd-blue'],
-				fn: () => {
-					this.returnStore();
+					name: '返回',
+					className: ['fd-blue'],
+					fn: () => {
+						this.returnStore();
+					}
+				},
+				{
+					name: '导出',
+					className: ['fd-blue'],
+					fn: () => {
+						this.Export();
+					}
 				}
-			},
-			{
-				name: '导出',
-				className: ['fd-blue'],
-				fn: () => {
-					this.Export();
-				}
-			}
 			]);
 		},
 		formatTime(time) {
@@ -222,16 +252,73 @@ export default {
 			let pageEnd = this.page * this.num;
 			let pageContent = this.allFormList.slice(pageStart, pageEnd);
 			this.formList = pageContent;
+		},
+		openPaycode: function() { //打开快捷支付统计
+			console.log('222222')
+			this.showCode = true;
+		},
+		//选择店铺弹窗返回
+		backShopId(res, item) {
+			if (res == 'ok') {
+				//this.staffId = obj.shopIds;
+				this.dynamicTags = item;
+				console.log(JSON.stringify(item))
+				if (this.dynamicTags.length > 0) {
+					this.paymentCode = `已选择${this.dynamicTags.length}个收款码`;
+				} else {
+					this.paymentCode = '请选择收款码';
+				}
+			}
+			this.showCode = false;
+		},
+		handleClose(tag) {
+			this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+			if (this.dynamicTags.length > 0) {
+				this.paymentCode = `已选择${this.dynamicTags.length}个收款码`;
+			} else {
+				this.paymentCode = '请选择收款码';
+			}
+		},
+		async getScanPayOrderByCodes() {
+			if (this.dynamicTags.length == 0) {
+				this.$store.commit('setWin', {
+					content: '请选择收款码',
+					title: '操作提示',
+					winType: 'alert'
+				});
+				return false;
+			}
+			let codes = [];
+			for (let item of this.dynamicTags) {
+				codes.push(item.staffId);
+			}
+			let data = await http.getScanPayOrderByCodes({
+				data: {
+					showShopId: this.constructionsId,
+					codes: codes.join(','),
+					taskId: this.taskId,
+					showDay: ''
+				}
+			})
+			if (data) {
+				this.staticLists = [];
+				this.staticLists.push(data.total); //头部的数据
+				this.allFormList = data.list; //身体的数据
+				this.$nextTick(() => {
+					this.setPage();
+				});
+			}
 		}
 	},
-	watch: {},
 	components: {
 		pageElement: () =>
 			import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 		comTable: () =>
 			import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 		'scancode-order': () =>
-			import ( /*webpackChunkName: "scancode_oredersearch"*/ './scancode_oredersearch')
+			import ( /*webpackChunkName: "scancode_oredersearch"*/ './scancode_oredersearch'),
+		paymentCode: () =>
+			import ( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')
 	},
 	created() {
 		let obj1 = {
@@ -253,19 +340,19 @@ export default {
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
-			name: '返回',
-			className: ['fd-blue'],
-			fn: () => {
-				this.returnStore();
+				name: '返回',
+				className: ['fd-blue'],
+				fn: () => {
+					this.returnStore();
+				}
+			},
+			{
+				name: '导出',
+				className: ['fd-blue'],
+				fn: () => {
+					this.Export();
+				}
 			}
-		},
-		{
-			name: '导出',
-			className: ['fd-blue'],
-			fn: () => {
-				this.Export();
-			}
-		}
 		]);
 		this.getScanPayData();
 	},
@@ -280,6 +367,16 @@ export default {
 	height: 100%;
 }
 
+#membercard .payment {
+	height: 40px;
+	margin-bottom: 20px;
+}
+
+#membercard .payment .paymentbox {
+	height: 40px;
+	margin-right: 20px;
+}
+
 #membercard .choiceshop {
 	width: 100%;
 	overflow: hidden;
@@ -289,13 +386,18 @@ export default {
 #membercard .choiceshop .choiceshop_l {
 	float: left;
 	font-size: 16px;
-	line-height: 24px;
+	line-height: 32px;
 }
 
 #membercard .choiceshop .choiceshop_r {
 	float: left;
 	width: 900px;
 	font-size: 16px;
-	line-height: 24px;
+	line-height: 32px;
+}
+
+.el-tag+.el-tag {
+	margin-left: 10px;
+	margin-bottom: 10px;
 }
 </style>

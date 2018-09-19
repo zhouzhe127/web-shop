@@ -17,11 +17,11 @@
 			<!-- 第二行 -->
 			<div class="date">
 				<!-- 选择卡属门店 -->
-				<div class="dateBox fl" v-if="cardTypeId == 1">
+				<div class="dateBox fl" v-if="cardTypeId == 1 && isBrand">
 					<selectStore :showName="'请选择卡属门店'" :shopIds="belongsId" @chooseShop="backShopId"></selectStore>
 				</div>
 				<!-- 选择操作门店 -->
-				<div class="dateBox fl">
+				<div class="dateBox fl" v-if="isBrand">
 					<selectStore :showName="'请选择操作门店'" :shopIds="storesId" @chooseShop="backstoresId"></selectStore>
 				</div>
 				<!-- 选择交易类型 -->
@@ -196,7 +196,8 @@ export default {
 			}],
 			cardTypeId: 0, //选中的卡类型的ifd
 			mid: '',
-			shopsId: ''
+			shopsId: '',
+			constructionshopId: '' //单店的id
 		};
 	},
 	mounted() {
@@ -212,12 +213,12 @@ export default {
 			this.isBrand = true; //更改品牌店的状态
 		} else {
 			this.isBrand = false;
+			this.constructionshopId = this.userData.id; //单店的id
 		}
 		let shopNumber = []; //门店编号
 		let shopName = []; //店铺名字
 		let shopList = []; //店铺列表
 		if (this.isBrand) {
-			//                shopList = this.userData.currentShop.direct.concat(this.userData.currentShop.franchise); //获取到品牌下面所有店铺信息
 			shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
 			for (let i in shopList) {
 				let obj = {
@@ -314,7 +315,7 @@ export default {
 		},
 		//交易查询
 		checkForm: function() {
-			if (this.storesId.length == 0) {
+			if (this.storesId.length == 0 && this.isBrand) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',
@@ -322,7 +323,7 @@ export default {
 				});
 				return false;
 			}
-			if (this.belongsId.length == 0 && this.cardTypeId == 1) {
+			if (this.belongsId.length == 0 && this.cardTypeId == 1 && this.isBrand) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alter',
@@ -333,15 +334,15 @@ export default {
 			return true;
 		},
 		async getCardConsumeList() {
-			if(!this.checkForm()) return;
+			if (!this.checkForm()) return;
 			let res = await http.getCardConsumeList({
 				data: {
 					startTime: parseInt(this.valueTime[0] / 1000), //开始时间
 					endTime: parseInt(this.valueTime[1] / 1000), //结束时间
 					page: this.page, //请求的页数
 					num: this.num, //请求的数据的条数
-					fromId: this.storesId.join(','), //操作门店门牌号
-					belongToShop: this.belongsId.join(','), //卡属门店
+					fromId: this.isBrand ? this.storesId.join(',') : this.constructionshopId, //操作门店门牌号
+					belongToShop: this.isBrand ? this.belongsId.join(',') : '', //卡属门店
 					memberCardId: 0, //实体卡关联id
 					consumeType: this.trantypeId, //交易类型
 					memberType: this.cardTypeId
@@ -698,6 +699,7 @@ export default {
 
 
 
+
 /*三角形-所有的边框线*/
 
 .calendar-ctr {
@@ -725,6 +727,7 @@ export default {
 .statisticsLists {
 	border: 1px solid #cccccc;
 }
+
 
 
 
@@ -831,6 +834,7 @@ export default {
 
 
 
+
 /*搜索和重置*/
 
 #transaction-enquiry .content a {
@@ -889,6 +893,7 @@ export default {
 
 
 
+
 /*分页*/
 
 #transaction-enquiry .pages {
@@ -899,6 +904,7 @@ export default {
 	position: relative;
 	margin-bottom: 40px;
 }
+
 
 
 

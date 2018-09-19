@@ -483,7 +483,7 @@ export default {
 						objectType: this.memberStatus ? 4 : 1, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
-						selectFans: this.fans, //粉丝的数量
+						selectFans: Number(this.checkedFans), //粉丝的数量
 						startTime: parseInt(this.startObj.time / 1000), //开始时间
 						endTime: parseInt(this.endObj.time / 1000), //结束时间
 						getType: 0, //获得方式
@@ -557,8 +557,8 @@ export default {
 			} else {
 				this.num = false;
 			}
-			if (data.selectFans && data.selectFans != '') { //筛选的粉丝的数量
-				this.fans = data.selectFans;
+			if (data.selectFans && data.selectFans == 1) { //筛选的粉丝的数量
+				this.getSubscribeFansCount();
 				this.checkedFans = true;
 			}
 			this.startObj.time = data.startTime * 1000;
