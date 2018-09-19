@@ -302,7 +302,7 @@ export default {
 	},
 	'scanPayQuery': {
 		url: w + 'Reportstatistics/scanPayQuery', //查询
-		method: 'get'
+		method: 'post'
 	},
 	'getScanTaskStatus': {
 		url: w + 'Reportstatistics/getTaskStatus', //查询
@@ -334,7 +334,7 @@ export default {
 	},
 	'takeoutOrderQuery': {
 		url: w + 'Reportstatistics/takeoutOrderQuery', //自营外卖查询
-		method: 'get'
+		method: 'post'
 	},
 	'getTakeoutData': {
 		url: w + 'Reportstatistics/getTakeoutData', //自营外卖获取数据
@@ -350,7 +350,7 @@ export default {
 	},
 	'rechargeQuery': {
 		url: w + 'Reportstatistics/rechargeQuery', //会员充值统计
-		method: 'get'
+		method: 'post'
 	},
 	'getRechargeData': {
 		url: w + 'Reportstatistics/getRechargeData', //会员充值统计获取数据
