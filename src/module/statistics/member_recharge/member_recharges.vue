@@ -450,8 +450,8 @@ export default {
 					startTime: parseInt(this.startTime / 1000), //开始时间 
 					endTime: parseInt(this.endTime / 1000), //结束时间
 					depositPlanIds: this.planId.join(','), //方案的IDs
-					max: this.intervalLeft, //充值实付最大
-					min: this.intervalRight //充值实付最小
+					min: this.intervalLeft, //充值实付最大
+					max: this.intervalRight //充值实付最小
 				}
 			});
 			if (data) {
@@ -481,7 +481,7 @@ export default {
 					}
 					return false;
 				}
-			}, 10000);
+			}, 20000);
 			this.timerqueue.push(this.timeout);
 			if (data == true) {
 				clearInterval(this.timer);
