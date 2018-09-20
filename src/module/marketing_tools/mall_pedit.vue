@@ -75,6 +75,10 @@
 	import global from 'src/manager/global';
 	import utils from 'src/verdor/utils';
 
+	let imgRang = {
+		top: 0,
+		left: 0
+	};
 
 	export default {
 		data() {
@@ -92,10 +96,6 @@
 				imgStyle: {
 					width: 0,
 					height: 0
-				},
-				imgRang: {
-					top: 0,
-					left: 0
 				},
 				imgScale: 1, //图片缩放比例
 				fontSize: 24,
@@ -147,8 +147,8 @@
 					}
 				} else {
 
-					this.editConfig[str].x = parseFloat(this.imgRang.left) + 'px';
-					this.editConfig[str].y = parseFloat(this.imgRang.top) + 'px';
+					this.editConfig[str].x = parseFloat(imgRang.left) + 'px';
+					this.editConfig[str].y = parseFloat(imgRang.top) + 'px';
 
 				}
 			},
@@ -159,7 +159,7 @@
 					width: 0,
 					height: 0
 				};
-				this.imgRang = {
+				imgRang = {
 					top: 0,
 					left: 0
 				};
@@ -209,12 +209,13 @@
 					width: w + 'px',
 					height: h + 'px'
 				};
-				this.imgRang = {
+				imgRang = {
 					width: w,
 					height: h,
 					top: (750 - h) / 2 + 'px',
 					left: (750 - w) / 2 + 'px'
 				};
+
 			},
 			async preFn(file) {
 
@@ -257,8 +258,8 @@
 			},
 			countSize(pos, size, type) {
 				if (pos) {
-					pos.push(parseInt( (parseFloat(this.editConfig[type].x) - parseFloat(this.imgRang.left))* this.imgScale ));
-					pos.push(parseInt( (parseFloat(this.editConfig[type].y) - parseFloat(this.imgRang.top) ) * this.imgScale ));
+					pos.push(parseInt( (parseFloat(this.editConfig[type].x) - parseFloat(imgRang.left))* this.imgScale ));
+					pos.push(parseInt( (parseFloat(this.editConfig[type].y) - parseFloat(imgRang.top) ) * this.imgScale ));
 				}
 				if (size) {
 					size.push(parseInt(parseFloat(this.editConfig[type].w) * this.imgScale));
@@ -364,7 +365,6 @@
 						width,
 						height
 					} = img;
-					debugger;
 					this.countScale(width, height);
 				}
 
@@ -397,8 +397,8 @@
 				let w = 0;
 				let h = 0;
 				if (pos.length > 0) {
-					x = parseFloat(this.imgRang.left) + parseInt(pos[0]) / this.imgScale;
-					y = parseFloat(this.imgRang.top) + parseInt(pos[1]) / this.imgScale;
+					x = parseFloat(imgRang.left) + parseInt(pos[0]) / this.imgScale;
+					y = parseFloat(imgRang.top) + parseInt(pos[1]) / this.imgScale;
 				}
 
 				let s = '';
@@ -407,9 +407,9 @@
 					h = parseInt(s[1] / this.imgScale);
 				}
 				
-				if ((x + w) > parseFloat(this.imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(this.imgRang.left) + parseFloat(this.imgStyle.height) || x < parseFloat(this.imgRang.left) || y < parseFloat(this.imgRang.top)) {
-					this.editConfig[type].x = this.imgRang.left;
-					this.editConfig[type].y = this.imgRang.top;
+				if ((x + w) > parseFloat(imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(imgRang.left) + parseFloat(this.imgStyle.height) || x < parseFloat(imgRang.left) || y < parseFloat(imgRang.top)) {
+					this.editConfig[type].x = imgRang.left;
+					this.editConfig[type].y = imgRang.top;
 					this.$store.commit('setWin', {
 						content: '坐标位置出现问题,已经重置,\n建议重新新建素材.'
 					});
@@ -427,12 +427,10 @@
 			moves: {
 				bind(el, binding, vNode) {
 
-					let editContent = vNode.context.imgRang;
-
 					el.addEventListener(
 						'mousedown',
 						e => {
-							// let editContent = vNode.context.$refs.editContent.getBoundingClientRect();
+							// let imgRang = vNode.context.$refs.imgRang.getBoundingClientRect();
 
 							let disX = e.clientX - el.offsetLeft;
 							let disY = e.clientY - el.offsetTop;
@@ -442,12 +440,13 @@
 								let l = ev.clientX - disX;
 								let t = ev.clientY - disY;
 								let divT = el.getBoundingClientRect();
-								if (l <= parseFloat(editContent.left)) l = editContent.left;
-								if (l > editContent.width - divT.width + parseFloat(editContent.left))
-									l = editContent.width - divT.width + parseFloat(editContent.left);
-								if (t < parseFloat(editContent.top)) t = editContent.top;
-								if (t > editContent.height - divT.height + parseFloat(editContent.top))
-									t = editContent.height - divT.height + parseFloat(editContent.top);
+
+								if (l <= parseFloat(imgRang.left)) l = imgRang.left;
+								if (l > imgRang.width - divT.width + parseFloat(imgRang.left))
+									l = imgRang.width - divT.width + parseFloat(imgRang.left);
+								if (t < parseFloat(imgRang.top)) t = imgRang.top;
+								if (t > imgRang.height - divT.height + parseFloat(imgRang.top))
+									t = imgRang.height - divT.height + parseFloat(imgRang.top);
 
 								el.style.cursor = 'move';
 								vNode.context.editConfig[name].x = l + 'px';
@@ -479,10 +478,10 @@
 
 									if (w < 24 || h < 24) return;
 
-									let tempLeft = el.offsetLeft - parseFloat(editContent.left);
-									let tempTop = el.offsetTop - parseFloat(editContent.top);
+									let tempLeft = el.offsetLeft - parseFloat(imgRang.left);
+									let tempTop = el.offsetTop - parseFloat(imgRang.top);
 
-									if (tempLeft + w >= editContent.width || tempTop + h >= editContent.height) {
+									if (tempLeft + w >= imgRang.width || tempTop + h >= imgRang.height) {
 										return;
 									}
 
