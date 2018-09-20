@@ -110,7 +110,7 @@ export default {
 		async getUserList() {
 			let data = await http.getUserLists({
 				data: {
-					shopId: this.shopId,
+					shop: this.shopId,
 					goodsId: this.goodsId,
 					page: this.page,
 					num: this.num
