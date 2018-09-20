@@ -1,0 +1,2 @@
+/* eslint-disable */
+module.exports={"path":"brandAssign","children":[{"path":"","url":"src/module/invoicing_system/brand_assign/brand_assign_list"},{"path":"create","url":"src/module/invoicing_system/brand_assign/create_assign"},{"path":"setNewjurisdiction","url":"src/module/invoicing_system/brand_assign/set_newjurisdiction"},{"path":"jurisdictionRecord","url":"src/module/invoicing_system/brand_assign/jurisdiction_record"},{"path":"jurisdictionDetail","url":"src/module/invoicing_system/brand_assign/jurisdiction_detail"}]}

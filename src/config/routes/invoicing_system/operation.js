@@ -1,0 +1,2 @@
+/* eslint-disable */
+module.exports={"path":"operation","children":[{"path":"","url":"src/module/invoicing_system/warehouse_manage/operation"},{"path":"operationDetail","url":"src/module/invoicing_system/warehouse_manage/operation_detail"},{"path":"enterGoods","url":"src/module/invoicing_system/warehouse_manage/enter_goods"}]}
