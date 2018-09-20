@@ -486,7 +486,7 @@ export default {
 }
 
 #scancode .selected {
-	background: url(../../res/icon/selected.png) center center no-repeat,
+	background: url(../../../res/icon/selected.png) center center no-repeat,
 	#28a8e0;
 }
 

@@ -10,7 +10,7 @@
 				</div>
 				<div class="paymentbox fl">
 					<el-button type="primary" style="width:120px;" @click="getScanPayOrderByCodes">筛选</el-button>
-					<el-button type="info" style="width:120px;">重置</el-button>
+					<el-button type="info" style="width:120px;" @click="reset">重置</el-button>
 				</div>
 			</div>
 			<div class="choiceshop">
@@ -74,93 +74,93 @@ export default {
 			num: 10,
 			endTotal: 1,
 			titleList: [{
-					titleName: '天数',
-					dataName: 'days'
-				},
-				{
-					titleName: '支付次数',
-					dataName: 'payTimes'
-				},
-				{
-					titleName: '消费总额 ',
-					dataName: 'totalConsumption'
-				},
-				{
-					titleName: '优惠总额',
-					dataName: 'totalDiscount'
-				},
-				{
-					titleName: '代金券'
-				},
-				{
-					titleName: '实收总额',
-					dataName: 'totalPain'
-				},
-				{
-					titleName: '积分抵扣总额',
-					dataName: 'totalPointCash'
-				},
-				{
-					titleName: '会员消费总额',
-					dataName: 'totalMemberConsumption'
-				},
-				{
-					titleName: '微信支付总额',
-					dataName: 'totalWeChatPain'
-				},
-				{
-					titleName: '支付宝支付总额',
-					dataName: 'totalAliPayPain'
-				}
+				titleName: '天数',
+				dataName: 'days'
+			},
+			{
+				titleName: '支付次数',
+				dataName: 'payTimes'
+			},
+			{
+				titleName: '消费总额 ',
+				dataName: 'totalConsumption'
+			},
+			{
+				titleName: '优惠总额',
+				dataName: 'totalDiscount'
+			},
+			{
+				titleName: '代金券'
+			},
+			{
+				titleName: '实收总额',
+				dataName: 'totalPain'
+			},
+			{
+				titleName: '积分抵扣总额',
+				dataName: 'totalPointCash'
+			},
+			{
+				titleName: '会员消费总额',
+				dataName: 'totalMemberConsumption'
+			},
+			{
+				titleName: '微信支付总额',
+				dataName: 'totalWeChatPain'
+			},
+			{
+				titleName: '支付宝支付总额',
+				dataName: 'totalAliPayPain'
+			}
 			],
 			staticLists: [], //数据
 			shoptitleList: [{
-					titleName: '操作',
-					dataName: 'shopId',
-					conStyle: {
-						color: '#27a8e0',
-						cursor: 'pointer'
-					}
-				},
-				{
-					titleName: '日期 ',
-					dataName: 'day'
-				},
-				{
-					titleName: '支付次数',
-					dataName: 'payTimes'
-				},
-				{
-					titleName: '消费总额 ',
-					dataName: 'totalConsumption'
-				},
-				{
-					titleName: '优惠总额',
-					dataName: 'totalDiscount'
-				},
-				{
-					titleName: '代金券'
-				},
-				{
-					titleName: '实收总额',
-					dataName: 'totalPain'
-				},
-				{
-					titleName: '积分抵扣总额',
-					dataName: 'totalPointCash'
-				},
-				{
-					titleName: '会员消费总额',
-					dataName: 'totalMemberConsumption'
-				},
-				{
-					titleName: '微信支付总额',
-					dataName: 'totalWeChatPain'
-				},
-				{
-					titleName: '支付宝支付总额',
-					dataName: 'totalAliPayPain'
+				titleName: '操作',
+				dataName: 'shopId',
+				conStyle: {
+					color: '#27a8e0',
+					cursor: 'pointer'
 				}
+			},
+			{
+				titleName: '日期 ',
+				dataName: 'day'
+			},
+			{
+				titleName: '支付次数',
+				dataName: 'payTimes'
+			},
+			{
+				titleName: '消费总额 ',
+				dataName: 'totalConsumption'
+			},
+			{
+				titleName: '优惠总额',
+				dataName: 'totalDiscount'
+			},
+			{
+				titleName: '代金券'
+			},
+			{
+				titleName: '实收总额',
+				dataName: 'totalPain'
+			},
+			{
+				titleName: '积分抵扣总额',
+				dataName: 'totalPointCash'
+			},
+			{
+				titleName: '会员消费总额',
+				dataName: 'totalMemberConsumption'
+			},
+			{
+				titleName: '微信支付总额',
+				dataName: 'totalWeChatPain'
+			},
+			{
+				titleName: '支付宝支付总额',
+				dataName: 'totalAliPayPain'
+			}
 			],
 			allFormList: [], //店铺查询的所有数据
 			formList: [], //展示的数据
@@ -197,19 +197,19 @@ export default {
 		getscanorder: function(res) {
 			this.showType = res;
 			this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: ['fd-blue'],
-					fn: () => {
-						this.returnStore();
-					}
-				},
-				{
-					name: '导出',
-					className: ['fd-blue'],
-					fn: () => {
-						this.Export();
-					}
+				name: '返回',
+				className: ['fd-blue'],
+				fn: () => {
+					this.returnStore();
 				}
+			},
+			{
+				name: '导出',
+				className: ['fd-blue'],
+				fn: () => {
+					this.Export();
+				}
+			}
 			]);
 		},
 		formatTime(time) {
@@ -263,7 +263,7 @@ export default {
 			if (res == 'ok') {
 				//this.staffId = obj.shopIds;
 				this.dynamicTags = item;
-				console.log(JSON.stringify(item))
+				//console.log(JSON.stringify(item));
 				if (this.dynamicTags.length > 0) {
 					this.paymentCode = `已选择${this.dynamicTags.length}个收款码`;
 				} else {
@@ -301,7 +301,7 @@ export default {
 					taskId: this.taskId,
 					showDay: ''
 				}
-			})
+			});
 			if (data) {
 				this.staticLists = [];
 				this.staticLists.push(data.total); //头部的数据
@@ -310,6 +310,12 @@ export default {
 					this.setPage();
 				});
 			}
+		},
+		reset:function(){//重置
+			this.dynamicTags = [];
+			this.paymentCode = '请选择收款码';
+			this.getScanPayData();
+			this.codes = [];
 		}
 	},
 	components: {
@@ -342,19 +348,19 @@ export default {
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
-				name: '返回',
-				className: ['fd-blue'],
-				fn: () => {
-					this.returnStore();
-				}
-			},
-			{
-				name: '导出',
-				className: ['fd-blue'],
-				fn: () => {
-					this.Export();
-				}
+			name: '返回',
+			className: ['fd-blue'],
+			fn: () => {
+				this.returnStore();
 			}
+		},
+		{
+			name: '导出',
+			className: ['fd-blue'],
+			fn: () => {
+				this.Export();
+			}
+		}
 		]);
 		this.getScanPayData();
 	},

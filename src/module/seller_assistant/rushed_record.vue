@@ -112,7 +112,7 @@ export default {
 				data: {
 					goodsId: this.goodsId
 				}
-			})
+			});
 			if (data) {
 				this.allFormList = data;
 				this.$nextTick(() => {
@@ -173,7 +173,7 @@ export default {
 				id: currentShop.id,
 				ischain: currentShop.ischain,
 				shopName: currentShop.name
-			}
+			};
 			this.shopsList = storage.session('shopList');
 			this.shopsList.push(userShop);
 		},
