@@ -12,43 +12,9 @@
 				<div v-if="ischain == 1|| ischain == 2" style="float:left;margin-right:10px;">
 					<select-btn @emit="selectType" :name="typeName" :sorts="goodSec.map(v=>v.name)" :width="158"></select-btn>
 				</div>
-				<div class="select-down" @click.stop style="margin-right: 20px;">
-					<section class="staList">
-						<section class="tableList" v-on:click="showOneArea">
-							<section class="oSpan">{{oneArea.name}}</section>
-							<div class="fl">
-								<i></i>
-							</div>
-						</section>
-						<div v-show="oneArea.show" class="detDiv">
-							<i class="detI"></i>
-							<div class="detCategory">
-								<template v-for="(item,index) in category">
-									<section :key="index" v-on:click="selectOneArea(item,index)" class="showName" :class="{'showname-select':item.id==oneArea.id}">{{item.name}}</section>
-								</template>
-							</div>
-						</div>
-					</section>
-				</div>
-				<div class="select-down" style="margin-right: 20px;" @click.stop>
-					<section class="staList">
-						<section v-on:click="showTwoArea" class="tableList">
-							<section class="oSpan">{{twoArea.name}}</section>
-							<div class="fl">
-								<i></i>
-							</div>
-						</section>
-						<div v-show="twoArea.show" class="detDiv">
-							<i class="detI"></i>
-							<div class="detChild">
-								<template v-for="(item,index) in child">
-									<section :key="index" v-on:click="selectTwoArea(item,index)" class="showName" :class="{'showname-select':item.id==twoArea.id}">{{item.name}}</section>
-								</template>
-							</div>
-						</div>
-					</section>
-				</div>
-
+				<!-- 分类选择 -->
+				<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea = "oneArea"></elCategory>
+				<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea = "twoArea"></elCategory>
 				<!-- 搜索 -->
 				<section class="search fl">
 					<div v-if="industry == 1">
@@ -234,7 +200,7 @@ export default {
 			pageBtnNum: 10, // 分页组件总的按钮数
 			num: 14, // 每页展示的数量
 			currentPage: 1, //当前展示的页数
-			totalNum: null, //总页数
+			totalNum: 1, //总页数
 			numList: [], //库存列表
 
 			search: '', // 搜索的内容
@@ -329,7 +295,10 @@ export default {
 			this.oneArea.show = !this.oneArea.show;
 			this.twoArea.show = false;
 		},
-		selectOneArea(item, index) {
+		selectOneArea(item, index,type) {
+			if(!type){//如果是从分类点击进入，则页码为1，反之为原来的页数
+				this.currentPage = 1;
+			}
 			this.oneIndex = index;
 			this.twoArea = {
 				id: -2,
@@ -351,9 +320,8 @@ export default {
 			);
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
-				this.currentPage = 1;
 			}
-
+			
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 				this.pageGoods = this.changeNav(
@@ -387,7 +355,10 @@ export default {
 			this.twoArea.show = !this.twoArea.show;
 			this.oneArea.show = false;
 		},
-		selectTwoArea(item, index) {
+		selectTwoArea(item, index,type) {
+			if(!type){//如果是从分类点击进入，则页码为1，反之为原来的页数
+				this.currentPage = 1;
+			}
 			this.twoIndex = index;
 			this.twoArea = {
 				id: item.id,
@@ -415,7 +386,6 @@ export default {
 			}
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
-				this.currentPage = 1;
 			}
 			this.initPage(this.pageGoods);
 		},
@@ -538,6 +508,12 @@ export default {
 		//-----------分页---------
 		initPage(arr) {
 			this.totalNum = Math.ceil(arr.length / this.num);
+			if(this.totalNum ==0){//如果数组为空，总页数为0，则将总数置为1，
+				this.totalNum ==1;
+			}
+			if(this.totalNum<this.currentPage){//如果总页数小于当前页码数，
+				this.currentPage = this.totalNum;
+			}
 			let startIndex = (this.currentPage - 1) * this.num;
 			let endIndex = this.currentPage * this.num;
 			this.nowGoods = arr.slice(startIndex, endIndex);
@@ -577,8 +553,8 @@ export default {
 					this.goodsList = this.deleteChildGoods(this.goodsList);
 					this.goodsList = this.funSortGood(this.goodsList);
 					this.twoArea.id == -2
-						? this.selectOneArea(this.oneArea,this.oneIndex)
-						: this.selectTwoArea(this.twoArea,this.twoIndex);
+						? this.selectOneArea(this.oneArea,this.oneIndex,true)
+						: this.selectTwoArea(this.twoArea,this.twoIndex,true);
 				});
 			}
 		},
@@ -719,6 +695,47 @@ export default {
 					this.showCom = 'asyncWin';
 				};
 			}
+			//添加商品，如果是表格模式，显示添加按钮
+			if(this.selectTab==1){
+				obj.addGood = ()=>{
+					this.openAddWin({});
+				}
+			}
+			//导入
+			obj.leadIn = () => {
+				this.importGoods().then(res => {
+					if (!res) {
+						this.$store.commit('setWin', {
+							title: '温馨提示',
+							content: '导入商品成功!'
+						});
+						this.showCom = '';
+					} else {
+						this.showCom = 'errorGoods';
+						this.comObj = {
+							errorInfo: res
+						};
+					}
+					this.getGoodsList(true).then(goods => {
+						this.allGoods = goods;
+						this.goodsList = this.initGoodsStock(
+							goods,
+							this.numList
+						);
+						this.goodsList = this.deleteChildGoods(
+							this.goodsList
+						);
+						this.goodsList = this.funSortGood(this.goodsList);
+						this.twoArea.id == -2
+							? this.selectOneArea(this.oneArea,this.oneIndex,true)
+							: this.selectTwoArea(this.twoArea,this.twoIndex,true);
+					});
+				});
+			}
+			//导出
+			obj.leadOut= () => {
+				this.exportGoodsList();
+			},
 			this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据

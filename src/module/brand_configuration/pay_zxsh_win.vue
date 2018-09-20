@@ -189,7 +189,7 @@ export default {
 			console.log(item);
 			this.onIndex = index;
 			this.shopDetial = {
-				subShopId: '',
+				subShopId: item.id,
 				recAccountNo: '',
 				recAccountName: '',
 				recOpenBankCode: ''
