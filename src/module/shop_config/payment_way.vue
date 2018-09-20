@@ -1,18 +1,15 @@
-<!--
-	**支付方式配置
-	* 
-	* 孔伟研
-	* *
-	* 
--->
+/**
+ * @Author: 孔伟研 
+ * @Date: 2018-09-19 11:39:01 
+ * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-09-19 14:03:20
+ * @Module:支付方式配置
+**/
 <template>
 	<section num="app" id="paymentWay" v-cloak>
 		<section v-if="!showZX" style="max-width:1240px;">
 			<!-- 添加原因的button-->
 			<section style="margin-bottom: 15px;">
-				<!-- <div v-on:click="addpay" class="btn-concent" style="width: 200px;display: inline-block;">
-					<button class="increase" style="width:100%;">添加支付方式</button>
-				</div> -->
 				<el-button @click="addpay" type="primary" icon="el-icon-plus">添加支付方式</el-button>
 				<div v-if="ischain == 1 || ischain == 2" class="topBox">
 					<span>
@@ -21,6 +18,12 @@
 						<i></i>门店自建</span>
 				</div>
 			</section>
+			<!-- <section style="padding:10px 0;color:#606266;">
+				<span>微信支付使用偏向</span>
+				<el-button @click="selectwxpay" size="small" type="primary" style="margin:0 10px;">支付配置</el-button>
+				<span style="color:#ccc;">当前配置：</span>
+				<span style="color:#ccc;">{{wxpayName}}</span>
+			</section> -->
 			<el-table :data="payNameList" border style="width: 100%;margin:20px 0;" stripe>
 				<el-table-column label="操作" align="center" :width="220" style="text-aline:center;" fixed>
 					<template slot-scope="scope">
@@ -72,52 +75,10 @@
 				</el-table-column>
 				<el-table-column label="排序" align="center" prop="sort"></el-table-column>
 			</el-table>
-			<!-- <section style="width:100%;min-width: 710px;">
-				<section class="paymentWayTittle commonLi">
-					<ul>
-						<li>操作</li>
-						<li>支付方式</li>
-						<li>入实收账</li>
-						<li>排序</li>
-					</ul>
-				</section>
-				<section>
-					<section v-if="payNameList.length == 0" style="width:100%;height:50px;line-height: 50px;text-align: center;color:orange;">暂时无支付</section>
-					<section v-else v-for="(bill,index) in payNameList" :key='index' class="paymentWayContent commonLi">
-						<ul>
-							<li>
-								<span v-if="bill.isOperation==1" class="blue editInfo">
-									<a v-on:click="modifyBtn(index,bill)" href="javascript:void(0);" class="blue fl" style="width: 50%;float: left;">编辑</a>
-									<a v-if="bill.isOpen ==0" v-on:click="isOpenDetial(index,bill)" href="javascript:void(0);" class="gray" style="width: 50%;float: left;">已关闭</a>
-									<a v-if="bill.isOpen ==1" v-on:click="isOpenDetial(index,bill)" href="javascript:void(0);" class="yellow" style="width: 50%;float: left;">已开启</a>
-								</span>
-								<section v-else>
-									<div v-if="bill.paymentName == '微信' || bill.paymentName == '支付宝' || bill.paymentName == '中信银行'|| bill.paymentName == '点佰趣'|| bill.paymentName == '农行支付'|| bill.paymentName == '网易严选支付'" class="editInfo">
-										<a v-on:click="modifyBtn(index,bill)" href="javascript:void(0);" class="blue" style="width: 50%;float: left;">编辑</a>
-										<a v-if="bill.isOpen ==0" v-on:click="isOpenDetial(index,bill)" href="javascript:void(0);" class="gray" style="width: 50%;float: left;">已关闭</a>
-										<a v-if="bill.isOpen ==1" v-on:click="isOpenDetial(index,bill)" href="javascript:void(0);" class="yellow" style="width: 50%;float: left;">已开启</a>
-									</div>
-									<div v-if="bill.paymentName == '现金' || bill.paymentName == '银行卡' ">
-										<a v-if="bill.isOpen ==0" v-on:click="isOpenDetial(index,bill)" href="javascript:void(0);" class="gray" style="width: 100%;float: left;">已关闭</a>
-										<a v-if="bill.isOpen ==1" v-on:click="isOpenDetial(index,bill)" href="javascript:void(0);" class="yellow" style="width: 100%;float: left;">已开启</a>
-									</div>
-									<span v-else class="gray editInfo">不可操作</span>
-								</section>
-							</li>
-							<li style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;" :class="{'isBrandColor':bill.isAssign=='0'&&ischain !=0,'isShopColor':bill.isAssign=='1'&&ischain !=0}">{{bill.paymentName}}</li>
-							<li>
-								<span v-if="bill.isBill=='1'">是</span>
-								<span v-else>否</span>
-							</li>
-							<li>{{bill.sort}}</li>
-
-						</ul>
-					</section>
-				</section>
-			</section> -->
 			<payWayWin v-if="showWin" @payWayWin="getResult" :detial='detial' :types="types"></payWayWin>
 		</section>
 		<zxBandWin v-if="showZX" @zxBandWin="newGetResult" :config="detial.payConfig" :types="types"></zxBandWin>
+		<selectRadioWin v-if="isOpenwx" @selectRadioWin ="radioBack" :list = "payNameList" :name ="'paymentName'" :selectIndex ="wxIndex" :title = "'选择微信支付使用偏向'"></selectRadioWin>
 	</section>
 </template>
 
@@ -142,14 +103,19 @@ export default {
 			showZX: false, //中信
 			userId: '', //用户id
 			index: -1, //所选支付方式下标
-			ischain: 0 //判断品牌门店
+			ischain: 0, //判断品牌门店
+			isOpenwx:false,//微信支付偏向弹窗
+			wxIndex:0,
+			wxpayName:'',
 		};
 	},
 	components: {
 		payWayWin: () =>
 			import(/* webpackChunkName:"pay_way_win" */ 'src/module/shop_config/pay_way_win'),
 		zxBandWin: () =>
-			import(/* webpackChunkName:"zx_band_win" */ 'src/module/shop_config/zx_band_win')
+			import(/* webpackChunkName:"zx_band_win" */ 'src/module/shop_config/zx_band_win'),
+		selectRadioWin: () =>import(/*webpackChunkName: "select_radio_win"*/ 'src/components/select_radio_win')
+		
 	},
 	mounted() {
 		let userData = storage.session('userShop');
@@ -158,6 +124,19 @@ export default {
 		this.inte();
 	},
 	methods: {
+		radioBack(res,item){
+			if(res == 'ok'){
+				this.wxIndex = item.index;
+				this.wxpayName = item.name;
+				// console.log(item);
+				// this.setMainTerminal(item);
+			}
+			this.isOpenwx = false;
+		},
+		//设置微信支付偏向
+		selectwxpay(){
+			this.isOpenwx = true;
+		},
 		//接收弹窗传递的内容数据
 		getResult: function(res, detial) {
 			if (res == 'ok') {
@@ -167,6 +146,7 @@ export default {
 					obj.isOpen = '1'; //默认开启
 					obj.paymentId = detial.id;
 					obj.paymentName = detial.paymentName;
+					obj.sort = detial.sort;
 					if (detial.paymentName == '支付宝' && this.index == 3) {
 						obj.alipayrsaPublicKey =
 							detial.payConfig.alipayrsaPublicKey; //支付宝公钥
@@ -214,7 +194,6 @@ export default {
 						obj.appSecret = detial.payConfig.appSecret; //
 						this.editPayConfig(obj);
 					}  else {
-						obj.sort = detial.sort;
 						obj.isBill = detial.isBill ? 1 : 0;
 						if (this.types == 'add') {
 							this.addPayment(obj);

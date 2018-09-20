@@ -10,11 +10,7 @@
 		<section class="top">
 			<section class="fl" style="margin-right: 20px">
 				<el-select v-model="selectedType" clearable placeholder="请选择起售类型">
-					<el-option
-							v-for="item in options"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
+					<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
 					</el-option>
 				</el-select>
 				<!--<selectBtn @emit="selectType" :sorts="options" class="select-btn"></selectBtn>-->
@@ -28,36 +24,35 @@
 		</section>
 
 		<section>
-			<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="currentList" border style="width:90%">
-				<el-table-column fixed min-width = "100" align="center" label="操作">
+			<el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="currentList" border style="width:90%">
+				<el-table-column fixed min-width="100" align="center" label="操作">
 					<template slot-scope="scope">
 						<span style="color: #FE8D2C;cursor:pointer" @click="toEdit(scope.row,scope.$index)">编辑</span>
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
 						<span style="color: #FD3F1F;cursor:pointer" @click="delJob(scope.row,scope.$index)">删除</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" min-width = "100" label="起售类型">
+				<el-table-column align="center" min-width="100" label="起售类型">
 					<template slot-scope="scope">
 						<span>{{scope.row.type==1?'单品起售':'多品联动起售'}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="goodsName" label="商品名称"></el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "50" prop="num" align="center" label="起售数量" > </el-table-column>
+				<el-table-column show-overflow-tooltip min-width="120" align="center" prop="goodsName" label="商品名称"></el-table-column>
+				<el-table-column show-overflow-tooltip min-width="50" prop="num" align="center" label="起售数量"> </el-table-column>
 			</el-table>
 		</section>
 
 		<!--<comTable :titleData="titleData" :introData="currentList" :allTotal="newrecordList.length" :showTitle="2" :showHand="false" :fixed="0" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :listHeight="50" :listWidth="1200" :widthType="true">-->
-			<!--<span style="cursor: pointer;" slot="con-0" slot-scope="props">-->
-				<!--<span style="color:#29ABE2;font-size: 16px" @click="toEdit(props.data,props.index)">编辑</span>-->
-				<!--<span style="padding:0 20px;color: #D2D2D2;">|</span>-->
-				<!--<span style="color: #FD3F1F;font-size: 16px" @click="delJob(props.data,props.index)">删除</span>-->
-			<!--</span>-->
-			<!--<span slot="con-1" slot-scope="props">{{props.data.type==1?'单品起售':'多品联动起售'}}</span>-->
+		<!--<span style="cursor: pointer;" slot="con-0" slot-scope="props">-->
+		<!--<span style="color:#29ABE2;font-size: 16px" @click="toEdit(props.data,props.index)">编辑</span>-->
+		<!--<span style="padding:0 20px;color: #D2D2D2;">|</span>-->
+		<!--<span style="color: #FD3F1F;font-size: 16px" @click="delJob(props.data,props.index)">删除</span>-->
+		<!--</span>-->
+		<!--<span slot="con-1" slot-scope="props">{{props.data.type==1?'单品起售':'多品联动起售'}}</span>-->
 		<!--</comTable>-->
 
 		<section style="margin-top: 10px">
-			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size = "num"
-						   layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 			<!--<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :isNoJump="true" :numArr="[10,20,30]"></pageElement>-->
 		</section>
 		<goodSaleWin v-if="isOpenWin" @throwWinResult="doThrowWinResult" :item="item" :isAdd="isAdd" :jobIndex="jobIndex" :newrecordList="newrecordList" :allGid="allGid">
@@ -83,20 +78,24 @@ export default {
 			positionName: '', //搜索输入的起售商品名称
 			allGid: [], //所有添加了起售配置的商品id
 
-            options: [{
-                value: 0,
-                label: '全部'
-            }, {
-                value: 1,
-                label: '单品起售'
-            }, {
-                value: 2,
-                label: '多品联动起售'
-            }],
-			selectedType:'', //对应循序  0:全部
+			options: [
+				{
+					value: 0,
+					label: '全部'
+				},
+				{
+					value: 1,
+					label: '单品起售'
+				},
+				{
+					value: 2,
+					label: '多品联动起售'
+				}
+			],
+			selectedType: '', //对应循序  0:全部
 
 			num: 10, //一页处理多少数据
-//			count: 0, //总数量
+			//			count: 0, //总数量
 			total: 0, //总页数
 			page: 1, //当前第几页
 
@@ -146,10 +145,10 @@ export default {
 		}
 	},
 	methods: {
-//		//选择职位类型
-//		selectType(index) {
-//			this.selectedType = index;
-//		},
+		//		//选择职位类型
+		//		selectType(index) {
+		//			this.selectedType = index;
+		//		},
 		//新建起售商品
 		openShop() {
 			this.item = {};
@@ -290,38 +289,38 @@ export default {
 			this.getList();
 		},
 		//分页组件返回值
-//		pageChange(obj) {
-//			this.page = obj.page;
-//			this.num = obj.num;
-//			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
-//			this.currentList = this.newrecordList.slice(
-//				(this.page - 1) * this.num,
-//				(this.page - 1) * this.num + this.num
-//			); //点击下一页
-//		},
+		//		pageChange(obj) {
+		//			this.page = obj.page;
+		//			this.num = obj.num;
+		//			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
+		//			this.currentList = this.newrecordList.slice(
+		//				(this.page - 1) * this.num,
+		//				(this.page - 1) * this.num + this.num
+		//			); //点击下一页
+		//		},
 		//每页显示几条数据
-        numChange(e){
-            this.num=e;
-            this.pageChange();
-		  console.log(e);
+		numChange(e) {
+			this.num = e;
+			this.pageChange();
+			console.log(e);
 		},
 		//切换到第几页
-        pageClick(e){
-            this.page=e;
-            this.pageChange();
-            console.log(e)
+		pageClick(e) {
+			this.page = e;
+			this.pageChange();
+			console.log(e);
 		},
-        pageChange() {
-            this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
-            this.currentList = this.newrecordList.slice(
-                (this.page - 1) * this.num,
-                (this.page - 1) * this.num + this.num
-            );
-        },
+		pageChange() {
+			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
+			this.currentList = this.newrecordList.slice(
+				(this.page - 1) * this.num,
+				(this.page - 1) * this.num + this.num
+			);
+		},
 		//分页
 		paging(type) {
 			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
-//			this.count = this.newrecordList.length; //获取总数量
+			//			this.count = this.newrecordList.length; //获取总数量
 			if (type != 1) {
 				this.page = 1;
 			}
@@ -333,13 +332,13 @@ export default {
 	},
 	components: {
 		goodSaleWin: () =>
-			import(/*webpackChunkName: "./good_sale_win"*/ './good_sale_win'),
-//		selectBtn: () =>
-//			import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
-//		pageElement: () =>
-//			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
-//		comTable: () =>
-//			import(/*webpackChunkName:"com_table"*/ 'src/components/com_table')
+			import(/*webpackChunkName: "./good_sale_win"*/ './good_sale_win')
+		//		selectBtn: () =>
+		//			import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
+		//		pageElement: () =>
+		//			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+		//		comTable: () =>
+		//			import(/*webpackChunkName:"com_table"*/ 'src/components/com_table')
 	}
 };
 </script>

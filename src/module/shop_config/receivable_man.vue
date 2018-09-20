@@ -9,22 +9,21 @@
 	<div id="receivableMan">
 		<section v-if="!showClearing" class="seac_top" style="width;100%;height:50px;">
 			<el-select v-model="recType" placeholder="请选择账户类型" style="width:150px;">
-				<el-option
-					v-for="item in accountType"
-					:key="item.id"
-					:label="item.name"
-					:value="item.id">
+				<el-option v-for="item in accountType" :key="item.id" :label="item.name" :value="item.id">
 				</el-option>
 			</el-select>
 			<span>-</span>
 			<el-input v-model="seachValue" clearable maxlength="11" placeholder="请输入账户名称/联系人/电话" style="width:225px;"></el-input>
-			<a href="javascript:;" class="blue" style="width:110px;height:40px;line-height:40px;" @click="seachFn">筛选</a>
-			<a href="javascript:;" class="gray" style="width:110px;height:40px;line-height:40px;" @click="resetFn">重置</a>
+			<el-button @click="seachFn" type="primary">筛选</el-button>
+			<el-button @click="resetFn" type="info">重置</el-button>
+			<!-- <a href="javascript:;" class="blue" style="width:110px;height:40px;line-height:40px;" @click="seachFn">筛选</a>
+			<a href="javascript:;" class="gray" style="width:110px;height:40px;line-height:40px;" @click="resetFn">重置</a> -->
 		</section>
 		<section v-if="!showClearing" class="allList">
 			<section class="oBox">
 				<div class="boxTop">
-					<span style="font-size:16px;margin-right: 20px;">挂账账户列表 · 共<span style="color: #ff3c04;font-size: inherit;">{{recList.length}}</span>个条目</span>
+					<span style="font-size:16px;margin-right: 20px;">挂账账户列表 · 共
+						<span style="color: #ff3c04;font-size: inherit;">{{recList.length}}</span>个条目</span>
 					<span v-if="ischain=='1' || ischain=='2'" class="aSpan">
 						<i class="aI" style=""></i>品牌指派
 					</span>
@@ -32,13 +31,8 @@
 						<i class="aI" style="background:#2ea7e0;"></i>门店自建
 					</span>
 				</div>
-				<el-table
-					ref="multipleTable" stripe
-					:header-cell-style = "{'background-color':'#f5f7fa'}"
-					:data="list"
-					fixed
-					style="width: 100%">
-					<el-table-column fixed min-width = "300" align="center" label="操作">
+				<el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="list" fixed style="width: 100%">
+					<el-table-column fixed min-width="300" align="center" label="操作">
 						<template slot-scope="scope">
 							<span v-if="ischain=='3'" style="color: #01AAE5;cursor:pointer" @click="toShop(scope.row)">指派</span>
 							<span v-if="ischain=='3'" style="padding:0 5px;color: #D2D2D2">|</span>
@@ -54,33 +48,33 @@
 							<span style="color: #FE3D06;cursor:pointer" @click="delman(scope.row,scope.$index)">删除</span>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" min-width = "100" label="账户类型">
+					<el-table-column align="center" min-width="100" label="账户类型">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type == 2">企业用户</span>
 							<span v-if="scope.row.type == 1">个人用户</span>
 						</template>
 					</el-table-column>
-					<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="name" label="账户名称">
+					<el-table-column show-overflow-tooltip min-width="120" align="center" prop="name" label="账户名称">
 						<template slot-scope="scope">
 							<span v-if="scope.row.isAppoint == 1" style="color:#fe9200;">{{scope.row.name}}</span>
 							<span v-if="scope.row.isAppoint == 0" :style="{color:ischain=='1'||ischain=='2'?'#29abe2':'#333'}">{{scope.row.name}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column show-overflow-tooltip min-width = "120" prop="contactMan" align="center" label="联系人" > </el-table-column>
-					<el-table-column prop="mobile" min-width = "120" align="center" label="电话" > </el-table-column>
-					<el-table-column show-overflow-tooltip min-width = "120" prop="contactMan" align="center" label="挂账人" > 
+					<el-table-column show-overflow-tooltip min-width="120" prop="contactMan" align="center" label="联系人"> </el-table-column>
+					<el-table-column prop="mobile" min-width="120" align="center" label="电话"> </el-table-column>
+					<el-table-column show-overflow-tooltip min-width="120" prop="contactMan" align="center" label="挂账人">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type == 2">{{scope.row.personNum}}人</span>
 							<span v-if="scope.row.type == 1">{{scope.row.contactMan}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column show-overflow-tooltip min-width = "120" prop="singlePrice" align="center" label="挂账额度(单笔)" >
+					<el-table-column show-overflow-tooltip min-width="120" prop="singlePrice" align="center" label="挂账额度(单笔)">
 						<template slot-scope="scope">
 							<span v-if="scope.row.singlePrice*1 == 0">无上限</span>
 							<span v-if="scope.row.singlePrice*1 > 0">{{scope.row.singlePrice}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column show-overflow-tooltip min-width = "120" align="center" prop="allPrice" label="挂账额度(总额)">
+					<el-table-column show-overflow-tooltip min-width="120" align="center" prop="allPrice" label="挂账额度(总额)">
 						<template slot-scope="scope">
 							<span v-if="scope.row.allPrice*1 == 0">无上限</span>
 							<span v-if="scope.row.allPrice*1 > 0">{{scope.row.allPrice}}</span>
@@ -90,7 +84,7 @@
 			</section>
 		</section>
 		<div v-if="!showClearing" style="margin-top:10px;">
-			<el-pagination background @size-change="handleSizeChange" @current-change="pageClick" :current-page="currentPage" :page-size = "num" layout="sizes, prev, pager, next" :page-count="totalNum" :page-sizes="[10, 20, 30]"></el-pagination>
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageClick" :current-page="currentPage" :page-size="num" layout="sizes, prev, pager, next" :page-count="totalNum" :page-sizes="[10, 20, 30]"></el-pagination>
 			<!-- <pageElement @pageNum="pageClick" :page="currentPage" :total="totalNum" :num='num' :isNoJump='true'></pageElement> -->
 		</div>
 		<add-receivable-man @winResult="doResult" v-if="showMan" :manDetial="manDetial" :isAdd="isAdd"></add-receivable-man>
@@ -141,19 +135,12 @@ export default {
 		}
 	},
 	components: {
-		// selectBtn: () =>
-		// 	import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
 		AddReceivableMan: () =>
 			import(/*webpackChunkName: "add_receivable_man"*/ 'src/module/shop_config/receivable/add_receivable_man'),
 		clearingReceivable: () =>
 			import(/*webpackChunkName: "clearing_receivable"*/ 'src/module/shop_config/receivable/clearing_receivable'),
-		// comTable: () =>
-		// 	import(/*webpackChunkName: "com_table"*/ 'src/components/com_table'),
-		// pageElement: () =>
-		// 	import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
-//		shopsSelect: () =>
-//			import(/*webpackChunkName: "shops_select"*/ 'src/components/shops_select'),
-		elShopListWin: ()=> import( /* webpackChunkName:'el_shopList_win' */ 'src/components/el_shopList_win'),
+		elShopListWin: () =>
+			import(/* webpackChunkName:'el_shopList_win' */ 'src/components/el_shopList_win')
 	},
 	created() {
 		let userData = storage.session('userShop');
@@ -167,7 +154,7 @@ export default {
 			this.currentPage = e;
 		},
 		//每页显示多少行
-		handleSizeChange(e){
+		handleSizeChange(e) {
 			this.num = e;
 			this.currentPage = 1;
 		},
@@ -196,14 +183,15 @@ export default {
 				let name = list[i].name;
 				let mobile = list[i].mobile;
 				let contactMan = list[i].contactMan;
-				if (this.seachValue.trim().length > 0 &&
+				if (
+					this.seachValue.trim().length > 0 &&
 					name.indexOf(this.seachValue) == -1 &&
 					mobile.indexOf(this.seachValue) == -1 &&
 					contactMan.indexOf(this.seachValue) == -1
 				) {
 					continue;
 				}
-				if(this.recType !=0 && this.recType != list[i].type){
+				if (this.recType != 0 && this.recType != list[i].type) {
 					continue;
 				}
 				findList.push(list[i]);
@@ -361,28 +349,28 @@ export default {
 			}
 		},
 		//选择店铺后返回
-//		shopResult(res, it) {
-//			console.log(it);
-//			if (res == 'ok') {
-//				if (it == '') {
-//					this.$store.commit('setWin', {
-//						winType: 'alert',
-//						content: '请选择要指派的店铺！'
-//					});
-//					return false;
-//				}
-//				let item = {};
-//				item.billId = this.manDetial.id;
-//				item.shopIds = it;
-//				console.log(item);
-//				this.selectShop(item);
-//			}
-//			this.showShop = false;
-//		},
+		//		shopResult(res, it) {
+		//			console.log(it);
+		//			if (res == 'ok') {
+		//				if (it == '') {
+		//					this.$store.commit('setWin', {
+		//						winType: 'alert',
+		//						content: '请选择要指派的店铺！'
+		//					});
+		//					return false;
+		//				}
+		//				let item = {};
+		//				item.billId = this.manDetial.id;
+		//				item.shopIds = it;
+		//				console.log(item);
+		//				this.selectShop(item);
+		//			}
+		//			this.showShop = false;
+		//		},
 		shopResult(res, it) {
 			console.log(it);
 			if (res == 'ok') {
-				if (it.length==0) {
+				if (it.length == 0) {
 					this.$store.commit('setWin', {
 						winType: 'alert',
 						content: '请选择要指派的店铺！'
@@ -391,7 +379,7 @@ export default {
 				}
 				let item = {};
 				item.billId = this.manDetial.id;
-				item.shopIds=it.join(',');
+				item.shopIds = it.join(',');
 				console.log(item);
 				this.selectShop(item);
 			}
@@ -542,13 +530,19 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
 .allList {
 	width: 100%;
-	.oBox{
-		width:100%;border:1px solid #ebeef5;border-bottom:none;padding:1px;margin:10px 0;
-		.boxTop{
-			height:50px;line-height: 50px;border-bottom:1px solid #ebeef5;padding:0 5px;
+	.oBox {
+		width: 100%;
+		border: 1px solid #ebeef5;
+		border-bottom: none;
+		padding: 1px;
+		margin: 10px 0;
+		.boxTop {
+			height: 50px;
+			line-height: 50px;
+			border-bottom: 1px solid #ebeef5;
+			padding: 0 5px;
 			.aSpan {
 				font-size: 16px;
 				color: #fe9200;
