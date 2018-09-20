@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-19 14:01:02
+ * @Last Modified time: 2018-09-20 15:55:33
  * @Module:店铺配置——打印机管理
 **/
 <template>
@@ -88,7 +88,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column show-overflow-tooltip align="center" min-width = "150" label="终端名称" prop="name"></el-table-column>
-				<el-table-column min-width = "150" align="center" label="设备SN号" prop="name"></el-table-column>
+				<el-table-column min-width = "150" align="center" label="设备SN号" prop="snNum"></el-table-column>
 			</el-table>
 		</div>
 		<div v-if="selectTab==0" style="margin:10px 0;">
@@ -232,7 +232,7 @@ export default {
 			if(this.terType == -1 || this.terType === ''){
 				secList = this.copyprinterList;
 			}else{
-				secList = list.filter(v => v.printTerminal ==this.terType+'');
+				secList = list.filter(v => v.printTerminalId ==this.terType+'');
 			}
 			// console.log(this.terType);
 			if(this.selectType == -1 || this.selectType === ''){
@@ -289,7 +289,7 @@ export default {
 			for(let i=0;i<this.printerList.length;i++){
 				this.$set(this.printerList[i], 'terminaName', '路由器');
 				for(let j=0;j<this.terminalList.length;j++){
-					if(this.printerList[i].printTerminal == this.terminalList[j].id){
+					if(this.printerList[i].printTerminalId == this.terminalList[j].id){
 						this.printerList[i].terminaName = this.terminalList[j].name;
 					}
 				}
@@ -343,10 +343,10 @@ export default {
 					this.printDetial = await http.getPrintDetial({
 						data: { shopId: this.shopId, printerId: pid }
 					});
-					if(!this.printDetial.printTerminal){
-						this.printDetial.printTerminal = '0';
+					if(!this.printDetial.printTerminalId){
+						this.printDetial.printTerminalId = '0';
 					}else{
-						this.printDetial.printTerminal = this.printDetial.printTerminal+'';
+						this.printDetial.printTerminalId = this.printDetial.printTerminalId+'';
 					}
 				}else{
 					this.printDetial = await http.getTerminalDetial({
@@ -410,7 +410,7 @@ export default {
 						maxLen: this.printDetial.maxLen,
 						type: this.printDetial.type,
 						sort: this.printDetial.sort,
-						printTerminal:this.printDetial.printTerminal,
+						printTerminalId:this.printDetial.printTerminalId,
 					}
 				});
 				this.getPrinterList();
@@ -440,7 +440,7 @@ export default {
 						maxLen: this.printDetial.maxLen,
 						type: this.printDetial.type,
 						sort: this.printDetial.sort,
-						printTerminal:this.printDetial.printTerminal,
+						printTerminalId:this.printDetial.printTerminalId,
 					}
 				});
 				this.getPrinterList();

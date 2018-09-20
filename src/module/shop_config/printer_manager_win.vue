@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:54 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-18 17:42:33
+ * @Last Modified time: 2018-09-20 15:56:00
  * @Module:打印机管理弹窗
 **/
 <template>
@@ -178,7 +178,7 @@ export default {
 			item.isTerminal = this.isTerminal;
 			item.name = this.printDetial.name;
 			item.snNum = this.printDetial.snNum;
-			item.printTerminal = this.terminaIndex;
+			item.printTerminalId = this.terminaIndex;
 			if (res == 'ok') {
 				if (this.isOk()) {
 					this.$emit('printManagerWin', res, item);
@@ -410,7 +410,7 @@ export default {
 			// 	data: { shopId: this.shopId, printerId: this.printerId }
 			// });
 			console.log(this.printDetial);
-			this.terminaIndex = this.printDetial.printTerminal+'';
+			this.terminaIndex = this.printDetial.printTerminalId+'';
 			this.printerName = this.printDetial.printerName;
 			this.ip = this.printDetial.ip;
 			this.slaveIp = this.printDetial.slaveIp;
