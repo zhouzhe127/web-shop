@@ -503,6 +503,7 @@
 					cid: this.cid,
 					wid : this.wid,
 					areaId : this.areaId,
+					type: -1,
 				}});
 				this.searchObj = {
 					cid: this.cid,
