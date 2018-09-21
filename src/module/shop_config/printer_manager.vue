@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-20 15:55:33
+ * @Last Modified time: 2018-09-20 18:31:03
  * @Module:店铺配置——打印机管理
 **/
 <template>
@@ -416,7 +416,7 @@ export default {
 				this.getPrinterList();
 			}
 		},
-		//修改打印机请求
+		//修改打印机/终端请求
 		async editPrinter() {
 			// console.log(this.printDetial);
 			if(this.printDetial.isTerminal){
@@ -427,7 +427,7 @@ export default {
 						snNum: this.printDetial.snNum,
 					}
 				});
-				this.getTerminalList();
+				this.getPrinterList();
 			}else{
 				await http.editPrinter({
 					data: {

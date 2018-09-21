@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-19 11:39:01 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-19 14:03:20
+ * @Last Modified time: 2018-09-21 10:51:10
  * @Module:支付方式配置
 **/
 <template>
@@ -86,6 +86,7 @@
 import storage from 'src/verdor/storage';
 import global from 'src/manager/global';
 import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
@@ -147,14 +148,14 @@ export default {
 					obj.paymentId = detial.id;
 					obj.paymentName = detial.paymentName;
 					obj.sort = detial.sort;
-					if (detial.paymentName == '支付宝' && this.index == 3) {
+					if (detial.paymentName == '支付宝') {
 						obj.alipayrsaPublicKey =
 							detial.payConfig.alipayrsaPublicKey; //支付宝公钥
 						obj.rsaPrivateKey = detial.payConfig.rsaPrivateKey; //支付宝RSA私钥
 						obj.appId = detial.payConfig.appId; //支付宝应用id
 						obj.signType = detial.payConfig.signType; //支付宝商户类型
 						this.editPayConfig(obj);
-					} else if (detial.paymentName == '微信' && this.index == 2) {
+					} else if (detial.paymentName == '微信') {
 						obj.appid = detial.payConfig.appid; //微信appid
 						obj.minAppId = detial.payConfig.minAppId; //微信小程序AppId
 						obj.mchid = detial.payConfig.mchid; //支付宝应用id
@@ -163,19 +164,19 @@ export default {
 						obj.apiclient_key = detial.payConfig.apiclient_key; //支付宝商户类型
 						obj.apiclient_cert = detial.payConfig.apiclient_cert; //支付宝商户类型
 						this.editPayConfig(obj);
-					} else if (detial.paymentName == '中信银行' && this.index == 5) {
+					} else if (detial.paymentName == '中信银行') {
 						//若为中信银行则跳转到中信银行表单页面
 						this.showZX = true;
-					} else if (detial.paymentName == '点佰趣' && this.index == 6) {
+					} else if (detial.paymentName == '点佰趣') {
 						obj.businessNum = detial.payConfig.businessNum; //点佰趣-商户编号
 						// obj.organizationNum = detial.payConfig.organizationNum;//点佰趣-组织编号
 						this.editPayConfig(obj);
-					}else if (detial.paymentName == '网易严选支付' && this.index == 7) {
+					}else if (detial.paymentName == '网易严选支付') {
 						obj.appId = detial.payConfig.appId; //
 						obj.productId = detial.payConfig.productId; //
 						obj.key = detial.payConfig.key; //
 						this.editPayConfig(obj);
-					}else if (detial.paymentName == '农行支付' && this.index == 8) {
+					}else if (detial.paymentName == '农行支付') {
 						obj.mid = detial.payConfig.mid; //
 						obj.tid = detial.payConfig.tid; //
 						obj.instMid = detial.payConfig.instMid; //
@@ -183,12 +184,12 @@ export default {
 						obj.msgSrcId = detial.payConfig.msgSrcId; //
 						obj.md5Key = detial.payConfig.md5Key; //
 						this.editPayConfig(obj);
-					} else if (detial.paymentName == '中信银行(上海)' &&this.index == 9) {
+					} else if (detial.paymentName == '中信银行(上海)') {
 						obj.mchId = detial.payConfig.mchId;//商户号
 						obj.privateRsaKey = detial.payConfig.privateRsaKey;//客户私钥
 						obj.publicRsaKey = detial.payConfig.publicRsaKey;//中信公钥
 						this.editPayConfig(obj);
-					}else if (detial.paymentName == '旺POS支付' && this.index == 10) {
+					}else if (detial.paymentName == '旺POS支付') {
 						obj.mcode = detial.payConfig.mcode; //旺POS门店编号
 						obj.appKey = detial.payConfig.appKey; //
 						obj.appSecret = detial.payConfig.appSecret; //
@@ -219,22 +220,28 @@ export default {
 		},
 		//初始化获取支付列表
 		async inte() {
-			this.payNameList = await http.getPaymentList({ data: {} });
+			let arr = await http.getPaymentList({ data: {} });
+			// arr.sort(this.paySort('sort'));
+			utils.sortByAll(arr,'sort');
+			this.payNameList = arr;
 		},
 		//修改微信、支付宝
 		async editPayConfig(item) {
 			await http.editPayConfig({ data: item });
-			this.payNameList = await http.getPaymentList({ data: {} });
+			this.inte();
+			// this.payNameList = await http.getPaymentList({ data: {} });
 		},
 		//添加支付方式
 		async addPayment(item) {
 			await http.addPayment({ data: item });
-			this.payNameList = await http.getPaymentList({ data: {} });
+			this.inte();
+			// this.payNameList = await http.getPaymentList({ data: {} });
 		},
 		//修改其它支付方式
 		async editPayment(item) {
 			await http.editPayment({ data: item });
-			this.payNameList = await http.getPaymentList({ data: {} });
+			this.inte();
+			// this.payNameList = await http.getPaymentList({ data: {} });
 		},
 		deletePayment(item,index){
 			this.$store.commit('setWin', {
@@ -261,11 +268,10 @@ export default {
 		},
 		//修改编辑支付方式
 		async modifyBtn(index, bill) {
-			this.index = index;
 			let data = {
 				paymentId: bill.trueId ? bill.trueId : bill.id
 			};
-			if (bill.paymentName == '中信银行' && bill.id == '6' && index == 5) {
+			if (bill.paymentName == '中信银行' && bill.id == '6') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (this.detial.payConfig) {
@@ -279,7 +285,7 @@ export default {
 					this.detial.payConfig.isIndependent = '';
 				}
 				this.types = 'zxBand';
-			} else if (bill.paymentName == '微信' && index == 2) {
+			} else if (bill.paymentName == '微信') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (
@@ -295,7 +301,7 @@ export default {
 					this.detial.payConfig.appid = ''; //微信的是appid,支付宝的为appId
 				}
 				this.types = 'wx';
-			} else if (bill.paymentName == '支付宝' && index == 3) {
+			} else if (bill.paymentName == '支付宝') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (
@@ -309,7 +315,7 @@ export default {
 					this.detial.payConfig.signType = 'RSA';
 				}
 				this.types = 'zfb';
-			} else if (bill.paymentName == '点佰趣' && index == 6) {
+			} else if (bill.paymentName == '点佰趣') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (
@@ -321,7 +327,7 @@ export default {
 					this.detial.payConfig.organizationNum = ''; //组织编号
 				}
 				this.types = 'dbq';
-			} else if (bill.paymentName == '网易严选支付' && index == 7) {
+			} else if (bill.paymentName == '网易严选支付') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (
@@ -334,7 +340,7 @@ export default {
 					this.detial.payConfig.key = ''; //
 				}
 				this.types = 'wyyx';
-			} else if (bill.paymentName == '农行支付' && index == 8) {
+			} else if (bill.paymentName == '农行支付') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (
@@ -350,7 +356,7 @@ export default {
 					this.detial.payConfig.md5Key = ''; 
 				}
 				this.types = 'nhzf';
-			} else if (bill.paymentName == '中信银行(上海)' &&index == 9) {
+			} else if (bill.paymentName == '中信银行(上海)') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (!this.detial.payConfig||this.detial.payConfig.length==0) {
@@ -365,7 +371,7 @@ export default {
 					}
 				}
 				this.types = 'SHzxBand';
-			} else if (bill.paymentName == '旺POS支付' && index == 10) {
+			} else if (bill.paymentName == '旺POS支付') {
 				//获取支付方式详情
 				this.detial = await http.getWeixinAlipay({ data: data });
 				if (
@@ -387,7 +393,7 @@ export default {
 			}
 			this.showWin = true;
 		},
-		//查看支付方式详情接口
+		//查看特殊支付方式详情接口
 		async getWeixinAlipay(bill) {
 			let data = {
 				paymentId: bill.id
@@ -416,7 +422,8 @@ export default {
 				});
 				return false;
 			}
-			this.payNameList = await http.getPaymentList({ data: {} });
+			this.inte();
+			// this.payNameList = await http.getPaymentList({ data: {} });
 		},
 		//开启、关闭支付方式
 		isOpenDetial: function(index, bill) {
@@ -432,9 +439,22 @@ export default {
 				}
 			});
 		},
+		paySort: function(key) {
+			return function(a, b) {
+				let value1 = parseInt(a[key]);
+				let value2 = parseInt(b[key]);
+				if (value1 > value2) {
+					return 1;
+				} else if (value1 < value2) {
+					return -1;
+				} else {
+					return 0;
+				}
+			};
+		},
 		//判断输入的数据是否符合规范
 		isOk: function(detial) {
-			if (detial.paymentName == '微信' && this.index == 2) {
+			if (detial.paymentName == '微信'&&detial.payConfig!='') {
 				// let appid = detial.payConfig.appid;
 				if (
 					!global.checkData(
@@ -506,7 +526,7 @@ export default {
 						return false;
 					}
 				}
-			} else if (detial.paymentName == '支付宝' && this.index == 3) {
+			} else if (detial.paymentName == '支付宝'&&detial.payConfig!='') {
 				// let alipayrsaPublicKey = detial.payConfig.alipayrsaPublicKey;
 				if (
 					!global.checkData(
@@ -531,7 +551,7 @@ export default {
 					)
 				)
 					return false;
-			} else if (detial.paymentName == '点佰趣' && this.index == 6) {
+			} else if (detial.paymentName == '点佰趣') {
 				// let businessNum = detial.payConfig.businessNum;
 				if (
 					!global.checkData(
@@ -540,7 +560,7 @@ export default {
 					)
 				)
 					return false;
-			} else if (detial.paymentName == '网易严选支付' && this.index == 7) {
+			} else if (detial.paymentName == '网易严选支付') {
 				// let businessNum = detial.payConfig.businessNum;
 				if (
 					!global.checkData(
@@ -551,18 +571,18 @@ export default {
 					return false;
 				if(!global.checkData({productId:'产品号不能为空'},detial.payConfig))return false;
 				if(!global.checkData({key:'产品密钥key不能为空'},detial.payConfig))return false;
-			} else if (detial.paymentName == '农行支付' && this.index == 8) {
+			} else if (detial.paymentName == '农行支付') {
 				if (!global.checkData({ mid: '商户号不能为空' },detial.payConfig))return false;
 				if(!global.checkData({tid:'终端号不能为空'},detial.payConfig))return false;
 				if(!global.checkData({instMid:'机构商户号不能为空'},detial.payConfig))return false;
 				if(!global.checkData({msgSrc:'消息来源不能为空'},detial.payConfig))return false;
 				if(!global.checkData({msgSrcId:'来源编号不能为空'},detial.payConfig))return false;
 				if(!global.checkData({md5Key:'MD5密钥不能为空'},detial.payConfig))return false;
-			}else if (detial.paymentName == '中信银行(上海)' && this.index == 9) {
+			}else if (detial.paymentName == '中信银行(上海)') {
 				if (!global.checkData({ mchId: '商户号不能为空' },detial.payConfig))return false;
 				if(!global.checkData({privateRsaKey:'客户私钥不能为空'},detial.payConfig))return false;
 				if(!global.checkData({publicRsaKey:'中信公钥不能为空'},detial.payConfig))return false;
-			}else if (detial.paymentName == '旺POS支付' && this.index == 10) {
+			}else if (detial.paymentName == '旺POS支付') {
 				if (!global.checkData({ mcode: '旺POS门店编号不能为空' },detial.payConfig))return false;
 				if(!global.checkData({appKey:'appKey不能为空'},detial.payConfig))return false;
 				if(!global.checkData({appSecret:'appSecret不能为空'},detial.payConfig))return false;
@@ -575,7 +595,7 @@ export default {
 				)
 					return false;
 				for (let i = 0; i < this.payNameList.length; i++) {
-					if (detial.paymentName == '中信银行' && this.index == 5) {
+					if (detial.paymentName == '中信银行') {
 						return true;
 					}
 				}
