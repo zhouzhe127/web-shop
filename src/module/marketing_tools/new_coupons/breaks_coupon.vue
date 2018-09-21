@@ -27,8 +27,8 @@
 				</div>
 			</div>
 			<div class="right">
-				<div class="fl">
-					<input class="inp" v-model="couponName" maxlength="20" placeholder="请输入优惠券名称" />
+				<div class="fl"> 
+                    <el-input  v-model="couponName" maxlength="20" placeholder="请输入优惠券名称"></el-input>
 				</div>
 			</div>
 			<!-- 适用门店 -->
@@ -40,12 +40,14 @@
 				</div>
 				<div class="right">
 					<div class="fl">
-						<div class="buttons" @click="openShopWin">
-							<img src="../../../res/images/add.png" /> 选择门店
-						</div>
-						<div class="associated">
-							共关联{{getArrLength('selectShops')}}家门店
-						</div>
+                        <el-row> 
+                            <el-button type="primary" @click="openShopWin" class="buttons">
+                                <img src="../../../res/images/add.png" /> 选择门店
+                            </el-button> 
+                            <div class="associated">
+                                共关联{{getArrLength('selectShops')}}家门店
+                            </div>
+                        </el-row>
 					</div>
 				</div>
 			</template>
@@ -458,12 +460,12 @@ export default {
 			if (couponDetail.sharingStatus == 0) {
 				this.isSharingId = 0;
 				this.isSharing = '不与其它优惠共享';
-			} else if (couponDetail.sharingStatus == 1) {
+			} else if (couponDetail.sharingStatus == 2) {
 				this.isSharingId = 1;
 				this.concessionSharingId = 0;
 				this.isSharing = '可与其他优惠共享';
 				this.concessionSharing = '不与会员卡优惠共用';
-			} else if (couponDetail.sharingStatus == 2) {
+			} else if (couponDetail.sharingStatus == 1) {
 				this.isSharingId = 1;
 				this.concessionSharingId = 1;
 				this.isSharing = '可与其他优惠共享';
@@ -774,9 +776,9 @@ export default {
 				if (this.isSharingId === 0) {
 					obj.sharingStatus = 0;
 				} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
-					obj.sharingStatus = 1;
-				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
 					obj.sharingStatus = 2;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
+					obj.sharingStatus = 1;
 				}
 
 				if (this.useThresholdId == 0) { //指定门槛金额
@@ -992,15 +994,7 @@ export default {
 	height: 40px;
 	padding: 0;
 	margin-left: 10px;
-}
-
-#breakCoupon .right .fl .inp {
-	border: 1px solid #999;
-	width: 250px;
-	height: 40px;
-	line-height: 40px;
-	padding-left: 10px;
-}
+} 
 
 #breakCoupon .left .text {
 	float: right;
@@ -1011,14 +1005,14 @@ export default {
 
 #breakCoupon .right .buttons {
 	padding: 0 10px 0 40px;
-	background-color: #28a8e0;
+	background-color:#E1BB4A;
 	height: 40px;
 	width: 120px;
 	cursor: pointer;
 	float: left;
 	color: #fff;
 	position: relative;
-	transition: background-color ease-in-out 0.2s;
+    display: inline-block;  
 }
 
 #breakCoupon .right .associated {
@@ -1026,10 +1020,11 @@ export default {
 	width: 600px;
 	text-align: left;
 	padding-left: 15px;
+    display: inline-block;
 }
 
 #breakCoupon .right .buttons:hover {
-	background-color: #2a80b9;
+	background-color:#E1BB4A;
 }
 
 #breakCoupon .right .buttons img {

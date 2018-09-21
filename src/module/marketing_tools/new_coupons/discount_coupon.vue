@@ -436,12 +436,12 @@ export default {
 			if (couponDetail.sharingStatus == 0) {
 				this.isSharingId = 0;
 				this.isSharing = '不与其它优惠共享';
-			} else if (couponDetail.sharingStatus == 1) {
+			} else if (couponDetail.sharingStatus == 2) {
 				this.isSharingId = 1;
 				this.concessionSharingId = 0;
 				this.isSharing = '可与其他优惠共享';
 				this.concessionSharing = '不与会员卡优惠共用';
-			} else if (couponDetail.sharingStatus == 2) {
+			} else if (couponDetail.sharingStatus == 1) {
 				this.isSharingId = 1;
 				this.concessionSharingId = 1;
 				this.isSharing = '可与其他优惠共享';
@@ -763,9 +763,9 @@ export default {
 				if (this.isSharingId === 0) {
 					obj.sharingStatus = 0;
 				} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
-					obj.sharingStatus = 1;
-				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
 					obj.sharingStatus = 2;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
+					obj.sharingStatus = 1;
 				}
 
 				if (this.useThresholdId == 0) { //指定门槛金额
