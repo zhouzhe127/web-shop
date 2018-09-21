@@ -472,6 +472,16 @@ export default {
 					msgContent: this.customActivity //自定义活动内容设置
 				};
 				arr.push(obj);
+				let objectType = '';
+				if(this.indexCustom == '1'){
+					objectType = 0;
+				}else if(this.indexCustom == '1'){
+					if(this.memberStatus){
+						objectType = 4;
+					}else{
+						objectType = 1;
+					}
+				}
 				await http.fissionActivity({
 					data: {
 						rule: JSON.stringify(arr),
@@ -479,8 +489,8 @@ export default {
 						mouldType: 0, //长期活动模板
 						name: this.customName, //活动名
 						explain: this.customExplain, //活动说明
-						//`objectType` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '活动对象。0：表示店内，1：表示会员 ，2表示全体会员 3.微分店，4.具体会员IDS',
-						objectType: this.memberStatus ? 4 : 1, //活动对象
+						//`objectType` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '活动对象。0：表示店内，1：具体会员IDS ，2表示全体会员 3.微分店，4.会员',
+						objectType: objectType, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
 						selectFans: Number(this.checkedFans), //粉丝的数量

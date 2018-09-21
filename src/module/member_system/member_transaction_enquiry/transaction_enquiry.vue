@@ -487,14 +487,14 @@ export default {
 		export () {
 			await http.exportCardConsumeList({
 				data: {
-					startTime: parseInt(this.startTime / 1000), //开始时间
-					endTime: parseInt(this.endTime / 1000), //结束时间
+					startTime: parseInt(this.valueTime[0] / 1000), //开始时间
+					endTime: parseInt(this.valueTime[1] / 1000), //结束时间
 					page: this.page, //请求的页数
 					num: this.num, //请求的数据的条数
 					fromId: this.storesId.join(','), //操作门店门牌号
 					belongToShop: this.belongsId.join(','), //卡属门店
 					memberCardId: 0, //实体卡关联id
-					consumeType: this.trantypeId.join(','), //交易类型
+					consumeType: this.trantypeId, //交易类型
 					export: 1
 				}
 			});
