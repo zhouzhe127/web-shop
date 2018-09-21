@@ -190,11 +190,10 @@ let config = [
 					return;
 				}
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					id:item.other.dispatchId,
-					intoId:item.other.dispatchInfoId,
-					logTab:2,
+					logTab:1,
 					logType:2,      
 				};
 				context.$router.push(obj);				
