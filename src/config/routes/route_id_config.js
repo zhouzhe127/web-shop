@@ -45,7 +45,8 @@ const goods_config = {
     "034": "goods_config/category_manager",
     "035": "goods_config/invcontrol",
     "036": "goods_config/more_menu",
-    "037": "goods_config/marker"
+    "037": "goods_config/marker",
+    "038": "goods_config/retail_good"
 };
 const outfood = {
     "041": "outfood/warrant",
