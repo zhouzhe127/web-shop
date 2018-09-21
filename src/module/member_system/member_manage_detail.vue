@@ -345,9 +345,9 @@ export default {
 				return operate + item.operatePoint;
 			} else {
 				if (item.type == '1' || item.type == '6') {
-					return operate + (Number(item.operateAmount) + Number(item.operateGiftAmount));
+					return operate + (parseInt(Number(item.operateAmount)*100) + parseInt(Number(item.operateGiftAmount)*100))/100;
 				} else if (item.type == '2') {
-					return operate + (Number(item.rechargeAmount) + Number(item.operateGiftAmount));
+					return operate + (parseInt(Number(item.rechargeAmount)*100) + parseInt(Number(item.operateGiftAmount)*100))/100;
 				} else {
 					if (this.bannerIndex == 2) {
 						return operate + (Number(item.operatePoint));

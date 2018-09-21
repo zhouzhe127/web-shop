@@ -289,30 +289,6 @@ export default {
 					break;
 			}
 		},
-		//选择下拉列表的某一项
-		costhighShow(index, type, e) {
-			switch (type) {
-				case 1:
-					e.stopPropagation();
-					console.log(this.belongsList);
-					this.belongshigh = this.belongsList[index].name; //点击卡类型对应的名字
-					this.belongsId = this.belongsList[index].id; //点击卡类型对应的id
-					this.belongsLimit = false;
-					break;
-				case 2:
-					e.stopPropagation();
-					this.storeshigh = this.storesList[index].name; //点击卡类型对应的名字
-					this.storesId = this.storesList[index].id; //点击卡类型对应的id
-					this.storesLimit = false;
-					break;
-				case 3:
-					e.stopPropagation();
-					this.trantypehigh = this.trantypeList[index].name; //点击卡类型对应的名字
-					this.trantypeId = this.trantypeList[index].id; //点击卡类型对应的id
-					this.trantypeLimit = false;
-					break;
-			}
-		},
 		//交易查询
 		checkForm: function() {
 			if (this.storesId.length == 0 && this.isBrand) {
@@ -363,7 +339,7 @@ export default {
 		},
 		//点击搜索（搜索图标和筛选）
 		screeningBtn: function() {
-			this.TotalPage = '';
+			this.TotalPage = 1;
 			this.page = 1;
 			this.getCardConsumeList(); //交易查询
 		},
@@ -515,7 +491,7 @@ export default {
 					endTime: parseInt(this.endTime / 1000), //结束时间
 					page: this.page, //请求的页数
 					num: this.num, //请求的数据的条数
-					fromId: this.storesId, //操作门店门牌号
+					fromId: this.storesId.join(','), //操作门店门牌号
 					belongToShop: this.belongsId.join(','), //卡属门店
 					memberCardId: 0, //实体卡关联id
 					consumeType: this.trantypeId.join(','), //交易类型
@@ -549,6 +525,7 @@ export default {
 			this.belongsId = id;
 		},
 		backstoresId: function(id) { //选择操作门店返回的
+			//console.log(id);
 			this.storesId = id;
 		},
 		selData: function(value) { //选择交易类型返回的

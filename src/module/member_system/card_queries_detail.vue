@@ -783,8 +783,10 @@ export default {
 			} else {
 				if (item.type == '1' || item.type == '6') {
 					return operate + (Number(item.operateAmount) + Number(item.operateGiftAmount));
-				} else {
-					return operate + (Number(item.operateAmount) + Number(item.operateGiftAmount));
+				} else if(item.type == '2') {
+					return operate + (parseInt(Number(item.operateGiftAmount)*100) + parseInt(Number(item.rechargeAmount)*100))/100;
+				}else{
+					return operate + (parseInt(Number(item.operateGiftAmount)*100) + parseInt(Number(item.operateGiftAmount)*100))/100;
 				}
 			}
 		},

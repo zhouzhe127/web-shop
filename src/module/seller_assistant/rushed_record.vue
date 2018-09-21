@@ -6,47 +6,47 @@
     *
 -->
 <template>
-	<div id="rushedRecord">
-		<div class="rushedstatus">
+	<div id='rushedRecord'>
+		<div class='rushedstatus'>
 			名称:{{goodsname}}
 		</div>
 		<!-- 下面的表格 -->
-		<div class="list">
-			<div class="list_title">
-				<div class="list_title_l fl">
+		<div class='list'>
+			<div class='list_title'>
+				<div class='list_title_l fl'>
 					<span>库存历史</span>
 					<span></span>
 					<span>共
-								<a href="javascript:;">{{allFormList.length}}</a>条记录</span>
+								<a href='javascript:;'>{{allFormList.length}}</a>条记录</span>
 				</div>
-				<div class="list_title_r fr">
+				<div class='list_title_r fr'>
 				</div>
 			</div>
-			<el-table :data="formList" border style="width: 1410px;margin-bottom: 20px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
-				<el-table-column fixed prop="shopId" label="店铺名称" width="310" align="center">
-					<template slot-scope="scope">
-						<span style="color: #27a8e0">{{getshopName(scope.row.shopId)}}</span>
+			<el-table :data='formList' border style='width: 1410px;margin-bottom: 20px;' :stripe='true' :header-cell-style='{'background-color':'#f5f7fa'}'>
+				<el-table-column fixed prop='shopId' label='店铺名称' width='310' align='center'>
+					<template slot-scope='scope'>
+						<span style='color: #27a8e0'>{{getshopName(scope.row.shopId)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="stock" label="原始库存" width="275" align="center">
+				<el-table-column prop='stock' label='原始库存' width='275' :render-header='renderHeader' show-overflow-tooltip align='center'>
 				</el-table-column>
-				<el-table-column prop="grabNum" label="抢购数量" width="275" align="center">
+				<el-table-column prop='grabNum' label='抢购数量' width='275' :render-header='renderHeader' show-overflow-tooltip align='center'>
 				</el-table-column>
-				<el-table-column prop="receiveNum" label="已领取数量" width="275" align="center">
+				<el-table-column prop='receiveNum' label='已领取数量' width='275' :render-header='renderHeader' show-overflow-tooltip align='center'>
 				</el-table-column>
-				<el-table-column label="操作" width="275" align="center">
-					<template slot-scope="scope">
-						<span style="color: #E1BB4A" @click="showDetail(scope.row)">详细记录</span>
+				<el-table-column label='操作' width='275' align='center'>
+					<template slot-scope='scope'>
+						<span style='color: #E1BB4A' @click='showDetail(scope.row)'>详细记录</span>
 					</template>
 				</el-table-column>
 			</el-table>
 		</div>
 		<!-- 翻页 -->
-		<!-- <section class="turn-page">
-			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+		<!-- <section class='turn-page'>
+			<pageElement @pageNum='pageChange' :page='Number(page)' :total='Number(pageNum)' :numArr='[10,20,30,40,50]' :isNoJump='true'></pageElement>
 		</section> -->
-		<div class="pageWrap">
-			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
+		<div class='pageWrap'>
+			<el-pagination background @size-change='handleSizeChange' @current-change='pageChange' :current-page='page' :page-size='num' layout='sizes, prev, pager, next' :page-count='endTotal' :page-sizes='[10, 20, 30]'></el-pagination>
 		</div>
 	</div>
 </template>
@@ -180,7 +180,42 @@ export default {
 		showDetail: function(item) { //查看详细记录
 			storage.session('recordStock', item);
 			this.$router.push('/admin/Assistanthistory/detail/record/recordDetail');
-		}
+		},
+		renderHeader(h, { column}) {
+			let titleName = '';
+			let label = column.label;
+			let property = column.property;
+			if (label == '原始库存' && property == 'stock') {
+				titleName = '该商品的总库存=初始库存+增加库存';
+			}
+			if (label == '抢购数量' && property == 'grabNum') {
+				titleName = '用户抢购商品时，选择该门店后支付成功的数量';
+			} else if (label == '已领取数量' && property == 'receiveNum') {
+				titleName = '在该门店已经领取的数量';
+			}
+			return h('div', [
+				h('span', {}, column.label),
+				h('el-popover', {
+					attrs: {
+						class: 'item',
+						effect: 'dark',
+						content: titleName,
+						placement: 'bottom',
+						width: '300',
+						// on:{
+						// 	click:this.abc(column)
+						// }
+					}
+				}, [
+					h('span', {
+						class: 'el-icon-question',
+						slot: 'reference',
+						style: 'font-size: 18px;margin-left:5px;',
+						// title:'标题',
+					})
+				])
+			]);
+		},
 	},
 	components: {
 		selectBtn: () =>
@@ -204,7 +239,7 @@ export default {
 	}
 };
 </script>
-<style type="text/css" scoped>
+<style type='text/css' scoped>
 #rushedRecord {
 	width: 1437px;
 	height: auto;
@@ -214,6 +249,7 @@ export default {
 	margin-bottom: 31px;
 	color: #1DA527;
 }
+
 
 
 
