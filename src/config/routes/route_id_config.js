@@ -139,7 +139,8 @@ const statistics = {
     "0922": "statistics/user_evaluation",
     "0923": "statistics/scancode_statistics",
     "0924": "statistics/reverse_statics",
-    "0925": "statistics/balance_record"
+    "0925": "statistics/balance_record",
+    "0926": "statistics/custom_package_statistics"
 };
 const cashier = {
     "101": "cashier/cashier_config",
@@ -183,7 +184,7 @@ const ticket_config = {
     "132": "ticket_config/sales_party"
 };
 let config = {
-    useId: [], //需要用到的路由id
+    useId: ['0926'], //需要用到的路由id
     configs: {} //需要插入的路由模块
 };
 Object.assign(config.configs, home_page, invoicing_system, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, statistics, cashier, member_system, seller_assistant, ticket_config);
