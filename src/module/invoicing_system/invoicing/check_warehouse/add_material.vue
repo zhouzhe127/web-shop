@@ -12,6 +12,16 @@
 				<input type="text" placeholder="请输入物料名" v-model="matName" />
 			</div>
 			<div class="inline-box">
+				<el-select v-model="matType" placeholder="请选择物料类型" @change="dropSelect" style="width:200px;">
+					<el-option
+						v-for="item in matTypeList"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+					</el-option>
+				</el-select>
+			</div>
+			<div class="inline-box">
 				<select-store @emit="selSortOne" :sorts="sortOne" :tipName="'请选择一级分类'" :isSingle="true"></select-store>
 			</div>
 			<div class="inline-box" @click="checkSelect('sortTwo','towSortDom')">
@@ -105,6 +115,13 @@
 					{titleName:'库存数量/重量'},
 					{titleName:'批次数量',dataName:'batch'},
 				],
+				matTypeList:[
+					{value:-1,label:'全部类型'},
+					{value:0,label:'成品'},
+					{value:1,label:'半成品'},
+					{value:2,label:'普通物料'},
+				],
+				matType:-1,
 				matTypeHash:{
 					0:'成品',
 					1:'半成品',
@@ -197,6 +214,9 @@
 					arr[0].style = 'background: #fe8d01;border: 1px solid #fe8d01;color: #fff;';
 				}
 				this.$store.commit('setPageTools', arr);
+			},
+			dropSelect(res){
+				this.matType = res;
 			},
 			confirmClick(){//确认选中
 				if(!this.selList.length && !this.storeAll){
@@ -503,7 +523,7 @@
 					cid: this.cid,
 					wid : this.wid,
 					areaId : this.areaId,
-					type: -1,
+					type: this.matType,
 				}});
 				this.searchObj = {
 					cid: this.cid,
