@@ -99,4 +99,8 @@ export default {
 		url: w + 'Activityconfig/setMiniProVerify',
 		method: 'get'
 	},
+	'clearWechatConfig': { //清除
+		url: w + 'Activityconfig/clearWechatConfig ',
+		method: 'get'
+	},
 };

@@ -22,6 +22,11 @@
 			<span></span>
 			<a href="javascript:void(0);" class="blue addnumber" @click="addWeChat">添加微信公众号</a>
 		</div>
+		<template v-if="appId != '' && appSecret != ''">
+		<div class="wx-showBox">
+			<span>提示</span>
+			<p>您可直接把公众号授权给闪店啦,无需再填写其他绑定内容.点击"添加微信公众号"进行授权后,可清除下侧AppId和AppSercet.</p>
+		</div>
 		<div class="wx-showBox">
 			<span class="required">AppId</span>
 			<input type="text" placeholder="请输入AppId" v-model="appIds" maxlength="32" />
@@ -30,7 +35,12 @@
 			<span class="required">AppSecret</span>
 			<input type="text" id="id" oncopy="return false;" oncut="return false;" placeholder="请输入AppSecret" v-model="appSecrets" maxlength="32" />
 		</div>
-		<a href="javascript:void(0)" class="yellow btn" @click="setConfig">保存</a>
+		<div class="wx-showBox">
+			<span></span>
+			<a v-if='isAuth' href="javascript:void(0)" class="blue btn" @click="clearConfig">清除</a>
+			<a href="javascript:void(0)" class="yellow btn" @click="setConfig">保存</a>
+		</div>
+		</template>
 	</div>
 </template>
 <script>
@@ -167,6 +177,24 @@ export default {
 				});
 				this.getConfig();
 			}
+		},
+		clearConfig: function() { //清除
+			this.clearWechatConfig();
+		},
+		async clearWechatConfig() {
+			let res = await http.clearWechatConfig({
+				data: {
+
+				}
+			});
+			if (res) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '清除成功',
+				});
+				this.getConfig();
+			}
 		}
 	},
 	computed: {
@@ -206,7 +234,7 @@ export default {
 			border-radius: 5px;
 			height: 45px;
 			line-height: 45px;
-			margin-right:10px;
+			margin-right: 10px;
 		}
 		span {
 			display: block;
@@ -235,7 +263,7 @@ export default {
 	}
 	.btn {
 		width: 200px;
-		margin-left: 195px;
+		margin-right: 10px;
 	}
 }
 </style>
