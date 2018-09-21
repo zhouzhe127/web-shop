@@ -20,7 +20,7 @@
             </div>
 
             <div class="in-block" >
-                <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" clearable>
+                <el-select v-model="condition.operationType" placeholder="操作类型" multiple collapse-tags>
                     <el-option
                     v-for="item in operationList"
                     :key="item.id"
@@ -51,7 +51,7 @@
                     >
                 </el-cascader>
 
-                <el-select v-model="condition.wid" :multiple="true" placeholder="仓库选择" clearable>
+                <el-select v-model="condition.wid" placeholder="仓库选择" multiple collapse-tags>
                     <el-option
                     v-for="item in warehouseList"
                     :key="item.id"
