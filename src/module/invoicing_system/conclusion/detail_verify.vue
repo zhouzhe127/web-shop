@@ -76,8 +76,9 @@
 				<span class="inGoods" @click="tooutshop(props.data.id)" v-if="props.data.dynamic==1"><i>|</i>确认出货</span>
 				<span class="inGoods" v-if="props.data && props.data.dynamic==2" @click="insertGoods(props.data.id)">
 					<i>|</i>入货</span>
-				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4" @click="delList(props.data.id)">
-					<i>|</i>删除</span>
+				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4&&props.data.dynamic!=4"
+				@click="delList(props.data.id)">
+					<i>|</i>取消</span>
 				
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
