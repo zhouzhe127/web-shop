@@ -90,7 +90,7 @@
 					</el-table-column>
 					<el-table-column prop="receiveNum" label="交易金额" width="100" align="center">
 						<template slot-scope="scope">
-							<span>{{(scope.row.type == '4' || scope.row.type == '9')?scope.row.operatePoint:scope.row.operateAmount}}</span>
+							<span>{{judgeTypes(scope.row)}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column prop="receiveNum" label="余额" width="100" align="center">
@@ -213,7 +213,7 @@ export default {
 			this.isBrand = true; //更改品牌店的状态
 		} else {
 			this.isBrand = false;
-			this.constructionshopId = this.userData.id; //单店的id
+			this.constructionshopId = this.userData.currentShop.id; //单店的id
 		}
 		let shopNumber = []; //门店编号
 		let shopName = []; //店铺名字
@@ -248,7 +248,9 @@ export default {
 		this.belongsList = shopNumber;
 		this.storesList = shopNumber;
 		this.shopList = shopList;
-		//this.getCardConsumeList();
+		if(!this.isBrand){
+			this.getCardConsumeList();
+		}
 		document.onclick = () => {
 			this.belongsLimit = false;
 			this.storesLimit = false;
@@ -550,6 +552,29 @@ export default {
 			this.page = p;
 			this.getCardConsumeList();
 		},
+		judgeTypes: function(item) {
+			// 判断操作类型 是否加还是减
+			// let operate;
+			// if (item.type == '1' || item.type == '3' || item.type == '6' || item.type == '9' || item.type == '11' || item.type ==
+			// 	'13') {
+			// 	operate = '-';
+			// } else {
+			// 	operate = '+';
+			// }
+
+			if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
+				'10' || item.type == '11') {
+				return item.operatePoint;
+			} else {
+				if (item.type == '1' || item.type == '6') {
+					return (Number(item.operateAmount) + Number(item.operateGiftAmount));
+				} else if(item.type == '2') {
+					return (parseInt(Number(item.operateGiftAmount)*100) + parseInt(Number(item.rechargeAmount)*100))/100;
+				}else{
+					return (parseInt(Number(item.operateGiftAmount)*100) + parseInt(Number(item.operateGiftAmount)*100))/100;
+				}
+			}
+		},		
 	},
 	components: {
 		orderDetail: () =>
