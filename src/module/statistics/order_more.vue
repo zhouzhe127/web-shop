@@ -17,16 +17,10 @@
 				<li v-if="!isBrand">
 					<!--日期选择和搜索框-->
 					<section class="statisticsList fl">
-						<el-date-picker
-							v-model="startTime"
-							type="datetime"
-							placeholder="选择日期">
+						<el-date-picker :clearable="false" v-model="startTime" type="datetime" placeholder="选择日期">
 						</el-date-picker>
 						<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
-						<el-date-picker
-							v-model="endTime"
-							type="datetime"
-							placeholder="选择日期">
+						<el-date-picker :clearable="false" v-model="endTime" type="datetime" placeholder="选择日期">
 						</el-date-picker>
 						<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 					</section>
@@ -37,7 +31,7 @@
 				</li>
 				<li>
 					<section class="oDe" style="width:250px;float:left;">
-						<el-input placeholder="请输入订单号" maxlength="18" v-model="orderNumber" clearable class="input-with-select" >
+						<el-input placeholder="请输入订单号" maxlength="18" v-model="orderNumber" clearable class="input-with-select">
 							<el-button slot="append" icon="el-icon-search" @click="getInfoByOrder"></el-button>
 						</el-input>
 					</section>
@@ -45,183 +39,175 @@
 			</ul>
 		</div>
 		<div>
-			<el-table
-				stripe :row-style ="{color:'#f8941f'}" :header-cell-style = "{'background-color':'#f5f7fa'}" @header-click ="headClick"
-				:data="newpayTotalNum"
-				border
-				style="width: 100%">
+			<el-table stripe :row-style="{color:'#f8941f'}" :header-cell-style="{'background-color':'#f5f7fa'}" @header-click="headClick" :data="newpayTotalNum" border style="width: 100%">
 				<el-table-column width="250" align="center" prop="totalDay" label="天数"></el-table-column>
-				<el-table-column min-width = "100" align="center" prop="orderNum" label="订单数"></el-table-column>
-				<el-table-column min-width = "80" align="center" prop="person" label="人数" ></el-table-column>
-				<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="goodsTotalNum" label="商品总数"></el-table-column>
-				<el-table-column min-width = "100" :render-header="renderHeader" show-overflow-tooltip align="center" prop="salesNum" label="销量" ></el-table-column>
-				<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="freeNum" label="赠品总数" ></el-table-column>
-					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="freePrice" label="赠品总额" >
-						<template slot-scope="scope">
-							<span>{{parseFloat(scope.row.freePrice).toFixed(2)}}</span>
-						</template>
-					</el-table-column>
-				<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="returnNum" label="退品总数" ></el-table-column>
-				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="returnPrice" label="退品总额" >
+				<el-table-column min-width="100" align="center" prop="orderNum" label="订单数"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="person" label="人数"></el-table-column>
+				<el-table-column min-width="120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="goodsTotalNum" label="商品总数"></el-table-column>
+				<el-table-column min-width="100" :render-header="renderHeader" show-overflow-tooltip align="center" prop="salesNum" label="销量"></el-table-column>
+				<el-table-column min-width="100" show-overflow-tooltip align="center" prop="freeNum" label="赠品总数"></el-table-column>
+				<el-table-column min-width="120" show-overflow-tooltip align="center" prop="freePrice" label="赠品总额">
+					<template slot-scope="scope">
+						<span>{{parseFloat(scope.row.freePrice).toFixed(2)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width="100" show-overflow-tooltip align="center" prop="returnNum" label="退品总数"></el-table-column>
+				<el-table-column min-width="120" show-overflow-tooltip align="center" prop="returnPrice" label="退品总额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.returnPrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" property="discount" label="优惠总额" >
+				<el-table-column min-width="120" :render-header="renderHeader" show-overflow-tooltip align="center" property="discount" label="优惠总额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.discount).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="orderNum" label="代金券" >
+				<el-table-column min-width="120" align="center" show-overflow-tooltip prop="orderNum" label="代金券">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.cashCoupon.price).toFixed(2) +'('+scope.row.cashCoupon.num+'张)'}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="profit" label="利润" >
+				<el-table-column min-width="120" align="center" show-overflow-tooltip prop="profit" label="利润">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.profit).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
 				<template v-for='(item,index) in paymentList'>
-					<el-table-column min-width = "120" show-overflow-tooltip :key="index" align="center" :label="item.paymentName" >
+					<el-table-column min-width="120" show-overflow-tooltip :key="index" align="center" :label="item.paymentName">
 						<template slot-scope="scope">
 							<span>{{parseFloat(paymentList[index].num).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
 				</template>
-				<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="chargePrice" label="服务费" >
+				<el-table-column min-width="100" align="center" show-overflow-tooltip prop="chargePrice" label="服务费">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.chargePrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="change" label="找零" >
+				<el-table-column min-width="100" align="center" show-overflow-tooltip prop="change" label="找零">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.change).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="bitPrice" label="系统取整" >
+				<el-table-column min-width="100" align="center" show-overflow-tooltip prop="bitPrice" label="系统取整">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.bitPrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" :render-header="renderHeader" align="center" show-overflow-tooltip prop="originalPrice" label="消费总额" >
+				<el-table-column min-width="120" :render-header="renderHeader" align="center" show-overflow-tooltip prop="originalPrice" label="消费总额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.originalPrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="waitPrice" label="实收总额" >
+				<el-table-column min-width="120" show-overflow-tooltip align="center" prop="waitPrice" label="实收总额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.waitPrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="paymentPrice" label="入账总额" >
+				<el-table-column min-width="120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="paymentPrice" label="入账总额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.paymentPrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" :render-header="renderHeader" align="center" prop="memberRecharge" label="会员充值" >
+				<el-table-column min-width="120" :render-header="renderHeader" align="center" prop="memberRecharge" label="会员充值">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.memberRecharge).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额" >
+				<el-table-column min-width="120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.settlePrice).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
 			</el-table>
 			<section style="margin-top:20px;">
-				<el-table
-					stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
-					:data="orderListInDays"
-					border
-					style="width: 100%">
+				<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="orderListInDays" border style="width: 100%">
 					<el-table-column fixed width="100" align="center" prop="shopName" label="操作">
 						<template slot-scope="scope">
 							<span style="color:#00AAE7;cursor: pointer;" @click="openDayDetial(scope.row.date)">查看详情</span>
 						</template>
 					</el-table-column>
 					<el-table-column fixed width="150" align="center" prop="date" label="日期"></el-table-column>
-					<el-table-column min-width = "100" align="center" prop="orderNum" label="订单数"></el-table-column>
-					<el-table-column min-width = "80" align="center" prop="person" label="人数" ></el-table-column>
-					<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="goodsTotalNum" label="商品数"></el-table-column>
-					<el-table-column min-width = "100" :render-header="renderHeader" show-overflow-tooltip align="center" prop="salesNum" label="销量" ></el-table-column>
-					<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="freeNum" label="赠品数" ></el-table-column>
-					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="freePrice" label="赠品金额" >
+					<el-table-column min-width="100" align="center" prop="orderNum" label="订单数"></el-table-column>
+					<el-table-column min-width="80" align="center" prop="person" label="人数"></el-table-column>
+					<el-table-column min-width="120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="goodsTotalNum" label="商品数"></el-table-column>
+					<el-table-column min-width="100" :render-header="renderHeader" show-overflow-tooltip align="center" prop="salesNum" label="销量"></el-table-column>
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="freeNum" label="赠品数"></el-table-column>
+					<el-table-column min-width="120" show-overflow-tooltip align="center" prop="freePrice" label="赠品金额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.freePrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="returnNum" label="退品数" ></el-table-column>
-					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="returnPrice" label="退品金额" >
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="returnNum" label="退品数"></el-table-column>
+					<el-table-column min-width="120" show-overflow-tooltip align="center" prop="returnPrice" label="退品金额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.returnPrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" property="discount" label="优惠金额" >
+					<el-table-column min-width="120" :render-header="renderHeader" show-overflow-tooltip align="center" property="discount" label="优惠金额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.discount).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="orderNum" label="代金券" >
+					<el-table-column min-width="120" align="center" show-overflow-tooltip prop="orderNum" label="代金券">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.cashCoupon.price).toFixed(2) +'('+scope.row.cashCoupon.num+'张)'}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" align="center" show-overflow-tooltip prop="profit" label="利润" >
+					<el-table-column min-width="120" align="center" show-overflow-tooltip prop="profit" label="利润">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.profit).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
 					<template v-for='(item,index) in paymentList'>
-						<el-table-column min-width = "120" show-overflow-tooltip :key="index" align="center" :label="item.paymentName" >
+						<el-table-column min-width="120" show-overflow-tooltip :key="index" align="center" :label="item.paymentName">
 							<template slot-scope="scope">
 								<span>{{parseFloat(scope.row.payLists[index].num).toFixed(2)}}</span>
 							</template>
 						</el-table-column>
 					</template>
-					<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="chargePrice" label="服务费" >
+					<el-table-column min-width="100" align="center" show-overflow-tooltip prop="chargePrice" label="服务费">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.chargePrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="change" label="找零" >
+					<el-table-column min-width="100" align="center" show-overflow-tooltip prop="change" label="找零">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.change).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "100" align="center" show-overflow-tooltip prop="bitPrice" label="系统取整" >
+					<el-table-column min-width="100" align="center" show-overflow-tooltip prop="bitPrice" label="系统取整">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.bitPrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" :render-header="renderHeader" align="center" show-overflow-tooltip prop="originalPrice" label="消费金额" >
+					<el-table-column min-width="120" :render-header="renderHeader" align="center" show-overflow-tooltip prop="originalPrice" label="消费金额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.originalPrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="waitPrice" label="实收总额" >
+					<el-table-column min-width="120" show-overflow-tooltip align="center" prop="waitPrice" label="实收总额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.waitPrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="paymentPrice" label="入账金额" >
+					<el-table-column min-width="120" :render-header="renderHeader" show-overflow-tooltip align="center" prop="paymentPrice" label="入账金额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.paymentPrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额" >
+					<el-table-column min-width="120" show-overflow-tooltip align="center" prop="settlePrice" label="挂账结清金额">
 						<template slot-scope="scope">
 							<span>{{parseFloat(scope.row.settlePrice).toFixed(2)}}</span>
 						</template>
 					</el-table-column>
 				</el-table>
 			</section>
-			
+
 		</div>
 		<!--分页-->
 		<div style="margin:20px 0;">
-			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="allDayPage.page" :page-count="allDayPage.pageNum" :page-size = "allDayPage.num" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="allDayPage.page" :page-count="allDayPage.pageNum" :page-size="allDayPage.num" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
 		<!-- <div style="float: left;margin-left: 30px;margin-top:20px;">
 			<pageElement @pageNum="getOrderListMonPage" :page="allDayPage.page+1" :total="allDayPage.pageNum" :num="allDayPage.num" :isNoJump='true'></pageElement>
@@ -261,7 +247,7 @@ export default {
 			isOpenTime: '', //是否按营业时间，默认 false 0 否
 			orderNumber: null, //订单号
 			payTotalNum: {}, //当天或者多天的数据总和
-			newpayTotalNum:[],//当天或者多天的数据总和
+			newpayTotalNum: [], //当天或者多天的数据总和
 			orderListInDays: [], //时间段内每天的订单列表
 			// showWidth: 2140, //长度
 
@@ -273,71 +259,79 @@ export default {
 			title: null, //优惠详情的弹框标题
 			// startObj: {},
 			// endObj: {},
-			paymentList: [{num:0,paymentName:''}],
+			paymentList: [{ num: 0, paymentName: '' }]
 		};
 	},
 	methods: {
-		renderHeader(h,{column,$index}){
-			let titleName = "";
+		renderHeader(h, { column}) {
+			let titleName = '';
 			let label = column.label;
 			let property = column.property;
-			if(label == "商品总数" && property == "goodsTotalNum"){
-				titleName = '该时间段的商品总数包含了订单中所有的商品数量（包括赠品和退品）';
-			}if(label=="商品数"&&property=="goodsTotalNum"){
-				titleName = '该日的商品数包含了订单中所有的商品数量（包括赠品和退品）';
-			}else if(label=="销量"&&property=="salesNum"){
-				titleName = '该时间段已销售的数量（不包含退品数）公式：商品总数-退品数=销量';
-			}else if(label=="优惠总额"&&property=="discount"){
-				return h("div", [
-					h("span",{},column.label),
+			if (label == '商品总数' && property == 'goodsTotalNum') {
+				titleName =
+					'该时间段的商品总数包含了订单中所有的商品数量（包括赠品和退品）';
+			}
+			if (label == '商品数' && property == 'goodsTotalNum') {
+				titleName =
+					'该日的商品数包含了订单中所有的商品数量（包括赠品和退品）';
+			} else if (label == '销量' && property == 'salesNum') {
+				titleName =
+					'该时间段已销售的数量（不包含退品数）公式：商品总数-退品数=销量';
+			} else if (label == '优惠总额' && property == 'discount') {
+				return h('div', [
+					h('span', {}, column.label),
 					// h("el-popover", {}, [
-						h("span", {
-							class: 'el-icon-document',
-							slot:"reference",
-							style: 'font-size: 18px;margin-left:5px;',
-						})
+					h('span', {
+						class: 'el-icon-document',
+						slot: 'reference',
+						style: 'font-size: 18px;margin-left:5px;'
+					})
 					// ])
 				]);
-			}else if(label=="优惠金额"&&property=="discount"){
+			} else if (label == '优惠金额' && property == 'discount') {
 				titleName = '该日所有的优惠金额总计';
-			}else if(label=="消费总额"&&property=="originalPrice"){
+			} else if (label == '消费总额' && property == 'originalPrice') {
 				titleName = '该时段内所有商品原价的金额总计（不计入退品金额）';
-			}else if(label=="消费金额"&&property=="originalPrice"){
+			} else if (label == '消费金额' && property == 'originalPrice') {
 				titleName = '该日内所有商品原价的金额总计（不计入退品金额）';
-			}else if(label=="入账总额"&&property=="paymentPrice"){
-				titleName = '该时间段中实际收入的金额（不计入未入实账的支付方式的金额）';
-			}else if(label=="入账金额"&&property=="paymentPrice"){
-				titleName = '该日中实际收入的金额（不计入未入实账的支付方式的金额）';
-			}else if(label=="会员充值"&&property=="memberRecharge"){
+			} else if (label == '入账总额' && property == 'paymentPrice') {
+				titleName =
+					'该时间段中实际收入的金额（不计入未入实账的支付方式的金额）';
+			} else if (label == '入账金额' && property == 'paymentPrice') {
+				titleName =
+					'该日中实际收入的金额（不计入未入实账的支付方式的金额）';
+			} else if (label == '会员充值' && property == 'memberRecharge') {
 				titleName = '该时段内会员充值总计(不计入消费总额及入账总额中)';
-			}else{
-
 			}
-			return h("div", [
-				h("span",{},column.label),
-				h("el-popover", {
-					attrs: {
-						class: "item",
-						effect: "dark",
-						content: titleName,
-						placement: "bottom",
-						width:'300',
-						// on:{
-						// 	click:this.abc(column)
-						// }
-					}
-				}, [
-					h("span", {
-						class: 'el-icon-question',
-						slot:"reference",
-						style: 'font-size: 18px;margin-left:5px;',
-						// title:"标题",
-					})
-				])
-			])
+			return h('div', [
+				h('span', {}, column.label),
+				h(
+					'el-popover',
+					{
+						attrs: {
+							class: 'item',
+							effect: 'dark',
+							content: titleName,
+							placement: 'bottom',
+							width: '300'
+							// on:{
+							// 	click:this.abc(column)
+							// }
+						}
+					},
+					[
+						h('span', {
+							class: 'el-icon-question',
+							slot: 'reference',
+							style: 'font-size: 18px;margin-left:5px;'
+							// title:"标题",
+						})
+					]
+				)
+			]);
 		},
-		headClick(column){
-			if(column.label=="优惠总额"&&column.property=="discount"){
+		headClick(column) {
+			if (column.label == '优惠总额' && column.property == 'discount') {
 				this.openDiscount(this.payTotalNum);
 			}
 		},
@@ -376,8 +370,8 @@ export default {
 					}
 				];
 			}
-			if (!this.isBrand) arr.splice(0, 1);//非品牌进入，去掉返回
-			if (this.isBrand) arr.splice(1, 1);//品牌进入，去掉打印
+			if (!this.isBrand) arr.splice(0, 1); //非品牌进入，去掉返回
+			if (this.isBrand) arr.splice(1, 1); //品牌进入，去掉打印
 			this.$store.commit('setPageTools', arr);
 		},
 		//到外卖界面
@@ -425,8 +419,8 @@ export default {
 		//选择时间查询订单
 		sreachOrderInDays: function() {
 			let timer = 3 * 30 * 24 * 60 * 60 * 1000;
-			this.startTime = new Date(this.startTime).getTime()
-			this.endTime = new Date(this.endTime).getTime()
+			this.startTime = new Date(this.startTime).getTime();
+			this.endTime = new Date(this.endTime).getTime();
 			if (this.endTime - this.startTime > timer) {
 				this.$store.commit('setWin', {
 					title: '操作提示',
@@ -500,8 +494,8 @@ export default {
 		},
 		//获取时间段内 订单列表
 		async getOrderListInDays() {
-			let startTime =new Date(this.startTime).getTime();
-			let endTime =new Date(this.endTime).getTime();
+			let startTime = new Date(this.startTime).getTime();
+			let endTime = new Date(this.endTime).getTime();
 			this.startH = utils.format(startTime, 'hh');
 			this.startM = utils.format(startTime, 'mm');
 			this.startS = utils.format(startTime, 'ss');
@@ -540,23 +534,25 @@ export default {
 				//对支付方式为0的进行操作
 				let arr = res.total.paymentList;
 				for (let i = 0; i < arr.length; i++) {
-					if (arr[i].num == 0) {
-
-					} else if(arr[i].paymentName =='该支付方式被删除'){
-						arr.splice(i,1);
+					if (arr[i].paymentName == '该支付方式被删除') {
+						arr.splice(i, 1);
 						i--;
-					}else if (arr[i].num > 0) {
+					} else if (arr[i].num > 0) {
 						ArrNoZero.push(arr[i]);
 					}
 				}
 				this.paymentList = ArrNoZero;
 				for (let i = 0; i < res.list.length; i++) {
-					this.$set(res.list[i],'payLists',[]);
+					this.$set(res.list[i], 'payLists', []);
 					let listItem = res.list[i];
-					for(let j=0;j<listItem.paymentList.length;j++){
+					for (let j = 0; j < listItem.paymentList.length; j++) {
 						let payitem = listItem.paymentList[j];
-						for(let m=0;m<ArrNoZero.length;m++){
-							if(payitem.paymentName == ArrNoZero[m].paymentName && payitem.id == ArrNoZero[m].id){
+						for (let m = 0; m < ArrNoZero.length; m++) {
+							if (
+								payitem.paymentName ==
+									ArrNoZero[m].paymentName &&
+								payitem.id == ArrNoZero[m].id
+							) {
 								res.list[i].payLists.push(payitem);
 							}
 						}
@@ -738,12 +734,12 @@ export default {
 				}
 			});
 		},
-		numChange(res){
+		numChange(res) {
 			this.allDayPage.num = res;
 			this.allDayPage.page = 1;
 			this.getOrderListInDays();
 		},
-		pageClick(res){
+		pageClick(res) {
 			this.allDayPage.page = res;
 			this.getOrderListInDays();
 		},
@@ -856,7 +852,7 @@ export default {
 		// calendar: () =>
 		// 	import(/*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
 		orderWin: () =>
-			import(/*webpackChunkName: "order_win"*/ 'src/module/statistics/order_win'),
+			import(/*webpackChunkName: "order_win"*/ 'src/module/statistics/order_win')
 		// detailsDes: () =>
 		// 	import(/*webpackChunkName: "details_des"*/ 'src/components/details_des'),
 		// pageElement: () =>
