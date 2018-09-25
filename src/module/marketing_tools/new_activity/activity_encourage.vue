@@ -43,7 +43,7 @@
 				<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
 				<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
 				<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
-				<el-tooltip class="item" effect="dark" content="Right Center 用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
+				<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
 					<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
 				</el-tooltip>
 				<div class="memberinner">

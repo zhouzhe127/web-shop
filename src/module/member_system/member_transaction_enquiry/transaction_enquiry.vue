@@ -534,6 +534,9 @@ export default {
 		selcardType(item) { //选择电子卡或者实体卡
 			this.page = 1;
 			this.cardTypeId = item.id;
+			this.count = 0;
+			this.TotalPage = 1;
+			this.consumeList = [];
 			this.getCardConsumeList();
 			//console.log(item.id)
 		},

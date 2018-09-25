@@ -22,7 +22,7 @@
 				<div class='list_title_r fr'>
 				</div>
 			</div>
-			<el-table :data='formList' border style='width: 1410px;margin-bottom: 20px;' :stripe='true' :header-cell-style='{'background-color':'#f5f7fa'}'>
+			<el-table :data='formList' border style='width: 1410px;margin-bottom: 20px;' :stripe='true' :header-cell-style="{'background-color':'#f5f7fa'}">
 				<el-table-column fixed prop='shopId' label='店铺名称' width='310' align='center'>
 					<template slot-scope='scope'>
 						<span style='color: #27a8e0'>{{getshopName(scope.row.shopId)}}</span>

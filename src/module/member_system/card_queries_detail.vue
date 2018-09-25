@@ -554,7 +554,8 @@ export default {
 					fromId: this.storesId, //操作门店门牌号
 					belongToShop: this.detaiList.shopId, //卡属门店
 					memberCardId: this.memberCardId, //关联卡的id
-					consumeType: this.trantypeId //交易类型
+					consumeType: this.trantypeId, //交易类型
+					memberType: 1
 				}
 			});
 			if (res) {

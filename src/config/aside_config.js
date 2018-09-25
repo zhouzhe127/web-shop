@@ -264,11 +264,11 @@ let need = {
 		memberStoredValueScheme: {
 			name: 'memberStoredValueScheme'
 		}, //"会员储值方案",
-		getCardList: {
-			name: 'getCardList'
+		entityCardQuery: {
+			name: 'entityCardQuery'
 		}, //"卡查询",
-		getCardConsumeList: {
-			name: 'getCardConsumeList'
+		CardConsume: {
+			name: 'CardConsume'
 		}, //"交易查询",
 		cardTypeList: {
 			name: 'cardTypeList'
