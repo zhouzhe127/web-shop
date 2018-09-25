@@ -55,6 +55,9 @@ import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import Timer from 'src/verdor/timer';
 import utils from 'src/verdor/utils';
+import warrantWin  from 'src/module/outfood/accredit/iframe_warrant';
+let getGoodslist = [];
+let getGoodspage = 1;
 export default {
 	data() {
 		return {
@@ -199,23 +202,38 @@ export default {
 				}
 			}
 		},
+		async getAllGoods(){
+			let data = await http.getAllGoods({
+				data:{
+					page: getGoodspage,
+					num: 1000,
+					shopIds: this.userData.currentShop.id
+				}
+			});
+			getGoodslist = [...getGoodslist,...data];
+			if(data.length>=1000){
+				getGoodspage++;
+				this.getAllGoods();
+			}
+			storage.session('goodList', data);
+		},
 		getGoods() {
 			// 请求商品列表
 			// let res = await http.All([{data: {page: 1,num: 9999,shopId:this.userData.currentShop.id},httpId :'getAllGoods',timeout: 20000},{data: {page: 1,num: 9999,shopId:this.userData.currentShop.id},httpId :'getAllPackage',timeout: 20000}])
 			// console.log(res)
-			http
-				.getAllGoods({
-					data: {
-						page: 1,
-						num: 9999,
-						shopIds: this.userData.currentShop.id
-					}
-				})
-				.then(data => {
-					console.log(data);
-					storage.session('goodList', data);
-				});
-
+			// http
+			// 	.getAllGoods({
+			// 		data: {
+			// 			page: 1,
+			// 			num: 9999,
+			// 			shopIds: this.userData.currentShop.id
+			// 		}
+			// 	})
+			// 	.then(data => {
+			// 		console.log(data);
+			// 		storage.session('goodList', data);
+			// 	});
+			this.getAllGoods();
 			http
 				.getAllPackage({
 					data: {
@@ -281,8 +299,7 @@ export default {
 		this.init();
 	},
 	components: {
-		meiTuanWarrant: () =>
-			import(/*webpackChunkName: "iframe_warrant"*/ 'src/module/outfood/accredit/iframe_warrant')
+		meiTuanWarrant: warrantWin
 	},
 	destroyed() {
 		Timer.clear(this.timer);
