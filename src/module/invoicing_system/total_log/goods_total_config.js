@@ -255,7 +255,7 @@ let config = [
 				let dispatchId = Number(item.other.dispatchId);
 				if(!dispatchId) return;
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					logTab:1,
 					logType:1,

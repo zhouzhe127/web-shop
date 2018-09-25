@@ -83,7 +83,7 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					logTab:1,
 					logType:2,
@@ -102,12 +102,12 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
-					id:893,
-					intoId:1,
+					id:item.other.dispatchId,					//调度单id
+					intoId:item.other.dispatchInfoId,			//入货单id
 					logTab:2,
-					logType:2,      
+					logType:2, 
 				};
 				context.$router.push(obj);
 				
@@ -190,11 +190,10 @@ let config = [
 					return;
 				}
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					id:item.other.dispatchId,
-					intoId:item.other.dispatchInfoId,
-					logTab:2,
+					logTab:1,
 					logType:2,      
 				};
 				context.$router.push(obj);				
