@@ -330,7 +330,7 @@ export default {
 			this.sendData({
 				urlType: 'deleteActivity',
 				data: {
-					aid: item.id,
+					activityId: item.id,
 				},
 				str: '确认要删除吗？'
 			});
@@ -379,7 +379,7 @@ export default {
 			this.sendData({
 				urlType: 'closeActivity',
 				data: {
-					aid: item.id,
+					activityId: item.id,
 					type: item.type,
 					mouldType: item.mouldType
 				},
