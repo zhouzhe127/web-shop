@@ -493,10 +493,11 @@ export default {
 					endTime: parseInt(this.valueTime[1] / 1000), //结束时间
 					page: this.page, //请求的页数
 					num: this.num, //请求的数据的条数
-					fromId: this.storesId.join(','), //操作门店门牌号
-					belongToShop: this.belongsId.join(','), //卡属门店
+					fromId: this.isBrand ? this.storesId.join(',') : this.constructionshopId, //操作门店门牌号
+					belongToShop: this.isBrand ? this.belongsId.join(',') : '', //卡属门店
 					memberCardId: 0, //实体卡关联id
 					consumeType: this.trantypeId, //交易类型
+					memberType: this.cardTypeId,
 					export: 1
 				}
 			});
