@@ -96,7 +96,7 @@
 				this.$emit('loseBack', false);
 			},
 			changeNum() {
-				if(Number(this.detail.type)==0){
+				if(Number(this.detail.type)==0&&this.loseNum){
 					this.loseNum = parseInt(this.loseNum);
 				}else{
 					if (this.loseNum.includes('.')) {
