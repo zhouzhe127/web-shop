@@ -473,9 +473,9 @@ export default {
 				};
 				arr.push(obj);
 				let objectType = '';
-				if(this.indexCustom == '1'){
+				if(this.indexCustom == 1){
 					objectType = 0;
-				}else if(this.indexCustom == '1'){
+				}else if(this.indexCustom == 2){
 					if(this.memberStatus){
 						objectType = 4;
 					}else{
