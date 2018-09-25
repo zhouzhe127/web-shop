@@ -32,7 +32,9 @@
 						</el-tooltip>
 					</div>
 					<div class="innermember">
-						<span>已关联会员:{{member}}人|已关联粉丝:{{fans}}人</span>
+						<span v-if="member > 0">已关联会员:{{member}}人</span>
+						<span v-if="member > 0 && fans > 0">|</span>
+						<span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>
 					</div>
 				</template>
 			</div>
@@ -824,10 +826,6 @@ export default {
 	height: 40px;
 	line-height: 40px;
 	font-size: 16px;
-}
-
-.custom .online-box .rightHalf .innermember span {
-	display: block;
 }
 
 .custom .online-box .rightHalf .returnInt {

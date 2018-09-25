@@ -47,7 +47,9 @@
 					<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
 				</el-tooltip>
 				<div class="memberinner">
-					(已关联会员{{member}}人,粉丝{{fans}}人)
+					<span v-if="member > 0">已关联会员:{{member}}人</span>
+					<span v-if="member > 0 && fans > 0">|</span>
+					<span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>					
 				</div>
 			</div>
 		</div>
