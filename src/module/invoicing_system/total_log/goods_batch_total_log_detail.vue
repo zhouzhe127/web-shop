@@ -40,10 +40,9 @@
             <div class="col">
                 <li>规格:{{materialInfo.specifications}}</li>
                 <li>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</li>
-                <li>耗损:{{materialInfo.lossNum}}</li>
+                <li>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</li>                
             </div>
             <div class="col">
-                <li>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</li>
                 <li>上架数量:{{materialInfo.shelveNum}}{{materialInfo.unit}}</li>
                 <li>总量:{{materialInfo.total}}{{materialInfo.unit}}</li>
             </div>
