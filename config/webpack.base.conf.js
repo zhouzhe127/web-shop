@@ -26,7 +26,7 @@ module.exports = {
         path: path.resolve(__dirname, "../",`${configs.dest}static`),
         publicPath,
 		chunkFilename: 'js/async/[name].js',
-		crossOriginLoading:configs.anomaly ? "crossOrigin" : ""  //是否启用 crossOrigin 加载script标签用于捕捉错误
+		// crossOriginLoading:configs.anomaly ? "crossOrigin" : ""  //是否启用 crossOrigin 加载script标签用于捕捉错误
     },
     resolve: {
         alias: {
