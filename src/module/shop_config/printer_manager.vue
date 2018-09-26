@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-20 18:31:03
+ * @Last Modified time: 2018-09-25 14:04:20
  * @Module:店铺配置——打印机管理
 **/
 <template>
@@ -209,7 +209,6 @@ export default {
 		},
 		//设置主终端
 		selectTerminal(){
-			console.log(this.terminalIn);
 			this.isOpenTerminal = true;
 		},
 		//打印机类型筛选
@@ -321,9 +320,10 @@ export default {
 		},
 		delPrin(item,ble){
 			let name = ble?item.name:item.printerName;
+			let conName =  '确定删除'+(ble?'终端 "':'打印机 "')+name+ '" '+'?';
 			this.$store.commit('setWin', {
 				winType: 'confirm',
-				content: '确定删除 "'+name+ '" 打印机'+ble?'终端':''+'?',
+				content: conName,
 				callback: delRes => {
 					if (delRes == 'ok') {
 						this.deletePrinter(item,ble);
