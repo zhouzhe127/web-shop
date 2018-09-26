@@ -76,8 +76,9 @@
 				<span class="inGoods" @click="tooutshop(props.data.id)" v-if="props.data.dynamic==1"><i>|</i>确认出货</span>
 				<span class="inGoods" v-if="props.data && props.data.dynamic==2" @click="insertGoods(props.data.id)">
 					<i>|</i>入货</span>
-				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4" @click="delList(props.data.id)">
-					<i>|</i>删除</span>
+				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4&&props.data.dynamic!=4"
+				@click="delList(props.data.id)">
+					<i>|</i>取消调度</span>
 				
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
@@ -265,7 +266,7 @@
 				this.listNum = this.introData.length;
 				this.pageTotal = goodsData.total;
 			},
-			// 总单接口
+			// 获取调度单列表
 			async searAll() {
 				if (this.tabactive == 1) {
 					let myData = await http.invoic_getApplyDispatchRecord({
@@ -333,16 +334,13 @@
 			},
 			// 删除操作
 			delList(id) {
-				this.$store.commit('setWin', {
-					winType: 'confirm',
-					title: '操作提示！',
-					content: '确认删除调度记录？',
-					callback: (res) => {
-						if (res == 'ok') {
-							this.deleteList(id);
-						}
-					}
-				});
+				this.$confirm('确认取消调度?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.deleteList(id);
+				}).catch(()=>{});
 			},
 			// 调用删除的接口
 			async deleteList(id) {
