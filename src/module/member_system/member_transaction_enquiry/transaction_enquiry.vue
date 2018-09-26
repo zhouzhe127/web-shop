@@ -465,6 +465,14 @@ export default {
 			if (oid == '' || oid == '0') {
 				return;
 			}
+			if(belongToShop == '' || belongToShop == 0){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '快捷支付暂无法查看订单详情'
+				});
+				return false;				
+			}
 			let res = await http.OrderstatisticsBillDelite({
 				data: {
 					shopId: this.isBrand == true ? fromId : belongToShop,
