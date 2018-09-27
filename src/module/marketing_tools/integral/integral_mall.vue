@@ -2,13 +2,12 @@
 <template>
 	<div class="mall-box" id="inte">
 		<div class="firstFun">
-			<div class="firstTitle fl" @click="openUse">
-				<span class="fl" :class="{on: isShop == 'shop'}">商品管理</span>
-				<span class="fl" :class="{on: isShop == 'exchange'}">兑换管理</span>
-			</div>
+			<el-radio-group v-model="commoditySlect">
+				<el-radio-button v-for="(item,index) in commodityList" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
+			</el-radio-group>
 		</div>
-		<div v-if="isShop == 'shop'" class="gooodsTable" style="margin-bottom: 20px;">
-			<com-table :listHeight='80' :listName="'商品列表'" :showTitle='2' :listWidth="1400" :introData="goodLists" :titleData="titleList" :allTotal="count">
+		<div v-if="commodityId == 0" class="gooodsTable" style="margin-bottom: 20px;">
+			<!-- <com-table :listHeight='80' :listName="'商品列表'" :showTitle='2' :listWidth="1400" :introData="goodLists" :titleData="titleList" :allTotal="count">
 				<div slot="con-1" slot-scope="props">
 					{{statusType[props.data.type]}}
 				</div>
@@ -27,9 +26,64 @@
 					</div>
 				</div>
 			</com-table>
-			<page v-if="total > 1 " @pageNum="pageChange" :page="pages" :total='total' :isNoJump='true' :isNoPaging='true' style="float: left;margin-bottom: 100px;"></page>
+			<page v-if="total > 1 " @pageNum="pageChange" :page="pages" :total='total' :isNoJump='true' :isNoPaging='true' style="float: left;margin-bottom: 100px;"></page> -->
+			<!-- 下面的表格 -->
+			<div class="list_box">
+				<div class="list_title">
+					<div class="list_title_l fl">
+						<span>商品列表</span>
+						<span></span>
+						<span>共
+								<a href="javascript:;">{{count}}</a>条记录</span>
+					</div>
+					<div class="list_title_r fr">
+					</div>
+				</div>
+				<el-table :data="goodLists" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+					<el-table-column fixed prop="id" label="序号" width="100" align="center">
+					</el-table-column>
+					<el-table-column label="商品类型" width="120" align="center">
+						<template slot-scope="scope">
+							<span>{{statusType[scope.row.type]}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="name" label="商品名称" width="200" align="center">
+					</el-table-column>
+					<el-table-column prop="imageName" label="展示图片" width="120" align="center">
+						<template slot-scope="scope">
+							<img :src=" imgHost + scope.row.imageName" style="width: 60px;height: 60px" />
+						</template>
+					</el-table-column>
+					<el-table-column prop="createTime" label="创建时间" width="140" align="center">
+					</el-table-column>
+					<el-table-column prop="price" label="兑换所需积分" width="140" align="center">
+					</el-table-column>
+					<el-table-column prop="cash" label="兑换所需现金" width="140" align="center">
+					</el-table-column>
+					<el-table-column prop="inventory" label="库存" width="100" align="center">
+					</el-table-column>
+					<el-table-column prop="exchangeNum" label="已兑换数量" width="140" align="center">
+					</el-table-column>
+					<el-table-column prop="sort" label="排序" width="100" align="center">
+					</el-table-column>
+					<el-table-column prop="showStatus" label="状态" width="100" align="center">
+					</el-table-column>
+					<el-table-column prop="receiveNum" label="操作" width="250" align="center">
+						<template slot-scope="scope">
+							<el-button size="mini" type="primary" @click="shelves(scope.$index,scope.row.id,scope.row.status)">{{scope.row.status =='0' ? '下架' : '上架'}}</el-button>
+							<!-- <el-button size="mini" type="primary" v-if="scope.row.status =='0'" @click="shelves(scope.$index,scope.row.id,scope.row.status)">下架</el-button> -->
+							<el-button size="mini" type="info" @click="edit(scope.$index, scope.row.id)">编辑</el-button>
+							<el-button size="mini" type="danger" @click="del(scope.$index, scope.row.id)">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<!-- 分页 -->
+			<div class="pageWrap">
+				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
+			</div>
 		</div>
-		<exchange v-if="isShop == 'exchange'" :shopId="shopId" :ischain="ischain" :imgHost="imgHost"></exchange>
+		<exchange v-if="commodityId == 1" :shopId="shopId" :ischain="ischain" :imgHost="imgHost"></exchange>
 		<temset v-if="isTemplate" @getTemplate="templateResult" :shopId="shopId"></temset>
 		<addwin v-if="isWin" @winEvent="getAdd" :editInfos="editInfos" :uid="uid" :imgHost="imgHost" :ischain='ischain'></addwin>
 	</div>
@@ -46,65 +100,14 @@ export default {
 			ischain: null,
 			goodLists: [],
 			len: null,
-			total: null,
-			pages: 1,
+			total: 1,
+			num:10,
 			index: null,
 			uid: null,
 			isTemplate: false, //模板设置弹窗
 			isShop: 'shop', //商品管理 兑换管理切换
 			isWin: false, //添加积分商品弹窗
 			editInfos: '', //保存编辑信息
-			titleList: [{
-				titleName: '序号',
-				titleStyle: {
-					width: '100px',
-					flex: 'none'
-				},
-				dataName: 'id'
-			},
-			{
-				titleName: '商品类型'
-			},
-			{
-				titleName: '商品名称',
-				dataName: 'name'
-			},
-			{
-				titleName: '展示图片',
-				dataName: 'imageName'
-			},
-			{
-				titleName: '创建时间',
-				dataName: 'createTime'
-			},
-			{
-				titleName: '兑换所需积分',
-				dataName: 'price'
-			},
-			{
-				titleName: '兑换所需现金',
-				dataName: 'cash'
-			},
-			{
-				titleName: '库存',
-				dataName: 'inventory'
-			},
-			{
-				titleName: '已兑换数量',
-				dataName: 'exchangeNum'
-			},
-			{
-				titleName: '排序',
-				dataName: 'sort'
-			},
-			{
-				titleName: '状态',
-				dataName: 'status'
-			},
-			{
-				titleName: '操作'
-			}
-			],
 			allTotal: 100,
 			page: 1,
 			pageTotal: 10,
@@ -114,7 +117,16 @@ export default {
 			statusType: {
 				0: '品牌商品',
 				1: '门店商品'
-			}
+			},
+			commoditySlect: '商品管理',
+			commodityList: [{
+				name: '商品管理',
+				id: 0
+			}, {
+				name: '兑换管理',
+				id: 1
+			}],
+			commodityId: 0 //选中的商品管理
 		};
 	},
 	mounted() {
@@ -126,7 +138,7 @@ export default {
 		this.getActivityGoodsList();
 		if (
 			(this.ischain == '0' || this.ischain == '3') &&
-			this.isShop == 'shop'
+			this.commodityId == 0
 		) {
 			this.initBtn();
 		}
@@ -152,8 +164,8 @@ export default {
 		async getActivityGoodsList() {
 			let res = await http.getActivityGoodsList({
 				data: {
-					page: this.pages,
-					num: 10
+					page: this.page,
+					num: this.num
 				}
 			});
 
@@ -169,7 +181,7 @@ export default {
 					type: true,
 					format: 'yyyy.MM.dd'
 				}).format;
-				good[i].status = good[i].status == 0 ? '已上架' : '已下架';
+				good[i].showStatus = good[i].status == 0 ? '已上架' : '已下架';
 			}
 		},
 		//上下架
@@ -213,23 +225,23 @@ export default {
 			});
 		},
 		//翻页
-		pageChange(page) {
-			this.pages = page.page;
-			this.getActivityGoodsList();
-		},
-		openUse() {
-			this.isShop == 'shop' ?
-				(this.isShop = 'exchange') :
-				(this.isShop = 'shop');
-			if (
-				(this.ischain == '0' || this.ischain == '3') &&
-				this.isShop == 'shop'
-			) {
-				setTimeout(() => {
-					this.initBtn();
-				});
-			}
-		},
+		// pageChange(page) {
+		// 	this.page = page.page;
+		// 	this.getActivityGoodsList();
+		// },
+		// openUse() {
+		// 	this.isShop == 'shop' ?
+		// 		(this.isShop = 'exchange') :
+		// 		(this.isShop = 'shop');
+		// 	if (
+		// 		(this.ischain == '0' || this.ischain == '3') &&
+		// 		this.isShop == 'shop'
+		// 	) {
+		// 		setTimeout(() => {
+		// 			this.initBtn();
+		// 		});
+		// 	}
+		// },
 		//模板选择
 		setTemplateType() {
 			this.isTemplate = true;
@@ -272,7 +284,28 @@ export default {
 			// 		this.ActivityGoodsadd(data);
 			// 	}
 			// }
-		}
+		},
+		selType(item) { //选择电子卡或者实体卡
+			this.commodityId = item.id;
+			if (
+				(this.ischain == '0' || this.ischain == '3') &&
+				this.commodityId == 0
+			) {
+				setTimeout(() => {
+					this.initBtn();
+				});
+			}
+		},
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.num = p;
+			this.getActivityGoodsList();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.getActivityGoodsList();
+		},
 	},
 	components: {
 		page: () =>
@@ -295,6 +328,17 @@ export default {
 .operate {
 	padding: 0;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* @import url("./warecom"); */

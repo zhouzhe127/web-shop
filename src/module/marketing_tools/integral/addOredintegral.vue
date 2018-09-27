@@ -3,20 +3,28 @@
 	<div id="user">
 		<!-- 品牌单店 -->
 		<div class="comList clearfix">
-			<span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span>
+			<!-- <span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span> -->
+			<el-radio-group v-model="commoditySlect">
+				<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="isFlag && selType(item)"></el-radio-button>
+			</el-radio-group>
 		</div>
 		<!-- 商品类型 -->
 		<div class="online-box clearfix" v-if='indexOn == 0'>
 			<span class="online-sub fl required">商品类型</span>
 			<div class="rightHalf">
-				<select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn>
+				<!-- <select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn> -->
+				<el-select v-model="durationName" placeholder="请选择" @change="selData" style="color:#c0c4cc;width: 179px;">
+					<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>
 			</div>
 		</div>
 		<!-- 关联优惠券 -->
 		<div class="online-box clearfix" v-if="durationId == 1 && indexOn == 0">
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount">选择关联优惠券</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount">选择关联优惠券</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="addCount" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -24,35 +32,40 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入积分商品名称" v-model='name' maxlength="10" />
+				<!-- <input type="text" class="name" placeholder="请输入积分商品名称" v-model='name' maxlength="10" /> -->
+				<el-input class="fl" v-model="name" placeholder="请输入积分商品名称" maxlength="10"></el-input>
 			</div>
 		</div>
 		<!-- 兑换所需积分 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">兑换所需积分</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入兑换所需积分" v-model='price' maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+				<!-- <input type="text" class="name" placeholder="请输入兑换所需积分" v-model='price' maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
+				<el-input class="fl" v-model="price" placeholder="请输入兑换所需积分" maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
 		<!-- 兑换所需现金 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">兑换所需现金</span>
 			<div class="rightHalf">
-				<input type="text" class="name" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue" placeholder="请输入兑换现金" v-model='cash' />
+				<!-- <input type="text" class="name" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue" placeholder="请输入兑换现金" v-model='cash' /> -->
+				<el-input class="fl" v-model="cash" placeholder="请输入兑换现金" maxlength="8" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue"></el-input>
 			</div>
 		</div>
 		<!-- 填写库存 -->
 		<div class="online-box clearfix" v-if='indexOn == 0'>
 			<span class="online-sub fl required">填写库存</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请填写库存" v-model='inventory' maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+				<!-- <input type="text" class="name" placeholder="请填写库存" v-model='inventory' maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
+				<el-input class="fl" v-model="inventory" placeholder="请填写库存" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
 		<!-- 商品库存 -->
 		<div class="online-box clearfix" v-if='indexOn == 1'>
 			<span class="online-sub fl required">商品库存</span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="addclassify" @click="choiceShop()" style="width:200px;">增加门店库存</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" @click="choiceShop()" style="width:200px;">增加门店库存</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="choiceShop()" style="width:179px;">增加门店库存</el-button>
 			</div>
 		</div>
 		<div class="online-box clearfix" v-show="indexOn== 1 && shopstock.length > 0">
@@ -78,7 +91,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品排序</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入商品排序(1-255)" v-model='sort' maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" />
+				<!-- <input type="text" class="name" placeholder="请输入商品排序(1-255)" v-model='sort' maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
+				<el-input class="fl" v-model="sort" placeholder="请输入商品排序(1-255)" maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
 		<!-- 是否上架： -->
@@ -92,21 +106,25 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">购买次数</span>
 			<div class="rightHalf">
-				<input type="text" class="name" v-model='limit' onkeyup="this.value=this.value.replace(/[^\d]/g,'')" maxlength="3" placeholder="请输入购买次数" />
+				<!-- <input type="text" class="name" v-model='limit' onkeyup="this.value=this.value.replace(/[^\d]/g,'')" maxlength="3" placeholder="请输入购买次数" /> -->
+				<el-input class="fl" v-model="limit" placeholder="请输入购买次数" maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
 		<!-- 过期时间 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">过期时间</span>
 			<div class="rightHalf">
-				<input type="text" class="name" v-model="expire" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" maxlength="3" placeholder="请输入过期时间" />
+				<!-- <input type="text" class="name" v-model="expire" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" maxlength="3" placeholder="请输入过期时间" /> -->
+				<el-input class="fl" v-model="expire" placeholder="请输入过期时间" maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
 		<!-- 过期时间 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">商品描述</span>
 			<div class="rightHalf">
-				<textarea class="tarea" placeholder="请输入商品描述" v-model="description"></textarea>
+				<!-- <textarea class="tarea" placeholder="请输入商品描述" v-model="description"></textarea> -->
+				<el-input type="textarea" :autosize="{ minRows: 6, maxRows: 6}" placeholder="请输入商品描述" v-model="description">
+				</el-input>
 			</div>
 		</div>
 		<!-- 添加详情图片 -->
@@ -143,8 +161,10 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="gray fl" style="margin-right: 15px;width:190px;" @click="cancelFun">取消</a>
-				<a href="javascript:void(0);" class="yellow fl" @click="okFun" style="width:190px;">保存</a>
+				<!-- <a href="javascript:void(0);" class="gray fl" style="margin-right: 15px;width:190px;" @click="cancelFun">取消</a> -->
+				<el-button type="info" style="margin-right: 15px;width:190px;" @click="cancelFun">取消</el-button>
+				<!-- <a href="javascript:void(0);" class="yellow fl" @click="okFun" style="width:190px;">保存</a> -->
+				<el-button type="primary" style="margin-right: 15px;width:190px;" @click="okFun">保存</el-button>
 			</div>
 		</div>
 		<!-- 优惠券的弹窗 -->
@@ -163,22 +183,25 @@ export default {
 	data() {
 		return {
 			bannerList: [{
-				name: '品牌商品'
-			},
-			{
-				name: '门店商品'
-			}
+					name: '品牌商品',
+					id: 0
+				},
+				{
+					name: '门店商品',
+					id: 1
+				}
 			], //固定还是自定义方案，数组
 			isFlag: true,
 			indexOn: 0, //默认固定
+			commoditySlect: '品牌商品',
 			durationList: [{ //活动期限
-				name: '积分商品',
-				id: 0
-			},
-			{
-				name: '优惠券',
-				id: 1
-			},
+					name: '积分商品',
+					id: 0
+				},
+				{
+					name: '优惠券',
+					id: 1
+				},
 			],
 			durationId: 0,
 			durationName: '积分商品', //状态
@@ -244,13 +267,13 @@ export default {
 				if (key == 'bigImage')
 					this.bigName =
 					this.editInfos.bigImage == '' ?
-						null :
-						this.editInfos.bigImage;
+					null :
+					this.editInfos.bigImage;
 				if (key == 'imageName')
 					this.fileName =
 					this.editInfos.imageName == '' ?
-						null :
-						this.editInfos.imageName;
+					null :
+					this.editInfos.imageName;
 				if (key == 'goodsType')
 					this.durationId = this.editInfos.goodsType;
 				this.durationName = this.durationList[this.durationId].name;
@@ -535,6 +558,12 @@ export default {
 				this.$router.push('/admin/integralMall');
 			}
 			//this.getActivityGoodsList();
+		},
+		selType(item) { //选择品牌商品或门店商品
+			this.indexOn = item.id;
+		},
+		selData: function(value) { //选择商品类型返回的
+			this.durationId = value;
 		},
 	},
 	components: {

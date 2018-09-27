@@ -39,7 +39,6 @@
 					<div class="operateStore_l">
 						充值来源
 					</div>
-					<!-- <selStore :shopIds="'10062'"></selStore> -->
 					<div class="operateStore_r fl detLi" @click.stop.prevent="openShop($event)">
 						<selectStore v-if="isBrand" @emit="clickShopList" :sorts="shopsList" :tipName="selectName"></selectStore>
 						<template v-else>
@@ -1063,7 +1062,7 @@ export default {
 		}
 	}
 	.box {
-		width: 1500px;
+		max-width: 1500px;
 	}
 	.pages {
 		padding-top: 20px;

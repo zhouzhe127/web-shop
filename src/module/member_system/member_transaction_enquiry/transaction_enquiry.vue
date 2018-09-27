@@ -616,11 +616,11 @@ export default {
 }
 
 #transaction-enquiry .list {
-	width: 1400px;
+	max-width: 1400px;
 }
 
 #transaction-enquiry .list .list_title {
-	width: 1400px;
+	max-width: 1400px;
 	height: 45px;
 	border: 1px solid #EAEEF5;
 	line-height: 45px;
