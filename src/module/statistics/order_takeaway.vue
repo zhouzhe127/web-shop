@@ -89,11 +89,11 @@
 						<span>{{parseFloat(scope.row.partRefund).toFixed(2)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column v-if="status =='3'" min-width="100" show-overflow-tooltip align="center" prop="goodsTotalPrice" label="退款总额">
-					<template slot-scope="scope">
-						<span>{{parseFloat(scope.row.goodsTotalPrice).toFixed(2)}}</span>
-					</template>
-				</el-table-column>
+				<!--<el-table-column v-if="status =='3'" min-width="100" show-overflow-tooltip align="center" prop="goodsTotalPrice" label="退款总额">-->
+				<!--<template slot-scope="scope">-->
+				<!--<span>{{parseFloat(scope.row.goodsTotalPrice).toFixed(2)}}</span>-->
+				<!--</template>-->
+				<!--</el-table-column>-->
 				<el-table-column v-if="status !='2'" min-width="100" show-overflow-tooltip align="center" prop="deliverFee" label="配送总额">
 					<template slot-scope="scope">
 						<span>{{parseFloat(scope.row.deliverFee).toFixed(2)}}</span>
@@ -133,11 +133,11 @@
 								<span>{{parseFloat(scope.row.partRefund).toFixed(2)}}</span>
 							</template>
 						</el-table-column>
-						<el-table-column min-width="100" show-overflow-tooltip align="center" prop="goodsTotalPrice" label="退款总额">
-							<template slot-scope="scope">
-								<span>{{parseFloat(scope.row.goodsTotalPrice).toFixed(2)}}</span>
-							</template>
-						</el-table-column>
+						<!--<el-table-column min-width="100" show-overflow-tooltip align="center" prop="goodsTotalPrice" label="退款总额">-->
+						<!--<template slot-scope="scope">-->
+						<!--<span>{{parseFloat(scope.row.goodsTotalPrice).toFixed(2)}}</span>-->
+						<!--</template>-->
+						<!--</el-table-column>-->
 						<el-table-column min-width="100" show-overflow-tooltip align="center" prop="deliverFee" label="配送金额">
 							<template slot-scope="scope">
 								<span>{{parseFloat(scope.row.deliverFee).toFixed(2)}}</span>
@@ -302,7 +302,7 @@ export default {
 		};
 	},
 	methods: {
-		renderHeader(h, { column}) {
+		renderHeader(h, { column }) {
 			let titleName = '';
 			let label = column.label;
 			let property = column.property;
