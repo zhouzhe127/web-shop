@@ -9,7 +9,7 @@
 	<div id="joblist">
 		<section class="top" >
 			<section class="top_input">
-				<el-select v-model="selectedType" placeholder="选择结算方式">
+				<el-select v-model="selectedType" placeholder="选择职位类型">
 					<el-option
 						v-for="(item,i) in options" 
 						:key="i"
