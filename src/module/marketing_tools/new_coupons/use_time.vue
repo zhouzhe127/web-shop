@@ -9,7 +9,7 @@
 	<div id="useTime">
 		<div class="right clearfix">
 			<section class="clearfix" style="margin-bottom:10px;">
-				<div class="fl" style="width: 250px;height: 40px;padding: 0;position: relative;cursor: pointer;text-align:center;" @click="selectItemShow('useDate')">
+				<!-- <div class="fl" style="width: 250px;height: 40px;padding: 0;position: relative;cursor: pointer;text-align:center;" @click="selectItemShow('useDate')">
 					<div class="fl" style="border: 1px solid #999;width: 200px;height: 40px;padding: 0;line-height:40px;">
 						{{useDate.list[useDate.index]}}
 					</div>
@@ -23,7 +23,11 @@
 							</template>
 						</ul>
 					</div>
-				</div>
+				</div> -->
+				<el-select class="fl" v-model="validTime" @change="selData" style="color:#c0c4cc">
+					<el-option v-for="(item,index) in useDate.list" :key="index" :label="item" :value="index">
+					</el-option>
+				</el-select>
 				<div class="fl" style="width: 100px;height: 40px;text-align: center;line-height: 40px;padding: 0;cursor: pointer;">
 					<div class="fl" style="width: 50%;color: #F1801A;" @click="cleanUseDate" v-if="useDate.index != 0 && (useDate.week.length > 0 || useDate.month.length > 0)">
 						清空
@@ -170,7 +174,8 @@ export default {
 	data() {
 		return {
 			week: ['日', '一', '二', '三', '四', '五', '六'],
-			openMonthIndex: -1, //打开日期选择的下标         
+			openMonthIndex: -1, //打开日期选择的下标  
+			validTime: '不设限制'
 		};
 	},
 	components: {
@@ -383,6 +388,11 @@ export default {
 		},
 		emitMethod() { //派发事件
 			this.$emit('getTime', this.useDate);
+		},
+		selData: function(value) { //领取后生效
+			// console.log(value)
+			// this.validTimeId = value;
+			this.useDate.index = value;
 		},
 	},
 	computed: {
