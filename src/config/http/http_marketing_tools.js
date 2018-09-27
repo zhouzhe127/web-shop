@@ -159,8 +159,8 @@ export default {
     "releaseActivity": {
         url: s + 'activity/releaseActivity' //发布活动
     },
-    "closeActivity": {
-        url: s + 'activity/closeActivity' //关闭活动
+    'closeActivity': {
+        url: w + 'activityconfig/closeActivity' //关闭活动
     },
     "upActivity": {
         url: s + 'activity/upActivity' //上架活动
@@ -168,8 +168,8 @@ export default {
     "downActivity": {
         url: s + 'activity/downActivity' //下架活动
     },
-    "deleteActivity": {
-        url: s + 'activity/deleteActivity' //删除活动
+    'deleteActivity': {
+        url: w + 'Activityconfig/deleteActivity' //删除活动
     },
     'addActivity': {
         url: s + 'Activity/addActivity', //保存发布活动
