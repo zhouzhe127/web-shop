@@ -427,7 +427,7 @@ export default {
 				data: {
 					activityId: item.id,
 					type: item.type,
-					mouldType: item.mouldType					
+					mouldType: item.mouldType
 				}
 			});
 			if (data) {
@@ -435,27 +435,28 @@ export default {
 				this.startObj.time = data.startTime * 1000; //开始时间
 				this.endObj.time = data.endTime * 1000; //结束时间
 				this.ruleId = data.rule[0].id; //规则id
-				if (utils.isEmptyObject(data.rule[0].couponIds.useTimeRule)) {
+				let couponIds = JSON.parse(data.rule[0].couponIds); //解析couponIds
+				if (utils.isEmptyObject(couponIds.useTimeRule)) {
 					this.useDate.index = 0;
 				}
-				if (!utils.isEmptyObject(data.rule[0].couponIds.useTimeRule) && data.rule[0].couponIds.useTimeRule.type == 'week') {
+				if (!utils.isEmptyObject(couponIds.useTimeRule) && couponIds.useTimeRule.type == 'week') {
 					this.useDate.index = 0;
 				}
-				if (!utils.isEmptyObject(data.rule[0].couponIds.useTimeRule) && data.rule[0].couponIds.useTimeRule.type == 'month') {
+				if (!utils.isEmptyObject(couponIds.useTimeRule) && couponIds.useTimeRule.type == 'month') {
 					this.useDate.index = 1;
 				}
 				if (this.useDate.index == 0) {
-					if (data.rule[0].couponIds.useTimeRule && data.rule[0].couponIds.useTimeRule.list) {
-						this.useDate.week = this.changeArrToNeed(data.rule[0].couponIds.useTimeRule.list, 'w');
+					if (couponIds.useTimeRule && couponIds.useTimeRule.list) {
+						this.useDate.week = this.changeArrToNeed(couponIds.useTimeRule.list, 'w');
 					}
 				}
 				if (this.useDate.index == 1) {
-					if (data.rule[0].couponIds.useTimeRule && data.rule[0].couponIds.useTimeRule.list) {
-						this.useDate.month = this.changeArrToNeed(data.rule[0].couponIds.useTimeRule.list, 'm');
+					if (couponIds.useTimeRule && couponIds.useTimeRule.list) {
+						this.useDate.month = this.changeArrToNeed(couponIds.useTimeRule.list, 'm');
 					}
 				}
 				//规则细分
-				let levelRule = data.rule[0].couponIds.levelRule;
+				let levelRule = couponIds.levelRule;
 				for (let item of this.ruleObj) {
 					for (let key in levelRule) {
 						if (item.levelId == key) {
@@ -530,7 +531,7 @@ export default {
 		let activityDetail = storage.session('activityDetail');
 		if (activityDetail) {
 			this.isactivityDetail = false;
-		}		
+		}
 		if (activityInfo) {
 			this.editId = activityInfo.id;
 			this.getActivityDetail(activityInfo);
