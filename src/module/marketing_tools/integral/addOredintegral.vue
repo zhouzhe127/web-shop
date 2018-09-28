@@ -5,7 +5,7 @@
 		<div class="comList clearfix">
 			<!-- <span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span> -->
 			<el-radio-group v-model="commoditySlect">
-				<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="isFlag && selType(item)"></el-radio-button>
+				<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
 			</el-radio-group>
 		</div>
 		<!-- 商品类型 -->
@@ -183,25 +183,25 @@ export default {
 	data() {
 		return {
 			bannerList: [{
-					name: '品牌商品',
-					id: 0
-				},
-				{
-					name: '门店商品',
-					id: 1
-				}
+				name: '品牌商品',
+				id: 0
+			},
+			{
+				name: '门店商品',
+				id: 1
+			}
 			], //固定还是自定义方案，数组
 			isFlag: true,
 			indexOn: 0, //默认固定
 			commoditySlect: '品牌商品',
 			durationList: [{ //活动期限
-					name: '积分商品',
-					id: 0
-				},
-				{
-					name: '优惠券',
-					id: 1
-				},
+				name: '积分商品',
+				id: 0
+			},
+			{
+				name: '优惠券',
+				id: 1
+			},
 			],
 			durationId: 0,
 			durationName: '积分商品', //状态
@@ -263,17 +263,18 @@ export default {
 					this.status = Boolean(this.editInfos.status == '已上架');
 				if (key == 'type')
 					this.indexOn = this.editInfos.type;
+				this.commoditySlect = this.bannerList[this.indexOn].name;
 				if (key == 'id') this.gid = this.editInfos.id;
 				if (key == 'bigImage')
 					this.bigName =
 					this.editInfos.bigImage == '' ?
-					null :
-					this.editInfos.bigImage;
+						null :
+						this.editInfos.bigImage;
 				if (key == 'imageName')
 					this.fileName =
 					this.editInfos.imageName == '' ?
-					null :
-					this.editInfos.imageName;
+						null :
+						this.editInfos.imageName;
 				if (key == 'goodsType')
 					this.durationId = this.editInfos.goodsType;
 				this.durationName = this.durationList[this.durationId].name;

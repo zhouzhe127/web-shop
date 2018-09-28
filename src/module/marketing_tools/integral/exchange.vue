@@ -128,17 +128,17 @@ export default {
 			num: 10,
 			len: null,
 			statusList: [{
-					'id': 'all',
-					'name': '全部'
-				},
-				{
-					'id': 'use',
-					'name': '未核销'
-				},
-				{
-					'id': 'used',
-					'name': '已核销'
-				}
+				'id': 'all',
+				'name': '全部'
+			},
+			{
+				'id': 'use',
+				'name': '未核销'
+			},
+			{
+				'id': 'used',
+				'name': '已核销'
+			}
 			],
 			commoditySlect: '全部',
 			types: 'all',

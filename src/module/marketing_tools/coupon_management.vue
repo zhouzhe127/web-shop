@@ -1,42 +1,87 @@
 <template>
 	<div>
 		<section v-if="couponType == 0" id="management">
-			<div id='test'>
-				<div class="oClickBox" style="" @click="showCalendar">
+			<div class='test'>
+				<!-- <div class="oClickBox" style="" @click="showCalendar">
 					<span class="oSpan" style="">{{start}}&nbsp;----&nbsp;{{end}}</span>
 					<span class="down"></span>
 				</div>
 				<a style="background-color: #29A7E1;margin-left: -4px;" @click="seachData" href="javascript:void(0)">
 					<span class="search"></span>
 				</a>
-				<can-multi @castTime="getAddAlltime" @closeCan="()=>{isShowCa=false}" v-if="isShowCa" :apartDays="days" :sideStart="atime" :sideEnd="btime"></can-multi>
+				<can-multi @castTime="getAddAlltime" @closeCan="()=>{isShowCa=false}" v-if="isShowCa" :apartDays="days" :sideStart="atime" :sideEnd="btime"></can-multi> -->
+				<el-date-picker class="fl" v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
+				</el-date-picker>
+				<el-button class="fl" type="primary" icon="el-icon-search" @click="seachData"></el-button>
 			</div>
-			<section @click="closeDate" style="width:100%;height:100%;">
-				<div class="" style="width:100%;height:50px;">
-					<section v-for="(item,index) in bannerList" class="diel" :class="{'on':indexOn == index }" :key="index" @click="()=>{inte(index);page=1}">{{item.name}}</section>
+			<div class="clearfix" style="margin-bottom: 20px;">
+				<section v-for="(item,index) in bannerList" class="diel" :class="{'on':indexOn == index }" :key="index" @click="()=>{inte(index,'1')}">{{item.name}}</section>
+			</div>
+			<!-- 下面的表格 -->
+			<div class="list_box" style="width:100%;">
+				<div class="list_title">
+					<div class="list_title_l fl">
+						<span>优惠券列表</span>
+						<span></span>
+						<span>共
+								<a href="javascript:;">{{count}}</a>条记录</span>
+					</div>
+					<div class="list_title_r fr">
+					</div>
 				</div>
-				<com-table :listHeight='60' :showHand="false" :listName="'优惠券列表'" :showTitle='2' :listWidth="1300" :introData="couponList" :titleData="titleList">
-					<div slot="con-0" slot-scope="props">{{returnTime(props.data.createTime)}}</div>
-					<div slot="con-2" slot-scope="props">{{getEndTime(props.data)}}</div>
-					<div slot="con-3" slot-scope="props">
-						{{couponTypeList[props.data.type]}}
+				<el-table :data="couponList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'60px'}">
+					<el-table-column fixed prop="createTime" label="创建时间" align="center">
+						<template slot-scope="scope">
+							<span>{{returnTime(scope.row.createTime)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="优惠券名称" prop="name" align="center">
+					</el-table-column>
+					<el-table-column prop="createTime" label="到期时间" align="center">
+						<template slot-scope="scope">
+							<span>{{getEndTime(scope.row)}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column prop="type" label="类型" align="center">
+						<template slot-scope="scope">
+							<span>{{couponTypeList[scope.row.type]}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" align="center" width="400">
+						<template slot-scope="scope">
+							<el-button size="medium" type="success" @click="unbundlingCoupon(scope.row)">同步</el-button>
+							<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
+							<el-button size="medium" type="info" @click="modfycoupons(scope.row)">编辑</el-button>
+							<el-button size="medium" type="danger" @click="deletecoupons(scope.row)">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<!-- 分页 -->
+			<div class="pageWrap">
+				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="pageNum" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
+			</div>
+			<!-- <com-table :listHeight='60' :showHand="false" :listName="'优惠券列表'" :showTitle='2' :listWidth="1300" :introData="couponList" :titleData="titleList">
+				<div slot="con-0" slot-scope="props">{{returnTime(props.data.createTime)}}</div>
+				<div slot="con-2" slot-scope="props">{{getEndTime(props.data)}}</div>
+				<div slot="con-3" slot-scope="props">
+					{{couponTypeList[props.data.type]}}
+				</div>
+				<div slot="con-4" slot-scope="props">
+					<div class="align_item" v-if="ischain == 1 || ischain == 2">
+						<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
 					</div>
-					<div slot="con-4" slot-scope="props">
-						<div class="align_item" v-if="ischain == 1 || ischain == 2">
-							<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
-						</div>
-						<div class="align_item" v-else>
-							<section @click="unbundlingCoupon(props.data)" style="border-bottom: 1px solid #fff;background-color: #28A8E0;color: #fff;">同步</section>
-							<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
-							<section @click="modfycoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #858585;color: #fff;">修改</section>
-							<section @click="deletecoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #A7A7A7;color: #fff;">删除</section>
-						</div>
+					<div class="align_item" v-else>
+						<section @click="unbundlingCoupon(props.data)" style="border-bottom: 1px solid #fff;background-color: #28A8E0;color: #fff;">同步</section>
+						<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
+						<section @click="modfycoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #858585;color: #fff;">修改</section>
+						<section @click="deletecoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #A7A7A7;color: #fff;">删除</section>
 					</div>
-				</com-table>
-				<footer class="worker_staff_footer">
-					<page v-if="total>1" :page="page" @pageNum="pageChange" :total="total" :len="10"></page>
-				</footer>
-			</section>
+				</div>
+			</com-table> -->
+			<!-- <footer class="worker_staff_footer">
+				<page v-if="total>1" :page="page" @pageNum="pageChange" :total="total" :len="10"></page>
+			</footer> -->
 		</section>
 		<breakCoupon v-if="couponType == 1 || couponType == 2" :couponDetail='couponDetail' @changeMnage='getcouponResult'></breakCoupon>
 		<discountCoupon v-if="couponType == 3 || couponType == 4" :couponDetail='couponDetail' @changeMnage='getcouponResult'></discountCoupon>
@@ -58,16 +103,11 @@ export default {
 			ischain: '', //店铺id 品牌店/单店
 			couponList: [], //优惠券列表
 			page: 1, //当前页的数据
-			total: '',
+			total: 1,
 			index: null,
 			pageNum: 10, //一版页码处理多少数据
 			pageCount: 0, //总条数
-			atime: utils.getTime({
-				time: new Date()
-			}).start,
-			btime: utils.getTime({
-				time: new Date()
-			}).end,
+			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 			days: 0, //一共的天数
 			indexOn: 0,
 			bannerList: [{
@@ -87,42 +127,6 @@ export default {
 			changeMnage: true, //  是否显示修改优惠券页面
 			showCoupon: false, //  是否显示优惠券弹框
 			couponInfo: '', //  优惠券信息
-			titleList: [{
-				titleName: '创建时间',
-				titleStyle: {
-					width: '200px',
-					flex: 'none',
-					fontSize: 16 + 'px'
-				},
-				dataName: 'createTime'
-			},
-			{
-				titleName: '优惠券名称',
-				dataName: 'name',
-				titleStyle: {
-					fontSize: 16 + 'px'
-				},
-			},
-			{
-				titleName: '到期时间',
-				titleStyle: {
-					fontSize: 16 + 'px'
-				},
-			},
-			{
-				titleName: '类型',
-				dataName: 'type',
-				titleStyle: {
-					fontSize: 16 + 'px'
-				},
-			},
-			{
-				titleName: '操作',
-				titleStyle: {
-					fontSize: 16 + 'px'
-				},
-			}
-			],
 			allTotal: 100,
 			pageTotal: 10,
 			couponType: 0, //优惠券的标识
@@ -137,7 +141,8 @@ export default {
 				7: '积分卡券'
 			},
 			unbindWin: false, //同步优惠券的弹窗
-			asyncId: '' //同步优惠券的id
+			asyncId: '', //同步优惠券的id
+			count: 0 //总条数
 		};
 	},
 	computed: {
@@ -158,10 +163,10 @@ export default {
 		}
 	},
 	methods: {
-		pageChange(obj) {
-			this.page = obj.page;
-			this.inte(this.indexOn);
-		},
+		// pageChange(obj) {
+		// 	this.page = obj.page;
+		// 	this.inte(this.indexOn);
+		// },
 		toEditCoupon(str) {
 			if (str == 'nochange') {
 				this.showCoupon = false;
@@ -186,30 +191,36 @@ export default {
 				return utils.format(new Date(item1.endTime), 'yyyy-MM-dd') + '过期';
 			}
 		},
-		async inte(index) {
+		async inte(index, page) {
 			this.indexOn = index;
+			if (page) {
+				this.page = 1;
+			}
 			let res = await http.getCouponList({
 				data: {
 					page: this.page,
 					num: this.pageNum,
 					status: this.indexOn,
-					fromDate: parseInt(this.atime / 1000),
-					toDate: parseInt(this.btime / 1000)
+					fromDate: parseInt(this.valueTime[0] / 1000),
+					toDate: parseInt(this.valueTime[1] / 1000)
 				}
 			});
 			this.couponList = res.list;
-			this.allTotal = res.list.length;
+			if (res.count) {
+				this.count = res.count;
+			}
+			//this.allTotal = res.list.length;
 			this.total = res.total;
-			this.pageCount = res.list.length;
+			//this.pageCount = res.list.length;
 		},
 		//
 		showCalendar() {
 			this.isShowCa = !this.isShowCa;
 		},
 		//关闭日期框
-		closeDate() {
-			this.isShowCa = false;
-		},
+		// closeDate() {
+		// 	this.isShowCa = false;
+		// },
 		//查询日期搜索
 		seachData() {
 			this.inte(this.indexOn);
@@ -275,12 +286,12 @@ export default {
 			};
 			// openWin(index, item);
 		},
-		getAddAlltime(time) {
-			this.atime = time.startTime;
-			this.btime = time.endTime;
-			this.days = time.days;
-			this.isShowCa = false;
-		},
+		// getAddAlltime(time) {
+		// 	this.atime = time.startTime;
+		// 	this.btime = time.endTime;
+		// 	this.days = time.days;
+		// 	this.isShowCa = false;
+		// },
 		getcouponResult: function() {
 			this.couponType = 0;
 			this.inte(this.indexOn); //重新刷新一下列表
@@ -308,7 +319,17 @@ export default {
 				this.syncCoupon();
 			}
 			this.unbindWin = false;
-		}
+		},
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.pageNum = p;
+			this.inte(this.indexOn);
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.inte(this.indexOn);
+		},
 	},
 	mounted() {
 		this.inte(this.indexOn);
@@ -376,22 +397,11 @@ export default {
 	color: #808080;
 }
 
-#test {
+.test {
 	display: inline-block;
 	vertical-align: middle;
-	position: relative;
-	width: 400px;
 	height: 40px;
 	margin: 20px 0;
-}
-
-#test .oClickBox {
-	display: inline-block;
-	border: 1px solid #b3b3b3;
-	width: 300px;
-	height: 40px;
-	line-height: 40px;
-	cursor: pointer;
 }
 
 .oClickBox .oSpan {
@@ -403,16 +413,7 @@ export default {
 	height: 40px;
 }
 
-#test .down {
-	width: 0;
-	height: 0;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	border-top: 10px solid #b3b3b3;
-	position: absolute;
-	right: 118px;
-	top: 17px;
-}
+
 
 .search {
 	display: inline-block;
@@ -441,7 +442,7 @@ export default {
 }
 
 .on {
-	background: #28a8e0;
+	background: #E1BB4A;
 	color: #fff;
 }
 

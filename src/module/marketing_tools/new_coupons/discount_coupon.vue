@@ -101,7 +101,7 @@
 					<div class="yuan">
 						%
 					</div> -->
-					<el-input placeholder="请输入折扣力度" v-model="deratePrice" maxlength="6">
+					<el-input placeholder="请输入折扣力度" v-model="deratePrice" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')">
 						<template slot="suffix">%</template>
 					</el-input>
 				</div>
@@ -435,6 +435,7 @@ export default {
 			} else if (couponDetail.type == 4) {
 				this.typeId = 1; //单品减免 整单减免
 			}
+			this.commoditySlect = this.goodlist[this.typeId].name;//单品减免 整单折扣
 			this.couponName = couponDetail.name; //优惠券名称
 			if (couponDetail.shopIds && couponDetail.shopIds.length > 0) {
 				this.selectShops = couponDetail.shopIds.split(',');
@@ -690,15 +691,15 @@ export default {
 				this.valiData('请输入折扣力度,不能小于0');
 				return false;
 			}
-			if (!reg.test(this.deratePrice)) {
-				this.valiData('折扣率只能是正整数');
-				let dp = this.deratePrice + '';
-				if (dp.indexOf('.') != -1) {
-					dp = dp.split('.')[0] ? dp.split('.')[0] : dp;
-				}
-				this.deratePrice = dp;
-				return false;
-			}
+			// if (!reg.test(this.deratePrice)) {
+			// 	this.valiData('折扣率只能是正整数');
+			// 	let dp = this.deratePrice + '';
+			// 	if (dp.indexOf('.') != -1) {
+			// 		dp = dp.split('.')[0] ? dp.split('.')[0] : dp;
+			// 	}
+			// 	this.deratePrice = dp;
+			// 	return false;
+			// }
 			let nums = this.deratePrice - 0;
 
 			if (nums < 1 || nums > 99) {
@@ -874,6 +875,7 @@ export default {
 		},
 		selType: function(item) { //选择电子卡或者实体卡
 			this.typeId = item.typeId;
+			//this.commoditySlect = item.name;
 		},
 		clicktheRadio: function(item) {
 			this.validType.index = item.validType;
