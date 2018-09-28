@@ -455,7 +455,7 @@ export default {
 		},
 		addParameter: function(index) {
 			//添加参数
-			this.ruleList[index].msgContent += this.parameter[index].id;
+			this.ruleList[this.ruleIndex].msgContent += this.parameter[index].id;
 		},
 		// getListDetail: function(item, index, type) {
 		// 	// 获取设置list详情
