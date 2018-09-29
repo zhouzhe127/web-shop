@@ -29,9 +29,9 @@
 					<a href="javascript:void(0)" class="delet fl" @click='deletePush(index)'></a>
 				</section>
 				<template v-if="item.typeId == '0'">
-					<textarea class="txt" maxlength="100" v-model='item.content'></textarea>
+					<textarea class="txt" maxlength="200" v-model='item.content'></textarea>
 					<div class="handle-tips">
-						<i></i> 限100字以内
+						<i></i> 限200字以内
 					</div>
 					<p class="sample">{{msg}}</p>
 				</template>
