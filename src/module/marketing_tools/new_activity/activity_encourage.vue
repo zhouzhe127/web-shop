@@ -640,7 +640,7 @@ export default {
 			// 	this.valiData('请至少保留一条规则!');
 			// 	return false;
 			// }
-			console.log(index)
+			//console.log(index)
 			this.ruleList.splice(index, 1);
 			// for (let i = 0; i < this.ruleList.length; i++) {
 			// 	this.ruleList[i].name = '规则' + (i + 1);
@@ -897,7 +897,7 @@ export default {
 					interestName: interestName, //会员权益
 					interestId: interestId,
 					couponIds: couponIds, //优惠券
-					pushChannel: item.pushChannel.split(","), //消息推送渠道
+					pushChannel: item.pushChannel == '0' ? [] : item.pushChannel.split(','), //消息推送渠道
 					msgContent: item.msgContent //内容设置
 				}
 				this.ruleList.push(obj);
