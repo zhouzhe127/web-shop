@@ -183,26 +183,24 @@ export default {
 	data() {
 		return {
 			bannerList: [{
-					name: '品牌商品',
-					id: 0
-				},
-				{
-					name: '门店商品',
-					id: 1
-				}
-			], //固定还是自定义方案，数组
+				name: '品牌商品',
+				id: 0
+			},
+			{
+				name: '门店商品',
+				id: 1
+			}], //固定还是自定义方案，数组
 			isFlag: true,
 			indexOn: 0, //默认固定
 			commoditySlect: '品牌商品',
 			durationList: [{ //活动期限
-					name: '积分商品',
-					id: 0
-				},
-				{
-					name: '优惠券',
-					id: 1
-				},
-			],
+				name: '积分商品',
+				id: 0
+			},
+			{
+				name: '优惠券',
+				id: 1
+			}],
 			durationId: 0,
 			durationName: '积分商品', //状态
 			showBirthCoupon: false,
@@ -266,14 +264,9 @@ export default {
 				if (key == 'id') this.gid = this.editInfos.id;
 				if (key == 'bigImage')
 					this.bigName =
-					this.editInfos.bigImage == '' ?
-					null :
-					this.editInfos.bigImage;
+					this.editInfos.bigImage == '' ? null : this.editInfos.bigImage;
 				if (key == 'imageName')
-					this.fileName =
-					this.editInfos.imageName == '' ?
-					null :
-					this.editInfos.imageName;
+					this.fileName = this.editInfos.imageName == '' ? null : this.editInfos.imageName;
 				if (key == 'goodsType')
 					this.durationId = this.editInfos.goodsType;
 				this.durationName = this.durationList[this.durationId].name;
