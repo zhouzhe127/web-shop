@@ -819,7 +819,7 @@ export default {
 			} else {
 				await http.fissionActivity({
 					data: {
-						shopIds: this.selectsList.toString(),
+						shopIds: this.ischain == '3' ? this.selectsList.toString() : this.shopId,
 						type: 3,
 						name: this.title,
 						mouldType: 0,
