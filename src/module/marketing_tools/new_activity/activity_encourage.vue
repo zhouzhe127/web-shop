@@ -379,7 +379,8 @@ export default {
 			memberStatus: true,
 			isactivityDetail: true,
 			ruleIndex: 0, //点中的第几个  
-			selectCoupon: [] //选中的优惠券
+			selectCoupon: [], //选中的优惠券
+			shopId:'' //单店的shopId
 		};
 	},
 	methods: {
@@ -1056,6 +1057,7 @@ export default {
 		this.userData = storage.session('userShop');
 		this.ischain = this.userData.currentShop.ischain;
 		this.shopName = this.userData.currentShop.name;
+		this.shopId = this.userData.currentShop.id;
 		this.getShopList();
 		let memberIds = storage.session('memberIds'); //获取是否有会员信息
 		if (memberIds) {
