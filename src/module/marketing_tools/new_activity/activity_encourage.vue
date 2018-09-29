@@ -371,7 +371,8 @@ export default {
 			ruleIndex: 0, //点中的第几个  
 			selectCoupon: [], //选中的优惠券
 			checkedMember: false, //会员选中的
-			checkedFans: false //粉丝选中的
+			checkedFans: false, //粉丝选中的
+			shopId:'' //单店的shopId
 		};
 	},
 	methods: {
@@ -447,7 +448,8 @@ export default {
 		},
 		addParameter: function(index) {
 			//添加参数
-			this.ruleList[index].msgContent += this.parameter[index].id;
+			this.ruleList[this.ruleIndex].msgContent += this.parameter[index].id;
+
 		},
 		// getListDetail: function(item, index, type) {
 		// 	// 获取设置list详情
@@ -727,6 +729,9 @@ export default {
 				this.activityDetail.endTime = Math.round(this.endObj.time / 1000); //结束时间
 				this.activityDetail.isAuto = type;
 				this.activityDetail.rule = rule;
+				this.activityDetail.selectFans = Number(this.checkedFans);//选择粉丝
+				// console.log(JSON.stringify(this.activityDetail))
+				// return false;
 				await http.fissionActivity({
 					data: {
 						activityId: this.activityDetail.id,
@@ -743,7 +748,7 @@ export default {
 						objectType: this.memberStatus ? 4 : 1, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
-						selectFans: this.fans, //粉丝的数量
+						selectFans: Number(this.checkedFans), //粉丝的数量
 						startTime: Math.round(this.startObj.time / 1000),
 						endTime: Math.round(this.endObj.time / 1000),
 						isAuto: type,
@@ -805,6 +810,7 @@ export default {
 					interestName = '电子优惠券';
 					interestId = 2;
 				}
+				//console.log(item.pushChannel)
 				let obj = {
 					id: item.id,
 					durationName: durationName, //最低消费
@@ -815,7 +821,7 @@ export default {
 					interestName: interestName, //会员权益
 					interestId: interestId,
 					couponIds: couponIds, //优惠券
-					pushChannel: item.pushChannel.split(','), //消息推送渠道
+					pushChannel: item.pushChannel == '0' ? [] : item.pushChannel.split(','), //消息推送渠道
 					msgContent: item.msgContent //内容设置
 				};
 				this.ruleList.push(obj);
@@ -838,8 +844,8 @@ export default {
 			if (this.member && Number(this.member) > 0) {
 				this.checkedMember = true;
 			}
-			if (activityDetail.selectFans && activityDetail.selectFans != '') { //筛选的粉丝的数量
-				this.fans = activityDetail.selectFans;
+			if (activityDetail.selectFans && activityDetail.selectFans == 1) { //筛选的粉丝的数量
+				this.getSubscribeFansCount();
 				this.checkedFans = true;
 			}
 			this.edit = true;
