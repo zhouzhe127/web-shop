@@ -138,8 +138,7 @@ export default {
 			{
 				'id': 'used',
 				'name': '已核销'
-			}
-			],
+			}],
 			commoditySlect: '全部',
 			types: 'all',
 			exportUrl: '',
