@@ -48,11 +48,14 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" align="center" width="400">
-						<template slot-scope="scope">
+						<template slot-scope="scope" >
 							<el-button size="medium" type="success" @click="unbundlingCoupon(scope.row)">同步</el-button>
 							<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
 							<el-button size="medium" type="info" @click="modfycoupons(scope.row)">编辑</el-button>
 							<el-button size="medium" type="danger" @click="deletecoupons(scope.row)">删除</el-button>
+						</template>
+						<template slot-scope="scope" v-if="ischain == 1 || ischain == 2">
+							<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
