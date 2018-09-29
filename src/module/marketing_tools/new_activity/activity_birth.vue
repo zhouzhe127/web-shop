@@ -9,7 +9,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='actName' maxlength="10" />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='actName' maxlength="10" /> -->
+				 <el-input  v-model="actName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动对象 -->
