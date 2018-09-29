@@ -5,7 +5,7 @@
 		<div class="comList clearfix">
 			<!-- <span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span> -->
 			<el-radio-group v-model="commoditySlect">
-				<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="isFlag && selType(item)"></el-radio-button>
+				<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
 			</el-radio-group>
 		</div>
 		<!-- 商品类型 -->
@@ -261,6 +261,7 @@ export default {
 					this.status = Boolean(this.editInfos.status == '已上架');
 				if (key == 'type')
 					this.indexOn = this.editInfos.type;
+				this.commoditySlect = this.bannerList[this.indexOn].name;
 				if (key == 'id') this.gid = this.editInfos.id;
 				if (key == 'bigImage')
 					this.bigName =
