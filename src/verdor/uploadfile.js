@@ -55,7 +55,7 @@ let uploadfile = {
    * @param {String} obj.data 参数
    * @memberof upload
    */
-  crosrouteroMain({ url, formId, data }) {
+  crosrouteroMain({ url, formId, data ,timeout }) {
     return new Promise((resolve, reject) => {
       let dom = document.querySelector("#" + formId);
 
@@ -141,7 +141,7 @@ let uploadfile = {
       };
 
       var postHandle = data => {
-        data.timerStr = timer.add(function() {}, 10000, 1, false, () => {
+        data.timerStr = timer.add(function() {}, timeout || 10000, 1, false, () => {
           // if (data.iframe) data.iframe.remove();
           this.Queue[obj.oid].reject("timeout!");
           delete this.Queue[data.oid];
