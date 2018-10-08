@@ -10,7 +10,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' /> -->
+				<el-input v-model="activityName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动时间 -->
@@ -18,9 +19,13 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar>
+					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
+					</el-date-picker>
 					<span class="fl" style="width: 40px;text-align: center;margin-right: 0;">-</span>
-					<calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar>
+					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
+					</el-date-picker>
 				</div>
 				<span class="fl" style="text-align: left;text-indent: 20px;color: #A3A3A3;">共{{returnInt}}天</span>
 			</div>
@@ -29,7 +34,7 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<span class="fans">全体会员</span>
+				<span class="obj">全体会员</span>
 			</div>
 		</div>
 		<!-- 会员日设置 -->
@@ -60,10 +65,13 @@
 				<div class="online-box clearfix" v-if='item.isDiscount '>
 					<span class="online-sub fl">折扣率</span>
 					<div class="rightHalf">
-						<section>
+						<!-- <section>
 							<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="2" v-model="item.discountParam" onkeyup="value=value.replace(/[^\d]/g,'')" />
 							<span>%</span>
-						</section>
+						</section> -->
+						<el-input placeholder="请输入正整数" v-model="item.discountParam" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+							<template slot="suffix">%</template>
+						</el-input>
 					</div>
 				</div>
 				<!-- 享有积分翻倍 -->
@@ -82,19 +90,24 @@
 				<div class="online-box clearfix" v-if="item.isDouble == true && item.pointType == 0">
 					<span class="online-sub fl">设置该等级积分比例</span>
 					<div class="fl setinp">
-						<input type="text" placeholder="请输入现金" v-model="item.cash" onkeyup="value=value.replace(/[^\d.]/g,'')" maxlength="6" class="fl" @blur="formatValue('cash')" />
+						<!--  <input type="text" placeholder="请输入现金" v-model="item.cash" onkeyup="value=value.replace(/[^\d.]/g,'')" maxlength="6" class="fl" @blur="formatValue('cash')" /> -->
+						<el-input class="fl" v-model="item.cash" maxlength="6" placeholder="请输入现金" onkeyup="value=value.replace(/[^\d.]/g,'')" @blur="formatValue('cash')" style="width:auto;"></el-input>
 						<i class="fl colon">:</i>
-						<input type="text" placeholder="请输入积分" v-model="item.point" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="8" class="fl" />
+						<!--  <input type="text" placeholder="请输入积分" v-model="item.point" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="8" class="fl" /> -->
+						<el-input class="fl" v-model="item.point" maxlength="8" placeholder="请输入积分" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:auto;"></el-input>
 					</div>
 				</div>
 				<!-- 设置倍数 -->
 				<div class="online-box clearfix" v-if="item.isDouble == true && item.pointType == 1">
 					<span class="online-sub fl">获得基础积分</span>
 					<div class="fl setinp">
-						<section class="sinp">
+						<!--  <section class="sinp">
 							<input type="text" class="cumulative" placeholder="请输入倍数" maxlength="5" v-model="item.pointMultiples" @blur="formatValue('pointMultiples')" onkeyup="value=value.replace(/[^\d.]/g,'')" />
 							<span>倍</span>
-						</section>
+						</section> -->
+						<el-input class="fl" placeholder="请输入正整数" v-model="item.pointMultiples" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;" @blur="formatValue('pointMultiples')">
+							<template slot="suffix">倍</template>
+						</el-input>
 						<div class="fl handle-tips">
 							<i></i> 允许输入区间：0.01~99.99
 						</div>
@@ -104,9 +117,12 @@
 		</div>
 		<!-- 取消保存 -->
 		<div class="online-box clearfix" style="padding-left:100px;">
-			<a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a>
+			<!--  <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a>
 			<a v-if='isactivityDetail' href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="saveConfig(' 0 ')">保存</a>
-			<a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig(' 1 ')">发布</a>
+			<a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig(' 1 ')">发布</a> -->
+			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
+			<el-button v-if='isactivityDetail' type="info" style="margin-right: 10px;width:190px;" @click="saveConfig('0')">保存</el-button>
+			<el-button v-if="editId == ''" type="primary" style="margin-right: 10px;width:190px;" @click="saveConfig('1')">发布</el-button>
 		</div>
 	</div>
 </template>
@@ -630,6 +646,17 @@ export default {
 	max-width: 1000px;
 	height: auto;
 	float: left;
+	line-height: 40px;
+}
+
+#fissoin .online-box .rightHalf .obj {
+	display: inline-block;
+	width: 179px;
+	height: 40px;
+	background: #f8f8f8;
+	line-height: 40px;
+	text-align: center;
+	border-radius: 4px;
 }
 
 #fissoin .online-box .rightHalf span {
@@ -642,6 +669,7 @@ export default {
 	text-indent: 25px;
 	background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
 	color: #999999;
+	margin-left: 10px;
 }
 
 #fissoin .online-box .rightHalf .name {
@@ -742,13 +770,16 @@ export default {
 	border-left: 1px solid #CECDCD;
 }
 
-#fissoin .setinp input {
+/* #fissoin .setinp input {
 	outline: none;
 	height: 38px;
 	background-color: #fff;
 	padding-left: 20px;
 	color: #333;
 	width: 160px;
+} */
+#fissoin .setinp {
+	line-height: 40px;
 }
 
 #fissoin .setinp .sinp {

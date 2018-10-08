@@ -709,7 +709,7 @@ export default {
 }
 
 .check-span {
-	width: 88px !important;
+	width: 101px !important;
 }
 
 .win-imgShow {

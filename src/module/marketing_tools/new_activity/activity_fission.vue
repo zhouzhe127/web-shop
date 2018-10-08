@@ -10,7 +10,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' /> -->
+				<el-input v-model="activityName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动时间 -->
@@ -18,9 +19,13 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar>
+					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
+					</el-date-picker>
 					<span class="fl" style="width: 40px;text-align: center;margin-right: 0;">-</span>
-					<calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar>
+					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
+					</el-date-picker>
 				</div>
 				<span class="fl" style="text-align: left;text-indent: 20px;color: #A3A3A3;">共{{returnInt}}天</span>
 			</div>
@@ -29,7 +34,7 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<span class="fans">全体会员</span>
+				<span class="obj">全体会员</span>
 			</div>
 		</div>
 		<!-- 推广权益 -->
@@ -41,7 +46,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">推广者获礼</span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount('1')">选择关联优惠券</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount('1')">选择关联优惠券</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="addCount('1')" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="promotersCoupon.length > 0">(已关联{{promotersCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -49,10 +55,13 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">推广者获得积分</span>
 			<div class="rightHalf">
-				<section>
+				<!-- <section>
 					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="followersPoint" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分</span>
-				</section>
+				</section> -->
+				<el-input placeholder="请输入正整数" v-model="followersPoint" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+					<template slot="suffix">分</template>
+				</el-input>
 				<span>(只有当其微信用户通过本推广者分享的【推广者二维码】而满足公众号的情况下,才能获得相应积分奖励)</span>
 			</div>
 		</div>
@@ -60,17 +69,21 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">获券上限</span>
 			<div class="rightHalf">
-				<section>
+				<!-- <section>
 					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="promotersNum" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>次</span>
-				</section>
+				</section> -->
+				<el-input placeholder="请输入正整数" v-model="promotersNum" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+					<template slot="suffix">次</template>
+				</el-input>
 			</div>
 		</div>
 		<!-- 关注者获礼 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">关注者获礼</span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount('2')">选择关联优惠券</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount('2')">选择关联优惠券</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="addCount('2')" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="followersCoupon.length > 0">(已关联{{followersCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -78,18 +91,24 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">关注者获得积分</span>
 			<div class="rightHalf">
-				<section>
+				<!-- <section>
 					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="promotersPoint" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分</span>
-				</section>
+				</section> -->
+				<el-input placeholder="请输入正整数" v-model="promotersPoint" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+					<template slot="suffix">分</template>
+				</el-input>
 				<span>(不管是通过推广者的专属二维码,还是通过公众号二维码,公众号名称,他人分享链接等,都可以获得相应积分)</span>
 			</div>
 		</div>
 		<!-- 取消保存 -->
 		<div class="online-box clearfix" style="padding-left:60px;">
-			<a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a>
-			<a v-if='isactivityDetail' href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="saveConfig('0')">保存</a>
-			<a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig('1')">发布</a>
+			<!-- <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a> -->
+			<!--  <a v-if='isactivityDetail' href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="saveConfig('0')">保存</a>
+			<a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig('1')">发布</a> -->
+			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
+			<el-button v-if='isactivityDetail' type="info" style="margin-right: 10px;width:190px;" @click="saveConfig('0')">保存</el-button>
+			<el-button v-if="editId == ''" type="primary" style="margin-right: 10px;width:190px;" @click="saveConfig('1')">发布</el-button>
 		</div>
 		<!-- 优惠券 -->
 		<birthCoupon v-if='showBirthCoupon' :selectCoupon='selectCoupon' :couponList='couponList' @winEvent='winEvent'></birthCoupon>
@@ -383,9 +402,19 @@ export default {
 }
 
 #fissoin .online-box .rightHalf {
-	width: 1000px;
 	height: auto;
 	float: left;
+	line-height: 40px;
+}
+
+#fissoin .online-box .rightHalf .obj {
+	display: inline-block;
+	width: 179px;
+	height: 40px;
+	background: #f8f8f8;
+	line-height: 40px;
+	text-align: center;
+	border-radius: 4px;
 }
 
 #fissoin .online-box .rightHalf span {
