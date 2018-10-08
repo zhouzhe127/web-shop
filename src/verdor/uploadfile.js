@@ -32,17 +32,17 @@ let uploadfile = {
 
     return url;
   },
-  checkFile(file){
-      file = file.files[0];
-  
-      var type = file.type;
-      if(type.indexOf("image")>-1){
-          if (file.size > 1024 * 1024 ) {
-              return "图片大小不能大于1M";
-          }
-      }
-      
-      return false;
+checkFile(file){
+    file = file.files[0];
+    if(file){
+        var type = file.type;
+        if(type.indexOf("image")>-1){
+            if (file.size > 1024 * 1024 ) {
+                return "图片大小不能大于1M";
+            }
+        }
+    }
+    return false;
   },
   onlyid: 0,
   Queue: {},
