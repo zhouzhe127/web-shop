@@ -4,50 +4,124 @@
 			<span>已选择:{{typeObj[activityType]}}</span>
 		</div>
 		<!--活动列表-->
-		<div id='test'>
-			<div class="clearfix">
-				<div class="oClickBox fl" style="" @click="showCalendarSearch">
+		<div class=" clearfix" style="margin-bottom:20px;">
+			<div class="fl filbox clearfix">
+				<el-date-picker class="fl" v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
+				</el-date-picker>
+				<el-button class="fl" type="primary" icon="el-icon-search" @click="searchlist"></el-button>
+			</div>
+			<div class="fl filbox clearfix">
+				<el-input class="fl" v-model="activityTitle" placeholder="请输入活动名称" maxlength="20"></el-input>
+				<el-button class="fl el-input" type="primary" icon="el-icon-search" @click="searchlist"></el-button>
+			</div>
+			<!-- <div class="oClickBox fl" style="" @click="showCalendarSearch">
 					<span class="oSpan" style="">{{start1}}&nbsp;----&nbsp;{{end1}}</span>
 					<span class="down" style=""></span>
 				</div>
 				<a class="fl searchBtn" v-on:click="searchlist" href="javascript:void(0)">
 					<span class="search"></span>
-				</a>
-				<!--选择卡属门店-->
-				<div class="filtrate fl">
+				</a> -->
+			<!--选择卡属门店-->
+			<!-- <div class="filtrate fl">
 					<input type="text" v-model="activityTitle" class="fl" placeholder="请输入活动名称" />
 					<a class="fl searchBtn" v-on:click="searchlist" href="javascript:void(0)">
 						<span class="search"></span>
 					</a>
-				</div>
-			</div>
-			<can-multi :sideStart="atime1" :sideEnd="btime1" @closeCan='closeCan' v-if='showCanMulti' @castTime='castTime' style="float: left;text-align: center;"></can-multi>
+				</div> -->
+			<!-- <can-multi :sideStart="atime1" :sideEnd="btime1" @closeCan='closeCan' v-if='showCanMulti' @castTime='castTime' style="float: left;text-align: center;"></can-multi> -->
 		</div>
 		<div style="margin-bottom: 20px;">
 			<span class="sel" v-for="(item,index) in buttonList" :key='index' v-bind:class="{'on':flag == index}" @click="tabSwitch(index)">{{item.name}}</span>
 		</div>
+		<!-- 下面的表格 -->
+		<div class="list_box" style="width:100%;">
+			<div class="list_title">
+				<div class="list_title_l fl">
+					<span>活动列表</span>
+					<span></span>
+					<span>共
+								<a href="javascript:;">{{count}}</a>条记录</span>
+				</div>
+				<div class="list_title_r fr">
+				</div>
+			</div>
+			<el-table :data="activityList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'60px'}">
+				<el-table-column fixed label="活动类型" align="center">
+					<template slot-scope="scope">
+						{{setType(scope.row.type)}}
+					</template>
+				</el-table-column>
+				<el-table-column label="活动名称" prop="name" align="center">
+				</el-table-column>
+				<el-table-column label="创建时间" align="center">
+					<template slot-scope="scope">
+						<span>{{transFormData(scope.row.createTime)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="活动期限" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.type == '0'">{{timeLimit[scope.row.limit].name}}</span>
+						<span v-else>{{setEndTime(scope.row.startTime,scope.row.endTime)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="券发放数量" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.giveNum == '0'">无限制</span>
+						<span v-else>{{scope.row.giveNum}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="每日发放上限" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.dayGiveNum == '0'">无限制</span>
+						<span v-else>{{scope.row.giveNum}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="对象" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.type == '1' && scope.row.objectType == '0'">
+							店内
+						</span>
+						<span v-else>会员</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" align="center" width="280">
+					<template slot-scope="scope">
+						<el-button v-if="flag==1" size="medium" type="primary" @click="close(scope.row)">关闭</el-button>
+						<el-button v-if="flag==0" size="medium" type="primary" @click="publish(scope.row)">发布</el-button>
+						<el-button v-if="flag==2" size="medium" type="primary" @click="modfycoupons(scope.row,'2')">查看详情</el-button>
+						<el-button v-if="flag==2" size="medium" type="warning" @click="off(scope.row)">下架</el-button>
+						<el-button v-if="flag==3" size="medium" type="primary" @click="on(scope.row)">上架</el-button>
+						<el-button v-if="flag==0 || flag==1 || flag==3" size="medium" type="info" @click="modfycoupons(scope.row,'1')">编辑</el-button>
+						<el-button v-if="!(flag==2)" size="medium" type="danger" @click="deletecoupons(scope.row)">删除</el-button>
+					</template>
+					<!-- <template slot-scope="scope" v-else>
+						<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
+					</template> -->
+				</el-table-column>
+			</el-table>
+		</div>
 		<!-- 活动列表 -->
-		<com-table :listHeight='80' :showHand='false' :key="index" :showTitle='2' :listWidth="1440" :introData="activityList" :titleData="titleList">
+		<!-- <com-table :listHeight='80' :showHand='false' :key="index" :showTitle='2' :listWidth="1440" :introData="activityList" :titleData="titleList">
 			<div slot="con-0" slot-scope="props">
-				{{setType(props.data.type)}}
+				{{setType(scope.row.type)}}
 			</div>
 			<div slot="con-2" slot-scope="props">
-				{{transFormData(props.data.createTime)}}
+				{{transFormData(scope.row.createTime)}}
 			</div>
 			<div slot="con-3" slot-scope="props">
-				<div v-if="props.data.type == '0'">{{timeLimit[props.data.limit].name}}</div>
-				<div v-else>{{setEndTime(props.data.startTime,props.data.endTime)}}</div>
+				<div v-if="scope.row.type == '0'">{{timeLimit[scope.row.limit].name}}</div>
+				<div v-else>{{setEndTime(scope.row.startTime,scope.row.endTime)}}</div>
 			</div>
 			<div slot="con-4" slot-scope="props">
-				<div v-if="props.data.giveNum == '0'">无限制</div>
-				<div v-else>{{props.data.giveNum}}</div>
+				<div v-if="scope.row.giveNum == '0'">无限制</div>
+				<div v-else>{{scope.row.giveNum}}</div>
 			</div>
 			<div slot="con-5" slot-scope="props">
-				<div v-if="props.data.dayGiveNum == '0'">无限制</div>
-				<div v-else>{{props.data.giveNum}}</div>
+				<div v-if="scope.row.dayGiveNum == '0'">无限制</div>
+				<div v-else>{{scope.row.giveNum}}</div>
 			</div>
 			<div slot="con-6" slot-scope="props">
-				<div v-if="props.data.type == '1' && props.data.objectType == '0'">
+				<div v-if="scope.row.type == '1' && scope.row.objectType == '0'">
 					店内
 				</div>
 				<div v-else>会员</div>
@@ -57,21 +131,24 @@
 					不可操作
 				</div>
 				<div v-else style="text-align: center;">
-					<a v-if="flag==1" href="javascript:void(0);" class="yellow" v-on:click="close(props.data)" style="width: 33.3%;">关闭</a>
-					<a v-if="flag==0" href="javascript:void(0);" class="yellow" v-on:click="publish(props.data)" style="width: 33.3%;">发布</a>
-					<a v-if="flag==2" href="javascript:void(0);" class="blue" v-on:click="modfycoupons(props.data,'2')" style="width: 50%;">查看详情</a>
-					<a v-if="flag==2" href="javascript:void(0);" class="yellow" v-on:click="off(props.data)" style="width: 50%;">下架</a>
-					<a v-if="flag==3" href="javascript:void(0);" class="yellow" v-on:click="on(props.data)" style="width: 33.3%;">上架</a>
-					<a v-if="flag==0 || flag==1 || flag==3" href="javascript:void(0);" class="gray" v-on:click="modfycoupons(props.data,'1')" style="width: 33.3%;background: #858585;">编辑</a>
-					<a v-if="!(flag==2)" href="javascript:void(0);" class="gray" v-on:click="deletecoupons(props.data)" v-bind:style="{'width':(flag==4) ? '100%' : '33.3%'}" style="background: #a7a7a7;">删除</a>
+					<a v-if="flag==1" href="javascript:void(0);" class="yellow" v-on:click="close(scope.row)" style="width: 33.3%;">关闭</a>
+					<a v-if="flag==0" href="javascript:void(0);" class="yellow" v-on:click="publish(scope.row)" style="width: 33.3%;">发布</a>
+					<a v-if="flag==2" href="javascript:void(0);" class="blue" v-on:click="modfycoupons(scope.row,'2')" style="width: 50%;">查看详情</a>
+					<a v-if="flag==2" href="javascript:void(0);" class="yellow" v-on:click="off(scope.row)" style="width: 50%;">下架</a>
+					<a v-if="flag==3" href="javascript:void(0);" class="yellow" v-on:click="on(scope.row)" style="width: 33.3%;">上架</a>
+					<a v-if="flag==0 || flag==1 || flag==3" href="javascript:void(0);" class="gray" v-on:click="modfycoupons(scope.row,'1')" style="width: 33.3%;background: #858585;">编辑</a>
+					<a v-if="!(flag==2)" href="javascript:void(0);" class="gray" v-on:click="deletecoupons(scope.row)" v-bind:style="{'width':(flag==4) ? '100%' : '33.3%'}" style="background: #a7a7a7;">删除</a>
 				</div>
 			</div>
-		</com-table>
+		</com-table> -->
 		<!-- <page v-if="pageTotal > 1" :isNoPaging='true' @pageNum="funGetPageNum" :len="pageNum" :page="page" :total='pageTotal' style="float: left;margin-top: 30px;"></page> -->
 		<!-- 翻页 -->
-		<section class="turn-page">
+		<!-- <section class="turn-page">
 			<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(pageTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-		</section>
+		</section> -->
+		<div class="pageWrap">
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="pageTotal" :page-sizes="[10, 20, 30]"></el-pagination>
+		</div>
 		<!-- 活动新增弹窗 -->
 		<!-- <activityAdd @winEvent='winEvent' v-if='showAdd'></activityAdd> -->
 	</section>
@@ -87,17 +164,8 @@ export default {
 	data() {
 		return {
 			index: '',
-			showCanMulti: false,
 			ischain: null, //店铺id 品牌店/单店
 			giveNum: '', //发放数量
-			//发放数量
-			total: [{
-				text: '不设限制',
-				value: '0'
-			}, {
-				text: '设定总数',
-				value: '1'
-			}],
 			buttonList: [{
 				'name': '未发布'
 			}, {
@@ -134,46 +202,11 @@ export default {
 				'name': '短信',
 				'id': '2'
 			}], //消息推送渠道
-			//查询日期日历
-			atime1: (new Date()).getTime(),
-			btime1: (new Date()).getTime(),
+			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 			activityList: [], //活动列表
 			num: 10, //一版页码处理多少数据
 			pageTotal: 1, //总页数
 			page: 1,
-			titleList: [{
-				titleName: '活动类型',
-				titleStyle: {
-					width: '100px',
-					flex: 'none',
-					fontSize: 16 + 'px'
-				},
-				dataName: 'id',
-			},
-			{
-				titleName: '活动名称',
-				dataName: 'name'
-			},
-			{
-				titleName: '创建时间',
-				dataName: 'createTime'
-			},
-			{
-				titleName: '活动期限'
-			},
-			{
-				titleName: '券发放数量'
-			},
-			{
-				titleName: '每日发放上限'
-			},
-			{
-				titleName: '对象'
-			},
-			{
-				titleName: '操作'
-			},
-			],
 			activityType: '', //活动类型的type
 			shopsList: [], // 卡属门店
 			shopsName: '选择门店',
@@ -187,7 +220,8 @@ export default {
 				'5': '会员日',
 				'6': '满减活动',
 				'7': '领券活动'
-			}
+			},
+			count: ''
 		};
 	},
 	computed: {
@@ -210,9 +244,6 @@ export default {
 		},
 	},
 	methods: {
-		closeCan() {
-			this.showCanMulti = false;
-		},
 		// winEvent(obj) { //两个入口 1:通过新怎活动跳转路由 2:通过编辑活动跳转路由
 		// 	let {
 		// 		module: m,
@@ -249,15 +280,15 @@ export default {
 		// 		}
 		// 	}
 		// },
-		castTime(obj) {
-			let {
-				startTime,
-				endTime
-			} = obj;
-			this.atime1 = startTime;
-			this.btime1 = endTime;
-			this.showCanMulti = false;
-		},
+		// castTime(obj) {
+		// 	let {
+		// 		startTime,
+		// 		endTime
+		// 	} = obj;
+		// 	this.atime1 = startTime;
+		// 	this.btime1 = endTime;
+		// 	this.showCanMulti = false;
+		// },
 		setEndTime: function(startTime, endTime) {
 			// 设置活动结束时间
 			startTime = utils.format(startTime, 'yyyy,MM,dd'); //获取开始时间年月日 
@@ -303,10 +334,6 @@ export default {
 		// 	// openWin(true, true);
 		// 	this.showAdd = true;
 		// },
-		//查询搜索
-		showCalendarSearch: function() {
-			this.showCanMulti = !this.showCanMulti;
-		},
 		sendData({
 			urlType,
 			data,
@@ -429,8 +456,8 @@ export default {
 			if (this.flag == 4) tabstatus = -2;
 			let data = await http.newgetActivityList({
 				data: {
-					fromDate: parseInt(this.atime1 / 1000), //开始日期
-					toDate: parseInt(this.btime1 / 1000), //结束日期
+					fromDate: parseInt(this.valueTime[0] / 1000), //开始日期
+					toDate: parseInt(this.valueTime[1] / 1000), //结束日期
 					page: this.page, //页数
 					num: this.num,
 					status: tabstatus,
@@ -440,6 +467,7 @@ export default {
 			});
 			this.activityList = data.list;
 			this.pageTotal = data.total;
+			this.count = data.count;
 		},
 		// getCouponId(arr, type) {
 		// 	let i;
@@ -541,6 +569,16 @@ export default {
 				//this.listObj.belongToShop.push(this.userData.currentShop.id);
 			}
 		},
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.num = p;
+			this.newgetActivityList();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.newgetActivityList();
+		},
 	},
 	components: {
 		page: () =>
@@ -557,18 +595,6 @@ export default {
 	beforeCreate() {
 		currentShop = storage.session('userShop').currentShop;
 	},
-	created() {
-		let obj1 = {
-			titleStyle: {
-				fontSize: 16 + 'px'
-			}
-		};
-		for (let item of this.titleList) {
-			if (item.dataName != 'id') {
-				Object.assign(item, obj1);
-			}
-		}
-	},
 	mounted() {
 		this.ischain = currentShop.ischain;
 		this.activityType = storage.session('activityType');
@@ -583,6 +609,10 @@ export default {
 <style scoped>
 #activity {
 	min-width: 800px;
+}
+
+#activity .filbox {
+	margin-right: 20px;
 }
 
 #activity .choice {
@@ -675,7 +705,7 @@ export default {
 }
 
 .on {
-	background: #28a8e0;
+	background: #E1BB4A;
 	color: #fff;
 }
 
@@ -689,6 +719,10 @@ export default {
 	position: relative;
 	height: 40px;
 	margin: 20px 0;
+}
+
+.el-input {
+	width: auto;
 }
 
 #test .filtrate {

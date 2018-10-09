@@ -33,7 +33,7 @@
 		</div>
 		<div class="wx-showBox">
 			<span class="required">AppSecret</span>
-			<input type="text" id="id" oncopy="return false;" oncut="return false;" placeholder="请输入AppSecret" v-model="appSecrets" maxlength="32" />
+			<input type="text" id="id" placeholder="请输入AppSecret" v-model="appSecrets" maxlength="32" />
 		</div>
 		<div class="wx-showBox">
 			<span></span>

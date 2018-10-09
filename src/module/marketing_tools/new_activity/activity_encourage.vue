@@ -1,114 +1,130 @@
 <template>
-	<div class="member-agift" id="consume" v-if='!showVip'>
-		<!-- 活动设置 -->
-		<div class="set-line">
-			<div class="titles">活动设置</div>
-			<div class="line"></div>
-		</div>
-		<!-- 活动标题 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">活动名称</span>
-			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='titles' maxlength="10" />
-			</div>
-		</div>
-		<!-- 活动时间 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">活动时间</span>
-			<div class="rightHalf">
-				<div class="fl" style="cursor: pointer;">
-					<calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar>
-					<span class="fl lines">-</span>
-					<calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar>
-				</div>
-				<span class="fl returnInt">共{{returnInt}}天</span>
-			</div>
-		</div>
-		<!-- 活动范围 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">活动范围</span>
-			<div class="rightHalf" v-if="ischain == '3'">
-				<a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a>
-				<span v-if="selectsList.length >= 1">(已选择{{selectsList.length}}家店铺)</span>
-			</div>
-			<div class="rightHalf" v-else>
-				<span class="obj">{{shopName}}</span>
-			</div>
-		</div>
-		<!-- 活动对象 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">活动对象</span>
-			<div class="rightHalf">
-				<!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
+    <div class="member-agift" id="consume" v-if='!showVip'>
+        <!-- 活动设置 -->
+        <div class="set-line">
+            <div class="titles">活动设置</div>
+            <div class="line"></div>
+        </div>
+        <!-- 活动标题 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl required">活动名称</span>
+            <div class="rightHalf">
+                <!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='titles' maxlength="10" /> -->
+                <el-input v-model="titles" maxlength="10" placeholder="请输入活动标题"></el-input>
+            </div>
+        </div>
+        <!-- 活动时间 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl">活动时间</span>
+            <div class="rightHalf">
+                <div class="fl" style="cursor: pointer;">
+                    <!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
+                    <el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
+                    </el-date-picker>
+                    <span class="fl lines">-</span>
+                    <!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
+                    <el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
+                    </el-date-picker>
+                </div>
+                <span class="fl returnInt">共{{returnInt}}天</span>
+            </div>
+        </div>
+        <!-- 活动范围 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl required">活动范围</span>
+            <div class="rightHalf" v-if="ischain == '3'">
+                <!-- <a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a> -->
+                <el-button type="primary" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
+                <span v-if="selectsList.length >= 1">(已选择{{selectsList.length}}家店铺)</span>
+            </div>
+            <div class="rightHalf" v-else>
+                <span class="obj">{{shopName}}</span>
+            </div>
+        </div>
+        <!-- 活动对象 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl required">活动对象</span>
+            <div class="rightHalf">
+                <!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
 				<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
-				<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
-				<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
-				<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
-					<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
-				</el-tooltip>
-				<div class="memberinner">
-					<span v-if="member > 0">已关联会员:{{member}}人</span>
-					<span v-if="member > 0 && fans > 0">|</span>
-					<span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>					
-				</div>
-			</div>
-		</div>
-		<!-- 营销规则设置 -->
-		<div class="set-line">
-			<div class="titles">营销规则设置</div>
-			<div class="line"></div>
-		</div>
-		<!-- 规则 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl"></span>
-			<div class="rightHalf">
-				<ul>
-					<li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
-						规则{{index + 1}}
-						<i class="deletes" @click.stop="deleteRule(index)"></i>
-					</li>
-					<li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
-				</ul>
-				<div class="content-set" v-for="(item,ind) in ruleList" :key='ind' v-if='ruleIndex == ind'>
-					<!-- 最低消费 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">最低消费</span>
-						<div class="rightHalf">
-							<select-btn :name='item.durationName' :sorts="durationList.map(v=>v.name)" :width="189" @selOn="selexpirationTime" :showIndex='ind'></select-btn>
-						</div>
-					</div>
-					<!-- 最低消费 -->
-					<div class="online-box clearfix" v-if="item.durationId == '1'">
-						<span class="online-sub fl">指定额度</span>
-						<div class="rightHalf">
-							<section>
-								<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.minConsumess" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'1')" />
-								<span>元</span>
-							</section>
-						</div>
-					</div>
-					<!-- 最高消费 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">最高消费</span>
-						<div class="rightHalf">
-							<section>
-								<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.maxConsumes" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'2')" />
-								<span>元</span>
-							</section>
-						</div>
-					</div>
-					<!-- 循环赠送 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl"></span>
-						<div class="rightHalf" style="line-height:40px;">
-							<div @click="isLoopFun(item)" :class="item.isLoop ? 'active check':'check'"></div>
-							<p class="fl" style="font-size: 16px;">循环赠送</p>
-							<div class="fl handle-tips">
-								<i></i> 满足交易额整数倍，发劵数同倍增加
-							</div>
-						</div>
-					</div>
-					<!-- <div class="agift-content">
+                <el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
+                <el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
+                <el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
+                    <i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
+                </el-tooltip>
+                <div class="memberinner">
+                    <span v-if="member > 0">已关联会员:{{member}}人</span>
+                    <span v-if="member > 0 && fans > 0">|</span>
+                    <span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>
+                </div>
+            </div>
+        </div>
+        <!-- 营销规则设置 -->
+        <div class="set-line">
+            <div class="titles">营销规则设置</div>
+            <div class="line"></div>
+        </div>
+        <!-- 规则 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl"></span>
+            <div class="rightHalf">
+                <ul>
+                    <li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
+                        规则{{index + 1}}
+                        <i class="deletes" @click.stop="deleteRule(index)"></i>
+                    </li>
+                    <li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
+                </ul>
+                <div class="content-set" v-for="(item,ind) in ruleList" :key='ind' v-if='ruleIndex == ind'>
+                    <!-- 最低消费 -->
+                    <div class="online-box clearfix">
+                        <span class="online-sub fl">最低消费</span>
+                        <div class="rightHalf">
+                            <!-- <select-btn :name='item.durationName' :sorts="durationList.map(v=>v.name)" :width="189" @selOn="selexpirationTime" :showIndex='ind'></select-btn> -->
+                            <el-select v-model="item.durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+                                <el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <!-- 最低消费 -->
+                    <div class="online-box clearfix" v-if="item.durationId == '1'">
+                        <span class="online-sub fl">指定额度</span>
+                        <div class="rightHalf">
+                            <!-- <section>
+                                <input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.minConsumess" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'1')" />
+                                <span>元</span>
+                            </section> -->
+                            <el-input placeholder="请输入金额" v-model="item.minConsumess" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'1')" style="width:179px;">
+                                <template slot="suffix">元</template>
+                            </el-input>
+                        </div>
+                    </div>
+                    <!-- 最高消费 -->
+                    <div class="online-box clearfix">
+                        <span class="online-sub fl">最高消费</span>
+                        <div class="rightHalf">
+                            <!-- <section>
+                                <input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.maxConsumes" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'2')" />
+                                <span>元</span>
+                            </section> -->
+                            <el-input placeholder="请输入金额" v-model="item.maxConsumes" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'2')" style="width:179px;">
+                                <template slot="suffix">元</template>
+                            </el-input>
+                        </div>
+                    </div>
+                    <!-- 循环赠送 -->
+                    <div class="online-box clearfix">
+                        <span class="online-sub fl"></span>
+                        <div class="rightHalf" style="line-height:40px;">
+                            <div @click="isLoopFun(item)" :class="item.isLoop ? 'active check':'check'"></div>
+                            <p class="fl" style="font-size: 16px;">循环赠送</p>
+                            <div class="fl handle-tips">
+                                <i></i> 满足交易额整数倍，发劵数同倍增加
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="agift-content">
 						<span class="fl"></span>
 						<label class="fl">
 							<i @click="isLoopFun" :class="ruleObj.isLoop ? 'chckOn' : ''">✓</i>
@@ -116,7 +132,7 @@
 						<p class="fl" style="font-size: 16px;margin-right: 10px;">循环赠送</p>
 						<p class="fl" style="color: #999999;margin-top: 2px;">(满足交易额整数倍，发劵数同倍增加)</p>
 					</div> -->
-					<!-- <div class="agift-content" style="overflow: initial;height: 40px;">
+                    <!-- <div class="agift-content" style="overflow: initial;height: 40px;">
 						<span class="fl">会员权益</span>
 						<div class="fl selectList" @click="openSelect">
 							{{onListName}}
@@ -128,59 +144,63 @@
 							<i></i>
 						</span>
 					</div> -->
-					<!-- 会员权益 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">会员权益</span>
-						<div class="rightHalf">
-							<select-btn :name='item.interestName' :sorts="interestList.map(v=>v.name)" :width="189" @selOn="selinterest" :showIndex='ind'></select-btn>
-						</div>
-					</div>
-					<!-- 关联优惠券 -->
-					<div class="online-box clearfix" v-if="item.interestId == '2'">
-						<span class="online-sub fl">关联优惠券</span>
-						<div class="rightHalf">
-							<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin(item)">选择关联优惠券</a>
-							<span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
-						</div>
-					</div>
-					<!-- <div class="agift-content" v-if="memberRights == 0">
+                    <!-- 会员权益 -->
+                    <div class="online-box clearfix">
+                        <span class="online-sub fl">会员权益</span>
+                        <div class="rightHalf">
+                            <!--  <select-btn :name='item.interestName' :sorts="interestList.map(v=>v.name)" :width="189" @selOn="selinterest" :showIndex='ind'></select-btn> -->
+                            <el-select v-model="item.interestName" placeholder="请选择" @change="selinterest" style="color:#c0c4cc;width: 179px;">
+                                <el-option v-for="item in interestList" :key="item.id" :label="item.name" :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <!-- 关联优惠券 -->
+                    <div class="online-box clearfix" v-if="item.interestId == '2'">
+                        <span class="online-sub fl">关联优惠券</span>
+                        <div class="rightHalf">
+                            <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin(item)">选择关联优惠券</a>
+                            <span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
+                        </div>
+                    </div>
+                    <!-- <div class="agift-content" v-if="memberRights == 0">
 						<span class="fl"></span>
 						<div class="btn-concent" @click="openCouponWin">
 							<button class="fl increase" style="width: 150px;">选择优惠劵</button>
 						</div>
 						<span class="fl" v-if="ruleObj.couponIds.length >= 1">已选择{{ruleObj.couponIds.length}}张</span>
 					</div> -->
-					<!-- <div class="agift-content" id="agift">
+                    <!-- <div class="agift-content" id="agift">
 						<span class="fl">消息推送渠道</span>
 						<mulSelect :styles="{backgroundColor:'rgb(247,247,247)'}" :list='list' @selOn='selOnSend' :selects="ruleObj.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
 						<span class="fl" style="width: auto;color: #666666;">活动发布后将通过该渠道触发会员</span>
 					</div> -->
-					<!-- 消息推送渠道 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">消息推送渠道</span>
-						<div class="rightHalf">
-							<mulSelect class="fl" :styles="{backgroundColor:'rgb(240,240,240)'}" :list='list' @selOn='selOnSend' :selects="item.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
-							<div class="fl handle-tips">
-								<i></i> 活动发布后将通过该渠道触发会员
-							</div>
-						</div>
-					</div>
-					<!-- 内容设置 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">内容设置</span>
-						<div class="rightHalf">
-							<textarea placeholder="请输入内容设置" v-model="item.msgContent" maxlength="151"></textarea>
-							<div class="bluehandle-tips">
-								<i></i> 活动发布后将通过该渠道触发会员
-							</div>
-							<div class="limit">
-								<p>引用参数:
-									<a style="color:#FF9200;" :key='index' v-for="(item,index) in parameter" @click="addParameter(index,1)">{{item.name}}</a>
-								</p>
-							</div>
-						</div>
-					</div>
-					<!-- <div class="agift-content">
+                    <!-- 消息推送渠道 -->
+                    <div class="online-box clearfix">
+                        <span class="online-sub fl">消息推送渠道</span>
+                        <div class="rightHalf">
+                            <mulSelect class="fl" :styles="{backgroundColor:'rgb(240,240,240)'}" :list='list' @selOn='selOnSend' :selects="item.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
+                            <div class="fl handle-tips">
+                                <i></i> 活动发布后将通过该渠道触发会员
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 内容设置 -->
+                    <div class="online-box clearfix">
+                        <span class="online-sub fl">内容设置</span>
+                        <div class="rightHalf">
+                            <textarea placeholder="请输入内容设置" v-model="item.msgContent" maxlength="151"></textarea>
+                            <div class="bluehandle-tips">
+                                <i></i> 活动发布后将通过该渠道触发会员
+                            </div>
+                            <div class="limit">
+                                <p>引用参数:
+                                    <a style="color:#FF9200;" :key='index' v-for="(item,index) in parameter" @click="addParameter(index,1)">{{item.name}}</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="agift-content">
 						<label>
 							<span class="required required-none" style="vertical-align: top;padding-top: 10px;">内容设置</span>
 							<textarea placeholder="内容设置" style="width: 350px;height: 100px;" v-model="ruleObj.msgContent" maxlength="151"></textarea>
@@ -196,41 +216,44 @@
 							</p>
 						</div>
 					</div> -->
-				</div>
-			</div>
-		</div>
-		<!-- <div class="main_Box" style="overflow: initial;">
+                </div>
+            </div>
+        </div>
+        <!-- <div class="main_Box" style="overflow: initial;">
 			<div class="agift-content">
 				<span class="fl">活动群体</span>
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }" @click="chooseIntegral(index)">{{item.name}}</span>
 				<span class="associated" v-if="integralOn == 1">(已关联{{member}}人)</span>
 			</div>
 		</div> -->
-		<!-- 活动说明 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">活动说明</span>
-			<div class="rightHalf">
-				<textarea placeholder="请输入活动说明" v-model="explain" maxlength="151"></textarea>
-				<div class="bluehandle-tips">
-					<i></i> 限150字以内
-				</div>
-			</div>
-		</div>
-		<div class="agift-content" style="padding-left: 60px;">
-			<a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a>
-			<template v-if='isactivityDetail'>
-				<a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
-				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a>
-			</template>
-		</div>
-		<rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
-		<coupon @winEvent='couponEvent' :selectCoupon='selectCoupon' v-if='showCoupon'></coupon>
-	</div>
-	<!-- 会员筛选 -->
-	<memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
+        <!-- 活动说明 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl">活动说明</span>
+            <div class="rightHalf">
+                <textarea placeholder="请输入活动说明" v-model="explain" maxlength="151"></textarea>
+                <div class="bluehandle-tips">
+                    <i></i> 限150字以内
+                </div>
+            </div>
+        </div>
+        <div class="agift-content" style="padding-left: 60px;">
+            <!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a> -->
+            <el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
+            <template v-if='isactivityDetail'>
+               <!--  <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
+                <a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
+                <el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
+                <el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
+            </template>
+        </div>
+        <rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
+        <coupon @winEvent='couponEvent' :selectCoupon='selectCoupon' v-if='showCoupon'></coupon>
+    </div>
+    <!-- 会员筛选 -->
+    <memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
 </template>
 <script>
-import utils from 'src/verdor/utils';
+    import utils from 'src/verdor/utils';
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
 
@@ -371,7 +394,8 @@ export default {
 			ruleIndex: 0, //点中的第几个  
 			selectCoupon: [], //选中的优惠券
 			checkedMember: false, //会员选中的
-			checkedFans: false //粉丝选中的
+			checkedFans: false, //粉丝选中的
+			shopId:'' //单店的shopId
 		};
 	},
 	methods: {
@@ -401,16 +425,17 @@ export default {
 				winType: winType
 			});
 		},
-		selexpirationTime: function(i, showIndex) { //最低消费
-			this.ruleList[showIndex].durationName = this.durationList[i].name; //点击对应的名字
-			this.ruleList[showIndex].durationId = this.durationList[i].id; //点击对应的id
-			if (this.ruleList[showIndex].durationId == 0) {
-				this.ruleList[showIndex].isLoop = false;
+		selexpirationTime: function(i) { //最低消费
+			//this.ruleList[showIndex].durationName = this.durationList[i].name; //点击对应的名字
+			this.ruleList[this.ruleIndex].durationId = i; //点击对应的id
+			if (this.ruleList[this.ruleIndex].durationId == 0) {
+				this.ruleList[this.ruleIndex].isLoop = false;
 			}
+			console.log(this.ruleList[this.ruleIndex].durationId);
 		},
-		selinterest: function(i, showIndex) { //会员权益
-			this.ruleList[showIndex].interestName = this.interestList[i].name; //点击对应的名字
-			this.ruleList[showIndex].interestId = this.interestList[i].id; //点击对应的id
+		selinterest: function(i) { //会员权益
+			//this.ruleList[showIndex].interestName = this.interestList[i].name; //点击对应的名字
+			this.ruleList[this.ruleIndex].interestId = i; //点击对应的id
 		},
 		openActivityWin() {
 			//设置活动范围
@@ -447,7 +472,8 @@ export default {
 		},
 		addParameter: function(index) {
 			//添加参数
-			this.ruleList[index].msgContent += this.parameter[index].id;
+			this.ruleList[this.ruleIndex].msgContent += this.parameter[index].id;
+
 		},
 		// getListDetail: function(item, index, type) {
 		// 	// 获取设置list详情
@@ -727,6 +753,9 @@ export default {
 				this.activityDetail.endTime = Math.round(this.endObj.time / 1000); //结束时间
 				this.activityDetail.isAuto = type;
 				this.activityDetail.rule = rule;
+				this.activityDetail.selectFans = Number(this.checkedFans);//选择粉丝
+				// console.log(JSON.stringify(this.activityDetail))
+				// return false;
 				await http.fissionActivity({
 					data: {
 						activityId: this.activityDetail.id,
@@ -743,7 +772,7 @@ export default {
 						objectType: this.memberStatus ? 4 : 1, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
-						selectFans: this.fans, //粉丝的数量
+						selectFans: Number(this.checkedFans), //粉丝的数量
 						startTime: Math.round(this.startObj.time / 1000),
 						endTime: Math.round(this.endObj.time / 1000),
 						isAuto: type,
@@ -805,6 +834,7 @@ export default {
 					interestName = '电子优惠券';
 					interestId = 2;
 				}
+				//console.log(item.pushChannel)
 				let obj = {
 					id: item.id,
 					durationName: durationName, //最低消费
@@ -815,7 +845,7 @@ export default {
 					interestName: interestName, //会员权益
 					interestId: interestId,
 					couponIds: couponIds, //优惠券
-					pushChannel: item.pushChannel.split(','), //消息推送渠道
+					pushChannel: item.pushChannel == '0' ? [] : item.pushChannel.split(','), //消息推送渠道
 					msgContent: item.msgContent //内容设置
 				};
 				this.ruleList.push(obj);
@@ -838,8 +868,8 @@ export default {
 			if (this.member && Number(this.member) > 0) {
 				this.checkedMember = true;
 			}
-			if (activityDetail.selectFans && activityDetail.selectFans != '') { //筛选的粉丝的数量
-				this.fans = activityDetail.selectFans;
+			if (activityDetail.selectFans && activityDetail.selectFans == 1) { //筛选的粉丝的数量
+				this.getSubscribeFansCount();
 				this.checkedFans = true;
 			}
 			this.edit = true;
@@ -1052,57 +1082,57 @@ export default {
 </script>
 <style type="text/css" scoped>
 .member-agift {
-	max-width: 1400px;
-	height: auto;
+    max-width: 1400px;
+    height: auto;
 }
 
 .member-agift .set-line {
-	width: 1000px;
-	height: 28px;
-	line-height: 28px;
-	border-left: 4px solid #28a8e0;
-	margin: 15px 0 35px;
-	position: relative;
+    width: 1000px;
+    height: 28px;
+    line-height: 28px;
+    border-left: 4px solid #28a8e0;
+    margin: 15px 0 35px;
+    position: relative;
 }
 
 .member-agift .set-line .titles {
-	float: left;
-	margin-left: 12px;
-	width: 100px;
-	font-size: 16px;
-	text-align: left;
+    float: left;
+    margin-left: 12px;
+    width: 100px;
+    font-size: 16px;
+    text-align: left;
 }
 
 .member-agift .set-line .line {
-	display: inline-block;
-	width: 870px;
-	border-bottom: 1px dashed #d9d9d9;
-	margin-bottom: 5px;
+    display: inline-block;
+    width: 870px;
+    border-bottom: 1px dashed #d9d9d9;
+    margin-bottom: 5px;
 }
 
 .member-agift .online-box {
-	width: 100%;
-	height: auto;
-	min-height: 40px;
-	margin-bottom: 29px;
+    width: 100%;
+    height: auto;
+    min-height: 40px;
+    margin-bottom: 29px;
 }
 
 .member-agift .online-box .online-sub {
-	display: block;
-	font-size: 16px;
-	width: 120px;
-	height: 40px;
-	line-height: 40px;
-	color: #333;
-	text-align: right;
-	margin-right: 14px;
+    display: block;
+    font-size: 16px;
+    width: 120px;
+    height: 40px;
+    line-height: 40px;
+    color: #333;
+    text-align: right;
+    margin-right: 14px;
 }
 
 .member-agift .online-box .rightHalf {
-	max-width: 900px;
-	height: auto;
-	float: left;
-	/*line-height: 40px;*/
+    max-width: 900px;
+    height: auto;
+    float: left;
+    line-height: 40px;
 }
 
 
@@ -1110,174 +1140,174 @@ export default {
 /*活动名称的输入框*/
 
 .member-agift .online-box .rightHalf .name {
-	width: 280px;
-	height: 40px;
-	background-color: #ffffff;
-	border: solid 1px #cecdcd;
-	text-indent: 15px;
+    width: 280px;
+    height: 40px;
+    background-color: #ffffff;
+    border: solid 1px #cecdcd;
+    text-indent: 15px;
 }
 
 .member-agift .online-box .rightHalf .obj {
-	display: inline-block;
-	width: 200px;
-	height: 40px;
-	background: #f8f8f8;
-	line-height: 40px;
-	text-align: center;
+    display: inline-block;
+    width: 200px;
+    height: 40px;
+    background: #f8f8f8;
+    line-height: 40px;
+    text-align: center;
 }
 
 .member-agift .online-box .rightHalf textarea {
-	width: 340px;
-	height: 100px;
-	outline: none;
-	padding: 10px;
-	color: #333;
-	font-size: 16px;
-	resize: none;
-	border: 1px solid #eaeaea;
+    width: 340px;
+    height: 100px;
+    outline: none;
+    padding: 10px;
+    color: #333;
+    font-size: 16px;
+    resize: none;
+    border: 1px solid #eaeaea;
 }
 
 .member-agift .online-box .rightHalf .limit {
-	font-size: 14px;
-	color: #999999;
-	height: auto;
-	overflow: hidden;
+    font-size: 14px;
+    color: #999999;
+    height: auto;
+    overflow: hidden;
 }
 
 .member-agift .online-box .rightHalf .check {
-	width: 20px;
-	height: 20px;
-	cursor: pointer;
-	border: 1px solid #28a8e0;
-	margin: 11px 8px;
-	float: left;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 1px solid #28a8e0;
+    margin: 11px 8px;
+    float: left;
 }
 
 .member-agift .online-box .rightHalf .memberinner {
-	height: 40px;
-	line-height: 40px;
-	font-size: 16px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
 }
 
 .handle-tips {
-	height: 40px;
-	line-height: 40px;
-	text-indent: 45px;
-	background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
-	color: #999999;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 45px;
+    background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
+    color: #999999;
 }
 
 .bluehandle-tips {
-	height: 40px;
-	line-height: 40px;
-	text-indent: 25px;
-	background: url(../../../res/icon/i.png) 0 center no-repeat;
-	color: #999999;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 25px;
+    background: url(../../../res/icon/i.png) 0 center no-repeat;
+    color: #999999;
 }
 
 .active {
-	background: url(../../../res/icon/selected.png) center center no-repeat,
-	#28a8e0;
+    background: url(../../../res/icon/selected.png) center center no-repeat,
+        #28a8e0;
 }
 
 .member-agift .online-box .rightHalf .lines {
-	width: 40px;
-	text-align: center;
-	margin-right: 0;
-	line-height: 40px;
+    width: 40px;
+    text-align: center;
+    margin-right: 0;
+    line-height: 40px;
 }
 
 .member-agift .online-box .rightHalf .returnInt {
-	text-align: left;
-	text-indent: 20px;
-	color: #A3A3A3;
-	line-height: 40px;
+    text-align: left;
+    text-indent: 20px;
+    color: #A3A3A3;
+    line-height: 40px;
 }
 
 .member-agift .online-box .rightHalf .associated {
-	line-height: 40px;
+    line-height: 40px;
 }
 
 .member-agift .online-box .rightHalf ul li {
-	display: inline-block;
-	width: 100px;
-	height: 40px;
-	line-height: 40px;
-	background-color: #f2f2f2;
-	color: #333333;
-	margin-right: 5px;
-	text-align: center;
-	position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #f2f2f2;
+    color: #333333;
+    margin-right: 5px;
+    text-align: center;
+    position: relative;
 }
 
 .member-agift .online-box .rightHalf ul li.on {
-	color: #ffffff;
-	background-color: #b3b3b3;
+    color: #ffffff;
+    background-color: #b3b3b3;
 }
 
 .member-agift .online-box .rightHalf ul li.initial:hover i.deletes {
-	position: absolute;
-	right: -12px;
-	top: -12px;
-	background: url(../../../res/images/delete.png) center center no-repeat;
-	height: 30px;
-	width: 30px;
-	cursor: pointer;
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    background: url(../../../res/images/delete.png) center center no-repeat;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
 }
 
 .member-agift .online-box .rightHalf ul li.adds {
-	cursor: pointer;
-	text-indent: 25px;
+    cursor: pointer;
+    text-indent: 25px;
 }
 
 .member-agift .online-box .rightHalf ul li.adds:after,
 .member-agift .online-box .rightHalf ul li.adds:before {
-	content: "";
-	position: absolute;
-	left: 8px;
-	top: 50%;
-	margin-top: -3px;
-	background-color: #666666;
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    margin-top: -3px;
+    background-color: #666666;
 }
 
 .member-agift .online-box .rightHalf ul li.adds:after {
-	width: 20px;
-	height: 3px;
+    width: 20px;
+    height: 3px;
 }
 
 .member-agift .online-box .rightHalf ul li.adds:before {
-	height: 20px;
-	width: 3px;
-	left: 17px;
-	margin-top: -11px;
+    height: 20px;
+    width: 3px;
+    left: 17px;
+    margin-top: -11px;
 }
 
-.member-agift .online-box .rightHalf section {
-	width: 190px;
-	height: 38px;
-	border: 1px solid #CECDCD;
-	float: left;
+/* .member-agift .online-box .rightHalf section {
+    width: 190px;
+    height: 38px;
+    border: 1px solid #CECDCD;
+    float: left;
 }
 
 .member-agift .online-box .rightHalf section .cumulative {
-	width: 150px;
-	height: 36px;
-	border: 1px solid #eaeaea;
-	float: left;
-	outline: none;
-	text-indent: 17px;
+    width: 150px;
+    height: 36px;
+    border: 1px solid #eaeaea;
+    float: left;
+    outline: none;
+    text-indent: 17px;
 }
 
 .member-agift .online-box .rightHalf section span {
-	display: block;
-	float: left;
-	width: 38px;
-	height: 37px;
-	text-align: center;
-	line-height: 38px;
-	border-left: 1px solid #CECDCD;
+    display: block;
+    float: left;
+    width: 38px;
+    height: 37px;
+    text-align: center;
+    line-height: 38px;
+    border-left: 1px solid #CECDCD;
 }
-
+ */
 
 
 
@@ -1351,10 +1381,10 @@ export default {
 */
 
 .agift-content {
-	width: 100%;
-	height: auto;
-	margin-bottom: 20px;
-	overflow: hidden;
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    overflow: hidden;
 }
 
 
@@ -1459,11 +1489,11 @@ export default {
 }*/
 
 .content-set {
-	border: 1px solid #cccccc;
-	width: 650px;
-	height: auto;
-	overflow: hidden;
-	padding-top: 29px;
+    border: 1px solid #cccccc;
+    width: 650px;
+    height: auto;
+    overflow: hidden;
+    padding-top: 29px;
 }
 
 
@@ -1529,7 +1559,7 @@ export default {
 }*/
 
 .tips {
-	background: url(../../../res/images/handle-tips.png) left center no-repeat;
+    background: url(../../../res/images/handle-tips.png) left center no-repeat;
 }
 
 
@@ -1609,22 +1639,22 @@ input:focus {
 */
 
 label {
-	font-size: 16px;
-	cursor: pointer;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 label i {
-	font-size: 16px;
-	font-style: normal;
-	display: inline-block;
-	width: 17px;
-	height: 17px;
-	text-align: center;
-	line-height: 12px;
-	color: #fff;
-	vertical-align: middle;
-	margin-right: 10px;
-	border: #2489c5 1px solid;
+    font-size: 16px;
+    font-style: normal;
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    text-align: center;
+    line-height: 12px;
+    color: #fff;
+    vertical-align: middle;
+    margin-right: 10px;
+    border: #2489c5 1px solid;
 }
 
 
@@ -1725,7 +1755,7 @@ input[type="radio"]:checked:disabled+i {
 }*/
 
 .chckOn {
-	background: #2489c5;
+    background: #2489c5;
 }
 
 

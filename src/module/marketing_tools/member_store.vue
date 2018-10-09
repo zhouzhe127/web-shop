@@ -20,8 +20,8 @@
 				</div>
 				<!-- 门店 -->
 				<div class="orderNum fl" v-if="ischain == '3'">
-					<span class="title fl">门店</span>
-					<selectStore @emit="clickShopList" :sorts="shopsList" :tipName="shopsName"></selectStore>
+					<span class="title fl">门店</span> 
+                   <elShopList @chooseShop="getSelectShopList" :shopIds="selectShopId"></elShopList>
 				</div>
 				<!-- 筛选重置 -->
 				<div class="search-box fl">
@@ -155,15 +155,15 @@ export default {
 			expirationTimeList: [{ //过期时间
 				name: '全部渠道',
 				id: 0
-			}, {
+			},
+			{
 				name: '微信',
 				id: 1
 			},
 			{
 				name: 'POS收银',
 				id: 2
-			}
-			],
+			}],
 			expirationTimeId: 0,
 			expirationTime: '全部', //状态
 			shopsList: [], // 卡属门店  
@@ -176,8 +176,7 @@ export default {
 			},
 			{
 				name: '自定义方案'
-			}
-			],
+			}],
 			indexOn: 0,
 			packageList: [], //筛选时方案列表显示
 			type: '', //筛选是固定方案还是自定义方案
@@ -242,12 +241,11 @@ export default {
 			{
 				titleName: '操作人',
 				dataName: 'createUid'
-			}
-			],
+			}],
 			userShop: '',
 			ischain: '',
 			selectName: '请选择店铺', //选择的店铺名
-			selectShopId: '', //选中的店铺
+			selectShopId: [], //选中的店铺
 			allFormList: [], //获取所有的数组
 			page: 1,
 			num: 10,
@@ -261,18 +259,18 @@ export default {
 			this.num = obj.num;
 			this.getStoreList();
 		},
-		startTimeChange: function(data) {
+		startTimeChange: function (data) {
 			this.startTime = new Date(data).setHours(0, 0, 0, 0);
 		},
-		endTimeChange: function(data) {
+		endTimeChange: function (data) {
 			this.endTime = new Date(data).setHours(23, 59, 59, 999);
 		},
-		selexpirationTime: function(i) {
+		selexpirationTime: function (i) {
 			this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
 			this.expirationTimeId = this.expirationTimeList[i].id; //点击卡类型对应的id
 		},
 		//时间显示
-		translateTime: function(time) {
+		translateTime: function (time) {
 			return utils.format(time, 'yyyy-MM-dd/hh:mm');
 		},
 		async getStoreList() {
@@ -281,7 +279,7 @@ export default {
 					startTime: parseInt(this.startTime / 1000), //开始时间
 					endTime: parseInt(this.endTime / 1000), //结束时间
 					channel: this.expirationTimeId, //渠道
-					shopIds: this.selectShopId, //店铺
+					shopIds: this.selectShopId.join(','), //店铺
 					type: this.indexOn, //方案类型
 					page: this.page, //页码数
 					num: this.num //条数
@@ -308,7 +306,7 @@ export default {
 				cancle: {
 					content: '取消删除'
 				},
-				callback: async(str) => {
+				callback: async (str) => {
 					if (str == 'ok') {
 						await http.delDep({
 							data: {
@@ -348,51 +346,75 @@ export default {
 			this.$router.push('/admin/memberStoredValueScheme/solution');
 		},
 		//打开创建方案页面
-		openStore: function() {
+		openStore: function () {
 			this.$router.push('/admin/memberStoredValueScheme/solution');
 		},
 
 		//方案列表点击选择方案
-		chooseStore: function(index) {
+		chooseStore: function (index) {
 			this.page = 1;
 			this.indexOn = index;
 			this.getStoreList();
 		},
-		getShopList: function() {
+		getShopList: function () {
 			// 获取卡属门店店铺列表
+			this.selectShopId = [];
 			if (this.ischain == '3') { // 处理品牌逻辑
 				this.shopsList = storage.session('shopList');
 				for (let item of this.shopsList) {
 					item.name = item.shopName;
 				}
+				this.selectShopId = this.shopsList.map((v) => {
+					return v.id;
+				});
+				let selectNameStr = '';
+				for (let i = 0; i < this.shopsList.length; i++) {
+
+					selectNameStr = selectNameStr + this.shopsList[i].name + ',';
+				}
+				this.selectName = selectNameStr;
 			} else {
-				this.selectShopId = this.userShop.currentShop.id;
+				this.selectShopId.push(this.userShop.currentShop.id);
+				this.selectName = this.userShop.currentShop.name;
 			}
 		},
 		// 获取卡属门店店铺列表
-		clickShopList: function(arr) {
-			let idArr = [];
-			let nameArr = [];
-			arr.forEach((item) => {
-				if (item.selected == true) {
-					idArr.push(item.id);
-					nameArr.push(item.name);
-				}
-			});
-			this.selectName = nameArr.join(',');
-			if (this.selectName == '') {
-				this.selectName = '请选择店铺';
-			}
-			this.selectShopId = idArr.join(',');
-		},
-		resetFun: function() {
+		// clickShopList: function(arr) {
+		// 	let idArr = [];
+		// 	let nameArr = [];
+		// 	arr.forEach((item) => {
+		// 		if (item.selected == true) {
+		// 			idArr.push(item.id);
+		// 			nameArr.push(item.name);
+		// 		}
+		// 	});
+		// 	this.selectName = nameArr.join(',');
+		// 	if (this.selectName == '') {
+		// 		this.selectName = '请选择店铺';
+		// 	}
+		// 	this.selectShopId = idArr.join(',');
+		// },
+		resetFun: function () {
 			this.startTime = new Date().setHours(0, 0, 0, 0) - (global.timeConst.THREEMONTHS);
 			this.endTime = new Date().setHours(23, 59, 59, 999);
 			this.expirationTimeId = 0;
 			this.expirationTime = '全部';
 			this.getShopList();
 			this.getStoreList();
-		}
+		},
+		getSelectShopList: function (res) {
+			this.selectShopId = res;
+			let selectNameStr = '';
+			for (let i = 0; i < this.shopsList.length; i++) {
+				if (this.selectShopId.includes(this.shopsList[i].id)) {
+					this.shopsList[i].selected = true;
+					selectNameStr = selectNameStr + this.shopsList[i].name + ',';
+				} else {
+					this.shopsList[i].selected = false;
+				}
+			}
+			this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
+		},
 	},
 	mounted() {
 		this.userShop = storage.session('userShop');
@@ -416,17 +438,19 @@ export default {
 	},
 	components: {
 		detail: () =>
-		import ( /* webpackChunkName:'member_store_detail' */ './member_store_detail'),
+			import ( /* webpackChunkName:'member_store_detail' */ './member_store_detail'),
 		comTable: () =>
-		import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 		Calendar: () =>
-		import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
+			import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 		selectBtn: () =>
-		import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+			import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+		elShopList: () =>
+			import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
 		selectStore: () =>
-		import ( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
+			import ( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
 		pageElement: () =>
-		import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+			import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 	}
 };
 </script>

@@ -9,7 +9,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='customName' maxlength="10" />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='customName' maxlength="10" /> -->
+				<el-input v-model="customName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动对象 -->
@@ -44,7 +45,8 @@
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
 				<section class="clearfix">
-					<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCustom">选择关联优惠券</a>
+					<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCustom">选择关联优惠券</a> -->
+					<el-button type="primary" icon="el-icon-plus" @click="addCustom" style="width:179px;">选择关联优惠券</el-button>
 					<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
 				</section>
 				<!-- 活动对象为店内的时候显示 -->
@@ -85,9 +87,13 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar>
+					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
+					</el-date-picker>
 					<span class="fl lines">-</span>
-					<calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar>
+					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp"  @change="getEndTime">
+					</el-date-picker>
 				</div>
 				<span class="fl returnInt">共{{returnInt}}天</span>
 			</div>
@@ -133,10 +139,13 @@
 			</div>
 		</div>
 		<div class="box" style="margin-top: 100px;padding-left: 70px;">
-			<a href="javascript:void(0);" class="gray" style="width: 200px;" @click="returnAct">取消</a>
+		   <!--  <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="returnAct">取消</a> -->
+			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="returnAct">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="activitySave('0')">保存</a>
-				<a v-if="editId == ''" href="javascript:void(0);" class="yellow" style="width: 200px;" @click="activitySave('1')">发布</a>
+				<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="activitySave('0')">保存</a> -->
+				<el-button type="info" style="margin-right: 10px;width:190px;" @click="activitySave('0')">保存</el-button>
+				<!-- <a v-if="editId == ''" href="javascript:void(0);" class="yellow" style="width: 200px;" @click="activitySave('1')">发布</a> -->
+				 <el-button type="primary" style="margin-right: 10px;width:190px;" @click="activitySave('1')">发布</el-button>
 			</template>
 		</div>
 		<!-- <vip v-if='showVip' @selectVip='selectVipEvent'></vip> -->
@@ -475,12 +484,12 @@ export default {
 				};
 				arr.push(obj);
 				let objectType = '';
-				if(this.indexCustom == 1){
+				if (this.indexCustom == 1) {
 					objectType = 0;
-				}else if(this.indexCustom == 2){
-					if(this.memberStatus){
+				} else if (this.indexCustom == 2) {
+					if (this.memberStatus) {
 						objectType = 4;
-					}else{
+					} else {
 						objectType = 1;
 					}
 				}

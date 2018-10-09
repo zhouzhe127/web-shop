@@ -9,7 +9,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='actName' maxlength="10" />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='actName' maxlength="10" /> -->
+				<el-input v-model="actName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动对象 -->
@@ -23,7 +24,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount">选择关联优惠券</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount">选择关联优惠券</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="addCount" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -31,16 +33,21 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动期限</span>
 			<div class="rightHalf">
-				<select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn>
+				<!-- <select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn> -->
+				<el-select v-model="durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+					<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>
 			</div>
 		</div>
 		<!-- 推送日期 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">推送日期</span>
 			<div class="rightHalf">
-				<span>提前</span>
-				<input type="text" placeholder="请输入推送日期" v-model="pushdateNum" class="name" style="width: 200px;margin:0 10px;" />
-				<span>天,发起生日活动推送</span>
+				<span class="fl thetext">提前</span>
+				<!--  <input type="text" placeholder="请输入推送日期" v-model="pushdateNum" class="name" style="width: 200px;margin:0 10px;" /> -->
+				<el-input class="fl" style="width:auto;margin-right:10px;" v-model="pushdateNum" maxlength="10" placeholder="请输入推送日期"></el-input>
+				<span class="fl thetext">天,发起生日活动推送</span>
 			</div>
 		</div>
 		<!-- 推送时间 -->
@@ -48,7 +55,11 @@
 			<span class="online-sub fl required">推送时间</span>
 			<div class="rightHalf">
 				<span style="margin-right:10px;">每日</span>
-				<select-btn :name='pushNum' :sorts="pushtimeList.map(v=>v.name)" :width="200" @selOn="selpushtime"></select-btn>
+				<!-- <select-btn :name='pushNum' :sorts="pushtimeList.map(v=>v.name)" :width="200" @selOn="selpushtime"></select-btn> -->
+				<el-select v-model="pushNum" placeholder="请选择" @change="selpushtime" style="color:#c0c4cc;width: 179px;">
+					<el-option v-for="item in pushtimeList" :key="item.name" :label="item.name" :value="item.name">
+					</el-option>
+				</el-select>
 				<span style="margin-left:10px;">时,发起生日活动推送</span>
 			</div>
 		</div>
@@ -101,10 +112,13 @@
 			</div>
 		</div>
 		<div class="box" style="margin-top: 100px;padding-left: 70px;">
-			<a href="javascript:void(0);" class="gray" style="width: 200px;" @click="returnAct">取消</a>
+			<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="returnAct">取消</a> -->
+			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="returnAct">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="birthSave('0')">保存</a>
-				<a v-if="!edit" href="javascript:void(0);" class="yellow" style="width: 200px;" @click="birthSave('1')">发布</a>
+				<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="birthSave('0')">保存</a> -->
+				<el-button type="info" style="margin-right: 10px;width:190px;" @click="birthSave('0')">保存</el-button>
+				<!-- <a v-if="!edit" href="javascript:void(0);" class="yellow" style="width: 200px;" @click="birthSave('1')">发布</a> -->
+				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="birthSave('1')">发布</el-button>
 			</template>
 		</div>
 		<!-- 优惠券的弹窗 -->
@@ -136,14 +150,14 @@ export default {
 				id: 2
 			}
 			],
-			durationId: -1,
+			durationId: -1, //活动期限
 			durationName: '全部', //状态
 			explain: '', //生日活动说明
 			isclick: false, //保存时只能点击一次
 			pushdateNum: '', //推送日期
 			pushtimeList: [ //推送时间
 				{
-					name: '8'
+					name: '8',
 				}, {
 					name: '9'
 				}, {
@@ -230,12 +244,15 @@ export default {
 				winType: winType
 			});
 		},
-		selexpirationTime: function(i) { //活动期限
-			this.durationName = this.durationList[i].name; //点击对应的名字
-			this.durationId = this.durationList[i].id; //点击对应的id
+		selexpirationTime: function(val) { //活动期限
+			//this.durationName = this.durationList[i].name; //点击对应的名字
+			this.durationId = val; //点击对应的id
+			//console.log(this.durationId)
 		},
-		selpushtime: function(i) { //推送时间
-			this.pushNum = this.pushtimeList[i].name; //点击对应的名字
+		selpushtime: function(val) { //推送时间
+			//this.pushNum = this.pushtimeList[i].name; //点击对应的名字
+			this.pushNum = val;
+			//console.log(value)
 		},
 		addParameter: function(index) { //添加参数
 			this.contentSetting += this.parameter[index].id;
@@ -466,11 +483,17 @@ export default {
 
 .birth_act .online-box .rightHalf .obj {
 	display: inline-block;
-	width: 200px;
+	width: 179px;
 	height: 40px;
 	background: #f8f8f8;
 	line-height: 40px;
 	text-align: center;
+	border-radius: 4px;
+}
+
+.birth_act .online-box .rightHalf .thetext {
+	line-height: 40px;
+	margin-right: 10px;
 }
 
 .birth_act .online-box .rightHalf textarea {

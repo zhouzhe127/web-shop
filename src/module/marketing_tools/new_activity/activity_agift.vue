@@ -9,7 +9,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='title' maxlength="10" />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='title' maxlength="10" /> -->
+				<el-input v-model="title" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动时间 -->
@@ -17,9 +18,13 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar>
+					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
+					</el-date-picker>
 					<span class="fl lines">-</span>
-					<calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar>
+					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp"  @change="getEndTime">
+					</el-date-picker>					
 				</div>
 				<span class="fl returnInt">共{{returnInt}}天</span>
 			</div>
@@ -28,7 +33,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动范围</span>
 			<div class="rightHalf" v-if="ischain == '3'">
-				<a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
 				<span v-if="selectsList.length >= 1">(已选择{{selectsList.length}}家店铺)</span>
 			</div>
 			<div class="rightHalf" v-else>
@@ -51,14 +57,19 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">会员权益</span>
 			<div class="rightHalf">
-				<select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn>
+				<!-- <select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn> -->
+				<el-select v-model="durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+					<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>				
 			</div>
 		</div>
 		<!-- 关联优惠券 -->
 		<div class="online-box clearfix" v-if="durationId == '1'">
 			<span class="online-sub fl">关联优惠券</span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin">选择关联优惠券</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin">选择关联优惠券</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="openCouponWin" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -147,10 +158,13 @@
 					<img class="icon-i" src="../../../res/images/handle-tips.png" />限150字以内</p>
 				</div> -->
 		<div class="agift-content" style="padding-left: 60px;">
-			<a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a>
+			<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a> -->
+			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
-				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a>
+				<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
+				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
+				<el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
+				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
 			</template>
 		</div>
 		<!-- 活动关联门店 -->
@@ -253,8 +267,8 @@ export default {
 			this.endObj.time = str;
 		},
 		selexpirationTime: function(i) { //会员权益
-			this.durationName = this.durationList[i].name; //点击对应的名字
-			this.durationId = this.durationList[i].id; //点击对应的id
+			//this.durationName = this.durationList[i].name; //点击对应的名字
+			this.durationId = i; //点击对应的id
 		},
 		addParameter: function(index) { //添加参数
 			this.memberContent += this.parameter[index].id;
@@ -548,11 +562,12 @@ export default {
 
 #member-agift .online-box .rightHalf .obj {
 	display: inline-block;
-	width: 200px;
+	width: 179px;
 	height: 40px;
 	background: #f8f8f8;
 	line-height: 40px;
 	text-align: center;
+	border-radius: 4px;
 }
 
 #member-agift .online-box .rightHalf textarea {
