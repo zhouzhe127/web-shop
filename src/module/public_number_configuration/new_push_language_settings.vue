@@ -12,25 +12,25 @@
 			<div class="titles">首次关注推送语</div>
 			<div class="line"></div>
 		</div>
-		<addPushlan :msg='msg_1' :resultArr='followerMessage'></addPushlan>
+		<addPushlan :msg='msg_1' :logo="'0'" :resultArr='followerMessage'></addPushlan>
 		<!-- 二次关注推送语 -->
 		<div class="set-line">
 			<div class="titles">二次关注推送语</div>
 			<div class="line"></div>
 		</div>
-		<addPushlan :msg='msg_2' :resultArr='message'></addPushlan>
+		<addPushlan :msg='msg_2' :logo="'1'" :resultArr='message'></addPushlan>
 		<!-- 通过分享后关注推送语 -->
 		<div class="set-line">
 			<div class="titles">通过分享后关注推送语</div>
 			<div class="line"></div>
 		</div>
-		<addPushlan :msg='msg_3' :resultArr='spreaderMessage'></addPushlan>
+		<addPushlan :msg='msg_3' :logo="'2'" :resultArr='spreaderMessage'></addPushlan>
 		<!-- 图片加载推送语 -->
 		<div class="set-line">
 			<div class="titles">图片加载推送语</div>
 			<div class="line"></div>
 		</div>
-		<addPushlan :msg='msg_4' :resultArr='imageMessage'></addPushlan>
+		<addPushlan :msg='msg_4' :logo="'3'" :resultArr='imageMessage'></addPushlan>
 		<!-- 保存 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
