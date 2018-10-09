@@ -64,16 +64,28 @@ let uploadfile = {
 		fn
 	}) {
 		return new Promise((resolve, reject) => {
-			let dom = document.querySelector('#' + formId);
 
-			let oid = ++this.onlyid;
-			if (typeof formId == 'string') {
-				if (dom.tagName != 'FORM') {
-					throw new Error('id等于' + formId + '的form表单不存在');
+			let f = null;
+			let dom = null;
+			if(typeof formId == 'string'){
+				dom = document.querySelector('#' + formId);
+				if (typeof formId == 'string') {
+					if (dom.tagName != 'FORM') {
+						throw new Error('id等于' + formId + '的form表单不存在');
+					}
 				}
+				f = document.querySelector(`#${formId} input[type=file]`);
+			}else{
+				f = formId;
+				let temp = f;
+				while(temp.tagName.toLocaleLowerCase() != 'form'){
+					temp = temp.parentNode;
+				}
+				dom = temp;
 			}
+			
+			let oid = ++this.onlyid;
 
-			let f = document.querySelector(`#${formId} input[type=file]`);
 			let returnStr = this.checkFile(f, fn);
 			if (returnStr) {
 				reject(returnStr);
