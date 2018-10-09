@@ -1,4 +1,6 @@
-import utils from "src/verdor/utils";
+import utils from 'src/verdor/utils';
+import exportFile from './exportFile.js';
+import {store} from 'src/manager/store';
 
 /**       IE10+ 
          * @description ajax请求
@@ -17,8 +19,8 @@ import utils from "src/verdor/utils";
             let ajaxId = [];//可以获取当前这个ajax的引用,供后期取消使用
             let obj = {
                 url: 'http://60.205.222.103:3000',
-                mothed: "get",
-                type: "json",
+                mothed: 'get',
+                type: 'json',
                 id:ajaxId
             }
             let p = ajax(obj);
@@ -33,18 +35,18 @@ import utils from "src/verdor/utils";
          */
 
 let accepts = {
-	xml: "application/xml, text/xml",
-	html: "text/html",
-	script: "text/javascript, application/javascript",
-	json: "application/json, text/javascript",
-	text: "text/plain",
-	_default: ""
+	xml: 'application/xml, text/xml',
+	html: 'text/html',
+	script: 'text/javascript, application/javascript',
+	json: 'application/json, text/javascript',
+	text: 'text/plain',
+	_default: ''
 };
-let _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+let _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
 function ajax(params) {
 	return new Promise(function (resolve, reject) {
-		var obj = utils.deepCopy(params);
+		let obj = utils.deepCopy(params);
 		ajax.checkCrossDomain(obj.url);
 
 		let url = obj.url;
@@ -52,13 +54,13 @@ function ajax(params) {
 		if (/\/.*\.(\w+)$/.test(url)) {
 			isDownFile = RegExp.$1;
 		}
-		let method = obj.method || "get";
+		let method = obj.method || 'get';
 		let timeout = obj.timeout || 20000;
-		let async = typeof obj.async == "undefined" ? true : obj.async;
-		let type = obj.type || "json";
-		let id = "a_" + ajax.id++;
+		let async = typeof obj.async == 'undefined' ? true : obj.async;
+		let type = obj.type || 'json';
+		let id = 'a_' + ajax.id++;
 		let globalData = Object.assign(obj.globalData || {}, {
-			format: "json"
+			format: 'json'
 		});
 		let source = obj.source; //post请求时单独发送字符串
 		//回调出ajax的id
@@ -72,21 +74,21 @@ function ajax(params) {
 		}
 
 		if (!source) { //中信一键转账接口不需要添加全局参数 source判断
-			url += "?" + ajax.paramsajaxData(globalData);
+			url += '?' + ajax.paramsajaxData(globalData);
 		}
 		//解析参数
-		if (method === "get" && obj.data) {
+		if (method === 'get' && obj.data) {
 			let pd = ajax.paramsajaxData(obj.data);
-			if (pd != "") {
-				if (url.indexOf("?") > 0) {
-					url += "&" + ajax.paramsajaxData(obj.data);
+			if (pd != '') {
+				if (url.indexOf('?') > 0) {
+					url += '&' + ajax.paramsajaxData(obj.data);
 				} else {
-					url += "?" + ajax.paramsajaxData(obj.data);
+					url += '?' + ajax.paramsajaxData(obj.data);
 				}
 			}
 		}
-		if (url.indexOf("?") > 0) url += "&r=" + Math.random();
-		else url = source ? url : url += "?r=" + Math.random(); //中信一键转账接口不需要添加全局参数 source判断
+		if (url.indexOf('?') > 0) url += '&r=' + Math.random();
+		else url = source ? url : url += '?r=' + Math.random(); //中信一键转账接口不需要添加全局参数 source判断
 
 		let xhr = ajax.createajax();
 		xhr._data = obj;
@@ -94,18 +96,20 @@ function ajax(params) {
 
 
 		//xhr2和XDomainRequest
-		if ("onload" in xhr && async) {
-			xhr.onload = function (event) {
+		if ('onload' in xhr && async) {
+			xhr.onload = function () {
 
 				//下载文件
-				if (type == "file") {
-					var blob = this.response;
-					var reader = new FileReader();
+				
+				if (type == 'file') {
+					
+					let blob = this.response;
+					let reader = new FileReader();
 					reader.readAsDataURL(blob); // 转换为base64，可以直接放入a
-					var suf = isDownFile || /^[\w]+\/(.+)/g.exec(blob.type)[1];
+					let suf = isDownFile || /^[\w]+\/(.+)/g.exec(blob.type)[1];
 
-					var time = new Date();
-					var fileName = obj.fileName || (time.getFullYear() + ("00" + (time.getMonth() + 1)).slice(-2) + ("00" + time.getDate()).slice(-2));
+					let time = new Date();
+					let fileName = obj.fileName || (time.getFullYear() + ('00' + (time.getMonth() + 1)).slice(-2) + ('00' + time.getDate()).slice(-2));
 					reader.onload = function (e) {
 
 						let str = e.target.result;
@@ -113,7 +117,7 @@ function ajax(params) {
 						// data:text/html;base64,eyJlcnJvciI6eyJjb2RlIjoyODE4LCJtZXNzYWdlIjoiXHU2MGE4XHU2Y2ExXHU2NzA5XHU2NzQzXHU5NjUwXHVmZjBjXHU4YmY3XHU4MDU0XHU3Y2ZiXHU3NmY4XHU1MTczXHU0ZWJhXHU1NDU4In19
 
 						if (str.length < 1000) {
-							let strCopy = decode(str.split(",")[1]); //将字符串分离
+							let strCopy = decode(str.split(',')[1]); //将字符串分离
 							let obj = null;
 							try {
 								obj = JSON.parse(strCopy);
@@ -124,32 +128,36 @@ function ajax(params) {
 								downfile(fileName, suf, str);
 							}
 
-						} else {
+						}else if (str.length > 1024 * 1024){
+							//超出1M
+							let tempData = xhr._data;
+							exportFile(
+								Object.assign(Object.assign(tempData.data,tempData.globalData,{url:tempData.url},{method:tempData.method}))
+							);
+							parseData();
+						} 
+						else {
 							downfile(fileName, suf, str);
 						}
-
-
-
-
-					}
+					};
 				} else {
 					parseData(xhr.responseText);
 				}
 
 			};
-			xhr.onerror = function (event) {
+			xhr.onerror = function () {
 				destroyed({
-					message: source ? "asdasdasd" : "请求出错,请稍后再试!"
+					message: source ? 'asdasdasd' : '请求出错,请稍后再试!'
 				});
 			};
 		} else {
-			xhr.onreadystatechange = function (event) {
+			xhr.onreadystatechange = function () {
 				if (xhr.readyState == 4) {
 					if (xhr.status == 200) {
 						parseData(xhr.responseText);
 					} else {
 						destroyed({
-							message: "请求出错",
+							message: '请求出错',
 							code: xhr.status
 						});
 					}
@@ -158,8 +166,8 @@ function ajax(params) {
 		}
 
 		function downfile(fileName, suf, str) {
-			var a = document.createElement('a');
-			a.download = fileName + "." + suf;
+			let a = document.createElement('a');
+			a.download = fileName + '.' + suf;
 			a.href = str;
 			document.body.append(a);
 			a.click();
@@ -174,23 +182,23 @@ function ajax(params) {
 		}
 
 		function parseData(str) {
-			if (type == "json") {
+			if (type == 'json') {
 				try {
 					let o = JSON.parse(str);
 					resolve(o);
 				} catch (e) {
-					reject("json解析失败");
+					reject('json解析失败');
 				}
-			} else if (type == "text") {
+			} else if (type == 'text') {
 				resolve({
 					data: str
 				});
-			} else if (type == "script") {
+			} else if (type == 'script') {
 				ajax.DOMEval(str);
 				resolve(str);
-			} else if (type == "file") {
+			} else if (type == 'file') {
 				resolve({
-					data: "下载成功"
+					data: '下载成功'
 				});
 			}
 			destroyed();
@@ -207,7 +215,7 @@ function ajax(params) {
 
 			obj.timer = setTimeout(function () {
 				reject({
-					message: "请求超时,已经取消"
+					message: '请求超时,已经取消'
 				});
 				ajax.stop(id);
 				ajax.removeStatus(id);
@@ -218,14 +226,17 @@ function ajax(params) {
 		let sendPam = [method, url, async];
 		xhr.open.apply(xhr, ajax.xDomain ? sendPam : sendPam.slice(0, 2));
 		//如果请求时下载文件
-		if (type == "file") xhr.responseType = "blob";
-		!ajax.xDomain && xhr.setRequestHeader("Accept", accepts[type] || "/");
+		if (type == 'file') {
+			xhr.responseType = 'blob';
+			store.commit('setWin',{content:'正在下载,请稍后!'});
+		}
+		!ajax.xDomain && xhr.setRequestHeader('Accept', accepts[type] || '/');
 
-		if (method === "post") {
+		if (method === 'post') {
 			!ajax.xDomain &&
 				xhr.setRequestHeader(
-					"Content-Type",
-					"application/x-www-form-urlencoded"
+					'Content-Type',
+					'application/x-www-form-urlencoded'
 				);
 			xhr.send(source ? obj.data : ajax.paramsajaxData(obj.data));
 		} else {
@@ -244,11 +255,11 @@ ajax.DOMEval = function (code) {
 	code = utils.trim(code);
 	if (!utils.NotIE8) {
 		// ( window.execScript || function( data ) {
-		//     window[ "eval" ].call( window, data );
+		//     window[ 'eval' ].call( window, data );
 		// } )( code );
 		new Function(code)(code);
 	} else {
-		var script = document.createElement("script");
+		let script = document.createElement('script');
 		script.text = code;
 		document.head.appendChild(script).parentNode.removeChild(script);
 	}
@@ -272,7 +283,7 @@ ajax.removeStatus = function (id) {
  * @returns {Boolean}
  */
 ajax.isArray = function (obj) {
-	return Object.prototype.toString.call(obj) === "[object Array]";
+	return Object.prototype.toString.call(obj) === '[object Array]';
 };
 /**
  * @description 移除还在加载的ajax对象
@@ -305,7 +316,7 @@ ajax.abortLoad = function (obj = Object.keys(ajax.loadQueue)) {
 			ajax.loadQueue[id] && ajax.stop(id);
 		}
 		obj.length = 0;
-	} else if (typeof obj == "string") {
+	} else if (typeof obj == 'string') {
 		ajax.loadQueue[obj] && ajax.stop(obj);
 	}
 };
@@ -338,18 +349,18 @@ ajax.cacheajax = [];
  * @memberof ajax
  */
 ajax.paramsajaxData = function (data) {
-	if (!data) return "";
+	if (!data) return '';
 	let arr = [];
 	for (let str in data) {
 		arr.push(
 			encodeURIComponent(str) +
-			"=" +
+			'=' +
 			encodeURIComponent(
-				typeof data[str] == "object" ? JSON.stringify(data[str]) : data[str]
+				typeof data[str] == 'object' ? JSON.stringify(data[str]) : data[str]
 			)
 		);
 	}
-	return arr.join("&");
+	return arr.join('&');
 };
 /**
  * @description 创建ajax
@@ -361,7 +372,7 @@ ajax.createajax = function () {
 	for (; i < ajax.cacheajax.length; i++) {
 		if (
 			(ajax.cacheajax[i].readyState == 0 ||
-			ajax.cacheajax[i].readyState == 4) && ajax.cacheajax[i].responseType == ""
+			ajax.cacheajax[i].readyState == 4) && ajax.cacheajax[i].responseType == ''
 		) {
 			
 			return ajax.cacheajax[i];
@@ -370,7 +381,7 @@ ajax.createajax = function () {
 	let xmlhttp = new XMLHttpRequest();
 	//如果浏览器不支持CORS并且是跨域请求时 IE9-
 	//XDomainRequest不支持cookie的上传
-	if (!("withCredentials" in xmlhttp) && ajax.crossDomain) {
+	if (!('withCredentials' in xmlhttp) && ajax.crossDomain) {
 		xmlhttp = null;
 		xmlhttp = new XDomainRequest();
 		this.xDomain = true;
@@ -386,20 +397,12 @@ ajax.createajax = function () {
 
 //检测当前的请求是否跨域
 ajax.checkCrossDomain = function (str) {
-	if (str.indexOf("http") != 0) {
+	if (str.indexOf('http') != 0) {
 		ajax.crossDomain = false;
 		return;
 	}
-	let locOrigin =
-		location.origin ||
-		location.href
-		.split("/")
-		.slice(0, 3)
-		.join("/");
-	let remoteOrigin = str
-		.split("/")
-		.slice(0, 3)
-		.join("/");
+	let locOrigin =location.origin ||location.href.split('/').slice(0, 3).join('/');
+	let remoteOrigin = str.split('/').slice(0, 3).join('/');
 	ajax.crossDomain = true;
 	if (locOrigin === utils.trim(remoteOrigin)) {
 		ajax.crossDomain = false;
@@ -413,11 +416,11 @@ ajax.crossDomain = false;
 
 
 function decode(input) {
-	var output = "";
-	var chr1, chr2, chr3;
-	var enc1, enc2, enc3, enc4;
-	var i = 0;
-	input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+	let output = '';
+	let chr1, chr2, chr3;
+	let enc1, enc2, enc3, enc4;
+	let i = 0;
+	input = input.replace(/[^A-Za-z0-9+/=]/g, '');
 	while (i < input.length) {
 		enc1 = _keyStr.indexOf(input.charAt(i++));
 		enc2 = _keyStr.indexOf(input.charAt(i++));
@@ -441,10 +444,9 @@ function decode(input) {
 
 // private method for UTF-8 decoding
 function _utf8_decode(utftext) {
-	var string = "";
-	var i = 0;
-	var c = 0,
-		c1 = 0,
+	let string = '';
+	let i = 0;
+	let c = 0,
 		c2 = 0,
 		c3 = undefined;
 	while (i < utftext.length) {
