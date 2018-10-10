@@ -403,10 +403,14 @@ export default {
 				this.selectPackages = couponDetail.pids.split(',');
 			} //关联套餐
 			this.compulsoryCredits = couponDetail.tastePrice; //是否包含口味
+			if(this.compulsoryCredits == '1'){
+				this.compulsoryName = '是';
+			}
 			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
 			if (couponDetail.validityType == 0) {
 				this.validType.time = couponDetail.relativeTime;
 			} else if (couponDetail.validityType == 1) {
+				this.validName = '指定时间';
 				this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
 				this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
 			}
@@ -429,6 +433,7 @@ export default {
 			} //领取后多久生效的名称
 			if (couponDetail.lowestConsume != 0) { //使用门槛
 				this.useThresholdId = 1;
+				this.useThresholdName = '指定门槛';
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
 

@@ -171,14 +171,17 @@ export default {
 			let couponDetail = this.couponDetail;
 			this.editCoupon = true;
 			this.couponName = couponDetail.name; //优惠券名称
+			this.deratePrice = couponDetail.param;//及分量
 			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
+			// console.log(this.validType.index)
 			if (couponDetail.validityType == 0) {
 				this.validType.time = couponDetail.relativeTime;
 			} else if (couponDetail.validityType == 1) {
+				this.validName = '指定时间';
 				this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
 				this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
 			}
-			this.useDate.index = couponDetail.periodSel;
+			//this.validType.index = couponDetail.periodSel;
 			this.annotation = couponDetail.annotation; //备注
 			this.useKnow = couponDetail.useKnow; //使用须知
 

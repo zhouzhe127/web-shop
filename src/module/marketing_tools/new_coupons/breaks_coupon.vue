@@ -474,7 +474,13 @@ export default {
 			} //关联套餐
 			this.deratePrice = couponDetail.param; //减免金额
 			this.compulsoryCredits = couponDetail.isDiscount; //强制减免
+			if(this.compulsoryCredits == '1'){
+				this.compulsoryName = '是';
+			}
 			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
+			if(this.validType.index == '1'){
+				this.validName = '指定时间';
+			}
 			if (couponDetail.validityType == 0) {
 				this.validType.time = couponDetail.relativeTime;
 			} else if (couponDetail.validityType == 1) {
@@ -500,10 +506,11 @@ export default {
 			} //领取后多久生效的名称
 			if (couponDetail.lowestConsume != 0) { //使用门槛
 				this.useThresholdId = 1;
+				this.useThresholdName = '指定门槛';
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
 			//判断优惠共享更改的状态
-	    	this.maxCeiling = couponDetail.useLimit;//最大使用上限
+			this.maxCeiling = couponDetail.useLimit;//最大使用上限
 			if (couponDetail.sharingStatus == 0) {
 				this.isSharingId = 0;
 				this.isSharing = '不与其它优惠共享';
@@ -575,8 +582,8 @@ export default {
 		getArrLength(type) { //返回数组的长度
 			return this[type].length;
 		},
-		changecompulsoryCredits: function (item, index) { //是否强制减免
-			this.compulsoryCredits = index;
+		changecompulsoryCredits: function (item) { //是否强制减免
+			this.compulsoryCredits = item.compulsoryCredits;
 		},
 		changeuseThreshold: function (item) { //使用门槛
 			this.useThresholdId = item.id;

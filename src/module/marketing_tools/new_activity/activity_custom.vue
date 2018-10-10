@@ -642,7 +642,7 @@ export default {
 			if (item) {
 				//需求变更 之前从会员管理页面选中会员跳转 不可重新修改会员
 				//if (this.memberStatus) {
-					this.addVip();
+				this.addVip();
 				//}
 			} else {
 				this.member = 0; //会员选中的人数

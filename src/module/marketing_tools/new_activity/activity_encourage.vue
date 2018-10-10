@@ -45,53 +45,53 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
-				<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
-				<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
-				<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
-				<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
-					<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
-				</el-tooltip>
-				<div class="memberinner">
-					<span v-if="member > 0">已关联会员:{{member}}人</span>
-					<span v-if="member > 0 && fans > 0">|</span>
-					<span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>
-				</div>
-			</div>
-		</div>
-		<!-- 营销规则设置 -->
-		<div class="set-line">
-			<div class="titles">营销规则设置</div>
-			<div class="line"></div>
-		</div>
-		<!-- 规则 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl"></span>
-			<div class="rightHalf">
-				<ul>
-					<li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
-						规则{{index + 1}}
-						<i class="deletes" @click.stop="deleteRule(index)"></i>
-					</li>
-					<li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
-				</ul>
-				<div class="content-set" v-for="(item,ind) in ruleList" :key='ind' v-if='ruleIndex == ind'>
-					<!-- 最低消费 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">最低消费</span>
-						<div class="rightHalf">
-							<!-- <select-btn :name='item.durationName' :sorts="durationList.map(v=>v.name)" :width="189" @selOn="selexpirationTime" :showIndex='ind'></select-btn> -->
-							<el-select v-model="item.durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
-								<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
-								</el-option>
-							</el-select>
-						</div>
-					</div>
-					<!-- 最低消费 -->
-					<div class="online-box clearfix" v-if="item.durationId == '1'">
-						<span class="online-sub fl">指定额度</span>
-						<div class="rightHalf">
-							<!-- <section>
+                <!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
+                	<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
+                	<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
+                	<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
+                	<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
+                		<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
+                	</el-tooltip>
+                	<div class="memberinner">
+                		<span v-if="member > 0">已关联会员:{{member}}人</span>
+                		<span v-if="member > 0 && fans > 0">|</span>
+                		<span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>
+                	</div>
+                </div>
+            </div>
+            <!-- 营销规则设置 -->
+            <div class="set-line">
+            	<div class="titles">营销规则设置</div>
+            	<div class="line"></div>
+            </div>
+            <!-- 规则 -->
+            <div class="online-box clearfix">
+            	<span class="online-sub fl"></span>
+            	<div class="rightHalf">
+            		<ul>
+            			<li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
+            				规则{{index + 1}}
+            				<i class="deletes" @click.stop="deleteRule(index)"></i>
+            			</li>
+            			<li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
+            		</ul>
+            		<div class="content-set" v-for="(item,ind) in ruleList" :key='ind' v-if='ruleIndex == ind'>
+            			<!-- 最低消费 -->
+            			<div class="online-box clearfix">
+            				<span class="online-sub fl">最低消费</span>
+            				<div class="rightHalf">
+            					<!-- <select-btn :name='item.durationName' :sorts="durationList.map(v=>v.name)" :width="189" @selOn="selexpirationTime" :showIndex='ind'></select-btn> -->
+            					<el-select v-model="item.durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+            						<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
+            						</el-option>
+            					</el-select>
+            				</div>
+            			</div>
+            			<!-- 最低消费 -->
+            			<div class="online-box clearfix" v-if="item.durationId == '1'">
+            				<span class="online-sub fl">指定额度</span>
+            				<div class="rightHalf">
+                            <!-- <section>
 								<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.minConsumess" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'1')" />
 								<span>元</span>
 							</section> -->
@@ -104,7 +104,7 @@
 					<div class="online-box clearfix">
 						<span class="online-sub fl">最高消费</span>
 						<div class="rightHalf">
-							<!-- <section>
+                            <!-- <section>
 								<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.maxConsumes" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'2')" />
 								<span>元</span>
 							</section> -->
@@ -124,7 +124,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="agift-content">
+                    <!-- <div class="agift-content">
 						<span class="fl"></span>
 						<label class="fl">
 							<i @click="isLoopFun" :class="ruleObj.isLoop ? 'chckOn' : ''">✓</i>
@@ -132,7 +132,7 @@
 						<p class="fl" style="font-size: 16px;margin-right: 10px;">循环赠送</p>
 						<p class="fl" style="color: #999999;margin-top: 2px;">(满足交易额整数倍，发劵数同倍增加)</p>
 					</div> -->
-					<!-- <div class="agift-content" style="overflow: initial;height: 40px;">
+                    <!-- <div class="agift-content" style="overflow: initial;height: 40px;">
 						<span class="fl">会员权益</span>
 						<div class="fl selectList" @click="openSelect">
 							{{onListName}}
@@ -163,14 +163,14 @@
 							<span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
 						</div>
 					</div>
-					<!-- <div class="agift-content" v-if="memberRights == 0">
+                    <!-- <div class="agift-content" v-if="memberRights == 0">
 						<span class="fl"></span>
 						<div class="btn-concent" @click="openCouponWin">
 							<button class="fl increase" style="width: 150px;">选择优惠劵</button>
 						</div>
 						<span class="fl" v-if="ruleObj.couponIds.length >= 1">已选择{{ruleObj.couponIds.length}}张</span>
 					</div> -->
-					<!-- <div class="agift-content" id="agift">
+                    <!-- <div class="agift-content" id="agift">
 						<span class="fl">消息推送渠道</span>
 						<mulSelect :styles="{backgroundColor:'rgb(247,247,247)'}" :list='list' @selOn='selOnSend' :selects="ruleObj.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
 						<span class="fl" style="width: auto;color: #666666;">活动发布后将通过该渠道触发会员</span>
@@ -200,7 +200,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="agift-content">
+                    <!-- <div class="agift-content">
 						<label>
 							<span class="required required-none" style="vertical-align: top;padding-top: 10px;">内容设置</span>
 							<textarea placeholder="内容设置" style="width: 350px;height: 100px;" v-model="ruleObj.msgContent" maxlength="151"></textarea>
@@ -219,7 +219,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="main_Box" style="overflow: initial;">
+        <!-- <div class="main_Box" style="overflow: initial;">
 			<div class="agift-content">
 				<span class="fl">活动群体</span>
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }" @click="chooseIntegral(index)">{{item.name}}</span>
@@ -240,22 +240,22 @@
 			<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a> -->
 			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
 			<template v-if='isactivityDetail'>
-			   <!--  <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
-				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
-				<el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
-				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
-			</template>
-		</div>
-		<rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
-		<coupon @winEvent='couponEvent' :selectCoupon='selectCoupon' v-if='showCoupon'></coupon>
-	</div>
-	<!-- 会员筛选 -->
-	<memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
-</template>
-<script>
-	import utils from 'src/verdor/utils';
-import storage from 'src/verdor/storage';
-import http from 'src/manager/http';
+                <!--  <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
+                	<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
+                	<el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
+                	<el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
+                </template>
+            </div>
+            <rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
+            <coupon @winEvent='couponEvent' :selectCoupon='selectCoupon' v-if='showCoupon'></coupon>
+        </div>
+        <!-- 会员筛选 -->
+        <memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
+    </template>
+    <script>
+    import utils from 'src/verdor/utils';
+    import storage from 'src/verdor/storage';
+    import http from 'src/manager/http';
 
 // 限制输入数字
 //let intReg = /[^\d]/g;
@@ -944,7 +944,7 @@ export default {
 		toSinglemember: function(item) {
 			if (item) {
 				//if (this.memberStatus) {
-					this.addVip();
+				this.addVip();
 				//}
 			} else {
 				this.member = 0; //会员选中的人数
@@ -1028,19 +1028,19 @@ export default {
 	},
 	components: {
 		calendar: () =>
-			import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+		import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 		mulSelect: () =>
-			import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+		import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 		rang: () =>
-			import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+		import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
 		coupon: () =>
-			import ( /* webpackChunkName:'activity_agift_coupon' */ './activity_agift_coupon'),
+		import ( /* webpackChunkName:'activity_agift_coupon' */ './activity_agift_coupon'),
 		'memberScreening': () =>
-			import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
+		import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
 		'singleSelect': () =>
-			import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+		import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 		selectBtn: () =>
-			import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+		import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
@@ -1210,7 +1210,7 @@ export default {
 
 .active {
 	background: url(../../../res/icon/selected.png) center center no-repeat,
-		#28a8e0;
+	#28a8e0;
 }
 
 .member-agift .online-box .rightHalf .lines {
@@ -1285,7 +1285,7 @@ export default {
 	margin-top: -11px;
 }
 
-/* .member-agift .online-box .rightHalf section {
+    /* .member-agift .online-box .rightHalf section {
 	width: 190px;
 	height: 38px;
 	border: 1px solid #CECDCD;
@@ -1310,7 +1310,7 @@ export default {
 	line-height: 38px;
 	border-left: 1px solid #CECDCD;
 }
- */
+*/
 
 
 
@@ -1337,7 +1337,7 @@ export default {
 
 
 
-/*.member-agift,
+    /*.member-agift,
 .main_Box {
 	width: 100%;
 	height: auto;
@@ -1351,7 +1351,7 @@ export default {
 */
 
 
-/*.header_tit {
+    /*.header_tit {
 	border-left: 2px solid #19749c;
 	height: 40px;
 	line-height: 40px;
@@ -1416,7 +1416,7 @@ export default {
 
 
 
-/*.agift-content span {
+    /*.agift-content span {
 	display: inline-block;
 	width: 100px;
 	height: 40px;
@@ -1489,17 +1489,15 @@ export default {
 	width: 3px;
 	left: 17px;
 	margin-top: -11px;
-}*/
+	}*/
 
-.content-set {
-	border: 1px solid #cccccc;
-	width: 650px;
-	height: auto;
-	overflow: hidden;
-	padding-top: 29px;
-}
-
-
+	.content-set {
+		border: 1px solid #cccccc;
+		width: 650px;
+		height: auto;
+		overflow: hidden;
+		padding-top: 29px;
+	}
 
 
 
@@ -1522,10 +1520,7 @@ export default {
 
 
 
-
-
-
-/*.moreBtn {
+    /*.moreBtn {
 	width: 50px !important;
 	position: relative;
 	margin-right: 0 !important;
@@ -1548,22 +1543,22 @@ export default {
 }*/
 
 
-/*input:focus {
+    /*input:focus {
 	border-color: #ccc !important;
 	box-shadow: none !important;
 }
 */
 
 
-/*#mycalendar1,
+    /*#mycalendar1,
 #mycalendar2 {
 	height: 40px !important;
 	border: none;
 }*/
 
-.tips {
-	background: url(../../../res/images/handle-tips.png) left center no-repeat;
-}
+    .tips {
+        background: url(../../../res/images/handle-tips.png) left center no-repeat;
+    }
 
 
 
@@ -1591,7 +1586,7 @@ export default {
 
 
 
-/*.selectList {
+    /*.selectList {
 	border: 1px solid #cccccc;
 	width: 150px;
 	height: 40px;
@@ -1609,7 +1604,7 @@ export default {
 }*/
 
 
-/*.selectList ul li {
+    /*.selectList ul li {
 	width: 200px;
 	text-align: center;
 	background-color: #ffffff;
@@ -1628,7 +1623,7 @@ input:focus {
 */
 
 
-/*#agift .selectbtns {
+    /*#agift .selectbtns {
 	width: auto;
 	float: left;
 }
@@ -1641,26 +1636,24 @@ input:focus {
 }
 */
 
-label {
-	font-size: 16px;
-	cursor: pointer;
-}
+    label {
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-label i {
-	font-size: 16px;
-	font-style: normal;
-	display: inline-block;
-	width: 17px;
-	height: 17px;
-	text-align: center;
-	line-height: 12px;
-	color: #fff;
-	vertical-align: middle;
-	margin-right: 10px;
-	border: #2489c5 1px solid;
-}
-
-
+    label i {
+        font-size: 16px;
+        font-style: normal;
+        display: inline-block;
+        width: 17px;
+        height: 17px;
+        text-align: center;
+        line-height: 12px;
+        color: #fff;
+        vertical-align: middle;
+        margin-right: 10px;
+        border: #2489c5 1px solid;
+    }
 
 
 
@@ -1685,7 +1678,9 @@ label i {
 
 
 
-/*
+
+
+    /*
 input[type="checkbox"],
 input[type="radio"] {
 	display: none;
@@ -1757,9 +1752,9 @@ input[type="radio"]:checked:disabled+i {
 	color: #fff;
 }*/
 
-.chckOn {
-	background: #2489c5;
-}
+    .chckOn {
+        background: #2489c5;
+    }
 
 
 
@@ -1785,7 +1780,7 @@ input[type="radio"]:checked:disabled+i {
 
 
 
-/*.countList {
+    /*.countList {
 	width: 100%;
 }
 
@@ -1825,7 +1820,7 @@ input[type="radio"]:checked:disabled+i {
 */
 
 
-/*.agift-content textarea {
+    /*.agift-content textarea {
 	width: 340px;
 	height: 140px;
 	outline: none;
@@ -1837,7 +1832,7 @@ input[type="radio"]:checked:disabled+i {
 }*/
 
 
-/*.limit {
+    /*.limit {
 	font-size: 14px;
 	color: #999999;
 	padding-left: 120px;
@@ -1853,7 +1848,7 @@ input[type="radio"]:checked:disabled+i {
 }*/
 
 
-/*.required-none:after {
+    /*.required-none:after {
 	display: none;
 }
 */

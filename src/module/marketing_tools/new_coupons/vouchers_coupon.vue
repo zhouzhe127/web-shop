@@ -437,6 +437,9 @@ export default {
 				this.selectShops = couponDetail.shopIds.split(',');
 			} //选中的店铺
 			this.compulsoryCredits = couponDetail.isDiscount; //是否强制减免
+			if(this.compulsoryCredits == '1'){
+				this.compulsoryName = '是';
+			}
 			this.denomination = couponDetail.param; //面额
 			this.netAmount = couponDetail.billPrice; //入账金额
 			this.setAmount = couponDetail.reckoningPrice; //结算金额
@@ -445,6 +448,8 @@ export default {
 			if (couponDetail.validityType == 0) {
 				this.validType.time = couponDetail.relativeTime;
 			} else if (couponDetail.validityType == 1) {
+				this.validName = '指定时间';
+				//console.log(this.validName)
 				this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
 				this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
 			}
@@ -467,6 +472,7 @@ export default {
 			} //领取后多久生效的名称
 			if (couponDetail.lowestConsume != 0) { //使用门槛
 				this.useThresholdId = 1;
+				this.useThresholdName = '指定门槛';
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
 
