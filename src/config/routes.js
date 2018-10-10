@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Login from 'src/module/login';
 const brandAudit = (resolve) =>
     import ( /* webpackChunkName: "brand_audit" */ 'src/module/brand/brand_audit');
@@ -378,7 +379,9 @@ const freeGoods = (resolve) =>
 const OrderBillList = () =>
     import ( /* webpackChunkName:"order_bill_list" */ 'src/module/statistics/order_bill_list'); //挂账统计
 const Handover = () =>
-    import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接班
+    import ( /* webpackChunkName:"handover_brand" */ 'src/module/statistics/handover_brand'); //交接班
+const HandoverShop = () =>
+	import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接统计单店
 const MemberRecharge = () =>
     import ( /* webpackChunkName:"member_recharge" */ 'src/module/statistics/member_recharge/member_recharges'); //会员充值统计
 const reservationManager = (resolve) =>
@@ -1255,12 +1258,25 @@ export default [{
                         details_con: brandOrderBill
                     }
                 },
-                {
-                    path: 'handover', //挂账统计
-                    components: {
-                        details_con: Handover
-                    }
-                },
+				{
+					path: 'handover', //交接班统计
+					components: {
+						details_con: details_con
+					},
+					children: [{
+						path: '',
+						components: {
+							details_con: Handover
+						}
+					},
+						{
+							path: 'handoverShop',
+							components: {
+								details_con: HandoverShop
+							}
+						}
+					]
+				},
                 {
                     path: 'memberRecharge', //挂账统计
                     components: {
