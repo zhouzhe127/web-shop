@@ -459,6 +459,9 @@ export default {
 			let couponDetail = this.couponDetail;
 			this.editCoupon = true;
 			this.typeId = couponDetail.type - 1; //单品减免 整单减免
+			if(this.typeId == 1){
+				this.commoditySlect = '整单减免';
+			}
 			this.couponName = couponDetail.name; //优惠券名称
 			if (couponDetail.shopIds && couponDetail.shopIds.length > 0) {
 				this.selectShops = couponDetail.shopIds.split(',');

@@ -221,7 +221,7 @@
 			<div class="right">
 				<div class="fl">
 					<!-- <input class="input" placeholder="20字" maxlength="20" v-model="annotation" /> -->
-					<el-input style="width:300px;" v-model="annotationannotation" placeholder="20字" maxlength="20"></el-input>
+					<el-input style="width:300px;" v-model="annotation" placeholder="20字" maxlength="20"></el-input>
 				</div>
 			</div>
 			<!-- 使用须知 -->
