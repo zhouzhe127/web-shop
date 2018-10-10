@@ -139,10 +139,6 @@ export default {
 				{
 					name: '已付款',
 					id: 3
-				},
-				{
-					name: '已通过',
-					id: 4
 				}
 			],
 			expirationTimeId: '',

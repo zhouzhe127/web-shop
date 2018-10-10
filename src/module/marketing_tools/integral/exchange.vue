@@ -7,12 +7,12 @@
 				<!--日期组件 开始时间-->
 				<span class="line fl">创建时间</span>
 				<!-- <calendar :time="startTime" class="data-box fl" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar> -->
-				<el-date-picker class="fl" v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+				<el-date-picker class="fl" v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" :editable="false">
 				</el-date-picker>
 				<span class="line fl">-</span>
 				<!--日期组件 开始时间-->
 				<!-- <calendar :time="endTime" class="data-box fl" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar> -->
-				<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+				<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" @change="endTimeChange" :editable="false">
 				</el-date-picker>
 				<!-- <span class="order-order-searchA fl" @click="searchList">
                     <span class="order-order-search" href="javascript:void(0)"></span>
