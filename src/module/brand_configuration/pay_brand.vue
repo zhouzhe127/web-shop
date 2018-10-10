@@ -103,6 +103,10 @@ export default {
 						obj.apiclient_key = detial.payConfig.apiclient_key; //支付宝商户类型
 						obj.apiclient_cert = detial.payConfig.apiclient_cert; //支付宝商户类型
 						this.editPayConfig(obj);
+					} else if (detial.paymentName == '收钱吧') {
+						obj.appId = detial.payConfig.appId; //收钱吧appid
+						obj.code = detial.payConfig.code; //收钱吧激活码
+						this.editPayConfig(obj);
 					}
 				} else {
 					this.showWin = true;
@@ -229,6 +233,17 @@ export default {
 				}
 				this.types = 'zxsh';
 				this.showZXSH = true;
+			} else if (bill.paymentName == '收钱吧') {
+				if (
+					!this.detial.payConfig ||
+					this.detial.payConfig.length == 0
+				) {
+					this.detial.payConfig = {};
+					this.detial.payConfig.appId = ''; //
+					this.detial.payConfig.code = ''; //
+				}
+				this.types = 'sqb';
+				this.showWin = true;
 			}
 		},
 		//修改微信、支付宝

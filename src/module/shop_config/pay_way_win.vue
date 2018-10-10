@@ -81,6 +81,24 @@
 						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
 					</div>
 				</section>
+				<section v-if="types == 'sqb'">
+					<div class="payShowList">
+						<h3 class="showListBefore">支付方式名称</h3>
+						<el-input v-model="detial.paymentName" class="inputWidth" :disabled="true"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">appId</h3>
+						<el-input v-model="detial.payConfig.appId" placeholder = "请输入收钱吧appId" class="inputWidth"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">激活码</h3>
+						<el-input v-model="detial.payConfig.code" placeholder = "请输入收钱吧激活码" class="inputWidth"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
+					</div>
+				</section>
 				<section v-if="types == 'dbq'">
 					<div class="payShowList">
 						<h3 class="showListBefore">支付方式名称</h3>
