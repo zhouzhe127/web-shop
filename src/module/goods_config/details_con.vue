@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-10 14:30:11
+ * @Last Modified time: 2018-10-10 16:46:18
  * @Module:商品管理
 **/
 
@@ -241,7 +241,7 @@
 		</section>
 
 		<div v-show="goodsList.length>0">
-			<el-pagination v-if="selectTab=='1'" background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size="Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50, 100]"></el-pagination>
+			<el-pagination v-if="selectTab=='1'" background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size="Number(num)" layout="sizes, prev, pager, next" :page-sizes="[14,30, 50, 100]"></el-pagination>
 			<el-pagination v-if="selectTab=='0'" background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size="Number(num)" layout="prev, pager, next"></el-pagination>
 			<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
 		</div>
