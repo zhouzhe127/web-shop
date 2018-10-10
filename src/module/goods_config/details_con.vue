@@ -2,7 +2,7 @@
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-09 18:39:48
+ * @Last Modified time: 2018-10-10 14:30:11
  * @Module:商品管理
 **/
 
@@ -341,12 +341,12 @@ export default {
 	},
 	mounted() {
 		this.initData();
-		if (this.industry == 1) {
-			this.$router.push({
-				path: 'retailGood?i=1&o=0&s=0'
-			});
-			return;
-		}
+		// if (this.industry == 1) {
+		// 	this.$router.push({
+		// 		path: 'retailGood?i=1&o=0&s=0'
+		// 	});
+		// 	return;
+		// }
 		this.initSyncBtn();
 		this.syncRequest();
 		// document.addEventListener('click', this.domClick, false);
