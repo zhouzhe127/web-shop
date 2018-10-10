@@ -14,7 +14,7 @@
 					<div v-on:click="tabTypes(item,index)" :class="{'selected' : typeId == index}" :key="index">{{item.name}}
 					</div>
 				</template> -->
-                <el-radio-group v-model="commoditySlect" class="fl">
+				<el-radio-group v-model="commoditySlect" class="fl">
 					<el-radio-button v-for="(item,index) in goodlist" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
 				</el-radio-group> 
 			</div>
@@ -31,7 +31,7 @@
 			</div>
 			<div class="right">
 				<div class="fl"> 
-                    <el-input  v-model="couponName" maxlength="20" placeholder="请输入优惠券名称"></el-input>
+					<el-input  v-model="couponName" maxlength="20" placeholder="请输入优惠券名称"></el-input>
 				</div>
 			</div>
 			<!-- 适用门店 -->
@@ -43,14 +43,14 @@
 				</div>
 				<div class="right">
 					<div class="fl">
-                        <el-row> 
-                            <el-button type="primary" @click="openShopWin"  icon="el-icon-plus" class="buttons">
-                                 选择门店
-                            </el-button> 
-                            <div class="associated">
-                                共关联{{getArrLength('selectShops')}}家门店
-                            </div>
-                        </el-row>
+						<el-row> 
+							<el-button type="primary" @click="openShopWin"  icon="el-icon-plus" class="buttons">
+								 选择门店
+							</el-button> 
+							<div class="associated">
+								共关联{{getArrLength('selectShops')}}家门店
+							</div>
+						</el-row>
 					</div>
 				</div>
 			</template>
@@ -63,14 +63,14 @@
 				</div>
 				<div class="right">
 					<div class="fl"> 
-                        <el-row> 
-                            <el-button type="primary" @click="openGoodsWindow" icon="el-icon-plus" class="buttons">
-							    选择菜品
-                            </el-button>
-                            <div class="associated">
-                                共关联商品{{getArrLength('selectGoods')}}份，套餐{{getArrLength('selectPackages')}}份
-                            </div>
-                        </el-row>
+						<el-row> 
+							<el-button type="primary" @click="openGoodsWindow" icon="el-icon-plus" class="buttons">
+								选择菜品
+							</el-button>
+							<div class="associated">
+								共关联商品{{getArrLength('selectGoods')}}份，套餐{{getArrLength('selectPackages')}}份
+							</div>
+						</el-row>
 					</div>
 				</div>
 			</template>
@@ -85,7 +85,7 @@
 					<!-- <section class="fl reduce" v-for="(item,index) in compulsoryCreditsList" :key="index">
 						<span :class="{'sign' : compulsoryCredits == index}" v-on:click="changecompulsoryCredits(item,index)">{{item.name}}</span>
 					</section> -->
-                    <el-radio-group v-model="compulsoryName" class="fl">
+					<el-radio-group v-model="compulsoryName" class="fl">
 						<el-radio style="width:112px;" v-for="(item,index) in compulsoryCreditsList" :key="index" :label="item.name" border @change.native="changecompulsoryCredits(item)"></el-radio>
 					</el-radio-group>
 				</div>
@@ -102,7 +102,7 @@
 					<div class="yuan">
 						元
 					</div> -->
-                    <el-input placeholder="请输入减免金额" v-model="deratePrice" maxlength="6">
+					<el-input placeholder="请输入减免金额" v-model="deratePrice" maxlength="6">
 						<template slot="suffix">元</template>
 					</el-input>
 				</div>
@@ -114,12 +114,12 @@
 				</div>
 			</div>
 			<div class="right">
-                <!-- <el-row class="fl"> 
-                    <el-button  v-for="(item,index) in validList" :key="index">
-                        <span v-on:click="changevalidType(item,index)">{{item.name}}</span>
-                    </el-button> 
-                </el-row>  -->
-                <el-radio-group v-model="validName" class="fl">
+				<!-- <el-row class="fl"> 
+					<el-button  v-for="(item,index) in validList" :key="index">
+						<span v-on:click="changevalidType(item,index)">{{item.name}}</span>
+					</el-button> 
+				</el-row>  -->
+				<el-radio-group v-model="validName" class="fl">
 					<el-radio v-for="(item,index) in validList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
 				</el-radio-group>
 			</div>
@@ -151,7 +151,7 @@
 				</div>
 			</div> -->
 
-                <el-date-picker class="fl" v-model="validType.valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
+				<el-date-picker class="fl" v-model="validType.valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
 				</el-date-picker>
 				<div class="foday">
 					共{{getValidDay()}}天
@@ -167,7 +167,7 @@
 			</div>
 			<div class="right" style="text-align:left;padding-left:10px;">
 				<!-- <select-btn :name='validTime' :sorts="validTimeList.map(v=>v.name)" :width="190" @selOn="selexpirationTime"></select-btn> -->
-                <el-select v-model="validTime" @change="selData" style="color:#c0c4cc">
+				<el-select v-model="validTime" @change="selData" style="color:#c0c4cc">
 					<el-option v-for="item in validTimeList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
@@ -191,7 +191,7 @@
 				<!-- <section class="fl reduce" v-for="(item,index) in useThresholdList" :key="index">
 					<span :class="{'sign' : useThresholdId == index}" v-on:click="changeuseThreshold(item,index)">{{item.name}}</span>
 				</section> -->
-                <el-radio-group v-model="useThresholdName" class="fl">
+				<el-radio-group v-model="useThresholdName" class="fl">
 					<el-radio v-for="(item,index) in useThresholdList" :key="index" :label="item.name" border @change.native="changeuseThreshold(item)"></el-radio>
 				</el-radio-group>
 			</div>
@@ -206,7 +206,7 @@
 							元
 						</div>
 					</div> -->
-                    <el-input class="fl" style="width:194px;" placeholder="请输入金额" v-model="threshold" maxlength="6">
+					<el-input class="fl" style="width:194px;" placeholder="请输入金额" v-model="threshold" maxlength="6">
 						<template slot="suffix">元</template>
 					</el-input>
 				</div>
@@ -219,12 +219,15 @@
 					</div>
 				</div>
 				<div class="right">
-					<div class="fl creditamount">
+					<!-- <div class="fl creditamount">
 						<input class="input reduceamount" placeholder="0" v-model="maxCeiling" maxlength="6" />
 						<div class="yuan">
 							张
 						</div>
-					</div>
+					</div> -->
+					<el-input class='fl' placeholder="请输入整数" v-model="maxCeiling" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+                        <template slot="suffix">张</template>
+                    </el-input>					
 					<!-- <input type="text" maxlength="2" class="fl" placeholder="0" style="width: 149px;height: 36px;padding: 0;border-color: #999;text-indent: 10px;outline: none; margin-left:10px;" v-model="maxCeiling" />
 						<div style="border:1px solid #999;width: 38px;float: left;height: 38px;border-left: none;text-align: center;line-height: 38px;">张</div> -->
 				</div>
@@ -248,7 +251,7 @@
 						</el-option>
 					</el-select>
 				</div>  
-                <el-tooltip placement="right">
+				<el-tooltip placement="right">
 					<div slot="content">与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用
 						<br/>不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受
 						<br/>“不可与其他优惠共享”则也包含“不与会员卡优惠共用”</div>
@@ -279,7 +282,7 @@
 			</div>
 			<div class="right">
 				<div class="fl"> 
-                    <el-input  placeholder="20字" maxlength="20" v-model="annotation"></el-input> 
+					<el-input  placeholder="20字" maxlength="20" v-model="annotation"></el-input> 
 				</div>
 			</div>
 			<!-- 使用须知 -->
@@ -291,7 +294,7 @@
 			<div class="right">
 				<div class="fl useinformation">
 					<!-- <textarea class="describe" maxlength="150" v-model="useKnow"></textarea> -->
-                     <el-input type="textarea" v-model="useKnow" maxlength="150" :autosize="{ minRows: 8, maxRows: 12}" placeholder="最多输入150字"></el-input>
+					 <el-input type="textarea" v-model="useKnow" maxlength="150" :autosize="{ minRows: 8, maxRows: 12}" placeholder="最多输入150字"></el-input>
 					<div class="fl describetip">
 						<div class="fl tips">
 							<img src="../../../res/icon/alert.jpg" />
@@ -305,7 +308,7 @@
 			<!-- 保存 -->
 			<div class="save-coupon">
 				<!-- <a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="getSendInfo">保存</a> -->
-                <el-button type="primary" style="width: 200px;" @click="getSendInfo">保存</el-button>
+				<el-button type="primary" style="width: 200px;" @click="getSendInfo">保存</el-button>
 			</div>
 			<!-- 选择门店的弹窗 -->
 			<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
@@ -497,7 +500,7 @@ export default {
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
 			//判断优惠共享更改的状态
-
+	    	this.maxCeiling = couponDetail.useLimit;//最大使用上限
 			if (couponDetail.sharingStatus == 0) {
 				this.isSharingId = 0;
 				this.isSharing = '不与其它优惠共享';
@@ -1052,7 +1055,7 @@ export default {
 	height: 100%;
 	padding: 0 10px;
 	text-align: right;
-    font-size:16px;
+	font-size:16px;
 }
  
 #breakCoupon .right .buttons { 
@@ -1065,7 +1068,7 @@ export default {
 	width: 600px;
 	text-align: left;
 	padding-left: 15px;
-    display: inline-block;
+	display: inline-block;
 } 
 
 #breakCoupon .right .buttons img {
@@ -1095,7 +1098,7 @@ export default {
 
 #breakCoupon .right .cleander {
 	width: 320px; 
-    height: 40px; 
+	height: 40px; 
 	border: 1px solid #999; 
 	float: left;
 }

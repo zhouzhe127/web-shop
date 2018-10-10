@@ -1,9 +1,9 @@
 <!--
-    **绑定公众号
-    *
-    * 胡江
-    * *
-    *
+	**绑定公众号
+	*
+	* 胡江
+	* *
+	*
 -->
 <template>
 	<div id="weChatBinding">
@@ -133,9 +133,10 @@ export default {
 		},
 		GetQueryString: function(paraName) { //获取url参数
 			let url = document.location.toString();
+			// let url = 'https://v5.qa.ishandian.com.cn/?branch=zs#/admin/boundPublicNumber?i=6&o=1&s=0&auth_code=queryauthcode%40%40%405JNXKkn9RWM0C2YkhCZbvryI8Bf_zoivu2gmxa8VBKo8o1WHAQLFGk9zFV7pJDZjg5-l8faydk6nwqRK9VKYMw&expires_in=3600'
 			let arrObj = url.split('?');
 			if (arrObj.length > 1) {
-				let arrPara = arrObj[1].split('&');
+				let arrPara = arrObj[arrObj.length - 1].split('&');
 				let arr = [];
 				for (let i = 0; i < arrPara.length; i++) {
 					arr = arrPara[i].split('=');

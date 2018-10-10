@@ -38,7 +38,7 @@
 				<template v-if="item.typeId == '1'">
 					<div class="uploadImgs">
 						<a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a>
-						<form enctype="multipart/form-data" id="endImage">
+						<form enctype="multipart/form-data" :id="'endImage'+logo+index">
 							<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''" @change="bgNameChange(index)" />
 						</form>
 					</div>
@@ -81,7 +81,7 @@
 						<div class="content" v-for="(int,ind) in item.secondary" v-if='ruleIndex == ind'>
 							<div class="uploadImgs">
 								<a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a>
-								<form enctype="multipart/form-data" id="startImage">
+								<form enctype="multipart/form-data" :id="'startImage'+logo+index+ind">
 									<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''" @change="upNameChange(index,ind)" />
 								</form>
 							</div>
@@ -139,7 +139,8 @@ export default {
 	},
 	props: {
 		msg: String, //示例提示
-		resultArr: Array //结果
+		resultArr: Array, //结果
+		logo: String //标识
 	},
 	watch:{
 		resultArr:'initValue'
@@ -207,7 +208,7 @@ export default {
 					type: 8,
 					shopId: this.shopId
 				},
-				formId: 'endImage',
+				formId: `endImage${this.logo}${index}`,
 			});
 			this.followerMessage[index].img = this.uploadUrl + res; //图片
 			// this.endingImage = res;//图片传给后台
@@ -221,7 +222,7 @@ export default {
 					type: 8,
 					shopId: this.shopId
 				},
-				formId: 'startImage',
+				formId: `startImage${this.logo}${index}${ind}`,
 			});
 			this.followerMessage[index].secondary[ind].imgUrl = this.uploadUrl + res; //图片
 			// this.endingImage = res;//图片传给后台

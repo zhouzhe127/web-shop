@@ -809,7 +809,7 @@ export default {
 				obj.validityType = this.validType.index; //券有效期
 				obj.periodSel = this.useDate.index; //使用时间段
 				obj.isDiscount = this.compulsoryCredits; // 是否强免 
-				obj.useLimit = this.maxCeiling; //最大使用上限
+				obj.useLimit = ''; //最大使用上限
 				obj.billPrice = ''; //入账金额
 				obj.reckoningPrice = ''; //结算金额
 				obj.tastePrice = '';

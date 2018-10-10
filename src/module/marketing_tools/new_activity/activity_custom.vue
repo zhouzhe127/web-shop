@@ -339,6 +339,9 @@ export default {
 			if (obj.status == 'ok') {
 				this.member = obj.member;
 				this.memfilter = obj.memfilter;
+				if(this.member == '0' && utils.isEmptyObject(this.memfilter)){
+					this.checkedMember = false;
+				}
 			}
 			this.$store.commit('setPageTools', [{
 				name: '<返回活动列表',
@@ -637,9 +640,10 @@ export default {
 		},
 		toSinglemember: function(item) {
 			if (item) {
-				if (this.memberStatus) {
+				//需求变更 之前从会员管理页面选中会员跳转 不可重新修改会员
+				//if (this.memberStatus) {
 					this.addVip();
-				}
+				//}
 			} else {
 				this.member = 0; //会员选中的人数
 				this.memfilter = ''; //会员筛选的条件
@@ -682,6 +686,7 @@ export default {
 			this.indexCustom = '2'; //让其默认选中会员
 			this.member = memberIds.length;
 			this.memfilter = memberIds.join(',');
+			this.checkedMember = true;
 			this.memberStatus = false; //从会员管理页面过来的 无法重新筛选会员的标识
 		}
 		let activityInfo = storage.session('activityInfo'); //获取编辑信息

@@ -1,71 +1,139 @@
 <!--
-    **领券活动
-    *
-    * 
-    * *miaochuan.sha
-    *
+	**领券活动
+	*
+	* 
+	* *miaochuan.sha
+	*
 -->
 <template>
-	<div id="redemption">
-		<div class="filter clearfix">
-			<!-- 日期选择 -->
-			<div class="fl date">
-				<calendar class='fl' :pObj="startObj" @throwTime="getStartTime" style=""></calendar>
+    <div id="redemption">
+        <div class="filter clearfix">
+            <!-- 日期选择 -->
+            <div class="fl date">
+                <!-- <calendar class='fl' :pObj="startObj" @throwTime="getStartTime" style=""></calendar>
 				<span class="fl line">-</span>
 				<calendar class='fl' :pObj="endObj" @throwTime="getEndTime"></calendar>
 				<span class="order-order-searchA fl">
 						<span class="order-order-search" href="javascript:void(0)"></span>
-				</span>
-			</div>
-			<!-- 选择类型 -->
-			<div class="date fl">
-				<span style="font-size:16px;">状态</span>
-				<select-btn :name='expirationTime' :sorts="expirationTimeList.map(v=>v.name)" :width="157" @selOn="selexpirationTime"></select-btn>
-			</div>
-			<!-- 选择类型 -->
-			<div class="date fl">
-				<span style="font-size:16px;">活动名称</span>
-				<input type="text" v-model="activityTitle" placeholder="请输入活动名称" />
-			</div>
-			<!-- 保存 -->
-			<div class="search-box fl">
-				<span class="search-btn blue" @click="searchList">筛选</span>
-				<span class="reset-btn gray" @click="resertFun">重置</span>
-			</div>
-		</div>
-		<!-- 表格 -->
-		<com-table :listWidth="1470" :listHeight='80' :listName="'领券列表'" :key="index" :showTitle='1' :introData="userList" :titleData="titleList" :allTotal="count" :widthType='true'>
+				</span> -->
+                <el-date-picker class="fl" v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
+                </el-date-picker>
+                <el-button class="fl" type="primary" icon="el-icon-search" @click="searchList"></el-button>
+            </div>
+            <!-- 选择类型 -->
+            <div class="date fl">
+                <span style="font-size:16px;">状态</span>
+                <!-- <select-btn :name='expirationTime' :sorts="expirationTimeList.map(v=>v.name)" :width="157" @selOn="selexpirationTime"></select-btn> -->
+                <el-select v-model="expirationTime" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+                    <el-option v-for="item in expirationTimeList" :key="item.id" :label="item.name" :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+            <!-- 选择类型 -->
+            <div class="date fl">
+                <span style="font-size:16px;">活动名称</span>
+                <!-- <input type="text" v-model="activityTitle" placeholder="请输入活动名称" /> -->
+                <el-input v-model="activityTitle" maxlength="10" placeholder="请输入活动标题" style="width:179px;"></el-input>
+            </div>
+            <!-- 保存 -->
+            <div class="search-box fl">
+                <!-- <span class="search-btn blue" @click="searchList">筛选</span>
+				<span class="reset-btn gray" @click="resertFun">重置</span> -->
+                <el-button type="primary" @click="searchList">筛选</el-button>
+                <el-button type="info" @click="resertFun">重置</el-button>
+            </div>
+        </div>
+        <!-- 表格 -->
+        <!-- <com-table :listWidth="1470" :listHeight='80' :listName="'领券列表'" :key="index" :showTitle='1' :introData="userList" :titleData="titleList" :allTotal="count" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="operate_worker">
-				<span v-if="!(props.data.status == '1' && props.data.startTime < now && props.data.endTime > now)" @click="modfycoupons(props.data)">编辑</span>
-				<span v-if="props.data.standStatus" @click="shelves(props.data)">{{props.data.downName}}</span>
+				<span v-if="!(scope.row.status == '1' && scope.row.startTime < now && scope.row.endTime > now)" @click="modfycoupons(scope.row)">编辑</span>
+				<span v-if="scope.row.standStatus" @click="shelves(scope.row)">{{scope.row.downName}}</span>
 			</div>
 			<div slot="con-1" slot-scope="props" class="download">
 				<div class="form">
-					<a @click="downloadCode(props.data)" :href="downloadUrl" class="fl add_btn qRcode" :download="props.data.name">下载二维码</a>
-					<input type="text" class="num inpurl" ref='copyTxt' :value="shortUrlPreFix + props.data.urlCode " />
+					<a @click="downloadCode(scope.row)" :href="downloadUrl" class="fl add_btn qRcode" :download="scope.row.name">下载二维码</a>
+					<input type="text" class="num inpurl" ref='copyTxt' :value="shortUrlPreFix + scope.row.urlCode " />
 				</div>
 			</div>
 			<div slot="con-2" slot-scope="props" class="download">
 				<p @click="copyUrl(props.index)">一键复制</p>
 			</div>
 			<div slot="con-4" slot-scope="props">
-				{{formatTime(props.data.createTime)}}
+				{{formatTime(scope.row.createTime)}}
 			</div>
 			<div slot="con-5" slot-scope="props">
-				{{formatTime(props.data.startTime)}} ~ {{formatTime(props.data.endTime)}}
+				{{formatTime(scope.row.startTime)}} ~ {{formatTime(scope.row.endTime)}}
 			</div>
 			<div slot="con-8" slot-scope="props">
-				{{getStatus(props.data)}}
+				{{getStatus(scope.row)}}
 			</div>
-		</com-table>
-		<!-- 翻页 -->
-		<section class="turn-page">
-			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-		</section>
-	</div>
+		</com-table> -->
+        <!-- 下面的表格 -->
+        <div class="list_box" style="width:100%;">
+            <div class="list_title">
+                <div class="list_title_l fl">
+                    <span>领券活动</span>
+                    <span></span>
+                    <span>共
+								<a href="javascript:;">{{count}}</a>条记录</span>
+                </div>
+                <div class="list_title_r fr">
+                </div>
+            </div>
+            <el-table :data="userList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+                <el-table-column fixed prop="id" label="操作" align="center" width="180">
+                    <template slot-scope="scope">
+                        <el-button v-if="!(scope.row.status == '1' && scope.row.startTime < now && scope.row.endTime > now)" size="mini" type="info" @click="modfycoupons(scope.row)">编辑</el-button>
+                        <el-button v-if="scope.row.standStatus" size="mini" type="primary" @click="shelves(scope.row)">{{scope.row.downName}}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="下载二维码" prop="name" align="center" width="120">
+                    <template slot-scope="scope">
+                        <div class="form">
+                            <a @click="downloadCode(scope.row)" :href="downloadUrl" class="fl add_btn qRcode" :download="scope.row.name">下载二维码</a>
+                            <input type="text" class="num inpurl" ref='copyTxt' :value="shortUrlPreFix + scope.row.urlCode " />
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="createTime" label="生成链接" align="center" width="120">
+                    <template slot-scope="scope">
+                        <p @click="copyUrl(scope.$index)">一键复制</p>
+                    </template>
+                </el-table-column>
+                <el-table-column label="名称" align="center" prop="name">
+                </el-table-column>
+                <el-table-column label="创建时间" align="center">
+                    <template slot-scope="scope">
+                        <span>{{formatTime(scope.row.createTime)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="活动时间" align="center" width="300">
+                    <template slot-scope="scope">
+                        <span>{{formatTime(scope.row.startTime)}} ~ {{formatTime(scope.row.endTime)}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="领券总量" align="center" prop="giveTotal" width="80">
+                </el-table-column>
+                <el-table-column label="销售金额" align="center" prop="priceTotal" width="80">
+                </el-table-column>
+                <el-table-column label="状态" align="center" width="120">
+                    <template slot-scope="scope">
+                        <span>{{getStatus(scope.row)}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <!-- 翻页 -->
+        <!--  <section class="turn-page">
+            <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+        </section> -->
+        <div class="pageWrap">
+            <el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
+        </div>
+    </div>
 </template>
 <script>
-import http from 'src/manager/http';
+    import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import utils from 'src/verdor/utils';
 // import global from 'src/manager/global';
@@ -83,6 +151,7 @@ export default {
 				time: new Date().setHours(23, 59, 59, 999),
 				// width: 170
 			}, //日期组件的结束时间
+			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 			expirationTimeList: [{
 				//过期时间
 				name: '全部',
@@ -112,46 +181,6 @@ export default {
 			expirationTimeId: 3,
 			expirationTime: '全部', //状态
 			index: null,
-			titleList: [{
-				titleName: '操作',
-				titleStyle: {
-					width: '180px',
-					flex: 'none',
-				}
-			},
-			{
-				titleName: '下载二维码'
-			},
-			{
-				titleName: '生成链接'
-			},
-			{
-				titleName: '名称',
-				dataName: 'name'
-			},
-			{
-				titleName: '创建时间'
-			},
-			{
-				titleName: '活动时间',
-				titleStyle: {
-					width: '300px',
-					flex: 'none',
-				}
-			},
-			{
-				titleName: '领券总量',
-				dataName: 'giveTotal'
-			},
-			{
-				titleName: '销售金额',
-				dataName: 'priceTotal'
-			},
-			{
-				titleName: '状态',
-				dataName: 'shopNames'
-			},
-			],
 			count: 0, //总条数
 			userList: [], //数据
 			downloadUrl: 'javascript:;',
@@ -162,26 +191,26 @@ export default {
 			now: new Date().getTime() / 1000
 		};
 	},
-	created: function() {
-		let obj1 = {
-			fontSize: 16 + 'px'
-		};
-		for (let item of this.titleList) {
-			item.titleStyle = Object.assign({}, item.titleStyle, obj1);
-		}
-	},
+	// created: function() {
+	// 	let obj1 = {
+	// 		fontSize: 16 + 'px'
+	// 	};
+	// 	for (let item of this.titleList) {
+	// 		item.titleStyle = Object.assign({}, item.titleStyle, obj1);
+	// 	}
+	// },
 	methods: {
 		//选择开始时间
-		getStartTime: function(receiveTime) {
-			this.startObj.time = new Date(receiveTime).getTime(); //毫秒
-		},
+		// getStartTime: function(receiveTime) {
+		// 	this.startObj.time = new Date(receiveTime).getTime(); //毫秒
+		// },
 		//选择结束时间
-		getEndTime: function(receiveTime) {
-			this.endObj.time = new Date(receiveTime).getTime(); //毫秒
-		},
+		// getEndTime: function(receiveTime) {
+		// 	this.endObj.time = new Date(receiveTime).getTime(); //毫秒
+		// },
 		selexpirationTime: function(i) { //选择类型
-			this.expirationTime = this.expirationTimeList[i].name;
-			this.expirationTimeId = this.expirationTimeList[i].id;
+			//this.expirationTime = this.expirationTimeList[i].name;
+			this.expirationTimeId = i;
 		},
 		pageChange(obj) {
 			this.page = obj.page;
@@ -214,8 +243,8 @@ export default {
 		async newgetActivityList() {
 			let data = await http.newgetActivityList({
 				data: {
-					fromDate: parseInt(this.startObj.time / 1000), //开始日期
-					toDate: parseInt(this.endObj.time / 1000), //结束日期
+					fromDate: parseInt(this.valueTime[0] / 1000), //开始日期
+					toDate: parseInt(this.valueTime[1] / 1000), //结束日期
 					page: this.page, //页数
 					num: this.num,
 					status: this.expirationTimeId,
@@ -260,8 +289,8 @@ export default {
 			this.newgetActivityList();
 		},
 		resertFun: function() { //重置
-			this.startObj.time = new Date().setHours(0, 0, 0, 0);
-			this.endObj.time = new Date().setHours(23, 59, 59, 999);
+			this.valueTime[0] = new Date().setHours(0, 0, 0, 0);
+			this.valueTime[1] = new Date().setHours(23, 59, 59, 999);
 			this.expirationTimeId = 3;
 			this.expirationTime = '全部';
 			this.newgetActivityList();
@@ -331,7 +360,17 @@ export default {
 				});
 				this.newgetActivityList();
 			}
-		}
+		},
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.num = p;
+			this.newgetActivityList();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.newgetActivityList();
+		},		
 	},
 	components: {
 		calendar: () =>
@@ -355,140 +394,142 @@ export default {
 </script>
 <style type="text/css" scoped>
 #redemption .filter {
-	min-height: 40px;
+    min-height: 40px;
 }
 
 #redemption .filter .date {
-	height: 40px;
-	margin-bottom: 20px;
-	line-height: 40px;
-	margin-right: 25px;
+    height: 40px;
+    margin-bottom: 20px;
+    line-height: 40px;
+    margin-right: 25px;
 }
 
 #redemption .filter .date .line {
-	margin: 0 5px;
+    margin: 0 5px;
 }
-#redemption .filter .date input{
-	width: 200px;
-	height: 40px;
-	text-indent: 15px;
+
+#redemption .filter .date input {
+    width: 200px;
+    height: 40px;
+    text-indent: 15px;
 }
+
 #redemption .order-order-searchA,
 #redemption .order-order-search {
-	display: inline-block;
-	width: 40px;
-	height: 40px;
-	background-color: #29a7e1;
-	cursor: pointer;
-	vertical-align: middle;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-color: #29a7e1;
+    cursor: pointer;
+    vertical-align: middle;
 }
 
 #redemption .order-order-search {
-	background: url(../../../res/images/search.png) center center no-repeat;
+    background: url(../../../res/images/search.png) center center no-repeat;
 }
 
 #redemption .order-order-searchA:hover {
-	background-color: #1878a5;
-	transition: background-color ease-in-out 0.2s;
+    background-color: #1878a5;
+    transition: background-color ease-in-out 0.2s;
 }
 
 #redemption .order-order-searchA:active {
-	background-color: #154961;
+    background-color: #154961;
 }
 
 #redemption .filter .search-box {
-	display: inline-block;
-	vertical-align: middle;
-	width: 200px;
-	height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 200px;
+    height: 40px;
 }
 
 #redemption .filter .search-box span {
-	width: 80px;
-	height: 40px;
-	line-height: 40px;
-	text-align: center;
-	border: 0;
-	color: #fff;
-	display: inline-block;
-	cursor: pointer;
+    width: 80px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 0;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
 }
 
 #redemption .filter .search-box .search-btn {
-	margin-right: 20px;
+    margin-right: 20px;
 }
 
 #redemption .operate_worker {
-	height: 100%;
-	align-items: center;
-	display: flex;
-	justify-content: center;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 
 #redemption .operate_worker span {
-	cursor: pointer;
-	display: block;
-	height: 18px;
-	text-align: center;
-	line-height: 18px;
-	border-left: 1px solid #cecece;
-	float: left;
-	padding: 0 10%;
+    cursor: pointer;
+    display: block;
+    height: 18px;
+    text-align: center;
+    line-height: 18px;
+    border-left: 1px solid #cecece;
+    float: left;
+    padding: 0 10%;
 }
 
 #redemption .operate_worker span:nth-child(1) {
-	border: none;
-	color: #ff8d00;
-	/* padding: 0 25px; */
-	/* border-right: 1px solid RGB(206, 206, 206); */
-	/* cursor: pointer; */
+    border: none;
+    color: #ff8d00;
+    /* padding: 0 25px; */
+    /* border-right: 1px solid RGB(206, 206, 206); */
+    /* cursor: pointer; */
 }
 
 #redemption .operate_worker span:nth-child(2) {
-	color: #28a8e0;
-	/* padding: 0 25px;
+    color: #28a8e0;
+    /* padding: 0 25px;
 	cursor: pointer; */
 }
 
 #redemption .download {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#redemption .download .form {
-	width: 100px;
-	height: 40px;
-	position: relative;
+#redemption .form {
+    width: 100px;
+    height: 40px;
+    position: relative;
 }
 
-#redemption .download .form input {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
-	opacity: 0;
+#redemption .form input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
 }
 
-#redemption .download a {
-	position: absolute;
-	display: block;
-	width: 100px;
-	height: 40px;
-	background-color: #28a8e0;
-	border: solid 1px #28a8e0;
-	text-align: center;
-	line-height: 40px;
-	font-size: 16px;
-	color: #fff;
-	z-index: 9;
+#redemption .form a {
+    position: absolute;
+    display: block;
+    width: 100px;
+    height: 40px;
+    background-color: #28a8e0;
+    border: solid 1px #28a8e0;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    color: #fff;
+    z-index: 9;
 }
 
-#redemption .download p {
-	font-size: 16px;
-	color: #28a8e0;
+#redemption p {
+    font-size: 16px;
+    color: #28a8e0;
 }
 </style>

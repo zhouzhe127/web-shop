@@ -399,16 +399,16 @@ export default {
 		};
 	},
 	methods: {
-		haveIndex(i) { //活动对象选择
-			this.integralOn = i;
-			// console.log(this.integralOn)
-			if (this.integralOn == '1') {
-				if (this.memberStatus) {
-					this.addVip();
-				}
-			}
-			//this.abc();
-		},
+		// haveIndex(i) { //活动对象选择
+		// 	this.integralOn = i;
+		// 	console.log(this.integralOn)
+		// 	if (this.integralOn == '1') {
+		// 		if (this.memberStatus) {
+		// 			this.addVip();
+		// 		}
+		// 	}
+		// 	this.abc();
+		// },
 		selOnSend(arr) {
 			this.ruleList[this.ruleIndex].pushChannel = arr;
 		},
@@ -921,6 +921,9 @@ export default {
 			if (obj.status == 'ok') {
 				this.member = obj.member;
 				this.memfilter = obj.memfilter;
+                if(this.member == '0' && utils.isEmptyObject(this.memfilter)){
+                    this.checkedMember = false;
+                }
 			}
 			this.$store.commit('setPageTools', [{
 				name: '<返回活动列表',
@@ -940,9 +943,9 @@ export default {
 		},
 		toSinglemember: function(item) {
 			if (item) {
-				if (this.memberStatus) {
+				//if (this.memberStatus) {
 					this.addVip();
-				}
+				//}
 			} else {
 				this.member = 0; //会员选中的人数
 				this.memfilter = ''; //会员筛选的条件
