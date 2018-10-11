@@ -14,8 +14,7 @@
 			<span class="round">2</span>
 			<span class="theText">填写服务器URL为:
 			</span>
-			<input type="text" name="" :value="'https://wx.ishandian.net/weixin/Callback/weixin?shopId=' + shopId" class="url urlo" readonly="true"
-			    style="width: 430px;" />
+			<input type="text" name="" :value="host + '/weixin/Callback/weixin?shopId=' + shopId" class="url urlo" readonly="true" style="width: 430px;" />
 			<a class="copy" @click="copyCode('','urlo')" style='width:110px'>一键复制</a>
 		</div>
 		<div class="verticalBar"></div>
@@ -40,7 +39,7 @@
 			<span class="round">2</span>
 			<span class="theText">填写业务域名为:
 			</span>
-			<input type="text" name="" value="wx.ishandian.net" class="url urlt" readonly="true" style="width: 122px;" />
+			<input type="text" name="" :value="host" class="url urlt" readonly="true" style="width: 200px;" />
 			<a class="copy" @click="copyCode('','urlt')">一键复制</a>
 		</div>
 		<div class="verticalBar"></div>
@@ -48,7 +47,7 @@
 			<span class="round">3</span>
 			<span class="theText">填写JS接口安全域名为:
 			</span>
-			<input type="text" name="" value="wx.ishandian.net" class="url urlfo" readonly="true" style="width: 122px;" />
+			<input type="text" name="" :value="host" class="url urlfo" readonly="true" style="width: 200px;" />
 			<a class="copy" @click="copyCode('','urlfo')">一键复制</a>
 		</div>
 		<div class="verticalBar"></div>
@@ -56,7 +55,7 @@
 			<span class="round">4</span>
 			<span class="theText">填写网页授权域名为:
 			</span>
-			<input type="text" name="" value="wx.ishandian.net" class="url urlf" readonly="true" style="width: 122px;" />
+			<input type="text" name="" :value="host" class="url urlf" readonly="true" style="width: 200px;" />
 			<a class="copy" @click="copyCode('','urlf')">一键复制</a>
 		</div>
 		<!-- 基础配置 -->
@@ -104,17 +103,15 @@
 		data() {
 			return {
 				shopId: storage.session('userShop').currentShop.id, //单店 shopId 品牌 品牌Id
-				urlList: [] //链接的列表
+				urlList: [], //链接的列表
+				userData: Object,
+				host:'' //域名
 			};
 		},
 		mounted() {
+			this.userData = storage.session('userShop');
 			this.getUrl();
-		},
-		watch: {
-
-		},
-		components: {
-
+			this.getConfig();
 		},
 		methods: {
 			async getUrl() { //获取配置
@@ -127,7 +124,7 @@
 					this.urlList = res; //获取链接
 				}
 			},
-			copyCode: function (i, oForm) {
+			copyCode: function(i, oForm) {
 				let t = null;
 				if (i != '' || i == '0') {
 					t = document.getElementsByClassName('inpurl')[i];
@@ -141,7 +138,18 @@
 					winType: 'alert',
 					content: '复制成功',
 				});
-			}
+			},
+			// 获取公众号配置
+			async getConfig() {
+				let res = await http.getWechatConfig({
+					data: {
+						shopId: this.userData.currentShop.id
+					}
+				});
+				if (res) {
+					this.host = res.host;
+				}
+			},
 		}
 	};
 </script>
@@ -281,6 +289,7 @@
 			margin: 15px 0 35px;
 			position: relative;
 		}
+
 		#configuration-tutorial .set-line .line {
 			display: inline-block;
 			width: 80%;
@@ -289,6 +298,7 @@
 			position: absolute;
 			top: 18px;
 		}
+
 		#configuration-tutorial .copy {
 			display: inline-block;
 			box-sizing: border-box;
