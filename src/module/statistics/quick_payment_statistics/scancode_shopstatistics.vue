@@ -13,6 +13,7 @@
 					<el-button type="info" style="width:120px;" @click="reset">重置</el-button>
 				</div>
 			</div>
+			<!-- 收款码 -->
 			<div class="choiceshop">
 				<div class="choiceshop_l">
 					收款码:

@@ -3,10 +3,34 @@
 	<div id="membercard">
 		<!-- 筛选 -->
 		<div class="search">
-			<span>订单查询</span>
-			<input type="text" placeholder="请输入订单号" v-model="goodsName">
-			<a href="javascript:;" class="blue" @click="getcommodity">筛选</a>
-			<a href="javascript:;" class="gray" @click="reset">重置</a>
+			<!-- <span>订单查询</span>
+			<input type="text" placeholder="请输入订单号" v-model="goodsName"> -->
+			<!-- <a href="javascript:;" class="blue" @click="getcommodity">筛选</a> -->
+			<el-input class="fl" placeholder="请输入订单号" v-model="goodsName" style="width:auto;">
+				<i slot="suffix" class="el-input__icon el-icon-search" @click="getcommodity"></i>
+			</el-input>
+			<!-- <a href="javascript:;" class="gray" @click="reset">重置</a> -->
+			<div class="paymentbox fl" @click="openPaycode">
+				<el-input placeholder="请选择收款码" v-model="paymentCode" :disabled="true" suffix-icon="el-icon-plus">
+				</el-input>
+			</div>
+			<div class="paymentbox fl">
+				<el-button type="primary" style="width:120px;" @click="getByCodes">筛选</el-button>
+				<el-button type="info" style="width:120px;" @click="reset">重置</el-button>
+			</div>
+		</div>
+		<div class="choiceshop">
+			<div class="choiceshop_l">
+				收款码:
+			</div>
+			<div class="choiceshop_r" v-if="dynamicTags.length > 0">
+				<el-tag :key="index" v-for="(tag,index) in dynamicTags" closable :disable-transitions="false" @close="handleClose(tag)">
+					{{tag.staffName}}
+				</el-tag>
+			</div>
+			<div class="choiceshop_r" v-else>
+				请选择收款码
+			</div>
 		</div>
 		<!-- 已经选择的店铺 -->
 		<div class="choiceshop">
@@ -40,6 +64,8 @@
 				</div>
 			</com-table>
 		</section>
+		<!-- 员工码弹窗 -->
+		<paymentCode v-if="showCode" :shopIds="dynamicTags" :constructionsName='constructionsName' :constructionsId="constructionsId" @chooseShop="backShopId"></paymentCode>
 		<!-- 翻页 -->
 		<section class="turn-page">
 			<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
@@ -101,7 +127,6 @@ export default {
 			staticLists: [], //数据
 			shoptitleList: [{
 				titleName: '操作',
-				dataName: 'shopId',
 				conStyle: {
 					color: '#27a8e0',
 					cursor: 'pointer'
@@ -168,11 +193,23 @@ export default {
 			formList: [], //展示的数据
 			allLists: [], //所有的数据  筛选订单
 			oid: '', //订单号
-			allShop: [] //所有的门店
+			allShop: [], //所有的门店
+			showCode: false, //打开员工码的弹窗
+			dynamicTags: [],
+			paymentCode: '', //选择的收款码
+			codesd:'' //当前页面筛选的codes
 		};
 	},
 	methods: {
 		getcommodity: function() {
+			if(this.goodsName == ''){
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					winType: 'alert',
+					content: '请输入订单号'
+				});
+				return false;				
+			}
 			let reg = new RegExp(this.goodsName);
 			let arr = [];
 			arr = this.allLists.filter(item => {
@@ -279,16 +316,16 @@ export default {
 			}
 			return name;
 		},
-		async getScanPayOrderByCodes() {
+		async getScanPayOrderByCodes(codes) {
 			let res = await http.getScanPayOrderByCodes({
 				data: {
 					showShopId: this.constructionsId,
-					codes: this.codes.join(','),
+					codes: codes.join(','),
 					taskId: this.taskId,
 					showDay: this.oneData
 				}
 			});
-			if (res) {
+			if (res && res != '') {
 				this.staticLists = [];
 				this.staticLists.push(res.total); //头部的数据
 				this.allFormList = res.list; //身体的数据
@@ -296,8 +333,69 @@ export default {
 				this.$nextTick(() => {
 					this.setPage();
 				});
+			}else{
+				this.staticLists = [];
+				this.formList = [];
 			}
-		}
+		},
+		openPaycode: function() { //打开快捷支付统计
+			//console.log('222222')
+			this.showCode = true;
+		},	
+		getByCodes:function() {
+			if (this.dynamicTags.length == 0) {
+				this.$store.commit('setWin', {
+					content: '请选择收款码',
+					title: '操作提示',
+					winType: 'alert'
+				});
+				return false;
+			}
+			let codes = [];
+			for (let item of this.dynamicTags) {
+				codes.push(item.staffId);
+			}
+			this.codesd = codes;
+			this.getScanPayOrderByCodes(this.codesd);
+			// let data = await http.getScanPayOrderByCodes({
+			// 	data: {
+			// 		showShopId: this.constructionsId,
+			// 		codes: this.codes.join(','),
+			// 		taskId: this.taskId,
+			// 		showDay: ''
+			// 	}
+			// });
+			// if (data) {
+			// 	this.staticLists = [];
+			// 	this.staticLists.push(data.total); //头部的数据
+			// 	this.allFormList = data.list; //身体的数据
+			// 	this.$nextTick(() => {
+			// 		this.setPage();
+			// 	});
+			// }
+		},	
+		//选择店铺弹窗返回
+		backShopId(res, item) {
+			if (res == 'ok') {
+				//this.staffId = obj.shopIds;
+				this.dynamicTags = item;
+				//console.log(JSON.stringify(item));
+				if (this.dynamicTags.length > 0) {
+					this.paymentCode = `已选择${this.dynamicTags.length}个收款码`;
+				} else {
+					this.paymentCode = '请选择收款码';
+				}
+			}
+			this.showCode = false;
+		},	
+		handleClose(tag) {
+			this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+			if (this.dynamicTags.length > 0) {
+				this.paymentCode = `已选择${this.dynamicTags.length}个收款码`;
+			} else {
+				this.paymentCode = '请选择收款码';
+			}
+		},					
 	},
 	props: {
 		constructionsName: String, //店铺名称
@@ -314,7 +412,9 @@ export default {
 			import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 		comTable: () =>
 			import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
-		getAppliedWin
+		getAppliedWin,
+		paymentCode: () =>
+			import ( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')		
 	},
 	created() {
 		let obj1 = {
@@ -354,7 +454,7 @@ export default {
 		}
 		]);
 		if (this.codes && this.codes != '') {
-			this.getScanPayOrderByCodes();
+			this.getScanPayOrderByCodes(this.codes);
 		} else {
 			this.getScanPayData();
 		}
@@ -365,53 +465,63 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-#membercard {
-	width: 1437px;
-	height: 100%;
-}
+	#membercard {
+		width: 1437px;
+		height: 100%;
+	}
 
-#membercard .search {
-	width: 100%;
-	height: 42px;
-	margin-bottom: 18px;
-}
+	#membercard .search {
+		width: 100%;
+		height: 42px;
+		margin-bottom: 18px;
+	}
 
-#membercard .search span {
-	font-size: 16px;
-	margin-right: 15px;
-}
+	#membercard .search span {
+		font-size: 16px;
+		margin-right: 15px;
+	}
 
-#membercard .search input {
-	width: 183px;
-	height: 41px;
-	text-indent: 10px;
-	margin-right: 15px;
-}
+	#membercard .search input {
+		width: 183px;
+		height: 41px;
+		text-indent: 10px;
+		margin-right: 15px;
+	}
 
-#membercard .search a {
-	width: 101px;
-	height: 42px;
-	text-align: center;
-	line-height: 42px;
-	margin-right: 15px;
-}
+	#membercard .search a {
+		width: 101px;
+		height: 42px;
+		text-align: center;
+		line-height: 42px;
+		margin-right: 15px;
+	}
 
-#membercard .choiceshop {
-	width: 100%;
-	overflow: hidden;
-	margin-bottom: 20px;
-}
+	#membercard .choiceshop {
+		width: 100%;
+		overflow: hidden;
+		margin-bottom: 20px;
+	}
 
-#membercard .choiceshop .choiceshop_l {
-	float: left;
-	font-size: 16px;
-	line-height: 24px;
-}
+	#membercard .choiceshop .choiceshop_l {
+		float: left;
+		font-size: 16px;
+		line-height: 32px;
+	}
 
-#membercard .choiceshop .choiceshop_r {
-	float: left;
-	width: 900px;
-	font-size: 16px;
-	line-height: 24px;
-}
+	#membercard .choiceshop .choiceshop_r {
+		float: left;
+		width: 900px;
+		font-size: 16px;
+		line-height: 32px;
+	}
+
+	#membercard .search .paymentbox {
+		height: 40px;
+		margin-left: 20px;
+	}
+
+	.el-tag+.el-tag {
+		margin-left: 10px;
+		margin-bottom: 10px;
+	}
 </style>
