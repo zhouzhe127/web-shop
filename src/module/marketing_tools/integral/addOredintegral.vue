@@ -38,7 +38,7 @@
         </div>
         <!-- 兑换所需积分 -->
         <div class="online-box clearfix">
-            <span class="online-sub fl">兑换所需积分</span>
+            <span class="online-sub fl required">兑换所需积分</span>
             <div class="rightHalf">
                 <!-- <input type="text" class="name" placeholder="请输入兑换所需积分" v-model='price' maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
                 <el-input class="fl" v-model="price" placeholder="请输入兑换所需积分" maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
@@ -209,7 +209,7 @@ export default {
 			name: '', //商品名称
 			price: '', //所需积分
 			inventory: '', //库存
-			sort: null, //商品排序
+			sort: '', //商品排序
 			status: false,
 			gid: null,
 			imgData: null,
@@ -310,37 +310,37 @@ export default {
 				this.errorShow('请先填写所需兑换积分！');
 				return false;
 			}
-			if (isNaN(Number(this.price))) {
-				this.errorShow('兑换积分必须为数字！');
-				return false;
-			}
-			if (Number(this.price) < 0) {
-				this.errorShow('兑换积分必须为大于等于0！');
-				return false;
-			}
+			// if (isNaN(Number(this.price))) {
+			// 	this.errorShow('兑换积分必须为数字！');
+			// 	return false;
+			// }
+			// if (Number(this.price) < 0) {
+			// 	this.errorShow('兑换积分必须为大于等于0！');
+			// 	return false;
+			// }
 			if (this.indexOn == 0) {
-				if (this.inventory == '' || this.inventory.length == 0) {
+				if (this.inventory == '') {
 					this.errorShow('请先填写商品库存！');
 					return false;
 				}
-				if (isNaN(Number(this.inventory))) {
-					this.errorShow('商品库存必须为数字！');
-					return false;
-				}
+				// if (isNaN(Number(this.inventory))) {
+				// 	this.errorShow('商品库存必须为数字！');
+				// 	return false;
+				// }
 			}
 			this.mergeObject(); //合并对象
 			if (this.indexOn == 1 && Object.keys(this.shopStock).length <= 0) {
 				this.errorShow('请填写门店库存!');
 				return false;
 			}
-			if (this.sort == null) {
+			if (this.sort == '') {
 				this.errorShow('排序不能为空！');
 				return false;
 			}
-			if (isNaN(this.sort)) {
-				this.errorShow('排序必须为数字！');
-				return false;
-			}
+			// if (isNaN(this.sort)) {
+			// 	this.errorShow('排序必须为数字！');
+			// 	return false;
+			// }
 			if (this.sort > 255 || this.sort <= 0) {
 				this.errorShow('排序不能小于0大于255！');
 				return false;
@@ -349,14 +349,14 @@ export default {
 				this.errorShow('请输入商品描述！');
 				return false;
 			}
+			if (this.bigName == null) {
+				this.errorShow('详情图片不能为空！');
+				return false;
+			}   			
 			if (this.fileName == null) {
 				this.errorShow('缩略图片不能为空！');
 				return false;
 			}
-			if (this.bigName == null) {
-				this.errorShow('详情图片不能为空！');
-				return false;
-			}   
 			return true;                        
 		},
 		okFun() {

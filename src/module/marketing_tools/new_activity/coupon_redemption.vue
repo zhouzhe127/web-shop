@@ -75,7 +75,7 @@
                     <span>领券活动</span>
                     <span></span>
                     <span>共
-								<a href="javascript:;">{{count}}</a>条记录</span>
+                        <a href="javascript:;">{{count}}</a>条记录</span>
                 </div>
                 <div class="list_title_r fr">
                 </div>
@@ -395,143 +395,143 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-#redemption .filter {
-    min-height: 40px;
-}
+    #redemption .filter {
+        min-height: 40px;
+    }
 
-#redemption .filter .date {
-    height: 40px;
-    margin-bottom: 20px;
-    line-height: 40px;
-    margin-right: 25px;
-}
+    #redemption .filter .date {
+        height: 40px;
+        margin-bottom: 20px;
+        line-height: 40px;
+        margin-right: 25px;
+    }
 
-#redemption .filter .date .line {
-    margin: 0 5px;
-}
+    #redemption .filter .date .line {
+        margin: 0 5px;
+    }
 
-#redemption .filter .date input {
-    width: 200px;
-    height: 40px;
-    text-indent: 15px;
-}
+    #redemption .filter .date input {
+        width: 200px;
+        height: 40px;
+        text-indent: 15px;
+    }
 
-#redemption .order-order-searchA,
-#redemption .order-order-search {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background-color: #29a7e1;
-    cursor: pointer;
-    vertical-align: middle;
-}
+    #redemption .order-order-searchA,
+    #redemption .order-order-search {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: #29a7e1;
+        cursor: pointer;
+        vertical-align: middle;
+    }
 
-#redemption .order-order-search {
-    background: url(../../../res/images/search.png) center center no-repeat;
-}
+    #redemption .order-order-search {
+        background: url(../../../res/images/search.png) center center no-repeat;
+    }
 
-#redemption .order-order-searchA:hover {
-    background-color: #1878a5;
-    transition: background-color ease-in-out 0.2s;
-}
+    #redemption .order-order-searchA:hover {
+        background-color: #1878a5;
+        transition: background-color ease-in-out 0.2s;
+    }
 
-#redemption .order-order-searchA:active {
-    background-color: #154961;
-}
+    #redemption .order-order-searchA:active {
+        background-color: #154961;
+    }
 
-#redemption .filter .search-box {
-    display: inline-block;
-    vertical-align: middle;
-    width: 200px;
-    height: 40px;
-}
+    #redemption .filter .search-box {
+        display: inline-block;
+        vertical-align: middle;
+        width: 200px;
+        height: 40px;
+    }
 
-#redemption .filter .search-box span {
-    width: 80px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    border: 0;
-    color: #fff;
-    display: inline-block;
-    cursor: pointer;
-}
+    #redemption .filter .search-box span {
+        width: 80px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border: 0;
+        color: #fff;
+        display: inline-block;
+        cursor: pointer;
+    }
 
-#redemption .filter .search-box .search-btn {
-    margin-right: 20px;
-}
+    #redemption .filter .search-box .search-btn {
+        margin-right: 20px;
+    }
 
-#redemption .operate_worker {
-    height: 100%;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
+    #redemption .operate_worker {
+        height: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
 
-#redemption .operate_worker span {
-    cursor: pointer;
-    display: block;
-    height: 18px;
-    text-align: center;
-    line-height: 18px;
-    border-left: 1px solid #cecece;
-    float: left;
-    padding: 0 10%;
-}
+    #redemption .operate_worker span {
+        cursor: pointer;
+        display: block;
+        height: 18px;
+        text-align: center;
+        line-height: 18px;
+        border-left: 1px solid #cecece;
+        float: left;
+        padding: 0 10%;
+    }
 
-#redemption .operate_worker span:nth-child(1) {
-    border: none;
-    color: #ff8d00;
-    /* padding: 0 25px; */
-    /* border-right: 1px solid RGB(206, 206, 206); */
-    /* cursor: pointer; */
-}
+    #redemption .operate_worker span:nth-child(1) {
+        border: none;
+        color: #ff8d00;
+        /* padding: 0 25px; */
+        /* border-right: 1px solid RGB(206, 206, 206); */
+        /* cursor: pointer; */
+    }
 
-#redemption .operate_worker span:nth-child(2) {
-    color: #28a8e0;
-    /* padding: 0 25px;
+    #redemption .operate_worker span:nth-child(2) {
+        color: #28a8e0;
+        /* padding: 0 25px;
 	cursor: pointer; */
-}
+    }
 
-#redemption .download {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    #redemption .download {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-#redemption .form {
-    width: 100px;
-    height: 40px;
-    position: relative;
-}
+    #redemption .form {
+        width: 100px;
+        height: 40px;
+        position: relative;
+    }
 
-#redemption .form input {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-}
+    #redemption .form input {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
 
-#redemption .form a {
-    position: absolute;
-    display: block;
-    width: 100px;
-    height: 40px;
-    background-color: #28a8e0;
-    border: solid 1px #28a8e0;
-    text-align: center;
-    line-height: 40px;
-    font-size: 16px;
-    color: #fff;
-    z-index: 9;
-}
+    #redemption .form a {
+        position: absolute;
+        display: block;
+        width: 100px;
+        height: 40px;
+        background-color: #28a8e0;
+        border: solid 1px #28a8e0;
+        text-align: center;
+        line-height: 40px;
+        font-size: 16px;
+        color: #fff;
+        z-index: 9;
+    }
 
-#redemption p {
-    font-size: 16px;
-    color: #28a8e0;
-}
+    #redemption p {
+        font-size: 16px;
+        color: #28a8e0;
+    }
 </style>
