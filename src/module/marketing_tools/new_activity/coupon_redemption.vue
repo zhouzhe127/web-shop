@@ -212,11 +212,11 @@ export default {
 			//this.expirationTime = this.expirationTimeList[i].name;
 			this.expirationTimeId = i;
 		},
-		pageChange(obj) {
-			this.page = obj.page;
-			this.num = obj.num;
-			this.newgetActivityList();
-		},
+		// pageChange(obj) {
+		// 	this.page = obj.page;
+		// 	this.num = obj.num;
+		// 	this.newgetActivityList();
+		// },
 		setTitle: function() { //设置标题
 			this.$store.commit('setPageTools', [{
 				name: '返回',
@@ -259,15 +259,17 @@ export default {
 			// this.activityList = data.list;
 			// this.pageTotal = data.total;
 		},
-		downloadCode: function(item) { //下载二维码
+		async downloadCode(item) { //下载二维码
 			//console.log('11111');
 			let url = this.shortUrlPreFix + item.urlCode;
-			this.downloadUrl = this.qrcode.getQrBase64(url, {
+			//console.log(url)
+			this.downloadUrl = await this.qrcode.getQrBase64(url, {
 				padding: 15,
 				width: 300,
 				height: 300,
 				correctLevel: QRErrorCorrectLevel.L
-			}); //链接地址 下载的二维码						
+			}); //链接地址 下载的二维码		
+			//console.log(this.downloadUrl)			
 		},
 		formatTime(time) { //日期格式化
 			if (time.length == 10) {
