@@ -25,7 +25,7 @@
 							<h3 class="showBefore">优惠券名称:</h3>
 							<div class="shopAfter">{{detials.name}}</div>
 						</div>
-						<div style="width:100%;height:40px;" v-if="detials.type =='2'">
+						<div style="width:100%;height:40px;" v-if="detials.type =='2' || detials.type =='6'">
 							<h3 class="showBefore">强制减免:</h3>
 							<div class="shopAfter" v-if="detials.isDiscount == 1">是</div>
 							<div class="shopAfter" v-if="detials.isDiscount == 0">否</div>

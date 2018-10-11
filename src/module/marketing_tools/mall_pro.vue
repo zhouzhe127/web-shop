@@ -23,11 +23,13 @@
 					</el-table-column>
 					<el-table-column prop="createTime" label="素材创建时间" align="center">
 					</el-table-column>
-					<el-table-column label="操作" align="center">
+					<el-table-column label="操作" align="center" width="250">
 						<template slot-scope="scope">
-							<el-button size="medium" type="primary" @click="changeStuas(scope.row.id,scope.row.status)">{{scope.row.status =='1' ? '启用' : '禁用'}}</el-button>
-							<el-button size="medium" type="info" @click="proedit(scope.row.id)">编辑</el-button>
-							<el-button size="medium" type="danger" @click="dels(scope.row.id)">删除</el-button>
+							<el-button size="medium" type="text" @click="changeStuas(scope.row.id,scope.row.status)" style="color: rgb(40, 168, 224);">{{scope.row.status =='1' ? '启用' : '禁用'}}</el-button>
+							<span style="padding:0 5px;color: #D2D2D2">|</span>
+							<el-button size="medium" type="text" @click="proedit(scope.row.id)" style="color: #ff8d00;">编辑</el-button>
+							<span style="padding:0 5px;color: #D2D2D2">|</span>
+							<el-button size="medium" type="text" @click="dels(scope.row.id)" style="color: #fd3f1f;">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>

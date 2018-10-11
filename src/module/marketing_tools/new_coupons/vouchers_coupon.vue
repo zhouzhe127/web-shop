@@ -208,7 +208,7 @@
 						张
 					</div> -->
 					<el-input style="width:194px;" placeholder="请输入最大使用上限" v-model="maxCeiling" maxlength="6">
-						<template slot="suffix">元</template>
+						<template slot="suffix">张</template>
 					</el-input>
 				</div>
 			</div>

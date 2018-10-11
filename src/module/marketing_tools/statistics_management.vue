@@ -57,11 +57,13 @@
 						<img :src="scope.row.imageUrl" style="width:60px;height:60px;" />
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" align="center" width="310">
+				<el-table-column label="操作" align="center" width="250">
 					<template slot-scope="scope">
-						<el-button size="medium" type="primary" @click="downLoadcode(scope.row)">下载二维码</el-button>
-						<el-button size="medium" type="info" @click="isSources('edit',scope.row)">编辑</el-button>
-						<el-button size="medium" type="danger" @click="delSources(scope.$index,scope.row)">删除</el-button>
+						<el-button size="medium" type="text" @click="downLoadcode(scope.row)" style="color: rgb(40, 168, 224);">下载二维码</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="medium" type="text" @click="isSources('edit',scope.row)" style="color: #ff8d00;">编辑</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="medium" type="text" @click="delSources(scope.$index,scope.row)" style="color: #fd3f1f;">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

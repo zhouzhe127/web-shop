@@ -68,12 +68,14 @@
 					</el-table-column>
 					<el-table-column prop="showStatus" label="状态" width="100" align="center">
 					</el-table-column>
-					<el-table-column prop="receiveNum" label="操作" width="250" align="center">
+					<el-table-column prop="receiveNum" label="操作" width="200" align="center">
 						<template slot-scope="scope">
-							<el-button size="mini" type="primary" @click="shelves(scope.$index,scope.row.id,scope.row.status)">{{scope.row.status =='0' ? '下架' : '上架'}}</el-button>
+							<el-button size="mini" type="text" @click="shelves(scope.$index,scope.row.id,scope.row.status)" style="color: rgb(40, 168, 224);">{{scope.row.status =='0' ? '下架' : '上架'}}</el-button>
 							<!-- <el-button size="mini" type="primary" v-if="scope.row.status =='0'" @click="shelves(scope.$index,scope.row.id,scope.row.status)">下架</el-button> -->
-							<el-button size="mini" type="info" @click="edit(scope.$index, scope.row.id)">编辑</el-button>
-							<el-button size="mini" type="danger" @click="del(scope.$index, scope.row.id)">删除</el-button>
+							<span style="padding:0 5px;color: #D2D2D2">|</span>
+							<el-button size="mini" type="text" @click="edit(scope.$index, scope.row.id)" style="color: #ff8d00;">编辑</el-button>
+							<span style="padding:0 5px;color: #D2D2D2">|</span>
+							<el-button size="mini" type="text" @click="del(scope.$index, scope.row.id)" style="color: #fd3f1f;">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>

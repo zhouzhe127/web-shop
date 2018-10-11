@@ -47,16 +47,19 @@
 							<span>{{couponTypeList[scope.row.type]}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="操作" align="center" width="400">
+					<el-table-column label="操作" align="center" width="280">
 						<template slot-scope="scope">
 							<div v-if="ischain == 1 || ischain == 2">
-								<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
+								<el-button size="medium" type="text" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
 							</div>
 							<div v-else>
-								<el-button size="medium" type="success" @click="unbundlingCoupon(scope.row)">同步</el-button>
-								<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
-								<el-button size="medium" type="info" @click="modfycoupons(scope.row)">编辑</el-button>
-								<el-button size="medium" type="danger" @click="deletecoupons(scope.row)">删除</el-button>
+								<el-button size="medium" type="text" @click="unbundlingCoupon(scope.row)" style="color: rgb(40, 168, 224);">同步</el-button>
+								<span style="padding:0 5px;color: #D2D2D2">|</span>
+								<el-button size="medium" type="text" @click="opencoupons(scope.$index,scope.row)" style="color: #E1BB4A;">查看详情</el-button>
+								<span style="padding:0 5px;color: #D2D2D2">|</span>
+								<el-button size="medium" type="text" @click="modfycoupons(scope.row)" style="color: #ff8d00;">编辑</el-button>
+								<span style="padding:0 5px;color: #D2D2D2">|</span>
+								<el-button size="medium" type="text" @click="deletecoupons(scope.row)" style="color: #fd3f1f;">删除</el-button>
 							</div>
 						</template>
 					</el-table-column>

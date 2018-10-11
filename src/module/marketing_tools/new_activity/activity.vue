@@ -84,15 +84,21 @@
 						<span v-else>会员</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" align="center" width="280">
+				<el-table-column label="操作" align="center" width="250">
 					<template slot-scope="scope">
-						<el-button v-if="flag==1" size="medium" type="primary" @click="close(scope.row)">关闭</el-button>
-						<el-button v-if="flag==0" size="medium" type="primary" @click="publish(scope.row)">发布</el-button>
-						<el-button v-if="flag==2" size="medium" type="primary" @click="modfycoupons(scope.row,'2')">查看详情</el-button>
-						<el-button v-if="flag==2" size="medium" type="warning" @click="off(scope.row)">下架</el-button>
-						<el-button v-if="flag==3" size="medium" type="primary" @click="on(scope.row)">上架</el-button>
-						<el-button v-if="flag==0 || flag==1 || flag==3" size="medium" type="info" @click="modfycoupons(scope.row,'1')">编辑</el-button>
-						<el-button v-if="!(flag==2)" size="medium" type="danger" @click="deletecoupons(scope.row)">删除</el-button>
+						<el-button v-if="flag==1" size="medium" type="text" @click="close(scope.row)" style="color: #E1BB4A;">关闭</el-button>
+						<span v-if="flag==1" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="flag==0" size="medium" type="text" @click="publish(scope.row)" style="color: #E1BB4A;">发布</el-button>
+						<span v-if="flag==0" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="flag==2" size="medium" type="text" @click="modfycoupons(scope.row,'2')" style="color: #E1BB4A;">查看详情</el-button>
+						<span v-if="flag==2" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="flag==2" size="medium" type="text" @click="off(scope.row)" style="color: rgb(40, 168, 224);">下架</el-button>
+						<!-- <span v-if="flag==2" style="padding:0 5px;color: #D2D2D2">|</span> -->
+						<el-button v-if="flag==3" size="medium" type="text" @click="on(scope.row)" style="color: rgb(40, 168, 224);">上架</el-button>
+						<span v-if="flag==3" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="flag==0 || flag==1 || flag==3" size="medium" type="text" @click="modfycoupons(scope.row,'1')" style="color: #ff8d00;">编辑</el-button>
+						<span v-if="flag==0 || flag==1 || flag==3" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="!(flag==2)" size="medium" type="text" @click="deletecoupons(scope.row)" style="color: #fd3f1f;">删除</el-button>
 					</template>
 					<!-- <template slot-scope="scope" v-else>
 						<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
