@@ -85,7 +85,7 @@ export default {
 		},
 		//获取店铺列表
 		async getShopList() {
-			let res = await http.getScanPayInfo({
+			let res = await http.getAllCodeList({
 				data: {
 					shopId: this.constructionsId
 				}
@@ -98,8 +98,8 @@ export default {
 			};
 			this.allShop.push(obj);
 			if (res) {
-				for (let key in res.staffList) {
-					this.allShop.push(res.staffList[key]);
+				for (let key in res) {
+					this.allShop.push(res[key]);
 				}
 				this.init();
 			}

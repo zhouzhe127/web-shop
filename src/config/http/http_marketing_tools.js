@@ -289,6 +289,10 @@ export default {
 		url: w + 'Scanpayconfig/getScanPayInfo', //扫码支付规则
 		method: 'get'
 	},
+	'getAllCodeList': {
+		url: w + 'Scanpayconfig/getAllCodeList', //扫码支付规则
+		method: 'get'
+	},
 	'updateShortUrl': {
 		url: w + 'Scanpayconfig/updateShortUrl', //更新短址
 		method: 'get'
@@ -337,11 +341,11 @@ export default {
 		url: w + 'activityconfig/getActivityDetail', //获取活动列表详情
 		method: 'get'
 	},
-	'deleteStaffScanPay':{
+	'deleteStaffScanPay': {
 		url: w + 'Scanpayconfig/deleteStaffScanPay', //刪除員工支付碼
 		method: 'post'
 	},
-	'addStaffScanPay':{
+	'addStaffScanPay': {
 		url: w + 'Scanpayconfig/addStaffScanPay', //新增員工支付碼
 		method: 'post'
 	},
