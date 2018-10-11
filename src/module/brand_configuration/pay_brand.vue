@@ -35,7 +35,7 @@
 		<!--:shopIds="''" -->
 		<!--:isTitle = "'选择指派门店'"-->
 		<!--&gt;</shopsWin>-->
-		<elShopListWin :shopIds="[]" @chooseShop="getShopResult" v-if="showShop"></elShopListWin>
+		<elShopListWin :shopIds="[]" @chooseShop="getShopResult"  v-if="showShop"></elShopListWin>
 	</section>
 </template>
 <script>

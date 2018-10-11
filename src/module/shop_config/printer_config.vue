@@ -148,6 +148,7 @@ export default {
 			this.conList = await http.getPrintsetList({ data: {} });
 		},
 		delPrin(item,index){
+			console.log(index);
 			this.$store.commit('setWin', {
 				title: '操作提示',
 				winType: 'confirm',
@@ -166,7 +167,7 @@ export default {
 				data: { printsetId: item.id }
 			});
 			if (abc && abc == item.id * 1) {
-				this.conList.splice(index, 1);
+				this.lists.splice(index, 1);
 			}
 		},
 		// 修改打印配置接口
