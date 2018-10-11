@@ -2,7 +2,7 @@
  * @Author: zhengu.jiang
  * @Date: 2018-08-13 11:04:36 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-10 17:44:37
+ * @Last Modified time: 2018-10-10 18:49:24
  * @Module: 品牌下选择门店下拉
  */
 
@@ -161,10 +161,11 @@ export default {
 			let res = utils.deepCopy(this.allShop);
 			if (this.isSingle) {
 				//单选
-				// this.singleId=this.shopIds;
+				this.singleId=this.shopIds;
 				if (this.singleId.length > 0) {
 					for (let i = 0; i < this.allShop.length; i++) {
 						if (this.singleId.includes(this.allShop[i].id)) {
+							res[i].selected = true;
 							this.singleName = this.allShop[i].shopName;
 							break;
 						}
@@ -305,7 +306,6 @@ export default {
 			this.visible = false;
 			if (this.isSingle) {
 				//单选
-				console.log(this.singleId);
 				this.$emit('chooseShop', this.singleId);
 			} else {
 				//多选
@@ -315,7 +315,6 @@ export default {
 						shopIds.push(this.showShopList[i].id);
 					}
 				}
-				console.log(this.singleId);
 				this.$emit('chooseShop', shopIds);
 			}
 		},
