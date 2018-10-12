@@ -425,12 +425,14 @@ export default {
 		//选择时间查询订单
 		sreachOrderInDays: function() {
 			let timer = 3 * 30 * 24 * 60 * 60 * 1000;
+			this.startTime = new Date(this.startTime).getTime()
+			this.endTime = new Date(this.endTime).getTime()
 			if (this.endTime - this.startTime > timer) {
 				this.$store.commit('setWin', {
 					title: '操作提示',
 					content: '最大只能查询三个月时间!'
 				});
-				this.startTime = this.endTime - timer + 24 * 60 * 60 * 1000 + 1000;
+				// this.startTime = this.endTime - timer + 24 * 60 * 60 * 1000 + 1000;
 				return false;
 			} else if (
 				parseInt(this.startTime / 1000) -
@@ -743,7 +745,6 @@ export default {
 		},
 		pageClick(res){
 			this.allDayPage.page = res;
-			console.log(res);
 			this.getOrderListInDays();
 		},
 		//通过多天的查看详情进入当天页面

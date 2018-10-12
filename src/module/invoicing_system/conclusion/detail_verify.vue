@@ -76,8 +76,9 @@
 				<span class="inGoods" @click="tooutshop(props.data.id)" v-if="props.data.dynamic==1"><i>|</i>确认出货</span>
 				<span class="inGoods" v-if="props.data && props.data.dynamic==2" @click="insertGoods(props.data.id)">
 					<i>|</i>入货</span>
-				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4" @click="delList(props.data.id)">
-					<i>|</i>删除</span>
+				<span class="dele" v-if="detailData && Number(detailData.auditStatus)!==4&&props.data.dynamic!=4"
+				@click="delList(props.data.id)">
+					<i>|</i>取消调度</span>
 				
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
@@ -143,7 +144,7 @@
 				detailData: '',
 				auditStatus: ['审核中', '已取消', '审核未通过', '审核通过'],
 				dispatchStatus: ['未调度', '配货中', '未出货', '全部取消', '待入货', '已完成', '已完成（异常）', '配货完成'],
-				listStatus: ['未出货', '待入货', '配货中', '已取消', '已完成', '已完成（异常）', '配货完成'],
+				listStatus: ['未出货', '待入货', '调度中', '已取消', '已完成', '已完成（异常）'],
 				introData: [], //商品物料列表所有数据
 				goodsDetails: '', //调度单列表所有数据
 				totalNum: 0, //调度单条目数
@@ -265,7 +266,7 @@
 				this.listNum = this.introData.length;
 				this.pageTotal = goodsData.total;
 			},
-			// 总单接口
+			// 获取调度单列表
 			async searAll() {
 				if (this.tabactive == 1) {
 					let myData = await http.invoic_getApplyDispatchRecord({
@@ -333,16 +334,13 @@
 			},
 			// 删除操作
 			delList(id) {
-				this.$store.commit('setWin', {
-					winType: 'confirm',
-					title: '操作提示！',
-					content: '确认删除调度记录？',
-					callback: (res) => {
-						if (res == 'ok') {
-							this.deleteList(id);
-						}
-					}
-				});
+				this.$confirm('确认取消调度?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.deleteList(id);
+				}).catch(()=>{});
 			},
 			// 调用删除的接口
 			async deleteList(id) {

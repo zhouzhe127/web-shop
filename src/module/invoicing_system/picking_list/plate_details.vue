@@ -50,7 +50,7 @@
 								</li>
 								<li class="over_hide" :title="item.materialName">{{item.materialName}}</li>
 								<li class="over_hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
-								<li>{{getType(item.materialType)}}</li>
+								<li>{{materType[item.materialType]}}</li>
 								<li style="line-height: 0;padding-top: 15px">
 									<el-select v-model="item.index" @change="(res)=>{backItem(item,res)}" style="width:100px;">
 									    <el-option
@@ -112,15 +112,35 @@
 				recordId:'', //领料记录页面传递的值
 				isChangeList:false,  //列表的展开与隐藏
 				item:{},
-				detail:{}
+				detail:{},
+				materType:{
+					0: '成品',
+					1: '半成品',
+					2: '普通物料',
+				},
+				isBack:true,
 			};
+		},
+		beforeRouteEnter (to, from, next) {
+			if(from.path=='/admin/pickingList/plateStorage'){
+				next(function(self){
+					self.isBack = false;
+				});
+			}else{
+				next();	
+			}
 		},
 		mounted(){
 			this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
 			let arr = [{name:'返回',className:'info',type:4,fn:()=>{
-				storage.session('listDetail',null);
 				storage.session('isBackPickingRecord',true);   //是否点击返回
-				window.history.go(-1);
+				if(this.isBack){
+					window.history.go(-1);
+				}else{
+					storage.session('numType',{num:1});
+					delete this.$route.query.id;
+					this.$router.push({path:'/admin/pickingList',query:this.$route.query});
+				}
 			}}];
 			this.$store.commit('setPageTools',arr);
 			this.recordId = this.$route.query.id;
@@ -130,16 +150,6 @@
 			//列表的展开与隐藏
 			changeList(){
 				this.isChangeList=!this.isChangeList;
-			},
-			//获取物料的类型
-			getType(type){
-				let showType={0:'物料',};
-				for(let key in showType){
-					if(key==type){
-						return showType[key];
-					}
-				}
-				return '--';
 			},
 			//选择单位
 			backItem(item,id){

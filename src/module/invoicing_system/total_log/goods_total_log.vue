@@ -263,12 +263,12 @@ export default {
             this.getList();
         },
         //筛选重置
-        filterReset(flag){
+        filterReset(flag,page){
             if(flag == 'reset'){
                 this.initPageObj();
                 this.initCondition();
             }else{
-                this.pageObj.currentPage = 1;
+                this.pageObj.currentPage = page || 1;
             }
             this.getList();
         },
@@ -296,17 +296,18 @@ export default {
 
 
                 ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
-                // ele.change = Math.abs(ele.change);
 
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
-                // ele.cost = Math.abs(ele.cost);
 
                 ele.arrowPrice = ele.price > 0;
-                // ele.price = Math.abs(ele.price);
 
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
                 ele.changeAfter = ele.changeAfter + ele.itemUnit;
+
+                if(!ele.createUName){
+                    ele.createUName = this.placeholder;
+                }
                 return ele;
             });
         },
@@ -315,12 +316,10 @@ export default {
         //查看商品详情
         async viewDetail(row,column){
             let info = {};
-            if(this.materialInfo.gid != row.itemId){
-                info = await this.getHttp('InvoicingGetGoodsDetail',{gid:row.itemId,wid:0});
-                if(!info || typeof info != 'object') info = {};
-                info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
-                this.materialInfo = info;
-            }
+            info = await this.getHttp('InvoicingGetGoodsDetail',{gid:row.itemId,wid:0});
+            if(!info || typeof info != 'object') info = {};
+            info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
+            this.materialInfo = info;
             this.dialog.show = true;
         },
 
@@ -347,15 +346,12 @@ export default {
         this.initData();
         this.initPageObj();
         this.initCondition();
-
+    },
+    activated(){
         this.getOperationList();
         this.getCategoryList();
         this.getWarehouseList();
-
-        this.filterReset('reset');
-    },
-    activated(){
-        this.filterReset('reset');
+        this.filterReset('filter',this.pageObj.currentPage);
     },
     /*
     beforeRouteEnter(to,from,next){

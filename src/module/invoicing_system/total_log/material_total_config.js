@@ -7,7 +7,7 @@ function defaultBatchClick(context,item){
 		query:{
 			id: item.itemId,
 			logId: item.id,
-			recordName:item.itemName
+			recordName:item.operationType
 		}
 	};
 	context.$router.push(obj);
@@ -82,10 +82,12 @@ let config = [
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
-				obj.path = '/admin/operation/enterGoods';
+				let obj = {};
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					logTab:1,
 					logType:2,
+					id:item.other.dispatchId
 				}; 
 				context.$router.push(obj);
 			}			
@@ -100,12 +102,12 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
-					id:893,
-					intoId:1,
+					id:item.other.dispatchId,					//调度单id
+					intoId:item.other.dispatchInfoId,			//入货单id
 					logTab:2,
-					logType:2,      
+					logType:2, 
 				};
 				context.$router.push(obj);
 				
@@ -123,7 +125,7 @@ let config = [
 				let obj = {};
 				obj.path = '/admin/pickingList/checkDetails';
 				obj.query = {
-					id:item.receiveLogId
+					id:item.other.receiveLogId
 				};
 				context.$router.push(obj);
 				
@@ -141,7 +143,7 @@ let config = [
 				let obj = {};
 				obj.path = '/admin/pickingList/plateDetails';
 				obj.query = {
-					id:item.itemId
+					id:item.other.logId
 				};
 				context.$router.push(obj);
 			}
@@ -166,16 +168,32 @@ let config = [
 			"typeName": "取消调度物料回库",
 			"historyDescripe": "点击进入调度入货单，入货单表格在耗损后边增加，入货成本总额。",
 			"batchDescripe": "",
-			"canViewHistory": true,
+			"canViewHistory": function(item){
+				let dispatchId = Number(item.other.dispatchId);
+				return Boolean(dispatchId);
+			},
 			"canViewBatch": true,
-			"batchClick": defaultBatchClick,
+			"batchClick": function(context,item){
+				let obj = {
+					path : '/admin/inventoryManagement/supbranchDetail',
+					query:{
+						id: item.itemId,
+						logId: item.id,
+						recordName:item.operationType
+					}
+				};
+				context.$router.push(obj);
+			},
 			"historyClick":function(context,item){
+				let dispatchId = Number(item.other.dispatchId);
+				if(!dispatchId){
+					return;
+				}
 				let obj = {};
-				obj.path = '/admin/operation/enterGoods';
+				obj.path = '/admin/operation/operationDetail';
 				obj.query = {
 					id:item.other.dispatchId,
-					intoId:item.other.dispatchInfoId,
-					logTab:2,
+					logTab:1,
 					logType:2,      
 				};
 				context.$router.push(obj);				
@@ -240,9 +258,34 @@ let config = [
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
-				let obj = {};
-				obj.path = '/admin/wareImport';
-				context.$router.push(obj);				
+				let obj = {},
+				other = item.other,
+				cdnUrl = '',
+				userDate = {},
+				temp = {};
+
+				userDate = storage.session('userShop');
+				
+				cdnUrl = userDate.cdnBaseUrl;
+
+				obj.path = '/admin/wareImport/wareProsperity';
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
+				storage.session('detailNeed',temp);
+				context.$router.push(obj);					
 			}
 		},
 		{

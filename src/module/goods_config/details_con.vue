@@ -37,73 +37,6 @@
 				<!-- 分类选择 -->
 				<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea = "oneArea"></elCategory>
 				<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea = "twoArea"></elCategory>
-				<!-- <el-popover
-					placement="bottom"
-					width="400"
-					v-model="showArea"
-					trigger="click">
-					<section style="max-height:260px;overflow:auto;min-height:100px;">
-						<el-radio-group v-model="oneIndex" size ="small" @change="newselectOneArea">
-							<el-radio border v-for="(item,index) in category" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
-						</el-radio-group>
-					</section>
-					<el-button slot="reference" plain style="width:200px;overflow: hidden;position: relative;text-overflow: ellipsis;white-space: nowrap;padding-right:30px;">
-						<span>{{oneArea.name}}</span>
-						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
-					</el-button>
-				</el-popover> -->
-				<!-- <div class="select-down" @click.stop style="margin-right: 20px;">
-					<section class="staList">
-						<section class="tableList" v-on:click="showOneArea">
-							<section class="oSpan">{{oneArea.name}}</section>
-							<div class="fl">
-								<i></i>
-							</div>
-						</section>
-						<div v-show="oneArea.show" class="detDiv">
-							<i class="detI"></i>
-							<div class="detCategory">
-								<template v-for="(item,index) in category">
-									<section :key="index" v-on:click="selectOneArea(item,index)" class="showName" :class="{'showname-select':item.id==oneArea.id}">{{item.name}}</section>
-								</template>
-							</div>
-						</div>
-					</section>
-				</div> -->
-				<!-- <el-popover
-					placement="bottom"
-					width="400"
-					@show = "showTwoArea"
-					v-model="showTArea"
-					trigger="click">
-					<section style="max-height:260px;overflow:auto;min-height:100px;">
-						<el-radio-group v-model="twoIndex" size ="small" @change="newselectTwoArea">
-							<el-radio border v-for="(item,index) in child" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
-						</el-radio-group>
-					</section>
-					<el-button slot="reference" plain style="width:200px;overflow: hidden;position: relative;text-overflow: ellipsis;white-space: nowrap;padding-right:30px;">
-						<span>{{twoArea.name}}</span>
-						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
-					</el-button>
-				</el-popover> -->
-				<!-- <div class="select-down" style="margin-right: 20px;" @click.stop>
-					<section class="staList">
-						<section v-on:click="showTwoArea" class="tableList">
-							<section class="oSpan">{{twoArea.name}}</section>
-							<div class="fl">
-								<i></i>
-							</div>
-						</section>
-						<div v-show="twoArea.show" class="detDiv">
-							<i class="detI"></i>
-							<div class="detChild">
-								<template v-for="(item,index) in child">
-									<section :key="index" v-on:click="selectTwoArea(item,index)" class="showName" :class="{'showname-select':item.id==twoArea.id}">{{item.name}}</section>
-								</template>
-							</div>
-						</div>
-					</section>
-				</div> -->
 				<!-- 搜索 -->
 				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
@@ -379,7 +312,6 @@ export default {
 
 			brandList: null, //品牌列表
 
-			isBrand: null, //是否是品牌
 			ischain: null,
 			brandId: null,
 			shopId: null, //店铺id
@@ -388,7 +320,7 @@ export default {
 			pageBtnNum: 10, // 分页组件总的按钮数
 			num: 14, // 每页展示的数量
 			currentPage: 1, //当前展示的页数
-			totalNum: null, //总页数
+			totalNum: 1, //总页数
 			numList: [], //库存列表
 
 			search: '', // 搜索的内容
@@ -544,7 +476,10 @@ export default {
 			this.showTArea = false;
 			this.selectTwoArea(item,index);
 		},
-		selectOneArea(item, index) {
+		selectOneArea(item, index,type) {
+			if(!type){//如果是从分类点击进入，则页码为1，反之为原来的页数
+				this.currentPage = 1;
+			}
 			this.oneIndex = index;
 			this.twoArea = {
 				id: -2,
@@ -565,9 +500,8 @@ export default {
 			);
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
-				this.currentPage = 1;
 			}
-
+			
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 				this.pageGoods = this.changeNav(
@@ -603,7 +537,10 @@ export default {
 			this.twoArea.show = !this.twoArea.show;
 			this.oneArea.show = false;
 		},
-		selectTwoArea(item, index) {
+		selectTwoArea(item, index,type) {
+			if(!type){//如果是从分类点击进入，则页码为1，反之为原来的页数
+				this.currentPage = 1;
+			}
 			this.twoIndex = index;
 			this.twoArea = {
 				id: item.id,
@@ -631,7 +568,6 @@ export default {
 			}
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
-				this.currentPage = 1;
 			}
 			this.initPage(this.pageGoods);
 		},
@@ -754,6 +690,12 @@ export default {
 		//-----------分页---------
 		initPage(arr) {
 			this.totalNum = Math.ceil(arr.length / this.num);
+			if(this.totalNum ==0){//如果数组为空，总页数为0，则将总数置为1，
+				this.totalNum ==1;
+			}
+			if(this.totalNum<this.currentPage){//如果总页数小于当前页码数，
+				this.currentPage = this.totalNum;
+			}
 			let startIndex = (this.currentPage - 1) * this.num;
 			let endIndex = this.currentPage * this.num;
 			this.nowGoods = arr.slice(startIndex, endIndex);
@@ -817,8 +759,8 @@ export default {
 					this.goodsList = this.deleteChildGoods(this.goodsList);
 					this.goodsList = this.funSortGood(this.goodsList);
 					this.twoArea.id == -2
-						? this.selectOneArea(this.oneArea,this.oneIndex)
-						: this.selectTwoArea(this.twoArea,this.twoIndex);
+						? this.selectOneArea(this.oneArea,this.oneIndex,true)
+						: this.selectTwoArea(this.twoArea,this.twoIndex,true);
 				});
 			}
 		},
@@ -958,8 +900,8 @@ export default {
 						);
 						this.goodsList = this.funSortGood(this.goodsList);
 						this.twoArea.id == -2
-							? this.selectOneArea(this.oneArea,this.oneIndex)
-							: this.selectTwoArea(this.twoArea,this.twoIndex);
+							? this.selectOneArea(this.oneArea,this.oneIndex,true)
+							: this.selectTwoArea(this.twoArea,this.twoIndex,true);
 					});
 				});
 			}
@@ -977,11 +919,6 @@ export default {
 			for (let key of ['industry', 'brandId', 'ischain']) {
 				this[key] = userData.currentShop[key];
 			}
-			this.isBrand =
-				userData.currentShop.ischain == '1' ||
-				userData.currentShop.ischain == '2'
-					? false
-					: true;
 		},
 		//获取分类
 		async getCate() {
