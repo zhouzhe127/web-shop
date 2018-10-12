@@ -398,7 +398,7 @@ export default {
 			maxCeiling: '', //最大使用上限
 			editCoupon: false,
 			shopList: [],
-			isSharingId: '',
+			isSharingId: 0,
 			isSharing: '不与其它优惠共享',
 			isSharingList: [{ //是否优惠共享
 				name: '不与其它优惠共享',
@@ -768,10 +768,10 @@ export default {
 				}
 			}
 
-			if (this.isSharingId === '') {
-				this.valiData('请选择优惠券共享方式');
-				return false;
-			}
+			// if (this.isSharingId === '') {
+			// 	this.valiData('请选择优惠券共享方式');
+			// 	return false;
+			// }
 			if (this.annotation.length > 20) {
 				this.valiData('备注字数不能大于20');
 				return false;
