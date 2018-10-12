@@ -12,8 +12,35 @@
   vertical-align: middle;
 }
 .top .top_input[data-v-06868110] {
-  margin: 0 40px;
-  height: 55px;
+  display: inline-block;
+  margin: 0 5px;
+  height: 50px;
+}
+#joblist .oBox[data-v-06868110] {
+  width: 100%;
+  border-bottom: none;
+  margin: 10px 0;
+}
+#joblist .oBox .boxTop[data-v-06868110] {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 5px;
+  border: 1px solid #ebeef5;
+  border-bottom: none;
+}
+#joblist .oBox .boxTop .aSpan[data-v-06868110] {
+  font-size: 16px;
+  color: #fe9200;
+  margin-right: 20px;
+}
+#joblist .oBox .boxTop .aSpan .aI[data-v-06868110] {
+  background: #fe9200;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 /*.totle{*/
 /*min-width: 1000px;border: 1px solid #D2D2D2;margin-top: 20px;background-color: #FFFFFF;*/

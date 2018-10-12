@@ -55,7 +55,7 @@
 #select-batch .filter .inline-box[data-v-d1c93b62] {
   padding-top: 10px;
   float: left;
-  margin-right: 5px;
+  margin-right: 10px;
 }
 #select-batch .filter .inline-box .search-btn[data-v-d1c93b62] {
   float: left;
@@ -69,6 +69,8 @@
   height: 40px;
   padding: 0 10px;
   font-size: 14px;
+  float: left;
+  margin-right: 10px;
 }
 #select-batch .filter .inline-box input[data-v-d1c93b62]:focus {
   outline: none;
@@ -78,6 +80,12 @@
 }
 #select-batch .filter .inline-box[data-v-d1c93b62]:last-child {
   margin-right: 0;
+}
+#select-batch .filter .inline-box[data-v-d1c93b62]:after {
+  content: '';
+  zoom: 1;
+  clear: both;
+  display: block;
 }
 #select-batch .filter .button-box[data-v-d1c93b62] {
   overflow: hidden;
@@ -91,7 +99,7 @@
   text-align: center;
 }
 #select-batch .filter .button-box .blue[data-v-d1c93b62] {
-  margin-right: 5px;
+  margin-right: 10px;
 }
 #select-batch .filter[data-v-d1c93b62]:after {
   content: '';

@@ -1,5 +1,5 @@
 
-#useTime[data-v-578f07d0] {
+#useTime[data-v-557d9ba4] {
 	/* width: 1200px;
     line-height: 40px;
     text-align: center;
@@ -7,33 +7,33 @@
     overflow: hidden;
     position: relative; */
 }
-#useTime .left[data-v-578f07d0],
-#useTime .right[data-v-578f07d0] {
+#useTime .left[data-v-557d9ba4],
+#useTime .right[data-v-557d9ba4] {
 	height: auto;
 	float: left;
 	margin-bottom: 15px;
 }
-#useTime .left[data-v-578f07d0] {
+#useTime .left[data-v-557d9ba4] {
 	color: #000000;
 	width: 170px;
 }
-#useTime .right[data-v-578f07d0] {
+#useTime .right[data-v-557d9ba4] {
 	width: 970px;
 }
-#useTime .right .fl[data-v-578f07d0] {
+#useTime .right .fl[data-v-557d9ba4] {
 	/* padding-left: 10px; */
 }
-#useTime .select-week[data-v-578f07d0] {
+#useTime .select-week[data-v-557d9ba4] {
 	width: 100%;
 	overflow: hidden;
 	float: left;
 	margin-bottom: 10px;
 }
-#useTime .show-week[data-v-578f07d0] {
+#useTime .show-week[data-v-557d9ba4] {
 	width: 800px;
 	height: 40px;
 }
-#useTime .show-week ul li[data-v-578f07d0] {
+#useTime .show-week ul li[data-v-557d9ba4] {
 	width: 66px;
 	height: 38px;
 	border: 1px solid #2393D6;
@@ -43,24 +43,24 @@
 	cursor: pointer;
 	line-height: 38px;
 }
-#useTime .show-week ul li.selected[data-v-578f07d0] {
+#useTime .show-week ul li.selected[data-v-557d9ba4] {
 	background-color: #2393D6;
 	color: #FFF;
 }
-#useTime .time[data-v-578f07d0] {
+#useTime .time[data-v-557d9ba4] {
 	width: 120px;
 	height: 42px;
 	line-height: 40px;
 	border: 1px solid #999;
 }
-#useTime .time .time-change[data-v-578f07d0] {
+#useTime .time .time-change[data-v-557d9ba4] {
 	width: 20px;
 	height: 40px;
 	float: right;
 	border-left: 1px solid #999;
 	position: relative;
 }
-#useTime .time .time-change div[data-v-578f07d0] {
+#useTime .time .time-change div[data-v-557d9ba4] {
 	position: absolute;
 	width: 0;
 	height: 0;
@@ -69,16 +69,16 @@
 	left: 3px;
 	cursor: pointer;
 }
-#useTime .left .text[data-v-578f07d0] {
+#useTime .left .text[data-v-557d9ba4] {
 	float: right;
 	height: 100%;
 	padding: 0 10px;
 	text-align: right;
 }
-#useTime .blueBySelect[data-v-578f07d0] {
+#useTime .blueBySelect[data-v-557d9ba4] {
 	background-color: #2393D6 !important;
 }
-.show-days[data-v-578f07d0] {
+.show-days[data-v-557d9ba4] {
 	position: absolute;
 	top: 42px;
 	left: 0;
@@ -90,7 +90,7 @@
 	border: 1px solid #999;
 	border-top: none;
 }
-.show-days ul li[data-v-578f07d0] {
+.show-days ul li[data-v-557d9ba4] {
 	width: 32px;
 	height: 32px;
 	text-align: center;
@@ -101,11 +101,11 @@
 	cursor: pointer;
 	line-height: 32px;
 }
-.show-days ul li.select[data-v-578f07d0] {
+.show-days ul li.select[data-v-557d9ba4] {
 	background-color: #2393D6;
 	color: #FFF;
 }
-#useTime .right .list[data-v-578f07d0] {
+#useTime .right .list[data-v-557d9ba4] {
 	text-align: left;
 	text-indent: 10px;
 	width: 190px;
@@ -117,15 +117,15 @@
 	z-index: 333;
 	background-color: #FFF;
 }
-#useTime .right .list ul[data-v-578f07d0] {
+#useTime .right .list ul[data-v-557d9ba4] {
 	width: 100%;
 }
-#useTime .right .list ul li[data-v-578f07d0] {
+#useTime .right .list ul li[data-v-557d9ba4] {
 	width: 100%;
 	height: 40px;
 	line-height: 40px;
 }
-#useTime .right .list ul li[data-v-578f07d0]:hover {
+#useTime .right .list ul li[data-v-557d9ba4]:hover {
 	background-color: #edeff0;
 }
 

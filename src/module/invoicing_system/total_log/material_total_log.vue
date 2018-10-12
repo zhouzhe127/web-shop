@@ -20,7 +20,11 @@
             </div>
 
             <div class="in-block" >
+<<<<<<< HEAD
                 <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" clearable>
+=======
+                <el-select v-model="condition.operationType" placeholder="操作类型" multiple collapse-tags>
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     <el-option
                     v-for="item in operationList"
                     :key="item.id"
@@ -51,7 +55,11 @@
                     >
                 </el-cascader>
 
+<<<<<<< HEAD
                 <el-select v-model="condition.wid" :multiple="true" placeholder="仓库选择" clearable>
+=======
+                <el-select v-model="condition.wid" placeholder="仓库选择" multiple collapse-tags>
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     <el-option
                     v-for="item in warehouseList"
                     :key="item.id"
@@ -62,8 +70,13 @@
             </div>
 
             <div class="in-block" style="padding-left:10px;">
+<<<<<<< HEAD
                 <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
                 <el-button type="info" @click="filterReset('reset')">重置</el-button>
+=======
+                <el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
+                <el-button type="info" @click="filterReset('reset',null)">重置</el-button>
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             </div>
         </div>
 
@@ -91,19 +104,32 @@
                 <el-table-column  label="成本金额" >
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
+<<<<<<< HEAD
 						{{row.cost}}
+=======
+						{{Number(row.cost)}}
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					</template>	                    
                 </el-table-column>
                 <el-table-column prop="createTime" label="日期" width="150px">
                 </el-table-column>
                 <el-table-column prop="createUName" label="操作人" width="150px">
                 </el-table-column>
+<<<<<<< HEAD
                 <el-table-column prop="wName" label="仓库" width="150px">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column,index}">
                         <span class="view view-detail" @click="viewHistory(row)" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
                         <span class="view" :class="{'view-detail-disable':canviewBatchDetail(row.type)}"  @click="viewBatchDetail(row)">批次详情</span>
+=======
+                <el-table-column prop="wName" label="仓库/货架" width="150px">
+                </el-table-column>
+                <el-table-column label="操作" fixed="right" width="150px">
+                    <template slot-scope="{row,column,index}">
+                        <span class="view view-detail" @click="viewHistory(row)" :class="{'view-detail-disable':canViewHistory(row)}">查看记录</span>
+                        <span class="view" :class="{'view-detail-disable':canviewBatchDetail(row)}"  @click="viewBatchDetail(row)">批次详情</span>
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     </template>
                 </el-table-column>
 
@@ -220,17 +246,30 @@ export default {
                 title:'物料信息',
                 show:false
             },
+<<<<<<< HEAD
             tabFlag : 'material'			//商品还是物料
+=======
+            tabFlag : 'material',			//商品还是物料
+            placeholder:'--',
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
         };
     },
     methods: {
         //筛选重置
+<<<<<<< HEAD
         filterReset(flag){
+=======
+        filterReset(flag,page){
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             if(flag == 'reset'){
                 this.initPageObj();
                 this.initCondition();
             }else{
+<<<<<<< HEAD
                 this.pageObj.currentPage = 1;
+=======
+                this.pageObj.currentPage = page || 1;
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             }
             this.getList();
         },
@@ -277,6 +316,7 @@ export default {
                 ele.operationType = this.getAttr(this.operationList,ele.type);          //操作类型
 
                 ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
+<<<<<<< HEAD
                 // ele.change = Math.abs(ele.change);
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
                 // ele.cost = Math.abs(ele.cost);
@@ -289,6 +329,31 @@ export default {
                 ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
                 ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
 
+=======
+
+                ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
+
+                this.getMaterialUnitInfo(ele,null,'relation');
+                
+                this.initObject(ele,['changeBefore','change','changeAfter'],0);
+
+                if(ele.changeBefore){
+                    ele.changeBefore = global.comUnit(ele.changeBefore, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                } 
+                if(ele.change){
+                    ele.change = global.comUnit(ele.change, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                }
+                if(ele.changeAfter){
+                    ele.changeAfter = global.comUnit(ele.changeAfter, ele.selUnitVal, ele.selUnitName, ele.minUnitName);
+                }
+                if(!ele.createUName){
+                    ele.createUName = this.placeholder;
+                }
+
+                if(!ele.wName){
+                    ele.wName = this.placeholder;
+                }
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 return ele;
             });
         },
@@ -296,10 +361,15 @@ export default {
 
         //查看物料详情
         async viewDetail(row,column){
+<<<<<<< HEAD
             if(this.materialInfo.id != row.itemId){
                 this.materialInfo = await this.getHttp('MaterialGetMaterialDetail',{mid:row.itemId,wid:0,isDistribution:0});
                 this.initMaterialInfo();
             }
+=======
+            this.materialInfo = await this.getHttp('MaterialGetMaterialDetail',{mid:row.itemId,wid:0,isDistribution:0});
+            this.initMaterialInfo();
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             this.dialog.show = true;    
         },
         initMaterialInfo(){
@@ -307,7 +377,18 @@ export default {
             if(this.toRaw(info,'Object')){
                 this.getMaterialUnitInfo(info,null,'unit');
                 info.typeName = this.getAttr(this.materialType,info.type);
+<<<<<<< HEAD
                 info.sumStoreNum = global.comUnit(info.num, info.selUnitVal, info.selUnitName, info.minUnitName);
+=======
+                if(info.selUnitId){
+                    info.sumStoreNum = global.comUnit(info.num, info.selUnitVal, info.selUnitName, info.minUnitName);
+                }else{
+                    info.sumStoreNum = this.placeholder;
+                }
+                if(info.brandName){
+                    info.brandName = this.placeholder;
+                }
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
             }else{
                 info = {};
@@ -359,6 +440,14 @@ export default {
                 ele.selUnitName = ele.defUnitName;
                 ele.selUnitVal = ele.defUnitVal;
             }
+<<<<<<< HEAD
+=======
+            if(!ele.selUnitName) ele.selUnitName = this.placeholder;
+            if(!ele.defUnitName) ele.defUnitName = this.placeholder;
+            if(!ele.minUnitName) ele.minUnitName = this.placeholder;
+            if(!ele.selUnitVal) ele.selUnitVal = 1;
+            if(!ele.defUnitVal) ele.defUnitVal = 1;
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
          
         },
         toRaw(val,type){
@@ -393,6 +482,7 @@ export default {
         this.initData();
         this.initCondition();
         this.initPageObj();
+<<<<<<< HEAD
         this.getOperationList('material');
         this.getCategoryList();
         this.getWarehouseList();
@@ -400,6 +490,14 @@ export default {
     },
     activated(){
         this.filterReset('reset');
+=======
+    },
+    activated(){
+        this.getOperationList('material');
+        this.getCategoryList();
+        this.getWarehouseList();
+        this.filterReset('filter',this.pageObj.currentPage);
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
     },
 };
 </script>

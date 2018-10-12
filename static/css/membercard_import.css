@@ -7,10 +7,11 @@
 #member-import .title .theForm[data-v-0b7ca908] {
 	position: relative;
 	float: right;
-	margin-right: 99px;
+	margin-right: 14px;
 }
 #member-import .title a[data-v-0b7ca908] {
-	width: 133px;
+	min-width: 133px;
+	padding: 0 10px;
 	height: 38px;
 	display: block;
 	font-size: 16px;
@@ -169,6 +170,8 @@
 	margin: 0 21px;
 }
 
+
+
 /*loading加载的css*/
 .spinner[data-v-0b7ca908] {
 	float: left;
@@ -305,6 +308,8 @@
 	border-right: 5px solid transparent;
 	box-sizing: border-box;
 }
+
+
 
 /*翻页================================*/
 .turn-page[data-v-0b7ca908] {

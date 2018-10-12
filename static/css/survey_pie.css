@@ -6,6 +6,8 @@
 .pie .pie-main[data-v-2bc7a58e] {
   margin-bottom: 20px;
   border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
   width: 100%;
 }
 .pie .pie-main .head[data-v-2bc7a58e] {
@@ -35,5 +37,10 @@
 .pie .pie-main .pie-block .block > div[data-v-2bc7a58e] {
   width: 100%;
   height: 250px;
+}
+.pie .pie-main .pie-block .line[data-v-2bc7a58e] {
+  border-left: 1px solid #ddd;
+  -webkit-border-image: -webkit-linear-gradient(#ffffff, #ddd, #ffffff) 10 10;
+          border-image: linear-gradient(#ffffff, #ddd, #ffffff) 10 10;
 }
 

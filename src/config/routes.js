@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* eslint-disable*/
 import Login from 'src/module/login';
 const test10 = () =>
@@ -18,6 +19,26 @@ const detailsHeader = () =>
 	import ( /* webpackChunkName:"details_header" */ 'src/module/common/details_header');
 const mainCon = () =>
 	import ( /* webpackChunkName:"main_con" */ 'src/module/common/main_con');
+=======
+/* eslint-disable */
+import Login from 'src/module/login';
+const brandAudit = (resolve) =>
+    import ( /* webpackChunkName: "brand_audit" */ 'src/module/brand/brand_audit');
+const loginHead = (resolve) =>
+    import ( /* webpackChunkName:"brand_head" */ 'src/module/brand/brand_head');
+const brandBuild = (resolve) =>
+    import ( /* webpackChunkName:"brand_build"*/ 'src/module/brand/brand_build');
+const unbrandBuild = (resolve) =>
+    import ( /* webpackChunkName:"unbrand_build" */ 'src/module/brand/unbrand_build');
+const unbrandBuildUi = (resolve) =>
+    import ( /* webpackChunkName:"unbrand_build" */ 'src/module/brand/unbrand_build_ui');
+const aside = (resolve) =>
+    import ( /* webpackChunkName:"aside" */ 'src/module/common/aside');
+const detailsHeader = (resolve) =>
+    import ( /* webpackChunkName:"details_header" */ 'src/module/common/details_header');
+const mainCon = (resolve) =>
+    import ( /* webpackChunkName:"main_con" */ 'src/module/common/main_con');
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 //首页概况
 const homePage = () =>
 	import ( /* webpackChunkName:"survey" */ 'src/module/home_page/survey');
@@ -96,6 +117,7 @@ const batchLogDetail = () =>
 const batchLogPrint = () =>
 	import ( /*webpackChunkName:'batch_log_print'*/ 'src/module/invoicing_system/batch_log/batch_log_print'); //批量调度,审核日志详情打印
 
+<<<<<<< HEAD
 const suppliesDetail = () =>
 	import ( /* webpackChunkName:"supplies_detail" */ 'src/module/invoicing_system/invoicing/supplies_detail'); //进销存详情物料详情   
 const putstroage = () =>
@@ -166,6 +188,91 @@ const createAssign = () =>
 	import ( /* webpackChunkName:"create_assign" */ 'src/module/invoicing_system/brand_assign/create_assign'); //品牌指派
 const batchSchedule = () =>
 	import ( /* webpackChunkName:"batch_schedule" */ 'src/module/invoicing_system/conclusion/batch_schedule'); //批量调度    
+=======
+//总日志
+const goodsTotalLog = (resolve) =>
+    import ( /*webpackChunkName:'goods_total_log'*/ 'src/module/invoicing_system/total_log/goods_total_log'); //批量调度,审核日志详情打印
+const materialTotalLog = (resolve) =>
+    import ( /*webpackChunkName:'material_total_log'*/ 'src/module/invoicing_system/total_log/material_total_log'); //批量调度,审核日志详情打印
+const bomConsumeDetail = (resolve) =>
+    import ( /*webpackChunkName:'bom_consume_detail'*/ 'src/module/invoicing_system/total_log/bom_consume_detail'); //批量调度,审核日志详情打印
+const goodsBatchTotalLogDetail = (resolve) =>
+    import ( /*webpackChunkName:'goods_batch_total_log_detail'*/ 'src/module/invoicing_system/total_log/goods_batch_total_log_detail'); //批量调度,审核日志详情打印
+
+
+const suppliesDetail = (resolve) =>
+    import ( /* webpackChunkName:"supplies_detail" */ 'src/module/invoicing_system/invoicing/supplies_detail'); //进销存详情物料详情   
+const putstroage = (resolve) =>
+    import ( /* webpackChunkName:"invent_putstroage" */ 'src/module/invoicing_system/invoicing/invent_putstroage'); //进销存入库    
+const loseManage = (resolve) =>
+    import ( /* webpackChunkName:"lose_manage" */ 'src/module/invoicing_system/invoicing/lose_manage'); //进销存耗损 
+const setNewjurisdiction = (resolve) =>
+    import ( /* webpackChunkName:"set_newjurisdiction" */ 'src/module/invoicing_system/brand_assign/set_newjurisdiction'); //新建权限指派  
+const jurisdictionRecord = (resolve) =>
+    import ( /* webpackChunkName:"jurisdiction_record" */ 'src/module/invoicing_system/brand_assign/jurisdiction_record'); //指派日志
+const jurisdictionDetail = (resolve) =>
+    import ( /* webpackChunkName:"jurisdiction_detail" */ 'src/module/invoicing_system/brand_assign/jurisdiction_detail'); //查看同步详情             
+const materialsPutinStorage = (resolve) =>
+    import ( /* webpackChunkName:"materials_putin_storage" */ 'src/module/invoicing_system/invoicing/materials_putin_storage'); //物料入库 
+const materialModifyBatch = (resolve) =>
+    import ( /* webpackChunkName:"material_modify_batch" */ 'src/module/invoicing_system/invoicing/material_modify_batch'); //物料批次修改
+const publicDetails = (resolve) =>
+    import ( /* webpackChunkName:"public_details" */ 'src/module/invoicing_system/invoicing/public_details'); //公用详情页面     
+const materialLoss = (resolve) =>
+    import ( /* webpackChunkName:"material_loss" */ 'src/module/invoicing_system/invoicing/material_loss'); //物料耗损 
+const revampUnit = (resolve) =>
+    import ( /* webpackChunkName:"revamp_unit" */ 'src/module/invoicing_system/invoicing/revamp_unit'); //修改单位       
+const supplierManagement = (resolve) =>
+    import ( /* webpackChunkName:"supply_manage" */ 'src/module/invoicing_system/supply/supply_manage'); //供应商管理
+const wearCause = (resolve) =>
+    import ( /* webpackChunkName:"wear_cause" */ 'src/module/invoicing_system/config_manage/wear_cause'); //耗损原因配置
+const offReason = (resolve) =>
+    import ( /* webpackChunkName:"off_cause" */ 'src/module/invoicing_system/config_manage/off_cause'); //下架原因配置
+const brandList = (resolve) =>
+    import ( /* webpackChunkName:"brand_list" */ 'src/module/invoicing_system/config_manage/brand_list'); //商品品牌管理
+const weighGoodsList = (resolve) =>
+    import ( /* webpackChunkName:"weigh_list" */ 'src/module/invoicing_system/config_manage/weigh_list'); //称重商品配置
+const shelfList = (resolve) =>
+    import ( /* webpackChunkName:"shelf_list" */ 'src/module/invoicing_system/config_manage/shelf_list'); //货架管理
+const shelveRule = (resolve) =>
+    import ( /* webpackChunkName:"shelve_rule" */ 'src/module/invoicing_system/config_manage/shelve_rule'); //销售规则
+const bomList = (resolve) =>
+    import ( /* webpackChunkName:"bom_list" */ 'src/module/invoicing_system/invoicing/bom_list'); //bom单列表
+const bomDetail = (resolve) =>
+    import ( /* webpackChunkName:"bom_detail" */ 'src/module/invoicing_system/invoicing/bom_detail'); //bom单详情
+const bomCreate = (resolve) =>
+    import ( /* webpackChunkName:"bom_create" */ 'src/module/invoicing_system/invoicing/bom_create'); //新建bom单
+const bomChange = (resolve) =>
+    import ( /* webpackChunkName:"bom_change" */ 'src/module/invoicing_system/invoicing/bom_change'); //修改bom单
+const checkMaterial = (resolve) =>
+    import ( /* webpackChunkName:"check_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/check_material'); //批量盘库-物料盘库-提交
+const editGoodsCountTemplate = (resolve) =>
+    import ( /* webpackChunkName:"add_goods" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_goods'); //批量盘库-编辑商品模板
+const editMaterialCountTemplate = (resolve) =>
+    import ( /* webpackChunkName:"add_material" */ 'src/module/invoicing_system/invoicing/check_warehouse/add_material'); //批量盘库-编辑物料模板
+const supbranchDetail = (resolve) =>
+    import ( /* webpackChunkName:"supbranch_detail" */ 'src/module/invoicing_system/invoicing/supbranch_detail'); //物料批次详情    
+const wareImport = (resolve) =>
+    import ( /* webpackChunkName:"ware_import" */ 'src/module/invoicing_system/wareimport/ware_import'); //入库导入
+const wareProsperity = (resolve) =>
+    import ( /* webpackChunkName:"ware_prosperity" */ 'src/module/invoicing_system/wareimport/ware_prosperity'); //入库导入成功
+const conclusionList = (resolve) =>
+    import ( /* webpackChunkName:"conclusion_list" */ 'src/module/invoicing_system/conclusion/conclusion_list'); //审核列表
+const shipmentVerify = (resolve) =>
+    import ( /* webpackChunkName:"shipment_verify" */ 'src/module/invoicing_system/conclusion/shipment_verify'); //审核详情   
+const newSchedule = (resolve) =>
+    import ( /* webpackChunkName:"new_schedule" */ 'src/module/invoicing_system/conclusion/new_schedule'); //新建调度
+const multipleExamine = (resolve) =>
+    import ( /* webpackChunkName:"multiple_examine" */ 'src/module/invoicing_system/conclusion/multiple_examine'); //批量审核
+const select_dispatch = (resolve) =>
+    import ( /* webpackChunkName:"select_dispatch" */ 'src/module/invoicing_system/warehouse_manage/select_dispatch'); //批量调度-选择调度单
+const brandAssign = (resolve) =>
+    import ( /* webpackChunkName:"brand_assign_list" */ 'src/module/invoicing_system/brand_assign/brand_assign_list'); //品牌指派
+const createAssign = (resolve) =>
+    import ( /* webpackChunkName:"create_assign" */ 'src/module/invoicing_system/brand_assign/create_assign'); //品牌指派
+const batchSchedule = (resolve) =>
+    import ( /* webpackChunkName:"batch_schedule" */ 'src/module/invoicing_system/conclusion/batch_schedule'); //批量调度    
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 //仓库管理
 const warehouseList = () =>
 	import ( /* webpackChunkName:"warehouse_list" */ 'src/module/invoicing_system/warehouse_manage/warehouse_list'); //仓库列表
@@ -304,6 +411,7 @@ const hangUpAccount = () =>
 const shopNotice = () =>
 	import ( /* webpackChunkName:"shop_notice" */ 'src/module/shop_config/shop_notice'); //商品起售配置
 //公众号配置
+<<<<<<< HEAD
 const boundPublicNumber = () =>
 	import ( /* webpackChunkName:"bound_public_number" */ 'src/module/public_number_configuration/bound_public_number'); //绑定公众号
 const smallProgramBinding = () =>
@@ -312,6 +420,16 @@ const moduleSet = () =>
 	import ( /* webpackChunkName:"module_set" */ 'src/module/public_number_configuration/module_set'); //模板设置
 const menuSet = () =>
 	import ( /* webpackChunkName:"menu_set" */ 'src/module/public_number_configuration/menu_set'); //菜单设置
+=======
+const boundPublicNumber = (resolve) =>
+    import ( /* webpackChunkName:"bound_public_number" */ 'src/module/public_number_configuration/bound_public_number'); //绑定公众号
+const smallProgramBinding = (resolve) =>
+    import ( /* webpackChunkName:"small_program_binding" */ 'src/module/public_number_configuration/small_program_binding'); //小程序绑定
+const moduleSet = (resolve) =>
+    import ( /* webpackChunkName:"module_set" */ 'src/module/public_number_configuration/module_set'); //模板设置
+const menuSet = (resolve) =>
+    import ( /* webpackChunkName:"menu_set" */ 'src/module/public_number_configuration/menu_set'); //菜单设置
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 const pushLanguageSettings = () =>
 	import ( /* webpackChunkName:"push_language_settings" */ 'src/module/public_number_configuration/new_push_language_settings'); //推送语设置
 const configCourse = () =>
@@ -368,9 +486,15 @@ const freeGoods = () =>
 const OrderBillList = () =>
 	import ( /* webpackChunkName:"order_bill_list" */ 'src/module/statistics/order_bill_list'); //挂账统计
 const Handover = () =>
+<<<<<<< HEAD
 	import ( /* webpackChunkName:"handover_brand" */ 'src/module/statistics/handover_brand'); //交接班统计品牌
 const handoverShop = () =>
 	import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接班统计单店
+=======
+    import ( /* webpackChunkName:"handover_brand" */ 'src/module/statistics/handover_brand'); //交接班
+const HandoverShop = () =>
+	import ( /* webpackChunkName:"handover" */ 'src/module/statistics/handover'); //交接统计单店
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 const MemberRecharge = () =>
 	import ( /* webpackChunkName:"member_recharge" */ 'src/module/statistics/member_recharge/member_recharges'); //会员充值统计
 const reservationManager = () =>
@@ -460,7 +584,11 @@ const activityFullreduce = () =>
 const activityCoupon = () =>
 	import ( /* webpackChunkName:"activity_coupon" */ 'src/module/marketing_tools/new_activity/activity_coupon'); //领券活动   
 const selfHelpMode = () =>
+<<<<<<< HEAD
 	import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help/self_help_mode'); //自助模式
+=======
+    import ( /* webpackChunkName:"self_help_mode" */ 'src/module/marketing_tools/self_help_mode'); //自助模式
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 const weixinOnfiguration = () =>
 	import ( /* webpackChunkName:"weixin_onfiguration" */ 'src/module/marketing_tools/weixin_onfiguration'); //微信首页配置
 const CommentConfig = () =>
@@ -571,6 +699,7 @@ let details_con = {
 };
 // 配置路由
 export default [{
+<<<<<<< HEAD
 	path: '/',
 	components: {
 		content: Login
@@ -1255,6 +1384,686 @@ export default [{
 						details_con: brandOrderBill
 					}
 				},
+=======
+        path: '/',
+        components: {
+            content: Login
+        }
+    },
+    {
+        path: '/brandAudit',
+        components: {
+            header: loginHead,
+            content: con
+        },
+        children: [{
+                path: '',
+                components: {
+                    content: brandAudit
+                }
+            },
+            {
+                path: 'brandBuild',
+                components: {
+                    content: brandBuild
+                }
+            },
+            {
+                path: 'unbrandBuild',
+                components: {
+                    content: unbrandBuild
+                }
+            },
+            {
+                path: 'unbrandBuildUi',
+                components: {
+                    content: unbrandBuildUi
+                }
+            }
+        ]
+    },
+    {
+        path: '/admin/authorization/relation',
+        components: {
+            content: relmain //饿了么，百度菜品关联，解除授权
+        },
+        children: [{
+                path: '',
+                components: {
+                    nextCon: warranRelation
+                }
+            },
+            {
+                path: 'config',
+                components: {
+                    nextCon: warrantConfig
+                }
+            },
+            {
+                path: 'goodsfig',
+                components: {
+                    nextCon: goodsfig
+                }
+            },
+            {
+                path: 'packConfig',
+                components: {
+                    nextCon: packConfig
+                }
+            },
+            {
+                path: 'relationele',
+                components: {
+                    nextCon: elebaidu
+                }
+            }
+        ]
+    },
+    {
+        path: '/admin',
+        components: {
+            header: loginHead,
+            content: mainCon
+        },
+        children: [{
+            path: '',
+            components: {
+                aside: aside,
+                details_header: detailsHeader,
+                details_con: details_con
+            },
+            children: [{
+                    path: 'storeOverview', //概况
+                    components: {
+                        details_con: homePage
+                    }
+                },
+                {
+                    path: 'goodsManager', //商品管理
+                    components: {
+                        details_con: goodsManager
+                    }
+                },
+                {
+                    path: 'attrManager', //口味管理
+                    components: {
+                        details_con: attrManager
+                    }
+                },
+                {
+                    path: 'packageManager',
+                    components: {
+                        details_con: packageManager //套餐管理
+                    }
+                },
+                {
+                    path: 'categoryManager',
+                    components: {
+                        details_con: categoryManager //分类管理
+                    }
+                },
+                {
+                    path: 'inventoryManager',
+                    components: {
+                        details_con: inventoryManager //库存管理
+                    }
+                },
+                {
+                    path: 'multiChannelMenu',
+                    components: {
+                        details_con: multiChannelMenu //多渠道菜单
+                    }
+                },
+                {
+                    path: 'marker',
+                    components: {
+                        details_con: marker //菜单标识
+                    }
+                },
+                {
+                    path: 'authorization',
+                    components: {
+                        details_con: warrant //外卖授权
+                    }
+                },
+                {
+                    path: 'printset',
+                    components: {
+                        details_con: awayPrinter
+                    }
+                },
+                {
+                    path: 'addCoupon',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '', //添加优惠券
+                            components: {
+                                details_con: addCoupon
+                            }
+                        },
+                        {
+                            path: 'breakCoupon', //减免优惠券
+                            components: {
+                                details_con: breakCoupon
+                            }
+                        },
+                        {
+                            path: 'discountCoupon', //折扣优惠券
+                            components: {
+                                details_con: discountCoupon
+                            }
+                        },
+                        {
+                            path: 'giveCoupon', //赠菜优惠券
+                            components: {
+                                details_con: giveCoupon
+                            }
+                        },
+                        {
+                            path: 'vouchersCoupon', //代金券
+                            components: {
+                                details_con: vouchersCoupon
+                            }
+                        },
+                        {
+                            path: 'intergralcardCoupon', //积分卡券
+                            components: {
+                                details_con: intergralcardCoupon
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'getCouponList',
+                    components: {
+                        details_con: couponManagement
+                    }
+                },
+                {
+                    path: 'integralMall',
+                    components: {
+                        details_con: integralMall
+                    }
+                },
+                {
+                    path: 'appointment',
+                    components: {
+                        details_con: appointment
+                    }
+                },
+                {
+                    path: 'point', //积分抵现配置
+                    components: {
+                        details_con: integralWithdrawal
+                    }
+                },
+                {
+                    path: 'staffManager', //员工管理
+                    components: {
+                        details_con: employeeManage
+                    }
+                },
+                {
+                    path: 'kitchen', //后厨配置
+                    components: {
+                        details_con: kitchenModel
+                    }
+                },
+                {
+                    path: 'areaManager', //区域管理
+                    components: {
+                        details_con: areaManage
+                    }
+                },
+                {
+                    path: 'tableManager', //桌台管理
+                    components: {
+                        details_con: tableManage
+                    }
+                },
+                {
+                    path: 'PriceRule', //取整设置
+                    components: {
+                        details_con: integerSet
+                    }
+                },
+                {
+                    path: 'returnReason', //退菜原因
+                    components: {
+                        details_con: refundFood
+                    }
+                },
+                {
+                    path: 'Startandsell', //商品起售配置
+                    components: {
+                        details_con: goodSale
+                    }
+                },
+                {
+                    path: 'notice', //商品起售配置
+                    components: {
+                        details_con: shopNotice
+                    }
+                },
+                {
+                    path: 'hangUpAccount', //商品起售配置
+                    components: {
+                        details_con: hangUpAccount
+                    }
+                },
+                {
+                    path: 'reverseReason', //反结账原因
+                    components: {
+                        details_con: reverseReason
+                    }
+                },
+                {
+                    path: 'serviceChargeManager', //服务费管理
+                    components: {
+                        details_con: serviceFee
+                    }
+                },
+                {
+                    path: 'shopNumber', //商家编号
+                    components: {
+                        details_con: shopNumber
+                    }
+                },
+                {
+                    path: 'banner', //轮播图配置
+                    components: {
+                        details_con: shufflingPic
+                    }
+                },
+                {
+                    path: 'openTime', //店铺基本信息
+                    components: {
+                        details_con: openTime
+                    }
+                },
+                {
+                    path: 'Payment', //支付方式
+                    components: {
+                        details_con: Payment
+                    }
+                },
+                {
+                    path: 'citySettings', //市别设置
+                    components: {
+                        details_con: timeSet
+                    }
+                },
+                {
+                    path: 'EleMenuManage', //市别设置
+                    components: {
+                        details_con: elemenuManage
+                    }
+                },
+                {
+                    path: 'fastSelling', //快销模式管理
+                    components: {
+                        details_con: fastSelling
+                    }
+                },
+                {
+                    path: 'jobsManager', //职位管理
+                    components: {
+                        details_con: jobManage
+                    }
+                },
+                {
+                    path: 'staffConfig', //员工配置
+                    components: {
+                        details_con: staffConfig
+                    }
+                },
+                {
+                    path: 'positionConfig', //职位配置
+                    components: {
+                        details_con: positionConfig
+                    }
+                },
+                {
+                    path: 'setting', //品牌基本配置
+                    components: {
+                        details_con: baseBrand
+                    }
+                },
+                {
+                    path: 'paymentMethod', //品牌支付配置
+                    components: {
+                        details_con: payBrand
+                    }
+                },
+                {
+                    path: 'storeArea', //区域门店
+                    components: {
+                        details_con: shopGroup
+                    }
+                },
+                {
+                    path: 'boundPublicNumber', //绑定公众号
+                    components: {
+                        details_con: boundPublicNumber
+                    }
+                },
+                {
+                    path: 'pushLanguageSettings',
+                    components: {
+                        details_con: pushLanguageSettings
+                    }
+                },
+                {
+                    path: 'menuSetting', //菜单设置
+                    components: {
+                        details_con: menuSet
+                    }
+                },
+                {
+                    path: 'appletBinding', //小程序绑定
+                    components: {
+                        details_con: smallProgramBinding
+                    }
+                },
+                {
+                    path: 'templateSetting', //模板设置
+                    components: {
+                        details_con: moduleSet
+                    }
+                },
+                {
+                    path: 'printerError', //打印错误队列
+                    components: {
+                        details_con: printer_errors
+                    }
+                },
+                {
+                    path: 'printQueue', //打印队列
+                    components: {
+                        details_con: print_queue
+                    }
+                },
+                {
+                    path: 'printerManager', //打印机管理
+                    components: {
+                        details_con: printer_manager
+                    }
+                },
+                {
+                    path: 'printerConfig', //打印机管理
+                    components: {
+                        details_con: printer_config
+                    }
+                },
+                //仓库管理
+                {
+                    path: 'warehouseList', //仓库管理
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '', //仓库列表
+                            components: {
+                                details_con: warehouseList
+                            }
+                        },
+                        {
+                            path: 'warehouseDetail', //仓库详情
+                            components: {
+                                details_con: warehouseDetail
+                            }
+                        },
+                        {
+                            path: 'create', //新建仓库
+                            components: {
+                                details_con: warehouseCreate
+                            }
+                        },
+                        {
+                            path: 'outputStore', //仓库出库
+                            components: {
+                                details_con: outputStore
+                            }
+                        },
+                        {
+                            path: 'outputShipper', //仓库出库详细信息-出货单
+                            components: {
+                                details_con: outputShipper
+                            }
+                        },
+                        {
+                            path: 'outputSelGoods', //仓库出库选择商品
+                            components: {
+                                details_con: outputSelGoods
+                            }
+                        },
+                        {
+                            path: 'changeArea', //修改区域
+                            components: {
+                                details_con: changeArea
+                            }
+                        },
+                        {
+                            path: 'change', //修改仓库
+                            components: {
+                                details_con: warehouseChange
+                            }
+                        },
+                        {
+                            path: 'searchGoods', //仓库商品查询
+                            components: {
+                                details_con: searchGoods
+                            }
+                        },
+                        {
+                            path: 'warehouseGoodsDetail', //仓库商品查询详情
+                            components: {
+                                details_con: warehouseGoodsDetail
+                            }
+                        },
+                        {
+                            path: 'warehouseMaterialDetail', //仓库商品查询详情
+                            components: {
+                                details_con: warehouseMaterialDetail
+                            }
+                        },
+                        {
+                            path: 'warehouseOperationDetail', //仓库操作详情
+                            components: {
+                                details_con: warehouseOperationDetail
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'operation', //调度管理
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: operation
+                            }
+                        },
+                        {
+                            path: 'operationDetail', //调度详情
+                            components: {
+                                details_con: operationDetail
+                            }
+                        },
+                        {
+                            path: 'enterGoods', //入货
+                            components: {
+                                details_con: enterGoods
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'pickingList', //领料列表
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '', //领料列表
+                            components: {
+                                details_con: pickingList
+                            }
+                        },
+                        {
+                            path: 'picking', //领料
+                            components: {
+                                details_con: picking
+                            }
+                        },
+                        {
+                            path: 'checkDetails', //查看详情
+                            components: {
+                                details_con: checkDetails
+                            }
+                        },
+                        {
+                            path: 'plateDetails', //查看领料盘库详情
+                            components: {
+                                details_con: plateDetails
+                            }
+                        },
+                        {
+                            path: 'plateStorage', //领料人盘库
+                            components: {
+                                details_con: plateStorage
+                            }
+                        }
+                    ]
+                },
+                //调度申请
+                {
+                    path: 'schedulingApplication',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: schedulingApplicationList //调度申请,模板列表
+                            }
+                        },
+                        {
+                            path: 'purchaseRequisition',
+                            components: {
+                                details_con: purchaseRequisition //入货申请
+                            }
+                        },
+                        {
+                            path: 'purchaseRequisitionDetail',
+                            components: {
+                                details_con: purchaseRequisitionDetail //调度申请详情
+                            }
+                        }
+                    ]
+                },
+                // 订单统计
+                {
+                    path: 'orderStatistics', //单天
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: orderStatistics
+                            }
+                        },
+                        {
+                            path: 'takeawayBrand', //订单统计外卖品牌
+                            components: {
+                                details_con: takeawayBrand
+                            }
+                        },
+                        {
+                            path: 'orderOne', //订单统计单天
+                            components: {
+                                details_con: orderOne
+                            }
+                        },
+                        {
+                            path: 'orderMore', //订单统计多天
+                            components: {
+                                details_con: orderMore
+                            }
+                        },
+                        {
+                            path: 'orderDetail', //订单统计详情
+                            components: {
+                                details_con: orderDetail
+                            }
+                        },
+                        {
+                            path: 'orderTakeaway', //订单统计外卖
+                            components: {
+                                details_con: orderTakeaway
+                            }
+                        },
+                        {
+                            path: 'orderProprietary', //自营外卖
+                            components: {
+                                details_con: orderProprietary
+                            }
+                        },
+                        {
+                            path: 'takeawayOne', //订单统计外卖单天
+                            components: {
+                                details_con: takeawayOne
+                            }
+                        },
+                        {
+                            path: 'takeawayMore', //订单统计外卖多天
+                            components: {
+                                details_con: takeawayMore
+                            }
+                        },
+                        {
+                            path: 'takeawayDetail', //订单统计外卖详情
+                            components: {
+                                details_con: takeawayDetail
+                            }
+                        },
+                        {
+                            path: 'orderProprietaryBrand', //自营外卖统计
+                            components: {
+                                details_con: orderProprietaryBrand
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'businessStatistics', //营业统计
+                    components: {
+                        details_con: businessStatistics
+                    }
+                },
+                {
+                    path: 'categoryStatistics', //分类统计
+                    components: {
+                        details_con: categoryStatistics
+                    }
+                },
+                {
+                    path: 'singleStatistics', //单品统计
+                    components: {
+                        details_con: singleStatistics
+                    }
+                },
+                {
+                    path: 'OrderBillList', //挂账统计
+                    components: {
+                        details_con: brandOrderBill
+                    }
+                },
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				{
 					path: 'handover', //交接班统计
 					components: {
@@ -1263,6 +2072,7 @@ export default [{
 					children: [{
 						path: '',
 						components: {
+<<<<<<< HEAD
 								details_con: Handover //品牌
 							}
 						},
@@ -2390,3 +3200,1169 @@ export default [{
 			}]
 		}
 		];
+=======
+							details_con: Handover
+						}
+					},
+						{
+							path: 'handoverShop',
+							components: {
+								details_con: HandoverShop
+							}
+						}
+					]
+				},
+                {
+                    path: 'memberRecharge', //挂账统计
+                    components: {
+                        details_con: MemberRecharge
+                    }
+                },
+                {
+                    path: 'delOrder', //废单统计
+                    components: {
+                        details_con: delOrder
+                    }
+                },
+                {
+                    path: 'returnGoods', //退品统计
+                    components: {
+                        details_con: returnGoods
+                    }
+                },
+                {
+                    path: 'singleStockstatics', //单品库存统计
+                    components: {
+                        details_con: singleStockstatics
+                    }
+                },
+                {
+                    path: 'exportTemplate', //单品库存统计 导出模板
+                    components: {
+                        details_con: exportTemplate
+                    }
+                },
+                //零售分类统计
+                {
+                    path: 'categoryCount',
+                    components: {
+                        details_con: categoryCount //零售分类统计
+                    }
+                },
+                {
+                    path: 'reservationManager', //预定统计
+                    components: {
+                        details_con: reservationManager
+                    }
+                },
+                {
+                    path: 'entityCardStatistics', //实体卡统计
+                    components: {
+                        details_con: entityCardStatistics
+                    }
+                },
+                {
+                    path: 'activityStatistics', //活动统计
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: activityStatistics
+                            }
+                        },
+                        {
+                            path: 'detail', //活动统计-详情
+                            components: {
+                                details_con: activityDetail
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'freeGoods', //赠品统计
+                    components: {
+                        details_con: freeGoods
+                    }
+                },
+                {
+                    path: 'changePriceRecord', //改价统计
+                    components: {
+                        details_con: changePriceRecord
+                    }
+                },
+                {
+                    path: 'Customstatistics', //自定义商品统计
+                    components: {
+                        details_con: customStatistics
+                    }
+                },
+                {
+                    path: 'wareImport', //入库导入
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: wareImport
+                            },
+                            meta: {
+                                keepAlive: true
+                            }
+
+                        },
+                        {
+                            path: 'wareProsperity', //入库导入成功
+                            components: {
+                                details_con: wareProsperity
+                            }
+                        }
+                    ]
+                },
+
+                {
+                    path: 'conclusionList', //审核列表
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: conclusionList
+                            },
+                            meta: {
+                                keepAlive: true
+                            }
+                        },
+                        {
+                            path: 'shipmentVerify', //审核详情确认
+                            components: {
+                                details_con: shipmentVerify
+                            }
+                        },
+                        {
+                            path: 'batchSchedule',
+                            components: {
+                                details_con: batchSchedule
+                            }
+                        },
+                        {
+                            path: 'newSchedule', //新建调度
+                            components: {
+                                details_con: newSchedule
+                            }
+                        },
+                        {
+                            path: 'selectDispatch', //批量调度-选择调度单
+                            components: {
+                                details_con: select_dispatch
+                            },
+                        },
+                        {
+                            path: 'multipleExamine', //批量审核
+                            components: {
+                                details_con: multipleExamine
+                            },
+                        },
+                    ]
+                },
+                {
+                    path: 'processbomList',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                        path: '',
+                        components: {
+                            details_con: processbomList
+                        },
+                    }, {
+                        path: 'bomlistDetail',
+                        components: {
+                            details_con: bomlistDetail
+                        },
+                    }, {
+                        path: 'create',
+                        components: {
+                            details_con: processBomCreate
+                        },
+                    }]
+                },
+                {
+                    path: 'inventoryManagement', //进销存
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: inventoryManagement
+                            }
+                        },
+                        {
+                            path: 'detail', //进销存详情
+                            components: {
+                                details_con: inventDetail
+                            }
+                        },
+                        {
+                            path: 'suppliesDetail', //进销存物料详情
+                            components: {
+                                details_con: suppliesDetail
+                            }
+                        },
+                        {
+                            path: 'putStroage', //进销存入库
+                            components: {
+                                details_con: putstroage
+                            }
+                        },
+                        {
+                            path: 'loseManage', //进销存耗损
+                            components: {
+                                details_con: loseManage
+                            }
+                        },
+                        {
+                            path: 'materialsPutinStorage', //物料入库
+                            components: {
+                                details_con: materialsPutinStorage
+                            }
+                        },
+                        {
+                            path: 'materialModifyBatch', //物料批次修改
+                            components: {
+                                details_con: materialModifyBatch
+                            }
+                        },
+                        {
+                            path: 'materialLoss', //物料耗损
+                            components: {
+                                details_con: materialLoss
+                            }
+                        },
+                        {
+                            path: 'revampUnit', //进销存入库
+                            components: {
+                                details_con: revampUnit
+                            }
+                        },
+                        {
+                            path: 'publicDetails', //公用详情
+                            components: {
+                                details_con: publicDetails
+                            }
+                        },
+                        {
+                            //新建物料
+                            path: 'materialCreate',
+                            components: {
+                                details_con: materialCreate
+                            }
+                        },
+                        {
+                            //修改物料
+                            path: 'materialEdit',
+                            components: {
+                                details_con: materialEdit
+                            }
+                        },
+                        {
+                            //盘库
+                            path: 'warehouseCount',
+                            components: {
+                                details_con: warehouseCount
+                            }
+                        },
+                        {
+                            //物料批次详情
+                            path: 'supbranchDetail',
+                            components: {
+                                details_con: supbranchDetail
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'brandAssign', //进销存-品牌指派
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '', //品牌指派-模板列表
+                            components: {
+                                details_con: brandAssign
+                            },
+                        },
+                        {
+                            path: 'create', //品牌指派-新建指派
+                            components: {
+                                details_con: createAssign
+                            }
+                        },
+                        {
+                            path: 'setNewjurisdiction', //新建权限指派
+                            components: {
+                                details_con: setNewjurisdiction
+                            }
+                        },
+                        {
+                            path: 'jurisdictionRecord', //指派日志
+                            components: {
+                                details_con: jurisdictionRecord
+                            }
+                        },
+                        {
+                            path: 'jurisdictionDetail', //查看同步详情
+                            components: {
+                                details_con: jurisdictionDetail
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'bomList', //bom单管理
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '', //bom单列表
+                            components: {
+                                details_con: bomList
+                            }
+                        },
+                        {
+                            path: 'bomCreate', //新建bom单
+                            components: {
+                                details_con: bomCreate
+                            }
+                        },
+                        {
+                            path: 'bomChange', //修改bom单
+                            components: {
+                                details_con: bomChange
+                            }
+                        },
+                        {
+                            path: 'bomDetail', //bom单详情
+                            components: {
+                                details_con: bomDetail
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'goodsCountHistory',
+                    components: {
+                        details_con: goodsCountHistory //商品盘库记录列表
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 1
+                            };
+                        }
+                    }
+                },
+                {
+                    path: 'materialCountHistory', //物料盘库记录列表
+                    components: {
+                        details_con: goodsCountHistory
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 2
+                            };
+                        }
+                    },
+
+                },
+                {
+                    path: 'processHistory', //物料盘库记录列表
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '', //bom单列表
+                            components: {
+                                details_con: goodsCountHistory
+                            },
+                            props: {
+                                details_con: (route) => {
+                                    return {
+                                        tab: 3
+                                    };
+                                }
+                            },
+                        },
+                        {
+                            path: 'detail', //bom单列表
+                            components: {
+                                details_con: processMatDetail
+                            }
+                        },
+                    ],
+                },
+                {
+                    path: 'goodsCountTemplate',
+                    components: {
+                        details_con: goodsCountTemplate //商品盘库模板列表
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 1
+                            };
+                        }
+                    }
+                }, {
+                    path: 'materialCountTemplate',
+                    components: {
+                        details_con: goodsCountTemplate //物料盘库模板列表
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 2
+                            };
+                        }
+                    }
+                },
+                {
+                    path: 'processTemplate',
+                    components: {
+                        details_con: goodsCountTemplate //物料盘库模板列表
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 3
+                            };
+                        }
+                    }
+                },
+                {
+                    path: 'goodsCountDetail',
+                    components: {
+                        details_con: goodsCountDetail //商品盘库详情
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 1
+                            };
+                        }
+                    }
+                },
+                {
+                    path: 'materialCountDetail',
+                    components: {
+                        details_con: goodsCountDetail //物料盘库详情
+                    },
+                    props: {
+                        details_con: (route) => {
+                            return {
+                                tab: 2
+                            };
+                        }
+                    }
+                },
+                {
+                    path: 'goodsCount',
+                    components: {
+                        details_con: goodsCount //商品盘库  
+                    }
+                }, {
+                    path: 'processMaterialPrint', //加工物料打印
+                    components: {
+                        details_con: processMaterialPrint
+                    }
+                },
+                {
+                    path: 'processMaterial',
+                    components: {
+                        details_con: processMaterial //加工物料
+                    }
+                },
+                //批量调度日志
+                {
+                    path: 'batchLog',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            redirect: 'batchLogDispatch'
+                        },
+                        {
+                            path: 'batchLogDispatch',
+                            components: {
+                                details_con: batchLogDispatch //批量调度日志列表      
+                            },
+                            alias: '',
+                            props: {
+                                details_con: (route) => {
+                                    return {
+                                        tab: 1
+                                    };
+                                }
+                            }
+                        },
+                        {
+                            path: 'batchLogAudit',
+                            components: {
+                                details_con: batchLogDispatch //批量审核日志列表      
+                            },
+                            props: {
+                                details_con: (route) => {
+                                    return {
+                                        tab: 2
+                                    };
+                                }
+                            }
+                        },
+                        {
+                            path: 'batchLogPrint',
+                            components: {
+                                details_con: batchLogPrint //批量审核详情打印
+                            },
+                            meta: {
+                                comName: 'batchLogPrint'
+                            }
+                        },
+                        {
+                            path: 'batchLogDetail',
+                            components: {
+                                details_con: batchLogDetail //批量审核日志详情
+                            }
+                        },
+                        {
+                            path: 'batchLogDispatchDetail',
+                            components: {
+                                details_con: batchLogDispatchDetail //批量调度日志详情
+                            },
+                            meta: {
+                                comName: 'batchLogDispatchDetail'
+                            }
+                        },
+                    ]
+                },
+                //总日志
+                {
+                    path:'totalLog',
+                    components:{
+                        details_con: details_con
+                    },
+                    children:[
+                        {
+                            path:'',
+                            components:{
+                                details_con:goodsTotalLog
+                            },
+                            meta:{
+                                keepAlive:true,
+                            }
+                        },
+                        {
+                            path:'materialTotalLog',
+                            components:{
+                                details_con: materialTotalLog
+                            },
+                            meta:{
+                                keepAlive:true,
+                            }
+                        },
+                    ],
+                },
+                {
+                    path:'bomConsumeDetail',
+                    components:{
+                        details_con: bomConsumeDetail
+                    },
+                },
+                {
+                    path:'goodsBatchTotalLogDetail',
+                    components:{
+                        details_con: goodsBatchTotalLogDetail
+                    },
+                },
+                {
+                    path: 'materialCount', //批量盘库-物料盘库
+                    components: {
+                        details_con: checkMaterial
+                    },
+                },
+                {
+                    path: 'editGoodsCountTemplate', //批量盘库-编辑商品盘库模板
+                    components: {
+                        details_con: editGoodsCountTemplate
+                    },
+                },
+                {
+                    path: 'editMaterialCountTemplate', //批量盘库-编辑商品盘库模板
+                    components: {
+                        details_con: editMaterialCountTemplate
+                    },
+                },
+                {
+                    path: 'supplierConfigure', //进销存配置
+                    components: {
+                        details_con: supplierConfigure
+                    }
+                },
+                {
+                    path: 'supplierManagement', //供应商管理
+                    components: {
+                        details_con: supplierManagement
+                    }
+                },
+                {
+                    path: 'wearCause', //耗损原因管理
+                    components: {
+                        details_con: wearCause
+                    }
+                },
+                {
+                    path: 'shelfReason', //下架原因管理
+                    components: {
+                        details_con: offReason
+                    }
+                },
+                {
+                    path: 'brandList', //商品品牌管理
+                    components: {
+                        details_con: brandList
+                    }
+                },
+                {
+                    path: 'weighGoodsList', //称重商品配置
+                    components: {
+                        details_con: weighGoodsList
+                    }
+                },
+                {
+                    path: 'shelfManagement', //货架管理
+                    components: {
+                        details_con: shelfList
+                    }
+                },
+                {
+                    path: 'materialCategory',
+                    components: {
+                        details_con: materialCategory //物料分类
+                    }
+                },
+                {
+                    path: 'materialUnitCreate',
+                    components: {
+                        details_con: materialUnitCreate //新建物料单位
+                    }
+                },
+                {
+                    path: 'shelveRule', //销售规则
+                    components: {
+                        details_con: shelveRule
+                    }
+                },
+                {
+                    path: 'cashierConfig', //报表配置
+                    components: {
+                        details_con: cashierConfig
+                    }
+                },
+                {
+                    path: 'cashierAnslysis', //收银分析
+                    components: {
+                        details_con: cashierAnslysis
+                    }
+                },
+                {
+                    path: 'ReportCategory', //分类报表
+                    components: {
+                        details_con: cashierCategory
+                    }
+                },
+                {
+                    path: 'NoBrand', //会员基本配置
+                    components: {
+                        details_con: NoBrand
+                    }
+                },
+                {
+                    path: 'memberManagement', //会员管理
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: memberManagement
+                            }
+                        },
+                        {
+                            path: 'detail',
+                            components: {
+                                details_con: memberManDetail
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'Couponstatistics', //会员管理
+                    components: {
+                        details_con: Couponstatistics
+                    }
+                },
+                {
+                    path: 'getCardConsumeList', //实体卡查询—交易查询
+                    components: {
+                        details_con: transactionEnquiry
+                    }
+                },
+                {
+                    path: 'getCardList', //实体卡查询—卡查询
+                    components: {
+                        details_con: cardQueries
+                    }
+                },
+                {
+                    path: 'memberSend',
+                    components: {
+                        details_con: memberSend
+                    }
+                },
+                {
+                    path: 'integralRule',
+                    components: {
+                        details_con: integralRule
+                    }
+                },
+                {
+                    path: 'statisticsManagement', //来源统计
+                    components: {
+                        details_con: statisticsManagement
+                    }
+                },
+                {
+                    path: 'configCourse', //配置教程
+                    components: {
+                        details_con: configCourse
+                    }
+                },
+                {
+                    path: 'onlineOrderConfig', //在线点单配置
+                    components: {
+                        details_con: onlineOrderConfig
+                    }
+                },
+                {
+                    path: 'activateEntityCard', //实体卡激活
+                    components: {
+                        details_con: activateEntityCard
+                    }
+                },
+                {
+                    path: 'square', //自助模式
+                    components: {
+                        details_con: selfHelpMode
+                    }
+                },
+                {
+                    path: 'memberStoredValueScheme', //会员储值
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: memberStore
+                            }
+                        },
+                        {
+                            path: 'solution',
+                            components: {
+                                details_con: memberStoreSolution
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'promotionMaterial',
+                    components: {
+                        details_con: mallPro
+                    }
+                },
+                {
+                    path: 'cooperation',
+                    components: {
+                        details_con: cooperation
+                    }
+                },
+                {
+                    path: 'memberLabel', //  会员标签
+                    components: {
+                        details_con: memberLabel
+                    }
+                },
+                {
+                    path: 'zhongxin', //  中信银行对账单
+                    components: {
+                        details_con: citicStatements
+                    }
+                },
+                {
+                    path: 'zxsh', //  中信银行对账单
+                    components: {
+                        details_con: zxsh
+                    }
+                },
+                {
+                    path: 'weixinConfiguration', //  中信银行对账单
+                    components: {
+                        details_con: weixinOnfiguration
+                    }
+                },
+                {
+                    path: 'activity',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: activity
+                            }
+                        },
+                        {
+                            path: 'generalActivity',
+                            components: {
+                                details_con: details_con
+                            },
+                            children: [{
+                                    path: '',
+                                    components: {
+                                        details_con: generalActivity
+                                    }
+                                },
+                                {
+                                    path: 'birth',
+                                    components: {
+                                        details_con: activityBirth
+                                    }
+                                }, {
+                                    path: 'custom',
+                                    components: {
+                                        details_con: activityCustom
+                                    }
+                                },
+                                {
+                                    path: 'agift',
+                                    components: {
+                                        details_con: activityAgift
+                                    }
+                                },
+                                {
+                                    path: 'encourage',
+                                    components: {
+                                        details_con: activityEncourage
+                                    }
+                                },
+                                {
+                                    path: 'fission',
+                                    components: {
+                                        details_con: activityFission
+                                    }
+                                },
+                                {
+                                    path: 'member',
+                                    components: {
+                                        details_con: activityMember
+                                    }
+                                },
+                                {
+                                    path: 'fullreduce',
+                                    components: {
+                                        details_con: activityFullreduce
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            path: 'couponActivity',
+                            components: {
+                                details_con: details_con
+                            },
+                            children: [{
+                                    path: '',
+                                    components: {
+                                        details_con: couponActivity
+                                    }
+                                },
+                                {
+                                    path: 'coupon',
+                                    components: {
+                                        details_con: activityCoupon
+                                    }
+                                }
+                            ]
+                        },
+                    ]
+                },
+                {
+                    path: 'memberLevelManagement',
+                    components: {
+                        details_con: memberLevelManagement
+                    }
+                },
+                {
+                    path: 'adminConfig', // 管理员配置
+                    components: {
+                        details_con: adminConfig
+                    }
+                },
+                {
+                    path: 'addCardType', // 实体卡配置-制卡
+                    components: {
+                        details_con: makeCard
+                    }
+                },
+                {
+                    path: 'cardTypeList',
+                    components: {
+                        details_con: cardTypeList
+                    }
+                },
+                {
+                    path: 'cardTypeApp', //实体卡应用
+                    components: {
+                        details_con: cardTypeApp
+                    }
+                },
+                {
+                    path: 'MemberCard', //实体卡会员导入
+                    components: {
+                        details_con: MemberCard
+                    }
+                },
+                {
+                    path: 'AssistantcoinsConfig', // 金币配置
+                    components: {
+                        details_con: goldConfig
+                    }
+                },
+                {
+                    path: 'Assistantusergroup',
+                    components: {
+                        details_con: userGroupings
+                    }
+                },
+                {
+                    path: 'Assistantfans',
+                    components: {
+                        details_con: vermicelliList
+                    }
+                },
+                {
+                    path: 'Assistantstaff',
+                    components: {
+                        details_con: workerStaff
+                    }
+                },
+                {
+                    path: 'Assistantverbaltrick',
+                    components: {
+                        details_con: speechConfig
+                    }
+                },
+                {
+                    path: 'Assistantusertag',
+                    components: {
+                        details_con: Assistantusertag
+                    }
+                },
+                {
+                    path: 'Assistantuserlevel',
+                    components: {
+                        details_con: Assistantuserlevel
+                    }
+                },
+                {
+                    path: 'Assistantbuyconfig',
+                    components: {
+                        details_con: Assistantbuyconfig
+                    }
+                },
+                {
+                    path: 'Assistanthistory',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: Assistanthistory
+                            }
+                        },
+                        {
+                            path: 'detail',
+                            components: {
+                                details_con: details_con
+                            },
+                            children: [{
+                                    path: '',
+                                    components: {
+                                        details_con: rushedDetail
+                                    }
+                                },
+                                {
+                                    path: 'record',
+                                    components: {
+                                        details_con: rushedRecord
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    path: 'Assistantgood',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: Assistantgood
+                            }
+                        },
+                        {
+                            path: 'newgoods',
+                            components: {
+                                details_con: NewGoods
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'Assistantenchashment',
+                    components: {
+                        details_con: Assistantenchashment
+                    }
+                },
+                {
+                    path: 'assistantComment',
+                    components: {
+                        details_con: assistantComment
+                    }
+                },
+                {
+                    path: 'CommentConfig',
+                    components: {
+                        details_con: CommentConfig
+                    }
+                },
+                {
+                    path: 'taskRules',
+                    components: {
+                        details_con: taskRules
+                    }
+                },
+                {
+                    path: 'Task',
+                    components: {
+                        details_con: details_con
+                    },
+                    children: [{
+                            path: '',
+                            components: {
+                                details_con: Task
+                            }
+                        },
+                        {
+                            path: 'newmission',
+                            components: {
+                                details_con: newmission
+                            }
+                        }
+                    ]
+                },
+                {
+                    path: 'Commentstatics',
+                    components: {
+                        details_con: Commentstatics
+                    }
+                },
+                {
+                    path: 'Scanpayconfig',
+                    components: {
+                        details_con: Scanpayconfig
+                    }
+                },
+                {
+                    path: 'Scanpaystatics',
+                    components: {
+                        details_con: Scanpaystatics
+                    }
+                },
+                {
+                    path: 'reverseStatics',
+                    components: {
+                        details_con: reverseStatics
+                    }
+                },
+                {
+                    path: 'Dada',
+                    components: {
+                        details_con: Dada
+                    }
+                },
+                {
+                    path: 'DadaConfig',
+                    components: {
+                        details_con: DadaConfig
+                    }
+                },
+                {
+                    path: 'MemberValueConfig',
+                    components: {
+                        details_con: MemberValueConfig
+                    }
+                },
+                {
+                    path: 'orderTemplateSwitch',
+                    components: {
+                        details_con: orderTemplateSwitch
+                    }
+                },
+                {
+                    path: 'MemberAnalysis',
+                    components: {
+                        details_con: MemberAnalysis
+                    }
+                },
+                {
+                    path: 'client',
+                    components: {
+                        details_con: client
+                    }
+                },
+                {
+                    path: 'seller', //销方配置
+                    components: {
+                        details_con: salesParty
+                    }
+                },
+                {
+                    path: 'balanceAdjustRecord', //余额调整记录
+                    components: {
+                        details_con: balanceAdjustRecord
+                    }
+                },
+            ]
+        }]
+    }
+];
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab

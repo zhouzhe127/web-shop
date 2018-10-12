@@ -6,17 +6,11 @@
 }
 }
 .search-module[data-v-2d02eebe] {
-  padding-top: 16px;
   padding-bottom: 16px;
 }
-.search-module .search-input[data-v-2d02eebe] {
-  height: 40px;
-  color: #a5a5a5;
-  font-size: 14px;
-  line-height: 40px;
-  text-indent: 15px;
-  padding: 0;
-  outline: none;
+.search-module .sleType[data-v-2d02eebe] {
+  width: 170px;
+  display: inline-block;
   margin-right: 15px;
 }
 .search-module .inline-box[data-v-2d02eebe] {

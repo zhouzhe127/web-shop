@@ -54,4 +54,12 @@
 .isShopColor[data-v-af4b7aca] {
 	color: #f8931f;
 }
+.line[data-v-af4b7aca]{
+	border-left: 1px solid #ccc;
+}
+.btn span[data-v-af4b7aca]{
+	display: inline-block;
+	padding: 0 15px;
+	cursor: pointer;
+}
 

@@ -132,12 +132,20 @@
 					name: '导出失败记录',
 					className: ['wearhouse handle'],
 					fn: async () => {
-						await http.Invent_redshes({
-							url: this.failLog,
-							data: {
-								format: 'csv'
-							}
-						});
+						if(this.failLog){
+							await http.Invent_redshes({
+								url: this.failLog,
+								data: {
+									format: 'csv'
+								}
+							});
+						}else{
+							this.$message({
+								message: '没有失败记录！',
+								type: 'warning'
+							});
+						}
+						
 					}
 				}
 				]);

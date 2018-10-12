@@ -98,10 +98,11 @@
   height: 35px;
   line-height: 35px;
   margin-right: 10px;
+  text-align: center;
   background: #f2f2f2;
   border-radius: 5px;
   vertical-align: middle;
-  text-align: center;
+  cursor: pointer;
 }
 #report_category .nav .shopName[data-v-332c5c20] {
   display: inline-block;

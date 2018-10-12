@@ -1,143 +1,21 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* #print-queue .clearbtn{position: absolute;top:-45px;right: 0;width:150px} */
 #print-queue-tan .oDetial[data-v-6bdb9438] {
-	width: 100%;
-	height: 20px;
-	line-height: 20px;
-	text-align: center;
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+}
+#print-queue .oBox[data-v-6bdb9438] {
+  width: 100%;
+  border-bottom: none;
+  margin: 10px 0;
+}
+#print-queue .oBox .boxTop[data-v-6bdb9438] {
+  height: 50px;
+  line-height: 50px;
+  border-bottom: 1px solid #ebeef5;
+  padding: 0 5px;
+  border: 1px solid #ebeef5;
+  border-bottom: none;
 }
 

@@ -11,13 +11,28 @@
   margin-right: 20px;
   vertical-align: middle;
   position: relative;
-}
-#category-charts .shops .shops_list .shopBox[data-v-60628f3f] {
-  height: 0;
-  margin-left: -350px;
-  position: absolute;
-  left: 100px;
-  top: -350px;
+  /*.shopBox{*/
+  /*height: 0;*/
+  /*margin-left: -350px;*/
+  /*position: absolute;*/
+  /*left: 100px;*/
+  /*top: -350px;*/
+  /*}*/
+  /*.select-body{*/
+  /*position: relative;display: inline-block;line-height: normal;*/
+  /*.select-body-btn {*/
+  /*vertical-align: middle;display: inline-block;border: #b3b3b3 solid 1px;overflow: hidden;cursor: pointer;*/
+  /*em{width: 40px;height: 38px;float: right;text-align: center;line-height: 38px;border-left: 1px solid #ccc;*/
+  /*i {height: 10px;width: 10px;display: inline-block;*/
+  /*border-top: 10px solid #b3b3b3;border-left: 5px solid transparent;border-right: 5px solid transparent;box-sizing: border-box;*/
+  /*}*/
+  /*}*/
+  /*span {*/
+  /*width: 150px;height: 38px;line-height: 38px;*/
+  /*text-align: center;color: #666666;float: left;*/
+  /*}*/
+  /*}*/
+  /*}*/
 }
 #category-charts .shops .shops_list .shops_sign[data-v-60628f3f] {
   display: inline-block;
@@ -34,43 +49,6 @@
 }
 #category-charts .shops .shops_list .greenSign[data-v-60628f3f] {
   background: #5eb71c;
-}
-#category-charts .shops .shops_list .select-body[data-v-60628f3f] {
-  position: relative;
-  display: inline-block;
-  line-height: normal;
-}
-#category-charts .shops .shops_list .select-body .select-body-btn[data-v-60628f3f] {
-  vertical-align: middle;
-  display: inline-block;
-  border: #b3b3b3 solid 1px;
-  overflow: hidden;
-  cursor: pointer;
-}
-#category-charts .shops .shops_list .select-body .select-body-btn em[data-v-60628f3f] {
-  width: 40px;
-  height: 38px;
-  float: right;
-  text-align: center;
-  line-height: 38px;
-  border-left: 1px solid #ccc;
-}
-#category-charts .shops .shops_list .select-body .select-body-btn em i[data-v-60628f3f] {
-  height: 10px;
-  width: 10px;
-  display: inline-block;
-  border-top: 10px solid #b3b3b3;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  box-sizing: border-box;
-}
-#category-charts .shops .shops_list .select-body .select-body-btn span[data-v-60628f3f] {
-  width: 150px;
-  height: 38px;
-  line-height: 38px;
-  text-align: center;
-  color: #666666;
-  float: left;
 }
 #category-charts .titleChart[data-v-60628f3f] {
   display: inline-block;

@@ -1,6 +1,6 @@
 
 #tan[data-v-dc0ea5a0] {
-	padding: 46px 100px 0 100px;
+	padding: 46px 50px 0 50px;
 	max-height: 700px;
 }
 #tan ul[data-v-dc0ea5a0] {
@@ -13,7 +13,7 @@
 	margin-bottom: 32px;
 }
 #tan ul li .shopname[data-v-dc0ea5a0] {
-	width: 120px;
+	width: 260px;
 	height: 40px;
 	text-align: center;
 	line-height: 40px;
@@ -126,6 +126,7 @@
 	color: #333;
 	text-align: right;
 	margin-right: 14px;
+	font-size: 16px;
 }
 #rushedConfiguration .clearfix[data-v-4860be13]::before,
 #rushedConfiguration .clearfix[data-v-4860be13]::after {

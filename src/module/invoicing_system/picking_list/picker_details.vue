@@ -117,6 +117,7 @@
 				item: {},          //保存点击的该条信息
 				detail:{},
 				info: '',
+				isBack:true,
 			};
 		},
 		// props:['info'],
@@ -130,7 +131,10 @@
 				if(this.recordId){
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
 					let arr = [{name:'返回',className: 'info',type:4,fn:()=>{
+<<<<<<< HEAD
 						storage.session('listDetail',null);
+=======
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 						storage.session('isBackPickingRecord',true);   //是否点击返回
 						window.history.go(-1);
 					}}];
@@ -139,7 +143,11 @@
 				}else{
 					this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'领料人详情'}]});
 					let arr = [
+<<<<<<< HEAD
 						{name:'领料盘库',className:'success',type:4,
+=======
+						{name:'领料盘库',className:'primary',type:4,
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 							fn:()=>{
 								this.isPickerDetail = false;
 								let data = {storageInfo:this.detailList,info:this.info};

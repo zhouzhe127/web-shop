@@ -36,11 +36,19 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {
+<<<<<<< HEAD
 					path: '/admin/operation/enterGoods',
 				};
 				
 				obj.query = {
 					id:item.other.dispatchId,									//调度单id
+=======
+					path: '/admin/operation/operationDetail',
+				};
+				
+				obj.query = {
+					id:item.other.dispatchId,					//调度单id
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					intoId:item.other.dispatchInfoId,			//入货单id
 					logTab:2,
 					logType:1,
@@ -63,10 +71,18 @@ let config = [
 			"historyClick":function(context,item){
 				let obj = {};
 
+<<<<<<< HEAD
 				obj.path = '/admin/operation/enterGoods';
 				obj.query = {
 					logTab:1,
 					logType:1,
+=======
+				obj.path = '/admin/operation/operationDetail';
+				obj.query = {
+					logTab:1,
+					logType:1,
+					id:item.other.dispatchId
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				}; 
 				context.$router.push(obj);				
 			}
@@ -127,8 +143,13 @@ let config = [
 			"historyDescripe":"",
 			"batchDescripe": "",
 			"canViewHistory": false,
+<<<<<<< HEAD
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
+=======
+			"canViewBatch": false,
+			"batchClick": forbiddenClick,
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			"historyClick": forbiddenClick
 		},
 		{
@@ -151,6 +172,7 @@ let config = [
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
 				let obj = {},
+<<<<<<< HEAD
 					temp = {};
 
 				obj.path = '/admin/wareImport/wareProsperity';
@@ -159,6 +181,35 @@ let config = [
 				temp.type = 1;						//1:商品 2:物料
 				storage.session('detailNeed',temp);
 				context.$router.push(obj);				
+=======
+					other = item.other,
+					cdnUrl = '',
+					userDate = {},
+					temp = {};
+
+				userDate = storage.session('userShop');
+				
+				cdnUrl = userDate.cdnBaseUrl;
+
+				obj.path = '/admin/wareImport/wareProsperity';
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
+				storage.session('detailNeed',temp);
+				context.$router.push(obj);			
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				
 			}	
 		},
@@ -172,12 +223,39 @@ let config = [
 			"batchClick": forbiddenClick,
 			"historyClick":function(context,item){
 				let obj = {},
+<<<<<<< HEAD
 				temp = {};
 
 				obj.path = '/admin/wareImport/wareProsperity';
 				temp.successLog = item.other.success;
 				temp.failLog = item.other.fail;
 				temp.type = 1;						//1:商品 2:物料
+=======
+					other = item.other,
+					cdnUrl = '',
+					userDate = {},
+					temp = {};
+
+				userDate = storage.session('userShop');
+				cdnUrl = userDate.cdnBaseUrl;
+
+				obj.path = '/admin/wareImport/wareProsperity';
+				
+				temp = {
+					createTime: other.createTime,
+					creator: other.createUName,
+					createUid: null,
+					type: other.type
+				};
+
+				if(other.fail){
+					temp.failLog = cdnUrl + '/import_storage/'+ other.fail;
+				}
+				if(other.success){
+					temp.successLog = cdnUrl + '/import_storage/'+ other.success;
+				}
+				
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				storage.session('detailNeed',temp);
 				context.$router.push(obj);					
 			}	
@@ -207,6 +285,7 @@ let config = [
 			"typeName": "取消调度回库",
 			"historyDescripe":"进入该条相关的调度记录。调入跳入入货单，调出跳入出货单（商品调跳商品，物料跳物料）。PS：删除调度单不可以查看记录，只能查看批次详情。取消调度单可以查看记录。",
 			"batchDescripe": "",
+<<<<<<< HEAD
 			"canViewHistory": true,
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
@@ -216,6 +295,23 @@ let config = [
 				obj.query = {
 					logTab:1,
 					logType:1,
+=======
+			"canViewHistory": function(item){
+				let dispatchId = Number(item.other.dispatchId);
+				return Boolean(dispatchId);
+			},
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick":function(context,item){
+				let dispatchId = Number(item.other.dispatchId);
+				if(!dispatchId) return;
+				let obj = {};
+				obj.path = '/admin/operation/operationDetail';
+				obj.query = {
+					logTab:1,
+					logType:1,
+					id:item.other.dispatchId
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				};  
 				context.$router.push(obj);				
 				

@@ -141,7 +141,11 @@
 		methods:{
 			initBtn(){
 				let arr=[
+<<<<<<< HEAD
 					{name: '确认',className: 'success',type:4,
+=======
+					{name: '确认',className: 'primary',type:4,
+>>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 						fn: () => {
 							this.enter();
 						}
@@ -329,7 +333,7 @@
 				if(res == false){
 					this.$message({message: '盘库失败',type: 'error'});
 				}else{
-					storage.session('listDetail',res);
+					this.$route.query.id = res.id;
 					this.$router.push({path:'plateDetails',query:this.$route.query});
 				}
 			},

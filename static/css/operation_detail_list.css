@@ -168,4 +168,12 @@
   height: 30px;
   line-height: 30px;
 }
+.detail-list .table .table-body .small-table.brand .small-head span[data-v-52ccce47],
+.detail-list .table .table-body .small-table.brand .small-body span[data-v-52ccce47] {
+  width: 13% !important;
+}
+.detail-list .table .table-body .small-table.brand .small-head span[data-v-52ccce47]:first-child,
+.detail-list .table .table-body .small-table.brand .small-body span[data-v-52ccce47]:first-child {
+  width: 9% !important;
+}
 

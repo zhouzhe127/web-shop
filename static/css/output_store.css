@@ -4,7 +4,7 @@
   font-size: 14px;
 }
 #out-store .scroll-box[data-v-eb90fbc0] {
-  min-width: 1200px;
+  min-width: 1300px;
 }
 #out-store .ellipsis[data-v-eb90fbc0] {
   overflow: hidden;
@@ -100,17 +100,26 @@
   vertical-align: top;
   line-height: 40px;
 }
-#out-store .chooseBtn[data-v-eb90fbc0] {
+#out-store .piceType[data-v-eb90fbc0] {
+  display: inline-block;
+  width: 200px;
+  margin-left: 15px;
+  vertical-align: top;
+}
+#out-store .tebBox[data-v-eb90fbc0] {
   margin-top: 20px;
+}
+#out-store .chooseBtn[data-v-eb90fbc0] {
   width: 240px;
-  height: 34px;
+  height: 40px;
   cursor: pointer;
+  display: inline-block;
 }
 #out-store .chooseBtn span[data-v-eb90fbc0] {
   width: 50%;
   height: 100%;
   text-align: center;
-  line-height: 34px;
+  line-height: 40px;
   color: #fe8d01;
   border: 1px solid #fe8d01;
   float: left;
@@ -178,10 +187,16 @@
   width: 16%;
 }
 #out-store .add-list .material li[data-v-eb90fbc0] {
-  width: 14%;
+  width: 9.5%;
 }
 #out-store .add-list .material li[data-v-eb90fbc0]:nth-child(3) {
-  width: 16%;
+  width: 18%;
+}
+#out-store .add-list .material li[data-v-eb90fbc0]:nth-child(5) {
+  width: 200px;
+}
+#out-store .add-list .material li[data-v-eb90fbc0]:nth-child(6) {
+  width: 100px;
 }
 #out-store .add-list .table-body .ceil[data-v-eb90fbc0] {
   width: 100%;
@@ -209,7 +224,7 @@
   width: 0;
   border-left: 1px solid #ccc;
   display: inline-block;
-  margin: 0 20px;
+  margin: 0 15px;
 }
 #out-store .add-list .table-body .ceil li .text[data-v-eb90fbc0] {
   height: 40px;
@@ -261,9 +276,25 @@
   width: 16%;
 }
 #out-store .add-list .table-body .material li[data-v-eb90fbc0] {
-  width: 14%;
+  width: 9.5%;
 }
 #out-store .add-list .table-body .material li[data-v-eb90fbc0]:nth-child(3) {
-  width: 16%;
+  width: 18%;
+}
+#out-store .add-list .table-body .material li[data-v-eb90fbc0]:nth-child(5) {
+  width: 200px;
+}
+#out-store .add-list .table-body .material li[data-v-eb90fbc0]:nth-child(6) {
+  width: 100px;
+}
+#out-store .add-list .table-body .material li .dispice .slebox[data-v-eb90fbc0] {
+  width: 120px;
+  display: inline-block;
+}
+#out-store .add-list .table-body .material li .dispice .input-num[data-v-eb90fbc0] {
+  width: 60px;
+  display: inline-block;
+  position: relative;
+  right: -8px;
 }
 

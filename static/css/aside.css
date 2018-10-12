@@ -7,7 +7,7 @@
 #mainNav[data-v-cf15423e] {
   height: 100%;
   cursor: pointer;
-  background-color: #2f91d0;
+  background-color: #44404A;
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -15,7 +15,7 @@
 #mainNav .mianNav[data-v-cf15423e] {
   width: 0.65rem;
   height: 100%;
-  background-color: #29abe2;
+  background-color: #44404A;
   overflow: hidden;
 }
 #mainNav .mianNav .little[data-v-cf15423e] {
@@ -26,7 +26,7 @@
   height: 0.40rem;
   line-height: 0.40rem;
   color: #ffffff;
-  background-color: #2f91d0;
+  background-color: #35313A;
   text-align: center;
 }
 #mainNav .mianNav li[data-v-cf15423e] {
@@ -43,10 +43,12 @@
   display: inline-block;
 }
 #mainNav .mianNav li[data-v-cf15423e]:hover {
-  background-color: #3a97d4;
+  background-color: #35313A;
+  color: #ffffff;
 }
 #mainNav .mianNav .active[data-v-cf15423e] {
-  background-color: #2a80b9;
+  background-color: #E1BB4A !important;
+  color: #44404A !important;
 }
 #mainNav .menSecond[data-v-cf15423e] {
   width: 1.30rem;
