@@ -8,7 +8,8 @@ const goods_config = {
     '024': 'goods_config/category_manager',
     '025': 'goods_config/invcontrol',
     '026': 'goods_config/more_menu',
-    '027': 'goods_config/marker'
+    '027': 'goods_config/marker',
+    "028": "goods_config/retail_good"
 };
 const outfood = {
     '031': 'outfood/warrant',
@@ -141,7 +142,8 @@ const statistics = {
     '0922': 'statistics/user_evaluation',
     '0923': 'statistics/scancode_statistics',
     '0924': 'statistics/reverse_statics',
-    '0925': 'statistics/balance_record'
+    '0925': 'statistics/balance_record',
+    "0926": "statistics/custom_package_statistics"
 };
 const cashier = {
     '101': 'cashier/cashier_config',

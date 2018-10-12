@@ -727,6 +727,7 @@ export default {
 		},
 		//中信银行表单提交接口
 		async applyZxMerId(data) {
+			console.log(data);
 			let dd = await http.applyZxMerId({ data: { merInfo: data } });
 			if (dd && dd.secMerId) {
 				this.$store.commit('setWin', {

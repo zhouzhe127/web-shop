@@ -1,8 +1,8 @@
 /**
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
- * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-06 18:37:38
+ * @Last Modified by: zhigang.li
+ * @Last Modified time: 2018-10-12 16:49:40
  * @Module:商品管理
 **/
 
@@ -16,27 +16,25 @@
 			<div style="margin:10px 0;">
 				<el-radio-group v-model="selectTab" @change="typeChange">
 					<el-radio-button label="1">
-						<span><i class="el-icon-tickets"></i> 列表</span>
+						<span>
+							<i class="el-icon-tickets"></i> 列表</span>
 					</el-radio-button>
 					<el-radio-button label="0">
-						<span><i class="el-icon-picture"></i> 图片</span>
+						<span>
+							<i class="el-icon-picture"></i> 图片</span>
 					</el-radio-button>
 				</el-radio-group>
 			</div>
 			<section style="width:100%;height:50px;">
 				<div v-if="ischain == 1|| ischain == 2" style="float:left;margin-right:10px;">
 					<el-select v-model="typeName" @change="selectType" placeholder="请选择指派类型" style="width:150px;">
-						<el-option
-							v-for="item in goodSec" 
-							:key="item.id"
-							:label="item.name"
-							:value="item.id">
+						<el-option v-for="item in goodSec" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
 					</el-select>
 				</div>
 				<!-- 分类选择 -->
-				<elCategory @selectCategory = "newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea = "oneArea"></elCategory>
-				<elCategory @selectCategory = "newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea = "twoArea"></elCategory>
+				<elCategory @selectCategory="newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea="oneArea"></elCategory>
+				<elCategory @selectCategory="newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea="twoArea"></elCategory>
 				<!-- 搜索 -->
 				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
@@ -47,7 +45,7 @@
 			</section>
 
 			<section style="clear:both;overflow:hidden;margin-bottom:10px;">
-				<el-radio-group v-model="selectNavId" @change = "filterGoodsByNav">
+				<el-radio-group v-model="selectNavId" @change="filterGoodsByNav">
 					<el-radio-button v-for="item in goodsNav" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
 				</el-radio-group>
 				<div v-if="selectTab==1" class="boxTop" style="display:inline-block">
@@ -151,30 +149,26 @@
 				</div>
 			</div>
 			<div v-if="selectTab==1 && load" class="commodity-box">
-				<el-table
-					stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
-					:data="nowGoods"
-					border
-					style="width: 100%">
-					<el-table-column fixed min-width = "160" show-overflow-tooltip align="center" prop="goodsName" label="名称">
+				<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" border style="width: 100%">
+					<el-table-column fixed min-width="160" show-overflow-tooltip align="center" prop="goodsName" label="名称">
 						<template slot-scope="scope">
 							<span v-if="ischain=='1'||ischain=='2'" @click="openAddWin(scope.row)" :style="{color:scope.row.id<10000?'#fe9200':'#2ea7e0',cursor:'pointer'}">{{scope.row.goodsName}}</span>
 							<span v-if="ischain=='0'||ischain=='3'" @click="openAddWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.goodsName}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
-					<el-table-column min-width = "100" sortable sort-by="price" show-overflow-tooltip align="center" prop="price" label="价格" >
+					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
+					<el-table-column min-width="100" sortable sort-by="price" show-overflow-tooltip align="center" prop="price" label="价格">
 						<!-- <template slot-scope="scope">
 							<span>{{parseFloat(scope.row.price).toFixed(2)}}</span>
 						</template> -->
 					</el-table-column>
-					<el-table-column min-width = "100" sortable show-overflow-tooltip align="center" prop="cost" label="成本" >
+					<el-table-column min-width="100" sortable show-overflow-tooltip align="center" prop="cost" label="成本">
 						<!-- <template slot-scope="scope">
 							<span>{{parseFloat(scope.row.cost).toFixed(2)}}</span>
 						</template> -->
 					</el-table-column>
-					<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="unit" label="单位"></el-table-column>
-					<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="type" label="类型">
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="unit" label="单位"></el-table-column>
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="type" label="类型">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type=='0'">普通商品</span>
 							<span v-if="scope.row.type=='1'">称重商品</span>
@@ -187,47 +181,47 @@
 							<span v-for="item in scope.row.attr" :key="item.attrId">{{item.name+','}}</span>
 						</template>
 					</el-table-column> -->
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isDiscount" label="参与优惠">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isDiscount" label="参与优惠">
 						<template slot-scope="scope">
 							<span :class="scope.row.isDiscount=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="serviceCharge" label="服务费">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="serviceCharge" label="服务费">
 						<template slot-scope="scope">
 							<span :class="scope.row.serviceCharge=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isRecommend" label="推荐菜">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isRecommend" label="推荐菜">
 						<template slot-scope="scope">
 							<span :class="scope.row.isRecommend=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isInvoicing" label="进销存">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isInvoicing" label="进销存">
 						<template slot-scope="scope">
 							<span :class="scope.row.isInvoicing=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isSelf" label="自取">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isSelf" label="自取">
 						<template slot-scope="scope">
 							<span :class="scope.row.isSelf=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isStock" label="开启库存">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isStock" label="开启库存">
 						<template slot-scope="scope">
 							<span :class="scope.row.isStock=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="cids" label="时价菜">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="cids" label="时价菜">
 						<template slot-scope="scope">
 							<span :class="scope.row.cids=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="isVip" label="参与会员">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isVip" label="参与会员">
 						<template slot-scope="scope">
 							<span :class="scope.row.isVip=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width = "80" show-overflow-tooltip align="center" prop="vipPrice" label="会员优惠">
+					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="vipPrice" label="会员优惠">
 						<template slot-scope="scope">
 							<span v-if="scope.row.isVip=='0'" class="el-icon-close"></span>
 							<span v-if="scope.row.isVip=='1'">{{scope.row.vipPrice}}</span>
@@ -247,13 +241,13 @@
 		</section>
 
 		<div v-show="goodsList.length>0">
-			<el-pagination v-if="selectTab=='1'" background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50, 100]"></el-pagination>
-			<el-pagination v-if="selectTab=='0'" background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size = "Number(num)" layout="prev, pager, next"></el-pagination>
+			<el-pagination v-if="selectTab=='1'" background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size="Number(num)" layout="sizes, prev, pager, next" :page-sizes="[14,30, 50, 100]"></el-pagination>
+			<el-pagination v-if="selectTab=='0'" background @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size="Number(num)" layout="prev, pager, next"></el-pagination>
 			<!-- <pageElement @pageNum="funGetPageNum" :page="currentPage" :total="totalNum" :num='num' :isNoPaging='true'></pageElement> -->
 		</div>
 
 		<transition name="fade">
-			<component :is="showCom" :pObj="comObj" :goIncom = "'goods'" @throwAddGoodsWin="closeAddGoodsWin">
+			<component :is="showCom" :pObj="comObj" :goIncom="'goods'" @throwAddGoodsWin="closeAddGoodsWin">
 			</component>
 		</transition>
 	</div>
@@ -293,13 +287,13 @@ export default {
 				id: -1, //一级分类id
 				show: false
 			},
-			oneIndex:-1,//一级分类下标
+			oneIndex: -1, //一级分类下标
 			twoArea: {
 				name: '请选择二级分类',
 				index: -2, //二级分类id
 				show: false
 			},
-			twoIndex:-1,//二级分类下标
+			twoIndex: -1, //二级分类下标
 			load: false, //是否在请求数据
 			category: [], //所有一级分类
 			child: [], //所有二级分类
@@ -333,20 +327,26 @@ export default {
 
 			listHeight: 200,
 			industry: 0, //店铺的行业分类
-			goodSec:[
-				{name:'全部',id:'0'},
-				{name:'品牌同步',id:'1'},
-				{name:'门店自建',id:'2'}
+			goodSec: [
+				{ name: '全部', id: '0' },
+				{ name: '品牌同步', id: '1' },
+				{ name: '门店自建', id: '2' }
 			],
-			goodType:0,//商品类型下标
-			typeName:'请选择商品类型',
-			selectTab:1,//默认表格模式
-			showArea:false,//显示一级分类
-			showTArea:false,//显示二级分类
+			goodType: 0, //商品类型下标
+			typeName: '请选择商品类型',
+			selectTab: 1, //默认表格模式
+			showArea: false, //显示一级分类
+			showTArea: false //显示二级分类
 		};
 	},
 	mounted() {
 		this.initData();
+		// if (this.industry == 1) {
+		// 	this.$router.push({
+		// 		path: 'retailGood?i=1&o=0&s=0'
+		// 	});
+		// 	return;
+		// }
 		this.initSyncBtn();
 		this.syncRequest();
 		// document.addEventListener('click', this.domClick, false);
@@ -363,26 +363,26 @@ export default {
 		// pageElement: () =>
 		// 	import(/*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 		elCategory: () =>
-			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
+			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
 		// selectBtn: () =>
 		// 	import(/* webpackChunkName:"select_btn" */ 'src/components/select_btn'), // 下拉
 	},
 	methods: {
 		//切换图片时计算宽度
-		typeChange(res){
-			if(res==0&&this.num!=14){
+		typeChange(res) {
+			if (res == 0 && this.num != 14) {
 				this.sizeChange(14);
 				this.windowResize();
 			}
 			this.initSyncBtn();
 		},
 		//上下架
-		updownWin(item){
-			let atr = item.status =='0'?'下架':'上架'
+		updownWin(item) {
+			let atr = item.status == '0' ? '下架' : '上架';
 			this.$store.commit('setWin', {
 				title: '温馨提示',
 				winType: 'confirm',
-				content: '确定'+atr+'“ ' + item.goodsName + ' ”?',
+				content: '确定' + atr + '“ ' + item.goodsName + ' ”?',
 				callback: delRes => {
 					if (delRes == 'ok') {
 						this.goodUpOrDownShelf(item, atr);
@@ -390,24 +390,24 @@ export default {
 				}
 			});
 		},
-		async goodUpOrDownShelf(item,atr){
-			let res =await http.goodUpOrDownShelf({
-				data:{
-					goodsId:item.id,
-					status:item.status =='0'?'2':'0'
+		async goodUpOrDownShelf(item, atr) {
+			let res = await http.goodUpOrDownShelf({
+				data: {
+					goodsId: item.id,
+					status: item.status == '0' ? '2' : '0'
 				}
 			});
-			if(res){
+			if (res) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'alert',
-					content: atr+'成功'
+					content: atr + '成功'
 				});
 				this.closeAddGoodsWin('updown');
 			}
 		},
 		//品牌同步-门店自建筛选
-		selectType(goodType){
+		selectType(goodType) {
 			this.goodType = goodType;
 			this.typeName = this.goodSec[goodType].name;
 			this.filterGoodsByNav(this.selectNavId);
@@ -468,16 +468,17 @@ export default {
 				name: item.name,
 				show: false
 			};
-			this.selectOneArea(item,index);
+			this.selectOneArea(item, index);
 		},
-		newselectTwoArea(index){
+		newselectTwoArea(index) {
 			this.twoIndex = index;
 			let item = this.child[index];
 			this.showTArea = false;
-			this.selectTwoArea(item,index);
+			this.selectTwoArea(item, index);
 		},
-		selectOneArea(item, index,type) {
-			if(!type){//如果是从分类点击进入，则页码为1，反之为原来的页数
+		selectOneArea(item, index, type) {
+			if (!type) {
+				//如果是从分类点击进入，则页码为1，反之为原来的页数
 				this.currentPage = 1;
 			}
 			this.oneIndex = index;
@@ -501,7 +502,7 @@ export default {
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
 			}
-			
+
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 				this.pageGoods = this.changeNav(
@@ -516,29 +517,30 @@ export default {
 			}
 			this.initPage(this.pageGoods);
 		},
-		showTwoArea(e) {
-			// e.stopPropagation();
-			if (this.oneArea.id == -1) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					content: '请先选择一级分类!'
-				});
-				this.showTArea = false;
-				return false;
-			}
-			if (this.child.length == 0) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					content: '该分类下没有二级分类!'
-				});
-				this.showTArea = false;
-				return false;
-			}
-			this.twoArea.show = !this.twoArea.show;
-			this.oneArea.show = false;
-		},
-		selectTwoArea(item, index,type) {
-			if(!type){//如果是从分类点击进入，则页码为1，反之为原来的页数
+		// showTwoArea() {
+		//     // e.stopPropagation();
+		//     if (this.oneArea.id == -1) {
+		//         this.$store.commit('setWin', {
+		//             title: '温馨提示',
+		//             content: '请先选择一级分类!'
+		//         });
+		//         this.showTArea = false;
+		//         return false;
+		//     }
+		//     if (this.child.length == 0) {
+		//         this.$store.commit('setWin', {
+		//             title: '温馨提示',
+		//             content: '该分类下没有二级分类!'
+		//         });
+		//         this.showTArea = false;
+		//         return false;
+		//     }
+		//     this.twoArea.show = !this.twoArea.show;
+		//     this.oneArea.show = false;
+		// },
+		selectTwoArea(item, index, type) {
+			if (!type) {
+				//如果是从分类点击进入，则页码为1，反之为原来的页数
 				this.currentPage = 1;
 			}
 			this.twoIndex = index;
@@ -636,24 +638,24 @@ export default {
 					return ele.status == 2;
 				});
 			}
-			let goods = [];//全部
-			let goodsOne = [];//品牌
+			let goods = []; //全部
+			let goodsOne = []; //品牌
 			let goodsTwo = []; //门店自建
 			let newGoods = utils.deepCopy(tempGoods);
-			if(this.goodType == 0){
+			if (this.goodType == 0) {
 				goods = newGoods;
-			}else{
-				for(let i=0;i<newGoods.length;i++){
+			} else {
+				for (let i = 0; i < newGoods.length; i++) {
 					let good = newGoods[i];
-					if(good.id*1<100000){
+					if (good.id * 1 < 100000) {
 						goodsOne.push(good);
-					}else{
+					} else {
 						goodsTwo.push(good);
 					}
 				}
-				if(this.goodType ==1){
+				if (this.goodType == 1) {
 					goods = goodsOne;
-				}else if(this.goodType ==2){
+				} else if (this.goodType == 2) {
 					goods = goodsTwo;
 				}
 			}
@@ -690,14 +692,17 @@ export default {
 		//-----------分页---------
 		initPage(arr) {
 			this.totalNum = Math.ceil(arr.length / this.num);
-			if(this.totalNum ==0){//如果数组为空，总页数为0，则将总数置为1，
-				this.totalNum ==1;
+			if (this.totalNum == 0) {
+				//如果数组为空，总页数为0，则将总数置为1，
+				this.totalNum == 1;
 			}
-			if(this.totalNum<this.currentPage){//如果总页数小于当前页码数，
+			if (this.totalNum < this.currentPage) {
+				//如果总页数小于当前页码数，
 				this.currentPage = this.totalNum;
 			}
 			let startIndex = (this.currentPage - 1) * this.num;
 			let endIndex = this.currentPage * this.num;
+			
 			this.nowGoods = arr.slice(startIndex, endIndex);
 		},
 		//获取分页跳转的页码
@@ -708,18 +713,21 @@ export default {
 
 			if (this.currentPage > this.totalNum - 2) {
 				//如果分页组件上的页数翻到一定值，
-				if (this.requestPage < this.requestTotal && this.oneIndex<=0) {
+				if (
+					this.requestPage < this.requestTotal &&
+					this.oneIndex <= 0
+				) {
 					//且后台请求的页数小于后台总页数，进行下一页的接口请求
 					this.requestPage++;
 					let goods = await this.getGoods();
-					
+
 					this.pageGoods = this.pageGoods.concat(goods);
 					this.initPage(this.pageGoods);
 					storage.session('goodList', this.pageGoods);
 				}
 			}
 		},
-		sizeChange(e){
+		sizeChange(e) {
 			this.num = e;
 			this.currentPage = 1;
 			this.initPage(this.pageGoods);
@@ -732,11 +740,14 @@ export default {
 
 			if (this.currentPage > this.totalNum - 2) {
 				//如果分页组件上的页数翻到一定值，
-				if (this.requestPage < this.requestTotal && this.oneIndex<=0) {
+				if (
+					this.requestPage < this.requestTotal &&
+					this.oneIndex <= 0
+				) {
 					//且后台请求的页数小于后台总页数，进行下一页的接口请求
 					this.requestPage++;
 					let goods = await this.getGoods();
-					
+
 					this.pageGoods = this.pageGoods.concat(goods);
 					this.initPage(this.pageGoods);
 					storage.session('goodList', this.pageGoods);
@@ -758,9 +769,14 @@ export default {
 					this.goodsList = this.initGoodsStock(goods, this.numList);
 					this.goodsList = this.deleteChildGoods(this.goodsList);
 					this.goodsList = this.funSortGood(this.goodsList);
-					this.twoArea.id == -2
-						? this.selectOneArea(this.oneArea,this.oneIndex,true)
-						: this.selectTwoArea(this.twoArea,this.twoIndex,true);
+					if (this.twoArea.id == -2) {
+						this.selectOneArea(this.oneArea, this.oneIndex, true);
+					} else {
+						this.selectTwoArea(this.twoArea, this.twoIndex, true);
+					}
+					// this.twoArea.id == -2
+					//     ? this.selectOneArea(this.oneArea, this.oneIndex, true)
+					//     : this.selectTwoArea(this.twoArea, this.twoIndex, true);
 				});
 			}
 		},
@@ -869,10 +885,10 @@ export default {
 				};
 			}
 			//添加商品，如果是表格模式，显示添加按钮
-			if(this.selectTab==1){
-				obj.addGood = ()=>{
+			if (this.selectTab == 1) {
+				obj.addGood = () => {
 					this.openAddWin({});
-				}
+				};
 			}
 			//导入
 			obj.leadIn = () => {
@@ -895,20 +911,28 @@ export default {
 							goods,
 							this.numList
 						);
-						this.goodsList = this.deleteChildGoods(
-							this.goodsList
-						);
+						this.goodsList = this.deleteChildGoods(this.goodsList);
 						this.goodsList = this.funSortGood(this.goodsList);
-						this.twoArea.id == -2
-							? this.selectOneArea(this.oneArea,this.oneIndex,true)
-							: this.selectTwoArea(this.twoArea,this.twoIndex,true);
+						if (this.twoArea.id == -2) {
+							this.selectOneArea(
+								this.oneArea,
+								this.oneIndex,
+								true
+							);
+						} else {
+							this.selectTwoArea(
+								this.twoArea,
+								this.twoIndex,
+								true
+							);
+						}
 					});
 				});
-			}
+			};
 			//导出
-			obj.leadOut= () => {
+			obj.leadOut = () => {
 				this.exportGoodsList();
-			},
+			};
 			this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据
@@ -960,10 +984,18 @@ export default {
 			});
 			this.requestTotal = temp.total;
 			goods = temp.list;
-			for(let i=0;i<goods.length;i++){
-				goods[i].price = +goods[i].price; 
-				goods[i].cost = +goods[i].cost; 
-				goods[i].sort = +goods[i].sort; 
+			for (let i = 0; i < goods.length; i++) {
+				goods[i].price = +goods[i].price;
+				goods[i].cost = +goods[i].cost;
+				goods[i].sort = +goods[i].sort;
+				// for(let i=0;i<arr.length;i++){//换成小图
+				let item = goods[i];
+				let imgName = item.imageName;
+				let imgArr = imgName.split('.');
+				imgName = imgArr[0]+'_normal.'+imgArr[1];
+				// console.log(imgName);
+				item.imageName = imgName;
+			// }
 			}
 			storage.session('goodList', goods);
 			return goods;
@@ -998,7 +1030,7 @@ export default {
 		},
 		//导出商品
 		exportGoodsList() {
-			let res = http.exportGoodsList();
+			http.exportGoodsList();
 		},
 		async getHttp(url, data = {}) {
 			let res = await http[url]({ data });
@@ -1022,14 +1054,14 @@ export default {
 			this.goodsList = this.deleteChildGoods(this.goodsList); //删除子菜
 			this.goodsList = this.funSortGood(this.goodsList); //排序商品
 
-			this.selectOneArea(this.oneArea,this.oneIndex);
+			this.selectOneArea(this.oneArea, this.oneIndex);
 			storage.session('httpGoodVersion', res);
 		},
 		//监听浏览器窗口变化
 		windowResize() {
 			let width = this.$refs.addGoods.offsetWidth - 10;
 			this.listHeight = width * 2 / 3;
-		},
+		}
 		//dom点击隐藏事件
 		// domClick() {
 		// 	if (this.twoArea.show || this.oneArea.show) {
@@ -1047,10 +1079,9 @@ export default {
 
 <style lang="less" scoped>
 #details_con {
-	
 	.labItem {
 		margin-bottom: 5px;
-		margin-left: 0!important;
+		margin-left: 0 !important;
 		margin-right: 10px;
 		float: left;
 	}
@@ -1076,100 +1107,6 @@ export default {
 			clear: both;
 		}
 	}
-	//分类
-	// .select-down {
-	// 	width: 210px;
-	// 	// float: left;
-	// 	display: inline-block;
-	// 	.staList {
-	// 		position: relative;
-	// 		line-height: 41px;
-	// 		width: 210px;
-	// 		cursor: pointer;
-	// 		float: left;
-
-	// 		.tableList {
-	// 			height: 40px;
-	// 			color: #666666;
-	// 			border: #b3b3b3 solid 1px;
-	// 			cursor: pointer;
-	// 			div {
-	// 				.whb(40px,40px);
-	// 				position: relative;
-	// 				z-index: 5;
-	// 				i {
-	// 					.whb(10px,10px);
-	// 					position: absolute;
-	// 					top: 50%;
-	// 					left: 50%;
-	// 					margin-top: -5px;
-	// 					margin-left: -5px;
-	// 					border-top: 10px solid #b3b3b3;
-	// 					border-left: 5px solid transparent;
-	// 					border-right: 5px solid transparent;
-	// 					box-sizing: border-box;
-	// 				}
-	// 			}
-	// 			.oSpan {
-	// 				height: 39px;
-	// 				line-height: 39px;
-	// 				width: 165px;
-	// 				float: left;
-	// 				text-align: center;
-	// 				border-right: 1px solid #b3b3b3;
-	// 				overflow: hidden;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	.detDiv {
-	// 		.whb(450px,250px);
-	// 		position: absolute;
-	// 		top: 45px;
-	// 		left: 0;
-	// 		padding: 10px;
-	// 		box-shadow: 3px 2px 10px #ccc;
-	// 		z-index: 15;
-	// 		background-color: #45404b;
-
-	// 		.detI {
-	// 			.whb(0,0);
-	// 			line-height: 0;
-	// 			position: absolute;
-	// 			top: -10px;
-	// 			left: 80px;
-	// 			border-width: 10px;
-	// 			border-top: 0px;
-	// 			border-style: solid;
-	// 			border-color: #fff #fff #45404b #fff;
-	// 		}
-	// 		.detCategory {
-	// 			.whb(100%,100%);
-	// 			overflow-y: auto;
-	// 			z-index: 16;
-	// 		}
-	// 		.detChild {
-	// 			width: 100%;
-	// 			height: 100%;
-	// 			overflow-y: auto;
-	// 			z-index: 16;
-	// 		}
-	// 	}
-
-	// 	.showName {
-	// 		height: 40px;
-	// 		line-height: 40px;
-	// 		border: 1px solid #f2f2f2;
-	// 		float: left;
-	// 		margin: 5px;
-	// 		color: #fff;
-	// 		padding: 0 10px;
-	// 	}
-	// 	.showname-select {
-	// 		border-color: #ff9800;
-	// 		background: url(../../res/images/sign.png) right bottom no-repeat;
-	// 	}
-	// }
 	.commodity-box {
 		&:after {
 			content: '';
@@ -1278,9 +1215,9 @@ export default {
 			}
 		}
 	}
-	.boxTop{
+	.boxTop {
 		// height:40px;line-height: 40px;
-		padding:0 5px;
+		padding: 0 5px;
 		.aSpan {
 			font-size: 16px;
 			color: #fe9200;

@@ -1,5 +1,5 @@
 <!--
-		**挂账统计
+		**挂账统计（单店）
 		*
 		* 胡江
 		* *
@@ -10,15 +10,23 @@
 		<section v-show="!showDetails">
 			<section class="orMaRetreatTime yuChairFix" v-if="!shopName">
 				<section class="block-div">
-					<selectBtn @emit="selectTypeOne" :sorts="optionsOne"></selectBtn>
+					<el-select v-model="selectedTypeOne" style="width:150px;">
+						<el-option v-for="(item,i) in optionsOne" :key="i" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+					<!--<selectBtn @emit="selectTypeOne" :sorts="optionsOne"></selectBtn>-->
 				</section>
 				<div class="block-div">
 					<section class="fl yuChairFix">
-						<calendar :time="startTime" :type="selectedType" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
+						<el-date-picker style="width:150px;cursor: pointer" :clearable="false" v-model="startTime" type="date" format="yyyy-MM-dd" value-format="timestamp">
+						</el-date-picker>
+						<!--<calendar :time="startTime" :type="selectedType" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>-->
 					</section>
 					<span class="zhi">—</span>
 					<section class="fl yuChairFix">
-						<calendar :time="endTime" :type="selectedType" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
+						<el-date-picker style="width:150px;cursor: pointer" :clearable="false" v-model="endTime" type="date" format="yyyy-MM-dd" value-format="timestamp">
+						</el-date-picker>
+						<!--<calendar :time="endTime" :type="selectedType" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>-->
 					</section>
 					<span class="order-order-searchA" @click="selectByTime">
 						<span class="order-order-search"></span>
@@ -40,20 +48,33 @@
 			</section>
 			<section class="orMaRetreatTime yuChairFix">
 				<section class="block-div">
-					<selectBtn @emit="selectTypeTwo" :sorts="optionsTwo" :name="selectedNameTwo"></selectBtn>
+					<el-select v-model="selectedTypeTwo" style="width:150px;" @change="selectTypeTwo">
+						<el-option v-for="(item,i) in optionsTwo" :key="i" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+					<!--<selectBtn @emit="selectTypeTwo" :sorts="optionsTwo" :name="selectedNameTwo"></selectBtn>-->
 				</section>
 				<section class="block-div" @click="noData($event)">
-					<selectBtn @emit="selectTypeThree" :sorts="optionsThree" :name="selectedNameThree"></selectBtn>
+					<el-select v-model="billId" style="width:150px;">
+						<el-option v-for="(item,i) in optionsThree" :key="i" :label="item.name" :value="item.billId">
+						</el-option>
+					</el-select>
+					<!--<selectBtn @emit="selectTypeThree" :sorts="optionsThree" :name="selectedNameThree"></selectBtn>-->
 				</section>
 				<section class="block-div">
-					<selectBtn @emit="selectTypeFour" :sorts="optionsFour"></selectBtn>
+					<el-select v-model="selectedTypeFour" style="width:150px;" @change="selectTypeFour">
+						<el-option v-for="(item,i) in optionsFour" :key="i" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+					<!--<selectBtn @emit="selectTypeFour" :sorts="optionsFour"></selectBtn>-->
 				</section>
 				<div class="block-div">
-					<input class="numbering" type="text" :placeholder="shuName" v-model="optionValue" maxlength="18" />
+					<el-input :placeholder="shuName" v-model="optionValue" maxlength="18"></el-input>
+					<!--<input class="numbering" type="text" :placeholder="shuName" v-model="optionValue" maxlength="18" />-->
 				</div>
 				<div class="block-div">
-					<a href="javascript:;" style="background: #2EA8DC;" @click="getOrderBillList()">筛选</a>
-					<a href="javascript:;" style="background: #B3B3B3;" @click="filterReset(true)">重置</a>
+					<el-button v-on:click="getOrderBillList()" type="primary">搜索</el-button>
+					<el-button v-on:click="filterReset(true)" type="info">重置</el-button>
 				</div>
 			</section>
 			<section class="orMaRetreatTime yuChairFix" v-if="selectedTypeOne==0">
@@ -69,52 +90,82 @@
 				</section>
 			</section>
 
-			<table-com :showHand="false" :titleHeight='60' :showTitle="1" :titleData="tableOne" :fixed="0" :widthType="false" :introData="[totalList]" :bannerStyle="{'backgroundColor':'#f2f2f2'}">
-				<span slot="title-2" slot-scope="props">
-					<span v-on:click="openDetial(1,$event)" class="detLi">消费总额
-						<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />
-						<div v-if="orderAll==1" class="detDiv1">
-							<i class="detI triright"></i>
-							<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该时间段内所有商品原价的金额总计（不计入退品金额）</h3>
-						</div>
-					</span>
-				</span>
-				<span slot="title-3" slot-scope="props">
-					<span v-on:click="openDetial(2,$event)" class="detLi">挂账总额
-						<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />
-						<div v-if="orderAll==2" class="detDiv1">
-							<i class="detI triright"></i>
-							<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该时间段内所有订单实际需要支付的金额的总计</h3>
-						</div>
-					</span>
-				</span>
-			</table-com>
-			<table-com :showHand="true" :listName="'挂账统计'" :titleHeight='50' :showTitle="1" :titleData="tableTwo" :allTotal="totalList.orderNum" :fixed="1" :widthType="false" :introData="orderCredit" :bannerStyle="{'backgroundColor':'#f2f2f2'}" :listWidth="1200">
-				<span slot="title-6" slot-scope="props">
-					<span v-on:click="openDetial(3,$event)" class="detLi">消费金额
-						<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />
-						<div v-if="orderAll==3" class="detDiv1">
-							<i class="detI triright"></i>
-							<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该笔订单内所有商品原价的金额总计（不计入退品金额）</h3>
-						</div>
-					</span>
-				</span>
-				<span slot="title-9" slot-scope="props">
-					<span v-on:click="openDetial(4,$event)" class="detLi">挂账金额
-						<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />
-						<div v-if="orderAll==4" class="detDiv1">
-							<i class="detI triright"></i>
-							<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该笔订单实际需要支付的金额的总计</h3>
-						</div>
-					</span>
-				</span>
-				<span slot="con-0" slot-scope="props">
-					<a v-on:click="goDetails(props.data.oid,props.index)" style="color:#21a7de;" href="javascript:void(0)">{{props.data.oid}}</a>
-				</span>
-			</table-com>
-			<div class="pagebox fl" v-if="total>1">
-				<page-element @pageNum="goPage" :page="page" :total="total" :isNoJump="true"></page-element>
+			<el-table stripe :row-style="{color:'#f8941f'}" :header-cell-style="{'background-color':'#f5f7fa'}" :data="[totalList]" border>
+				<el-table-column min-width="120" align="center" prop="totalDay" label="天数"></el-table-column>
+				<el-table-column min-width="120" align="center" prop="orderNum" label="订单数"></el-table-column>
+				<el-table-column min-width="120" align="center" prop="originalPrice" label="消费总额" :render-header="renderHeader"></el-table-column>
+				<el-table-column min-width="120" align="center" prop="billPrice" label="挂账总额" :render-header="renderHeader"></el-table-column>>
+			</el-table>
+			<div class="store-list">
+				<div class="length">
+					挂账统计 · 共
+					<span> {{orderCredit.length}} </span>条记录
+				</div>
+				<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="orderCredit" border>
+					<el-table-column show-overflow-tooltip min-width="180" align="center" label="订单号" fixed>
+						<template slot-scope="props">
+							<span class="light" @click="goDetails(props.row.oid)">{{props.row.oid}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="isSettle" label="订单状态"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="billType" label="挂账类型"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="billName" label="挂账账户"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="personName" label="挂账人"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="createName" label="操作人"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="originalPrice" label="消费金额" :render-header="renderHeader"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="createTime" label="挂账时间"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="updateTime" label="结算时间"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="billPrice" label="挂账金额" :render-header="renderHeader"></el-table-column>
+				</el-table>
 			</div>
+
+			<!--<table-com :showHand="false" :titleHeight='60' :showTitle="1" :titleData="tableOne" :fixed="0" :widthType="false" :introData="[totalList]" :bannerStyle="{'backgroundColor':'#f2f2f2'}">-->
+			<!--<span slot="title-2" slot-scope="props">-->
+			<!--<span v-on:click="openDetial(1,$event)" class="detLi">消费总额-->
+			<!--<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />-->
+			<!--<div v-if="orderAll==1" class="detDiv1">-->
+			<!--<i class="detI triright"></i>-->
+			<!--<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该时间段内所有商品原价的金额总计（不计入退品金额）</h3>-->
+			<!--</div>-->
+			<!--</span>-->
+			<!--</span>-->
+			<!--<span slot="title-3" slot-scope="props">-->
+			<!--<span v-on:click="openDetial(2,$event)" class="detLi">挂账总额-->
+			<!--<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />-->
+			<!--<div v-if="orderAll==2" class="detDiv1">-->
+			<!--<i class="detI triright"></i>-->
+			<!--<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该时间段内所有订单实际需要支付的金额的总计</h3>-->
+			<!--</div>-->
+			<!--</span>-->
+			<!--</span>-->
+			<!--</table-com>-->
+			<!--<table-com :showHand="true" :listName="'挂账统计'" :titleHeight='50' :showTitle="1" :titleData="tableTwo" :allTotal="totalList.orderNum" :fixed="1" :widthType="false" :introData="orderCredit" :bannerStyle="{'backgroundColor':'#f2f2f2'}" :listWidth="1200">-->
+			<!--<span slot="title-6" slot-scope="props">-->
+			<!--<span v-on:click="openDetial(3,$event)" class="detLi">消费金额-->
+			<!--<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />-->
+			<!--<div v-if="orderAll==3" class="detDiv1">-->
+			<!--<i class="detI triright"></i>-->
+			<!--<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该笔订单内所有商品原价的金额总计（不计入退品金额）</h3>-->
+			<!--</div>-->
+			<!--</span>-->
+			<!--</span>-->
+			<!--<span slot="title-9" slot-scope="props">-->
+			<!--<span v-on:click="openDetial(4,$event)" class="detLi">挂账金额-->
+			<!--<img class="detImg1" src="../../res/icon/orderdetial18.png" style="vertical-align: middle;" />-->
+			<!--<div v-if="orderAll==4" class="detDiv1">-->
+			<!--<i class="detI triright"></i>-->
+			<!--<h3 class="detH3" style="color: #e6e6e7;white-space: normal;">该笔订单实际需要支付的金额的总计</h3>-->
+			<!--</div>-->
+			<!--</span>-->
+			<!--</span>-->
+			<!--<span slot="con-0" slot-scope="props">-->
+			<!--<a v-on:click="goDetails(props.data.oid,props.index)" style="color:#21a7de;" href="javascript:void(0)">{{props.data.oid}}</a>-->
+			<!--</span>-->
+			<!--</table-com>-->
+
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" :page-count="total" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]">
+			</el-pagination>
+
 		</section>
 		<div v-if="showDetails">
 			<orderDetail :detail="detail" :isDelete="false" @detailShow="getDetailShow"></orderDetail>
@@ -131,7 +182,7 @@ export default {
 		return {
 			orderCredit: [], //挂账列表数据
 			startTime: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
-			endTime: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
+			endTime: new Date().setHours(0, 0, 0, 0), //日期组件的结束时间
 			selectedType: 0,
 
 			page: 1, // 当前页
@@ -139,7 +190,6 @@ export default {
 			total: 1, // 总共有多少页
 
 			showDetails: false, // 显示详情
-			//			oid: '', // 传入detail里面的订单号
 			optionValue: '', // 搜索条件的值
 
 			totalList: {
@@ -149,35 +199,36 @@ export default {
 				billPrice: 0 //挂账总额
 			}, //总计数据
 
-			optionsOne: ['挂账时间', '结账时间'],
+			optionsOne: [
+				{ name: '挂账时间', id: 0 },
+				{ name: '结算时间', id: 1 }
+			],
 			selectedTypeOne: 0, //对应循序  0:挂账时间
 
-			optionsTwo: ['全部', '个人账户', '企业账户'],
+			optionsTwo: [
+				{ name: '全部', id: 0 },
+				{ name: '个人账户', id: 1 },
+				{ name: '企业账户', id: 2 }
+			],
 			selectedTypeTwo: 0, //对应循序  0:全部
-			selectedNameTwo: '请选择账户类型',
 
 			optionsThree: [],
-			selectedTypeThree: 0, //对应循序
-			selectedNameThree: '请选择挂账账户',
+			billId: 0, //挂账账户id
+			allBill: [], //所有挂账账户
 
-			optionsFour: ['订单号', '挂账人名称', '操作人名称'],
+			optionsFour: [
+				{ name: '订单号', id: 0 },
+				{ name: '挂账人名称', id: 1 },
+				{ name: '操作人名称', id: 2 }
+			],
 			selectedTypeFour: 0,
 
 			shuName: '请输入订单号',
 
 			status: -1, //结账类型
 			isOpenTime: true, //是否按营业时间
-			allBillName: [], //展示的挂账账户名称
-			allBill: [], //所有挂账账户
-			showBill: [], //展示的挂账账户
-			billId: 0, //挂账账户id
-			//			soId: '',
 
-			userdata: {},
-			tableOne: [],
-			tableTwo: [],
-
-			orderAll: 0
+			userdata: {}
 		};
 	},
 	//    props: {
@@ -209,66 +260,54 @@ export default {
 					}
 				}
 			]);
-			//			this.soId = this.sId;
 		}
-		//		else {
-		//			this.soId = this.userdata.currentShop.id;
-		//		}
-		this.tableOne = [
-			{
-				titleName: '天数',
-				dataName: 'totalDay',
-				conStyle: { color: '#ffa627' }
-			},
-			{
-				titleName: '订单数',
-				dataName: 'orderNum',
-				conStyle: { color: '#ffa627' }
-			},
-			{
-				titleName: '消费总额',
-				dataName: 'originalPrice',
-				conStyle: { color: '#ffa627' }
-			},
-			{
-				titleName: '挂账总额',
-				dataName: 'billPrice',
-				conStyle: { color: '#ffa627' }
-			}
-		];
-		this.tableTwo = [
-			{
-				titleName: '订单号',
-				dataName: 'oid',
-				titleStyle: { width: '180px' },
-				conStyle: { color: '#21a7de' }
-			},
-			{
-				titleName: '订单状态',
-				titleStyle: { width: '80px' },
-				dataName: 'isSettle'
-			},
-			{
-				titleName: '挂账类型',
-				titleStyle: { width: '80px' },
-				dataName: 'billType'
-			},
-			{ titleName: '挂账账户', dataName: 'billName' },
-			{ titleName: '挂账人', dataName: 'personName' },
-			{ titleName: '操作人', dataName: 'createName' },
-			{ titleName: '消费金额', dataName: 'originalPrice' },
-			{ titleName: '挂账时间', dataName: 'createTime' },
-			{ titleName: '结算时间', dataName: 'updateTime' },
-			{ titleName: '挂账金额', dataName: 'billPrice' }
-		];
-		//		if (this.userdata.currentShop.ischain == 3) {
-		//			//品牌
-		//			this.$router.push({
-		//				path: '/admin/brandOrderBill',
-		//				query: this.$route.query
-		//			});
-		//			return false;
-		//		}
+		//		this.tableOne = [
+		//			{
+		//				titleName: '天数',
+		//				dataName: 'totalDay',
+		//				conStyle: { color: '#ffa627' }
+		//			},
+		//			{
+		//				titleName: '订单数',
+		//				dataName: 'orderNum',
+		//				conStyle: { color: '#ffa627' }
+		//			},
+		//			{
+		//				titleName: '消费总额',
+		//				dataName: 'originalPrice',
+		//				conStyle: { color: '#ffa627' }
+		//			},
+		//			{
+		//				titleName: '挂账总额',
+		//				dataName: 'billPrice',
+		//				conStyle: { color: '#ffa627' }
+		//			}
+		//		];
+		//		this.tableTwo = [
+		//			{
+		//				titleName: '订单号',
+		//				dataName: 'oid',
+		//				titleStyle: { width: '180px' },
+		//				conStyle: { color: '#21a7de' }
+		//			},
+		//			{
+		//				titleName: '订单状态',
+		//				titleStyle: { width: '80px' },
+		//				dataName: 'isSettle'
+		//			},
+		//			{
+		//				titleName: '挂账类型',
+		//				titleStyle: { width: '80px' },
+		//				dataName: 'billType'
+		//			},
+		//			{ titleName: '挂账账户', dataName: 'billName' },
+		//			{ titleName: '挂账人', dataName: 'personName' },
+		//			{ titleName: '操作人', dataName: 'createName' },
+		//			{ titleName: '消费金额', dataName: 'originalPrice' },
+		//			{ titleName: '挂账时间', dataName: 'createTime' },
+		//			{ titleName: '结算时间', dataName: 'updateTime' },
+		//			{ titleName: '挂账金额', dataName: 'billPrice' }
+		//		];
 	},
 	destroyed() {
 		this.$store.commit('setPageTools', []);
@@ -276,15 +315,52 @@ export default {
 	beforeMount() {
 		this.billGetBillNames();
 		this.getOrderBillList();
-		document.onclick = () => {
-			this.orderAll = 0;
-		};
+		//		document.onclick = () => {
+		//			this.orderAll = 0;
+		//		};
 	},
 	methods: {
-		//点击说明详情
-		openDetial(index, e) {
-			e.stopPropagation();
-			this.orderAll = index;
+		renderHeader(h, { column }) {
+			let titleName = '';
+			let label = column.label;
+			let property = column.property;
+			if (label == '消费总额' && property == 'originalPrice') {
+				titleName =
+					'该时间段内所有商品原价的金额总计（不计入退品金额）';
+			} else if (label == '挂账总额' && property == 'billPrice') {
+				titleName = '该时间段内所有订单实际需要支付的金额的总计';
+			} else if (label == '消费金额' && property == 'originalPrice') {
+				titleName =
+					'该笔订单内所有商品原价的金额总计（不计入退品金额）';
+			} else if (label == '挂账金额' && property == 'billPrice') {
+				titleName = '该笔订单实际需要支付的金额的总计';
+			}
+			return h('div', [
+				h('span', {}, column.label),
+				h(
+					'el-popover',
+					{
+						attrs: {
+							class: 'item',
+							effect: 'dark',
+							content: titleName,
+							placement: 'bottom',
+							width: '300'
+							// on:{
+							// 	click:this.abc(column)
+							// }
+						}
+					},
+					[
+						h('span', {
+							class: 'el-icon-question',
+							slot: 'reference',
+							style: 'font-size: 18px;margin-left:5px;'
+							// title:"标题",
+						})
+					]
+				)
+			]);
 		},
 		//是否按营业时间
 		selectBusinessHours() {
@@ -298,18 +374,9 @@ export default {
 		},
 		//重置
 		filterReset(blo) {
-			this.optionsOne = ['挂账时间', '结账时间'];
 			this.selectedTypeOne = 0;
-
-			this.optionsTwo = ['全部', '个人账户', '企业账户'];
 			this.selectedTypeTwo = 0;
-			this.selectedNameTwo = '请选择账户类型';
-
-			this.optionsThree = utils.deepCopy(this.allBillName);
-			this.selectedTypeThree = 0;
-			this.selectedNameThree = '请选择挂账账户';
-
-			this.optionsFour = ['订单号', '挂账人名称', '操作人名称'];
+			this.billId = 0;
 			this.selectedTypeFour = 0;
 			this.shuName = '请输入订单号';
 
@@ -319,40 +386,23 @@ export default {
 			}
 
 			this.status = -1;
-
 			this.optionValue = '';
+			this.isOpenTime = 1;
 
 			this.page = 1;
 			this.num = 10;
 			this.total = 1;
 
-			this.billId = 0;
-
 			this.getOrderBillList();
 		},
-		//挂账时间类型
-		selectTypeOne(index) {
-			this.selectedTypeOne = index;
-		},
 		//挂账账户类型
-		selectTypeTwo(index) {
-			this.selectedTypeTwo = index;
+		selectTypeTwo() {
 			this.billId = 0;
 			this.changType();
 		},
-		//挂账账户
-		selectTypeThree(index) {
-			this.selectedTypeThree = index;
-			this.billId = this.showBill[index].billId;
-			//			for (let i = 0; i < this.allBill.length; i++) {
-			//				if (this.allBill[i].name == this.optionsThree[index]) {
-			//					this.billId = this.allBill[i].billId;
-			//				}
-			//			}
-		},
 		noData(e) {
 			e.stopPropagation();
-			if (this.showBill.length == 0) {
+			if (this.optionsThree.length == 0) {
 				this.$store.commit('setWin', {
 					title: '提示信息',
 					content: '该分类下没有挂账账户'
@@ -360,8 +410,7 @@ export default {
 			}
 		},
 		//搜检索条件
-		selectTypeFour(index) {
-			this.selectedTypeFour = index;
+		selectTypeFour() {
 			switch (this.selectedTypeFour + '') {
 				case '0':
 					this.shuName = '请输入订单号';
@@ -374,35 +423,13 @@ export default {
 					break;
 			}
 		},
-		//导出订单
-		//		exportHander: function() {
-		//			if (this.orderCredit.length == 0) {
-		//				this.$store.commit('setWin', {
-		//					title: '提示信息',
-		//					content: '没有订单可以导出'
-		//				});
-		//				return false;
-		//			}
-		//			this.exportOrder();
-		//		},
-		//		async exportOrder() {
-		//			http.exportBill({
-		//				data: {
-		//					startTime: parseInt(this.startTime / 1000),
-		//					endTime: parseInt(this.endTime / 1000),
-		//					shopId: this.sId ? this.sId : this.userdata.currentShop.id
-		//				}
-		//			});
-		//		},
 		//获取所有的挂账账户
 		async billGetBillNames() {
-			let allBill = await http.billGetBillNames({
-				data: { shopId: this.sId ? this.sId : this.userdata.currentShop.id }
+			this.allBill = await http.billGetBillNames({
+				data: {
+					shopId: this.sId ? this.sId : this.userdata.currentShop.id
+				}
 			});
-
-			let item = { billId: '0', name: '全部' };
-			allBill.unshift(item);
-			this.allBill = allBill;
 			this.changType();
 		},
 		//改变挂账账户类型
@@ -410,34 +437,21 @@ export default {
 			let tempGoods = [];
 			switch (this.selectedTypeTwo + '') {
 				case '0':
-					tempGoods = this.allBill.map(ele => {
-						return ele.name;
-					});
-					this.showBill = this.allBill;
+					tempGoods = this.allBill;
 					break;
 				case '1':
-					this.showBill = this.allBill.filter(ele => {
+					tempGoods = this.allBill.filter(ele => {
 						return ele.type == 1;
-					});
-					tempGoods = this.showBill.map(ele => {
-						return ele.name;
 					});
 					break;
 				case '2':
-					this.showBill = this.allBill.filter(ele => {
+					tempGoods = this.allBill.filter(ele => {
 						return ele.type == 2;
-					});
-					tempGoods = this.showBill.map(ele => {
-						return ele.name;
 					});
 					break;
 			}
-			this.allBillName = utils.deepCopy(tempGoods);
 			this.optionsThree = utils.deepCopy(tempGoods);
-			// let item = {billId: '0', name: '全部'};
-			// optionsThree.unshift(item);
-			// this.optionsThree = optionsThree;
-			// this.allBillName = optionsThree;
+			this.optionsThree.unshift({ billId: 0, name: '全部' });
 		},
 		//验证
 		checkDate() {
@@ -451,7 +465,9 @@ export default {
 				});
 				return true;
 			}
-			if (parseInt(this.startTime / 1000) > parseInt(this.endTime / 1000)) {
+			if (
+				parseInt(this.startTime / 1000) > parseInt(this.endTime / 1000)
+			) {
 				this.$store.commit('setWin', {
 					title: '提示信息',
 					content: '开始时间不能大于结束时间'
@@ -464,8 +480,8 @@ export default {
 			if (this.checkDate()) return;
 			let data = await http.billstatisticsGetList({
 				data: {
-					startTime: parseInt(this.startTime / 1000),
-					endTime: parseInt(this.endTime / 1000),
+					startTime: this.startTime / 1000,
+					endTime: this.endTime / 1000 + 24 * 60 * 60 - 1,
 					page: this.page + 0,
 					num: this.num,
 					isOpenTime: Number(this.isOpenTime),
@@ -478,17 +494,10 @@ export default {
 					shopId: this.sId ? this.sId : this.userdata.currentShop.id
 				}
 			});
-			//			this.totalList.totalOriginalPrice = data.totalNum.originalPrice || '0';
-			//			this.totalList.totalPrice = data.totalNum.price || '0';
-			//			this.totalList.person = data.totalNum.person || '0';
-			//			this.totalList.orderNum = data.totalNum.orderNum;
-			//			this.totalList.days = Math.ceil(
+			this.totalList = data.total;
+			//			this.totalList.totalDay = Math.ceil(
 			//				(this.endTime - this.startTime) / (24 * 3600 * 1000)
 			//			);
-			this.totalList = data.total;
-			this.totalList.totalDay = Math.ceil(
-				(this.endTime - this.startTime) / (24 * 3600 * 1000)
-			);
 			let list = data.list;
 			if (!list) {
 				return;
@@ -507,7 +516,8 @@ export default {
 					'yyyy-MM-dd hh:mm'
 				);
 				list[i].isSettle = list[i].isSettle == 0 ? '未结清' : '已结清';
-				list[i].billType = list[i].billType == 1 ? '个人账户' : '企业账户';
+				list[i].billType =
+					list[i].billType == 1 ? '个人账户' : '企业账户';
 			}
 			this.orderCredit = list;
 			this.total = data.pageNum;
@@ -516,23 +526,25 @@ export default {
 		selectByTime() {
 			this.filterReset(false);
 		},
-		startTimeChange(data) {
-			this.startTime = data;
+
+		//每页显示多少行
+		handleSizeChange(n) {
+			this.num = n;
+			this.page = 1;
+			this.getOrderBillList();
 		},
-		endTimeChange(data) {
-			this.endTime = new Date(data).setHours(23, 59, 59, 999);
-		},
-		// 跳页
-		goPage(backData) {
-			this.page = backData.page;
-			this.num = backData.num;
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
 			this.getOrderBillList();
 		},
 		//去订单详情
 		async goDetails(oid) {
 			let res = await http.OrderstatisticsBillDelite({
 				data: {
-					trueShopId: this.sId ? this.sId : this.userdata.currentShop.id,
+					trueShopId: this.sId
+						? this.sId
+						: this.userdata.currentShop.id,
 					oid: oid
 				}
 			});
@@ -541,10 +553,6 @@ export default {
 				this.showDetails = true;
 			}
 		},
-		//		goDetails(item) {
-		//			this.oid = item.oid;
-		//			this.showDetails = true;
-		//		},
 		//订单详情返回
 		getDetailShow() {
 			this.showDetails = false;
@@ -571,28 +579,42 @@ export default {
 		}
 	},
 	components: {
-		calendar: () =>
-			import(/*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
-		PageElement: () =>
-			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 		orderDetail: () =>
-			import(/*webpackChunkName: "delete_detail"*/ './delete_detail'),
-		tableCom: () =>
-			import(/*webpackChunkName: "com_table"*/ 'src/components/com_table'),
-		selectBtn: () =>
-			import(/*webpackChunkName: 'select_btn'*/ 'src/components/select_btn')
+			import(/*webpackChunkName: "delete_detail"*/ './delete_detail')
 	}
 };
 </script>
 
 <style scoped lang="less">
 #orMaRetreat {
-	margin-top: 30px;
 	position: relative;
 	.yuChairFix:after {
 		content: '';
 		display: block;
 		clear: both;
+	}
+	.store-list {
+		width: 100%;
+		border-bottom: none;
+		margin: 15px 0;
+		.length {
+			height: 50px;
+			line-height: 50px;
+			border: 1px solid #ebeef5;
+			padding-left: 10px;
+			border-bottom: none;
+			font-size: 16px;
+			span {
+				display: inline-block;
+				margin: 0 5px;
+				color: #e1bb4a;
+				font-size: 16px;
+			}
+		}
+		.light {
+			color: #e1bb4a;
+			cursor: pointer;
+		}
 	}
 	.orMaRetreatTime {
 		margin-bottom: 10px;
@@ -609,54 +631,38 @@ export default {
 			}
 			.order-order-searchA,
 			.order-order-search {
-				// display: inline-block;
 				float: left;
 				width: 40px;
 				height: 40px;
-				background-color: #29a7e1;
+				background-color: #e1bb4a;
 				cursor: pointer;
 			}
 			.order-order-search {
-				background: url(../../res/images/search.png) center center no-repeat;
+				background: url(../../res/images/search.png) center center
+					no-repeat;
 			}
 			.order-order-searchA {
 				height: 40px;
 			}
 			.order-order-searchA:hover {
-				background-color: #1878a5;
+				background-color: #e1bb4a;
 				transition: background-color ease-in-out 0.2s;
 			}
 			.order-order-searchA:active {
-				background-color: #154961;
-			}
-			.numbering {
-				width: 200px;
-				height: 40px;
-				border: 1px solid #b3b3b3;
-				text-indent: 15px;
-				display: inline-block;
-				outline: none;
-			}
-			a {
-				display: inline-block;
-				width: 100px;
-				height: 40px;
-				text-align: center;
-				line-height: 40px;
-				font-size: 16px;
-				color: #fff;
+				background-color: #e1bb4a;
 			}
 			.pickBlu {
 				width: 20px;
 				height: 20px;
 				cursor: pointer;
-				border: 1px solid #28a8e0;
+				border: 1px solid #e1bb4a;
 				margin: 13px 10px;
 				float: left;
 			}
 			.active {
-				background: url(../../res/icon/selected.png) center center no-repeat,
-					#28a8e0;
+				background: url(../../res/icon/selected.png) center center
+						no-repeat,
+					#e1bb4a;
 			}
 		}
 	}
@@ -668,7 +674,7 @@ export default {
 			box-sizing: border-box;
 			float: left;
 			.act {
-				background-color: #28a8e0;
+				background-color: #e1bb4a;
 				color: #fff;
 			}
 		}
@@ -683,41 +689,6 @@ export default {
 			margin-right: 10px;
 			background-color: #f2f2f2;
 			border-radius: 5px;
-		}
-	}
-	.pagebox {
-		padding-top: 20px;
-	}
-	.detLi {
-		position: relative;
-		cursor: pointer;
-		.detDiv1 {
-			display: inline-block;
-			width: 300px;
-			background: #45404b;
-			position: absolute;
-			top: 28px;
-			left: -250px;
-			padding: 10px;
-			box-shadow: 3px 2px 10px #ccc;
-			z-index: 10;
-			.detI {
-				width: 0;
-				height: 0;
-				line-height: 0;
-				position: absolute;
-				top: -10px;
-				left: 250px;
-				border-width: 10px;
-				border-top: 0px;
-				border-style: solid;
-				border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
-			}
-			.detH3 {
-				line-height: 30px;
-				color: #e6e6e7;
-				text-align: center;
-			}
 		}
 	}
 }

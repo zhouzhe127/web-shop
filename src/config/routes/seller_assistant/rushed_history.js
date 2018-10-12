@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
 	"path": "Assistanthistory",
 	"children": [{
@@ -13,8 +14,8 @@ module.exports = {
 			"children": [{
 				"path": '',
 				"url": "src/module/seller_assistant/rushed_record"
-			},{
-				"path":'recordDetail',
+			}, {
+				"path": 'recordDetail',
 				"url": "src/module/seller_assistant/rushed_record_detail"
 			}]
 		}]

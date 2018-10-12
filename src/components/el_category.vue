@@ -2,19 +2,14 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-05 10:54:43 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 18:26:39
+ * @Last Modified time: 2018-10-10 17:47:32
  * @Module:分类选择框
 **/
 <template>
 	<div id="elCategory" style="display:inline-block;">
-		<el-popover
-			placement="bottom"
-			width="400"
-			v-model="showArea"
-			@show="changeIndex"
-			trigger="click">
+		<el-popover placement="bottom" width="400" v-model="showArea" @show="changeIndex" trigger="click">
 			<section style="max-height:260px;overflow:auto;min-height:100px;">
-				<el-radio-group v-model="newOneIndex" size ="small" @change="changeArea">
+				<el-radio-group v-model="newOneIndex" size="small" @change="changeArea">
 					<el-radio border v-for="(item,index) in categoryArr" :key="index" :label="index" style="margin-bottom: 5px;">{{item.name}}</el-radio>
 				</el-radio-group>
 			</section>
@@ -26,37 +21,36 @@
 	</div>
 </template>
 <script>
-import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
-import http from 'src/manager/http';
+// import storage from 'src/verdor/storage';
+// import utils from 'src/verdor/utils';
+// import http from 'src/manager/http';
 export default {
-	data(){
+	data() {
 		return {
-			showArea:false,
-			newOneIndex:-1,//选中的下标
+			showArea: false,
+			newOneIndex: -1 //选中的下标
 		};
 	},
 	props: {
-		categoryArr:Array, //分类数组
-		itemIndex:Number,//选中分类的下标
-		itemArea:Object
+		categoryArr: Array, //分类数组
+		itemIndex: Number, //选中分类的下标
+		itemArea: Object
 	},
 	methods: {
-		changeIndex(){
+		changeIndex() {
 			this.newOneIndex = this.itemIndex;
 			if (this.categoryArr.length == 0) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
-					content: '没有分类或该分类下没有二级分类!'
+					content: '没有分类或该分类下没有子分类!'
 				});
 				this.showArea = false;
 			}
 		},
-		changeArea(e){
-			// console.log(e);
+		changeArea() {
 			this.showArea = false;
-			this.$emit('selectCategory',this.newOneIndex);
-		},
+			this.$emit('selectCategory', this.newOneIndex);
+		}
 	}
-}
+};
 </script>

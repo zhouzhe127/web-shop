@@ -1,1 +1,2 @@
+/* eslint-disable */
 module.exports={"path":"schedulingApplication","children":[{"path":"","url":"src/module/invoicing_system/warehouse_manage/scheduling_application_list"},{"path":"purchaseRequisition","url":"src/module/invoicing_system/warehouse_manage/purchase_requisition"},{"path":"purchaseRequisitionDetail","url":"src/module/invoicing_system/warehouse_manage/purchase_requisition_detail"}]}

@@ -339,9 +339,6 @@ let need = {
 		memberSend: {
 			name: 'memberSend'
 		}, //会员推送信息
-		freeGoods: {
-			name: 'freeGoods'
-		}, //赠品统计
 		onlineOrderConfig: {
 			name: 'onlineOrderConfig'
 		}, //在线点单配置
@@ -441,17 +438,25 @@ let need = {
 		materialWorking: {
 			name: 'processHistory'
 		},
-		balanceAdjustRecord: { //余额调整记录
+		balanceAdjustRecord: {
+			//余额调整记录
 			name: 'balanceAdjustRecord'
 		},
-		storeArea: { //区域门店
+		storeArea: {
+			//区域门店
 			name: 'storeArea'
 		},
-		getDispatchLogList: { //批量日志
+		getDispatchLogList: {
+			//批量日志
 			name: 'batchLog'
 		},
-		getGoodsLogList: { //总日志列表
-			name: 'goodsTotalLog'
+		getGoodsLogList: {
+			//总日志列表
+			name: 'totalLog'
+		},
+		customPackageStatistics: {
+			//自定义套餐
+			name: 'customPackageStatistics'
 		}
 	}
 };

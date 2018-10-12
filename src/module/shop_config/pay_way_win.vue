@@ -23,7 +23,7 @@
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">排序</h3>
-						<el-input-number v-model="detial.sort" @change="changeNum" :min="1" :max="100" label="描述文字"></el-input-number>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
 					</div>
 				</section>
 				<section v-if="types == 'zxBand'">
@@ -76,6 +76,28 @@
 							</el-radio-group>
 						</div>
 					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
+					</div>
+				</section>
+				<section v-if="types == 'sqb'">
+					<div class="payShowList">
+						<h3 class="showListBefore">支付方式名称</h3>
+						<el-input v-model="detial.paymentName" class="inputWidth" :disabled="true"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">appId</h3>
+						<el-input v-model="detial.payConfig.appId" placeholder = "请输入收钱吧appId" class="inputWidth"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">激活码</h3>
+						<el-input v-model="detial.payConfig.code" placeholder = "请输入收钱吧激活码" class="inputWidth"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
+					</div>
 				</section>
 				<section v-if="types == 'dbq'">
 					<div class="payShowList">
@@ -90,6 +112,10 @@
 						<h3 class="showListBefore">组织编号</h3>
 						<input type="text" v-model="detial.payConfig.organizationNum" class="input"/>
 					</div> -->
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
+					</div>
 				</section>
 				<section v-if="types == 'wyyx'">
 					<!-- 网易严选 -->
@@ -109,23 +135,35 @@
 						<h3 class="showListBefore">产品密钥key</h3>
 						<el-input v-model="detial.payConfig.key" placeholder = "请输入产品密钥key" class="inputWidth"></el-input>
 					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
+					</div>
 				</section>
 				<section v-if="types == 'SHzxBand'">
 					<div class="payShowList">
 						<h3 class="showListBefore">支付方式名称</h3>
-						<input type="text" v-model="detial.paymentName" class="input" disabled="disabled" />
+						<el-input v-model="detial.paymentName" disabled class="inputWidth"></el-input>
+						<!-- <input type="text" v-model="detial.paymentName" class="input" disabled="disabled" /> -->
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户号</h3>
-						<input type="text" v-model="detial.payConfig.mchId" placeholder = "请输入商户号" class="input" />
+						<el-input v-model="detial.payConfig.mchId" class="inputWidth" placeholder = "请输入商户号"></el-input>
+						<!-- <input type="text" v-model="detial.payConfig.mchId" placeholder = "请输入商户号" class="input" /> -->
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户私钥</h3>
-						<input type="text" v-model="detial.payConfig.privateRsaKey" placeholder = "请输入商户私钥" class="input" />
+						<el-input v-model="detial.payConfig.privateRsaKey" class="inputWidth" placeholder = "请输入商户私钥"></el-input>
+						<!-- <input type="text" v-model="detial.payConfig.privateRsaKey" placeholder = "请输入商户私钥" class="input" /> -->
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">中信公钥</h3>
-						<input type="text" v-model="detial.payConfig.publicRsaKey" placeholder = "请输入中信公钥" class="input" />
+						<el-input v-model="detial.payConfig.publicRsaKey" class="inputWidth" placeholder = "请输入中信公钥"></el-input>
+						<!-- <input type="text" v-model="detial.payConfig.publicRsaKey" placeholder = "请输入中信公钥" class="input" /> -->
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
 					</div>
 					<!-- <div class="payShowList">
 						<h3 class="showListBefore">key</h3>
@@ -161,6 +199,10 @@
 					<div class="payShowList">
 						<h3 class="showListBefore">MD5密钥</h3>
 						<el-input v-model="detial.payConfig.md5Key" placeholder = "请输入MD5密钥" class="inputWidth"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
 					</div>
 				</section>
 				<section v-if="types == 'wx'">
@@ -207,6 +249,10 @@
 						<!-- <label v-if = "detial.payConfig.vxkey != ''" for="uploadFile" style="position: absolute;left: 270px;top:12px;">已上传 </label> -->
 						<!-- <label for="uploadFile" style="position: absolute;left: 320px;top:12px;">{{spliceFileName(detial.payConfig.downloadFile)}} </label> -->
 					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
+					</div>
 				</section>
 				<section v-if="types == 'wPos'">
 					<div class="payShowList">
@@ -224,6 +270,10 @@
 					<div class="payShowList">
 						<h3 class="showListBefore">appSecret</h3>
 						<el-input v-model="detial.payConfig.appSecret" class="inputWidth" placeholder = "请输入appSecret"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
 					</div>
 				</section>
 			</section>
@@ -262,10 +312,10 @@ export default {
 		radioBtn: () =>
 			import(/* webpackChunkName:"radio_btn" */ 'src/components/radio_btn'),
 		win: () => import(/* webpackChunkName:"win" */ 'src/components/win'),
-		onOff: () =>
-			import(/* webpackChunkName:"on_off" */ 'src/components/on_off'),
-		subaddBtn: () =>
-			import(/* webpackChunkName:"subadd" */ 'src/components/subadd')
+		// onOff: () =>
+		// 	import(/* webpackChunkName:"on_off" */ 'src/components/on_off'),
+		// subaddBtn: () =>
+		// 	import(/* webpackChunkName:"subadd" */ 'src/components/subadd')
 	},
 	props: {
 		detial: Object, //支付方式详情
@@ -326,9 +376,9 @@ export default {
 			this.detial.isBill = e;
 		},
 		//排序按钮点击
-		changeNum: function(e) {
-			this.detial.sort = e;
-		},
+		// changeNum: function(e) {
+		// 	this.detial.sort = e;
+		// },
 		//支付宝商户类型
 		changeZfbIndex: function(item) {
 			this.list.forEach(e=>{

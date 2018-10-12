@@ -25,7 +25,7 @@
 			<ul class="tagsList">
 				<li v-on:click="openTagWin(tag)" v-for="(tag,tagIndex) in nowMarker" :key="tagIndex">
 					<div class="split-line"></div>
-					<div>
+					<div style="margin-top: 10px">
 						<span class="tag-container">
 							{{tag.tagName}}
 							<span v-if="tag.markerType==1" v-for="i in parseInt(tag.markerNum)" :key="i">
@@ -354,19 +354,20 @@
 			opacity: 0.7;
 		}
 		.tag-container {
+			width: 80%;
 			float: left;
-			margin: 20px 0 0 12px;
+			padding: 20px 0 0 12px;
 			color: #333333;
 			font-size: 26px;
 			.tag-img {
 				height: 29px;
-				width: 30px;
+				width: 12%;
 				vertical-align: text-bottom;
 			}
 		}
 		.tag-markerNum {
-			float: right;
-			margin: 10px;
+			width: 20%;
+			float: left;
 			font-size: 72px;
 			color: #008ed6;
 			opacity: 0.2;

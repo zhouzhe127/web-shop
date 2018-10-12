@@ -421,4 +421,13 @@ export default {
 		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
 		method:'post'
 	},
+	'customPackageStatistics': {
+		url: s + 'Customstatistics/customPackageStatistics', //自定义套餐统计
+		method: 'post'
+	},
+	'exportCustomPackageStatistics': {
+		url: s + 'Customstatistics/exportCustomPackageStatistics', //自定义套餐统计导出
+		type: 'file',
+		method: 'post'
+	},
 };

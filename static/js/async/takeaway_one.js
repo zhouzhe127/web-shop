@@ -1,1 +1,1 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([["takeaway_one"],{"5eac":function(e,a,o){"use strict";o.r(a);var n=o("6ceb"),t=Object(n.a)({},void 0,void 0,!1,null,null,null);t.options.__file="src\\module\\statistics\\takeaway_one.vue",a.default=t.exports}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([["takeaway_one"],{"5eac":function(n,a,e){"use strict";e.r(a);var o=e("d801"),l=Object(o.a)({},void 0,void 0,!1,null,null,null);a.default=l.exports}}]);
