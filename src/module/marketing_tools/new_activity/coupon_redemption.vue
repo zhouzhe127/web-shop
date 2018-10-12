@@ -81,10 +81,11 @@
                 </div>
             </div>
             <el-table :data="userList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
-                <el-table-column fixed prop="id" label="操作" align="center" width="180">
+                <el-table-column fixed prop="id" label="操作" align="center" width="150">
                     <template slot-scope="scope">
-                        <el-button v-if="!(scope.row.status == '1' && scope.row.startTime < now && scope.row.endTime > now)" size="mini" type="info" @click="modfycoupons(scope.row)">编辑</el-button>
-                        <el-button v-if="scope.row.standStatus" size="mini" type="primary" @click="shelves(scope.row)">{{scope.row.downName}}</el-button>
+                        <el-button v-if="!(scope.row.status == '1' && scope.row.startTime < now && scope.row.endTime > now)" size="mini" type="text" @click="modfycoupons(scope.row)" style="color: #ff8d00;">编辑</el-button>
+                        <span v-if="!(scope.row.status == '1' && scope.row.startTime < now && scope.row.endTime > now) && scope.row.standStatus" style="padding:0 5px;color: #D2D2D2">|</span>
+                        <el-button v-if="scope.row.standStatus" size="mini" type="text" @click="shelves(scope.row)" style="color: rgb(40, 168, 224);">{{scope.row.downName}}</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="下载二维码" prop="name" align="center" width="120">
@@ -191,23 +192,7 @@ export default {
 			now: new Date().getTime() / 1000
 		};
 	},
-	// created: function() {
-	// 	let obj1 = {
-	// 		fontSize: 16 + 'px'
-	// 	};
-	// 	for (let item of this.titleList) {
-	// 		item.titleStyle = Object.assign({}, item.titleStyle, obj1);
-	// 	}
-	// },
 	methods: {
-		//选择开始时间
-		// getStartTime: function(receiveTime) {
-		// 	this.startObj.time = new Date(receiveTime).getTime(); //毫秒
-		// },
-		//选择结束时间
-		// getEndTime: function(receiveTime) {
-		// 	this.endObj.time = new Date(receiveTime).getTime(); //毫秒
-		// },
 		selexpirationTime: function(i) { //选择类型
 			//this.expirationTime = this.expirationTimeList[i].name;
 			this.expirationTimeId = i;
