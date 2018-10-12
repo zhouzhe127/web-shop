@@ -39,7 +39,7 @@
 			<span class="round">2</span>
 			<span class="theText">填写业务域名为:
 			</span>
-			<input type="text" name="" :value="host" class="url urlt" readonly="true" style="width: 200px;" />
+			<input type="text" name="" :value="newhost" class="url urlt" readonly="true" style="width: 200px;" />
 			<a class="copy" @click="copyCode('','urlt')">一键复制</a>
 		</div>
 		<div class="verticalBar"></div>
@@ -47,7 +47,7 @@
 			<span class="round">3</span>
 			<span class="theText">填写JS接口安全域名为:
 			</span>
-			<input type="text" name="" :value="host" class="url urlfo" readonly="true" style="width: 200px;" />
+			<input type="text" name="" :value="newhost" class="url urlfo" readonly="true" style="width: 200px;" />
 			<a class="copy" @click="copyCode('','urlfo')">一键复制</a>
 		</div>
 		<div class="verticalBar"></div>
@@ -55,7 +55,7 @@
 			<span class="round">4</span>
 			<span class="theText">填写网页授权域名为:
 			</span>
-			<input type="text" name="" :value="host" class="url urlf" readonly="true" style="width: 200px;" />
+			<input type="text" name="" :value="newhost" class="url urlf" readonly="true" style="width: 200px;" />
 			<a class="copy" @click="copyCode('','urlf')">一键复制</a>
 		</div>
 		<!-- 基础配置 -->
@@ -105,7 +105,8 @@
 				shopId: storage.session('userShop').currentShop.id, //单店 shopId 品牌 品牌Id
 				urlList: [], //链接的列表
 				userData: Object,
-				host:'' //域名
+				host:'', //域名
+				newhost:'' //不带https的域名
 			};
 		},
 		mounted() {
@@ -148,6 +149,7 @@
 				});
 				if (res) {
 					this.host = res.host;
+					this.newhost = res.host.split('//')[1];
 				}
 			},
 		}
