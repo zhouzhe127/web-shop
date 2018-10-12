@@ -780,10 +780,10 @@ export default {
 					return false;
 				}
 			}
-			if (this.isSharingId === '') {
-				this.valiData('请选择优惠券共享方式');
-				return false;
-			}
+			// if (this.isSharingId == '') {
+			// 	this.valiData('请选择优惠券共享方式');
+			// 	return false;
+			// }
 			if (this.annotation.length > 20) {
 				this.valiData('备注字数不能大于20');
 				return false;
