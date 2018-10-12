@@ -92,15 +92,9 @@
 	export default {
 		data() {
 			return {
-<<<<<<< HEAD
-				timeDate:[new Date(Date.parse(new Date())-30*3600*24*1000),new Date()],
-				startTime: new Date().setHours(0, 0, 0, 0)-30*3600*24*1000, //开始时间
-				endTime: new Date().setHours(23, 59, 59, 0), //结束时间
-=======
 				timeDate:[],
 				startTime: '', //开始时间
 				endTime: '', //结束时间
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				cid: '', //用户id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
 				options: [
@@ -248,20 +242,6 @@
 				storage.session('bomListCache', this.requestObj);
 			},
 			reset() { //重置
-<<<<<<< HEAD
-				for (let i in this.requestObj) {
-					if (i == 'startTime' || i == 'endTime') {
-						this[i] = new Date().setHours(0, 0, 0, 0);
-					} else if (i == 'page') {
-						this[i] = 1;
-					} else if (i == 'isPublic') {
-						this[i] = 0;
-					} else if (i == 'pageShow') {
-						this[i] = 10;
-					} else if (i != 'pageTotal') {
-						this[i] = '';
-					}
-=======
 				this.startTime = '';
 				this.endTime = '';
 				this.timeDate = [];
@@ -270,7 +250,6 @@
 				this.pageShow = 10;
 				for(let item of ['createName','bomNum','gName']){
 					this[item] = '';
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				}
 				this.getData();
 			},

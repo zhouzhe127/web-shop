@@ -1,0 +1,103 @@
+@y:#ff8d01;
+@b:#29a8e0;
+@r:#ff3d04;
+@ey:#E1BB4A;
+.whb(@width:200px,@height:40px,@border:none){
+    width:@width;
+    height:@height;
+    border:@border;
+}
+.lfc(@color:#333,@lh:38px,@size:14px){
+    line-height: @lh;
+    color:@color;
+    font-size:@size;
+}
+
+// 输入框样式
+.input-text(@w:200px,@h:40px,@b:1px solid #ccc){
+    .whb(@w,@h,@b);
+    margin-right:15px;
+    vertical-align: top;
+    padding:0 10px;
+    font-size:16px;
+    outline:none;
+}
+
+// tab切换公共样式
+.tab-div{
+    padding-bottom: 20px;
+    span{
+        .whb(135px,40px,1px solid @y);
+        .lfc(@y,38px,16px);
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        &:first-child{
+            float:left;
+        }
+    }
+    .select-tab{
+        color:#fff;
+        background-color: @y;
+        text-align: center;
+    }
+}
+
+//筛选,重置按钮样式
+.common-btn{
+    .whb(100px,40px);
+    .lfc(#fff,40px,16px);
+    display:inline-block;
+    text-align: center;
+    margin-right:10px;
+}
+.btn(@w:100px,@h:40px,@f:16px,@c:#fff,@b:none){
+    .whb(@w,@h);
+    .lfc(@c,@h,@f);
+    display:inline-block;
+    text-align: center;
+    margin-right:10px;
+    border:@b;
+    cursor: pointer;
+}
+
+//面包屑头
+.split-div(@w:483px){
+    height:23px;
+    border-left:2px solid @ey;
+    padding-left:10px;
+    .lfc(#333,23px,16px);
+    &:after{
+        content:"";
+        display:inline-block;
+        .whb(@w,5px);
+        border-top:2px dashed #ccc;
+        margin-left:5px;
+    }
+}
+
+//清除浮动
+.clear{
+    content:"";
+    display: block;
+    line-height: 0;
+    visibility: hidden;
+    clear: both;
+}
+//消除必须
+.required-no{
+    &:after{
+        position: relative;
+        top: -8px;
+        right: -2px;
+        content: "*";
+        visibility: hidden;
+    }
+}
+
+//省略显示
+.text-ellipsis{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

@@ -83,11 +83,7 @@
 		    </el-table-column>
 		    <el-table-column prop="createName" label="操作人">
 		    </el-table-column>
-<<<<<<< HEAD
-		    <el-table-column label="BOM类型" align="center">
-=======
 		    <el-table-column label="操作" align="center">
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 		    	<template slot-scope="scope" fixed="right" width="180" >
 		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic != 1"
 		        		type="text" size="small">查看详情</el-button>

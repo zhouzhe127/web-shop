@@ -18,11 +18,7 @@
 				<span class="left required">领料人</span>
 				<div class="right">
 					<el-button @click="selPicker" icon="el-icon-plus" type="primary" class="el-input">选择领料人</el-button>
-<<<<<<< HEAD
-					<span class="picker-name">{{pickData.ownerName}}</span>
-=======
 					<span class="picker-name">{{pickData.ownerName?'已选择：':''}}{{pickData.ownerName}}</span>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				</div>
 			</div>
 			<div class="row">
@@ -105,11 +101,7 @@
 			<el-dialog
 			  title="选择领料人"
 			  :visible.sync="dialogVisible"
-<<<<<<< HEAD
-			  width="250"
-=======
 			  width="600px"
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			  :close="handleClose">
 			  <div class="radio-box" v-for="(item,index) in pickerList" :key="index">
 			  	<el-radio v-model="pickerId" :label="item.id" border>{{item.name}}</el-radio>
@@ -171,22 +163,14 @@
 				let arr = [
 					{
 						name: '确定',
-<<<<<<< HEAD
-						className: 'success',type:4,
-=======
 						className: 'primary',type:4,
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 						fn: () => {
 							this.enter(); //确认
 						}
 					},
 					{
 						name: '继续添加',
-<<<<<<< HEAD
-						className: 'success',type:5,
-=======
 						className: 'primary',type:5,
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 						fn: () => {
 							this.again(); //确认
 						}
@@ -210,10 +194,7 @@
 				this.dialogVisible = true;
 			},
 			pickerConfirm(){//领料人选择完毕
-<<<<<<< HEAD
-=======
 				this.dialogVisible = false;
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				for(let item of this.pickerList){
 					if(item.id == this.pickerId){
 						this.pickData.ownerName = item.name;
@@ -221,10 +202,6 @@
 					}
 				}
 				this.pickData.owner = this.pickerId;
-<<<<<<< HEAD
-				this.dialogVisible = false;
-=======
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			},
 			handleClose(){
 				this.dialogVisible = false;
@@ -303,65 +280,7 @@
 						obj.num = res[i].goodsNum.surplus;
 						this.pickData.materialInfo.push(obj);
 					}
-<<<<<<< HEAD
-					if(isHave){
-						continue;
-					}
-					let obj =  {
-						materialBC: '',
-						materialId: '',// 物料id
-						materialName: '', //物料名
-						materialType: '', //物料类型
-						materialCategory: '', //物料分类id
-						materialCategoryName: '', //物料分类名
-						unitData: '', //所有单位信息
-						unit: '', //选择的单位
-						batch: [], //批次
-						validity: '', //保质期
-						validityType: '', //保质期类型
-
-						number: '', //领料量
-						num: '', //原始库存量
-						unitList: [], //单位列表
-						index: 0, //单位选择的索引
-						minName:'', //最小单位名
-						defaultName:'',    //默认单位名
-						defaultValue:'',   //默认单位的转换关系
-						oneNum:'',      //第一个输入框
-						twoNum:'',      //第二个输入框
-						oneName:'',
-						twoName:'',
-						showName:'', //展示单位名
-						showValue:'',   //展示单位换算关系
-						minNumber:''     //最小单位的数量
-					};
-					obj.materialBC = res[i].BC;
-					obj.materialId = res[i].id;
-					obj.materialName = res[i].name;
-					obj.materialType = res[i].type;
-					obj.validity = res[i].validity;
-					obj.validityType = res[i].validityType;
-					obj.batchNum = res[i].goodsNum.batch;
-					for(let key of res[i].cate){
-						obj.materialCategory += key.cid + ',';
-						obj.materialCategoryName += key.name + ',';
-					}
-					obj.materialCategory = obj.materialCategory.slice(0,obj.materialCategory.length-1);
-					obj.materialCategoryName = obj.materialCategoryName.slice(0,obj.materialCategoryName.length-1);
-					for(let key of res[i].unit){
-						let unitObj={
-							value:key.muId,
-							label:key.name,
-						};
-						obj.unitList.push(unitObj);
-					}
-					obj.unitData = res[i].unit;
-					obj.number = res[i].goodsNum.surplus;
-					obj.num = res[i].goodsNum.surplus;
-					this.pickData.materialInfo.push(obj);
-=======
 					this.unitConversion(this.pickData.materialInfo);
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				}
 			},
 			unitConversion(detailList){
@@ -411,10 +330,6 @@
 						break;
 					}
 				}
-<<<<<<< HEAD
-				console.log(item.selUnit.name);
-=======
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				item.index = res;
 				item.oneName=showName;
 				item.number=global.comUnit(item.comNum,item.showValue,showName,item.minName);
@@ -579,11 +494,7 @@
 	#picking {
 		margin-top: 20px;
 		.radio-box{display: inline-block;padding: 7px;}
-<<<<<<< HEAD
-		.picker-name{padding-left: 10px;color: #666;}
-=======
 		.picker-name{padding-left: 10px;color: #666;display: inline-block;height: 40px;line-height: 40px;vertical-align: middle;}
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 		textarea{border: 1px solid #dcdfe6;padding: 10px;width: 210px;}
 		.el-input{width: 210px;}
 		.el-sel{width: 80px;}

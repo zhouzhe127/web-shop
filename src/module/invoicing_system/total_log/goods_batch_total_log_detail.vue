@@ -40,16 +40,9 @@
             <div class="col">
                 <li>规格:{{materialInfo.specifications}}</li>
                 <li>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</li>
-<<<<<<< HEAD
-                <li>耗损:{{materialInfo.lossNum}}</li>
-            </div>
-            <div class="col">
-                <li>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</li>
-=======
                 <li>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</li>                
             </div>
             <div class="col">
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 <li>上架数量:{{materialInfo.shelveNum}}{{materialInfo.unit}}</li>
                 <li>总量:{{materialInfo.total}}{{materialInfo.unit}}</li>
             </div>
@@ -67,11 +60,7 @@
                 <i class="circle"></i>共 <span class="num">{{tableData.length}}</span> 个条目
             </div>
             <el-table :data="tableData" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
-<<<<<<< HEAD
-                <el-table-column prop="itemIndex" width="150px" label="序号">
-=======
                 <el-table-column prop="itemIndex" width="100px" label="序号">
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 </el-table-column>
                 <el-table-column prop="batchCode" width="150px" label="批次编码" >
                 </el-table-column>
@@ -87,15 +76,9 @@
                 </el-table-column>
                 <el-table-column prop="distributionPrice" width="150px" label="进价" >
                 </el-table-column>
-<<<<<<< HEAD
-                <el-table-column prop="aName"  label="仓库" >
-                </el-table-column>
-                <el-table-column prop="remark" label="备注" >
-=======
                 <el-table-column prop="storeName" min-width='150px' label="仓库" >
                 </el-table-column>
                 <el-table-column prop="remark" min-width='150px' label="备注" >
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 </el-table-column>
             </el-table>           
         </div>
@@ -168,11 +151,8 @@ export default {
                 ele.arrowNum = ele.num > 0;
                 ele.num = '' + ele.num + this.materialInfo.unit;
                 ele.distributionPrice = `${ele.distributionPrice}元/ ${this.materialInfo.unit}`;
-<<<<<<< HEAD
-=======
 
                 ele.storeName = ele.wName + '/' + ele.aName;
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 return ele;
             });
         },

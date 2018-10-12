@@ -42,11 +42,7 @@
 				<el-input v-model="creatorName" placeholder="请输入操作人" maxlength="10" style="width:180px;"></el-input>
 			</div>
 			<div class="input-box">
-<<<<<<< HEAD
-				<el-button @click="searchTime" type="success">筛选</el-button>
-=======
 				<el-button @click="searchTime" type="primary">筛选</el-button>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				<el-button @click="reset" type="info">重置</el-button>
 			</div>
 		</div>
@@ -54,22 +50,15 @@
 		<div class="list-box">
 			<el-table
 		    	:data="currentList" stripe border style="width: 100%">
-<<<<<<< HEAD
-			    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
-=======
 			    <el-table-column type="index" :index="indexMethod" label="序号" width="100">
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			    </el-table-column>
 			    <el-table-column label="操作类型" width="180">
 			    	<template slot-scope="scope">{{scope.row.type==1?'领料':'领料盘库'}}</template>
 			    </el-table-column>
 			    <el-table-column prop="creatorName" label="操作人">
 			    </el-table-column>
-<<<<<<< HEAD
-=======
 			    <el-table-column prop="ownerName" label="领料人">
 			    </el-table-column>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			    <el-table-column label="操作时间">
 			    	<template slot-scope="scope">{{transformTime(scope.row.createTime)}}</template>
 			    </el-table-column>
@@ -132,11 +121,7 @@
 		},
 		methods:{
 			initBtn(){
-<<<<<<< HEAD
-				let arr = [{name:'领料',className: 'success',type:5,fn:()=>{
-=======
 				let arr = [{name:'领料',className: 'primary',type:5,fn:()=>{
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					let data = {num:this.numType};
 					storage.session('numType',data);
 					this.getMaterial();

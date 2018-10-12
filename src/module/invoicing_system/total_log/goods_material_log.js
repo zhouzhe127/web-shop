@@ -84,10 +84,6 @@ export default {
                     obj.cid = condition.category[1];                    
                 }   
             }
-<<<<<<< HEAD
-			console.log(obj);
-=======
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             return obj;
 		},
 		initData() {
@@ -135,23 +131,6 @@ export default {
             console.log(temp);
 		},
         //是否可以查看批次详情
-<<<<<<< HEAD
-        canviewBatchDetail(id){
-			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
-			
-            let temp = null;
-            temp = this.getAttr(config,id,'type','canViewBatch');
-            return !temp;
-
-        },
-        //是否可以查看记录
-        canViewHistory(id){
-			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
-			
-            let temp = null;
-            temp =  this.getAttr(config,id,'type','canViewHistory');
-            return !temp;
-=======
         canviewBatchDetail(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
 			
@@ -174,7 +153,6 @@ export default {
 			}else{
 				return !temp;				
 			}
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
         },
 		
 
@@ -189,15 +167,9 @@ export default {
 		//商品物料导航的切换
         navigateTo(navigate){
 			if(navigate == 'goods'){
-<<<<<<< HEAD
-				this.$router.push({path:'/admin/materialTotalLog'});
-			}else{
-				this.$router.push({path:'/admin/goodsTotalLog'});				
-=======
 				this.$router.push({path:'/admin/totalLog/materialTotalLog',query:this.$route.query});
 			}else{
 				this.$router.push({path:'/admin/totalLog/',query:this.$route.query});				
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			}
 		},
 		generatorDate(time){

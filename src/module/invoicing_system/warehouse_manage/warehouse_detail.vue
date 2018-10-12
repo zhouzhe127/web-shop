@@ -207,11 +207,7 @@ export default {
 			goodsType:-1,//选中商品类型
 			goodsName:'',//商品名称
 			matTypeList:[
-<<<<<<< HEAD
-				{value:'-1',label:'全部类型'},
-=======
 				{value:'-1',label:'全部物料类型'},
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 				{value:'0',label:'成品'},
 				{value:'1',label:'半成品'},
 				{value:'2',label:'普通物料'},

@@ -75,11 +75,7 @@
 					<el-dialog
 					  title="仓库信息"
 					  :visible.sync="dialogVisible"
-<<<<<<< HEAD
-					  width="250"
-=======
 					  width="600px"
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					  :close="handleClose">
 					  <div class="ware-detail">
 					  	<span>仓库名称：{{this.wareDetail.name}}</span>
@@ -269,11 +265,7 @@ export default {
 				},
 				{
 					name: '确认出货',
-<<<<<<< HEAD
-					className: 'success',type:4,
-=======
 					className: 'primary',type:4,
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					fn: () => {
 						this.confirmMethod(); //确认
 					}
@@ -283,11 +275,7 @@ export default {
 			if(this.dynamic == 2) { //this.dynamic==2
 				let addArr = [{
 					name: '入货',
-<<<<<<< HEAD
-					className: 'success',type:4,
-=======
 					className: 'primary',type:4,
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					fn: () => {
 						this.$router.push({
 							path: '/admin/operation/enterGoods',
@@ -474,11 +462,7 @@ export default {
 					cost = detail.purchasePrice*detail.num;
 					costTotal += cost;
 				}
-<<<<<<< HEAD
-				item.costTotal = costTotal+'元';
-=======
 				item.costTotal = this.setNumfloat(costTotal)+'元';
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			}
 			return goodList;
 		},
@@ -506,11 +490,7 @@ export default {
 					cost = detail.num/this.getUnitName(item.unitData,detail.purchaseUnit,true)*detail.purchasePrice;
 					costTotal += cost;
 				}
-<<<<<<< HEAD
-				item.costTotal = costTotal+'元';
-=======
 				item.costTotal = this.setNumfloat(costTotal)+'元';
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			}
 			return materialList;
 		},
@@ -570,11 +550,7 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
-<<<<<<< HEAD
-				item.costTotal = costTotal+'元';
-=======
 				item.costTotal = this.setNumfloat(costTotal)+'元';
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			}
 			return goodList;
 		},
@@ -608,11 +584,7 @@ export default {
 				for(let areaItem of item.newArea) { //匹配区域名称
 					if(areaItem.id == item.areaId) item.aName = areaItem.areaName;
 				}
-<<<<<<< HEAD
-				item.costTotal = costTotal+'元';
-=======
 				item.costTotal = this.setNumfloat(costTotal)+'元';
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			}
 			return materialList;
 		},

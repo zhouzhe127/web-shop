@@ -21,11 +21,7 @@
             </div>
 
             <div class="in-block" >
-<<<<<<< HEAD
-                <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" clearable>
-=======
                 <el-select v-model="condition.operationType" placeholder="操作类型" multiple collapse-tags>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     <el-option
                     v-for="item in operationList"
                     :key="item.id"
@@ -56,11 +52,7 @@
                     >
                 </el-cascader>
 
-<<<<<<< HEAD
-                <el-select v-model="condition.wid" :multiple="true" placeholder="仓库选择" clearable>
-=======
                 <el-select v-model="condition.wid" placeholder="仓库选择" multiple collapse-tags>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     <el-option
                     v-for="item in warehouseList"
                     :key="item.id"
@@ -71,13 +63,8 @@
             </div>
 
             <div class="in-block" style="padding-left:10px;">
-<<<<<<< HEAD
-                <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
-                <el-button type="info" @click="filterReset('reset')">重置</el-button>
-=======
                 <el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
                 <el-button type="info" @click="filterReset('reset',null)">重置</el-button>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             </div>
         </div>
 
@@ -103,42 +90,25 @@
                 <el-table-column  label="成本金额" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
-<<<<<<< HEAD
-						{{row.cost}}
-=======
 						{{Number(row.cost)}}
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					</template>	  
                 </el-table-column>
                 <el-table-column label="售卖价格" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowPrice,'arrow-down':!row.arrowPrice}"></span>
-<<<<<<< HEAD
-						{{row.price}}
-=======
 						{{Number(row.price)}}
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 					</template>	  
                 </el-table-column>
                 <el-table-column prop="createTime" label="日期" width="150px">
                 </el-table-column>
                 <el-table-column prop="createUName" label="操作人" width="150px">
                 </el-table-column>
-<<<<<<< HEAD
-                <el-table-column prop="wName" label="仓库" width="150px">
-                </el-table-column>
-                <el-table-column label="操作" fixed="right" width="150px">
-                    <template slot-scope="{row,column}">
-                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
-                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row.type)}">批次详情</span>
-=======
                 <el-table-column prop="wName" label="仓库/货架" width="150px">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column}">
                         <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row)}">查看记录</span>
                         <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row)}">批次详情</span>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     </template>
                 </el-table-column>
 
@@ -188,10 +158,6 @@
                 <div class="column">
                     <div>规格:{{materialInfo.specifications}}</div>
                     <div>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</div>
-<<<<<<< HEAD
-                    <div>耗损:{{materialInfo.lossNum}}</div>
-=======
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                     <div class="column-container">
                         <div class="label">货架位置:</div>
                         <div class="">
@@ -296,20 +262,12 @@ export default {
             this.getList();
         },
         //筛选重置
-<<<<<<< HEAD
-        filterReset(flag){
-=======
         filterReset(flag,page){
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             if(flag == 'reset'){
                 this.initPageObj();
                 this.initCondition();
             }else{
-<<<<<<< HEAD
-                this.pageObj.currentPage = 1;
-=======
                 this.pageObj.currentPage = page || 1;
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             }
             this.getList();
         },
@@ -337,31 +295,18 @@ export default {
 
 
                 ele.arrowOperation = ele.change > 0;                                    //变化量红色箭头
-<<<<<<< HEAD
-                // ele.change = Math.abs(ele.change);
-
-                ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
-                // ele.cost = Math.abs(ele.cost);
-
-                ele.arrowPrice = ele.price > 0;
-                // ele.price = Math.abs(ele.price);
-=======
 
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
 
                 ele.arrowPrice = ele.price > 0;
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
                 ele.changeAfter = ele.changeAfter + ele.itemUnit;
-<<<<<<< HEAD
-=======
 
                 if(!ele.createUName){
                     ele.createUName = this.placeholder;
                 }
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
                 return ele;
             });
         },
@@ -370,19 +315,10 @@ export default {
         //查看商品详情
         async viewDetail(row,column){
             let info = {};
-<<<<<<< HEAD
-            if(this.materialInfo.gid != row.itemId){
-                info = await this.getHttp('InvoicingGetGoodsDetail',{gid:row.itemId,wid:0});
-                if(!info || typeof info != 'object') info = {};
-                info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
-                this.materialInfo = info;
-            }
-=======
             info = await this.getHttp('InvoicingGetGoodsDetail',{gid:row.itemId,wid:0});
             if(!info || typeof info != 'object') info = {};
             info.validityTypeName = this.getAttr(this.valiDate,info.validityType);
             this.materialInfo = info;
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
             this.dialog.show = true;
         },
 
@@ -409,24 +345,12 @@ export default {
         this.initData();
         this.initPageObj();
         this.initCondition();
-<<<<<<< HEAD
-
-        this.getOperationList();
-        this.getCategoryList();
-        this.getWarehouseList();
-
-        this.filterReset('reset');
-    },
-    activated(){
-        this.filterReset('reset');
-=======
     },
     activated(){
         this.getOperationList();
         this.getCategoryList();
         this.getWarehouseList();
         this.filterReset('filter',this.pageObj.currentPage);
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
     },
     /*
     beforeRouteEnter(to,from,next){

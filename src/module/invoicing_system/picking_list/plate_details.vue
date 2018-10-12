@@ -50,11 +50,7 @@
 								</li>
 								<li class="over_hide" :title="item.materialName">{{item.materialName}}</li>
 								<li class="over_hide" :title="item.materialCategoryName">{{item.materialCategoryName}}</li>
-<<<<<<< HEAD
-								<li>{{getType(item.materialType)}}</li>
-=======
 								<li>{{materType[item.materialType]}}</li>
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 								<li style="line-height: 0;padding-top: 15px">
 									<el-select v-model="item.index" @change="(res)=>{backItem(item,res)}" style="width:100px;">
 									    <el-option
@@ -137,11 +133,6 @@
 		mounted(){
 			this.$store.commit('setHeaderTil',{type: 'push', params: [{title:'查看详情'}]});
 			let arr = [{name:'返回',className:'info',type:4,fn:()=>{
-<<<<<<< HEAD
-				storage.session('listDetail',null);
-				storage.session('isBackPickingRecord',true);   //是否点击返回
-				window.history.go(-1);
-=======
 				storage.session('isBackPickingRecord',true);   //是否点击返回
 				if(this.isBack){
 					window.history.go(-1);
@@ -150,7 +141,6 @@
 					delete this.$route.query.id;
 					this.$router.push({path:'/admin/pickingList',query:this.$route.query});
 				}
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 			}}];
 			this.$store.commit('setPageTools',arr);
 			this.recordId = this.$route.query.id;

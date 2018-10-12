@@ -1,0 +1,56 @@
+.tebBox {
+  display: inline-block;
+  color: orange;
+  cursor: pointer;
+  li {
+    border: 1px orange solid;
+    display: inline-block;
+    padding: 10px 35px;
+    &:nth-child(n + 2) {
+      border-left: none;
+    }
+  }
+  .active {
+    background-color: orange;
+    color: #ffffff;
+  }
+}
+.serBox {
+  margin-top: 15px;
+  h1 {
+    display: inline-block;
+    line-height: 42px;
+  }
+  .timer {
+    display: inline-block;
+  }
+  .search-input {
+    height: 40px;
+    color: #a5a5a5;
+    font-size: 14px;
+    line-height: 40px;
+    text-indent: 15px;
+    padding: 0;
+    outline: none;
+    margin-right: 15px;
+  }
+}
+.tableCon {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px #cccccc solid;
+  li {
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    flex: 1;
+  }
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.page-box {
+  margin-top: 10px;
+}

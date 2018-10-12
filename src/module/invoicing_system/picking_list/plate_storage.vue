@@ -141,11 +141,7 @@
 		methods:{
 			initBtn(){
 				let arr=[
-<<<<<<< HEAD
-					{name: '确认',className: 'success',type:4,
-=======
 					{name: '确认',className: 'primary',type:4,
->>>>>>> 9eaed6ee20f861080a6c82a05cb8c534e4bbb7ab
 						fn: () => {
 							this.enter();
 						}
