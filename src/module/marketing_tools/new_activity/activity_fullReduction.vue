@@ -48,7 +48,7 @@
             <span class="online-sub fl required">活动门店</span>
             <div class="rightHalf" v-if="ischain == '3'">
                 <!-- <a href="javascript:void(0);" class="addclassify fl" @click="openActivityWin">关联门店</a> -->
-                <el-button type="primary" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
+                <el-button type="primary" class="fl margin" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
                 <span class="fl" v-if="selectsList.length >= 1">已选择{{selectsList.length}}家店铺</span>
             </div>
             <div class="rightHalf" v-else>
@@ -549,6 +549,7 @@ export default {
 				data.rule[0].couponIds = JSON.parse(data.rule[0].couponIds);
 				this.isItemShare = data.rule[0].couponIds.isItemShare;
 				this.isMemberShare = data.rule[0].couponIds.isMemberShare;
+				this.compulsoryName = this.list[this.isMemberShare].name;
 				this.isWholeShare = data.rule[0].couponIds.isWholeShare;
 				this.payDiscount = Boolean(Number(data.rule[0].couponIds.otherRule.status));
 				this.cash = data.rule[0].couponIds.otherRule.orderPrice;
@@ -805,5 +806,8 @@ export default {
     border-bottom: 10px solid transparent;
     border-right: 10px solid #45404b;
     border-left: 10px solid transparent;
+}
+#reduction .online-box .rightHalf .margin{
+	margin-right: 10px;
 }
 </style>
