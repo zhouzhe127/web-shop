@@ -134,7 +134,7 @@
 		</div>
 		<com-table :listHeight='80' :showHand="false" :listName="'员工码'" :showTitle='2' :listWidth="672" :introData="taList" :titleData="titleList">
 			<div slot="con-1" slot-scope="props">
-				<a @click="downloadCode(props.data)" download :href="downloadUrls" class="alink_color">下载二维码</a>
+				<a @click="downloadCode(props.data)" :download="props.data.staffName" :href="downloadUrls" class="alink_color">下载二维码</a>
 				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,props.$index)" style="width: 32%;">删除</a>
 
 			</div>
@@ -227,9 +227,9 @@
 					}
 				});
 			},
-			downloadCode: function (item) { //下载二维码
+			async downloadCode(item) { //下载二维码
 				let url = item.shortUrl;
-				this.downloadUrls = this.qrcode.getQrBase64(url, {
+				this.downloadUrls = await this.qrcode.getQrBase64(url, {
 					padding: 15,
 					width: 300,
 					height: 300,

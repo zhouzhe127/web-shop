@@ -120,7 +120,7 @@
 			<div class="right" v-if="validType.index == 0">
 				<div class="line" style="text-align:left;">
 					领券后
-					<input class="input couponinp" maxlength="3" v-model.trim.number="validType.time" /> 日内有效
+					<input class="input couponinp" maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" /> 日内有效
 				</div>
 			</div>
 			<div class="right" v-if="validType.index == 1" style="padding-left: 10px;">
@@ -708,6 +708,10 @@ export default {
 					this.valiData('券有效期只能是整数');
 					return false;
 				}
+				if (this.validType.time == 0) {
+					this.valiData('券有效期不能为0');
+					return false;
+				}						
 			}
 			let arr = [];
 			let alertText = '';
