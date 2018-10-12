@@ -135,7 +135,7 @@
 						<p class="name">步骤一：登录小程序后台，点击左方侧边栏选中“设置”</p>
 						<p class="name">步骤二：设置中选择“开发设置”，滑动至最下方“扫普通链接二维码打开小程序”，点击“添加”</p>
 						<p class="name">步骤三：二维码规则处填写
-							<input type="text" value="'https://wx.ishandian.net/MiniPro?oid='" class="url urlo inpurl" readonly="true" /><span style="color: #29A8E0;font-size: 16px;" @click="copyCode">点击复制</span></p>
+							<input type="text" :value="`${host}/MiniPro?brandOrAloneId=${userData.currentShop.id}&oid=`" class="url urlo inpurl" readonly="true" /><span style="color: #29A8E0;font-size: 16px;" @click="copyCode">点击复制</span></p>
 						<p class="name">步骤四：在“配置普通链接二维码规则”内，点击“下载校验文件”</p>
 						<p class="name">步骤五：打开校验文件，复制文件名与文件内容粘贴至下方，点击保存。</p>
 						<a href="javascript:;" class="blue" style="width:200px;margin-top: 10px;" @click="openCheckWin">配置校验文件</a>
@@ -181,7 +181,8 @@ export default {
 				'1': '审核失败',
 				'2': '审核中'
 			},
-			checkWin: false //校验文件弹窗
+			checkWin: false, //校验文件弹窗
+			host:'' //域名
 		};
 	},
 	methods: {
@@ -330,6 +331,7 @@ export default {
 					this.reviewStatus = res.auditData.status;
 				}
 				this.authMiniBackground = res.authMiniBackground;
+				this.host = res.host;
 			}
 		},
 		getQRcode: function() {

@@ -31,6 +31,7 @@
 						<span class="itemLeft">储值适用门店</span>
 						<a href="javascript:void(0);" class="addclassify" @click="openshopWin">选择门店</a>
 						<span style="color: #A5A5A5;" v-if="fixedslectsShopIds.length > 0">已选择{{fixedslectsShopIds.length}}家门店</span>
+                       
 					</li>
 					<li class="setItem">
 						<span class="itemLeft required">储值金额</span>

@@ -447,11 +447,11 @@ let need = {
 		storeArea: { //区域门店
 			name: 'storeArea'
 		},
-		getDispatchLogList:{//批量日志
-			name:'batchLog'
+		getDispatchLogList: { //批量日志
+			name: 'batchLog'
 		},
-		getGoodsLogList:{//总日志列表
-			name:'totalLog'
+		getGoodsLogList: { //总日志列表
+			name: 'goodsTotalLog'
 		}
 	}
 };

@@ -21,7 +21,7 @@
             </div>
 
             <div class="in-block" >
-                <el-select v-model="condition.operationType" placeholder="操作类型" multiple collapse-tags>
+                <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" clearable>
                     <el-option
                     v-for="item in operationList"
                     :key="item.id"
@@ -52,7 +52,7 @@
                     >
                 </el-cascader>
 
-                <el-select v-model="condition.wid" placeholder="仓库选择" multiple collapse-tags>
+                <el-select v-model="condition.wid" :multiple="true" placeholder="仓库选择" clearable>
                     <el-option
                     v-for="item in warehouseList"
                     :key="item.id"
@@ -63,8 +63,8 @@
             </div>
 
             <div class="in-block" style="padding-left:10px;">
-                <el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
-                <el-button type="info" @click="filterReset('reset',null)">重置</el-button>
+                <el-button type="primary" @click="filterReset('filter')">筛选</el-button>
+                <el-button type="info" @click="filterReset('reset')">重置</el-button>
             </div>
         </div>
 
@@ -90,25 +90,25 @@
                 <el-table-column  label="成本金额" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
-						{{Number(row.cost)}}
+						{{row.cost}}
 					</template>	  
                 </el-table-column>
                 <el-table-column label="售卖价格" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowPrice,'arrow-down':!row.arrowPrice}"></span>
-						{{Number(row.price)}}
+						{{row.price}}
 					</template>	  
                 </el-table-column>
                 <el-table-column prop="createTime" label="日期" width="150px">
                 </el-table-column>
                 <el-table-column prop="createUName" label="操作人" width="150px">
                 </el-table-column>
-                <el-table-column prop="wName" label="仓库/货架" width="150px">
+                <el-table-column prop="wName" label="仓库" width="150px">
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column}">
-                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row)}">查看记录</span>
-                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row)}">批次详情</span>
+                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
+                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row.type)}">批次详情</span>
                     </template>
                 </el-table-column>
 
@@ -158,6 +158,7 @@
                 <div class="column">
                     <div>规格:{{materialInfo.specifications}}</div>
                     <div>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</div>
+                    <div>耗损:{{materialInfo.lossNum}}</div>
                     <div class="column-container">
                         <div class="label">货架位置:</div>
                         <div class="">

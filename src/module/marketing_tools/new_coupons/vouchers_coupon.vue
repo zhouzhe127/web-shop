@@ -21,7 +21,8 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<input class="inp" v-model="couponName" maxlength="20" placeholder="请输入优惠券名称" />
+					<!-- <input class="inp" v-model="couponName" maxlength="20" placeholder="请输入优惠券名称" /> -->
+					<el-input v-model="couponName" placeholder="请输入优惠券名称" maxlength="20"></el-input>
 				</div>
 			</div>
 			<!-- 适用门店 -->
@@ -33,9 +34,10 @@
 				</div>
 				<div class="right">
 					<div class="fl">
-						<div class="buttons" @click="openShopWin">
+						<!-- <div class="buttons" @click="openShopWin">
 							<img src="../../../res/images/add.png" /> 选择门店
-						</div>
+						</div> -->
+						<el-button class="fl" type="primary" icon="el-icon-plus" @click="openShopWin">选择门店</el-button>
 						<div class="associated">
 							共关联{{getArrLength('selectShops')}}家门店
 						</div>
@@ -50,7 +52,10 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<input class="input denomination" maxlength="6" placeholder="请输入面额" v-model.trim.number="denomination" /> 元
+					<!-- <input class="input denomination" maxlength="6" placeholder="请输入面额" v-model.trim.number="denomination" /> 元 -->
+					<el-input placeholder="请输入面额" v-model="denomination" maxlength="6">
+						<template slot="suffix">元</template>
+					</el-input>
 				</div>
 			</div>
 			<!-- 入账金额 -->
@@ -61,7 +66,10 @@
 			</div>
 			<div class="right">
 				<div class="fl ">
-					<input maxlength="6" class="input denomination" placeholder="0" v-model.trim.number="netAmount" /> 元
+					<!-- <input maxlength="6" class="input denomination" placeholder="0" v-model.trim.number="netAmount" /> 元 -->
+					<el-input placeholder="请输入金额" v-model="netAmount" maxlength="6">
+						<template slot="suffix">元</template>
+					</el-input>
 				</div>
 			</div>
 			<!-- 结算金额 -->
@@ -72,7 +80,10 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<input maxlength="6" class="input denomination" placeholder="0" v-model.trim.number="setAmount" /> 元
+					<!-- <input maxlength="6" class="input denomination" placeholder="0" v-model.trim.number="setAmount" /> 元 -->
+					<el-input placeholder="请输入金额" v-model="setAmount" maxlength="6">
+						<template slot="suffix">元</template>
+					</el-input>
 				</div>
 			</div>
 			<!-- 是否强免 -->
@@ -82,9 +93,12 @@
 				</div>
 			</div>
 			<div class="right">
-				<section class="fl reduce" v-for="(item,index) in compulsoryCreditsList" :key="index">
+				<!-- <section class="fl reduce" v-for="(item,index) in compulsoryCreditsList" :key="index">
 					<span :class="{'sign' : compulsoryCredits == index}" v-on:click="changecompulsoryCredits(item,index)">{{item.name}}</span>
-				</section>
+				</section> -->
+				<el-radio-group v-model="compulsoryName" class="fl">
+					<el-radio style="width:112px;" v-for="(item,index) in compulsoryCreditsList" :key="index" :label="item.name" border @change.native="changecompulsoryCredits(item)"></el-radio>
+				</el-radio-group>
 			</div>
 			<!-- 券有效期 -->
 			<div class="left ">
@@ -93,9 +107,12 @@
 				</div>
 			</div>
 			<div class="right">
-				<section class="fl reduce" v-for="(item,index) in validList" :key="index">
+				<!-- <section class="fl reduce" v-for="(item,index) in validList" :key="index">
 					<span :class="{'sign' : validType.index == index}" v-on:click="changevalidType(item,index)">{{item.name}}</span>
-				</section>
+				</section> -->
+				<el-radio-group v-model="validName" class="fl">
+					<el-radio v-for="(item,index) in validList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
+				</el-radio-group>
 			</div>
 			<!-- 相对时间和制定时间对应的 -->
 			<div class="left ">
@@ -107,7 +124,7 @@
 				</div>
 			</div>
 			<div class="right" v-if="validType.index == 1" style="padding-left: 10px;">
-				<div class="cleander">
+				<!-- <div class="cleander">
 					<div class="cleander_o" @click="showCalendar">
 						<div class="cleander_t">{{transformDate(validType.startTime)}}</div>
 						<div class="cleander_f">
@@ -119,7 +136,9 @@
 				</div>
 				<div class="triangle" @click="showCalendar">
 					<img src="../../../res/icon/q2x.png" />
-				</div>
+				</div> -->
+				<el-date-picker class="fl" v-model="validType.valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
+				</el-date-picker>
 				<div class="foday">
 					共{{getValidDay()}}天
 				</div>
@@ -131,7 +150,11 @@
 				</div>
 			</div>
 			<div class="right" style="text-align:left;padding-left:10px;">
-				<select-btn :name='validTime' :sorts="validTimeList.map(v=>v.name)" :width="190" @selOn="selexpirationTime"></select-btn>
+				<!-- <select-btn :name='validTime' :sorts="validTimeList.map(v=>v.name)" :width="190" @selOn="selexpirationTime"></select-btn> -->
+				<el-select v-model="validTime" @change="selData" style="color:#c0c4cc">
+					<el-option v-for="item in validTimeList" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>
 			</div>
 			<!-- 使用时段 -->
 			<div class="left">
@@ -149,20 +172,26 @@
 				</div>
 			</div>
 			<div class="right">
-				<section class="fl reduce" v-for="(item,index) in useThresholdList" :key="index">
+				<!-- <section class="fl reduce" v-for="(item,index) in useThresholdList" :key="index">
 					<span :class="{'sign' : useThresholdId == index}" v-on:click="changeuseThreshold(item,index)">{{item.name}}</span>
-				</section>
+				</section> -->
+				<el-radio-group v-model="useThresholdName" class="fl">
+					<el-radio v-for="(item,index) in useThresholdList" :key="index" :label="item.name" border @change.native="changeuseThreshold(item)"></el-radio>
+				</el-radio-group>
 			</div>
 			<!-- 制定门槛的金额 -->
 			<template v-if="useThresholdId == 1">
 				<div class="left ">
 				</div>
 				<div class="right">
-					<div class="fl creditamount">
-						<input class="input reduceamount" placeholder="请输入金额" v-model.trim.number="threshold" maxlength="6" />
+					<div class="fl">
+						<!-- <input class="input reduceamount" placeholder="请输入金额" v-model.trim.number="threshold" maxlength="6" />
 						<div class="yuan">
 							元
-						</div>
+						</div> -->
+						<el-input style="width:194px;" placeholder="请输入金额" v-model="threshold" maxlength="6">
+							<template slot="suffix">元</template>
+						</el-input>
 					</div>
 				</div>
 			</template>
@@ -173,12 +202,50 @@
 				</div>
 			</div>
 			<div class="right">
-				<div class="fl creditamount">
-					<input class="input reduceamount" placeholder="请输入最大使用上限" v-model.trim.number="maxCeiling" maxlength="6" />
+				<div class="fl">
+					<!-- <input class="input reduceamount" placeholder="请输入最大使用上限" v-model.trim.number="maxCeiling" maxlength="6" />
 					<div class="yuan">
 						张
-					</div>
+					</div> -->
+					<el-input style="width:194px;" placeholder="请输入最大使用上限" v-model="maxCeiling" maxlength="6">
+						<template slot="suffix">张</template>
+					</el-input>
 				</div>
+			</div>
+			<!-- 优惠共享 -->
+			<div class="left ">
+				<div class="text required">
+					优惠共享
+				</div>
+			</div>
+			<div class="right" style="text-align:left;padding-left:10px;">
+				<!-- <select-btn :name='isSharing' :sorts="isSharingList.map(v=>v.name)" :width="190" @selOn="getSharing"></select-btn> -->
+				<el-select v-model="isSharing" @change="getSharing" style="color:#c0c4cc">
+					<el-option v-for="item in isSharingList" :key="item.id" :label="item.name" :value="item.id">
+					</el-option>
+				</el-select>
+				<div class="and" v-if="isSharingId == 1">
+					<span> 且</span>
+					<!-- <select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn> -->
+					<el-select v-model="concessionSharing" @change="getconcession" style="color:#c0c4cc">
+						<el-option v-for="item in concessionSharingList" :key="item.id" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+				</div>
+				<!-- <div class="icon" @click="showText()">
+					<div class="detDiv" v-if="hiddenText">
+						<i class="detI triright"></i>
+						<h3 class="detH3">
+                            “与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用 “不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受 “不可与其他优惠共享”则也包含“不与会员卡优惠共用”。
+                        </h3>
+					</div>
+				</div> -->
+				<el-tooltip placement="right">
+					<div slot="content">与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用
+						<br/>不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受
+						<br/>“不可与其他优惠共享”则也包含“不与会员卡优惠共用”</div>
+					<i class="el-icon-question" style="font-size:24px;"></i>
+				</el-tooltip>
 			</div>
 			<!-- 其他设置 -->
 			<div class="set-line" style="float: left;">
@@ -194,8 +261,9 @@
 				</div>
 			</div>
 			<div class="right">
-				<div class="fl note">
-					<input class="input" placeholder="20字" maxlength="20" v-model="annotation" />
+				<div class="fl">
+					<!-- <input class="input" placeholder="20字" maxlength="20" v-model="annotation" /> -->
+					<el-input style="width:300px;" v-model="annotation" placeholder="20字" maxlength="20"></el-input>
 				</div>
 			</div>
 			<!-- 使用须知 -->
@@ -205,8 +273,10 @@
 				</div>
 			</div>
 			<div class="right">
-				<div class="fl useinformation">
-					<textarea class="describe" maxlength="150" v-model="useKnow"></textarea>
+				<div class="fl">
+					<!-- <textarea class="describe" maxlength="150" v-model="useKnow"></textarea> -->
+					<el-input type="textarea" :autosize="{ minRows: 8, maxRows: 8}" placeholder="请输入内容" v-model="useKnow" maxlength="150">
+					</el-input>
 					<div class="fl describetip">
 						<div class="fl tips">
 							<img src="../../../res/icon/alert.jpg" />
@@ -219,7 +289,8 @@
 			</div>
 			<!-- 保存 -->
 			<div class="save-coupon">
-				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="getSendInfo">保存</a>
+				<!-- <a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="getSendInfo">保存</a> -->
+				<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
 			</div>
 			<!-- 选择门店的弹窗 -->
 			<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
@@ -238,6 +309,7 @@ export default {
 			ischain: '', //0 单店 3 品牌
 			couponName: '', //优惠券名称
 			shopWin: false, // 店铺弹框
+			hiddenText: false,
 			goodsWin: false, // 商品弹框
 			isShowCa: false, // 是否展示时间选择组件
 			selectShops: [], //选中的商铺
@@ -250,7 +322,9 @@ export default {
 				'name': '是'
 			}
 			],
+			compulsoryName: '否',
 			compulsoryCredits: '0', //是否强制减免
+			validName: '相对时间',
 			validList: [{
 				'validType': '0',
 				'name': '相对时间'
@@ -265,6 +339,7 @@ export default {
 				'time': '', //制定时间输入的值 领取后多少日生效
 				'startTime': (new Date()).getTime(), //相对时间的开始时间
 				'endTime': (new Date()).getTime(), //相对时间的结束时间
+				'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 			}, //券有效期 
 			validTimeList: [{ //过期时间
 				name: '领取后即刻生效',
@@ -312,6 +387,7 @@ export default {
 				id: 1
 			},
 			],
+			useThresholdName: '不设限制',
 			useThresholdId: '0',
 			threshold: '', //指定门槛金额
 			annotation: '', //备注
@@ -321,7 +397,30 @@ export default {
 			setAmount: '', //结算金额
 			maxCeiling: '', //最大使用上限
 			editCoupon: false,
-			shopList: []
+			shopList: [],
+			isSharingId: '',
+			isSharing: '不与其它优惠共享',
+			isSharingList: [{ //是否优惠共享
+				name: '不与其它优惠共享',
+				id: 0
+			},
+			{
+				name: '可与其他优惠共享',
+				id: 1
+			}
+			],
+			concessionSharingId: 0,
+			concessionSharing: '不与会员卡优惠共用',
+			concessionSharingList: [{ //优惠共享
+				name: '不与会员卡优惠共用',
+				id: 0
+			},
+			{
+				name: '可与会员卡优惠共用',
+				id: 1
+			}
+			],
+			sharingStatus: '',
 		};
 	},
 	props: {
@@ -338,6 +437,9 @@ export default {
 				this.selectShops = couponDetail.shopIds.split(',');
 			} //选中的店铺
 			this.compulsoryCredits = couponDetail.isDiscount; //是否强制减免
+			if(this.compulsoryCredits == '1'){
+				this.compulsoryName = '是';
+			}
 			this.denomination = couponDetail.param; //面额
 			this.netAmount = couponDetail.billPrice; //入账金额
 			this.setAmount = couponDetail.reckoningPrice; //结算金额
@@ -346,8 +448,10 @@ export default {
 			if (couponDetail.validityType == 0) {
 				this.validType.time = couponDetail.relativeTime;
 			} else if (couponDetail.validityType == 1) {
-				this.validType.startTime = (couponDetail.startTime - 0) * 1000;
-				this.validType.endTime = (couponDetail.endTime - 0) * 1000;
+				this.validName = '指定时间';
+				//console.log(this.validName)
+				this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
+				this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
 			}
 			this.useDate.index = couponDetail.periodSel;
 			if (couponDetail.periodSel == 1) {
@@ -368,8 +472,26 @@ export default {
 			} //领取后多久生效的名称
 			if (couponDetail.lowestConsume != 0) { //使用门槛
 				this.useThresholdId = 1;
+				this.useThresholdName = '指定门槛';
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
+
+			//判断优惠共享更改的状态
+			if (couponDetail.sharingStatus == 0) {
+				this.isSharingId = 0;
+				this.isSharing = '不与其它优惠共享';
+			} else if (couponDetail.sharingStatus == 2) {
+				this.isSharingId = 1;
+				this.concessionSharingId = 0;
+				this.isSharing = '可与其他优惠共享';
+				this.concessionSharing = '不与会员卡优惠共用';
+			} else if (couponDetail.sharingStatus == 1) {
+				this.isSharingId = 1;
+				this.concessionSharingId = 1;
+				this.isSharing = '可与其他优惠共享';
+				this.concessionSharing = '可与会员卡优惠共用';
+			}
+
 			this.annotation = couponDetail.annotation; //备注
 			this.useKnow = couponDetail.useKnow; //使用须知
 
@@ -388,6 +510,9 @@ export default {
 			import ( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
 	},
 	methods: {
+		showText() {
+			this.hiddenText = !this.hiddenText;
+		},
 		openShopWin() { //打开选择店铺的弹窗
 			this.shopWin = true;
 		},
@@ -400,15 +525,15 @@ export default {
 		getArrLength(type) { //返回数组的长度
 			return this[type].length;
 		},
-		changecompulsoryCredits: function(item, index) { //是否强制减免
-			this.compulsoryCredits = index;
+		changecompulsoryCredits: function(item) { //是否强制减免
+			this.compulsoryCredits = item.compulsoryCredits;
 		},
-		changeuseThreshold: function(item, index) { //使用门槛
-			this.useThresholdId = index;
+		changeuseThreshold: function(item) { //使用门槛
+			this.useThresholdId = item.id;
 		},
-		changevalidType: function(item, index) { //指定时间和相对时间
-			this.validType.index = index;
-		},
+		// changevalidType: function(item, index) { //指定时间和相对时间
+		// 	this.validType.index = index;
+		// },
 		showCalendar() { //是否打开日历组建
 			this.isShowCa = !this.isShowCa;
 		},
@@ -416,7 +541,7 @@ export default {
 			return utils.format(new Date(t), 'yyyy-MM-dd');
 		},
 		getValidDay() { //获取一共多少天
-			return Math.floor((this.validType.endTime - this.validType.startTime) / (24 * 3600 * 1000) + 1);
+			return Math.floor((this.validType.valueTime[1] - this.validType.valueTime[0]) / (24 * 3600 * 1000) + 1);
 		},
 		getAddAlltime(time) {
 			this.validType.startTime = time.startTime;
@@ -426,6 +551,17 @@ export default {
 		selexpirationTime: function(i) { //领取生效
 			this.validTime = this.validTimeList[i].name; //点击卡类型对应的名字
 			this.validTimeId = this.validTimeList[i].id; //点击卡类型对应的id
+		},
+		getSharing: function(value) {
+			console.log(value);
+			this.isSharingId = value;
+			// this.isSharing = this.isSharingList[i].name; //点击卡类型对应的名字
+			// this.isSharingId = this.isSharingList[i].id; //点击卡类型对应的id
+		},
+		getconcession: function(value) {
+			this.concessionSharingId = value;
+			// this.concessionSharing = this.concessionSharingList[i].name;
+			// this.concessionSharingId = this.concessionSharingList[i].id;
 		},
 		getResult: function(val) { //使用时间段
 			this.useDate = val;
@@ -631,6 +767,11 @@ export default {
 					return false;
 				}
 			}
+
+			if (this.isSharingId === '') {
+				this.valiData('请选择优惠券共享方式');
+				return false;
+			}
 			if (this.annotation.length > 20) {
 				this.valiData('备注字数不能大于20');
 				return false;
@@ -665,6 +806,16 @@ export default {
 				obj.useLimit = this.maxCeiling; //最大使用上限
 				obj.billPrice = this.netAmount; //入账金额
 				obj.reckoningPrice = this.setAmount; //结算金额
+
+				// 优惠券共享
+				if (this.isSharingId === 0) {
+					obj.sharingStatus = 0;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
+					obj.sharingStatus = 2;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
+					obj.sharingStatus = 1;
+				}
+
 				if (this.useThresholdId == 0) { //指定门槛金额
 					obj.lowestConsume = 0;
 				} else {
@@ -684,8 +835,8 @@ export default {
 				if (this.validType.index == 0) {
 					obj.relativeTime = this.validType.time;
 				} else {
-					obj.startTime = parseInt(this.validType.startTime / 1000);
-					obj.endTime = parseInt(this.validType.endTime / 1000);
+					obj.startTime = parseInt(this.validType.valueTime[0] / 1000);
+					obj.endTime = parseInt(this.validType.valueTime[1] / 1000);
 				}
 				obj.type = 6;
 				if (!utils.isEmptyObject(this.couponDetail)) {
@@ -712,10 +863,13 @@ export default {
 				}, 500);
 			}
 		},
+		clicktheRadio: function(item) {
+			this.validType.index = item.validType;
+		},
+		selData: function(value) { //领取后生效
+			this.validTimeId = value;
+		},
 	},
-	computed: {
-
-	}
 };
 </script>
 <style type="text/css" scoped>
@@ -727,6 +881,65 @@ export default {
 	overflow: hidden;
 	padding-bottom: 300px;
 	position: relative;
+}
+
+#breakCoupon .icon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
+	position: relative;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+#breakCoupon .icon .detDiv {
+	display: inline-block;
+	width: 460px;
+	background: #45404b;
+	position: absolute;
+	top: -10px;
+	left: 35px;
+	padding: 10px;
+	box-shadow: 3px 2px 10px #ccc;
+	z-index: 100;
+}
+
+#breakCoupon .icon .detDiv .detI {
+	width: 0;
+	height: 0;
+	line-height: 0;
+	position: absolute;
+	top: 10px;
+	left: -20px;
+	right: 30%;
+	border-width: 10px;
+	border-top: 0px;
+	border-style: solid;
+	border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
+}
+
+#breakCoupon .icon .detDiv .detH3 {
+	line-height: 22px;
+	color: #e6e6e7;
+}
+
+#breakCoupon .icon .detDiv .triright {
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #45404b;
+	border-left: 10px solid transparent;
+}
+
+#breakCoupon .and {
+	display: inline-block;
+}
+
+#breakCoupon .and span {
+	color: #000000;
+	padding: 0 10px;
 }
 
 #breakCoupon .set-line {
@@ -819,6 +1032,7 @@ export default {
 	height: 100%;
 	padding: 0 10px;
 	text-align: right;
+	font-size: 16px;
 }
 
 #breakCoupon .right .buttons {

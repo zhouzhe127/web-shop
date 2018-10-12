@@ -9,7 +9,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='titles' maxlength="10" />
+				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='titles' maxlength="10" /> -->
+				<el-input v-model="titles" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
 		<!-- 活动时间 -->
@@ -17,9 +18,13 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar>
+					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
+					</el-date-picker>
 					<span class="fl lines">-</span>
-					<calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar>
+					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
+					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
+					</el-date-picker>
 				</div>
 				<span class="fl returnInt">共{{returnInt}}天</span>
 			</div>
@@ -28,7 +33,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动范围</span>
 			<div class="rightHalf" v-if="ischain == '3'">
-				<a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a>
+				<!-- <a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a> -->
+				<el-button type="primary" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
 				<span v-if="selectsList.length >= 1">(已选择{{selectsList.length}}家店铺)</span>
 			</div>
 			<div class="rightHalf" v-else>
@@ -39,72 +45,72 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
-				<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span>
-			</div>
-		</div>
-		<!-- 营销规则设置 -->
-		<div class="set-line">
-			<div class="titles">营销规则设置</div>
-			<div class="line"></div>
-		</div>
-		<!-- 规则 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl"></span>
-			<div class="rightHalf">
-				<ul>
-					<li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
-						规则{{index + 1}}
-						<i class="deletes" @click.stop="deleteRule(index)"></i>
-					</li>
-					<li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
-				</ul>
-				<div class="content-set" v-for="(item,ind) in ruleList" :key='ind' v-if='ruleIndex == ind'>
-					<!-- 最低消费 -->
-					<div class="online-box clearfix">
-						<span class="online-sub fl">最低消费</span>
-						<div class="rightHalf">
-							<select-btn :name='item.durationName' :sorts="durationList.map(v=>v.name)" :width="189" @selOn="selexpirationTime" :showIndex='ind'></select-btn>
-						</div>
-					</div>
-					<!-- 最低消费 -->
-					<div class="online-box clearfix" v-if="item.durationId == '1'">
-						<span class="online-sub fl">指定额度</span>
-						<div class="rightHalf">
-							<section>
+                <!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
+                	<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
+                	<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
+                	<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
+                	<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
+                		<i class="el-icon-question" style="color:#E1BB4A;font-size: 24px;"></i>
+                	</el-tooltip>
+                	<div class="memberinner">
+                		<span v-if="member > 0">已关联会员:{{member}}人</span>
+                		<span v-if="member > 0 && fans > 0">|</span>
+                		<span v-if='fans > 0'>已关联粉丝:{{fans}}人</span>
+                	</div>
+                </div>
+            </div>
+            <!-- 营销规则设置 -->
+            <div class="set-line">
+            	<div class="titles">营销规则设置</div>
+            	<div class="line"></div>
+            </div>
+            <!-- 规则 -->
+            <div class="online-box clearfix">
+            	<span class="online-sub fl"></span>
+            	<div class="rightHalf">
+            		<ul>
+            			<li v-for="(item,index) in ruleList" :key='index' :class="ruleIndex == index ? 'on' : 'initial'" @click="getDetails(index)">
+            				规则{{index + 1}}
+            				<i class="deletes" @click.stop="deleteRule(index)"></i>
+            			</li>
+            			<li class="adds" @click="addRule" v-if="ruleList.length < 5">新增规则</li>
+            		</ul>
+            		<div class="content-set" v-for="(item,ind) in ruleList" :key='ind' v-if='ruleIndex == ind'>
+            			<!-- 最低消费 -->
+            			<div class="online-box clearfix">
+            				<span class="online-sub fl">最低消费</span>
+            				<div class="rightHalf">
+            					<!-- <select-btn :name='item.durationName' :sorts="durationList.map(v=>v.name)" :width="189" @selOn="selexpirationTime" :showIndex='ind'></select-btn> -->
+            					<el-select v-model="item.durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+            						<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
+            						</el-option>
+            					</el-select>
+            				</div>
+            			</div>
+            			<!-- 最低消费 -->
+            			<div class="online-box clearfix" v-if="item.durationId == '1'">
+            				<span class="online-sub fl">指定额度</span>
+            				<div class="rightHalf">
+                            <!-- <section>
 								<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.minConsumess" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'1')" />
 								<span>元</span>
-							</section>
+							</section> -->
+							<el-input placeholder="请输入金额" v-model="item.minConsumess" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'1')" style="width:179px;">
+								<template slot="suffix">元</template>
+							</el-input>
 						</div>
 					</div>
-					<!-- <div class="agift-content" style="overflow: initial;height: 40px;margin-top: 20px;">
-						<span class="fl">最低消费</span>
-						<div class="fl selectList" @click="openSelect('1')">
-							{{consumeName}}
-							<ul v-if="isConsumeList">
-								<li v-for="(item,index) in consumeList" :key='index' @click="getListDetail(item,index,'1')">{{item.name}}</li>
-							</ul>
-						</div>
-						<span class="fl moreBtn" style="border: 1px solid #CCCCCC;border-left: none;cursor: pointer;" @click="openSelect('1')">
-							<i></i>
-						</span>
-						<template v-if="minConsume == 1">
-							<input type="text" class="fl" placeholder="请输入金额" maxlength="6" style="width: 100px;margin-left: 10px;" v-model="minConsumess" />
-						</template>
-					</div> -->
-					<!-- <div class="agift-content">
-						<span class="fl">最高消费</span>
-						<input type="text" placeholder="请输入金额" style="width: 138px;height:40px" maxlength="6" v-model="maxConsumes" class="fl" />
-						<span class="fl moreBtn" style="border: 1px solid #CCCCCC;border-left: none;cursor: pointer;text-align: center;color: #999999;">元</span>
-					</div> -->
 					<!-- 最高消费 -->
 					<div class="online-box clearfix">
 						<span class="online-sub fl">最高消费</span>
 						<div class="rightHalf">
-							<section>
+                            <!-- <section>
 								<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="item.maxConsumes" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'2')" />
 								<span>元</span>
-							</section>
+							</section> -->
+							<el-input placeholder="请输入金额" v-model="item.maxConsumes" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue(item,'2')" style="width:179px;">
+								<template slot="suffix">元</template>
+							</el-input>
 						</div>
 					</div>
 					<!-- 循环赠送 -->
@@ -118,7 +124,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="agift-content">
+                    <!-- <div class="agift-content">
 						<span class="fl"></span>
 						<label class="fl">
 							<i @click="isLoopFun" :class="ruleObj.isLoop ? 'chckOn' : ''">✓</i>
@@ -126,7 +132,7 @@
 						<p class="fl" style="font-size: 16px;margin-right: 10px;">循环赠送</p>
 						<p class="fl" style="color: #999999;margin-top: 2px;">(满足交易额整数倍，发劵数同倍增加)</p>
 					</div> -->
-					<!-- <div class="agift-content" style="overflow: initial;height: 40px;">
+                    <!-- <div class="agift-content" style="overflow: initial;height: 40px;">
 						<span class="fl">会员权益</span>
 						<div class="fl selectList" @click="openSelect">
 							{{onListName}}
@@ -142,7 +148,11 @@
 					<div class="online-box clearfix">
 						<span class="online-sub fl">会员权益</span>
 						<div class="rightHalf">
-							<select-btn :name='item.interestName' :sorts="interestList.map(v=>v.name)" :width="189" @selOn="selinterest" :showIndex='ind'></select-btn>
+							<!--  <select-btn :name='item.interestName' :sorts="interestList.map(v=>v.name)" :width="189" @selOn="selinterest" :showIndex='ind'></select-btn> -->
+							<el-select v-model="item.interestName" placeholder="请选择" @change="selinterest" style="color:#c0c4cc;width: 179px;">
+								<el-option v-for="item in interestList" :key="item.id" :label="item.name" :value="item.id">
+								</el-option>
+							</el-select>
 						</div>
 					</div>
 					<!-- 关联优惠券 -->
@@ -153,14 +163,14 @@
 							<span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
 						</div>
 					</div>
-					<!-- <div class="agift-content" v-if="memberRights == 0">
+                    <!-- <div class="agift-content" v-if="memberRights == 0">
 						<span class="fl"></span>
 						<div class="btn-concent" @click="openCouponWin">
 							<button class="fl increase" style="width: 150px;">选择优惠劵</button>
 						</div>
 						<span class="fl" v-if="ruleObj.couponIds.length >= 1">已选择{{ruleObj.couponIds.length}}张</span>
 					</div> -->
-					<!-- <div class="agift-content" id="agift">
+                    <!-- <div class="agift-content" id="agift">
 						<span class="fl">消息推送渠道</span>
 						<mulSelect :styles="{backgroundColor:'rgb(247,247,247)'}" :list='list' @selOn='selOnSend' :selects="ruleObj.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
 						<span class="fl" style="width: auto;color: #666666;">活动发布后将通过该渠道触发会员</span>
@@ -190,7 +200,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="agift-content">
+                    <!-- <div class="agift-content">
 						<label>
 							<span class="required required-none" style="vertical-align: top;padding-top: 10px;">内容设置</span>
 							<textarea placeholder="内容设置" style="width: 350px;height: 100px;" v-model="ruleObj.msgContent" maxlength="151"></textarea>
@@ -209,7 +219,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="main_Box" style="overflow: initial;">
+        <!-- <div class="main_Box" style="overflow: initial;">
 			<div class="agift-content">
 				<span class="fl">活动群体</span>
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }" @click="chooseIntegral(index)">{{item.name}}</span>
@@ -227,25 +237,28 @@
 			</div>
 		</div>
 		<div class="agift-content" style="padding-left: 60px;">
-			<a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a>
+			<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a> -->
+			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
-				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a>
-			</template>
-		</div>
-		<rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
-		<coupon @winEvent='couponEvent' :selectCoupon='selectCoupon' v-if='showCoupon'></coupon>
-	</div>
-	<!-- 会员筛选 -->
-	<memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
-</template>
-<script>
-import utils from 'src/verdor/utils';
-import storage from 'src/verdor/storage';
-import http from 'src/manager/http';
+                <!--  <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
+                	<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
+                	<el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
+                	<el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
+                </template>
+            </div>
+            <rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
+            <coupon @winEvent='couponEvent' :selectCoupon='selectCoupon' v-if='showCoupon'></coupon>
+        </div>
+        <!-- 会员筛选 -->
+        <memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
+    </template>
+    <script>
+    import utils from 'src/verdor/utils';
+    import storage from 'src/verdor/storage';
+    import http from 'src/manager/http';
 
 // 限制输入数字
-let intReg = /[^\d]/g;
+//let intReg = /[^\d]/g;
 
 // 验证中文
 // let Chinese = /[^\u4E00-\u9FA5]|[\uFE30-\uFFA0]/g;
@@ -266,35 +279,35 @@ export default {
 			dates: new Date().getTime(), //当前时间
 			returnInt: 1, //相差天数
 			list: [{
-					name: '微信',
-					id: '1'
-				},
-				// {
-				// 	name: '短信',
-				// 	id: '2'
-				// }
+				name: '微信',
+				id: '1'
+			},
+			// {
+			// 	name: '短信',
+			// 	id: '2'
+			// }
 			],
 			selects: [],
 			msmStatus: false,
 			interestList: [{ //会员权益
-					name: '无',
-					id: 1
-				},
-				{
-					name: '电子优惠券',
-					id: 2
-				}
+				name: '无',
+				id: 1
+			},
+			{
+				name: '电子优惠券',
+				id: 2
+			}
 			],
 			interestName: '无',
 			interestId: 1,
 			durationList: [{ //活动期限
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定额度',
-					id: 1
-				}
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定额度',
+				id: 1
+			}
 			],
 			durationId: 0,
 			durationName: '不设限制', //状态
@@ -321,7 +334,6 @@ export default {
 				msgContent: '' //内容设置
 			}],
 			ischain: 0, //3为品牌 0为单店
-			ruleIndex: 0,
 			title: '', //标题
 			maxConsume: '', //最高消费
 			minConsumes: '', //最低消费
@@ -341,59 +353,62 @@ export default {
 			activityDetail: {},
 			explain: '', //内容设置
 			parameter: [{
-					name: '【会员姓名】',
-					id: '{memberName}'
-				},
-				{
-					name: '【优惠券名称】',
-					id: '{couponName}'
-				},
-				{
-					name: '【优惠券数量】',
-					id: '{couponNum}'
-				},
-				{
-					name: '【活动名称】',
-					id: '{activityName}'
-				},
-				{
-					name: '【消费日期】',
-					id: '{salesTime}'
-				}
+				name: '【会员姓名】',
+				id: '{memberName}'
+			},
+			{
+				name: '【优惠券名称】',
+				id: '{couponName}'
+			},
+			{
+				name: '【优惠券数量】',
+				id: '{couponNum}'
+			},
+			{
+				name: '【活动名称】',
+				id: '{activityName}'
+			},
+			{
+				name: '【消费日期】',
+				id: '{salesTime}'
+			}
 			],
 			showRang: false,
 			showCoupon: false,
 			selectsList: [],
 			integralList: [{
-					name: '默认全部'
-				},
-				{
-					name: '会员筛选'
-				}
+				name: '默认全部'
+			},
+			{
+				name: '会员筛选'
+			}
 			],
 			integralOn: 0, //活动对象的选择
 			indexCustom: 0, //活动对象选中的
 			showVip: false, //打开高级筛选	
 			member: '0', //筛选出来的人数
+			fans: '0', //粉丝的人数
 			memfilter: '', //筛选的条件
 			memberStatus: true,
 			isactivityDetail: true,
 			ruleIndex: 0, //点中的第几个  
 			selectCoupon: [], //选中的优惠券
+			checkedMember: false, //会员选中的
+			checkedFans: false, //粉丝选中的
 			shopId:'' //单店的shopId
 		};
 	},
 	methods: {
-		haveIndex(i) { //活动对象选择
-			this.integralOn = i;
-			// console.log(this.integralOn)
-			if (this.integralOn == '1') {
-				if (this.memberStatus) {
-					this.addVip();
-				}
-			}
-			//this.abc();
-		},
+		// haveIndex(i) { //活动对象选择
+		// 	this.integralOn = i;
+		// 	console.log(this.integralOn)
+		// 	if (this.integralOn == '1') {
+		// 		if (this.memberStatus) {
+		// 			this.addVip();
+		// 		}
+		// 	}
+		// 	this.abc();
+		// },
 		selOnSend(arr) {
 			this.ruleList[this.ruleIndex].pushChannel = arr;
 		},
@@ -410,16 +425,17 @@ export default {
 				winType: winType
 			});
 		},
-		selexpirationTime: function(i, showIndex) { //最低消费
-			this.ruleList[showIndex].durationName = this.durationList[i].name; //点击对应的名字
-			this.ruleList[showIndex].durationId = this.durationList[i].id; //点击对应的id
-			if (this.ruleList[showIndex].durationId == 0) {
-				this.ruleList[showIndex].isLoop = false;
+		selexpirationTime: function(i) { //最低消费
+			//this.ruleList[showIndex].durationName = this.durationList[i].name; //点击对应的名字
+			this.ruleList[this.ruleIndex].durationId = i; //点击对应的id
+			if (this.ruleList[this.ruleIndex].durationId == 0) {
+				this.ruleList[this.ruleIndex].isLoop = false;
 			}
+			console.log(this.ruleList[this.ruleIndex].durationId);
 		},
-		selinterest: function(i, showIndex) { //会员权益
-			this.ruleList[showIndex].interestName = this.interestList[i].name; //点击对应的名字
-			this.ruleList[showIndex].interestId = this.interestList[i].id; //点击对应的id
+		selinterest: function(i) { //会员权益
+			//this.ruleList[showIndex].interestName = this.interestList[i].name; //点击对应的名字
+			this.ruleList[this.ruleIndex].interestId = i; //点击对应的id
 		},
 		openActivityWin() {
 			//设置活动范围
@@ -457,6 +473,7 @@ export default {
 		addParameter: function(index) {
 			//添加参数
 			this.ruleList[this.ruleIndex].msgContent += this.parameter[index].id;
+
 		},
 		// getListDetail: function(item, index, type) {
 		// 	// 获取设置list详情
@@ -491,7 +508,7 @@ export default {
 			if (item.durationId == 1) {
 				item.isLoop = !item.isLoop;
 			} else {
-				this.valiData('请选择并填写最低消费金额')
+				this.valiData('请选择并填写最低消费金额');
 			}
 			// if (this.minConsume == 1) {
 			// 	//            this.Loops = !this.Loops;
@@ -543,7 +560,7 @@ export default {
 				couponIds: [], //优惠券
 				pushChannel: [], //消息推送渠道
 				msgContent: '' //内容设置
-			}
+			};
 			this.ruleList.push(obj);
 			// if (this.minConsume == '1' && this.ruleObj.minConsume < 1) {
 			// 	this.$store.commit('setWin', {
@@ -641,7 +658,7 @@ export default {
 			// 	this.valiData('请至少保留一条规则!');
 			// 	return false;
 			// }
-			//console.log(index)
+			//console.log(index);
 			this.ruleList.splice(index, 1);
 			// for (let i = 0; i < this.ruleList.length; i++) {
 			// 	this.ruleList[i].name = '规则' + (i + 1);
@@ -686,6 +703,10 @@ export default {
 				this.valiData('请选择活动范围');
 				return false;
 			}
+			if (!this.checkedMember && !this.checkedFans) {
+				this.valiData('请关联活动对象!');
+				return false;
+			}
 			for (let i = 0; i < this.ruleList.length; i++) {
 				if (this.ruleList[i].durationId == 1 && this.ruleList[i].minConsumess == '') {
 					this.valiData(`规则${i+1}请填写最低消费金额`);
@@ -708,85 +729,6 @@ export default {
 		},
 		async addActivity(type) {
 			if (!this.checkForm()) return;
-			// 新建活动
-			// if (this.title.trim() == '') {
-			// 	this.$store.commit('setWin', {
-			// 		content: '请填写活动标题',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	return false;
-			// }
-			// if (utils.isEmptyObject(this.selectsList)) {
-			// 	this.$store.commit('setWin', {
-			// 		content: '请选择活动范围',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	return false;
-			// }
-
-			// 监听最低消费 and 最高消费
-			// if (
-			// 	Number(this.maxConsume) >= 1 &&
-			// 	this.minConsumes > Number(this.maxConsume)
-			// ) {
-			// 	this.$store.commit('setWin', {
-			// 		content: '最低消费不能大于最高消费',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	this.minConsumes = 0;
-			// 	this.ruleLists[this.ruleIndex].minConsume = this.minConsumes;
-			// 	return false;
-			// }
-			// if (
-			// 	Number(this.maxConsume) >= 1 &&
-			// 	Number(this.maxConsume) < Number(this.minConsumes)
-			// ) {
-			// 	this.$store.commit('setWin', {
-			// 		content: '最高消费不能小于最低消费',
-			// 		timerPowerOff: 1000
-			// 	});
-			// 	this.maxConsume = 0;
-			// 	this.ruleLists[this.ruleIndex].maxConsume = this.maxConsume;
-			// 	return false;
-			// }
-
-			// 循环ruleLists
-			// this.ruleLists[this.ruleIndex] = this.ruleObj;
-			// this.ruleLists[this.ruleIndex].memberRights = Number(!(this.memberRights));
-
-			// if (this.ruleIndex == 0 && this.ruleLists.length == 0) {
-			// 	this.ruleLists.push(this.ruleObj);
-			// }
-
-			// let rule = utils.deepCopy(this.ruleLists);
-			// for (let i = 0; i < rule.length; i++) {
-			// 	rule[i].isLoop = Number(rule[i].isLoop);
-			// 	rule[i].couponIds = rule[i].couponIds;
-			// 	if (rule[i].pushChannel) {
-			// 		rule[i].pushChannel = Number(
-			// 			rule[i].pushChannel.toString().replace(/,/g, '')
-			// 		);
-			// 	}
-			// 	if (
-			// 		rule[i].minConsume >= 1 &&
-			// 		rule[i].maxConsume >= 1 &&
-			// 		Number(rule[i].minConsume) > Number(rule[i].maxConsume)
-			// 	) {
-			// 		this.$store.commit('setWin', {
-			// 			content: '规则' + (i + 1) + '最低消费大于最高消费,请修改！'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	if (
-			// 		rule[i].minConsume >= 1 &&
-			// 		rule[i].maxConsume >= 1 &&
-			// 		Number(rule[i].maxConsume) < Number(rule[i].minConsume)
-			// 	) {
-			// 		this.$store.commit('setWin', {
-			// 			content: '规则' + (i + 1) + '最高消费小于最低消费,请修改！'
-			// 		});
-			// 		return false;
-			// 	}
 			let rule = [];
 			for (let item of this.ruleList) { //整合数据
 				let obj = {
@@ -797,7 +739,7 @@ export default {
 					couponIds: item.interestId == 2 ? item.couponIds : [], //优惠券
 					pushChannel: item.pushChannel.join(','), //规则
 					msgContent: item.msgContent //内容设置
-				}
+				};
 				if (item.id && item.id != '') {
 					obj.id = item.id;
 				}
@@ -811,6 +753,9 @@ export default {
 				this.activityDetail.endTime = Math.round(this.endObj.time / 1000); //结束时间
 				this.activityDetail.isAuto = type;
 				this.activityDetail.rule = rule;
+				this.activityDetail.selectFans = Number(this.checkedFans);//选择粉丝
+				// console.log(JSON.stringify(this.activityDetail))
+				// return false;
 				await http.fissionActivity({
 					data: {
 						activityId: this.activityDetail.id,
@@ -824,9 +769,10 @@ export default {
 						type: 3,
 						name: this.title,
 						mouldType: 0,
-						objectType: this.memberStatus ? (this.integralOn == 0 ? '2' : this.integralOn) : 4, //活动对象
+						objectType: this.memberStatus ? 4 : 1, //活动对象
 						memberIds: this.memfilter, //活动关联会员
 						memberNum: this.member, //会员人数
+						selectFans: Number(this.checkedFans), //粉丝的数量
 						startTime: Math.round(this.startObj.time / 1000),
 						endTime: Math.round(this.endObj.time / 1000),
 						isAuto: type,
@@ -888,6 +834,7 @@ export default {
 					interestName = '电子优惠券';
 					interestId = 2;
 				}
+				//console.log(item.pushChannel)
 				let obj = {
 					id: item.id,
 					durationName: durationName, //最低消费
@@ -900,13 +847,9 @@ export default {
 					couponIds: couponIds, //优惠券
 					pushChannel: item.pushChannel == '0' ? [] : item.pushChannel.split(','), //消息推送渠道
 					msgContent: item.msgContent //内容设置
-				}
+				};
 				this.ruleList.push(obj);
 			}
-
-
-
-
 			// this.ruleObj.pushChannel = String(this.ruleObj.pushChannel).split('');
 			// this.ruleObj.isLoop = (Number(this.ruleObj.isLoop));
 			// this.minthiss = this.ruleObj.minthis;
@@ -914,14 +857,21 @@ export default {
 			// this.maxthis = this.ruleObj.maxthis;
 			// this.memberRights = Number(!(Number(this.ruleObj.memberRights)));
 			// this.onListName = this.memberRights == 0 ? '电子优惠劵' : '无';
-			if (activityDetail.objectType == '4') {
-				this.integralOn = 1;
-				this.memberStatus = false;
-			} else {
-				this.integralOn = activityDetail.objectType == '2' ? 0 : activityDetail.objectType; //活动群体
-			}
+			// if (activityDetail.objectType == '1') {
+			// 	this.checkedMember = true;
+			// 	this.memberStatus = false;
+			// } else {
+			// 	this.integralOn = activityDetail.objectType == '2' ? 0 : activityDetail.objectType; //活动群体
+			// }
 			this.memfilter = activityDetail.memberIds; //筛选条件
 			this.member = activityDetail.sendProgress.split(',')[0]; //会员人数
+			if (this.member && Number(this.member) > 0) {
+				this.checkedMember = true;
+			}
+			if (activityDetail.selectFans && activityDetail.selectFans == 1) { //筛选的粉丝的数量
+				this.getSubscribeFansCount();
+				this.checkedFans = true;
+			}
 			this.edit = true;
 			// this.ruleList = [];
 			// for (let i = 0; i < activityDetail.rule.length; i++) {
@@ -971,9 +921,43 @@ export default {
 			if (obj.status == 'ok') {
 				this.member = obj.member;
 				this.memfilter = obj.memfilter;
+				if(this.member == '0' && utils.isEmptyObject(this.memfilter)){
+					this.checkedMember = false;
+				}
 			}
+			this.$store.commit('setPageTools', [{
+				name: '<返回活动列表',
+				className: ['activity'],
+				fn: () => {
+					this.closePage();
+				}
+			}]);
+			//console.log('11111');
 			this.showVip = false;
 		},
+		async getSubscribeFansCount() {
+			let data = await http.getSubscribeFansCount({});
+			if (data) {
+				this.fans = data;
+			}
+		},
+		toSinglemember: function(item) {
+			if (item) {
+				//if (this.memberStatus) {
+				this.addVip();
+				//}
+			} else {
+				this.member = 0; //会员选中的人数
+				this.memfilter = ''; //会员筛选的条件
+			}
+		},
+		toSinglefans: function(item) {
+			if (item) {
+				this.getSubscribeFansCount();
+			} else {
+				this.fans = 0;
+			}
+		}
 	},
 	computed: {
 		titles: {
@@ -1028,23 +1012,35 @@ export default {
 				});
 				this.explain = this.explain.substr(0, 150);
 			}
-		}
+		},
+		// checkedMember: function(Value, oldValue, ) {
+		// 	if (this.checkedMember && this.memberStatus) {
+		// 		this.addVip();
+		// 	}
+		// },
+		// checkedFans:function(){
+		// 	if(this.checkedFans){
+		// 		this.getSubscribeFansCount();
+		// 	}else{
+		// 		this.fans = 0;
+		// 	}
+		// }
 	},
 	components: {
 		calendar: () =>
-			import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+		import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 		mulSelect: () =>
-			import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+		import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 		rang: () =>
-			import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+		import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
 		coupon: () =>
-			import ( /* webpackChunkName:'activity_agift_coupon' */ './activity_agift_coupon'),
+		import ( /* webpackChunkName:'activity_agift_coupon' */ './activity_agift_coupon'),
 		'memberScreening': () =>
-			import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
+		import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
 		'singleSelect': () =>
-			import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+		import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 		selectBtn: () =>
-			import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+		import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
@@ -1061,7 +1057,7 @@ export default {
 		this.getShopList();
 		let memberIds = storage.session('memberIds'); //获取是否有会员信息
 		if (memberIds) {
-			this.integralOn = 1; //让其默认选中会员
+			this.checkedMember = true; //让其默认选中会员
 			this.member = memberIds.length;
 			this.memfilter = memberIds.join(',');
 			this.memberStatus = false; //会员标识
@@ -1139,32 +1135,8 @@ export default {
 	max-width: 900px;
 	height: auto;
 	float: left;
-	/*line-height: 40px;*/
+	line-height: 40px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1212,6 +1184,12 @@ export default {
 	border: 1px solid #28a8e0;
 	margin: 11px 8px;
 	float: left;
+}
+
+.member-agift .online-box .rightHalf .memberinner {
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
 }
 
 .handle-tips {
@@ -1307,7 +1285,7 @@ export default {
 	margin-top: -11px;
 }
 
-.member-agift .online-box .rightHalf section {
+    /* .member-agift .online-box .rightHalf section {
 	width: 190px;
 	height: 38px;
 	border: 1px solid #CECDCD;
@@ -1332,6 +1310,7 @@ export default {
 	line-height: 38px;
 	border-left: 1px solid #CECDCD;
 }
+*/
 
 
 
@@ -1349,7 +1328,16 @@ export default {
 
 
 
-/*.member-agift,
+
+
+
+
+
+
+
+
+
+    /*.member-agift,
 .main_Box {
 	width: 100%;
 	height: auto;
@@ -1363,7 +1351,7 @@ export default {
 */
 
 
-/*.header_tit {
+    /*.header_tit {
 	border-left: 2px solid #19749c;
 	height: 40px;
 	line-height: 40px;
@@ -1418,7 +1406,17 @@ export default {
 
 
 
-/*.agift-content span {
+
+
+
+
+
+
+
+
+
+
+    /*.agift-content span {
 	display: inline-block;
 	width: 100px;
 	height: 40px;
@@ -1491,17 +1489,15 @@ export default {
 	width: 3px;
 	left: 17px;
 	margin-top: -11px;
-}*/
+	}*/
 
-.content-set {
-	border: 1px solid #cccccc;
-	width: 650px;
-	height: auto;
-	overflow: hidden;
-	padding-top: 29px;
-}
-
-
+	.content-set {
+		border: 1px solid #cccccc;
+		width: 650px;
+		height: auto;
+		overflow: hidden;
+		padding-top: 29px;
+	}
 
 
 
@@ -1517,7 +1513,14 @@ export default {
 
 
 
-/*.moreBtn {
+
+
+
+
+
+
+
+    /*.moreBtn {
 	width: 50px !important;
 	position: relative;
 	margin-right: 0 !important;
@@ -1540,22 +1543,22 @@ export default {
 }*/
 
 
-/*input:focus {
+    /*input:focus {
 	border-color: #ccc !important;
 	box-shadow: none !important;
 }
 */
 
 
-/*#mycalendar1,
+    /*#mycalendar1,
 #mycalendar2 {
 	height: 40px !important;
 	border: none;
 }*/
 
-.tips {
-	background: url(../../../res/images/handle-tips.png) left center no-repeat;
-}
+    .tips {
+        background: url(../../../res/images/handle-tips.png) left center no-repeat;
+    }
 
 
 
@@ -1573,7 +1576,17 @@ export default {
 
 
 
-/*.selectList {
+
+
+
+
+
+
+
+
+
+
+    /*.selectList {
 	border: 1px solid #cccccc;
 	width: 150px;
 	height: 40px;
@@ -1591,7 +1604,7 @@ export default {
 }*/
 
 
-/*.selectList ul li {
+    /*.selectList ul li {
 	width: 200px;
 	text-align: center;
 	background-color: #ffffff;
@@ -1610,7 +1623,7 @@ input:focus {
 */
 
 
-/*#agift .selectbtns {
+    /*#agift .selectbtns {
 	width: auto;
 	float: left;
 }
@@ -1623,26 +1636,24 @@ input:focus {
 }
 */
 
-label {
-	font-size: 16px;
-	cursor: pointer;
-}
+    label {
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-label i {
-	font-size: 16px;
-	font-style: normal;
-	display: inline-block;
-	width: 17px;
-	height: 17px;
-	text-align: center;
-	line-height: 12px;
-	color: #fff;
-	vertical-align: middle;
-	margin-right: 10px;
-	border: #2489c5 1px solid;
-}
-
-
+    label i {
+        font-size: 16px;
+        font-style: normal;
+        display: inline-block;
+        width: 17px;
+        height: 17px;
+        text-align: center;
+        line-height: 12px;
+        color: #fff;
+        vertical-align: middle;
+        margin-right: 10px;
+        border: #2489c5 1px solid;
+    }
 
 
 
@@ -1657,7 +1668,19 @@ label i {
 
 
 
-/*
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
 input[type="checkbox"],
 input[type="radio"] {
 	display: none;
@@ -1729,9 +1752,9 @@ input[type="radio"]:checked:disabled+i {
 	color: #fff;
 }*/
 
-.chckOn {
-	background: #2489c5;
-}
+    .chckOn {
+        background: #2489c5;
+    }
 
 
 
@@ -1747,7 +1770,17 @@ input[type="radio"]:checked:disabled+i {
 
 
 
-/*.countList {
+
+
+
+
+
+
+
+
+
+
+    /*.countList {
 	width: 100%;
 }
 
@@ -1787,7 +1820,7 @@ input[type="radio"]:checked:disabled+i {
 */
 
 
-/*.agift-content textarea {
+    /*.agift-content textarea {
 	width: 340px;
 	height: 140px;
 	outline: none;
@@ -1799,7 +1832,7 @@ input[type="radio"]:checked:disabled+i {
 }*/
 
 
-/*.limit {
+    /*.limit {
 	font-size: 14px;
 	color: #999999;
 	padding-left: 120px;
@@ -1815,7 +1848,7 @@ input[type="radio"]:checked:disabled+i {
 }*/
 
 
-/*.required-none:after {
+    /*.required-none:after {
 	display: none;
 }
 */

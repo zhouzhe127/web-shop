@@ -175,11 +175,11 @@
 						<!-- 二级图文关联 -->
 						<section v-if="secondary.length > 0">
 							<ul class="title">
-								<li v-for="(int,ind) in secondary" :class="ruleIndex == ind ? 'active' : ''" @click="getDetails(ind)">二级图文{{ind + 1}}
+								<li v-for="(int,ind) in secondary" :key = "ind" :class="ruleIndex == ind ? 'active' : ''" @click="getDetails(ind)">二级图文{{ind + 1}}
 									<i class="deletes" @click.stop='deletesecPush(index,ind)'></i>
 								</li>
 							</ul>
-							<div class="content" v-for="(int,ind) in secondary" v-if='ruleIndex == ind'>
+							<div class="content" v-for="(int,ind) in secondary" :key="ind" v-if='ruleIndex == ind'>
 								<div class="uploadImgs">
 									<a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a>
 									<form enctype="multipart/form-data" id="endImage">
@@ -336,13 +336,13 @@ export default {
 			this.menuId = 'newType';
 			this.matchRule = this.selects[0];
 		},
-		valiData(content) {
-			this.$store.commit('setWin', {
-				title: '操作提示',
-				content: content,
-				winType: 'alert'
-			});
-		},
+		// valiData(content) {
+		// 	this.$store.commit('setWin', {
+		// 		title: '操作提示',
+		// 		content: content,
+		// 		winType: 'alert'
+		// 	});
+		// },
 		async delMenu() {
 			if (this.menuId == 'default') {
 				this.valiData('默认菜单无法删除');
@@ -484,7 +484,7 @@ export default {
 		},
 		checkForm: function() {
 			if (!this.saveStatus) {
-				this.valiData('请勿重复保存!')
+				this.valiData('请勿重复保存!');
 				return false;
 			}
 			let arr = this.menuList;
@@ -680,7 +680,7 @@ export default {
 		},
 		//保存
 		async saveMenu() {
-			console.log(this.saveStatus)
+			//console.log(this.saveStatus);
 			if (!this.checkForm()) return;
 			// 提交判断
 			//更改微信菜单
@@ -754,7 +754,7 @@ export default {
 				//console.log(this.type)
 				//如果有type
 				if (typeof(this.menuList[i].message) == 'string') {
-					this.message = this.menuList[i].message
+					this.message = this.menuList[i].message;
 				} else {
 					this.message = '';
 				}
@@ -781,7 +781,7 @@ export default {
 								imgUrl: this.menuList[i].message[j].PicUrl,
 								title: this.menuList[i].message[j].Title,
 								url: this.menuList[i].message[j].Url
-							}
+							};
 							this.secondary.push(graphic);
 						}
 					}
@@ -844,7 +844,7 @@ export default {
 								imgUrl: this.menuList[this.index].sub_button[j].message[k].PicUrl,
 								title: this.menuList[this.index].sub_button[j].message[k].Title,
 								url: this.menuList[this.index].sub_button[j].message[k].Url
-							}
+							};
 							this.secondary.push(graphic);
 						}
 					}
@@ -913,7 +913,7 @@ export default {
 					let message = {
 						picUrl: this.imgUrl,
 						media_id: this.media_id
-					}
+					};
 					obj.message = message;
 				}
 				if (this.type == '40') {
@@ -922,7 +922,7 @@ export default {
 						title: this.graphicTitle,
 						imgUrl: this.graphicimgUrl,
 						url: this.graphicUrl
-					}
+					};
 					arr.push(obj1);
 					let newArr = arr.concat(this.secondary);
 					let message = [];
@@ -932,7 +932,7 @@ export default {
 							Description: '',
 							PicUrl: item.imgUrl,
 							Url: item.url
-						}
+						};
 						message.push(obj2);
 					}
 					obj.message = message;
@@ -969,7 +969,7 @@ export default {
 					let message = {
 						picUrl: this.imgUrl,
 						media_id: this.media_id
-					}
+					};
 					obj.message = message;
 				}
 				if (this.type == '40') {
@@ -978,7 +978,7 @@ export default {
 						title: this.graphicTitle,
 						imgUrl: this.graphicimgUrl,
 						url: this.graphicUrl
-					}
+					};
 					arr.push(obj1);
 					let newArr = arr.concat(this.secondary);
 					let message = [];
@@ -988,7 +988,7 @@ export default {
 							Description: '',
 							PicUrl: item.imgUrl,
 							Url: item.url
-						}
+						};
 						message.push(obj2);
 					}
 					obj.message = message;
@@ -1144,7 +1144,7 @@ export default {
 			this.secondary[ind].imgUrl = this.uploadUrl + res; //图片
 			this.selectType();
 		},
-		addsencPushlanguage: function(index) { //增加二级图文推送关联
+		addsencPushlanguage: function() { //增加二级图文推送关联
 			let obj = {
 				imgUrl: '', //二级图片
 				title: '', //标题

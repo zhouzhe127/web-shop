@@ -10,7 +10,7 @@
 			<div class="online-box clearfix">
 				<span class="fl online-sub required">激活方式</span>
 				<template v-for="(item,index) in goodlist">
-					<span class="way" :class="{'signa' :type == index}" v-on:click="tabTypes(index,1)" v-if="item.type">{{item.name}}</span>
+					<span class="way" :key = "index" :class="{'signa' :type == index}" v-on:click="tabTypes(index,1)" v-if="item.type">{{item.name}}</span>
 				</template>
 			</div>
 			<section v-show="type == '0'">
@@ -84,7 +84,7 @@
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">性别</span>
 					<template v-for="(item,index) in genderList">
-						<span class="way" :class="{'signa' : virtualCard.genderType == index}" v-on:click="tabTypes(index,2)" v-if="item.type">{{item.name}}</span>
+						<span class="way" :key = "index" :class="{'signa' : virtualCard.genderType == index}" v-on:click="tabTypes(index,2)" v-if="item.type">{{item.name}}</span>
 					</template>
 				</div>
 				<div class="online-box clearfix ">
@@ -184,7 +184,7 @@
 				<div class="online-box clearfix">
 					<span class="fl online-sub">性别</span>
 					<template v-for="(item,index) in genderList">
-						<span class="way" :class="entityCard.genderType == index ? 'signa' : ''" v-on:click="tabTypes(index,2)" v-if="item.type">{{item.name}}</span>
+						<span class="way" :key = "index" :class="entityCard.genderType == index ? 'signa' : ''" v-on:click="tabTypes(index,2)" v-if="item.type">{{item.name}}</span>
 					</template>
 				</div>
 				<div class="online-box clearfix ">

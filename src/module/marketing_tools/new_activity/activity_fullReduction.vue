@@ -6,72 +6,81 @@
     *
 -->
 <template>
-	<div id="reduction">
-		<!-- 活动设置 -->
-		<div class="set-line">
-			<div class="titles">活动设置</div>
-			<div class="line"></div>
-		</div>
-		<!-- 活动说明 -->
-		<div class="handle-tips" style="margin:0 0 20px 20px;">
-			<i></i> 说明:您可以设置顾客订单满指定金额后，可享受相应优惠。如【订单满50元减20；满100元减40】。满减活动当前仅支持自助模式。
-		</div>
-		<!-- 活动标题 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">活动名称</span>
-			<div class="rightHalf">
-				<input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' />
-			</div>
-		</div>
-		<!-- 活动时间 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">活动时间</span>
-			<div class="rightHalf">
-				<div class="input-box">
-					<!--日期组件 开始时间-->
-					<calendar :time="startTime" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar>
-				</div>
-				<s>-</s>
-				<div class="input-box">
-					<!--日期组件 开始时间-->
-					<calendar :time="endTime" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar>
-				</div>
-			</div>
-		</div>
-		<!-- 活动门店 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">活动门店</span>
-			<div class="rightHalf" v-if="ischain == '3'">
-				<a href="javascript:void(0);" class="addclassify fl" @click="openActivityWin">关联门店</a>
-				<span class="fl" v-if="selectsList.length >= 1">已选择{{selectsList.length}}家店铺</span>
-			</div>
-			<div class="rightHalf" v-else>
-				<span>{{shopName}}</span>
-			</div>
-		</div>
-		<!-- 营销规则设置 -->
-		<div class="set-line">
-			<div class="titles">营销规则设置</div>
-			<div class="line"></div>
-		</div>
-		<!-- 是否与会员折扣同享 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">是否与会员折扣同享</span>
-			<div class="rightHalf">
-				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in list" :key="index" v-bind:class="{'presentActive':isMemberShare == index }" @click="chooseIntegral('1',index)">{{item.name}}</span>
-				<div class="prompting" @click="isPublicNumber('1')">
-					<div class="detDiv" v-if="isPublic['1']">
-						<i class="detI triright"></i>
-						<h3 class="detH3">
+    <div id="reduction">
+        <!-- 活动设置 -->
+        <div class="set-line">
+            <div class="titles">活动设置</div>
+            <div class="line"></div>
+        </div>
+        <!-- 活动说明 -->
+        <div class="handle-tips" style="margin:0 0 20px 20px;">
+            <i></i> 说明:您可以设置顾客订单满指定金额后，可享受相应优惠。如【订单满50元减20；满100元减40】。满减活动当前仅支持自助模式。
+        </div>
+        <!-- 活动标题 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl required">活动名称</span>
+            <div class="rightHalf">
+                <!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' /> -->
+                <el-input v-model="activityName" maxlength="10" placeholder="请输入活动标题"></el-input>
+            </div>
+        </div>
+        <!-- 活动时间 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl required">活动时间</span>
+            <div class="rightHalf">
+                <div class="input-box">
+                    <!--日期组件 开始时间-->
+                    <!-- <calendar :time="startTime" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar> -->
+                    <el-date-picker class="fl" v-model="startTime" type="datetime" placeholder="选择日期时间" :clearable="false" @change="startTimeChange" value-format="timestamp">
+                    </el-date-picker>
+                </div>
+                <s>-</s>
+                <div class="input-box">
+                    <!--日期组件 开始时间-->
+                    <!--  <calendar :time="endTime" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar> -->
+                    <el-date-picker class="fl" v-model="endTime" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="endTimeChange">
+                    </el-date-picker>
+                </div>
+            </div>
+        </div>
+        <!-- 活动门店 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl required">活动门店</span>
+            <div class="rightHalf" v-if="ischain == '3'">
+                <!-- <a href="javascript:void(0);" class="addclassify fl" @click="openActivityWin">关联门店</a> -->
+                <el-button type="primary" class="fl margin" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
+                <span class="fl" v-if="selectsList.length >= 1">已选择{{selectsList.length}}家店铺</span>
+            </div>
+            <div class="rightHalf" v-else>
+                <span>{{shopName}}</span>
+            </div>
+        </div>
+        <!-- 营销规则设置 -->
+        <div class="set-line">
+            <div class="titles">营销规则设置</div>
+            <div class="line"></div>
+        </div>
+        <!-- 是否与会员折扣同享 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl">是否与会员折扣同享</span>
+            <div class="rightHalf">
+                <!-- <span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in list" :key="index" v-bind:class="{'presentActive':isMemberShare == index }" @click="chooseIntegral('1',index)">{{item.name}}</span> -->
+                <el-radio-group v-model="compulsoryName" class="fl">
+                    <el-radio style="width:112px;text-align:center;" v-for="(item,index) in list" :key="index" :label="item.name" border @change.native="chooseIntegral(index)"></el-radio>
+                </el-radio-group>
+                <div class="prompting" @click="isPublicNumber('1')">
+                    <div class="detDiv" v-if="isPublic['1']">
+                        <i class="detI triright"></i>
+                        <h3 class="detH3">
 							是:与会员折扣同享,当该门店有此活动时,先计算会员价,累加达到满减值再进行满减!
 							<P>否:不与会员折扣同享,当该门店有此活动时,只需要计算满减即可.</P>
 						</h3>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 是否与会员折扣同享 -->
-		<div class="online-box clearfix">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 是否与会员折扣同享 -->
+        <!-- <div class="online-box clearfix">
 			<span class="online-sub fl">是否与单品优惠券同享</span>
 			<div class="rightHalf">
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in list" :key="index" v-bind:class="{'presentActive':isItemShare == index }" @click="chooseIntegral('2',index)">{{item.name}}</span>
@@ -85,9 +94,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- 是否与会员折扣同享 -->
-		<div class="online-box clearfix">
+		</div> -->
+        <!-- 是否与会员折扣同享 -->
+        <!-- <div class="online-box clearfix">
 			<span class="online-sub fl">是否与整单优惠券同享</span>
 			<div class="rightHalf">
 				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in list" :key="index" v-bind:class="{'presentActive':isWholeShare == index }" @click="chooseIntegral('3',index)">{{item.name}}</span>
@@ -101,86 +110,102 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- 默认规则 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">默认规则</span>
-			<div class="rightHalf">
-				<onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff>
-				<div class="fl handle-tips" style="margin-left: 20px;">
-					<i></i> 说明:当订单金额低于支付金额时,用户只需支付订单金额
-				</div>
-			</div>
-		</div>
-		<div class="online-box clearfix" v-if='payDiscount'>
-			<span class="online-sub fl"></span>
-			<div class="rightHalf">
-				<span class="fl">不满</span>
-				<section>
-					<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="cash" onkeyup="value=value.replace(/[^\d]/g,'')" />
-					<span>元</span>
-				</section>
-				<span class="fl">,只付</span>
-				<section>
-					<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="payCash" onkeyup="value=value.replace(/[^\d]/g,'')" />
-					<span>元</span>
-				</section>
-			</div>
-		</div>
-		<!-- 优惠设置 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">优惠设置</span>
-			<div class="rightHalf">
-				<onOff :key='1' :status="preferential" @statusChange="openpreferential" class='fl'></onOff>
-				<div class="fl handle-tips" style="margin-left: 20px;">
-					<i></i> 说明:最多设置5条优惠规则
-				</div>
-			</div>
-		</div>
-		<div class="online-box clearfix" v-if='preferential'>
-			<span class="online-sub fl"></span>
-			<div class="rightHalf">
-				<com-table :listHeight='60' :listWidth="1100" :showHand="false" :titleData="titleList" :introData="formList" :widthType='true'>
-					<div slot="con-0" slot-scope="props" class="delete">
-						<span @click='delplan(props.data)'>删除</span>
-					</div>
-					<div slot="con-1" slot-scope="props">
-						{{props.data.index}}
-					</div>
-					<div slot="con-2" slot-scope="props" class="orderCash">
-						<section>
-							<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="props.data.fullCash" onkeyup="value=value.replace(/[^\d]/g,'')" />
-							<span>元</span>
-						</section>
-						<div class="warning-tips" v-if='props.data.fullStatus'>
-							<i></i>{{props.data.fullerrorMessage}}
-						</div>
-					</div>
-					<div slot="con-3" slot-scope="props" class="orderCash">
-						<section>
-							<input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="props.data.reduceCsah" onkeyup="value=value.replace(/[^\d]/g,'')" />
-							<span>元</span>
-						</section>
-						<div class="warning-tips" v-if='props.data.reduceStatus'>
-							<i></i>{{props.data.reduceerrorMessage}}
-						</div>
-					</div>
-				</com-table>
-				<a href="javascript:void(0);" v-if='formList.length < 5' class="addclassify fl" @click="addplan">增加优惠方案</a>
-			</div>
-		</div>
-		<!-- 取消保存 -->
-		<div class="online-box clearfix" style="padding-left:100px;">
-			<a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a>
-			<a v-if='activityDetail' href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="saveConfig('0')">保存</a>
-			<a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig('1')">发布</a>
-		</div>
-		<!-- 活动关联门店 -->
-		<rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
-	</div>
+		</div> -->
+        <!-- 默认规则 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl">默认规则</span>
+            <div class="rightHalf">
+                <onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff>
+                <div class="fl handle-tips" style="margin-left: 20px;">
+                    <i></i> 说明:当订单金额低于支付金额时,用户只需支付订单金额
+                </div>
+            </div>
+        </div>
+        <div class="online-box clearfix" v-if='payDiscount'>
+            <span class="online-sub fl"></span>
+            <div class="rightHalf">
+                <span class="fl">不满</span>
+                <section>
+                    <!-- <input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="cash" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                    <span>元</span> -->
+                    <el-input class='fl' placeholder="请输入金额" v-model="cash" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+                        <template slot="suffix">元</template>
+                    </el-input>
+                </section>
+                <span class="fl">,只付</span>
+                <section>
+                    <!--  <input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="payCash" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                    <span>元</span> -->
+                    <el-input class='fl' placeholder="请输入金额" v-model="payCash" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+                        <template slot="suffix">元</template>
+                    </el-input>
+                </section>
+            </div>
+        </div>
+        <!-- 优惠设置 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl">优惠设置</span>
+            <div class="rightHalf">
+                <onOff :key='1' :status="preferential" @statusChange="openpreferential" class='fl'></onOff>
+                <div class="fl handle-tips" style="margin-left: 20px;">
+                    <i></i> 说明:最多设置5条优惠规则
+                </div>
+            </div>
+        </div>
+        <div class="online-box clearfix" v-if='preferential'>
+            <span class="online-sub fl"></span>
+            <div class="rightHalf">
+                <com-table :listHeight='60' :listWidth="1100" :showHand="false" :titleData="titleList" :introData="formList" :widthType='true'>
+                    <div slot="con-0" slot-scope="props" class="delete">
+                        <span @click='delplan(props.data)'>删除</span>
+                    </div>
+                    <div slot="con-1" slot-scope="props">
+                        {{props.data.index}}
+                    </div>
+                    <div slot="con-2" slot-scope="props" class="orderCash">
+                        <section>
+                            <!--  <input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="props.data.fullCash" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            <span>元</span> -->
+                            <el-input class='fl' placeholder="请输入金额" v-model="props.data.fullCash" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+                                <template slot="suffix">元</template>
+                            </el-input>
+                        </section>
+                        <div class="warning-tips" v-if='props.data.fullStatus'>
+                            <i></i>{{props.data.fullerrorMessage}}
+                        </div>
+                    </div>
+                    <div slot="con-3" slot-scope="props" class="orderCash">
+                        <section>
+                            <!--  <input type="text" class="cumulative" placeholder="请输入金额" maxlength="6" v-model="props.data.reduceCsah" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            <span>元</span> -->
+                            <el-input class='fl' placeholder="请输入金额" v-model="props.data.reduceCsah" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+                                <template slot="suffix">元</template>
+                            </el-input>
+                        </section>
+                        <div class="warning-tips" v-if='props.data.reduceStatus'>
+                            <i></i>{{props.data.reduceerrorMessage}}
+                        </div>
+                    </div>
+                </com-table>
+               <!--  <a href="javascript:void(0);" v-if='formList.length < 5' class="addclassify fl" @click="addplan">增加优惠方案</a> -->
+               <el-button v-if='formList.length < 5'  type="primary" icon="el-icon-plus" @click="addplan" style="width:179px;">增加优惠方案</el-button>
+            </div>
+        </div>
+        <!-- 取消保存 -->
+        <div class="online-box clearfix" style="padding-left:100px;">
+            <!--  <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a>
+            <a v-if='activityDetail' href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="saveConfig('0')">保存</a>
+            <a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig('1')">发布</a> -->
+            <el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
+            <el-button v-if='activityDetail' type="info" style="margin-right: 10px;width:190px;" @click="saveConfig('0')">保存</el-button>
+            <el-button v-if="editId == ''" type="primary" style="margin-right: 10px;width:190px;" @click="saveConfig('1')">发布</el-button>
+        </div>
+        <!-- 活动关联门店 -->
+        <rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
+    </div>
 </template>
 <script>
-import http from 'src/manager/http';
+    import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
 import storage from 'src/verdor/storage';
 
@@ -204,6 +229,7 @@ export default {
 				name: '是',
 				id: 1
 			}],
+			compulsoryName:'否',//是否与会员折扣同享
 			isMemberShare: 0, //会员折扣共享
 			isItemShare: 0, //单品优惠券共享
 			isWholeShare: 0, //整单优惠券共享
@@ -212,25 +238,25 @@ export default {
 			payCash: 0, //支付金额
 			preferential: false, //优惠设置
 			titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: 150 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '序列',
-					titleStyle: {
-						width: 150 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '订单金额(元)'
-				},
-				{
-					titleName: '减免金额(元)'
+				titleName: '操作',
+				titleStyle: {
+					width: 150 + 'px',
+					flex: 'none'
 				}
+			},
+			{
+				titleName: '序列',
+				titleStyle: {
+					width: 150 + 'px',
+					flex: 'none'
+				}
+			},
+			{
+				titleName: '订单金额(元)'
+			},
+			{
+				titleName: '减免金额(元)'
+			}
 			],
 			formList: [], //展示的数据
 			editId: '', //编辑的id
@@ -249,7 +275,7 @@ export default {
 		},
 		endTimeChange(time) {
 			//结束时间
-			this.endTime = new Date(time).setHours(23, 59, 59, 999);
+			this.endTime = time;
 		},
 		openActivityWin() {
 			//设置活动范围
@@ -269,18 +295,20 @@ export default {
 			}
 			this.showRang = false;
 		},
-		chooseIntegral: function(type, index) {
-			switch (type) {
-				case '1':
-					this.isMemberShare = index;
-					break;
-				case '2':
-					this.isItemShare = index;
-					break;
-				case '3':
-					this.isWholeShare = index;
-					break;
-			}
+		chooseIntegral: function(index) {
+			// switch (type) {
+			// 	case '1':
+			// 		this.isMemberShare = index;
+			// 		break;
+			// 	case '2':
+			// 		this.isItemShare = index;
+			// 		break;
+			// 	case '3':
+			// 		this.isWholeShare = index;
+			// 		break;
+			// }
+			// console.log(index)
+			this.isMemberShare = index;
 		},
 		openpayDiscount: function(res) { //开启默认规则
 			this.payDiscount = res;
@@ -521,6 +549,7 @@ export default {
 				data.rule[0].couponIds = JSON.parse(data.rule[0].couponIds);
 				this.isItemShare = data.rule[0].couponIds.isItemShare;
 				this.isMemberShare = data.rule[0].couponIds.isMemberShare;
+				this.compulsoryName = this.list[this.isMemberShare].name;
 				this.isWholeShare = data.rule[0].couponIds.isWholeShare;
 				this.payDiscount = Boolean(Number(data.rule[0].couponIds.otherRule.status));
 				this.cash = data.rule[0].couponIds.otherRule.orderPrice;
@@ -582,199 +611,203 @@ export default {
 </script>
 <style type="text/css" scoped>
 #reduction {
-	width: 1400px;
-	height: auto;
+    width: 1400px;
+    height: auto;
 }
 
 #reduction .set-line {
-	width: 1000px;
-	height: 28px;
-	line-height: 28px;
-	border-left: 4px solid #28a8e0;
-	margin: 15px 0 35px;
-	position: relative;
+    width: 1000px;
+    height: 28px;
+    line-height: 28px;
+    border-left: 4px solid #28a8e0;
+    margin: 15px 0 35px;
+    position: relative;
 }
 
 #reduction .set-line .titles {
-	float: left;
-	margin-left: 12px;
-	width: 100px;
-	font-size: 16px;
-	text-align: left;
+    float: left;
+    margin-left: 12px;
+    width: 100px;
+    font-size: 16px;
+    text-align: left;
 }
 
 #reduction .set-line .line {
-	display: inline-block;
-	width: 870px;
-	border-bottom: 1px dashed #d9d9d9;
-	margin-bottom: 5px;
+    display: inline-block;
+    width: 870px;
+    border-bottom: 1px dashed #d9d9d9;
+    margin-bottom: 5px;
 }
 
 #reduction .online-box {
-	width: 100%;
-	height: auto;
-	min-height: 40px;
-	margin-bottom: 29px;
+    width: 100%;
+    height: auto;
+    min-height: 40px;
+    margin-bottom: 29px;
 }
 
 #reduction .online-box .online-sub {
-	display: block;
-	font-size: 16px;
-	width: 170px;
-	height: 40px;
-	line-height: 40px;
-	color: #333;
-	text-align: right;
-	margin-right: 14px;
+    display: block;
+    font-size: 16px;
+    width: 170px;
+    height: 40px;
+    line-height: 40px;
+    color: #333;
+    text-align: right;
+    margin-right: 14px;
 }
 
 #reduction .online-box .rightHalf {
-	width: 1100px;
-	height: auto;
-	float: left;
+    width: auto;
+    height: auto;
+    float: left;
+    line-height: 40px;
 }
 
 #reduction .online-box .freeFix {
-	width: 100px;
-	height: 40px;
-	border: 1px #D2D2D2 solid;
-	display: inline-block;
-	line-height: 40px;
-	text-align: center;
-	cursor: pointer;
-	float: left;
+    width: 100px;
+    height: 40px;
+    border: 1px #D2D2D2 solid;
+    display: inline-block;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    float: left;
 }
 
 #reduction .online-box .presentActive {
-	border: 1px #FF9200 solid;
-	background: #FFEDD1;
-	color: #FF9200;
+    border: 1px #FF9200 solid;
+    background: #FFEDD1;
+    color: #FF9200;
 }
 
 #reduction .online-box .rightHalf .delete {
-	color: #FF3D04;
+    color: #FF3D04;
 }
 
 #reduction .online-box .rightHalf .orderCash {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 #reduction .online-box .rightHalf .addclassify {
-	margin-right: 10px;
+    margin-right: 10px;
 }
 
 #reduction .online-box .rightHalf span {
-	line-height: 40px;
+    line-height: 40px;
 }
 
 #reduction .online-box .rightHalf .name {
-	width: 280px;
-	height: 40px;
-	background-color: #ffffff;
-	border: solid 1px #cecdcd;
-	text-indent: 15px;
+    width: 280px;
+    height: 40px;
+    background-color: #ffffff;
+    border: solid 1px #cecdcd;
+    text-indent: 15px;
 }
 
 #reduction .online-box .rightHalf .input-box {
-	display: inline-block;
-	vertical-align: middle;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #reduction .handle-tips {
-	height: 40px;
-	line-height: 40px;
-	text-indent: 25px;
-	background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
-	color: #999999;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 25px;
+    background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
+    color: #999999;
 }
 
 #reduction .warning-tips {
-	width: 130px;
-	height: 40px;
-	line-height: 40px;
-	text-indent: 25px;
-	background: url("../../../../src/res/images/tip.png") 0 center no-repeat;
-	background-size: 16px 18px;
-	color: #EA3B44;
+    width: 130px;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 25px;
+    background: url("../../../../src/res/images/tip.png") 0 center no-repeat;
+    background-size: 16px 18px;
+    color: #EA3B44;
 }
 
 #reduction .online-box .rightHalf section {
-	width: 190px;
-	height: 38px;
-	border: 1px solid #CECDCD;
-	margin: 0 16px;
-	float: left;
+    /* width: 190px;
+    height: 38px;
+    border: 1px solid #CECDCD; */
+    margin: 0 16px;
+    float: left;
 }
 
 #reduction .online-box .rightHalf section .cumulative {
-	width: 150px;
-	height: 36px;
-	border: 1px solid #eaeaea;
-	float: left;
-	outline: none;
-	text-indent: 17px;
+    width: 150px;
+    height: 36px;
+    border: 1px solid #eaeaea;
+    float: left;
+    outline: none;
+    text-indent: 17px;
 }
 
 #reduction .online-box .rightHalf section span {
-	display: block;
-	float: left;
-	width: 38px;
-	height: 37px;
-	text-align: center;
-	line-height: 38px;
-	border-left: 1px solid #CECDCD;
+    display: block;
+    float: left;
+    width: 38px;
+    height: 37px;
+    text-align: center;
+    line-height: 38px;
+    border-left: 1px solid #CECDCD;
 }
 
 #reduction .online-box .rightHalf .prompting {
-	display: inline-block;
-	width: 40px;
-	height: 40px;
-	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
-	position: relative;
-	vertical-align: middle;
-	cursor: pointer;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
 #reduction .online-box .rightHalf .prompting .detDiv {
-	display: inline-block;
-	width: 279px;
-	background: #45404b;
-	position: absolute;
-	top: 0px;
-	left: 45px;
-	padding: 10px;
-	box-shadow: 3px 2px 10px #ccc;
-	z-index: 100;
+    display: inline-block;
+    width: 279px;
+    background: #45404b;
+    position: absolute;
+    top: 0px;
+    left: 45px;
+    padding: 10px;
+    box-shadow: 3px 2px 10px #ccc;
+    z-index: 100;
 }
 
 #reduction .online-box .rightHalf .prompting .detDiv .detI {
-	width: 0;
-	height: 0;
-	line-height: 0;
-	position: absolute;
-	top: 10px;
-	left: -20px;
-	right: 30%;
-	border-width: 10px;
-	border-top: 0px;
-	border-style: solid;
-	border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    position: absolute;
+    top: 10px;
+    left: -20px;
+    right: 30%;
+    border-width: 10px;
+    border-top: 0px;
+    border-style: solid;
+    border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
 }
 
 #reduction .online-box .rightHalf .prompting .detDiv .detH3 {
-	line-height: 22px;
-	color: #e6e6e7;
+    line-height: 22px;
+    color: #e6e6e7;
 }
 
 #reduction .online-box .rightHalf .prompting .detDiv .triright {
-	width: 0;
-	height: 0;
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent;
-	border-right: 10px solid #45404b;
-	border-left: 10px solid transparent;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #45404b;
+    border-left: 10px solid transparent;
+}
+#reduction .online-box .rightHalf .margin{
+	margin-right: 10px;
 }
 </style>
