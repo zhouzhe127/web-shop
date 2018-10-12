@@ -398,7 +398,7 @@ export default {
 			maxCeiling: '', //最大使用上限
 			editCoupon: false,
 			shopList: [],
-			isSharingId: '',
+			isSharingId: 0,
 			isSharing: '不与其它优惠共享',
 			isSharingList: [{ //是否优惠共享
 				name: '不与其它优惠共享',

@@ -358,7 +358,7 @@ export default {
 			useKnow: '', //使用须知
 			editCoupon: false, //修改的标示
 			shopList: [], //店铺
-			isSharingId: '',
+			isSharingId: 0,
 			isSharing: '不与其它优惠共享',
 			isSharingList: [{ //是否优惠共享
 				name: '不与其它优惠共享',

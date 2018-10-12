@@ -425,8 +425,8 @@ export default {
 			useKnow: '', //使用须知
 			maxCeiling: 0,
 			shopList: [], //店铺
-			isSharingId: '',
-			isSharing: '请选择',
+			isSharingId: 0,
+			isSharing: '不与其它优惠共享',
 			isSharingList: [{ //是否优惠共享
 				name: '不与其它优惠共享',
 				id: 0
@@ -436,7 +436,7 @@ export default {
 				id: 1
 			}],
 			concessionSharingId: 0,
-			concessionSharing: '',
+			concessionSharing: '不与会员卡优惠共用',
 			concessionSharingList: [{ //优惠共享
 				name: '不与会员卡优惠共用',
 				id: 0
@@ -610,12 +610,12 @@ export default {
 			this.validTimeId = this.validTimeList[i].id; //点击卡类型对应的id
 		},
 		getSharing: function (i) {
-			this.isSharing = this.isSharingList[i].name; //点击卡类型对应的名字
-			this.isSharingId = this.isSharingList[i].id; //点击卡类型对应的id
+			//this.isSharing = this.isSharingList[i].name; //点击卡类型对应的名字
+			this.isSharingId = i; //点击卡类型对应的id
 		},
 		getconcession: function (i) {
-			this.concessionSharing = this.concessionSharingList[i].name;
-			this.concessionSharingId = this.concessionSharingList[i].id;
+			//this.concessionSharing = this.concessionSharingList[i].name;
+			this.concessionSharingId = i;
 		},
 		getResult: function (val) { //使用时间段
 			this.useDate = val;
