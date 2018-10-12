@@ -35,6 +35,9 @@
 				<div slot="con-5" slot-scope="props">
 					{{props.data.vouchersPain}}({{props.data.vouchersNum}}张)
 				</div>
+				<div slot="con-11" slot-scope="props">
+					{{getStaffname(props.data.staffId)}}
+				</div>
 			</com-table>
 		</section>
 		<!-- 翻页 -->
@@ -56,103 +59,107 @@ export default {
 			endTotal: 1,
 			goodsName: '', //订单号
 			titleList: [{
-				titleName: '天数',
-				dataName: 'days'
-			},
-			{
-				titleName: '支付次数',
-				dataName: 'payTimes'
-			},
-			{
-				titleName: '消费总额 ',
-				dataName: 'totalConsumption'
-			},
-			{
-				titleName: '优惠总额',
-				dataName: 'totalDiscount'
-			},
-			{
-				titleName: '代金券'
-			},
-			{
-				titleName: '实收总额',
-				dataName: 'totalPain'
-			},
-			{
-				titleName: '积分抵扣总额',
-				dataName: 'totalPointCash'
-			},
-			{
-				titleName: '会员消费总额',
-				dataName: 'totalMemberConsumption'
-			},
-			{
-				titleName: '微信支付总额',
-				dataName: 'totalWeChatPain'
-			},
-			{
-				titleName: '支付宝支付总额',
-				dataName: 'totalAliPayPain'
-			}
+					titleName: '天数',
+					dataName: 'days'
+				},
+				{
+					titleName: '支付次数',
+					dataName: 'payTimes'
+				},
+				{
+					titleName: '消费总额 ',
+					dataName: 'totalConsumption'
+				},
+				{
+					titleName: '优惠总额',
+					dataName: 'totalDiscount'
+				},
+				{
+					titleName: '代金券'
+				},
+				{
+					titleName: '实收总额',
+					dataName: 'totalPain'
+				},
+				{
+					titleName: '积分抵扣总额',
+					dataName: 'totalPointCash'
+				},
+				{
+					titleName: '会员消费总额',
+					dataName: 'totalMemberConsumption'
+				},
+				{
+					titleName: '微信支付总额',
+					dataName: 'totalWeChatPain'
+				},
+				{
+					titleName: '支付宝支付总额',
+					dataName: 'totalAliPayPain'
+				}
 			],
 			staticLists: [], //数据
 			shoptitleList: [{
-				titleName: '操作',
-				dataName: 'shopId',
-				conStyle: {
-					color: '#27a8e0',
-					cursor: 'pointer'
+					titleName: '操作',
+					dataName: 'shopId',
+					conStyle: {
+						color: '#27a8e0',
+						cursor: 'pointer'
+					}
+				},
+				{
+					titleName: '结账时间 ',
+					dataName: 'createTime',
+					titleStyle: {
+						width: 200 + 'px',
+						flex: 'none',
+						fontSize: 16 + 'px'
+					}
+				},
+				{
+					titleName: '支付订单 ',
+					dataName: 'oid',
+					titleStyle: {
+						width: 200 + 'px',
+						flex: 'none',
+						fontSize: 16 + 'px'
+					}
+				},
+				{
+					titleName: '消费总额 ',
+					dataName: 'consumption'
+				},
+				{
+					titleName: '优惠总额',
+					dataName: 'discount'
+				},
+				{
+					titleName: '代金券'
+				},
+				{
+					titleName: '实收总额',
+					dataName: 'pain'
+				},
+				{
+					titleName: '积分抵扣总额',
+					dataName: 'pointCash'
+				},
+				{
+					titleName: '会员消费总额',
+					dataName: 'memberConsumption'
+				},
+				{
+					titleName: '微信支付总额',
+					dataName: 'weChatPain'
+				},
+				{
+					titleName: '支付宝支付总额',
+					dataName: 'aliPayPain'
+				},
+				{
+					titleName: '收款码',
+					dataName: 'staffId'
 				}
-			},
-			{
-				titleName: '结账时间 ',
-				dataName: 'createTime',
-				titleStyle: {
-					width: 200 + 'px',
-					flex: 'none',
-					fontSize: 16 + 'px'
-				}
-			},
-			{
-				titleName: '支付订单 ',
-				dataName: 'oid',
-				titleStyle: {
-					width: 200 + 'px',
-					flex: 'none',
-					fontSize: 16 + 'px'
-				}
-			},
-			{
-				titleName: '消费总额 ',
-				dataName: 'consumption'
-			},
-			{
-				titleName: '优惠总额',
-				dataName: 'discount'
-			},
-			{
-				titleName: '代金券'
-			},
-			{
-				titleName: '实收总额',
-				dataName: 'pain'
-			},
-			{
-				titleName: '积分抵扣总额',
-				dataName: 'pointCash'
-			},
-			{
-				titleName: '会员消费总额',
-				dataName: 'memberConsumption'
-			},
-			{
-				titleName: '微信支付总额',
-				dataName: 'weChatPain'
-			},
-			{
-				titleName: '支付宝支付总额',
-				dataName: 'aliPayPain'
-			}
 			],
 			staticshopLists: [], //店铺查询的数据
 			showWin: false, //弹窗默认关闭状态
@@ -160,7 +167,8 @@ export default {
 			allFormList: [], //所有的数据
 			formList: [], //展示的数据
 			allLists: [], //所有的数据  筛选订单
-			oid: '' //订单号
+			oid: '', //订单号
+			allShop: [] //所有的门店
 		};
 	},
 	methods: {
@@ -241,6 +249,55 @@ export default {
 			}
 			return utils.format(new Date(time), 'yyyy-MM-dd hh:mm:ss');
 		},
+		//获取店铺列表
+		async getShopList() {
+			let res = await http.getScanPayInfo({
+				data: {
+					shopId: this.constructionsId
+				}
+			})
+			this.allShop = [];
+			let obj = {
+				'staffName': this.constructionsName,
+				'staffId': 0,
+				'shopId': this.constructionsId
+			}
+			this.allShop.push(obj);
+			if (res) {
+				for (let key in res.staffList) {
+					this.allShop.push(res.staffList[key]);
+				}
+			}
+		},
+		getStaffname: function(id) { //
+			let name = '--';
+			for (let item of this.allShop) {
+				if (item.staffId == id) {
+					name = item.staffName;
+					break;
+				}
+			}
+			return name;
+		},
+		async getScanPayOrderByCodes() {
+			let res = await http.getScanPayOrderByCodes({
+				data: {
+					showShopId: this.constructionsId,
+					codes: this.codes.join(','),
+					taskId: this.taskId,
+					showDay: this.oneData
+				}
+			})
+			if (res) {
+				this.staticLists = [];
+				this.staticLists.push(res.total); //头部的数据
+				this.allFormList = res.list; //身体的数据
+				this.allLists = this.allFormList;
+				this.$nextTick(() => {
+					this.setPage();
+				});
+			}
+		}
 	},
 	props: {
 		constructionsName: String, //店铺名称
@@ -249,9 +306,9 @@ export default {
 		constructionsId: String, //店铺的id
 		isOpenTime: Boolean,
 		oneData: String,
-		taskId: Number
+		taskId: Number,
+		codes: Array
 	},
-	watch: {},
 	components: {
 		pageElement: () =>
 			import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
@@ -278,24 +335,29 @@ export default {
 				Object.assign(item, obj1);
 			}
 		}
+		this.getShopList();
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
-			name: '返回',
-			className: ['fd-blue'],
-			fn: () => {
-				this.returnShopstatic();
+				name: '返回',
+				className: ['fd-blue'],
+				fn: () => {
+					this.returnShopstatic();
+				}
+			},
+			{
+				name: '导出',
+				className: ['fd-blue'],
+				fn: () => {
+					this.Export();
+				}
 			}
-		},
-		{
-			name: '导出',
-			className: ['fd-blue'],
-			fn: () => {
-				this.Export();
-			}
-		}
 		]);
-		this.getScanPayData();
+		if (this.codes && this.codes != '') {
+			this.getScanPayOrderByCodes();
+		} else {
+			this.getScanPayData();
+		}
 	},
 	destroyed() {
 		clearInterval(this.timer);

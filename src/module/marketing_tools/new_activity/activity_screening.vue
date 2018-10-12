@@ -367,7 +367,7 @@ export default {
 				memfilter: this.chooseData
 			};
 			this.$emit('selectVip', obj);
-			// this.$store.commit('setPageTools', {});
+			//this.$store.commit('setPageTools', {});
 		},
 		radioSel(index) {
 			this.indexCustom = index;

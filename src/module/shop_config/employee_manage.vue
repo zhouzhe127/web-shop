@@ -27,8 +27,10 @@
 			<!-- <select-btn :name="selectJob.name" :sorts="reduceJobList.map(v=>v.name)" :width="138" @emit="selectJobFilte"></select-btn> -->
 			<el-input v-model="seachValue" clearable maxlength="11" placeholder="请输入员工名称/手机号码" style="width:225px;"></el-input>
 			<!-- <input type="text" v-model="seachValue" maxlength="11" placeholder="请输入员工名称/手机号码"> -->
-			<a href="javascript:;" class="blue" @click="seachFn">筛选</a>
-			<a href="javascript:;" class="gray" @click="resetFn">重置</a>
+			<el-button v-on:click="seachFn" type="primary">搜索</el-button>
+			<el-button v-on:click="resetFn" type="info">重置</el-button>
+			<!-- <a href="javascript:;" class="blue" @click="seachFn">筛选</a>
+			<a href="javascript:;" class="gray" @click="resetFn">重置</a> -->
 		</nav>
 		<div class="aBox">
 			<div class="boxTop">
@@ -70,7 +72,7 @@
 				<el-table-column align="center" label="手机号码" prop="mobile"></el-table-column>
 			</el-table>
 		</div>
-		<div class="pageWrap" v-if="!batch && orginList.length>pagenum">
+		<div class="pageWrap" v-if="!batch">
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size = "pagenum" layout="sizes, prev, pager, next" :page-count="totalPage" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
 		<employee-win v-if="showWin" @throwWinResult="doThrowWinResult" :isAdd="isAdd" :employeeId="employeeId" :employeeIndex="employeeIndex" :list="pagedList" :jobList="jobList.slice(1)" :ischain="+ischain"></employee-win>
@@ -305,6 +307,7 @@ export default {
 		//每页显示多少行
 		handleSizeChange(p){
 			this.pagenum = p;
+			this.page = 1;
 		},
 		//页码跳转
 		pageChange(p) {

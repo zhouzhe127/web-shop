@@ -9,58 +9,53 @@
 	<section id="change-price">
 
 		<section class="allSection">
-			<input class="searchgoods" type="text" placeholder="请输入名称" v-model="searchName" />
+			<el-input placeholder="请输入名称" v-model="searchName" clearable class="input-with-select" ></el-input>
+			<!-- <input class="searchgoods" type="text" placeholder="请输入名称" v-model="searchName" /> -->
 		</section>
 		<section class="allSection">
-			<a @click="resetSearch" href="javascript:void(0);" class="reset">重置</a>
-			<a @click="searchGoods" href="javascript:void(0);" class="blue">筛选</a>
+			<el-button v-on:click="searchGoods" type="primary">搜索</el-button>
+			<el-button v-on:click="resetSearch" type="info">重置</el-button>
+			<!-- <a @click="resetSearch" href="javascript:void(0);" class="reset">重置</a>
+			<a @click="searchGoods" href="javascript:void(0);" class="blue">筛选</a> -->
 		</section>
 		<div style="clear: both;height: 20px"></div>
-		<div v-for="(item,index) in titleList" :key="index" class="diel" :class="{'on':item.type == selectTab}" @click="chooseTab(item.type)">{{item.name}}</div>
-
-		<comTable :showHand="false" :showTitle="2" :listWidth="750" :titleData="titleData" :introData="currentList" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :listHeight="50">
+		<el-radio-group v-model="selectTab" @change = "chooseTab">
+			<el-radio-button label="0">非时价商品</el-radio-button>
+			<el-radio-button label="1">时价商品</el-radio-button>
+		</el-radio-group>
+		<!-- <div v-for="(item,index) in titleList" :key="index" class="diel" :class="{'on':item.type == selectTab}" @click="chooseTab(item.type)">{{item.name}}</div> -->
+		<div style="margin:10px 0;">
+			<el-table
+				stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
+				:data="currentList"
+				border
+				style="width: 100%">
+				<el-table-column width="250" align="center" prop="totalDay" label="操作">
+					<template slot-scope="scope">
+						<span style="color:#00AAE7;cursor: pointer;" @click="openDetail(scope.row)">查看详情</span>
+					</template>
+				</el-table-column>
+				<el-table-column min-width = "160" show-overflow-tooltip align="center" prop="goodsName" label="菜品"></el-table-column>
+				<el-table-column min-width = "120" show-overflow-tooltip align="center" prop="price" label="当前价格"></el-table-column>
+				<el-table-column min-width = "100" show-overflow-tooltip align="center" prop="name" label="操作员" ></el-table-column>
+				<el-table-column min-width = "250" show-overflow-tooltip align="center" prop="returnNum" label="最后修改时间" >
+					<template slot-scope="scope">
+						<span>{{getDate(scope.row.updateTime)}}</span>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
+		
+		<!-- <comTable :showHand="false" :showTitle="2" :listWidth="750" :titleData="titleData" :introData="currentList" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :listHeight="50">
 			<span slot="con-0" slot-scope="props">
 				<a href="javascript:void(0);" @click="openDetail(props.data)" class="yellow" style="width: 100%;">查看详情</a>
 			</span>
 			<span slot="con-4" slot-scope="props">{{getDate(props.data.updateTime)}}</span>
-		</comTable>
-
-		<!--<section class="box">-->
-		<!--<div style="border: 1px solid #b3b3b3;">-->
-		<!--<section class="title">-->
-		<!--<span v-for="item in titleList" :class="[{tab: item.type == selectTab, tab2: item.type == 0}]" @click="chooseTab(item.type)">{{item.name}}</span>-->
-		<!--</section>-->
-		<!--<section class="content">-->
-		<!--<ul class="ulT">-->
-		<!--<li style="width:10%;">操作</li>-->
-		<!--<li>菜品</li>-->
-		<!--<li>当前价格</li>-->
-		<!--<li>操作员</li>-->
-		<!--<li>最后修改时间</li>-->
-		<!--</ul>-->
-		<!--<ul v-for="(item,index) in currentList" :style="{'background-color': (index % 2 == 0) ? '#f2f2f2' : '#fff'}" :key="index">-->
-		<!--<li style="width: 10%;"><a href="javascript:void(0);" @click="openDetail(item)" class="yellow" style="width: 100%;">查看详情</a></li>-->
-		<!--<li >{{item.goodsName}}</li>-->
-		<!--<li>{{item.price}}</li>-->
-		<!--<li>{{item.name}}</li>-->
-		<!--<li>{{getDate(item.updateTime)}}</li>-->
-		<!--</ul>-->
-		<!--<ul v-if="currentList.length == 0">-->
-		<!--<li class="ulLi" style="width: 100%;color: orange;">暂无改价记录</li>-->
-		<!--</ul>-->
-		<!--<ul class="ulT">-->
-		<!--<li style="width: 10%;">操作</li>-->
-		<!--<li>菜品</li>-->
-		<!--<li>当前价格</li>-->
-		<!--<li>操作员</li>-->
-		<!--<li>最后修改时间</li>-->
-		<!--</ul>-->
-		<!--</section>-->
-		<!--</div>-->
-		<!--</section>-->
-
+		</comTable> -->
 		<section style="margin-top: 10px">
-			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :isNoJump="true" :numArr="[10,20]"></pageElement>
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="Number(page)" :page-count="Number(total)" :page-size = "Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
+
+			<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :isNoJump="true" :numArr="[10,20]"></pageElement> -->
 		</section>
 		<changePriceWin v-if="isShow" @throwWinResult="doThrowWinResult" :userData="userData" :id="id" :title="title" :item="item">
 		</changePriceWin>
@@ -136,7 +131,24 @@ export default {
 			this.page = obj.page;
 			this.num = obj.num;
 			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
-			//                this.chooseTab(this.selectTab);
+			this.currentList = this.newrecordList.slice(
+				(this.page - 1) * this.num,
+				(this.page - 1) * this.num + this.num
+			); //点击下一页
+		},
+		//分页点击
+		pageClick: function(e) {
+			this.page = e;
+			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
+			this.currentList = this.newrecordList.slice(
+				(this.page - 1) * this.num,
+				(this.page - 1) * this.num + this.num
+			); //点击下一页
+		},
+		//每页显示多少条点击
+		numChange(e){
+			this.num = e;
+			this.total = Math.ceil(this.newrecordList.length / this.num); //获取总页数
 			this.currentList = this.newrecordList.slice(
 				(this.page - 1) * this.num,
 				(this.page - 1) * this.num + this.num
@@ -222,14 +234,14 @@ export default {
 		}
 	},
 	components: {
-		selectBtn: () =>
-			import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
+		// selectBtn: () =>
+		// 	import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
 		changePriceWin: () =>
 			import(/*webpackChunkName: "change_price_win"*/ './change_price_win'),
-		pageElement: () =>
-			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
-		comTable: () =>
-			import(/*webpackChunkName:"com_table"*/ 'src/components/com_table')
+		// pageElement: () =>
+		// 	import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+		// comTable: () =>
+		// 	import(/*webpackChunkName:"com_table"*/ 'src/components/com_table')
 	}
 };
 </script>
@@ -237,100 +249,8 @@ export default {
 <style lang="less" scoped>
 #change-price {
 	.allSection {
-		margin-right: 40px;
+		width:180px;
 		display: inline-block;
-		.searchgoods {
-			text-align: center;
-			display: inline-block;
-			height: 41px;
-			line-height: 41px;
-			outline: none;
-			width: 174px;
-			border: 1px solid #b3b3b3;
-		}
-		a {
-			width: 90px;
-			height: 40px;
-			border: 1px solid #00adef;
-			line-height: 40px;
-			display: inline-block;
-		}
-		.reset {
-			background: #b3b3b3;
-			border: none;
-			color: #fff;
-		}
-	}
-	.diel {
-		display: inline-block;
-		width: 136px;
-		height: 40px;
-		font-size: 16px;
-		background: #fff;
-		border: 1px solid #e9c048;
-		text-align: center;
-		line-height: 40px;
-		cursor: pointer;
-		color: #f8931f;
-		/*margin-bottom:10px;*/
-	}
-	.on {
-		background: #f8931f;
-		color: #fff;
 	}
 }
-/*头部================================*/
-/**/
-/*.box {*/
-/*width: 100%;*/
-/*height: 100%;*/
-/*overflow: auto;*/
-/*min-width:780px;*/
-/*}*/
-/*.box .title {*/
-/*width: 100%;*/
-/*height: 70px;*/
-/*background: #fbfbfb;*/
-/*border-bottom: 1px solid #b3b3b3;*/
-/*}*/
-/*.box .title span {*/
-/*display: inline-block;*/
-/*width: 150px;*/
-/*line-height: 70px;*/
-/*text-align: center;*/
-/*font-size: 16px;*/
-/*vertical-align: middle;*/
-/*cursor: pointer;*/
-/*}*/
-/*.box .title .tab {*/
-/*border-right: 1px solid #b3b3b3;*/
-/*border-left: 1px solid #b3b3b3;*/
-/*border-top: 4px solid #28a8e0;*/
-/*width: 149px;*/
-/*background: #fff;*/
-/*height: 70px;*/
-/*line-height: 66px;*/
-/*}*/
-/*.box .title .tab2 {*/
-/*border-left: none;*/
-/*}*/
-/*.box .content {*/
-/*width: 100%;*/
-/*padding: 20px;*/
-/*}*/
-/*.box .content ul li{*/
-/*display: inline-block;*/
-/*width: 22%;*/
-/*height: 50px;*/
-/*line-height: 50px;*/
-/*text-align: center;*/
-/*overflow: hidden;*/
-/*white-space: nowrap;*/
-/*text-overflow:ellipsis;*/
-/*}*/
-/*.box .content .ulT {*/
-/*background: #e6e6e6;*/
-/*width: 100%;*/
-/*height: 50px;*/
-/*}*/
 </style>

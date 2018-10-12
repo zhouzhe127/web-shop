@@ -11,44 +11,40 @@
 		<span slot="title">{{title}}</span>
 		<!--内容-->
 		<div slot="content">
-			<section id="detail">
-				<div class="top_search">
-					<section class="chooseTime">
-						<div class="gaiTime">修改时间：</div>
-						<div class="input-box">
-							<!--日期组件 开始时间-->
-							<calendar :time="startTime" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
-						</div>
-						<span class="input-word">至</span>
-						<div class="input-box">
-							<!--日期组件 开始时间-->
-							<calendar :time="endTime" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
-						</div>
-					</section>
-					<section class="statisticsList">
-						<a @click="resetTime" href="javascript:void(0);" class="reset">重置</a>
-						<a @click="search" href="javascript:void(0);" class="blue">筛选</a>
-					</section>
+			<section style="padding: 20px;">
+				<div style="margin-bottom: 10px;">
+					<span style="font-size:16px;">修改时间：</span>
+					<el-date-picker
+						v-model="startTime"
+						type="datetime"
+						placeholder="选择日期">
+					</el-date-picker>
+					<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
+					<el-date-picker
+						v-model="endTime"
+						type="datetime"
+						placeholder="选择日期">
+					</el-date-picker>
+					<el-button v-on:click="search" type="primary">筛选</el-button>
+					<el-button v-on:click="resetTime" type="info">重置</el-button>
 				</div>
-				<section class="box" style="width: 760px;min-width: 0;">
-					<section class="content-box">
-						<ul class="ulT">
-							<li>修改时间</li>
-							<li>操作员</li>
-							<li>价格</li>
-						</ul>
-						<ul v-for="(item,i) in currentList" :key="i">
-							<li>{{getDate(item.time * 1000)}}</li>
-							<li>{{item.name}}</li>
-							<li>{{item.price}}</li>
-						</ul>
-						<ul v-if="list.length == 0">
-							<li class="gaiTimeLi" style="width:100%;">该时间段内暂无改价记录</li>
-						</ul>
-					</section>
+				<section class="box">
+					<el-table
+						stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
+						:data="currentList"
+						style="width: 100%">
+						<el-table-column  show-overflow-tooltip align="center" prop="returnNum" label="最后修改时间" >
+							<template slot-scope="scope">
+								<span>{{getDate(scope.row.time*1000)}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column show-overflow-tooltip align="center" prop="name" label="操作员" ></el-table-column>
+						<el-table-column show-overflow-tooltip align="center" prop="price" label="价格"></el-table-column>
+					</el-table>
 				</section>
 				<section style="margin-top: 10px">
-					<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :isNoJump="true" :numArr="[10,20]"></pageElement>
+					<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="Number(page)" :page-count="Number(total)" :page-size ="Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
+					<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :isNoJump="true" :numArr="[10,20]"></pageElement> -->
 				</section>
 			</section>
 		</div>
@@ -63,7 +59,7 @@ export default {
 		return {
 			startTime: new Date().getTime() - 24 * 3600 * 1000 * 7, //开始时间 一周前开始
 			endTime: new Date().getTime(), //结束时间
-			num: 10, //一页处理多少数据
+			num: 2, //一页处理多少数据
 			total: 0, //总页数
 			count: 0, //总记录
 			page: 1, //当前的页数
@@ -95,17 +91,35 @@ export default {
 		this.init();
 	},
 	methods: {
-		startTimeChange(time) {
-			//开始时间
-			this.startTime = time;
-		},
-		endTimeChange(time) {
-			//结束时间
-			this.endTime = new Date(time).setHours(23, 59, 59, 999);
-		},
+		// startTimeChange(time) {
+		// 	//开始时间
+		// 	this.startTime = time;
+		// },
+		// endTimeChange(time) {
+		// 	//结束时间
+		// 	this.endTime = new Date(time).setHours(23, 59, 59, 999);
+		// },
 		pageChange(obj) {
 			this.page = obj.page;
 			this.num = obj.num;
+			this.total = Math.ceil(this.list.length / this.num); //获取总页数
+			this.currentList = this.list.slice(
+				(this.page - 1) * this.num,
+				(this.page - 1) * this.num + this.num
+			); //点击下一页
+		},
+		//分页点击
+		pageClick: function(e) {
+			this.page = e;
+			this.total = Math.ceil(this.list.length / this.num); //获取总页数
+			this.currentList = this.list.slice(
+				(this.page - 1) * this.num,
+				(this.page - 1) * this.num + this.num
+			); //点击下一页
+		},
+		//每页显示多少条点击
+		numChange(e){
+			this.num = e;
 			this.total = Math.ceil(this.list.length / this.num); //获取总页数
 			this.currentList = this.list.slice(
 				(this.page - 1) * this.num,
@@ -157,82 +171,10 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		calendar: () =>
-			import(/*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
-		pageElement: () =>
-			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element')
+		// calendar: () =>
+		// 	import(/*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
+		// pageElement: () =>
+		// 	import(/*webpackChunkName:"page_element"*/ 'src/components/page_element')
 	}
 };
 </script>
-
-<style type="text/css" scoped>
-#detail {
-	margin: 20px;
-}
-.top_search {
-	margin-bottom: 10px;
-}
-/*日期组件*/
-.chooseTime {
-	line-height: 40px;
-	text-align: center;
-	color: #333;
-	position: relative;
-	display: inline-block;
-}
-.gaiTime {
-	/* display: inline-block; */
-	width: 100px;
-	font-size: 16px;
-	float: left;
-}
-.input-box {
-	width: 200px;
-	float: left;
-}
-.input-word {
-	padding: 0 5px;
-	height: 40px;
-	line-height: 40px;
-	float: left;
-}
-/*搜索重置=================*/
-.statisticsList {
-	float: right;
-}
-.statisticsList .reset {
-	color: #00adef;
-}
-.statisticsList a {
-	width: 90px;
-	height: 40px;
-	border: 1px solid #00adef;
-	line-height: 40px;
-}
-/*列表*/
-.box .content-box ul {
-	width: 100%;
-	height: 40px;
-	border-bottom: 1px solid #b3b3b3;
-}
-.box .content-box ul li {
-	/* display: inline-block; */
-	width: 32%;
-	height: 100%;
-	line-height: 40px;
-	text-align: center;
-	float: left;
-}
-.gaiTimeLi {
-	width: 100%;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	color: orange;
-}
-.box {
-	width: 100%;
-	min-width: 1000px;
-	border: 1px solid #b3b3b3;
-}
-</style>

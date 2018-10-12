@@ -2,16 +2,49 @@
 <template>
 	<div id="membercard">
 		<section style="margin-bottom:20px;">
-			<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="phonetotal">
-				<div slot="con-0" slot-scope="props">
-					{{count}}
-				</div>
-			</com-table>
+			<el-table :data="phonetotal" border style="width: 1391px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column fixed prop="days" label="充值次数" width="107" align="center">
+					<template slot-scope="scope">
+						<span>{{count}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="totalRecharge" label="充值总额" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalPayment" label="支付总额" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalCash" label="现金" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalCard" label="银行卡" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalWeChat" label="微信" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalAliPay" label="支付宝" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalZXWeChat" label="中信微信" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalZXAliPay" label="中信支付宝" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalOtherPay" label="自定义支付" width="107" align="center">
+					<template slot-scope="scope">
+						<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'all')">{{scope.row.totalOtherPay}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="totalGiftAmount" label="赠送总额" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalGiftPoint" label="赠送积分" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="totalGiftCoupon" label="赠送优惠券" width="107" align="center">
+				</el-table-column>
+			</el-table>
 		</section>
-		<section>
-			<com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="phonelist" :listName="'会员充值统计'" :key="index" :showTitle='1' :allTotal="count">
+		<section style="margin-bottom:20px;">
+			<!-- <com-table :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="phonelist" :listName="'会员充值统计'" :key="index" :showTitle='1' :allTotal="count">
 				<div slot="con-1" slot-scope="props">
 					{{formatTime(props.data.createTime)}}
+				</div>
+				<div slot="con-3" slot-scope="props">
+					<span v-if="props.data.cardNumber == ''">电子卡</span>
+					<span v-else>{{props.data.cardTypeName}}</span>
 				</div>
 				<div slot="con-8" slot-scope="props">
 					{{getpaytypeName(props.data.payType)}}
@@ -19,7 +52,52 @@
 				<div slot="con-13" slot-scope="props" @click="openDiscount(props.data)">
 					{{props.data.giftCoupon}}
 				</div>
-			</com-table>
+			</com-table> -->
+			<el-table :data="phonelist" border style="width: 1391px;" :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column fixed prop="shopName" label="来源名称" width="207" align="center">
+				</el-table-column>
+				<el-table-column prop="createTime" label="时间" width="207" align="center">
+					<template slot-scope="scope">
+						<span>{{formatTime(scope.row.createTime)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="cardNumber" label="卡号" width="107" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.cardNumber == ''">--</span>
+						<span v-else>{{scope.row.cardNumber}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="cardTypeName" label="卡类型" width="107" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.cardNumber == ''">电子卡</span>
+						<span v-else>{{scope.row.cardTypeName}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="mobile" label="手机号" width="150" align="center">
+				</el-table-column>
+				<el-table-column prop="memberName" label="会员姓名" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="recharge" label="充值金额" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="payment" label="支付金额" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="payType" label="支付方式" width="107" align="center">
+					<template slot-scope="scope">
+						<span>{{getpaytypeName(scope.row.payType)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="staffName" label="操作员" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="giftAmount" label="赠送总额" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="giftPoint" label="赠送积分" width="107" align="center">
+				</el-table-column>
+				<el-table-column prop="giftCoupon" label="赠送优惠券" width="107" align="center">
+					<template slot-scope="scope">
+						<span style="color: #27a8e0;" @click="openDiscount(scope.row)">{{scope.row.giftCoupon}}</span>
+					</template>
+				</el-table-column>
+			</el-table>
 		</section>
 		<!-- 优惠券详情的弹窗 -->
 		<coupon-detail v-if='showWin' @getAppliedWin='getResult' :CouponDetails='CouponDetails'></coupon-detail>
@@ -39,139 +117,7 @@ export default {
 			endTotal: 1,
 			index: null,
 			goodsName: '', //订单号
-			titleList: [{
-				titleName: '充值次数',
-			},
-			{
-				titleName: '充值总额',
-				dataName: 'totalRecharge',
-			},
-			{
-				titleName: '支付总额',
-				dataName: 'totalPayment',
-			},
-			{
-				titleName: '现金',
-				dataName: 'totalCash',
-			},
-			{
-				titleName: '银行卡',
-				dataName: 'totalCard',
-			},
-			{
-				titleName: '微信',
-				dataName: 'totalWeChat',
-			},
-			{
-				titleName: '支付宝',
-				dataName: 'totalAliPay',
-			},
-			{
-				titleName: '中信微信',
-				dataName: 'totalZXWeChat',
-			},
-			{
-				titleName: '中信支付宝',
-				dataName: 'totalZXAliPay',
-			},
-			{
-				titleName: '自定义支付',
-				dataName: 'totalOtherPay',
-			},					
-			{
-				titleName: '赠送总额',
-				dataName: 'totalGiftAmount',
-			},
-			{
-				titleName: '赠送积分',
-				dataName: 'totalGiftPoint',
-			},
-			{
-				titleName: '赠送优惠券',
-				dataName: 'totalGiftCoupon',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			}
-			],
 			staticLists: [], //数据
-			shoptitleList: [{
-				titleName: '来源名称',
-				dataName: 'shopName',
-				titleStyle: {
-					fontSize: 16 + 'px',
-					width: '160px',
-					flex: 'none'
-				},
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			},
-			{
-				titleName: '时间',
-				dataName: 'createTime',
-				titleStyle: {
-					fontSize: 16 + 'px',
-					width: '160px',
-					flex: 'none'
-				}
-			},
-			{
-				titleName: '卡号',
-				dataName: 'cardNumber',
-				titleStyle: {
-					fontSize: 16 + 'px',
-					width: '160px',
-					flex: 'none'
-				}
-			},
-			{
-				titleName: '卡类型',
-				dataName: 'cardTypeName',
-			},
-			{
-				titleName: '手机号',
-				dataName: 'mobile',
-			},
-			{
-				titleName: '会员姓名',
-				dataName: 'memberName',
-			},
-			{
-				titleName: '充值金额',
-				dataName: 'recharge',
-			},
-			{
-				titleName: '支付金额',
-				dataName: 'payment',
-			},
-			{
-				titleName: '支付方式',
-				dataName: 'payType',
-			},
-			{
-				titleName: '操作员',
-				dataName: 'staffName',
-			},
-			{
-				titleName: '赠送总额',
-				dataName: 'giftAmount',
-			},
-			{
-				titleName: '赠送积分',
-				dataName: 'giftPoint',
-			},
-			{
-				titleName: '赠送优惠券',
-				dataName: 'giftCoupon',
-				conStyle: {
-					'color': '#27a8e0',
-					'cursor': 'pointer'
-				}
-			}
-			],
 			staticshopLists: [], //店铺查询的数据 
 			showWin: false, //弹窗默认关闭状态
 			isPopupwindow: '',
@@ -245,7 +191,7 @@ export default {
 				case 23:
 					return '上海中信';
 				case 24:
-					return '上海中信支付宝';		
+					return '上海中信支付宝';
 			}
 		},
 	},
@@ -256,31 +202,11 @@ export default {
 	},
 	components: {
 		pageElement: () =>
-		import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+			import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 		comTable: () =>
-		import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+			import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 		'coupon-detail': () =>
-		import ( /*webpackChunkName: "member_recharge_couponwin"*/ './member_recharge_couponwin'),
-	},
-	created() {
-		let obj1 = {
-			titleStyle: {
-				fontSize: 16 + 'px'
-			}
-		};
-		let obj2 = {
-			conStyle: {
-				'color': '#ff9800'
-			}
-		};
-		for (let item of this.titleList) {
-			Object.assign(item, obj1, obj2);
-		}
-		for (let item of this.shoptitleList) {
-			if (item.dataName != 'cardNumber' && item.dataName != 'createTime' && item.dataName != 'shopName') {
-				Object.assign(item, obj1);
-			}
-		}
+			import ( /*webpackChunkName: "member_recharge_couponwin"*/ './member_recharge_couponwin'),
 	},
 	destroyed() {
 		clearInterval(this.timer);

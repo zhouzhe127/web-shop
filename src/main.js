@@ -72,6 +72,8 @@ class Main {
             }
 
 
+			
+
         })
 
         router.afterEach((to, from) => {

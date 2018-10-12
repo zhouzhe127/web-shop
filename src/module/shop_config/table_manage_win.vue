@@ -63,16 +63,13 @@ export default {
 	props: {
 		isAdd: Boolean,
 		tableId: '',
-		tableIndex: '',
 		userData: Object,
-		tableList: Array, //桌台列表
 		Area: Array, //区域列表
 		tableDetial: Object
 	},
 	mounted() {
 		if (this.isAdd) {
 			this.title = '新建桌台';
-			// this.cancelStyle = null;
 			this.okStyle = {
 				content: '保存',
 				style: {
@@ -82,7 +79,6 @@ export default {
 			};
 		} else if (!this.isAdd) {
 			this.title = '修改桌台';
-			// this.okStyle = null;
 			this.cancelStyle = {
 				content: '删除',
 				style: {
@@ -95,27 +91,27 @@ export default {
 	},
 	methods: {
 		//选择区域
-		doThrowWinResult(i) {
-			if (this.getOneTable && this.Area) {
-				this.oIndex = i;
-			}
-		},
-		//标准席位
-		changeOne(res) {
-			this.getOneTable.normalSeat = res;
-		},
-		//最小容纳人数
-		changeTwo(res) {
-			this.minSeat = res;
-		},
-		//最大容纳人数
-		changeThree(res) {
-			this.maxSeat = res;
-		},
-		//排序
-		changeFour(res) {
-			this.sort = res;
-		},
+//		doThrowWinResult(i) {
+//			if (this.getOneTable && this.Area) {
+//				this.oIndex = i;
+//			}
+//		},
+//		//标准席位
+//		changeOne(res) {
+//			this.getOneTable.normalSeat = res;
+//		},
+//		//最小容纳人数
+//		changeTwo(res) {
+//			this.minSeat = res;
+//		},
+//		//最大容纳人数
+//		changeThree(res) {
+//			this.maxSeat = res;
+//		},
+//		//排序
+//		changeFour(res) {
+//			this.sort = res;
+//		},
 		//创建桌台
 		async createTable(backRes) {
 			let res = await http.createTable({
@@ -132,10 +128,7 @@ export default {
 				}
 			});
 			if (res) {
-				for (let i = 0; i < res.length; i++) {
-					this.tableList.push(res[i]);
-				}
-				this.$emit('throwWinResult', backRes); //抛出一个事件给父组件
+				this.$emit('throwWinResult',backRes,res); //抛出一个事件给父组件
 			}
 		},
 		//编辑桌台
@@ -156,8 +149,7 @@ export default {
 				}
 			});
 			if (res) {
-				this.tableList.splice(this.tableIndex, 1, res);
-				this.$emit('throwWinResult', backRes); //抛出一个事件给父组件
+				this.$emit('throwWinResult',backRes,res); //抛出一个事件给父组件
 			}
 		},
 		//删除桌台
@@ -169,12 +161,11 @@ export default {
 				}
 			});
 			if (res) {
-				this.tableList.splice(this.tableIndex, 1);
-				this.$emit('throwWinResult', backRes); //抛出一个事件给父组件
+				this.$emit('throwWinResult', backRes,this.tableId); //抛出一个事件给父组件
 			}
 		},
 		//判断是修改还是添加 对区域信息数据进行赋值
-		async getTableInfo() {
+		getTableInfo() {
 			if (!this.isAdd) {
 				this.areaID = this.tableDetial.areaId;
 				this.getOneTable = this.tableDetial;

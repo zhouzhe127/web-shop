@@ -4,12 +4,12 @@
 		<div class="title">
 			<form class="theForm" enctype="multipart/form-data" id="uploadmemberForm">
 				<a href="javascript:void(0);" style=" background: #28A8E0;
-        color: #fff;">电子会员导入</a>
+				color: #fff;">电子会员导入</a>
 				<input type="file" accept="application/vnd.ms-excel,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="imports('1','uploadmemberForm')" id="file" name="file" style="opacity: 0; position: absolute;top:0;left:0;width: 133px;height: 38px;" />
 			</form>
 			<form class="theForm" enctype="multipart/form-data" id="uploadcardForm">
 				<a href="javascript:void(0);" style=" background: #28A8E0;
-        color: #fff;">实体会员导入</a>
+				color: #fff;">实体会员导入</a>
 				<input type="file" accept="application/vnd.ms-excel,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" @change="imports('0','uploadcardForm')" id="file" name="file" style="opacity: 0; position: absolute;top:0;left:0;width: 133px;height: 38px;" />
 			</form>
 			<a href="javascript:void(0);" @click="filterExport('0')">实体卡样例表格下载</a>
@@ -120,57 +120,57 @@ export default {
 			importStatus: true, //导入成功失败状态
 			shopId: '', //店铺id
 			titleList: [{
-					titleName: '表格下载',
-					titleStyle: {
-						fontSize: 16 + 'px',
-						width: 287 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '序号',
-					dataName: 'id',
-					titleStyle: {
-						fontSize: 16 + 'px',
-						width: 229.5 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '导入时间',
-					titleStyle: {
-						fontSize: 16 + 'px',
-						width: 229.5 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '成功人数',
-					dataName: 'successNum',
-					titleStyle: {
-						fontSize: 16 + 'px',
-						width: 229.5 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '失败人数',
-					dataName: 'failNum',
-					titleStyle: {
-						fontSize: 16 + 'px',
-						width: 229.5 + 'px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '共计导入金额',
-					dataName: 'successPrice',
-					titleStyle: {
-						fontSize: 16 + 'px',
-						width: 229.5 + 'px',
-						flex: 'none'
-					}
+				titleName: '表格下载',
+				titleStyle: {
+					fontSize: 16 + 'px',
+					width: 287 + 'px',
+					flex: 'none'
 				}
+			},
+			{
+				titleName: '序号',
+				dataName: 'id',
+				titleStyle: {
+					fontSize: 16 + 'px',
+					width: 229.5 + 'px',
+					flex: 'none'
+				}
+			},
+			{
+				titleName: '导入时间',
+				titleStyle: {
+					fontSize: 16 + 'px',
+					width: 229.5 + 'px',
+					flex: 'none'
+				}
+			},
+			{
+				titleName: '成功人数',
+				dataName: 'successNum',
+				titleStyle: {
+					fontSize: 16 + 'px',
+					width: 229.5 + 'px',
+					flex: 'none'
+				}
+			},
+			{
+				titleName: '失败人数',
+				dataName: 'failNum',
+				titleStyle: {
+					fontSize: 16 + 'px',
+					width: 229.5 + 'px',
+					flex: 'none'
+				}
+			},
+			{
+				titleName: '共计导入金额',
+				dataName: 'successPrice',
+				titleStyle: {
+					fontSize: 16 + 'px',
+					width: 229.5 + 'px',
+					flex: 'none'
+				}
+			}
 			],
 		};
 	},
@@ -199,10 +199,10 @@ export default {
 			this.pageBtn = !this.pageBtn;
 		},
 		//导入
-		imports: function(type,uploadId) {
-			this.importsForm(type,uploadId);
+		imports: function(type, uploadId) {
+			this.importsForm(type, uploadId);
 		},
-		async importsForm(type,uploadId) {
+		async importsForm(type, uploadId) {
 			let info = await http.importCard({
 				data: {
 					ischain: userDate.currentShop.ischain,
@@ -264,7 +264,7 @@ export default {
 			//0 实体卡  1会员
 			await http.importCardSample({
 				data: {
-					type:type
+					type: type
 				}
 			});
 		},
@@ -554,6 +554,7 @@ export default {
 }
 
 
+
 /*loading加载的css*/
 
 .spinner {
@@ -714,6 +715,7 @@ export default {
 	border-right: 5px solid transparent;
 	box-sizing: border-box;
 }
+
 
 
 /*翻页================================*/

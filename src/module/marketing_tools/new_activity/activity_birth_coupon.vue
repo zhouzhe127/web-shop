@@ -43,20 +43,20 @@ export default {
 			flag2: 0,
 			goodsCom: [], //优惠券显示列表
 			CountList: [{
-					'name': '全部'
-				},
-				{
-					'name': '满减优惠券'
-				},
-				{
-					'name': '折扣优惠券'
-				},
-				{
-					'name': '赠菜优惠券'
-				},
-				{
-					'name': '代金券'
-				}
+				'name': '全部'
+			},
+			{
+				'name': '满减优惠券'
+			},
+			{
+				'name': '折扣优惠券'
+			},
+			{
+				'name': '赠菜优惠券'
+			},
+			{
+				'name': '代金券'
+			}
 			],
 			selects: [],
 			list: []

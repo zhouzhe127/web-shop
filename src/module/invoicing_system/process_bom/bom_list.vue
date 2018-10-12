@@ -23,7 +23,8 @@
 						</div>
 					</template>
 				</el-table-column>
-				 <el-table-column label="序号" type="index" width="50">
+				 <el-table-column label="序号" type="index" :index='indexMethod' width="50">
+
 				 </el-table-column>
 				 <el-table-column label="物料名称" prop="material"></el-table-column>
 				 <el-table-column label="所需物料">
@@ -133,6 +134,9 @@ import utils from 'src/verdor/utils';
 			sizeChange(size){
 				this.size = size;
 				this.init();
+			},
+			indexMethod(index){
+				return (index+1)*this.page;
 			},
 			addEduce() {
 				this.$store.commit('setPageTools', [{

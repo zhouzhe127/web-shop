@@ -1,0 +1,1 @@
+module.exports={"path":"materialTotalLog","meta":{"keepAlive":true},"url":"src/module/invoicing_system/total_log/material_total_log"}

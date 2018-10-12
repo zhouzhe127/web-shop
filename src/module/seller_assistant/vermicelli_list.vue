@@ -11,17 +11,23 @@
 			</header>
 			<!-- list表格 -->
 			<com-table :listHeight='80' :fixed='2' :listName="'粉丝列表'" :key="index" :showTitle='1' :introData="vermiceList" :listWidth="1437" :titleData="titleList" :allTotal="count" :widthType='true'>
-				<div slot="title-0" @click="selectAll" class="content_select_all">全部</div>
-				<div class="cli_radios" slot="con-0" slot-scope="props">
-					<input :id="index" ref="input" @change="changeSelect($event,props.index)" :value="props.data" v-model="selectInfo" type="checkbox">
+				<div class="list_title_l fl" slot="title-0">
+					<span @click="allSelectedOne" style="cursor:pointer;">全选</span>
+					<span></span>
+					<span>已选
+								<a href="javascript:;">{{selectedList.length}}</a>人</span>
+				</div>
+				<div slot="con-0" slot-scope="props" class="circle">
+					<!-- <input :id="index" ref="input" @change="changeSelect($event,props.index)" :value="props.data" v-model="selectInfo" type="checkbox"> -->
+					<span :class="{ 'actives': props.data.selected}" @click="ocSelOne(props.data)"></span>
 				</div>
 				<div slot="con-1" slot-scope="props" class="detail_info">
 					<span @click="showDetailInfo(props.data,index)">详细信息</span>
 					<span @click="()=>{showVermicelliList=false;interData=props.data}">积分记录</span>
 					<span @click="adjustRecord(props.data)">调整积分</span>
 				</div>
-				<div slot="con-2" slot-scope="props">
-					<div v-if="props.data.recommendedImageUrl != '' && props.data.recommendedName != ''">
+				<div slot="con-2" slot-scope="props" class="detail_img">
+					<template v-if="props.data.recommendedImageUrl != '' && props.data.recommendedName != ''">
 						<div>
 							<img v-if="props.data.recommendedImageUrl != ''" :src="props.data.recommendedImageUrl" :alt="props.data.recommendedName" />
 						</div>
@@ -30,7 +36,7 @@
 								{{props.data.recommendedName}}
 							</span>
 						</div>
-					</div>
+					</template>
 					<div v-else>--</div>
 				</div>
 				<div slot="con-3" slot-scope="props" class="detail_img">
@@ -166,28 +172,30 @@ export default {
 			interIndex: '',
 			count: 0,
 			selAll: false, //  是否全选
-			timer: '' //定时器
+			timer: '', //定时器
+			selectedList: [], //选中的数组
+			allselect: false, //全选的状态			
 		};
 	},
 	methods: {
-		selectAll() {
-			this.editIndex = [];
-			this.selAll = !this.selAll;
-			let arr = document.querySelectorAll('.cli_radios input');
-			if (arr) {
-				for (let i = 0; i < arr.length; i++) {
-					arr[i].checked = this.selAll;
-					arr[i].className = this.selAll ? 'select_icon' : '';
-					this.editIndex.push(i);
-				}
-				this.selectInfo = this.selAll ? [...this.vermiceList] : [];
-				if (this.selAll) {
-					this.editIndex = this.editIndex;
-				} else {
-					this.editIndex = [];
-				}
-			}
-		},
+		// selectAll() {
+		// 	this.editIndex = [];
+		// 	this.selAll = !this.selAll;
+		// 	let arr = document.querySelectorAll('.cli_radios input');
+		// 	if (arr) {
+		// 		for (let i = 0; i < arr.length; i++) {
+		// 			arr[i].checked = this.selAll;
+		// 			arr[i].className = this.selAll ? 'select_icon' : '';
+		// 			this.editIndex.push(i);
+		// 		}
+		// 		this.selectInfo = this.selAll ? [...this.vermiceList] : [];
+		// 		if (this.selAll) {
+		// 			this.editIndex = this.editIndex;
+		// 		} else {
+		// 			this.editIndex = [];
+		// 		}
+		// 	}
+		// },
 		selectGroup(val) {
 			if (val == 0) {
 				this.selects = ['-1'];
@@ -198,14 +206,14 @@ export default {
 		pageChange(obj) {
 			this.page = obj.page;
 			this.num = obj.num;
-			this.selectInfo = [];
+			//this.selectInfo = [];
 			this.selectUser('foot');
 		},
 		async selectUser(type) { //  筛选
 			if (type == 'header') {
 				this.page = 1;
 			}
-			this.selectInfo = [];
+			//this.selectedList = [];
 			this.editIndex = [];
 			this.selAll = false;
 			if (this.$refs.input) {
@@ -227,6 +235,25 @@ export default {
 				this.count = res.count;
 			}
 			this.pageNum = Math.ceil(this.count / this.num);
+			//判断哪些数据是之前选中过的 选中过的加上标识
+			for (let item of res.fansList) {
+				if (this.selectedList.length == 0) {
+					item.selected = false;
+				} else {
+					for (let int of this.selectedList) {
+						if (int.id == item.id) {
+							item.selected = int.selected;
+							break;
+						} else {
+							item.selected = false;
+						}
+					}
+				}
+				this.allselect = true;
+				if (!item.selected) {
+					this.allselect = false;
+				}
+			}
 			this.vermiceList = res.fansList;
 		},
 		resertUser() { //  重置
@@ -265,7 +292,7 @@ export default {
 			}
 		},
 		async setGroup() {
-			if (!this.selectInfo.length > 0) {
+			if (!this.selectedList.length > 0) {
 				this.valiData('请选择用户');
 				return false;
 			}
@@ -275,12 +302,12 @@ export default {
 
 		},
 		async exportUser() {
-			if (!this.selectInfo.length > 0) {
+			if (!this.selectedList.length > 0) {
 				this.valiData('请选择需要导出的粉丝');
 				return false;
 			}
 			let fansIds = []; //被选中的粉丝的id
-			for (let i of this.selectInfo) {
+			for (let i of this.selectedList) {
 				fansIds.push(i.id);
 			}
 			await http.exportAssistantfans({
@@ -291,7 +318,7 @@ export default {
 			});
 		},
 		setLabel() {
-			if (!this.selectInfo.length > 0) {
+			if (!this.selectedList.length > 0) {
 				this.valiData('请选择用户');
 				return false;
 			}
@@ -319,7 +346,7 @@ export default {
 		async setUserLabel(val) {
 			let fansIds = [];
 			let tagName = []; //   被设置的标签
-			for (let i of this.selectInfo) {
+			for (let i of this.selectedList) {
 				fansIds.push(i.id);
 			}
 			let res = await http.setUserTag({
@@ -356,7 +383,7 @@ export default {
 					groupName = i.name;
 				}
 			}
-			for (let key of this.selectInfo) {
+			for (let key of this.selectedList) {
 				openIdList.push(key.openId);
 				idList.push(key.id);
 			}
@@ -369,10 +396,12 @@ export default {
 			});
 			if (res) {
 				this.$store.commit('setWin', {
-					content: '设置成功',
+					content: '设置分组成功',
 					title: '操作提示',
 					winType: 'alert'
 				});
+				this.selectUser(1);
+				this.selectedList = [];
 				for (let p of this.editIndex) {
 					this.vermiceList[p].groupName = groupName;
 				}
@@ -480,7 +509,56 @@ export default {
 					this.exportUser();
 				}
 			});
-		}
+		},
+		//单选
+		ocSelOne: function(item) {
+			item.selected = !item.selected;
+			if (item.selected) {
+				this.selectedList.push(item);
+				for (let i = 0; i < this.vermiceList.length; i++) {
+					if (this.vermiceList[i].selected != true) {
+						return;
+					}
+				}
+				this.allselect = true;
+			} else {
+				this.allselect = false;
+				for (let j = 0; j < this.selectedList.length; j++) {
+					if (this.selectedList[j].id == item.id) {
+						this.selectedList.splice(j, 1);
+					}
+				}
+			}
+		},
+		//全选
+		allSelectedOne: function() {
+			if (this.allselect == true) {
+				for (let i = 0; i < this.vermiceList.length; i++) {
+					this.vermiceList[i].selected = false;
+					for (let j = 0; j < this.selectedList.length; j++) {
+						if (this.selectedList[j].memberId == this.vermiceList[i].memberId) {
+							this.selectedList.splice(j, 1);
+						}
+					}
+				}
+			} else {
+				for (let i = 0; i < this.vermiceList.length; i++) {
+					// if (this.selectedList.length >= 50) {
+					// 	this.$store.commit('setWin', {
+					// 		title: '温馨提示',
+					// 		winType: 'alter',
+					// 		content: '最多可选50条数据'
+					// 	});
+					// 	return false;
+					// }
+					this.vermiceList[i].selected = true;
+					if (JSON.stringify(this.selectedList).indexOf(JSON.stringify(this.vermiceList[i])) == -1) {
+						this.selectedList.push(this.vermiceList[i]);
+					}
+				}
+			}
+			this.allselect = !this.allselect;
+		},
 	},
 	filters: {
 		filterSex(val) {
@@ -513,21 +591,21 @@ export default {
 	},
 	components: {
 		pageElement: () =>
-		import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+			import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 		'details-win': () =>
-		import ( /* webpackChunkName: 'details_win' */ './details_win'),
+			import ( /* webpackChunkName: 'details_win' */ './details_win'),
 		'set-user-group': () =>
-		import ( /* webpackChunkName: 'set_user_group' */ './set_user_group'),
+			import ( /* webpackChunkName: 'set_user_group' */ './set_user_group'),
 		'select-btn': () =>
-		import ( /* webpackChunkName: 'select_btn' */ 'src/components/select_btn'),
+			import ( /* webpackChunkName: 'select_btn' */ 'src/components/select_btn'),
 		'integral-win': () =>
-		import ( /* webpackChunkName: 'integral_win' */ './integral_win'),
+			import ( /* webpackChunkName: 'integral_win' */ './integral_win'),
 		'integral-record': () =>
-		import ( /* webpackChunkName: 'integral_record' */ './integral_record'),
+			import ( /* webpackChunkName: 'integral_record' */ './integral_record'),
 		selectBtn: () =>
-		import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
+			import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
 		comTable: () =>
-		import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 	},
 	beforeDestroy() {
 		global.groupFansList = {
@@ -759,6 +837,50 @@ export default {
 		background-image: url(../../res/icon/icon-select-blue.png);
 		border: none;
 	}
+}
+
+#vermiceli_list .circle {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#vermiceli_list .circle span {
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	border-radius: 12.5px;
+	border: 1px solid #919191;
+}
+
+.actives {
+	background: url('../../res/icon/selected.png') center center no-repeat, #28A8E0;
+}
+
+#vermiceli_list .list_title_l {
+	width: 100%;
+}
+
+#vermiceli_list .list_title_l span {
+	font-size: 16px;
+	color: #2EA8DC;
+}
+
+#vermiceli_list .list_title_l span:nth-child(2) {
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #2EA8DC;
+	margin: 0 5px;
+	vertical-align: middle;
+}
+
+#vermiceli_list .list_title_l span:last-child a {
+	font-size: 16px;
+	color: #2EA8DC;
 }
 
 @media screen and (min-width:1024px) and (max-width:1440px) {

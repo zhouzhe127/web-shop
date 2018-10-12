@@ -175,7 +175,7 @@ export default {
 		async addCount(type) {
 			let data = await http.getGetCouponCondition({
 				data: {
-					flag: 1
+					
 				}
 			});
 			let coupons = [];
