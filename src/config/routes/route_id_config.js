@@ -123,7 +123,7 @@ const statistics = {
     '093': 'statistics/category',
     '094': 'statistics/single_goods',
     '095': 'statistics/brand_order_bill',
-    '096': 'statistics/handover',
+    '096': 'statistics/handover_brand',
     '097': 'statistics/member_recharges',
     '098': 'statistics/delete',
     '099': 'statistics/return_goods',
