@@ -5,36 +5,24 @@
 	*
 -->
 <template>
-	<div id="employlist">
+	<div id="employlist" style="width:100%;">
 		<nav v-show="!batch" :class="{sdHidden: batch}">
 			<el-select v-if="ischain != 0" v-model="selectAssignmentType" @change="selectAssignmentTypeFilte" placeholder="请选择指派类型" style="width:150px;">
-				<el-option
-					v-for="(item,i) in assignmentTypes" 
-					:key="i"
-					:label="item.name"
-					:value="item.type">
+				<el-option v-for="(item,i) in assignmentTypes" :key="i" :label="item.name" :value="item.type">
 				</el-option>
 			</el-select>
-			<!-- <select-btn v-if="ischain != 0" :name="selectAssignmentType" :sorts="assignmentTypes" :width="158" @emit="selectAssignmentTypeFilte"></select-btn> -->
 			<el-select v-if="ischain != 0" v-model="recType" @change="selectJobFilte" placeholder="请选择职位" style="width:150px;">
-				<el-option
-					v-for="(item,i) in reduceJobList" 
-					:key="i"
-					:label="item.name"
-					:value="i">
+				<el-option v-for="(item,i) in reduceJobList" :key="i" :label="item.name" :value="i">
 				</el-option>
 			</el-select>
-			<!-- <select-btn :name="selectJob.name" :sorts="reduceJobList.map(v=>v.name)" :width="138" @emit="selectJobFilte"></select-btn> -->
 			<el-input v-model="seachValue" clearable maxlength="11" placeholder="请输入员工名称/手机号码" style="width:225px;"></el-input>
-			<!-- <input type="text" v-model="seachValue" maxlength="11" placeholder="请输入员工名称/手机号码"> -->
 			<el-button v-on:click="seachFn" type="primary">搜索</el-button>
 			<el-button v-on:click="resetFn" type="info">重置</el-button>
-			<!-- <a href="javascript:;" class="blue" @click="seachFn">筛选</a>
-			<a href="javascript:;" class="gray" @click="resetFn">重置</a> -->
 		</nav>
 		<div class="aBox">
 			<div class="boxTop">
-				<span style="font-size:16px;margin-right: 20px;">员工列表 · 共<span style="color: #ff3c04;font-size: inherit;">{{orginList.length}}</span>个条目</span>
+				<span style="font-size:16px;margin-right: 20px;">员工列表 · 共
+					<span style="color: #ff3c04;font-size: inherit;">{{orginList.length}}</span>个条目</span>
 				<span v-if="ischain=='1'||ischain=='2'" class="aSpan">
 					<i class="aI" style=""></i>品牌指派
 				</span>
@@ -42,38 +30,36 @@
 					<i class="aI" style="background:#2ea7e0;"></i>门店自建
 				</span>
 			</div>
-			<el-table class="list" :data="pagedList" border style="width: 100%;" stripe :header-cell-style = "{'background-color':'#f5f7fa'}">
-				<el-table-column fixed align="center" min-width = "120" :render-header="renderHeader" label="操作">
+			<el-table class="list" :data="pagedList" border style="width: 100%;" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column fixed align="center" min-width="120" :render-header="renderHeader" label="操作">
 					<template slot-scope="scope">
-						<div class="optionWrap">
-							<template v-if="!batch" >
-								<span @click="edit(scope.row.userId,scope.$index)">编辑</span>
-								<span>|</span>
-								<span @click="delEmployeeFn(scope.row.userId,scope.$index)">删除</span>
-							</template>
-							<div v-if="batch" class="oBox" @click="selectItemInBatch(scope.$index,scope.row.userId)">
-								<i :class="{select: scope.$index in batchIndexs}"></i>
-							</div>
+						<template v-if="!batch">
+							<span style="color: #FE8D2C;cursor:pointer" @click="edit(scope.row.userId,scope.$index)">编辑</span>
+							<span style="padding:0 5px;color: #D2D2D2">|</span>
+							<span style="color: #FD3F1F;cursor:pointer" @click="delEmployeeFn(scope.row.userId,scope.$index)">删除</span>
+						</template>
+						<div v-if="batch" class="oBox" @click="selectItemInBatch(scope.$index,scope.row.userId)">
+							<i :class="{select: scope.$index in batchIndexs}"></i>
 						</div>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" min-width = "120" label="序号">
+				<el-table-column align="center" min-width="120" label="序号">
 					<template slot-scope="scope">
-						<span>{{(scope.$index+1)+(page-1)*10}}</span>
+						<span>{{scope.$index+1}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column show-overflow-tooltip  min-width = "120" align="center" label="员工名称" prop="name"></el-table-column>
-				<el-table-column align="center" min-width = "120" label="职位名称" prop="roleName">
+				<el-table-column show-overflow-tooltip min-width="120" align="center" label="员工名称" prop="name"></el-table-column>
+				<el-table-column align="center" min-width="120" label="职位名称" prop="roleName">
 					<template slot-scope="scope">
 						<span v-if="scope.row.roleId*1>=100000||scope.row.roleId*1==0" :style="{color:ischain=='1'||ischain=='2'?'#fe9200':'#333'}">{{scope.row.roleName}}</span>
 						<span v-if="scope.row.roleId* 1> 0&&scope.row.roleId* 1< 100000" :style="{color:ischain=='1'||ischain=='2'?'#29abe2':'#333'}">{{scope.row.roleName}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" min-width = "120" label="手机号码" prop="mobile"></el-table-column>
+				<el-table-column align="center" min-width="120" label="手机号码" prop="mobile"></el-table-column>
 			</el-table>
 		</div>
 		<div v-if="!batch">
-			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size = "pagenum" layout="sizes, prev, pager, next" :page-count="totalPage" :page-sizes="[10, 20, 30]"></el-pagination>
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="pagenum" layout="sizes, prev, pager, next" :page-count="totalPage" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
 		<employee-win v-if="showWin" @throwWinResult="doThrowWinResult" :isAdd="isAdd" :employeeId="employeeId" :employeeIndex="employeeIndex" :list="pagedList" :jobList="jobList.slice(1)" :ischain="+ischain"></employee-win>
 		<select-job v-if="showBatchJobs" @winEvent="batchJobWinFn" :ischain="+ischain" :jobList="jobList.slice(1)" :title="'批量选择员工职位'" :index="-1">
@@ -95,7 +81,11 @@ export default {
 			employeeId: '', //员工id
 			employeeIndex: '', //员工列表索引
 			info: '', //员工信息
-			assignmentTypes: [{name:'全部',type:'0'}, {name:'品牌指派',type:"1"}, {name:'门店自建',type:'2'}], // 指派类型
+			assignmentTypes: [
+				{ name: '全部', type: '0' },
+				{ name: '品牌指派', type: '1' },
+				{ name: '门店自建', type: '2' }
+			], // 指派类型
 			selectAssignmentType: '', // 选中的指派类型
 			jobList: [], //职位列表
 			selectJob: {}, // 导航栏选中的职位
@@ -106,7 +96,7 @@ export default {
 				selectAssignmentType: '',
 				selectJob: {}
 			},
-			recType:'',
+			recType: '',
 			page: 1,
 			pagenum: 10, // 每页条数
 			pagenumArr: [10, 20, 50],
@@ -164,7 +154,8 @@ export default {
 		},
 		reduceJobList() {
 			// console.log(this.recType);
-			if (this.selectAssignmentType == '2') {//2是门店自建，1是品牌
+			if (this.selectAssignmentType == '2') {
+				//2是门店自建，1是品牌
 				return this.jobList.filter(
 					v =>
 						(v.id < 100000 && v.id + '' !== '0') || v.name == '全部'
@@ -200,26 +191,35 @@ export default {
 
 	// },
 	methods: {
-		renderHeader(h,{column,$index}){
-			if(!this.batch){
-				return h('span',column.label);
-			}else {
-				return h('span',{},[
-					h('span',{
-						class: 'edit',
-						style: 'color:#F8931F;cursor:pointer;margin-right:20px;',
-						on: {
-							click: this.batchEdit
-						}
-					},'编辑'),
-					h('span', {
-						class: 'del',
-						style: 'color: #FD3E1F;cursor:pointer',
-						on: {
-							click: this.batchDel
-						}
-					},'删除')
-				])
+		renderHeader(h, { column}) {
+			if (!this.batch) {
+				return h('span', column.label);
+			} else {
+				return h('span', {}, [
+					h(
+						'span',
+						{
+							class: 'edit',
+							style:
+								'color:#F8931F;cursor:pointer;margin-right:20px;',
+							on: {
+								click: this.batchEdit
+							}
+						},
+						'编辑'
+					),
+					h(
+						'span',
+						{
+							class: 'del',
+							style: 'color: #FD3E1F;cursor:pointer',
+							on: {
+								click: this.batchDel
+							}
+						},
+						'删除'
+					)
+				]);
 			}
 		},
 		init() {
@@ -269,7 +269,7 @@ export default {
 			this.page = 1;
 			this.selectJob = this.reduceJobList[i];
 		},
-		selectAssignmentTypeFilte(i) {
+		selectAssignmentTypeFilte() {
 			this.recType = '';
 			this.page = 1;
 			// this.selectAssignmentType = this.assignmentTypes[i].type;
@@ -305,7 +305,7 @@ export default {
 			// };
 		},
 		//每页显示多少行
-		handleSizeChange(p){
+		handleSizeChange(p) {
 			this.pagenum = p;
 			this.page = 1;
 		},
@@ -537,7 +537,7 @@ export default {
 	@sdBlue: #2daadd;
 	@sdRed: #fc3f1d;
 	#employlist{
-		min-width: 710px;
+		// min-width: 710px;
 		color: #424149;
 		.sdRed{color: @sdRed}
 		// nav{
@@ -726,23 +726,23 @@ export default {
 		// /deep/ .sdOrange{
 		// 	color: @sdOrange
 		// }
-		.optionWrap{
-			cursor:pointer;
-			span:first-child{
-				color: @sdOrange;
-				padding:0 5px;
-				display: inline-block;
-				// min-width: 50px;
-			}
-			span:nth-child(2){
-				color:#d2d2d2;
-			}
-			span:last-child{
-				display: inline-block;
-				min-width: 50px;
-				padding:0 5px;
-				color: @sdRed;
-			}
-		}
+		// .optionWrap{
+		// 	cursor:pointer;
+		// 	span:first-child{
+		// 		color: @sdOrange;
+		// 		padding:0 5px;
+		// 		display: inline-block;
+		// 		// min-width: 50px;
+		// 	}
+		// 	span:nth-child(2){
+		// 		color:#d2d2d2;
+		// 	}
+		// 	span:last-child{
+		// 		display: inline-block;
+		// 		min-width: 50px;
+		// 		padding:0 5px;
+		// 		color: @sdRed;
+		// 	}
+		// }
 	}
 </style>

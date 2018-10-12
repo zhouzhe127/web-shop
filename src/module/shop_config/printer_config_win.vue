@@ -2,12 +2,12 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-05 16:02:16
+ * @Last Modified time: 2018-09-14 18:43:41
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
 	<div>
-		<win @winEvent="printConfigWin" :align="'right'" :width="600" :height="560" :ok="okStyle" :cancel="cancelStyle">
+		<win @winEvent="printConfigWin" :align="'right'" :width="600" :height="560" :ok="okStyle">
 			<span slot="title">{{title}}</span>
 			<div id="prin_con" slot="content" v-cloak>
 				<!--打印机创建修改表单-->
@@ -16,7 +16,7 @@
 						<el-form-item label="单据数据"  required>
 							<el-radio-group v-model="orderTypeIndex">
 								<div style="margin-bottom:2px;">
-									<el-radio class="labItem" @change="changeIndex(i)" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
+									<el-radio size="small" class="labItem" @change="changeIndex(i)" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
 								</div>
 							</el-radio-group>
 						</el-form-item>
@@ -27,14 +27,14 @@
 						<el-form-item required label="打印机">
 							<el-radio-group v-model="printerIndex">
 								<div style="margin-bottom:2px;">
-									<el-radio class="labItem" @change="changePrintIndex(i)" v-for="(item,i) in printerList" :key="i" :label="i" border>{{item.printerName}}</el-radio>
+									<el-radio size="small" class="labItem" @change="changePrintIndex(i)" v-for="(item,i) in printerList" :key="i" :label="i" border>{{item.printerName}}</el-radio>
 								</div>
 							</el-radio-group>
 						</el-form-item>
 						<el-form-item required label="区域" v-if="status==1 || status==3 || status==5">
 							<el-checkbox-group @change="areaIndexChange" v-model="areaIndex">
 								<div style="margin-bottom:2px;">
-									<el-checkbox class="labItem" v-for="(item,i) in areaIdsList" :key="i" :label="item.id" border>{{item.areaName}}</el-checkbox>
+									<el-checkbox size="small" class="labItem" v-for="(item,i) in areaIdsList" :key="i" :label="item.id" border>{{item.areaName}}</el-checkbox>
 								</div>
 							</el-checkbox-group>
 						</el-form-item>
@@ -208,26 +208,12 @@ export default {
 					color: '#fff'
 				}
 			};
-			this.cancelStyle = {
-				content: '取消',
-				style: {
-					backgroundColor: '#a0a0a0',
-					color: '#fff'
-				}
-			};
 		} else if (this.types == 'edit') {
 			this.title = '修改打印机配置';
 			this.okStyle = {
 				content: '确定',
 				style: {
 					backgroundColor: '#29ABE2',
-					color: '#fff'
-				}
-			};
-			this.cancelStyle = {
-				content: '删除',
-				style: {
-					backgroundColor: '#982c2c',
 					color: '#fff'
 				}
 			};

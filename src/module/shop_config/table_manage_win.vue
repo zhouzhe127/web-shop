@@ -19,10 +19,10 @@
 						</el-radio-group>
 					</el-form-item>
 					<el-form-item required label="桌号名称">
-						<el-input v-model="getOneTable.tableName" maxlength="40" placeholder = "输入桌台名称(创建多个桌台请以逗号隔开)" style = "width:300px;"></el-input>
+						<el-input v-model="getOneTable.tableName" maxlength="40" placeholder="输入桌台名称(创建多个桌台请以逗号隔开)" style="width:300px;"></el-input>
 					</el-form-item>
-					<el-form-item required label="桌号编号"  v-if="!isAdd">
-						<el-input v-model="getOneTable.id" placeholder = "输入桌台编号(数字)" maxlength='9' style = "width:300px;"></el-input>
+					<el-form-item required label="桌号编号" v-if="!isAdd">
+						<el-input v-model="getOneTable.id" placeholder="输入桌台编号(数字)" maxlength='9' style="width:300px;"></el-input>
 					</el-form-item>
 					<el-form-item required label="标准席位">
 						<el-input-number v-model="getOneTable.normalSeat" style="width:150px;" :min="1" :max="1000"></el-input-number>
@@ -36,7 +36,7 @@
 						<el-input-number v-model="sort" style="width:150px;" :min="1" :max="255"></el-input-number>
 					</el-form-item>
 					<el-form-item label="描述">
-						<el-input type="textarea" maxlength='50' style="width:400px;" v-model="getOneTable.description" ></el-input>
+						<el-input type="textarea" maxlength='50' style="width:400px;" v-model="getOneTable.description"></el-input>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -57,7 +57,7 @@ export default {
 			maxSeat: 99, //最大容纳人数
 			getOneTable: {}, //详细桌台信息数据
 			oIndex: -1, //顶部区域选择 index
-			areaID: 0, //区域id
+			areaID: 0 //区域id
 		};
 	},
 	props: {
@@ -91,27 +91,27 @@ export default {
 	},
 	methods: {
 		//选择区域
-//		doThrowWinResult(i) {
-//			if (this.getOneTable && this.Area) {
-//				this.oIndex = i;
-//			}
-//		},
-//		//标准席位
-//		changeOne(res) {
-//			this.getOneTable.normalSeat = res;
-//		},
-//		//最小容纳人数
-//		changeTwo(res) {
-//			this.minSeat = res;
-//		},
-//		//最大容纳人数
-//		changeThree(res) {
-//			this.maxSeat = res;
-//		},
-//		//排序
-//		changeFour(res) {
-//			this.sort = res;
-//		},
+		//		doThrowWinResult(i) {
+		//			if (this.getOneTable && this.Area) {
+		//				this.oIndex = i;
+		//			}
+		//		},
+		//		//标准席位
+		//		changeOne(res) {
+		//			this.getOneTable.normalSeat = res;
+		//		},
+		//		//最小容纳人数
+		//		changeTwo(res) {
+		//			this.minSeat = res;
+		//		},
+		//		//最大容纳人数
+		//		changeThree(res) {
+		//			this.maxSeat = res;
+		//		},
+		//		//排序
+		//		changeFour(res) {
+		//			this.sort = res;
+		//		},
 		//创建桌台
 		async createTable(backRes) {
 			let res = await http.createTable({
@@ -128,7 +128,7 @@ export default {
 				}
 			});
 			if (res) {
-				this.$emit('throwWinResult',backRes,res); //抛出一个事件给父组件
+				this.$emit('throwWinResult', backRes, res); //抛出一个事件给父组件
 			}
 		},
 		//编辑桌台
@@ -149,7 +149,7 @@ export default {
 				}
 			});
 			if (res) {
-				this.$emit('throwWinResult',backRes,res); //抛出一个事件给父组件
+				this.$emit('throwWinResult', backRes, res); //抛出一个事件给父组件
 			}
 		},
 		//删除桌台
@@ -161,7 +161,7 @@ export default {
 				}
 			});
 			if (res) {
-				this.$emit('throwWinResult', backRes,this.tableId); //抛出一个事件给父组件
+				this.$emit('throwWinResult', backRes, this.tableId); //抛出一个事件给父组件
 			}
 		},
 		//判断是修改还是添加 对区域信息数据进行赋值
@@ -232,7 +232,7 @@ export default {
 					});
 					return false;
 				}
-				if (this.getOneTable.id.trim().length==0&&!this.isAdd) {
+				if (this.getOneTable.id.trim().length == 0 && !this.isAdd) {
 					this.$store.commit('setWin', {
 						title: '操作提示',
 						winType: 'alter',
@@ -242,7 +242,7 @@ export default {
 				}
 				let regNormalSeat = info.normalSeat - 0;
 				let regNum = /^[0-9]+$/;
-				if (!regNum.test(Number(this.getOneTable.id))&&!this.isAdd) {
+				if (!regNum.test(Number(this.getOneTable.id)) && !this.isAdd) {
 					this.$store.commit('setWin', {
 						title: '操作提示',
 						winType: 'alter',
@@ -357,7 +357,7 @@ export default {
 	padding: 20px 0;
 	.labItem {
 		margin-bottom: 5px;
-		margin-left: 0!important;
+		margin-left: 0 !important;
 		margin-right: 10px;
 	}
 }

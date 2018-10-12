@@ -1,22 +1,22 @@
 /**
  * @Author: 孔伟研 
  * @Date: 2018-03-28 15:43:31 
- * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-08-03 16:49:24
+ * @Last Modified by: zhigang.li
+ * @Last Modified time: 2018-10-12 16:52:31
  * @Module:基本信息**/
 
 <template>
 	<section style="text-align:left;width:900px;min-height:1280px;" id="bstime">
 		<el-form :model="baseDetial" ref="baseDetial" label-width="120px">
 			<el-form-item required label="店铺名称">
-				<el-input v-model="baseDetial.shopName" maxlength="20" placeholder = "请输入店铺名称" style="width:250px;"></el-input>
+				<el-input v-model="baseDetial.shopName" maxlength="20" placeholder="请输入店铺名称" style="width:250px;"></el-input>
 			</el-form-item>
 			<el-form-item label="店铺编号">
 				<span v-if="baseDetial.shopNumber !== '' && baseDetial.shopNumber">{{shopNumber}}</span>
 				<span v-else>
-					<el-input v-model="shopNumber" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" placeholder = "请输入店铺编号（必须为4位数）" style="width:250px;"></el-input>
+					<el-input v-model="shopNumber" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" placeholder="请输入店铺编号（必须为4位数）" style="width:250px;"></el-input>
 					<!-- <input type="text" v-model="shopNumber" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" placeholder="请输入店铺编号（必须为4位数）"> -->
-					<span style="margin-left: 10px;color: #EA3B44;" class="el-icon-warning">  店铺编号一旦提交，不可修改！</span>
+					<span style="margin-left: 10px;color: #EA3B44;" class="el-icon-warning"> 店铺编号一旦提交，不可修改！</span>
 				</span>
 			</el-form-item>
 			<el-form-item label="店铺类型">
@@ -53,13 +53,13 @@
 				</div>
 			</el-form-item>
 			<el-form-item label="负责人">
-				<el-input v-model="baseDetial.contactMan" maxlength="15" placeholder = "请输入负责人" style="width:250px;"></el-input>
+				<el-input v-model="baseDetial.contactMan" maxlength="15" placeholder="请输入负责人" style="width:250px;"></el-input>
 			</el-form-item>
 			<el-form-item required label="联系方式 ">
-				<el-input v-model="baseDetial.telephone" maxlength="20" placeholder = "请输入手机号码" style="width:250px;"></el-input>
+				<el-input v-model="baseDetial.telephone" maxlength="20" placeholder="请输入手机号码" style="width:250px;"></el-input>
 			</el-form-item>
 			<el-form-item required label="店铺地址 ">
-				<el-input v-model="baseDetial.address" maxlength="20" placeholder = "请输店铺地址" style="width:320px;">
+				<el-input v-model="baseDetial.address" maxlength="20" placeholder="请输店铺地址" style="width:320px;">
 					<el-button slot="append" @click="seach(true)">搜索</el-button>
 				</el-input>
 			</el-form-item>
@@ -76,7 +76,7 @@
 				</div>
 			</el-form-item>
 			<el-form-item label="详细介绍 ">
-				<el-input type="textarea" v-model="baseDetial.description" maxlength="50" :autosize="{minRows: 3, maxRows: 5}" placeholder = "请输入详细介绍" style="width:400px;"></el-input>
+				<el-input type="textarea" v-model="baseDetial.description" maxlength="50" :autosize="{minRows: 3, maxRows: 5}" placeholder="请输入详细介绍" style="width:400px;"></el-input>
 			</el-form-item>
 			<el-form-item required label="营业时间 ">
 				<div style="float:left;" v-if="loaded">
@@ -127,14 +127,14 @@ export default {
 			pointLat: 39.915, //地图纬度
 			optionW: 13, //地图缩放级别
 
-//			shiftList:[
-//				{name:'早班',selected:false,id:1},
-//				{name:'中班',selected:false,id:2},
-//				{name:'晚班',selected:false,id:3},
-//				{name:'日常班',selected:false,id:4},
-//			],//班次数组
-			shiftList:[],
-			showShift:false,//交接班开关
+			//			shiftList:[
+			//				{name:'早班',selected:false,id:1},
+			//				{name:'中班',selected:false,id:2},
+			//				{name:'晚班',selected:false,id:3},
+			//				{name:'日常班',selected:false,id:4},
+			//			],//班次数组
+			shiftList: [],
+			showShift: false //交接班开关
 		};
 	},
 	async created() {
@@ -250,12 +250,12 @@ export default {
 			this.endSlot.minute = time.end.minute;
 		},
 		//获取交接班班次信息
-		async getChangeShifts(){
-			let res=await http.getChangeShifts({
-				data:{}
+		async getChangeShifts() {
+			let res = await http.getChangeShifts({
+				data: {}
 			});
-			this.shiftList=res.map((v)=>{
-				v.selected=false;
+			this.shiftList = res.map(v => {
+				v.selected = false;
 				return v;
 			});
 			this.baseGet();
@@ -265,12 +265,12 @@ export default {
 			this.baseDetial = await http.baseGet({
 				data: { shopId: this.shopId }
 			});
-			this.showShift=Boolean(Number(this.baseDetial.isShifts));
-			let arr=this.baseDetial.changeShifts.split(',');
-			if(arr.length>0){
-				for(let i=0;i<this.shiftList.length;i++){
-					if(arr.includes(this.shiftList[i].id)){
-						this.shiftList[i].selected=true;
+			this.showShift = Boolean(Number(this.baseDetial.isShifts));
+			let arr = this.baseDetial.changeShifts.split(',');
+			if (arr.length > 0) {
+				for (let i = 0; i < this.shiftList.length; i++) {
+					if (arr.includes(this.shiftList[i].id)) {
+						this.shiftList[i].selected = true;
 					}
 				}
 			}
@@ -336,8 +336,15 @@ export default {
 					isShared: this.isShared ? 0 : 1,
 					shopNumber: this.shopNumber,
 					position: this.pointLng + ',' + this.pointLat,
-					changeShifts:this.shiftList.filter((v)=>{return v.selected}).map((v)=>{return v.id}).toString(),
-					isShifts:Number(this.showShift)
+					changeShifts: this.shiftList
+						.filter(v => {
+							return v.selected;
+						})
+						.map(v => {
+							return v.id;
+						})
+						.toString(),
+					isShifts: Number(this.showShift)
 				}
 			});
 
@@ -460,7 +467,12 @@ export default {
 				});
 				return false;
 			}
-			if (this.showShift&&this.shiftList.filter((v)=>{return v.selected}).length===0) {
+			if (
+				this.showShift &&
+				this.shiftList.filter(v => {
+					return v.selected;
+				}).length === 0
+			) {
 				this.$store.commit('setWin', {
 					title: '错误提示',
 					winType: 'alert',

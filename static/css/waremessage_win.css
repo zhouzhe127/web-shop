@@ -1,18 +1,1 @@
-
-#tan[data-v-9d2d8350] {
-  height: 100%;
-  padding: 10px 60px;
-  background-color: #eeeeee;
-}
-#tan .conBox[data-v-9d2d8350] {
-  margin-top: 20px;
-}
-#tan .conBox span[data-v-9d2d8350] {
-  font-size: 16px;
-  display: inline-block;
-  vertical-align: top;
-}
-#tan .conBox span[data-v-9d2d8350]:last-child {
-  width: 70%;
-}
-
+#tan[data-v-6e94fa8d]{height:100%;padding:10px 60px;background-color:#eee}#tan .conBox[data-v-6e94fa8d]{margin-top:20px}#tan .conBox span[data-v-6e94fa8d]{font-size:16px;display:inline-block;vertical-align:top}#tan .conBox span[data-v-6e94fa8d]:last-child{width:70%}

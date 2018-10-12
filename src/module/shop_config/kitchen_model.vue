@@ -13,15 +13,15 @@
 			</el-switch>
 		</section>
 		<section>
-			<el-table ref="multipleTable" stripe :header-cell-style = "{'background-color':'#f5f7fa'}" :data="currentList" border>
-				<el-table-column  min-width = "120" align="center" label="操作">
+			<el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="currentList" border>
+				<el-table-column min-width="120" align="center" label="操作">
 					<template slot-scope="scope">
-						<el-popover placement="bottom" width="400" trigger="click">
-							<div>
+						<el-popover placement="bottom" width="600" trigger="click">
+							<div style="overflow-y: auto;max-height: 400px;height: auto">
 								{{scope.row.goodsName}}
 								<!--<i v-for="(info,i) in scope.row.goodsName" :key="i">-->
-									<!--<i>{{info}}</i>-->
-									<!--<i v-if="i!=scope.row.goodsName.length-1">、</i>-->
+								<!--<i>{{info}}</i>-->
+								<!--<i v-if="i!=scope.row.goodsName.length-1">、</i>-->
 								<!--</i>-->
 							</div>
 							<span style="color: #28A8E0;cursor:pointer" slot="reference">查看</span>
@@ -33,18 +33,18 @@
 						<span style="color: #FD3F1F;cursor:pointer" @click="delJob(scope.row.id,scope.$index)">删除</span>
 					</template>
 				</el-table-column>
-				<el-table-column align="center" min-width = "50" label="序号">
+				<el-table-column align="center" min-width="50" label="序号">
 					<template slot-scope="scope">
 						<span>{{scope.$index+1}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "100" align="center" label="操作台类型">
+				<el-table-column show-overflow-tooltip min-width="100" align="center" label="操作台类型">
 					<template slot-scope="scope">
 						<span>{{scope.row.type==0? '后厨加工' : '出品台'}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "100" prop="name" align="center" label="操作台名称" > </el-table-column>
-				<el-table-column show-overflow-tooltip min-width = "50" prop="goodsNum" align="center" label="关联商品数量" > </el-table-column>
+				<el-table-column show-overflow-tooltip min-width="100" prop="name" align="center" label="操作台名称"> </el-table-column>
+				<el-table-column show-overflow-tooltip min-width="50" prop="goodsNum" align="center" label="关联商品数量"> </el-table-column>
 			</el-table>
 		</section>
 
@@ -82,23 +82,23 @@ export default {
 			}
 		];
 		this.$store.commit('setPageTools', arr);
-		this.getOn();  //开关
+		this.getOn(); //开关
 
 		//获取商品
-			this.goodLists = storage.session('goodList'); //获取商品列表
-			if (!this.goodLists) {
-				let res = await http.getGoodsList({
-					data: { page: 1, num: 9999, specification: 1 }
-				});
-				this.goodLists = res.list;
-			}
-		//获取套餐
-			this.packlist = await http.getpackagelist({
-				data: { page: 1, num: 9999 }
+		this.goodLists = storage.session('goodList'); //获取商品列表
+		if (!this.goodLists) {
+			let res = await http.getGoodsList({
+				data: { page: 1, num: 9999, specification: 1 }
 			});
+			this.goodLists = res.list;
+		}
+		//获取套餐
+		this.packlist = await http.getpackagelist({
+			data: { page: 1, num: 9999 }
+		});
 		this.init();
 	},
-	mounted(){
+	mounted() {
 		this.getArea();
 	},
 	methods: {
@@ -108,7 +108,7 @@ export default {
 			this.on = Boolean(res);
 		},
 		//开关组件返回
-		getIsDiscountToggle( ) {
+		getIsDiscountToggle() {
 			if (this.on) {
 				this.isKitchen();
 			} else {
@@ -119,15 +119,15 @@ export default {
 					callback: delRes => {
 						if (delRes == 'ok') {
 							this.isKitchen();
-						}else {
-							this.on=true;
+						} else {
+							this.on = true;
 						}
 					}
 				});
 			}
 		},
 		async isKitchen() {
-			await http.editIsKitchen({ data: { isKitchen: Number(this.on) }});
+			await http.editIsKitchen({ data: { isKitchen: Number(this.on) } });
 		},
 		//添加操作台
 		addKitchen() {
@@ -150,19 +150,19 @@ export default {
 				data: {}
 			});
 			if (res) {
-				for(let i=0;i<res.length;i++){
-					let goodsName=[];
+				for (let i = 0; i < res.length; i++) {
+					let goodsName = [];
 					for (let value of this.goodLists) {
 						if (res[i].goodsIds.includes(value.id)) {
-							goodsName=goodsName.concat(value.goodsName);
+							goodsName = goodsName.concat(value.goodsName);
 						}
 					}
 					for (let item of this.packlist) {
 						if (res[i].packageIds.includes(item.id)) {
-							goodsName=goodsName.concat(item.packageName);
+							goodsName = goodsName.concat(item.packageName);
 						}
 					}
-					res[i].goodsName=goodsName.join('、');
+					res[i].goodsName = goodsName.join('、');
 				}
 				this.currentList = res;
 				this.sortList();
@@ -208,21 +208,21 @@ export default {
 				data: {}
 			});
 			if (res) {
-				this.Area = res.map((item)=>{
-					item.selected=false;
+				this.Area = res.map(item => {
+					item.selected = false;
 					return item;
 				});
 			}
 		},
 		//弹窗返回
-		doThrowTanResult(res, item) {
+		doThrowTanResult(res) {
 			if (res == 'ok') {
-//				if (this.isAdd) {
-//					this.currentList.push(item);
-//				} else {
-//					this.currentList.splice(this.index, 1, item);
-//				}
-//				this.sortList();
+				//				if (this.isAdd) {
+				//					this.currentList.push(item);
+				//				} else {
+				//					this.currentList.splice(this.index, 1, item);
+				//				}
+				//				this.sortList();
 				this.init();
 			}
 			this.showTan = false;
@@ -237,16 +237,17 @@ export default {
 		}
 	},
 	components: {
-		kitchenModel: () => import(/*webpackChunkName: 'kitchen_model_win'*/ './kitchen_model_win')
+		kitchenModel: () =>
+			import(/*webpackChunkName: 'kitchen_model_win'*/ './kitchen_model_win')
 	}
 };
 </script>
 <style scoped lang="less">
 #kitchen {
-	.top{
+	.top {
 		line-height: 40px;
 		height: 40px;
-		label{
+		label {
 			font-size: 16px;
 		}
 	}

@@ -1,1 +1,2 @@
+/* eslint-disable */
 module.exports={"path":"pickingList","children":[{"path":"","url":"src/module/invoicing_system/picking_list/picking_record"},{"path":"picking","url":"src/module/invoicing_system/picking_list/picking"},{"path":"checkDetails","url":"src/module/invoicing_system/picking_list/picker_details"},{"path":"plateDetails","url":"src/module/invoicing_system/picking_list/plate_details"},{"path":"plateStorage","url":"src/module/invoicing_system/picking_list/plate_storage"}]}

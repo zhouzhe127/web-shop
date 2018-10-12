@@ -1,74 +1,96 @@
-/*
- * @Author: zhengu.jiang 
- * @Date: 2018-06-13 10:46:57 
- * @Module: {挂账统计--品牌} 
- */
-
+<!--
+		**挂账统计(品牌)
+		*
+		* 胡江
+		* *
+		*
+-->
 <template>
 	<div class="brandBill">
 		<div v-if="brand" class="brand">
 			<div class="filter">
 				<div class="block">
-					<selectBtn @emit="getTimeType" :sorts="timeTypeList" :width="150"></selectBtn>
+					<el-select v-model="operateTime" style="width:150px;">
+						<el-option v-for="(item,i) in timeTypeList" :key="i" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
 				</div>
 				<div class="block">
-					<calendar :time="startTime" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
+					<el-date-picker style="width:150px;cursor: pointer" :clearable="false" v-model="startTime" type="date" format="yyyy-MM-dd" value-format="timestamp">
+					</el-date-picker>
 					<span class="input-word">--</span>
-					<calendar :time="endTime" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
+					<el-date-picker style="width:150px;cursor: pointer" :clearable="false" v-model="endTime" type="date" format="yyyy-MM-dd" value-format="timestamp">
+					</el-date-picker>
 				</div>
 				<div class="block time">
 					<i @click="timeCheck" :class="{active:this.isOpenTime == 1}"></i>
 					<span>按营业时间</span>
 				</div>
 				<div class="block">
-					<!--<selectStore @emit="getDrop" :sorts="shopList" :tipName="dropName"></selectStore>-->
 					<elShopList @chooseShop="getDrop" :shopIds="shopList"></elShopList>
 				</div>
-				<!-- <div class="block">
-					<selectBtn @emit="getType" :sorts="accountTypeList" :width="150"></selectBtn>
-				</div> -->
 				<div class="search-box block">
-					<span class="search-btn yellow" @click="search">搜索</span>
-					<span class="reset-btn gray" @click="reset">重置</span>
-				</div>
-				<div class="shops">
-					<i>已选择店铺：</i>
-					<span v-for="(item,index) in shopNameB" :key="index">{{item.name}}，</span>
+					<el-button v-on:click="search()" type="primary">搜索</el-button>
+					<el-button v-on:click="reset()" type="info">重置</el-button>
 				</div>
 			</div>
 			<div v-if="!loadShow" class="main">
-				<div class="total">
-					<div class="title">
-						<span>天数</span>
-						<span>订单数</span>
-						<span>消费总额</span>
-						<span>挂账总额</span>
-					</div>
-					<div class="total-data">
-						<span>{{orderTotal.totalDay}}</span>
-						<span>{{orderTotal.orderNum}}</span>
-						<span>{{orderTotal.originalPrice}}</span>
-						<span>{{orderTotal.billPrice}}</span>
-					</div>
+				<div>
+					<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="orderTotal" border>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" prop="totalDay" label="天数"></el-table-column>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" prop="orderNum" label="订单数"></el-table-column>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" prop="originalPrice" label="消费总额"></el-table-column>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" prop="billPrice" label="挂账总额"></el-table-column>
+					</el-table>
 				</div>
+				<!--<div class="total">-->
+				<!--<div class="title">-->
+				<!--<span>天数</span>-->
+				<!--<span>订单数</span>-->
+				<!--<span>消费总额</span>-->
+				<!--<span>挂账总额</span>-->
+				<!--</div>-->
+				<!--<div class="total-data">-->
+				<!--<span>{{orderTotal.totalDay}}</span>-->
+				<!--<span>{{orderTotal.orderNum}}</span>-->
+				<!--<span>{{orderTotal.originalPrice}}</span>-->
+				<!--<span>{{orderTotal.billPrice}}</span>-->
+				<!--</div>-->
+				<!--</div>-->
+				<!--<div class="store-list">-->
+				<!--<div class="length">-->
+				<!--挂账统计统计 · 共-->
+				<!--<span> {{orderStoreList.length}} </span>条记录-->
+				<!--</div>-->
+				<!--<div class="title">-->
+				<!--<span>店铺名称</span>-->
+				<!--<span>消费金额</span>-->
+				<!--<span>挂账金额</span>-->
+				<!--</div>-->
+				<!--<ul>-->
+				<!--<li v-for="(item,index) in orderStoreList" :key="index">-->
+				<!--<span class="light" @click="toDay(item)">{{item.shopName}}</span>-->
+				<!--<span>{{item.originalPrice}}</span>-->
+				<!--<span>{{item.billPrice}}</span>-->
+				<!--</li>-->
+				<!--<li class="list-empty" v-if="!orderStoreList.length">暂时没有挂账</li>-->
+				<!--</ul>-->
+				<!--</div>-->
+
 				<div class="store-list">
 					<div class="length">
-						挂账统计统计 · 共
-						<span> {{orderStoreList.length}} </span>条记录
+						挂账统计 · 共
+						<span> {{orderStoreList.length}}</span>条记录
 					</div>
-					<div class="title">
-						<span>店铺名称</span>
-						<span>消费金额</span>
-						<span>挂账金额</span>
-					</div>
-					<ul>
-						<li v-for="(item,index) in orderStoreList" :key="index">
-							<span class="light" @click="toDay(item)">{{item.shopName}}</span>
-							<span>{{item.originalPrice}}</span>
-							<span>{{item.billPrice}}</span>
-						</li>
-						<li class="list-empty" v-if="!orderStoreList.length">暂时没有挂账</li>
-					</ul>
+					<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="orderStoreList" border>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" label="店铺名称">
+							<template slot-scope="props">
+								<span class="light" @click="toDay(props.row)">{{props.row.shopName}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" prop="originalPrice" label="消费金额"></el-table-column>
+						<el-table-column show-overflow-tooltip min-width="120" align="center" prop="billPrice" label="挂账金额"></el-table-column>
+					</el-table>
 				</div>
 			</div>
 			<div class="loading" v-else><img src="../../res/images/preloader.gif" /></div>
@@ -81,44 +103,37 @@ import storage from 'src/verdor/storage';
 import utils from 'src/verdor/utils';
 import http from 'src/manager/http';
 export default {
-	data(){
+	data() {
 		return {
-			startTime: '',
-			endTime: '',
+			startTime: new Date().setHours(0, 0, 0, 0),
+			endTime: new Date().setHours(0, 0, 0, 0),
 			isOpenTime: 1, //按营业时间
 			shopList: [], //店铺列表
 			dropName: '请选择品牌门店',
 			orderStoreList: [], //列表数据
 			userShopList: [],
-			// accountTypeList: ['全部','个人账户','企业账户'], //账户类型
-			timeTypeList: ['挂账时间','结算时间'],
+
+			timeTypeList: [
+				{ name: '挂账时间', id: 0 },
+				{ name: '结算时间', id: 1 }
+			],
+			operateTime: 0, //选中的操作时间
+
 			loadShow: false,
-			orderTotal: {
-				totalDay: 1,
-				orderNum: 0,
-				originalPrice: 0, //消费总额
-				billPrice: 0 //挂账总额
-			}, //总计数据
+			orderTotal: [
+				{ totalDay: 1, orderNum: 0, originalPrice: 0, billPrice: 0 }
+			], //总计数据
 			brand: true,
-			operateTime: 0,//选中的操作时间
-			billType: 0,//选中的账户类型
 			timer: null,
 			shopName: '',
 			sId: '', //传入单店
 
-			shopNameB:[],//已选择的店铺名称
+			shopNameB: [] //已选择的店铺名称
 		};
-	},
-	components:{
-		calendar: () => import(/*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
-		selectStore: () => import(/*webpackChunkName: "select_store"*/ 'src/components/select_store'),
-		selectBtn: () => import(/*webpackChunkName: "select_btn"*/ 'src/components/select_btn'),
-		orderBill: () => import(/*webpackChunkName: "order_bill_list"*/ './order_bill_list'),
-		elShopList: () =>import(/*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList')
 	},
 	created() {
 		this.userData = storage.session('userShop');
-		if(this.userData.currentShop.ischain != 3){
+		if (this.userData.currentShop.ischain != 3) {
 			this.brand = false;
 		}
 		let shopIdArr = [],
@@ -137,7 +152,7 @@ export default {
 			this.userShopList = shopListArr;
 		}
 	},
-	mounted(){
+	mounted() {
 		// this.initBtn();
 		this.shopIds = this.userShopIdStr;
 		for (let i in this.userShopList) {
@@ -145,17 +160,18 @@ export default {
 			this.userShopList[i].selected = true;
 		}
 
-
-		this.shopNameB=utils.deepCopy(this.userShopList);
-		this.shopList = this.userShopList.map((v)=>{
-			return v.id
+		this.shopNameB = utils.deepCopy(this.userShopList);
+		this.shopList = this.userShopList.map(v => {
+			return v.id;
 		});
-
-
 		this.storeName =
 			this.userShopList.length > 0
 				? this.userShopList[0].name
-				: '选择店铺'; //选中店铺按钮 显示,
+				: '选择店铺'; //选中店铺按钮 显示
+
+		if (this.brand) {
+			this.search();
+		}
 	},
 	methods: {
 		//初始化右上角按钮
@@ -169,285 +185,196 @@ export default {
 		// 	}];
 		// 	this.$store.commit('setPageTools', arr);
 		// },
-		startTimeChange(time){
-			this.startTime = time;
+		timeCheck() {
+			this.isOpenTime == 1
+				? (this.isOpenTime = 0)
+				: (this.isOpenTime = 1);
 		},
-		endTimeChange(time){
-			this.endTime = time;
-		},	
-		timeCheck(){
-			this.isOpenTime == 1 ? this.isOpenTime = 0 : this.isOpenTime = 1;
-		},
-//		getDrop(res){//获取选中的店铺id
-//			this.shopList = res;
-//			let shopIds = [];
-//			res.forEach(item => {
-//				if(item.selected){
-//					shopIds.push(item.id);
-//				}
-//			});
-//			this.shopIds = shopIds.join(',');
-//		},
 		//选店返回
 		getDrop(arr) {
-			console.log(arr);
 			this.shopList = arr;
 			this.shopIds = this.shopList.join(',');
-			this.shopNameB=utils.deepCopy(this.userShopList);
-			for(let i=0;i<this.shopNameB.length;i++){
-				if(!this.shopList.includes(this.shopNameB[i].id)){
-					this.shopNameB.splice(i,1);
-					i--
+			this.shopNameB = utils.deepCopy(this.userShopList);
+			for (let i = 0; i < this.shopNameB.length; i++) {
+				if (!this.shopList.includes(this.shopNameB[i].id)) {
+					this.shopNameB.splice(i, 1);
+					i--;
 				}
 			}
-			console.log(this.shopNameB);
 		},
-
-
-		getTimeType(res){ //获取挂账时间类型
-			this.operateTime = res;
-		},
-		toDay(item){
+		toDay(item) {
 			this.sId = item.shopId;
 			this.shopName = item.shopName;
 			this.brand = false;
 			storage.session('brandBillList', this.orderStoreList);
 		},
-		search(){
+		search() {
 			this.billOrderReport();
 		},
-		reset(){
-			// this.accountTypeList =['全部','个人账户','企业账户'];
-			this.timeTypeList =['挂账时间','结算时间'];
-			this.startTime = '';
-			this.endTime = '';
-//			let list = utils.deepCopy(this.shopList);
-//			let shopIds = [];
-//			list.forEach(item => {
-//				item.selected = true;
-//				shopIds.push(item.id);
-//			});
-//			this.shopList = list;
-//			this.shopIds = shopIds.join(',');
+		reset() {
+			this.isOpenTime = 1;
+			this.operateTime = 0;
+			this.startTime = new Date().setHours(0, 0, 0, 0);
+			this.endTime = new Date().setHours(0, 0, 0, 0);
 
-			this.shopList=this.userShopList.map((v)=>{
+			this.shopList = this.userShopList.map(v => {
 				return v.id;
 			});
-			this.shopIds=this.shopList.join(',');
-			this.shopNameB=utils.deepCopy(this.userShopList);
+			this.shopIds = this.shopList.join(',');
+			this.shopNameB = utils.deepCopy(this.userShopList);
+
+			this.search();
 		},
-		getReturn(){
+		getReturn() {
 			this.brand = true;
 			this.orderStoreList = storage.session('brandBillList');
 		},
 		async billOrderReport() {
-			if(!this.shopIds){
-				this.$store.commit('setWin', {title: '温馨提示',winType: 'alert',content: '请选择店铺',});
+			if (!this.shopIds) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alert',
+					content: '请选择店铺'
+				});
 				return false;
 			}
 			this.loadShow = true;
-			http.billOrderReport({
-				data: {
-					startTime: this.startTime/1000,
-					endTime: this.endTime/1000,
-					isOpenTime: this.isOpenTime,
-					operateTime: this.operateTime, //操作时间
-					billType: this.billType, //挂账类型
-					shopIds: this.shopIds,
-					type: 21 //后台需要 写死
-				}
-			}).then(res => {
-				if(this.timer){
-					clearInterval(this.timer);
-				}
-				this.taskInfo(res.taskId);
-				this.timer = setInterval(() => {
+			http
+				.billOrderReport({
+					data: {
+						startTime: this.startTime / 1000,
+						endTime: this.endTime / 1000 + 24 * 60 * 60 - 1,
+						isOpenTime: this.isOpenTime,
+						operateTime: this.operateTime, //操作时间
+						shopIds: this.shopIds,
+						type: 21 //后台需要 写死
+					}
+				})
+				.then(res => {
+					if (this.timer) {
+						clearInterval(this.timer);
+					}
 					this.taskInfo(res.taskId);
-				}, 2000);
-			});
+					this.timer = setInterval(() => {
+						this.taskInfo(res.taskId);
+					}, 2000);
+				});
 		},
 		//轮询请求接口
 		async taskInfo(taskId) {
-			http.taskInfo({data: {taskId: taskId}})
-				.then(res => {
-					if (res.status == 3) {
-						clearInterval(this.timer);
-						this.ReportGet(taskId);
-					}else if(res.status == 2){
-						clearInterval(this.timer);
-						this.$store.commit('setWin', {title: '温馨提示',winType: 'alter',content: '请求失败，请重试'});
-						this.loadShow = false;
-					}
-				});
+			http.taskInfo({ data: { taskId: taskId } }).then(res => {
+				if (res.status == 3) {
+					clearInterval(this.timer);
+					this.ReportGet(taskId);
+				} else if (res.status == 2) {
+					clearInterval(this.timer);
+					this.$store.commit('setWin', {
+						title: '温馨提示',
+						winType: 'alter',
+						content: '请求失败，请重试'
+					});
+					this.loadShow = false;
+				}
+			});
 		},
 		//轮询结束获取数据
-		async ReportGet(id){
-			let res = await http.ReportGet({data: {
-				taskId:id
-			}});
+		async ReportGet(id) {
+			let res = await http.ReportGet({
+				data: {
+					taskId: id
+				}
+			});
 			this.loadShow = false;
-			if(res.total){
+			if (res.total && res.shops) {
 				this.orderStoreList = res.shops;
-				this.orderTotal = res.total;
+				res.total.totalDay =
+					(this.endTime - this.startTime) / 86400000 + 1;
+				this.orderTotal[0] = res.total;
+			} else {
+				this.orderStoreList = [];
+				this.orderTotal[0] = {
+					billPrice: 0,
+					orderNum: 0,
+					originalPrice: 0,
+					totalDay: (this.endTime - this.startTime) / 86400000 + 1
+				};
 			}
 		}
 	},
 	destroyed() {
 		clearInterval(this.timer);
+	},
+	components: {
+		orderBill: () =>
+			import(/*webpackChunkName: "order_bill_list"*/ './order_bill_list'),
+		elShopList: () =>
+			import(/*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList')
 	}
 };
 </script>
 <style lang="less" scoped>
-	.brandBill{
-		.filter{
-			.search-box {
-				margin-right: 10px;
-				display: inline-block;
-				span {
-					width: 80px;
-					height: 40px;
-					line-height: 40px;
-					text-align: center;
-					border: 0;
-					color: #fff;
-					display: inline-block;
-					cursor: pointer;
-				}
-				.search-btn {
-					margin-right: 5px;
-				}
-			}
-			.block{
-				display: inline-block;
-				margin-right: 10px;
-				margin-bottom: 10px;
-			}
-			.shops{
-				margin-bottom: 10px;
-				line-height: 20px;
-			}
-			.time{
-				i {
-					height: 20px;
-					width: 20px;
-					border-radius: 2px;
-					margin-right: 5px;
-					color: #444;
-					cursor: pointer;
-					display: inline-block;
-					border: 1px solid #bbb;
-					vertical-align: middle;
-					margin-top: -3px;
-				}
-				i.active {
-					background: url(../../res/icon/white_select.png) #28a8e0 center
-						no-repeat;
-					border: 1px solid #28a8e0;
-				}
-				span{
-					font-size: 16px;
-				}
-			}
+.brandBill {
+	.filter {
+		.block {
+			display: inline-block;
+			margin-right: 10px;
+			margin-bottom: 10px;
 		}
-		.loading {
-			width: 100%;
-			height: 350px;
-			padding-top: 100px;
-			text-align: center;
-		}
-		.main{
-			.total {
-				border: 1px solid #ccc;
-				span {
-					float: left;
-					width: 25%;
-					text-align: center;
-				}
-				.title {
-					height: 40px;
-					overflow: hidden;
-					background: #e6e6e6;
-					span {
-						color: #333;
-						height: 40px;
-						line-height: 40px;
-					}
-				}
-				.total-data {
-					overflow: hidden;
-					span {
-						color: #f8941f;
-						height: 50px;
-						line-height: 50px;
-					}
-				}
+		.time {
+			i {
+				height: 20px;
+				width: 20px;
+				border-radius: 2px;
+				margin-right: 5px;
+				color: #444;
+				cursor: pointer;
+				display: inline-block;
+				border: 1px solid #bbb;
+				vertical-align: middle;
+				margin-top: -3px;
 			}
-			.store-list {
-				margin-top: 20px;
-				border: 1px solid #ccc;
-				.length {
-					height: 50px;
-					line-height: 50px;
-					padding-left: 10px;
-					font-size: 16px;
-					span {
-						color: #f30;
-						font-size: 16px;
-					}
-				}
-				.title {
-					overflow: hidden;
-					background: #e6e6e6;
-					span {
-						float: left;
-						text-align: center;
-						height: 50px;
-						line-height: 50px;
-						width: 33.33%;
-						color: #666;
-					}
-				}
-				.day span {
-					width: 25%;
-				}
-				ul {
-					background: #fff;
-					li {
-						overflow: hidden;
-						border-bottom: 1px solid #f7f7f7;
-						span {
-							float: left;
-							text-align: center;
-							height: 50px;
-							line-height: 50px;
-							width: 33.33%;
-							color: #f8941f;
-						}
-						.light {
-							color: #29a7e1;
-							cursor: pointer;
-							&:hover {
-								color: #09f;
-							}
-						}
-						&:last-child {
-							border-bottom: 0;
-						}
-					}
-					.day span {
-						width: 25%;
-					}
-					.list-empty {
-						height: 70px;
-						line-height: 70px;
-						font-size: 20px;
-						text-align: center;
-						color: #999;
-					}
-				}
+			i.active {
+				background: url(../../res/icon/white_select.png) #e1bb4a center
+					no-repeat;
+				border: 1px solid #e1bb4a;
+			}
+			span {
+				font-size: 16px;
 			}
 		}
 	}
+	.loading {
+		width: 100%;
+		height: 350px;
+		padding-top: 100px;
+		text-align: center;
+	}
+	.main {
+		.store-list {
+			width: 100%;
+			border-bottom: none;
+			margin: 15px 0;
+			.length {
+				height: 50px;
+				line-height: 50px;
+				border: 1px solid #ebeef5;
+				padding-left: 10px;
+				border-bottom: none;
+				font-size: 16px;
+				span {
+					display: inline-block;
+					margin: 0 5px;
+					color: #e1bb4a;
+					font-size: 16px;
+				}
+			}
+			.light {
+				color: #e1bb4a;
+				cursor: pointer;
+			}
+		}
+	}
+}
 </style>
 
 

@@ -37,13 +37,13 @@
 					<div class="clear"></div>
 					<h2 class="required tag">区域</h2>
 					<div class="mes">
-						<el-checkbox  class="mesLi" v-for="(item,index) in Area" :key="index" v-model="item.selected" :label="item.areaName" border size="medium"></el-checkbox>
+						<el-checkbox class="mesLi" v-for="(item,index) in Area" :key="index" v-model="item.selected" :label="item.areaName" border size="medium"></el-checkbox>
 						<!--<mulSelect @selOn="doMore" :list="Area" :selects="info.areaIds" :name='"areaName"' :keys='"id"'></mulSelect>-->
 					</div>
 					<div class="clear"></div>
 					<h2 class="required tag">排序</h2>
 					<div class="mes">
-						<el-input-number v-model="info.sort"  :min="1" :max="255"></el-input-number>
+						<el-input-number v-model="info.sort" :min="1" :max="255"></el-input-number>
 						<!--<subadd :bindnum="info.sort" :maxnum="255" :minnum="1" :sign='false' @toClick="change"></subadd>-->
 					</div>
 					<div class="clear"></div>
@@ -89,8 +89,8 @@ export default {
 		};
 		this.name = item.name ? item.name : '';
 
-		for(let i=0;i<this.Area.length;i++){
-			this.Area[i].selected=this.info.areaIds.includes(this.Area[i].id);
+		for (let i = 0; i < this.Area.length; i++) {
+			this.Area[i].selected = this.info.areaIds.includes(this.Area[i].id);
 		}
 	},
 	methods: {
@@ -106,14 +106,14 @@ export default {
 			}
 			this.info.type = i;
 		},
-//		//区域
-//		doMore(res) {
-//			this.info.areaIds = res;
-//		},
-//		//排序
-//		change(res) {
-//			this.info.sort = res;
-//		},
+		//		//区域
+		//		doMore(res) {
+		//			this.info.areaIds = res;
+		//		},
+		//		//排序
+		//		change(res) {
+		//			this.info.sort = res;
+		//		},
 		//关联商品
 		edit() {
 			this.isGoodsShow = true;
@@ -189,7 +189,10 @@ export default {
 					});
 					return false;
 				}
-				if (this.info.goodsIds.length + this.info.packageIds.length == 0) {
+				if (
+					this.info.goodsIds.length + this.info.packageIds.length ==
+					0
+				) {
 					this.$store.commit('setWin', {
 						title: '提示信息',
 						winType: 'alter',
@@ -197,9 +200,9 @@ export default {
 					});
 					return false;
 				}
-				this.info.areaIds=[];
-				for(let i=0;i<this.Area.length;i++){
-					if(this.Area[i].selected){
+				this.info.areaIds = [];
+				for (let i = 0; i < this.Area.length; i++) {
+					if (this.Area[i].selected) {
 						this.info.areaIds.push(this.Area[i].id);
 					}
 				}
@@ -211,7 +214,8 @@ export default {
 					});
 					return false;
 				}
-				this.info.goodsNum = this.info.goodsIds.length + this.info.packageIds.length;
+				this.info.goodsNum =
+					this.info.goodsIds.length + this.info.packageIds.length;
 				if (this.isAdd) {
 					this.isAddFun(res);
 				} else {
@@ -224,7 +228,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: 'win'*/ 'src/components/win'),
-		goodListWin: () => import(/* webpackChunkName:"good_list_win" */ 'src/components/good_list_win')
+		goodListWin: () =>
+			import(/* webpackChunkName:"good_list_win" */ 'src/components/good_list_win')
 	}
 };
 </script>
@@ -248,9 +253,9 @@ export default {
 		padding-left: 15px;
 		text-indent: 0;
 		line-height: 0;
-		.mesLi{
+		.mesLi {
 			margin-bottom: 5px;
-			background-color: #FFFFFF;
+			background-color: #ffffff;
 		}
 	}
 	.clear {
