@@ -100,7 +100,7 @@ export default {
 		method: 'get'
 	},
 	'clearWechatConfig': { //清除
-		url: w + 'Activityconfig/clearWechatConfig ',
+		url: w + 'Activityconfig/clearWechatConfig',
 		method: 'get'
 	},
 };
