@@ -136,7 +136,6 @@
 			<div slot="con-1" slot-scope="props">
 				<a @click="downloadCode(props.data)" :download="props.data.staffName" :href="downloadUrls" class="alink_color">下载二维码</a>
 				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,props.$index)" style="width: 32%;">删除</a>
-
 			</div>
 		</com-table>
 		<el-button type="primary" @click="addconfig">保存</el-button>
