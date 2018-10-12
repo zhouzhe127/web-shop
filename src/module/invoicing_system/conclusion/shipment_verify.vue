@@ -62,7 +62,7 @@
 				}
 			},
 			detailevt(data) {
-				if (data.auditStatus == 1 && data.dispatchStatus <= 2) {
+				if (data.auditStatus == 1) {
 					this.type = 1;
 				} else if (data.auditStatus == 4 && data.dispatchStatus == 3) {
 					this.type = 2;

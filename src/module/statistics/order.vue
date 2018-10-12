@@ -446,6 +446,8 @@ export default {
 		//选择时间查询订单
 		sreachOrderInDays: function() {
 			let timer = 3 * 30 * 24 * 60 * 60 * 1000;
+			this.startTime = new Date(this.startTime).getTime();
+			this.endTime = new Date(this.endTime).getTime();
 			if (this.endTime - this.startTime > timer) {
 				this.$store.commit('setWin', {
 					title: '操作提示',

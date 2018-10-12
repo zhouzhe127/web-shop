@@ -28,40 +28,54 @@
 		</div>
 		<div class="main">
 			<div class="unit-box">
-		      <select-btn :sorts="goodsUnit" :index = "unitIndex" @emit="selectList"></select-btn>
+		      <el-select v-model="unitIndex" placeholder="请选择单位" @change="selectList" class="el-size">
+			    <el-option
+					v-for="item in goodsUnit"
+					:key="item.value"
+					:label="item.label"
+					:value="item.value">
+			    </el-option>
+			</el-select>
 		    </div>
 			<div class="list">
-				<div class="head">
-					批次列表 · 共<em> {{batchList.length}} </em>条数据
-				</div>
-				<div class="scroll-box">
-					<div class="title">
-						<span class="narrow">序号</span>
-						<span>批次编码</span>
-						<span>生产日期</span>
-						<span>供应商</span>
-						<span>数量/重量</span>
-						<span>进价</span>
-						<span>所属仓库</span>
-					</div>
-					<ul>
-						<li v-for="(item,index) in selList" :key="index">
-							<span class="narrow handle" >
-	                        	{{item.indexNum}}
-								</span>
-								<span>{{item.batchCode}}</span>
-								<span>{{timeFormat(item.productionTime)}}</span>
-								<span>{{item.supplier}}</span>
-								<span>{{comUnit(item.surplus,relation[selUnit].value,relation[selUnit].name,minName)}}</span>
-								<span>{{item.purchasePrice}}/{{item.purchaseUnit.name}}</span>
-								<span>{{item.wName}}<template v-if="item.aName">-</template>{{item.aName}}</span>         
-						</li>
-						<li class="empty" v-if="!selList.length">- 暂无条目 -</li>
-					</ul>
-				</div>
+				<el-table :data="batchList" stripe border style="width: 100%" >
+					<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+				    </el-table-column>
+				    <el-table-column prop="batchCode" label="批次编号">
+				    </el-table-column>
+				    <el-table-column label="生产日期">
+				    	<template slot-scope="scope">
+				        	{{timeFormat(scope.row.productionTime)}}
+				      	</template>
+				    </el-table-column>
+				    <el-table-column prop="supplier" label="供应商">
+				    </el-table-column>
+				    <el-table-column label="数量/重量">
+				    	<template slot-scope="scope">
+				        	{{comUnit(scope.row.surplus,relation[selUnit].value,relation[selUnit].name,minName)}}
+				      	</template>
+				    </el-table-column>
+				    <el-table-column label="进价">
+				    	<template slot-scope="scope">
+				    		{{scope.row.purchasePrice}}元/{{scope.row.purchaseUnit.name}}
+				    	</template>
+				    </el-table-column>
+				    <el-table-column label="所属仓库">
+				    	<template slot-scope="scope">
+				    		{{scope.row.wName}}
+				    		<template v-if="scope.row.wName && scope.row.aName">-</template>
+				    		{{scope.row.aName}}
+				    	</template>
+				    </el-table-column>
+			  	</el-table>
 			</div>
 			<div class="page-box">
-				<page-btn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></page-btn>
+				<el-pagination @current-change="pageChange"
+					:current-page="page"
+					background
+					layout="total,prev, pager, next"
+					:total="count">
+				</el-pagination>
 			</div>
 		</div>
 	</div>
@@ -76,7 +90,6 @@
 	export default {
 		data() {
 			return {
-				unitList: [], //单位列表
 				tabactive: 0,
 				mid: '',
 				wid: '',
@@ -93,6 +106,7 @@
 				unitArr: [],
 				page: 1,
 				pageTotal: 1,
+				count:0,
 				showNum: 10,
 				relation: [], //关联
 				batchList: [], //批次列表
@@ -118,7 +132,7 @@
 			if(this.shopId){
 				this.dataObj.shopId = this.shopId;
 			}
-			this.$store.commit('setPageTools', [{name: '返回',className: ['back'],
+			this.$store.commit('setPageTools', [{name: '返回',className: 'info',type:4,
 				fn: () => {
 					storage.session('warehouseDetailDestroy', true);
 					window.history.go(-1);
@@ -135,17 +149,18 @@
 				});
 				this.relation = data.relation;
 				this.batchList = data.list;
+				this.count = data.list.length;
 				let arr = [];
 				for(let i in this.relation) {
 					let item = this.relation[i];
 					if(item.isDefault == 1) {
 						this.selUnit = i;
-						this.unitIndex = i;
+						this.unitIndex = item.muId;
 					}
 					if(item.isMin == 1) {
 						this.minName = item.name;
 					}
-					arr.push(item.name);
+					arr.push({value:item.muId,label:item.name});
 				}
 				this.goodsUnit = arr;
 				this.paging();
@@ -162,6 +177,9 @@
 				for(let item of this.goodsDetail.unit) {
 					this.unitArr.push(item.name);
 				}
+			},
+			indexMethod(index){
+				return 10*(this.page-1)+index+1;
 			},
 			paging() { //分页
 				this.pageTotal = Math.ceil(this.batchList.length / this.showNum);
@@ -186,9 +204,15 @@
 				let [number, value, showName, minName] = args;
 				return global.comUnit(number, value, showName, minName);
 			},
-			selectList(sle) {
+			selectList(res) {
 				//选择单位
-				this.selUnit = sle;
+				this.unitIndex = res;
+				for(let i=0;i<this.relation.length;i++){
+					if(res==this.relation[i].muId){
+						this.selUnit = i;
+						break;
+					}
+				}
 			},
 			computeUnit(arr) {
 				//单位换算
@@ -209,18 +233,6 @@
 					}
 				}
 			},
-			addCount(num) {
-				num += '';
-				//清除字符串开头的0
-				if(/^0+/.test(num)) num = num.replace(/^0+/, '');
-				//为整数字符串在末尾添加.000
-				if(!/\./.test(num)) num += '.000';
-				//字符以.开头时,在开头添加0
-				if(/^\./.test(num)) num = '0' + num;
-				num += '000'; //在字符串末尾补零
-				num = num.match(/([+-]?)\d+\.\d{3}/)[0];
-				return num;
-			}
 		}
 	};
 </script>
@@ -284,8 +296,6 @@
 			padding-bottom: 20px;
 		}
 		.list {
-			border: 1px solid #ccc;
-			border-bottom: 2px solid #ddd;
 			.head {
 				height: 50px;
 				line-height: 50px;

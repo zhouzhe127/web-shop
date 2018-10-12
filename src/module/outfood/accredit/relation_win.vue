@@ -70,7 +70,7 @@
 						</div>
 					</template>
 					<template v-if="!allGood">
-						<div class="onecate" v-if=" oneGoodList.goodsList.length > 0" style="">
+						<div class="onecate" v-if="oneGoodList.goodsList&&oneGoodList.goodsList.length > 0" style="">
 							<section class="onecataTitle" style="">
 								<i class="twoI" :class="{'oneI':L2ID == '0'}"></i>
 								<li class="twoTitle " :class="{'oneTitle':L2ID == '0'}">{{oneGoodList.name}}</li>
@@ -83,7 +83,7 @@
 								</template>
 							</section>
 						</div>
-						<template v-for="(category,index) in oneGoodList.child">
+						<template v-if="oneGoodList.child" v-for="(category,index) in oneGoodList.child">
 							<div v-if="category.goodsList.length > 0" :key="index" class="onecate" style="">
 								<section class="onecataTitle" style="">
 									<i class="twoI" style=""></i>
@@ -98,7 +98,7 @@
 								</section>
 							</div>
 						</template>
-						<div class="showText" v-if="(oneGoodList.goodsList.length==0)&&!oneGoodChild">
+						<div class="showText" v-if="oneGoodList.goodsList.length==0">
 							<span>------------未搜索到该商品------------</span>
 						</div>
 					</template>
@@ -335,7 +335,7 @@ export default {
 					}
 				}
 				this.oneGoodList = selectArr;
-				this.newOneGoodList = utils.deepCopy(selectArr);
+				// this.newOneGoodList = utils.deepCopy(selectArr);
 			}
 			this.L2ID = item.id;
 		},

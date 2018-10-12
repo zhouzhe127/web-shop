@@ -92,9 +92,9 @@
 	export default {
 		data() {
 			return {
-				timeDate:[new Date(Date.parse(new Date())-30*3600*24*1000),new Date()],
-				startTime: new Date().setHours(0, 0, 0, 0)-30*3600*24*1000, //开始时间
-				endTime: new Date().setHours(23, 59, 59, 0), //结束时间
+				timeDate:[],
+				startTime: '', //开始时间
+				endTime: '', //结束时间
 				cid: '', //用户id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
 				options: [
@@ -124,7 +124,6 @@
 					{titleName:'BOM类型'},
 				],
 				requestObj:{},
-				isInit:true,//是否按照初始模式请求
 			};
 		},
 		components: {
@@ -198,12 +197,9 @@
 			},
 			async getData() {
 				if (!this.validate()) return;
-				let sendStart='',sendEnd='';
-				let endTime = new Date(this.endTime).setHours(23, 59, 59, 0);
-				if(this.isInit){//页面加载的第一次执行
-					sendStart = '';
-					sendEnd = '';
-				}else{
+				let sendStart='',sendEnd='',endTime='';
+				if(this.endTime){//页面加载的第一次执行
+					endTime = new Date(this.endTime).setHours(23, 59, 59, 0);
 					sendStart = parseInt(this.startTime / 1000);
 					sendEnd = parseInt(endTime / 1000);
 				}
@@ -246,20 +242,15 @@
 				storage.session('bomListCache', this.requestObj);
 			},
 			reset() { //重置
-				for (let i in this.requestObj) {
-					if (i == 'startTime' || i == 'endTime') {
-						this[i] = new Date().setHours(0, 0, 0, 0);
-					} else if (i == 'page') {
-						this[i] = 1;
-					} else if (i == 'isPublic') {
-						this[i] = 0;
-					} else if (i == 'pageShow') {
-						this[i] = 10;
-					} else if (i != 'pageTotal') {
-						this[i] = '';
-					}
+				this.startTime = '';
+				this.endTime = '';
+				this.timeDate = [];
+				this.page = 1;
+				this.isPublic = 0;
+				this.pageShow = 10;
+				for(let item of ['createName','bomNum','gName']){
+					this[item] = '';
 				}
-				this.isInit = true;
 				this.getData();
 			},
 			validate() { //日期验证

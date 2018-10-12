@@ -12,12 +12,12 @@
 				<el-input v-model="name" placeholder="请输入领料人"></el-input>
 			</div>
 			<div class="inline-box">
-				<el-button type="success" @click="search">筛选</el-button>
+				<el-button type="primary" @click="search">筛选</el-button>
 				<el-button type="info" @click="reset">重置</el-button>
 			</div>
 		</div>
 		<el-table :data="pickerList" stripe border style="width: 100%">
-		    <el-table-column type="index" label="序号" width="150">
+		    <el-table-column type="index" label="序号" width="100">
 		    </el-table-column>
 		    <el-table-column prop="name" label="领料人">
 		    </el-table-column>

@@ -109,7 +109,7 @@
 			</el-table-column>
 		</el-table>
 		<div class="page-box">
-			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
+			<el-pagination @size-change="numChange" @current-change="pageChange" background :current-page="page" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]" :total="total"></el-pagination>
 		</div>
 		<!--添加编辑一级弹窗-->
 		<addstaffWin v-if="isStaff" @getStaff="getStaff" :edit="edit" :jobInfo="info"></addstaffWin>
@@ -246,6 +246,11 @@
 			//批量操作选择
 			selected(item) {
 				item.selected = !item.selected;
+			},
+			//每页显示多少行
+			numChange(e){
+				this.num = e;
+				this.pageChange(1);
 			},
 			pageChange(page) {
 				this.page = page;

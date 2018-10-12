@@ -72,7 +72,8 @@ export default {
     },
     "importGoods": {
         url: s + "goods/importNew", //导入商品
-        type: 'upload'
+        type: 'upload',
+        timeout: 60000
     },
     "GoodsGetBrandGoodsDetail": {
         url: s + "Goods/getBrandGoodsDetail",

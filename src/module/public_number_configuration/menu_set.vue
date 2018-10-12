@@ -175,11 +175,11 @@
 						<!-- 二级图文关联 -->
 						<section v-if="secondary.length > 0">
 							<ul class="title">
-								<li v-for="(int,ind) in secondary" :class="ruleIndex == ind ? 'active' : ''" @click="getDetails(ind)">二级图文{{ind + 1}}
+								<li v-for="(int,ind) in secondary" :key = "ind" :class="ruleIndex == ind ? 'active' : ''" @click="getDetails(ind)">二级图文{{ind + 1}}
 									<i class="deletes" @click.stop='deletesecPush(index,ind)'></i>
 								</li>
 							</ul>
-							<div class="content" v-for="(int,ind) in secondary" v-if='ruleIndex == ind'>
+							<div class="content" v-for="(int,ind) in secondary" :key="ind" v-if='ruleIndex == ind'>
 								<div class="uploadImgs">
 									<a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a>
 									<form enctype="multipart/form-data" id="endImage">

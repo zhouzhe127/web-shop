@@ -23,152 +23,153 @@
 					<!--<div class="item"><em>普通商品：</em>{{detail.numGoods}}</div>-->
 				</div>
 				<div class="item handle">
-					<span class="blue" @click="changeWarehouse">修改仓库</span>
-					<span class="yellow" @click="changeArea">修改区域</span>
-					<span class="gray" @click="deleteWarehouse">删除</span>
+					<el-button type="primary" @click="changeWarehouse">修改仓库</el-button>
+					<el-button type="success" @click="changeArea">修改区域</el-button>
+					<el-button type="danger" @click="deleteWarehouse">删除</el-button>
 				</div>
 			</div>
 		</div>
-		<div class="tab-box" @click="tabClick" v-if="configIndex==0">
-			<span :class="{active:tabIndex==1}" data-index='1'>商品</span>
-			<span :class="{active:tabIndex==2}" data-index='2'>物料</span>
+		<div class="tab-box" v-if="configIndex==0">
+			<el-radio-group v-model="tabIndex">
+			    <el-radio-button label="1">商品</el-radio-button>
+			    <el-radio-button label="2">物料</el-radio-button>
+			</el-radio-group>
 		</div>
 		<div class="filter">
 			<template v-if='tabIndex==1'>
 				<div class="block-box">
 					<div class="inline-box">
-						<input type="text" placeholder="请输入商品名" v-model="goodsName"/>
+						<el-input  v-model="goodsName" placeholder="请输入商品名"></el-input>
 					</div>
 					<div class="inline-box">
-						<input type="text" placeholder="请输入条形码" v-model="barCode"/>
+						<el-input  v-model="barCode" placeholder="请输入条形码"></el-input>
 					</div>
 					<div class="inline-box">
-						<input type="text" placeholder="请输入副条形码" v-model="secBarCode"/>
+						<el-input  v-model="secBarCode" placeholder="请输入副条形码"></el-input>
 					</div>
 				</div>
 				<div class="block-box inline-box">
-					<selectBtn @emit="selectType" :sorts="typeNameArr" :index="typeIndex" class="select-btn"></selectBtn>
-				</div>
-			</template>
-			<template v-if='tabIndex==2'>
-				<div class="block-box">
-					<div class="inline-box">
-						<input type="text" placeholder="请输入物料名称" v-model="mName"/>
-					</div>
-					<div class="inline-box">
-						<el-select v-model="matType" placeholder="请选择物料类型" @change="dropSelect" style="width:180px;">
+					<el-select v-model="goodsType" placeholder="请选择商品类型" @change="selectType" class="el-size">
 					    <el-option
-							v-for="item in matTypeList"
+							v-for="item in typeNameArr"
 							:key="item.value"
 							:label="item.label"
 							:value="item.value">
 					    </el-option>
 					</el-select>
+				</div>
+			</template>
+			<template v-if='tabIndex==2'>
+				<div class="block-box">
+					<div class="inline-box">
+						<el-input  v-model="mName" placeholder="请输入物料名称"></el-input>
 					</div>
 					<div class="inline-box">
-						<selectStore @emit="getSortOne" :sorts="oneSort" :tipName="'请选择一级分类'" :isSingle="true"></selectStore>
+						<el-select v-model="matType" placeholder="请选择物料类型" @change="dropSelect" class="el-size">
+						    <el-option
+								v-for="item in matTypeList"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+						    </el-option>
+						</el-select>
 					</div>
-					<div class="inline-box" @click="twoSortClick">
-						<selectStore @emit="getSortTwo" :sorts="twoSort" :tipName="'请选择二级分类'" :isSingle="true" ref="towSortDom"></selectStore>
+					<div class="inline-box">
+						<el-cascader
+							class="el-size"
+						    :options="oneSort"
+						    v-model="cidSel"
+						    @change="getSortSel">
+						</el-cascader>
 					</div>
 				</div>
 			</template>
 			<div class="block-box inline-box button-box">
-				<span class="blue" @click="filterClick">筛选</span>
-				<span class="gray" @click="resetGoods" v-if="tabIndex==1">重置</span>
-				<span class="gray" @click="reset" v-if="tabIndex==2">重置</span>
+				<el-button type="primary" @click="filterClick">筛选</el-button>
+				<el-button type="info" @click="resetGoods" v-if="tabIndex==1">重置</el-button>
+				<el-button type="info" @click="reset" v-if="tabIndex==2">重置</el-button>
 			</div>
 		</div>
 		<div class="main">
 			<template v-if="tabIndex==1">
 				<div class="list">
-					<div class="head">
-						商品列表 · 共<em> {{gLength}} </em>条数据
-					</div>
-					<div class="scroll-box">
-						<div class="title">
-							<span class="narrow">操作</span>
-							<span>序号</span>
-							<span>商品名</span>
-							<span>条形码</span>
-							<span>售价</span>
-							<span>商品类型</span>
-							<span>库存数量 / 重量</span>
-							<span>批次数量</span>
-						</div>
-						<ul @click="listHandle">
-							<li v-for="(item,index) in goodsList" :key="index">
-								<!--操作-->
-								<span class="narrow handle">
-									<em class="detail goods-detail" :data-index="index">查看详情</em>
-								</span>
-								<!--序号-->
-								<span v-if="(gPage-1)*gShowNum+index>=9">{{(gPage-1)*gShowNum+index+1}}</span>
-								<span v-else>{{'0'+((gPage-1)*gShowNum+index+1)}}</span>
-								<!--商品名-->
-								<span class="text-ellipsis" :title="item.goodsName">{{item.goodsName}}</span>
-								<!--条形码-->
-								<span>{{item.barCode}}</span>
-								<!--售价-->
-								<span>{{item.price}}</span>
-								<!--商品类型-->
-								<span>{{setGoodsType(item.type)}}</span>
-								<!--库存数量/重量-->
-								<span>{{item.surplus}}{{item.unit}}</span>
-								<!--批次数量-->
-								<span class="text-ellipsis" :title="item.batch">{{item.batch}}</span>
-							</li>
-							<li class="empty" v-if="!gLength">- 暂无条目 -</li>
-						</ul>
-					</div>
+					<el-table :data="goodsList" stripe border style="width: 100%" :key="1">
+						<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+					    </el-table-column>
+					    <el-table-column prop="goodsName" label="商品名称">
+					    </el-table-column>
+					    <el-table-column prop="barCode" label="条形码">
+					    </el-table-column>
+					    <el-table-column prop="price" label="售价">
+					    </el-table-column>
+					    <el-table-column label="商品类型">
+					    	<template slot-scope="scope">
+					        	{{typeNameArr[Number(scope.row.type)+1].label}}
+					      	</template>
+					    </el-table-column>
+					    <el-table-column label="库存数量/重量">
+					    	<template slot-scope="scope">
+					        	{{scope.row.surplus}}{{scope.row.unit}}
+					      	</template>
+					    </el-table-column>
+					    <el-table-column prop="batch" label="批次数量">
+					    </el-table-column>
+					    <el-table-column label="操作" fixed="right" width="150">
+					    	<template slot-scope="scope">
+					        	<el-button @click="listHandle(scope.row,1)" type="text" size="small">查看详情</el-button>
+					      	</template>
+					    </el-table-column>
+				  	</el-table>
 				</div>
 				<div class="page-box">
-					<pageBtn @pageNum="gPageChange" :total="gPageTotal" :page="gPage" :isNoJump="true"></pageBtn>
+					<el-pagination @current-change="(res)=>{gPageChange(res,1)}" @size-change="gPageChange"
+						:current-page="gPage"
+						background
+						layout="sizes,total,prev, pager, next"
+						:page-sizes="[10, 20, 50]"
+						:total="gLength">
+					</el-pagination>
 				</div>
 			</template>
 			<template v-if="tabIndex==2">
-				<div class="list mList">
-					<div class="head">
-						物料列表 · 共<em> {{mLength}} </em>条数据
-					</div>
-					<div class="scroll-box">
-						<div class="title">
-							<span class="narrow">操作</span>
-							<span>序号</span>
-							<span>物料名称</span>
-							<span>类型</span>
-							<span>分类</span>
-							<span>库存数量 / 重量</span>
-							<span>批次数量</span>
-						</div>
-						<ul @click="listHandle">
-							<li v-for="(item,index) in materialList" :key="index">
-								<!--操作-->
-								<span class="narrow handle">
-									<em class="detail wl-detail" :data-id="item.id">查看详情</em>
-								</span>
-								<!--序号-->
-								<span v-if="(mPage-1)*mShowNum+index>=9">{{(mPage-1)*mShowNum+index+1}}</span>
-								<span v-else>{{'0'+((mPage-1)*mShowNum+index+1)}}</span>
-								<!--物料名称-->
-								<span class="text-ellipsis" :title="item.name">{{item.name}}</span>
-								<!--类型-->
-								<span class="text-ellipsis" :title="setWlType(item.type)">{{matTypeList[Number(item.type)+1].label}}</span>
-								<!--分类-->
-								<span class="text-ellipsis" :title="setWlSort(item.cate)">{{setWlSort(item.cate)}}</span>
-								<!--库存数量/重量-->
-								<span class="text-ellipsis" :title="setUnit(item.surplus,item.unit)">
-									{{setUnit(item.surplus,item.unit)}}
-								</span>
-								<!--批次数量-->
-								<span>{{item.batch}}</span>
-							</li>
-							<li class="empty" v-if="!mLength">- 暂无条目 -</li>
-						</ul>
-					</div>
+				<div class="list">
+					<el-table :data="materialList" stripe border style="width: 100%" :key="2">
+						<el-table-column type="index" :index="indexMethodMat" label="序号" width="100">
+					    </el-table-column>
+					    <el-table-column prop="name" label="物料名称">
+					    </el-table-column>
+					    <el-table-column label="类型">
+					    	<template slot-scope="scope">
+					    		{{matTypeList[Number(scope.row.type)+1].label}}
+					    	</template>
+					    </el-table-column>
+					    <el-table-column label="分类">
+					    	<template slot-scope="scope">
+					    		{{setWlSort(scope.row.cate)}}
+					    	</template>
+					    </el-table-column>
+					    <el-table-column label="库存数量/重量">
+					    	<template slot-scope="scope">
+					        	{{setUnit(scope.row.surplus,scope.row.unit)}}
+					      	</template>
+					    </el-table-column>
+					    <el-table-column prop="batch" label="批次数量">
+					    </el-table-column>
+					    <el-table-column label="操作" fixed="right" width="150">
+					    	<template slot-scope="scope">
+					        	<el-button @click="listHandle(scope.row,2)" type="text" size="small">查看详情</el-button>
+					      	</template>
+					    </el-table-column>
+				  	</el-table>
 				</div>
 				<div class="page-box">
-					<pageBtn @pageNum="mPageChange" :total="mPageTotal" :page="mPage" :isNoJump="true"></pageBtn>
+					<el-pagination @current-change="(res)=>{mPageChange(res,1)}" @size-change="mPageChange"
+						:current-page="mPage"
+						background
+						layout="sizes,total,prev, pager, next"
+						:page-sizes="[10, 20, 50]"
+						:total="mLength">
+					</el-pagination>
 				</div>
 			</template>
 		</div>
@@ -191,26 +192,22 @@ export default {
 			detail:{area:[]},//仓库详情
 			gPage:1,//商品分页
 			gShowNum:10,
-			gPageTotal:1,
 			gLength:0,
 			mPage:1,//物料分页
 			mShowNum:10,
-			mPageTotal:1,
 			mLength:0,
 			dropList:['10','20'],
 			tabIndex:1,//tab切换下标
 			configIndex:0,//1商品 2物料 0商品+物料
-			typeNameArr:[],//商品类型下拉列表
-			typeIndex:0,
-			typeList:[
-				{id:-1,name:'全部类型'},
-				{id: 0,name:'普通商品'},
-				{id: 1,name:'称重商品'},
-			],//商品类型对应数字
+			typeNameArr:[
+				{value: -1,label:'全部商品类型'},
+				{value: 0,label:'普通商品'},
+				{value: 1,label:'称重商品'},
+			],//商品类型下拉列表
 			goodsType:-1,//选中商品类型
 			goodsName:'',//商品名称
 			matTypeList:[
-				{value:'-1',label:'全部类型'},
+				{value:'-1',label:'全部物料类型'},
 				{value:'0',label:'成品'},
 				{value:'1',label:'半成品'},
 				{value:'2',label:'普通物料'},
@@ -222,9 +219,9 @@ export default {
 			mName:'',//物料名称
 			allSort:[],//所有分类
 			oneSort:[],//一级分类列表
-			twoSort:[],//二级分类列表
 			mCid:'',//分类id
 			mCidOne:'',//一级分类id
+			cidSel:[-1],//选中的分类id
 			goodsData:[],//商品列表-未拼接数量
 			goodsList:[],//商品列表
 			materialData:'',//物料数据
@@ -241,14 +238,7 @@ export default {
 		selectStore: ()=> import (/*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
 	},
 	mounted(){
-		this.$store.commit('setPageTools',{
-			back:()=>{//返回
-				storage.session('warehouseListsDestroy',true);
-				storage.session('warehouseDetail',null);
-				delete this.$route.query.id,delete this.$route.query.sid;
-				this.$router.push({path:'/admin/warehouseList',query:this.$route.query});
-			}
-		});
+		this.initBtn();
 		let inventConfigure = storage.session('inventConfigure');
 		this.configIndex = inventConfigure;
 		this.tabIndex = inventConfigure==2 ? 2 : 1;
@@ -258,7 +248,6 @@ export default {
 		this.getRequest();
 		if(inventConfigure==1||inventConfigure==0){
 			this.getGoodsList();//获取商品列表
-			this.setTypeNameArr();//设置商品分类	
 		}
 		//然后请求物料列表 保存 无需每次切换都请求数据
 		if(inventConfigure==2||inventConfigure==0){
@@ -267,6 +256,25 @@ export default {
 		}
 	},
 	methods: {
+		initBtn(){
+			let arr = [
+				{name: '返回',className: 'info',type:4,
+					fn: () => {
+						storage.session('warehouseListsDestroy',true);
+						storage.session('warehouseDetail',null);
+						delete this.$route.query.id,delete this.$route.query.sid;
+						this.$router.push({path:'/admin/warehouseList',query:this.$route.query});
+					}
+				},
+			];
+			this.$store.commit('setPageTools', arr);
+		},
+		indexMethod(index){
+			return this.gShowNum*(this.gPage-1)+index+1;
+		},
+		indexMethodMat(index){
+			return this.mShowNum*(this.mPage-1)+index+1;
+		},
 		async getWarehouseDetail(){//获取仓库详情
 			let data = await http.warehouseGetWarehouse({data:{
 				id:this.id
@@ -282,7 +290,6 @@ export default {
 				num:this.gShowNum,
 			}});
 			this.goodsList = data.list;
-			this.gPageTotal = Number(data.total);
 			this.gLength = Number(data.count);
 		},
 		async filterGoodsNum(){//筛选商品列表
@@ -294,7 +301,6 @@ export default {
 				type:this.goodsType,
 			}});
 			this.goodsList = data;
-			this.gPageTotal = 1;
 			this.gLength = data.length?data.length:0;
 		},
 		async getMaterialList(){//获取物料列表
@@ -303,11 +309,10 @@ export default {
 				page:this.mPage,
 				num:this.mShowNum,
 				name:this.mName,
-				cid:this.mCid,
+				cid:this.mCid>0?this.mCid:'',
 				type:this.matType,
 			}});
 			this.materialList = data.list;
-			this.mPageTotal = Number(data.total);
 			this.mLength = Number(data.count);
 		},
 		async deleteReq(){
@@ -320,14 +325,36 @@ export default {
 		},
 		async getCategoryList(){//获取一二级分类
 			let data = await http.invoiv_getCategoryList();
-			let one=[];
+			this.allSort = data;
+			let one = [];
 			for(let item of data){
 				if(item.pid == 0){
-					one.push(item);
+					one.push({value:item.id,label:item.name,children:[]});
 				}
 			}
+			one.unshift({value:-1,label:'全部分类'});
 			this.oneSort = one;
-			this.allSort = data;
+			for(let one of this.oneSort){
+				let two = [];
+				for(let item of data){
+					if(one.value==item.pid){
+						two.push({value:item.id,label:item.name});
+					}
+				}
+				if(two.length){
+					one.children = two;
+				}else{
+					delete one.children;
+				}
+			}
+		},
+		getSortSel(res){
+			if(res.length>1){
+				this.mCidOne = res[0];
+				this.mCid = res[1];
+			}else{
+				this.mCid = res[0];
+			}
 		},
 		async getAreaCn(){//异步加载 省市区插件
 			let data = await import (/*webpackChunkName: 'area_cn'*/ 'src/verdor/area_cn'); 
@@ -350,45 +377,14 @@ export default {
 					}
 				}
 			}
+			for(let item of this.allSort){
+				if(this.mCid == item.pid){
+					this.cidSel.push(item.id);
+				}
+			}
+			this.cidSel.push(this.mCid);
 			storage.session('warehouseDetailDestroy',null);
 			storage.session('warehouseDetailRequest',null);
-		},
-		getSortOne(arr){//选中一级分类 并且关联二级分类
-			this.mCid = this.setSortId(arr);
-			this.mCidOne = this.mCid;
-			let arrTwo=[];
-			for(let item of this.allSort){
-				if(item.pid == this.mCid){
-					arrTwo.push(item);
-				}
-			}
-			this.twoSort = arrTwo;
-		},
-		getSortTwo(arr){//选中二级分类
-			let cid = this.setSortId(arr);
-			if(cid){
-				this.mCid = cid;
-			}else{
-				this.mCid = this.mCidOne ? this.mCidOne : '';
-			}
-		},
-		twoSortClick(){
-			if(!this.twoSort.length){
-				this.$refs.towSortDom.sortShow = false;
-				this.$store.commit('setWin',{title:'提示信息',content:'请选择一级分类'});
-			}
-		},
-		setSortId(arr){//设置选中的分类id
-			let id;
-			for(let item of arr){
-				if(item.selected == true){
-					id = item.id;
-					break;
-				}else{
-					id = '';
-				}
-			}
-			return id;
 		},
 		setWlSort(arr){//设置物料分类
 			let arrSort = [],str='';
@@ -426,40 +422,37 @@ export default {
 			storage.session('warehouseArea',obj);
 			this.$router.push({path:'changeArea',query:this.$route.query});
 		},
-		listHandle(event){//列表点击操作
-			let target = event.target;
-			if(target.className.includes('goods-detail')){//进入详情
-				let index = parseInt(target.getAttribute('data-index'));
-				let detail = this.goodsList[index];
-				let num = (this.gPage-1)*this.gShowNum+index+1;
+		listHandle(item,type){//列表点击操作
+			if(type==1){//商品详情
+				let detail = item;
 				detail.wid = this.id;
-				detail.id = this.goodsList[index].gid;
-				if(num>=9){
-					detail.numerical = num;
-				}else{
-					detail.numerical = '0'+num;
-				}
+				detail.id = item.gid;
 				storage.session('goodsneed',detail);
 				storage.session('warehouseDetailRequest',this.filterObj);
 				this.$router.push({path:'warehouseGoodsDetail',query:this.$route.query});
-			}else if(target.className.includes('wl-detail')){//进入详情
-				let id = target.getAttribute('data-id');
-				this.$route.query.id = id;
+			}else{//物料详情
+				this.$route.query.id = item.id;
 				this.$route.query.wid = this.id;
 				delete this.$route.query.sid;
 				storage.session('warehouseDetailRequest',this.filterObj);
 				this.$router.push({path:'warehouseMaterialDetail',query:this.$route.query});
 			}
 		},
-		gPageChange(obj){
-			this.gPage = obj.page;
-			this.gShowNum = obj.num;
+		gPageChange(res,type){
+			if(type){
+				this.gPage = res;
+			}else{
+				this.gShowNum = res;
+			}
 			this.setGoodsFilter();
 			this.getGoodsList();
 		},
-		mPageChange(obj){
-			this.mPage = obj.page;
-			this.mShowNum = obj.num;
+		mPageChange(res,type){
+			if(type){
+				this.mPage = res;
+			}else{
+				this.mShowNum = res;
+			}
 			this.filter();
 		},
 		filterClick(){
@@ -496,31 +489,22 @@ export default {
 			this.filterObj = utils.deepCopy(obj);
 			this.filterObj.tabIndex = 2;
 		},
-		clearSort(arr){
-			let arrSort = utils.deepCopy(arr);
-			for(let item of arrSort){
-				item.selected = false;
-			}
-			return arrSort;
-		},
 		resetGoods(){//商品列表重置
 			for(let item of this.veri){
 				this[item]='';
 			}
 			this.goodsType = -1;
-			this.typeIndex = 0;
 			this.gPage = 1;
 			this.gShowNum = 10;
 			this.getGoodsList();
 		},
 		reset(){//物料重置
-			this.oneSort = this.clearSort(this.oneSort);
-			this.twoSort = [];
+			this.cidSel = [-1]
+			this.matType = '-1';
 			this.mName = '';
 			this.mCid = '';
 			this.mPage = 1;
 			this.mShowNum = 10;
-			this.tabIndex = 2;
 			this.filter();
 		},
 		codeInput(event){//限制文本框输入 只能输入数字
@@ -529,20 +513,6 @@ export default {
 			if(isNaN(num)) num = '';
 			this.barCode = num;
 			event.target.value = num;
-		},
-		setTypeNameArr(){//设置下拉列表
-			for(let item of this.typeList){
-				this.typeNameArr.push(item.name);
-			}
-		},
-		setGoodsType(type){//列表-显示商品类型
-			let typeName='';
-			for(let item of this.typeList){
-				if(item.id == type){
-					typeName = item.name;
-				}
-			}
-			return typeName;
 		},
 		setUnit(num,unit){//单位计算
 			let def='',min='',value=1;
@@ -566,9 +536,8 @@ export default {
 				return '物料';
 			}
 		},
-		selectType(index){//选择商品类型
-			this.goodsType = this.typeList[index].id;
-			this.typeIndex = index;
+		selectType(res){//选择商品类型
+			this.goodsType = res;
 			this.setGoodsFilter();
 			let num=0;
 			for(let item of this.veri){
@@ -594,7 +563,7 @@ export default {
 
 <style lang='less' scoped>
 	.warehouse-detail{padding-bottom: 100px;padding-top: 10px;
-		.detail-box{border: 1px solid #ccc;
+		.detail-box{border: 1px solid #dcdfe6;
 			.title{height: 40px;line-height: 40px;padding: 0 20px;font-size: 16px;background: #e6e6e6;}
 			.word{overflow: hidden;
 				.block{overflow: hidden;width: 100%;}
@@ -605,11 +574,7 @@ export default {
 					&:nth-child(2){width: 30%;}
 					&:nth-child(3){width: 40%;}
 				}
-				.handle{text-align: right;width: 100%;padding-left: 0;line-height: normal;padding-top: 0;
-					span{width: 100px;height: 40px;line-height: 40px;text-align: center;color: #fff;display: inline-block;margin-right: 10px;
-						border-radius: 5px;
-					}
-				}
+				.handle{text-align: right;width: 100%;padding-left: 0;line-height: normal;padding-top: 0;}
 			}
 		}
 		.tab-box{overflow: hidden;padding-top: 20px;
@@ -622,6 +587,7 @@ export default {
 			.block-box{
 				display: inline-block;padding-bottom: 20px;vertical-align: middle;
 			}
+			.el-size{width:210px;}
 			.inline-box{display: inline-block;vertical-align: middle;margin-right: 10px;
 				input{width: 180px;height: 40px;padding: 0 10px;font-size: 14px;vertical-align: top;
 					&:focus{outline: none;}
@@ -633,39 +599,7 @@ export default {
 			}
 		}
 		.main{padding-bottom: 50px;
-			.list{border: 1px solid #ccc;border-bottom: 2px solid #ddd;
-				.head{height: 50px;line-height: 50px;padding: 0 10px;font-size: 16px;
-					em{color: #ff3c04;font-size: inherit;}
-				}
-				.scroll-box{overflow: auto;}
-				.title{background: #e6e6e6;overflow: hidden;min-width: 1200px;
-					span{float: left;height: 40px;line-height: 40px;text-align: center;width: 13%;}
-					.narrow{width: 9%;}
-				}
-				ul{min-width: 1200px;
-					li{overflow: hidden;border-bottom: 2px solid #ddd;
-						&:last-child{border-bottom: 0;}
-						span{float: left;height: 70px;line-height: 70px;text-align: center;width: 13%;color: #555;padding: 0 5px;
-							.wrap{display: inline-block;line-height: normal;vertical-align: middle;max-width: 100%;max-height: 38px;overflow: hidden;}
-						}
-						.narrow{width: 9%;}
-						.handle{
-							.detail{display: inline-block;padding: 0 20px;height: 18px;line-height: normal;cursor: pointer;color: #27a8e0;
-								&:hover{text-decoration: underline;}
-							}
-							
-						}
-					}
-					.empty{
-						line-height: 70px;text-align: center;color: #ccc;font-size: 20px;
-					}	
-				}
-			}
-			.mList{
-				span{width: 15.16% !important;}
-				.narrow{width: 9% !important;}
-			}
-			.page-box{margin-top: 20px;text-align: left;padding-bottom: 100px;}
+			.page-box{padding: 20px 0;}
 		}
 	}
 </style>

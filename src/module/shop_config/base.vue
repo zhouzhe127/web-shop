@@ -7,109 +7,94 @@
 
 <template>
 	<section style="text-align:left;width:900px;min-height:1280px;" id="bstime">
-
-		<div class="line">
-			<span class="ltitle" style="">店铺名称
-				<span class="required"></span>
-			</span>
-			<label><input type="text" class="input mes" v-model="baseDetial.shopName" maxlength="20" placeholder="请输入店铺名称"></label>
-		</div>
-		<div class="line">
-			<span class="ltitle" style="">店铺编号</span>
-			<label v-if="baseDetial.shopNumber !== '' && baseDetial.shopNumber">
-				{{shopNumber}}
-			</label>
-			<label v-else>
-				<input type="text" class="input mes" v-model="shopNumber" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" placeholder="请输入店铺编号（必须为4位数）">
-				<span style="margin-left: 10px;color: #EA3B44;"><img src="../../res/icon/warning.png" style="width: 20px;height: 20px;margin-right: 5px;vertical-align: middle;" />店铺编号一旦提交，不可修改！</span>
-			</label>
-		</div>
-		<div class="line">
-			<span class="ltitle" style="">店铺类型</span>
-			<label>{{baseDetial.industry==0?'餐饮':'零售'}}</label>
-		</div>
-		<div class="line" style="position: relative;height:150px;">
-			<span class="ltitle" style="height:150px;">店铺LOGO</span>
-			<form id="imageUpForm" enctype="multipart/form-data">
-				<input type="file" accept="image/jpeg,image/png,image/image/tiff" id="file_upload" name="image" @change='fileNameChange' style="width:150px;height:150px;position: absolute;z-index: 5;opacity: 0;cursor: pointer;">
-			</form>
-			<section style="width:150px;height:150px;border:1px solid #C0C0C0;position: absolute;left: 140px;z-index: 0;">
-				<img src="../../res/images/comadd.png" style="width:47px;height:47px;margin-left: 50px;margin-top: 25px;">
-				<section v-if="baseDetial.logoImage ==''" style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">添加店铺LOGO</section>
-				<section v-else style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">更改店铺LOGO</section>
-			</section>
-			<section style="width:150px;height:150px;position: absolute;left: 290px;z-index: 0;">
-				<img v-if="baseDetial.logoImage != ''" id="imgs" :src="imgHost + baseDetial.logoImage" style="width:100%;height:100%;">
-			</section>
-		</div>
-		<div class="line" style="position: relative;height:150px;">
-			<span class="ltitle" style="height:150px;">卫生许可证</span>
-			<form id="imageUpForm2" enctype="multipart/form-data">
-				<input type="file" accept="image/jpeg,image/png,image/image/tiff" id="file_upload" name="image" @change='fileNameChange2' style="width:150px;height:150px;position: absolute;z-index: 5;opacity: 0;cursor: pointer;">
-			</form>
-			<section style="width:150px;height:150px;border:1px solid #C0C0C0;position: absolute;left: 140px;z-index: 0;">
-				<img src="../../res/images/comadd.png" style="width:47px;height:47px;margin-left: 50px;margin-top: 25px;">
-				<section v-if="!baseDetial.healthLicense || baseDetial.healthLicense ==''" style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">添加卫生许可证</section>
-				<section v-else style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">更改卫生许可证</section>
-			</section>
-			<section style="width:150px;height:150px;position: absolute;left: 290px;z-index: 0;">
-				<img v-if="baseDetial.healthLicense != ''" id="imgs" :src="imgHost + baseDetial.healthLicense" style="width:100%;height:100%;">
-			</section>
-		</div>
-		<div class="line">
-			<span class="ltitle" style="">负责人</span>
-			<label><input type="text" class="input mes" maxlength="15" v-model="baseDetial.contactMan" placeholder="请输入负责人"></label>
-		</div>
-		<div class="line">
-			<span class="ltitle" style="">联系方式
-				<span class="required"></span>
-			</span>
-			<label><input type="text" class="input mes" v-model="baseDetial.telephone" maxlength="20" placeholder="请输入手机号码"></label>
-		</div>
-		<div class="line">
-			<span class="ltitle" style="">店铺地址
-				<span class="required"></span>
-			</span>
-			<label><input type="text" class="input mes" maxlength="50" id="keywords" v-model="baseDetial.address" placeholder="请输店铺地址"></label>
-			<a class="blue" style="width: 120px;height:40px;line-height:40px;margin-left:10px;" @click="seach(true)">搜索</a>
-		</div>
-
-		<div style="height:350px;width:900px;padding-left:135px;">
-			<section id="mapBox" style="width:400px;height:350px;float:left;"></section>
-			<section id="mapBoxDet" style="width:300px;height:350px;float:left;margin-left:20px;"></section>
-		</div>
-		<div class="line" style="padding-left:120px;">
-			<span class="" style="">经度:</span>
-			<span style="line-height:40px;padding-right:30px;">{{pointLng}}</span>
-			<span class="" style="">纬度:</span>
-			<span style="line-height:40px;padding-right:30px;">{{pointLat}}</span>
-		</div>
-		<div class="line" style="height:150px;">
-			<span class="ltitle" style="">详细介绍</span>
-			<label>
-				<textarea type="text" class="input mes" maxlength="50" v-model="baseDetial.description" placeholder="请输入详细介绍"></textarea>
-			</label>
-		</div>
-		<div class="line" style="clear: both;position: relative;">
-			<span class="ltitle required" style="margin-right:20px;float:left;">营业时间</span>
-			<div style="float:left;" v-if="loaded">
-				<atime @timeChoose="getTime" :start="startslot" :end='endSlot'></atime>
-			</div>
-			<div style="position: absolute;left: 380px;top: 0px;">
-				<div class="circle" v-bind:class="{ 'active': selnext}" @click="nextDay"></div>
-				<span>隔天</span>
-			</div>
-		</div>
-		<div class="line" style="clear: both;position: relative;">
-			<span class="ltitle" style="margin-right:20px;float:left;">启用交接班班次</span>
-			<el-switch v-model="showShift" active-color="#13ce66" inactive-color="#ff4949" style="float: left;margin-top:10px">
-			</el-switch>
-
-			<el-checkbox  v-for="(item,index) in shiftList" :key="index" v-model="item.selected" :label="item.name" border size="medium"></el-checkbox>
-		</div>
-		<div style="width:300px;padding-left: 50px;">
-			<a class="yellow fl" style="width: 290px;" @click="send">修改店铺信息</a>
-		</div>
+		<el-form :model="baseDetial" ref="baseDetial" label-width="120px">
+			<el-form-item required label="店铺名称">
+				<el-input v-model="baseDetial.shopName" maxlength="20" placeholder = "请输入店铺名称" style="width:250px;"></el-input>
+			</el-form-item>
+			<el-form-item label="店铺编号">
+				<span v-if="baseDetial.shopNumber !== '' && baseDetial.shopNumber">{{shopNumber}}</span>
+				<span v-else>
+					<el-input v-model="shopNumber" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" placeholder = "请输入店铺编号（必须为4位数）" style="width:250px;"></el-input>
+					<!-- <input type="text" v-model="shopNumber" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" placeholder="请输入店铺编号（必须为4位数）"> -->
+					<span style="margin-left: 10px;color: #EA3B44;" class="el-icon-warning">  店铺编号一旦提交，不可修改！</span>
+				</span>
+			</el-form-item>
+			<el-form-item label="店铺类型">
+				<span>{{baseDetial.industry==0?'餐饮':'零售'}}</span>
+			</el-form-item>
+			<el-form-item label="店铺LOGO">
+				<div style="position: relative;height:150px;">
+					<form id="imageUpForm" enctype="multipart/form-data">
+						<input type="file" accept="image/jpeg,image/png,image/image/tiff" id="file_upload" name="image" @change='fileNameChange' style="width:150px;height:150px;position: absolute;z-index: 5;opacity: 0;cursor: pointer;">
+					</form>
+					<section style="width:150px;height:150px;border:1px solid #C0C0C0;position: absolute;z-index: 0;">
+						<img src="../../res/images/comadd.png" style="width:47px;height:47px;margin-left: 50px;margin-top: 25px;">
+						<section v-if="baseDetial.logoImage ==''" style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">添加店铺LOGO</section>
+						<section v-else style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">更改店铺LOGO</section>
+					</section>
+					<section style="width:150px;height:150px;position: absolute;left: 170px;z-index: 0;">
+						<img v-if="baseDetial.logoImage != ''" id="imgs" :src="imgHost + baseDetial.logoImage" style="width:100%;height:100%;">
+					</section>
+				</div>
+			</el-form-item>
+			<el-form-item label="卫生许可证">
+				<div style="position: relative;height:150px;">
+					<form id="imageUpForm2" enctype="multipart/form-data">
+						<input type="file" accept="image/jpeg,image/png,image/image/tiff" id="file_upload" name="image" @change='fileNameChange2' style="width:150px;height:150px;position: absolute;z-index: 5;opacity: 0;cursor: pointer;">
+					</form>
+					<section style="width:150px;height:150px;border:1px solid #C0C0C0;position: absolute;z-index: 0;">
+						<img src="../../res/images/comadd.png" style="width:47px;height:47px;margin-left: 50px;margin-top: 25px;">
+						<section v-if="!baseDetial.healthLicense || baseDetial.healthLicense ==''" style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">添加卫生许可证</section>
+						<section v-else style="width:100%;height:60px;line-height: 60px;text-align: center;font-size: 18px;color: #D6D6D6;">更改卫生许可证</section>
+					</section>
+					<section style="width:150px;height:150px;position: absolute;left: 170px;z-index: 0;">
+						<img v-if="baseDetial.healthLicense != ''" id="imgs" :src="imgHost + baseDetial.healthLicense" style="width:100%;height:100%;">
+					</section>
+				</div>
+			</el-form-item>
+			<el-form-item label="负责人">
+				<el-input v-model="baseDetial.contactMan" maxlength="15" placeholder = "请输入负责人" style="width:250px;"></el-input>
+			</el-form-item>
+			<el-form-item required label="联系方式 ">
+				<el-input v-model="baseDetial.telephone" maxlength="20" placeholder = "请输入手机号码" style="width:250px;"></el-input>
+			</el-form-item>
+			<el-form-item required label="店铺地址 ">
+				<el-input v-model="baseDetial.address" maxlength="20" placeholder = "请输店铺地址" style="width:320px;">
+					<el-button slot="append" @click="seach(true)">搜索</el-button>
+				</el-input>
+			</el-form-item>
+			<el-form-item label=" ">
+				<div style="height:350px;width:900px;">
+					<section id="mapBox" style="width:400px;height:350px;float:left;"></section>
+					<section id="mapBoxDet" style="width:300px;height:350px;float:left;margin-left:20px;"></section>
+				</div>
+				<div class="line">
+					<span class="" style="">经度:</span>
+					<span style="line-height:40px;padding-right:30px;">{{pointLng}}</span>
+					<span class="" style="">纬度:</span>
+					<span style="line-height:40px;padding-right:30px;">{{pointLat}}</span>
+				</div>
+			</el-form-item>
+			<el-form-item label="详细介绍 ">
+				<el-input type="textarea" v-model="baseDetial.description" maxlength="50" :autosize="{minRows: 3, maxRows: 5}" placeholder = "请输入详细介绍" style="width:400px;"></el-input>
+			</el-form-item>
+			<el-form-item required label="营业时间 ">
+				<div style="float:left;" v-if="loaded">
+					<atime @timeChoose="getTime" :start="startslot" :end='endSlot'></atime>
+				</div>
+				<div style="position: absolute;left: 260px;top: 0px;">
+					<div class="circle" v-bind:class="{ 'active': selnext}" @click="nextDay"></div>
+					<span>隔天</span>
+				</div>
+			</el-form-item>
+			<el-form-item label="启用交接班班次 ">
+				<el-switch v-model="showShift" active-color="#13ce66" inactive-color="#ff4949" style="float: left;margin-top:10px;margin-right:10px;"></el-switch>
+				<el-checkbox v-if="showShift" v-for="(item,index) in shiftList" :key="index" v-model="item.selected" :label="item.name" border size="medium"></el-checkbox>
+			</el-form-item>
+			<el-form-item label="">
+				<el-button style="width: 290px;" @click="send" type="primary">修改店铺信息</el-button>
+			</el-form-item>
+		</el-form>
 	</section>
 </template>
 <script>
@@ -214,7 +199,7 @@ export default {
 			let address; //点击地址
 			let adcode; //邮政编码
 			map.on('click', function(e) {
-				console.log(e);
+				// console.log(e);
 				that.pointLng = e.lnglat.lng; //地图经度116.404;39.915
 				that.pointLat = e.lnglat.lat; //地图纬度
 				// 填写地址
@@ -289,9 +274,7 @@ export default {
 					}
 				}
 			}
-			console.log(this.shiftList);
-
-
+			// console.log(this.shiftList);
 			this.onoff = this.baseDetial.isWarrant == 0 ? true : false;
 			this.isShared = this.baseDetial.isShared == 0 ? true : false;
 			this.shopNumber = this.baseDetial.shopNumber
@@ -525,43 +508,6 @@ export default {
 
 
 <style type="text/css" scoped>
-#bstime .line {
-	display: block;
-	width: 100%;
-	height: 40px;
-	line-height: 40px;
-	margin: 10px 0;
-}
-
-#bstime .line label {
-	float: left;
-	margin-left: 20px;
-}
-
-#bstime .ltitle {
-	width: 120px;
-	line-height: 40px;
-	text-align: right;
-	float: left;
-	box-sizing: border-box;
-	font-size: 16px;
-}
-
-#bstime input.mes {
-	width: 300px;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-	resize: none;
-}
-
-#bstime textarea {
-	outline: none;
-	width: 300px;
-	height: 150px;
-	box-sizing: border-box;
-	border: 1px solid #ccc;
-	resize: none;
-}
 .circle {
 	display: inline-block;
 	vertical-align: middle;
