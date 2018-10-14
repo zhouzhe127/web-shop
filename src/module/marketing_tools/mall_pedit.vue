@@ -353,7 +353,7 @@
 				this.islogo = true;
 				this.isqr = true;
 
-				this.color = val.positionNameColor;
+				this.color = `rgb(${val.positionNameColor})`;
 				this.fontSize = val.positionNameFontSize;
 				this.fileName = val.imageName;
 				this.name = val.name;
