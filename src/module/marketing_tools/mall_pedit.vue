@@ -417,8 +417,8 @@
 					let item = this.editConfig[type];
 					item.x = x + 'px';
 					item.y = y + 'px';
-					item.w = w + 'px';
-					item.h = h + 'px';
+					item.w = (w < 20 ? 20 : w) + 'px';
+					item.h = (h < 20 ? 20 : h)+ 'px';
 				}
 
 			}
