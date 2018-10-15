@@ -41,6 +41,8 @@
 				<span>仅有会员享有门店折扣</span>
 			</div>
 		</div>
+
+        <!-- **************************************************************** -->
 		<!-- 支付方式 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">支付方式</span>
@@ -48,65 +50,76 @@
 			<div class="fl handle-tips">
 				<i></i> 使用时需在支付门店支付方式内开启微信或支付宝
 			</div>
-		</div>
-		<!-- 开启会员支付-->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">会员支付</span>
-			<onOff :key='1' :status="paySwitch" @statusChange="openpaySwitch"></onOff>
-		</div>
-		<!-- 开启优惠券使用 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">优惠券使用</span>
-			<onOff :key='1' :status="couponSwitch" @statusChange="opencouponSwitch"></onOff>
-		</div>
-		<!-- 开启积分抵扣使用 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">积分抵扣</span>
-			<onOff :key='1' :status="pointSwitch" @statusChange="openpointSwitch"></onOff>
-		</div>
-		<!-- 会员折扣与优惠券是否共享 -->
-		<!-- <div class="online-box clearfix">
-			<span class="online-sub fl" style="line-height:16px;">会员折扣与优惠券共享</span>
-			<onOff :key='1' :status="shareSwitch" @statusChange="openshareSwitch"></onOff>
-		</div> -->
-		<!-- 开启用餐人数-->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">开启用餐人数</span>
-			<onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff>
-		</div>
-		<!-- 用餐人数 -->
-		<div class="online-box clearfix" v-if='payMeals'>
-			<span class="online-sub required fl"></span>
-			<span class="discount">用餐</span>
-			<input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
-			<span class="discount">人</span>
-		</div>
-		<!-- 开启优惠规则 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">开启优惠规则</span>
-			<onOff :key='1' :status="preferentialSwitch" @statusChange="openpreferentialSwitch"></onOff>
-		</div>
-		<!-- 优惠规则 -->
-		<div class="online-box clearfix" v-if="preferentialSwitch">
-			<span class="online-sub fl"></span>
-			<section class="fl therules">
-				<section class="clearfix" v-if="configure.length <= 9">
-					<div class="rulebox">
-						<el-input type="text" placeholder="请输入规则" class="fl" v-model="content" maxlength="30"></el-input>
-						<!-- <el-input placeholder="请输入内容" v-model="shopName" class="input-with-select">
-    					<el-button slot="append" icon="el-icon-search" @click="searchShop"></el-button>
-  					</el-input> -->
-						<div class='bg' @click="saveConcont"></div>
-					</div>
-					<div class="fl handle-tips">
-						<i></i> 最多输入10条,每条限制30字符
-					</div>
-				</section>
-				<div class="rlues" v-for="(content,i) in configure" :key='i' v-if="configure.length >= 1">{{content}}
-					<i class="del" @click="delConcont(i)"></i>
-				</div>
-			</section>
-		</div>
+		</div> 
+        <div class="clear-box">
+            <!-- 开启会员支付-->
+            <div class="online-box2 clearfix">
+                <span class="online-sub fl">会员支付</span>
+                <onOff :key='1' :status="paySwitch" @statusChange="openpaySwitch"></onOff>
+            </div>
+            <!-- 开启优惠券使用 -->
+            <div class="online-box clearfix">
+                <span class="online-sub fl">优惠券使用</span>
+                <onOff :key='1' :status="couponSwitch" @statusChange="opencouponSwitch"></onOff>
+            </div>
+        </div>
+       
+
+        
+        <!-- 开启积分抵扣使用 -->
+        <div class="online-box2 clearfix">
+            <span class="online-sub fl">积分抵扣</span>
+            <onOff :key='1' :status="pointSwitch" @statusChange="openpointSwitch"></onOff>
+        </div>
+        <!-- 会员折扣与优惠券是否共享 -->
+        <!-- <div class="online-box clearfix">
+            <span class="online-sub fl" style="line-height:16px;">会员折扣与优惠券共享</span>
+            <onOff :key='1' :status="shareSwitch" @statusChange="openshareSwitch"></onOff>
+        </div> -->
+        <div style="position:relative;">
+                <div class="online-box clearfix">
+            <span class="online-sub fl">开启用餐人数</span>
+            <onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff>
+        </div>
+        <!-- 用餐人数 -->
+        <div class="online-box dinnerNum clearfix" v-if='payMeals'>
+            <span class="online-sub required fl"></span>
+            <span class="discount">用餐</span>
+            <input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
+            <span class="discount">人</span>
+        </div>
+        </div>
+        <!-- 开启用餐人数-->
+        
+        
+        <!-- 开启优惠规则 -->
+        <div class="online-box clearfix">
+            <span class="online-sub fl">开启优惠规则</span>
+            <onOff :key='1' :status="preferentialSwitch" @statusChange="openpreferentialSwitch"></onOff>
+        </div>
+        <!-- 优惠规则 -->
+        <div class="online-box clearfix" v-if="preferentialSwitch">
+            <span class="online-sub fl"></span>
+            <section class="fl therules">
+                <section class="clearfix" v-if="configure.length <= 9">
+                    <div class="rulebox">
+                        <el-input type="text" placeholder="请输入规则" class="fl el_input" v-model="content" maxlength="30"></el-input>
+                        <!-- <el-input placeholder="请输入内容" v-model="shopName" class="input-with-select">
+                        <el-button slot="append" icon="el-icon-search" @click="searchShop"></el-button>
+                    </el-input> -->
+                        <div class='bg' @click="saveConcont"></div>
+                    </div>
+                    <div class="fl handle-tips">
+                        <i></i> 最多输入10条,每条限制30字符
+                    </div>
+                </section>
+                <div class="rlues" v-for="(content,i) in configure" :key='i' v-if="configure.length >= 1">{{content}}
+                    <i class="del" @click="delConcont(i)"></i>
+                </div>
+            </section>
+        </div> 
+        <!-- ************************************************************************************** -->
+        
 		<!-- 绑定门店管理人员 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">绑定门店管理人员</span>
@@ -125,6 +138,7 @@
 				</div>
 			</section>
 		</div>
+
 		<div class="online-box clearfix">
 			<span class="online-sub fl">生成员工专属码</span>
 			<el-select v-model="value8" filterable placeholder="请选择" @change='addStaffScanPay'>
@@ -132,10 +146,11 @@
 				</el-option>
 			</el-select>
 		</div>
-		<com-table :listHeight='80' :showHand="false" :listName="'员工码'" :showTitle='2' :listWidth="672" :introData="taList" :titleData="titleList">
-			<div slot="con-1" slot-scope="props">
-				<a @click="downloadCode(props.data)" :download="props.data.staffName" :href="downloadUrls" class="alink_color">下载二维码</a>
+		<com-table style="width:800px;" :listHeight='80' :showHand="false" :listName="'员工码'" :showTitle='2' :introData="taList" :titleData="titleList">
+			<div slot="con-1" slot-scope="props" style="width:400px;">
+				<a @click="downloadCode(props.data)" download :href="downloadUrls" class="alink_color">下载二维码</a>
 				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,props.$index)" style="width: 32%;">删除</a>
+
 			</div>
 		</com-table>
 		<el-button type="primary" @click="addconfig">保存</el-button>
@@ -188,14 +203,14 @@
 						titleName: '姓名',
 						dataName: 'staffName',
 						titleStyle: {
-							width: '20%',
+							width: '400px',
 							flex: 'none'
 						}
 					},
 					{
 						titleName: '操作',
 						titleStyle: {
-							width: '20%',
+							width: '400px',
 							flex: 'none'
 						}
 					},
@@ -226,9 +241,9 @@
 					}
 				});
 			},
-			async downloadCode(item) { //下载二维码
+			downloadCode: function (item) { //下载二维码
 				let url = item.shortUrl;
-				this.downloadUrls = await this.qrcode.getQrBase64(url, {
+				this.downloadUrls = this.qrcode.getQrBase64(url, {
 					padding: 15,
 					width: 300,
 					height: 300,
@@ -576,6 +591,28 @@
 		margin-bottom: 29px;
 	}
 
+    #sweepCode .online-box2 { 
+        width:240px;
+        float: left;
+        height: auto;
+        margin-left:82px;
+        display: block;
+        font-size: 16px;
+        height: 40px;
+        line-height: 40px;
+        color: #333;
+        text-align: right;
+        margin-right: 14px;
+        
+	}
+     #sweepCode .online-box2>.fl{
+        margin-right: 14px;
+        font-size: 16px;
+        }
+
+    #sweepCode .online-box .el_input{
+            width: 218px
+    }
 	#sweepCode .online-box .businessHours {
 		float: left;
 		line-height: 42px;
@@ -606,6 +643,7 @@
 	#sweepCode .online-box .therules {
 		width: auto;
 		height: auto;
+        width: 234px;
 	}
 
 	#sweepCode .online-box .therules .rulebox {
@@ -631,7 +669,7 @@
 		height: 40px;
 		border-left: none;
 		position: absolute;
-		right: 0;
+		right: -60px;
 		border: 1px solid #dcdfe6;
 		border-radius: 4px;
 	}
@@ -681,16 +719,16 @@
 	}
 
 	#sweepCode .rlues {
-		width: 390px;
-		height: 36px;
-		border: 1px solid #dcdfe6;
-		text-align: center;
-		line-height: 36px;
-		position: relative;
-		font-size: 12px;
-		background-color: #fff;
-		margin-bottom: 25px;
-		border-radius: 4px;
+    width: 292px;
+    height: 40px;
+    border: 1px solid #dcdfe6;
+    text-align: center;
+    line-height: 40px;
+    position: relative;
+    font-size: 12px;
+    background-color: #fff;
+    margin-bottom: 25px;
+    border-radius: 4px;
 	}
 
 	#sweepCode .del {
@@ -719,10 +757,10 @@
 	}
 
 	#sweepCode .online-box .employees {
-		width: 120px;
+		width: 130px;
 		height: 40px;
 		line-height: 40px;
-	}
+	} 
 
 	#sweepCode .online-box .fans {
 		width: 100px;
@@ -736,9 +774,10 @@
 		border-radius: 4px;
 	}
 
-	#sweepCode .online-box .fans:hover {
+	/* #sweepCode .online-box .fans:hover {
 		border: 1px solid #e9c048;
-	}
+        background:url(../../../static/images/checkbg.jpg) top center no-repeat; 
+	} */
 
 	#sweepCode .online-box .fans img {
 		display: block;
@@ -747,7 +786,6 @@
 		border-radius: 30px;
 		margin: 16px auto;
 	}
-
 	#sweepCode .online-box .fans span {}
 
 	#sweepCode .fans:hover i {
@@ -795,5 +833,14 @@
 		position: relative;
 		top: 16px;
 		left: 2px;
-	}
+	} 
+    .dinnerNum{
+        width: 200px;
+        position: absolute;
+        left: 310px;
+    }
+    .dinnerNum .online-sub{
+        width: auto;
+    } 
+
 </style>
