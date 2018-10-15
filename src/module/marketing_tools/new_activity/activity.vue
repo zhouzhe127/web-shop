@@ -603,8 +603,9 @@
 		},
 		mounted() {
 			this.ischain = currentShop.ischain;
+			//console.log(this.ischain)
 			this.activityType = storage.session('activityType');
-			if (this.ischain != 1 || this.ischain != 2) {
+			if (this.ischain != 1 && this.ischain != 2) {
 				this.setTitle();
 			}
 			this.newgetActivityList();
