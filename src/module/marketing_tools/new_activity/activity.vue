@@ -84,7 +84,7 @@
 						<span v-else>会员</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" align="center" width="250">
+				<el-table-column label="操作" align="center" width="250" v-if="ischain == '0' || ischain== '3'">
 					<template slot-scope="scope">
 						<el-button v-if="flag==1" size="medium" type="text" @click="close(scope.row)" style="color: #E1BB4A;">关闭</el-button>
 						<span v-if="flag==1" style="padding:0 5px;color: #D2D2D2">|</span>
@@ -104,6 +104,15 @@
 						<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
 					</template> -->
 				</el-table-column>
+				<el-table-column label="操作" align="center" width="250" v-if="ischain == '1' || ischain== '2'">
+					<template slot-scope="scope">
+						<el-button v-if="flag==2" size="medium" type="text" @click="modfycoupons(scope.row,'2')" style="color: #E1BB4A;">查看详情</el-button>
+						<el-button v-else size="medium" type="text" style="color: #E1BB4A;">不可操作</el-button>
+					</template>
+					<!-- <template slot-scope="scope" v-else>
+						<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
+					</template> -->
+				</el-table-column>				
 			</el-table>
 		</div>
 		<!-- 活动列表 -->
@@ -227,7 +236,7 @@
 					'6': '满减活动',
 					'7': '领券活动'
 				},
-				count: ''
+				count: '',
 			};
 		},
 		computed: {
