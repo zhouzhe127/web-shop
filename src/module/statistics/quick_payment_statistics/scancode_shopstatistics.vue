@@ -281,7 +281,8 @@
 						showShopId: this.constructionsId,
 						codes: this.codes.join(','),
 						taskId: this.taskId,
-						showDay: ''
+						showDay: '',
+						isExport: 0
 					}
 				});
 				if (data) {
@@ -309,6 +310,24 @@
 				this.page = p;
 				this.setPage();
 			},
+			async codesExport() {
+				await http.exportgetScanPayOrderByCodes({
+					data: {
+						showShopId: this.constructionsId,
+						codes: this.codes.join(','),
+						taskId: this.taskId,
+						showDay: '',
+						isExport: 1
+					}
+				});
+			},
+			Exportcodes:function(){
+				if(this.codes && this.codes != ''){
+					this.codesExport();
+				}else{
+					this.Export();
+				}
+			}			
 		},
 		components: {
 			pageElement: () =>
@@ -350,7 +369,7 @@
 				name: '导出',
 				className: ['fd-blue'],
 				fn: () => {
-					this.Export();
+					this.Exportcodes();
 				}
 			}
 			]);

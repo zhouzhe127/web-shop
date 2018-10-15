@@ -240,6 +240,17 @@
 					});
 				}
 			},
+			async codesExport(codes) {
+				await http.exportgetScanPayOrderByCodes({
+					data: {
+						showShopId: this.constructionsId,
+						codes: codes.join(','),
+						taskId: this.taskId,
+						showDay: this.oneData,
+						isExport: 1
+					}
+				});
+			},
 			async Export() {
 				await http.exportScanPayData({
 					data: {
@@ -301,7 +312,8 @@
 						showShopId: this.constructionsId,
 						codes: codes.join(','),
 						taskId: this.taskId,
-						showDay: this.oneData
+						showDay: this.oneData,
+						isExport: 0
 					}
 				});
 				if (res && res != '') {
@@ -438,7 +450,11 @@
 				name: '导出',
 				className: ['fd-blue'],
 				fn: () => {
-					this.Export();
+					if (this.codes && this.codes != '') {
+						this.codesExport(this.codes);
+					}else{
+						this.Export();
+					}
 				}
 			}
 			]);
