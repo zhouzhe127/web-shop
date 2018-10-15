@@ -407,7 +407,7 @@
 					h = parseInt(s[1] / this.imgScale);
 				}
 				
-				if ((x + w) > parseFloat(imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(imgRang.left) + parseFloat(this.imgStyle.height) || x < parseFloat(imgRang.left) || y < parseFloat(imgRang.top)) {
+				if ((x + w) > parseFloat(imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(imgRang.top) + parseFloat(this.imgStyle.height) || x < parseFloat(imgRang.left) || y < parseFloat(imgRang.top)) {
 					this.editConfig[type].x = imgRang.left;
 					this.editConfig[type].y = imgRang.top;
 					this.$store.commit('setWin', {
