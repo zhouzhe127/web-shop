@@ -1,15 +1,15 @@
 /**
  * @Author: zhengu.jiang
  * @Date: 2018-08-13 11:04:36 
- * @Last Modified by: zhigang.li
- * @Last Modified time: 2018-10-12 16:43:26
+ * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-10-10 18:49:24
  * @Module: 品牌下选择门店下拉
  */
 
 <template>
 	<div id="elShop">
 		<el-popover placement="bottom" width="500" trigger="click" @show="show" v-model="visible" @hide="hide">
-			<span slot="reference" class="el-dropdown-link el-dropdown-selfdefine shopbox">
+			<el-button slot="reference" plain class="el-dropdown-link el-dropdown-selfdefine shopbox">
 				<span v-if="isSingle" style="color:#c0c4cc">
 					<i class="name">{{singleName | divide}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
@@ -18,7 +18,7 @@
 					<i class="name">{{title}}</i>
 					<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
-			</span>
+			</el-button>
 			<div @click.stop class="detDivBox elshop">
 				<i class="detI" style="left: 150px;"></i>
 				<div class="searchbox">
@@ -165,7 +165,6 @@ export default {
 				if (this.singleId.length > 0) {
 					for (let i = 0; i < this.allShop.length; i++) {
 						if (this.singleId.includes(this.allShop[i].id)) {
-							res[i].selected = true;
 							this.singleName = this.allShop[i].shopName;
 							break;
 						}
