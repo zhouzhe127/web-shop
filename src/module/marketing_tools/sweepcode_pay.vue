@@ -774,10 +774,10 @@
 		border-radius: 4px;
 	}
 
-	#sweepCode .online-box .fans:hover {
+	/* #sweepCode .online-box .fans:hover {
 		border: 1px solid #e9c048;
         background:url(../../../static/images/checkbg.jpg) top center no-repeat; 
-	}
+	} */
 
 	#sweepCode .online-box .fans img {
 		display: block;
