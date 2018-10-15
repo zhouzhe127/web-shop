@@ -228,7 +228,7 @@ function ajax(params) {
 		//如果请求时下载文件
 		if (type == 'file') {
 			xhr.responseType = 'blob';
-			store.commit('setWin',{content:'正在下载,请稍后!'});
+			store.commit('setWin',{content:'正在下载,请稍后!',timerPowerOff:3000});
 		}
 		!ajax.xDomain && xhr.setRequestHeader('Accept', accepts[type] || '/');
 

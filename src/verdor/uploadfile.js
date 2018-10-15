@@ -119,6 +119,7 @@ let uploadfile = {
 			let accData = (e) => {
 
 				let strArr = e.data && e.data.data && e.data.data.split('&');
+				
 				if (strArr && strArr.length > 1) {
 					//暂时不启用
 
@@ -132,6 +133,7 @@ let uploadfile = {
 						let itemArr = item.split('=');
 						obj[itemArr[0]] = itemArr[1];
 					}
+					
 					if (obj && obj.oid && this.Queue[obj.oid]) {
 						timer.clear(this.Queue[obj.oid].timerStr);
 						let backStr = decodeURIComponent(obj.encode);
