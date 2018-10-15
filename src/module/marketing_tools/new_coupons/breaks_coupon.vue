@@ -151,7 +151,7 @@
 				</div>
 			</div> -->
 
-				<el-date-picker class="fl" v-model="validType.valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :editable="false">
+				<el-date-picker class="fl" v-model="validType.valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :editable="false" :clearable="false">
 				</el-date-picker>
 				<div class="foday">
 					共{{getValidDay()}}天
