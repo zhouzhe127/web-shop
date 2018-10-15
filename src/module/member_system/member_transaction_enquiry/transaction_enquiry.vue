@@ -554,6 +554,7 @@ export default {
 		//每页显示多少条数据
 		handleSizeChange(p) {
 			this.num = p;
+			this.page = 1;
 			this.getCardConsumeList();
 		},
 		//页码跳转
