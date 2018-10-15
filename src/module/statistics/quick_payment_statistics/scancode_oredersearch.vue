@@ -129,6 +129,9 @@
 				<el-table-column label="支付宝支付总额" prop="aliPayPain" align="center">
 				</el-table-column>
 				<el-table-column label="收款码" prop="staffId" align="center">
+					<template slot-scope="scope">
+						<span>{{getStaffname(scope.row.staffId)}}</span>
+					</template>
 				</el-table-column>
 				<el-table-column prop="shopId" label="操作" align="center">
 					<template slot-scope="scope">
@@ -283,6 +286,7 @@
 			},
 			getStaffname: function(id) { //
 				let name = '--';
+				//console.log(JSON.stringify(this.allShop))
 				for (let item of this.allShop) {
 					if (item.staffId == id) {
 						name = item.staffName;
