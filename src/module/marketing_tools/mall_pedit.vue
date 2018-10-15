@@ -196,7 +196,7 @@
 				if (width < 750 && height < 750) {
 					w = width;
 					h = height;
-				} else if (width > height) {
+				} else if (width >= height) {
 					this.imgScale = width / 750;
 					h = height / this.imgScale;
 					w = 750;
@@ -215,7 +215,6 @@
 					top: (750 - h) / 2 + 'px',
 					left: (750 - w) / 2 + 'px'
 				};
-
 			},
 			async preFn(file) {
 
