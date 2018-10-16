@@ -18,130 +18,154 @@
 			<a :href="downloadUrl" class="fl add_btn qRcode" :download="shopName"> 下载门店二维码</a>
 			<img src="../../res/images/icon-refresh.png" class="upload" @click="updateShortUrl">
 		</div>
-		<!-- 门店折扣-->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">门店折扣</span>
-			<onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff>
-			<div class="fl handle-tips" style="margin-left: 20px;">
-				<i></i> 门店折扣与会员折扣不共享
+			<!-- 门店折扣-->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">门店折扣</span>
+				<onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff>
+				<div class="fl handle-tips" style="margin-left: 20px;">
+					<i></i> 门店折扣与会员折扣不共享
+				</div>
 			</div>
-		</div>
-		<!-- 门店折扣 -->
-		<div class="online-box clearfix" v-if='payDiscount'>
-			<span class="online-sub fl"></span>
-			<span class="discount">折扣率</span>
-			<input class="discountinp" type="text" v-model="discounts" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')">
-			<span class="discount">%</span>
-		</div>
-		<!-- 门店折扣 -->
-		<div class="online-box clearfix" v-if='payDiscount'>
-			<span class="online-sub fl"></span>
-			<div class="businessHours">
-				<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
-				<span>仅有会员享有门店折扣</span>
+			<!-- 门店折扣 -->
+			<div class="online-box clearfix" v-if='payDiscount'>
+				<span class="online-sub fl"></span>
+				<span class="discount">折扣率</span>
+				<input class="discountinp" type="text" v-model="discounts" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')">
+				<span class="discount">%</span>
 			</div>
-		</div>
-		<!-- 支付方式 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl required">支付方式</span>
-			<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'100px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
-			<div class="fl handle-tips">
-				<i></i> 使用时需在支付门店支付方式内开启微信或支付宝
+			<!-- 门店折扣 -->
+			<div class="online-box clearfix" v-if='payDiscount'>
+				<span class="online-sub fl"></span>
+				<div class="businessHours">
+					<div @click="selectBusinessHours" :class="{'active':isMember}"></div>
+					<span>仅有会员享有门店折扣</span>
+				</div>
 			</div>
-		</div>
-		<!-- 开启会员支付-->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">会员支付</span>
-			<onOff :key='1' :status="paySwitch" @statusChange="openpaySwitch"></onOff>
-		</div>
-		<!-- 开启优惠券使用 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">优惠券使用</span>
-			<onOff :key='1' :status="couponSwitch" @statusChange="opencouponSwitch"></onOff>
-		</div>
-		<!-- 开启积分抵扣使用 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">积分抵扣</span>
-			<onOff :key='1' :status="pointSwitch" @statusChange="openpointSwitch"></onOff>
-		</div>
-		<!-- 会员折扣与优惠券是否共享 -->
-		<!-- <div class="online-box clearfix">
-			<span class="online-sub fl" style="line-height:16px;">会员折扣与优惠券共享</span>
-			<onOff :key='1' :status="shareSwitch" @statusChange="openshareSwitch"></onOff>
-		</div> -->
-		<!-- 开启用餐人数-->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">开启用餐人数</span>
-			<onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff>
-		</div>
-		<!-- 用餐人数 -->
-		<div class="online-box clearfix" v-if='payMeals'>
-			<span class="online-sub required fl"></span>
-			<span class="discount">用餐</span>
-			<input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
-			<span class="discount">人</span>
-		</div>
-		<!-- 开启优惠规则 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">开启优惠规则</span>
-			<onOff :key='1' :status="preferentialSwitch" @statusChange="openpreferentialSwitch"></onOff>
-		</div>
-		<!-- 优惠规则 -->
-		<div class="online-box clearfix" v-if="preferentialSwitch">
-			<span class="online-sub fl"></span>
-			<section class="fl therules">
-				<section class="clearfix" v-if="configure.length <= 9">
-					<div class="rulebox">
-						<el-input type="text" placeholder="请输入规则" class="fl" v-model="content" maxlength="30"></el-input>
-						<!-- <el-input placeholder="请输入内容" v-model="shopName" class="input-with-select">
-    					<el-button slot="append" icon="el-icon-search" @click="searchShop"></el-button>
-  					</el-input> -->
-						<div class='bg' @click="saveConcont"></div>
-					</div>
-					<div class="fl handle-tips">
-						<i></i> 最多输入10条,每条限制30字符
+			<!-- **************************************************************** -->
+			<!-- 支付方式 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">支付方式</span>
+				<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'100px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
+				<div class="fl handle-tips">
+					<i></i> 使用时需在支付门店支付方式内开启微信或支付宝
+				</div>
+			</div>
+			<div class="clear-box">
+				<!-- 开启会员支付-->
+				<div class="online-box2 clearfix">
+					<span class="online-sub fl">会员支付</span>
+					<onOff :key='1' :status="paySwitch" @statusChange="openpaySwitch"></onOff>
+				</div>
+				<!-- 开启优惠券使用 -->
+				<div class="online-box clearfix">
+					<span class="online-sub fl">优惠券使用</span>
+					<onOff :key='1' :status="couponSwitch" @statusChange="opencouponSwitch"></onOff>
+				</div>
+			</div>
+			<!-- 开启积分抵扣使用 -->
+			<div class="online-box2 clearfix">
+				<span class="online-sub fl">积分抵扣</span>
+				<onOff :key='1' :status="pointSwitch" @statusChange="openpointSwitch"></onOff>
+			</div>
+			<!-- 会员折扣与优惠券是否共享 -->
+			<!-- <div class="online-box clearfix">
+            <span class="online-sub fl" style="line-height:16px;">会员折扣与优惠券共享</span>
+            <onOff :key='1' :status="shareSwitch" @statusChange="openshareSwitch"></onOff>
+        </div> -->
+			<div style="position:relative;">
+				<div class="online-box clearfix">
+					<span class="online-sub fl">开启用餐人数</span>
+					<onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff>
+				</div>
+				<!-- 用餐人数 -->
+				<div class="online-box dinnerNum clearfix" v-if='payMeals'>
+					<span class="online-sub required fl"></span>
+					<span class="discount">用餐</span>
+					<input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
+					<span class="discount">人</span>
+				</div>
+			</div>
+			<!-- 开启用餐人数-->
+			<!-- 开启优惠规则 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">开启优惠规则</span>
+				<onOff :key='1' :status="preferentialSwitch" @statusChange="openpreferentialSwitch"></onOff>
+			</div>
+			<!-- 优惠规则 -->
+			<div class="online-box clearfix" v-if="preferentialSwitch">
+				<span class="online-sub fl"></span>
+				<section class="fl therules">
+					<section class="clearfix" v-if="configure.length <= 9">
+						<div class="rulebox">
+							<el-input type="text" placeholder="请输入规则" class="fl el_input" v-model="content" maxlength="30"></el-input>
+							<!-- <el-input placeholder="请输入内容" v-model="shopName" class="input-with-select">
+                        <el-button slot="append" icon="el-icon-search" @click="searchShop"></el-button>
+                    </el-input> -->
+							<div class='bg' @click="saveConcont"></div>
+						</div>
+						<div class="fl handle-tips">
+							<i></i> 最多输入10条,每条限制30字符
+						</div>
+					</section>
+					<div class="rlues" v-for="(content,i) in configure" :key='i' v-if="configure.length >= 1">{{content}}
+						<i class="del" @click="delConcont(i)"></i>
 					</div>
 				</section>
-				<div class="rlues" v-for="(content,i) in configure" :key='i' v-if="configure.length >= 1">{{content}}
-					<i class="del" @click="delConcont(i)"></i>
-				</div>
-			</section>
-		</div>
-		<!-- 绑定门店管理人员 -->
-		<div class="online-box clearfix">
-			<span class="online-sub fl">绑定门店管理人员</span>
-			<a href="javascript:;" class="employees employeeColor" @click="chooseuser"> <img src="../../res/images/a-dd.png" alt="">
-				选择微信粉丝</a>
-		</div>
-		<!-- 绑定门店管理人员 -->
-		<div class="online-box clearfix" v-show="userSelect.length > 0">
-			<span class="online-sub fl"></span>
-			<section class="clearfix fl" style="width:639px;">
-				<div class="fans" v-for="(item,index) in userSelect" :key="index">
-					<img :src="item.imageUrl" />
-					<span>{{item.name}}</span>
-					<i @click="deluser(index)" class="delete"> <img src="../../res/images/yichu.png" alt=""> <span>移除</span>
-					</i>
-				</div>
-			</section>
-		</div>
-		<div class="online-box clearfix">
-			<span class="online-sub fl">生成员工专属码</span>
-			<el-select v-model="value8" filterable placeholder="请选择" @change='addStaffScanPay'>
-				<el-option v-for="item in restaurants" :key="item.value" :label="item.label" :value="item.value">
-				</el-option>
-			</el-select>
-		</div>
-		<com-table :listHeight='80' :showHand="false" :listName="'员工码'" :showTitle='2' :listWidth="672" :introData="taList" :titleData="titleList">
-			<div slot="con-1" slot-scope="props">
-				<a @click="downloadCode(props.data)" :download="props.data.staffName" :href="downloadUrls" class="alink_color">下载二维码</a>
-				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,props.$index)" style="width: 32%;">删除</a>
 			</div>
-		</com-table>
-		<el-button type="primary" @click="addconfig">保存</el-button>
-		<!-- 选择员工 -->
-		<select-user-win :selectedList="userSelect" @closeWin="closeUserWin" v-if="isShowSelector"></select-user-win>
-	</div>
+			<!-- ************************************************************************************** -->
+			<!-- 绑定门店管理人员 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">绑定门店管理人员</span>
+				<a href="javascript:;" class="employees employeeColor" @click="chooseuser"> <img src="../../res/images/a-dd.png" alt="">
+				选择微信粉丝</a>
+			</div>
+			<!-- 绑定门店管理人员 -->
+			<div class="online-box clearfix" v-show="userSelect.length > 0">
+				<span class="online-sub fl"></span>
+				<section class="clearfix fl" style="width:639px;">
+					<div class="fans" v-for="(item,index) in userSelect" :key="index">
+						<img :src="item.imageUrl" />
+						<span>{{item.name}}</span>
+						<i @click="deluser(index)" class="delete"> <img src="../../res/images/yichu.png" alt=""> <span>移除</span>
+					</i>
+					</div>
+				</section>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl">生成员工专属码</span>
+				<el-select v-model="value8" filterable placeholder="请选择" @change='addStaffScanPay'>
+					<el-option v-for="item in restaurants" :key="item.value" :label="item.label" :value="item.value">
+					</el-option>
+				</el-select>
+			</div>
+			<!-- <com-table style="width:800px;" :listHeight='80' :showHand="false" :listName="'员工码'" :showTitle='2' :introData="taList" :titleData="titleList">
+			<div slot="con-1" slot-scope="props" style="width:400px;">
+				<a @click="downloadCode(props.data)" download :href="downloadUrls" class="alink_color">下载二维码</a>
+				<a class="alink_color" href="javascript:void(0);" @click="del(props.data,props.$index)" style="width: 32%;">删除</a>
+
+			</div>
+		</com-table> -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl"></span>
+				<el-table :data="taList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}" style="width: 800px;">
+					<el-table-column fixed prop="staffName" label="姓名" align="center">
+					</el-table-column>
+					<el-table-column label="操作" align="center">
+						<template slot-scope="scope">
+							<a @click="downloadCode(scope.row)" style="color: #E1BB4A;" :download="scope.row.staffName" :href="downloadUrls" class="alink_color">下载二维码</a>
+							<span style="padding:0 5px;color: #D2D2D2">|</span>
+							<el-button size="medium" type="text" @click="del(scope.row,scope.$index)" style="color: #E1BB4A;">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl"></span>
+				<el-button type="primary" @click="addconfig" style="width:200px;">保存</el-button>
+			</div>
+			<!-- 选择员工 -->
+			<select-user-win :selectedList="userSelect" @closeWin="closeUserWin" v-if="isShowSelector"></select-user-win>
+		</div>
 </template>
 <script>
 	import http from 'src/manager/http';
@@ -188,14 +212,14 @@
 						titleName: '姓名',
 						dataName: 'staffName',
 						titleStyle: {
-							width: '20%',
+							width: '400px',
 							flex: 'none'
 						}
 					},
 					{
 						titleName: '操作',
 						titleStyle: {
-							width: '20%',
+							width: '400px',
 							flex: 'none'
 						}
 					},
@@ -379,7 +403,7 @@
 				}
 			},
 			async addStaffScanPay(userId) {
-				console.log(userId, 'id');
+				//console.log(userId, 'id');
 				let data = await http.addStaffScanPay({
 					data: {
 						staffId: userId
@@ -397,7 +421,7 @@
 					return item;
 
 				});
-				console.log(data, 'data');
+				//console.log(data, 'data');
 			},
 			async getUserList() { //获取下拉框中所有员工的列表
 				let res = await http.getUserList();
@@ -412,7 +436,7 @@
 				let data = await http.getScanPayInfo({
 					data: {}
 				});
-				console.log(data, 'data');
+				//console.log(data, 'data');
 				if (data) {
 					let staffList = Object.values(data.staffList);
 					this.getUserList();
@@ -576,6 +600,30 @@
 		margin-bottom: 29px;
 	}
 
+	#sweepCode .online-box2 {
+		width: 240px;
+		float: left;
+		height: auto;
+		margin-left: 82px;
+		display: block;
+		font-size: 16px;
+		height: 40px;
+		line-height: 40px;
+		color: #333;
+		text-align: right;
+		margin-right: 14px;
+
+	}
+
+	#sweepCode .online-box2>.fl {
+		margin-right: 14px;
+		font-size: 16px;
+	}
+
+	#sweepCode .online-box .el_input {
+		width: 218px
+	}
+
 	#sweepCode .online-box .businessHours {
 		float: left;
 		line-height: 42px;
@@ -606,6 +654,7 @@
 	#sweepCode .online-box .therules {
 		width: auto;
 		height: auto;
+		width: 234px;
 	}
 
 	#sweepCode .online-box .therules .rulebox {
@@ -631,7 +680,7 @@
 		height: 40px;
 		border-left: none;
 		position: absolute;
-		right: 0;
+		right: -60px;
 		border: 1px solid #dcdfe6;
 		border-radius: 4px;
 	}
@@ -681,11 +730,11 @@
 	}
 
 	#sweepCode .rlues {
-		width: 390px;
-		height: 36px;
+		width: 292px;
+		height: 40px;
 		border: 1px solid #dcdfe6;
 		text-align: center;
-		line-height: 36px;
+		line-height: 40px;
 		position: relative;
 		font-size: 12px;
 		background-color: #fff;
@@ -719,7 +768,7 @@
 	}
 
 	#sweepCode .online-box .employees {
-		width: 120px;
+		width: 130px;
 		height: 40px;
 		line-height: 40px;
 	}
@@ -736,9 +785,10 @@
 		border-radius: 4px;
 	}
 
-	#sweepCode .online-box .fans:hover {
+	/* #sweepCode .online-box .fans:hover {
 		border: 1px solid #e9c048;
-	}
+        background:url(../../../static/images/checkbg.jpg) top center no-repeat; 
+	} */
 
 	#sweepCode .online-box .fans img {
 		display: block;
@@ -795,5 +845,15 @@
 		position: relative;
 		top: 16px;
 		left: 2px;
+	}
+
+	.dinnerNum {
+		width: 200px;
+		position: absolute;
+		left: 310px;
+	}
+
+	.dinnerNum .online-sub {
+		width: auto;
 	}
 </style>
