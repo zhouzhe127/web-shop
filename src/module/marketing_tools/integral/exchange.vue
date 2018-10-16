@@ -89,7 +89,11 @@
 				</el-table-column>
 				<el-table-column prop="state" label="状态" width="100" align="center">
 				</el-table-column>
-				<el-table-column prop="code" label="券码" width="100" align="center">
+				<el-table-column label="券码" width="100" align="center">
+					<template slot-scope="scope">
+						<span v-if="scope.row.goodsType == '0'">--</span>
+						<span v-else>{{scope.row.code}}</span>
+					</template>
 				</el-table-column>
 				<el-table-column label="领取门店" width="150" align="center">
 					<template slot-scope="scope">
@@ -98,7 +102,8 @@
 				</el-table-column>
 				<el-table-column label="核销人" width="100" align="center">
 					<template slot-scope="scope">
-						<span>{{staffList[scope.row.updateUid]}}</span>
+						<span v-if="scope.row.goodsType == '0'">{{scope.row.mname}}</span>
+						<span v-else>{{getStaffname(scope.row.updateUid)}}</span>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -332,6 +337,18 @@ export default {
 				page: this.pages
 			});
 		},
+		getStaffname:function(id){
+			let staffname = '--';
+			if(this.staffList && this.staffList != ''){
+				for(let key in this.staffList){
+					if(key == id){
+						staffname = this.staffList[key];
+						break;
+					}
+				}
+			}
+			return staffname;
+		}
 	},
 	components: {
 		page: () =>
