@@ -11,6 +11,8 @@
         changeNum:true表示切换单位时需要改变单位的字段
         operationType:跳转到总日志需要查询的总日志类型
         description:title属性的一个描述
+        toFixed-3:该字段需要保留三位小数的字段
+        toFixed-2:该字段需要保留两位小数的字段
 */
 
 module.exports = [
@@ -27,18 +29,21 @@ module.exports = [
 //     "title": "t-1",
 //     "changeNum": false,
 // },
- {
+    {
     "id": 2,
     "name": "期初数量",
     "title": "t-2",
     "changeNum": true,
     "attr": "startNum",
+    "toFixed-3":true,
 }, {
     "id": 3,
     "name": "结存数量",
     "title": "t-3",
     "changeNum": true,
     "attr":"endNum",
+    "toFixed-3":true,
+    
 }, {
     "id": 4,
     "name": "入库量",
@@ -46,6 +51,8 @@ module.exports = [
     "changeNum": true,
     "operationType":2,
     "attr":"MATERIAL_STOCKING_NUM",
+    "toFixed-3":true,
+    
 }, {
     "id": 5,
     "name": "入库成本总额",
@@ -53,6 +60,8 @@ module.exports = [
     "changeNum": false,
     "operationType":2,    
     "attr":"MATERIAL_STOCKING_COST",
+    "toFixed-2":true,
+    
 }, {
     "id": 6,
     "name": "入库均价",
@@ -60,6 +69,8 @@ module.exports = [
     "changeNum": false,
     "description":"入库成本总额/入库量",
     "attr":"MATERIAL_STOCKING_PRICE",
+    "toFixed-2":true,
+    
 }, {
     "id": 7,
     "name": "加工入库数量",
@@ -67,6 +78,8 @@ module.exports = [
     "changeNum": true,
     "operationType":13,    
     "attr":"MATERIAL_MACHINING_PRODUCE_NUM",    
+    "toFixed-3":true,
+    
 }, {
     "id": 8,
     "name": "加工入库成本总额",
@@ -74,13 +87,17 @@ module.exports = [
     "changeNum": false,
     "operationType":13,        
     "attr":"MATERIAL_MACHINING_PRODUCE_COST",        
+    "toFixed-2":true,
+    
 }, {
     "id": 9,
     "name": "加工入库成本均价",
     "title": "t-9",
     "changeNum": false,
     "description":"加工入库成本总额/加工入库数量" ,
-    "attr":"MATERIAL_MACHINING_PRODUCE_PRICE"   
+    "attr":"MATERIAL_MACHINING_PRODUCE_PRICE",
+    "toFixed-2":true,
+    
 }, {
     "id": 10,
     "name": "调入数量",
@@ -88,6 +105,8 @@ module.exports = [
     "changeNum": true,
     "attr":"MATERIAL_TRANSFER_IN_NUM",        
     "operationType":7,    
+    "toFixed-3":true,
+    
 }, {
     "id": 11,
     "name": "调入成本总额",
@@ -95,13 +114,17 @@ module.exports = [
     "changeNum": false,
     "attr":"MATERIAL_TRANSFER_IN_COST",            
     "operationType":7,        
+    "toFixed-2":true,
+    
 }, {
     "id": 12,
     "name": "调入成本均价",
     "title": "t-12",
     "changeNum": false,
     "description":"调入成本总额/调入数量" ,
-    "attr":"MATERIAL_TRANSFER_IN_PRICE"      
+    "attr":"MATERIAL_TRANSFER_IN_PRICE",      
+    "toFixed-2":true,
+    
 }, {
     "id": 13,
     "name": "调出数量",
@@ -109,6 +132,7 @@ module.exports = [
     "changeNum": true,
     "operationType":6,    
     "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_NUM",            
+    "toFixed-3":true,
     
 }, {
     "id": 14,
@@ -117,13 +141,17 @@ module.exports = [
     "changeNum": false,
     "operationType":6,        
     "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_COST",                
+    "toFixed-2":true,
+    
 }, {
     "id": 15,
     "name": "调出成本均价",
     "title": "t-15",
     "description":"调出成本总额 / 调出数量",
     "changeNum": false,
-    "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_PRICE"      
+    "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_PRICE",      
+    "toFixed-2":true,
+    
     
 }, {
     "id": 16,
@@ -132,27 +160,36 @@ module.exports = [
     "changeNum": false,
     "operationType":6,            
     "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_COST2",        
+    "toFixed-2":true,
+    
 }, {
     "id": 17,
     "name": "调出分销均价",
     "title": "t-17",
     "description":"调出分销总额 / 调出数量",
     "changeNum": false,
-    "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_PRICE2"
+    "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_PRICE2",
+    "toFixed-2":true,
+    
+
 }, {
     "id": 18,
     "name": "调出分销利润",
     "title": "t-18",
     "description":"调出分销总额 - 调出成本总额",    
     "changeNum": false,
-    "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_PROFIT"
+    "attr":"INVENTORY_MATERIAL_TRANSFER_OUT_PROFIT",
+    "toFixed-2":true,
+    
 }, {
     "id": 19,
     "name": "加工消耗",
     "title": "t-19",
     "changeNum": true,
     "operationType":14, 
-    "attr":"MATERIAL_MACHINING_CONSUME_NUM"       
+    "attr":"MATERIAL_MACHINING_CONSUME_NUM",
+    "toFixed-3":true,
+    
     
 }, {
     "id": 20,
@@ -160,7 +197,8 @@ module.exports = [
     "title": "t-20",
     "changeNum": false,
     "operationType":14,            
-    "attr":"MATERIAL_MACHINING_CONSUME_COST"       
+    "attr":"MATERIAL_MACHINING_CONSUME_COST",       
+    "toFixed-2":true,
     
 }, {
     "id": 21,
@@ -168,7 +206,9 @@ module.exports = [
     "title": "t-21",
     "changeNum": false,
     "description":"加工消耗成本总额/加工消耗",
-    "attr":"MATERIAL_MACHINING_CONSUME_PRICE"
+    "attr":"MATERIAL_MACHINING_CONSUME_PRICE",
+    "toFixed-2":true,
+    
 }, {
     "id": 22,
     "name": "耗损总量",
@@ -177,6 +217,8 @@ module.exports = [
     "operationType":3,  
     "desctiption":"",
     "attr":"INVENTORY_MATERIAL_LOSS_NUM",    
+    "toFixed-3":true,
+    
 }, {
     "id": 23,
     "name": "耗损成本总额",
@@ -184,6 +226,8 @@ module.exports = [
     "changeNum": false,
     "operationType":3,   
     "attr":"INVENTORY_MATERIAL_LOSS_COST",        
+    "toFixed-2":true,
+    
 }, {
     "id": 24,
     "name": "盘亏数量",
@@ -191,6 +235,8 @@ module.exports = [
     "changeNum": true,
     "operationType":[19,1],  
     "attr":"MATERIAL_CHECK_INVENTORY_LOSSES_NUM",        
+    "toFixed-3":true,
+    
 }, {
     "id": 25,
     "name": "盘亏总金额",
@@ -198,6 +244,8 @@ module.exports = [
     "changeNum": false,
     "operationType":[19,1],  
     "attr":"MATERIAL_CHECK_INVENTORY_LOSSES_COST",            
+    "toFixed-2":true,
+    
 }, {
     "id": 26,
     "name": "盘盈数量",
@@ -205,6 +253,8 @@ module.exports = [
     "changeNum": true,
     "operationType":[19,1],   
     "attr":"MATERIAL_CHECK_INVENTORY_PROFIT_NUM",                
+    "toFixed-3":true,
+    
     
 }, {
     "id": 27,
@@ -213,6 +263,7 @@ module.exports = [
     "changeNum": false,
     "operationType":[19,1],    
     "attr":"MATERIAL_CHECK_INVENTORY_PROFIT_COST",                    
+    "toFixed-2":true,
     
 }, {
     "id": 28,
@@ -220,41 +271,52 @@ module.exports = [
     "title": "t-28",
     "changeNum": true,
     "operationType":8,   
-    "attr":"MATERIAL_RECEIVE_NUM"         
+    "attr":"MATERIAL_RECEIVE_NUM",         
+    "toFixed-3":true,
+    
 }, {
     "id": 29,
     "name": "领料总金额",
     "title": "t-29",
     "changeNum": false,
     "operationType":8,            
-    "attr":"MATERIAL_RECEIVE_COST"         
+    "attr":"MATERIAL_RECEIVE_COST",
+    "toFixed-2":true,
+    
     
 }, {
     "id": 30,
     "name": "领料消耗",
     "title": "t-30",
     "changeNum": true,
-    "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_NUM"             
+    "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_NUM",
+    "toFixed-3":true,
+    
 }, {
     "id": 31,
     "name": "领料消耗总金额",
     "title": "t-31",
     "changeNum": false,
-    "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_COST"                 
+    "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_COST",
+    "toFixed-2":true,
+    
 }, {
     "id": 32,
     "name": "领料回库",
     "title": "t-32",
     "changeNum": true,
     "operationType":9,            
-    "attr":"MATERIAL_RECEIVE_CHECK_RETURN_NUM"                 
+    "attr":"MATERIAL_RECEIVE_CHECK_RETURN_NUM",                 
+    "toFixed-3":true,
+    
 }, {
     "id": 33,
     "name": "领料回库总金额",
     "title": "t-33",
     "changeNum": false,
     "operationType":9,            
-    "attr":"MATERIAL_RECEIVE_CHECK_RETURN_COST"                 
+    "attr":"MATERIAL_RECEIVE_CHECK_RETURN_COST",                 
+    "toFixed-2":true,
     
 }, {
     "id": 34,
@@ -262,7 +324,9 @@ module.exports = [
     "title": "t-34",
     "changeNum": true,
     "description":"领料数量 - 领料消耗数量 - 领料回库数量",    
-    "attr":"MATERIAL_RECEIVE_REST",                 
+    "attr":"MATERIAL_RECEIVE_REST", 
+    "toFixed-3":true,
+    
 }, {
     "id": 35,
     "name": "领料剩余总金额",
@@ -270,6 +334,8 @@ module.exports = [
     "changeNum": false,
     "description":"领料总金额 - 领料消耗总金额 - 领料回库总金额",
     "attr":"MATERIAL_RECEIVE_REST_COST",        
+    "toFixed-2":true,
+    
 }, {
     "id": 36,
     "name": "BOM单消耗毛料",
@@ -277,6 +343,7 @@ module.exports = [
     "changeNum": true,
     "operationType":5,   
     "attr":"MATERIAL_BOM_CONSUME_WOOL_NUM",         
+    "toFixed-3":true,
     
 }, {
     "id": 37,
@@ -285,6 +352,8 @@ module.exports = [
     "changeNum": false,
     "operationType":5,            
     "attr":"MATERIAL_BOM_CONSUME_WOOL_COST",         
+    "toFixed-2":true,
+    
     
 }, {
     "id": 38,
@@ -293,6 +362,8 @@ module.exports = [
     "changeNum": true,
     "operationType":5,            
     "attr":"MATERIAL_BOM_CONSUME_NET_NUM",         
+    "toFixed-3":true,
+    
     
 }, {
     "id": 39,
@@ -301,6 +372,7 @@ module.exports = [
     "changeNum": false,
     "operationType":5,            
     "attr":"MATERIAL_BOM_CONSUME_NET_COST",         
+    "toFixed-2":true,
     
 }, {
     "id": 40,
@@ -309,6 +381,7 @@ module.exports = [
     "changeNum": true,
     "operationType":5,            
     "attr":"MATERIAL_BOM_CONSUME_WASTAGE_NUM",         
+    "toFixed-3":true,
     
 }, {
     "id": 41,
@@ -317,6 +390,7 @@ module.exports = [
     "changeNum": false,
     "operationType":5,            
     "attr":"MATERIAL_BOM_CONSUME_WASTAGE_COST",         
+    "toFixed-2":true,
     
 },{
     "id": 42,
