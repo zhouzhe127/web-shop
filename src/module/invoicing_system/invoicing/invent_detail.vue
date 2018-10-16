@@ -461,6 +461,9 @@
 			// 	this.tabactive = index;
 			// },
 			getTime(time) {
+				if (time == 0||!time) {
+					return '--';
+				}
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
 			},
 			handBtn() {
