@@ -4,440 +4,418 @@ import {
 	b
 } from 'src/config/host_var';
 
-
 export default {
 	//---------------------统计管理------------------
-	'statisticsBusiness': {
+	statisticsBusiness: {
 		url: b + 'Business/getBusinessData', //营业统计
 		method: 'post'
 	},
-	'statisticsBrandBusiness': {
+	statisticsBrandBusiness: {
 		url: b + 'Business/getBrandBusinessData', //营业统计-品牌
 		method: 'post'
 	},
-	'createBusinessTask': {
+	createBusinessTask: {
 		url: b + 'Business/createBusinessTask', //营业统计-品牌
 		method: 'post'
 	},
-	'orderBillDelite': {
-		url: s + 'Orderstatistics/billDelite', //订单详情
+	orderBillDelite: {
+		url: s + 'Orderstatistics/billDelite' //订单详情
 	},
-	'billDelite': {
+	billDelite: {
 		url: s + 'Orderstatistics/billDelite', //堂吃订单详情
 		method: 'get'
 	},
-	'more': {
+	more: {
 		url: s + 'Orderstatistics/more', //堂吃多天
 		method: 'get'
 	},
-	'printMore': {
+	printMore: {
 		url: s + 'Orderstatistics/printMore', //堂吃多天数据打印
 		method: 'get'
 	},
-	'oneDayOrderData': {
+	oneDayOrderData: {
 		url: s + 'Orderstatistics/one', //堂吃单天
 		method: 'get'
 	},
-	'getCondition': {
+	oneDayOrderDataNew: {
+		url: s + 'Orderstatistics/getOneData', //堂吃单天--带交接班，为区别于pos
+		method: 'get'
+	},
+	getCondition: {
 		url: s + 'orderstatistics/getCondition', //区域
 		method: 'get'
 	},
-	'printOrderDetail': {
-		url: s + 'Statistics/printOrderDetail', //堂吃订单详情打印
-		method: 'get'
-	},
-	'OrderReport': {
-		url: s + 'Report/OrderReport', //堂吃获取taskId
-		method: 'get'
-	},
-	'reportGet': {
+	reportGet: {
 		url: s + 'Report/get', //堂吃获取店铺
 		method: 'get'
 	},
-	'exportReport': {
+	exportReport: {
 		url: s + 'Report/exportReport', //堂吃品牌导出
 		type: 'file'
 	},
-	'getOrderOneDayStat': {
+	getOrderOneDayStat: {
 		url: b + 'takeout/getOrderOneDayStat', //外卖单天数据
 		method: 'get'
 	},
-	'getOrderManyDaysStat': {
+	getOrderManyDaysStat: {
 		url: b + 'takeout/getOrderManyDaysStat', //外卖多天数据
 		method: 'get'
 	},
-	'getOrderDetail': {
+	getOrderDetail: {
 		url: b + 'takeout/getOrderDetail', //外卖订单详情
 		method: 'get'
 	},
-	'printOrderStat': {
+	printOrderStat: {
 		url: b + 'takeout/printOrderStat', //外卖订单打印
 		method: 'get'
 	},
-	'takeoutPrintOrderDetail': {
+	takeoutPrintOrderDetail: {
 		url: b + 'takeout/printOrderDetail', //外卖详情打印
 		method: 'get'
 	},
-	'getOrderManyShopsStat': {
+	getOrderManyShopsStat: {
 		url: b + 'Takeout/getOrderManyShopsStat', //外卖获取taskId
 		method: 'post'
 	},
 
-	'exportManyShopsOrderStat': {
+	exportManyShopsOrderStat: {
 		url: b + 'Takeout/exportManyShopsOrderStat', //外卖品牌导出
 		type: 'file'
 	},
 
-	'exportOrderStat': {
+	exportOrderStat: {
 		url: b + 'Takeout/exportOrderStat', //外卖导出
 		type: 'file'
 	},
-	'goodssalesMore': {
+	goodssalesMore: {
 		url: b + 'Goodssales/more', //分类统计全部
 		method: 'get'
 	},
-	'categorystatisticsMore': {
+	categorystatisticsMore: {
 		url: s + 'Categorystatistics/more', //分类统计堂吃
 		method: 'post'
 	},
-	'goodssalesTakeoutList': {
+	goodssalesTakeoutList: {
 		url: b + 'Goodssales/takeoutList', //分类统计外卖
 		method: 'get'
 	},
-	'goodssalesExportMore': {
+	goodssalesExportMore: {
 		url: b + 'Goodssales/exportMore', //分类统计全部导出
 		type: 'file'
 	},
-	'categorystatisticsExport': {
+	categorystatisticsExport: {
 		url: s + 'Categorystatistics/export', //分类统计堂吃导出
 		type: 'file',
 		method: 'post'
 	},
-	'goodssalesExportTakeout': {
+	goodssalesExportTakeout: {
 		url: b + 'Goodssales/exportTakeout', //分类统计外卖导出
-		type: 'file',
+		type: 'file'
 	},
-	'goodssalesPrintDataMore': {
+	goodssalesPrintDataMore: {
 		url: b + 'Goodssales/printDataMore', //分类统计全部打印
 		method: 'get'
 	},
-	'categorystatisticsPrintData': {
+	categorystatisticsPrintData: {
 		url: s + 'Categorystatistics/printData', //分类统计堂吃打印
 		method: 'post'
 	},
-	'goodssalesPrintTakeoutData': {
+	goodssalesPrintTakeoutData: {
 		url: b + 'Goodssales/printTakeoutData', //分类统计外卖打印
 		method: 'get'
 	},
-	'getDelOrder': {
-		url: s + 'wastestatistics/getDelOrder', //废单统计
+	getDelOrder: {
+		url: s + 'wastestatistics/getDelOrder' //废单统计
 	},
-	'exportDelOrder': {
+	exportDelOrder: {
 		url: s + 'Wastestatistics/exportDelOrder', //废单导出
 		type: 'file'
 	},
-	'deleteBillDelite': {
-		url: s + 'wastestatistics/billDelite', //废单详情
+	deleteBillDelite: {
+		url: s + 'wastestatistics/billDelite' //废单详情
 	},
-	// 'getOrderBillList': {
-	//     url: s + 'Order/getOrderBillList', // 按日期获取'挂账统计'列表
+	// "getOrderBillList": {
+	//     url: s + "Order/getOrderBillList", // 按日期获取"挂账统计"列表
 	// },
-	'billstatisticsGetList': {
-		url: s + 'billstatistics/getList', // 获取'挂账统计'列表
+	billstatisticsGetList: {
+		url: s + 'billstatistics/getList' // 获取"挂账统计"列表
 	},
-	'billGetBillNames': {
+	billGetBillNames: {
 		url: s + 'Bill/getBillNames', // 获取挂账账户列表
 		method: 'get'
 	},
-	// 'exportBill': {
-	//     url: s + 'Order/exportBill', // '挂账统计' 导出
+	// "exportBill": {
+	//     url: s + "Order/exportBill", // "挂账统计" 导出
 	//     type: 'file'
 	// },
-	'getRechargeStatistics': {
-		url: w + 'MemberConsume/getRechargeStatistics', // '会员充值统计' 获取列表
+	getRechargeStatistics: {
+		url: w + 'MemberConsume/getRechargeStatistics' // "会员充值统计" 获取列表
 	},
-	'exportRechargeStatistics': {
-		url: w + 'MemberConsume/getRechargeStatistics', // '会员充值统计' 导出
+	exportRechargeStatistics: {
+		url: w + 'MemberConsume/getRechargeStatistics', // "会员充值统计" 导出
 		type: 'file'
 	},
-	'getChangeShiftsList': {
-		url: s + 'Shiftsstatistics/getShiftsList', // 获取'交接班'的数据列表
+	getChangeShiftsList: {
+		url: s + 'Shiftsstatistics/getShiftsList', // 获取"交接班"的数据列表
 		method: 'get'
 	},
-	'getShiftsDetail': {
-		url: s + 'Shiftsstatistics/getShiftsDetail', // 获取'交接班'详情
+	getShiftsDetail: {
+		url: s + 'Shiftsstatistics/getShiftsDetail', // 获取"交接班"详情
 		method: 'get'
 	},
-	'updateDifferPrice': {
+	updateDifferPrice: {
 		url: s + 'Shiftsstatistics/updateDifferPrice', //差额调整
 		method: 'post'
 	},
-	// 'getBillDelite': {
-	//     url: s + 'Order/billDelite', // 根据订单号获取挂账的订单详情
-	//     method: 'post'
+	// "getBillDelite": {
+	//     url: s + "Order/billDelite", // 根据订单号获取挂账的订单详情
+	//     method: "post"
 	// },
-	// 'printOrderDetail': {
-	// 	url: s + 'Statistics/printOrderDetail', //定单详情-打印
-	// },
-	// 'OrderReport': {
-	// 	url: s + 'Report/OrderReport', //订单报表创建任务
-	// },
-	'ReportGet': {
-		url: s + 'Report/get', //获取任务数据
+	printOrderDetail: {
+		url: s + 'Statistics/printOrderDetail' //定单详情-打印
 	},
-	'moreDelOrder': {
-		url: s + 'Wastestatistics/moreDelOrder', //废单统计---多天废单统计
+	OrderReport: {
+		url: s + 'Report/OrderReport' //订单报表创建任务
 	},
-	'moreReturnByName': {
-		url: s + 'Wastestatistics/moreReturnByName', //多商品退菜列表
+	ReportGet: {
+		url: s + 'Report/get' //获取任务数据
 	},
-	'getReturnList': {
-		url: s + 'wastestatistics/getReturnList', //退菜列表
+	moreDelOrder: {
+		url: s + 'Wastestatistics/moreDelOrder' //废单统计---多天废单统计
 	},
-	'getReturnDetail': {
-		url: s + 'wastestatistics/getReturnDetail', //退菜详情
+	moreReturnByName: {
+		url: s + 'Wastestatistics/moreReturnByName' //多商品退菜列表
 	},
-	'moreReturn': {
-		url: s + 'Wastestatistics/moreReturn', //退品统计---多天退品统计
+	getReturnList: {
+		url: s + 'wastestatistics/getReturnList' //退菜列表
 	},
-	'exportMoreReturnByName': {
+	getReturnDetail: {
+		url: s + 'wastestatistics/getReturnDetail' //退菜详情
+	},
+	moreReturn: {
+		url: s + 'Wastestatistics/moreReturn' //退品统计---多天退品统计
+	},
+	exportMoreReturnByName: {
 		url: s + 'Wastestatistics/exportMoreReturnByName', //导出多商品退菜数据
 		type: 'file'
 	},
-	'exportReturnList': {
+	exportReturnList: {
 		url: s + 'Wastestatistics/exportReturnList', //导出退菜商品具体订单
 		type: 'file'
 	},
-	'moreFreeByName': {
-		url: s + 'Wastestatistics/moreFreeByName', //赠品统计---多商品赠品列表
+	moreFreeByName: {
+		url: s + 'Wastestatistics/moreFreeByName' //赠品统计---多商品赠品列表
 	},
-	'getFreeList': {
-		url: s + 'wastestatistics/getFreeList', //赠品列表
+	getFreeList: {
+		url: s + 'wastestatistics/getFreeList' //赠品列表
 	},
-	'getFreeDetail': {
-		url: s + 'wastestatistics/getFreeDetail', //赠品详情
+	getFreeDetail: {
+		url: s + 'wastestatistics/getFreeDetail' //赠品详情
 	},
-	'moreFree': {
-		url: s + 'Wastestatistics/moreFree', //多天赠品统计
+	moreFree: {
+		url: s + 'Wastestatistics/moreFree' //多天赠品统计
 	},
-	'exportMoreFreeByName': {
+	exportMoreFreeByName: {
 		url: s + 'Wastestatistics/exportMoreFreeByName', //导出多商品赠品数据
 		type: 'file'
 	},
-	'exportFreeList': {
+	exportFreeList: {
 		url: s + 'Wastestatistics/exportFreeList', //导出赠菜商品具体订单
 		type: 'file'
 	},
-	'getReserveList': {
+	getReserveList: {
 		url: s + 'Reserve/getReserveList', //预定统计列表
 		method: 'post'
 	},
-	'getReserveDetail': {
+	getReserveDetail: {
 		url: s + 'Reserve/getReserveDetail', //预定统计详情
 		method: 'post'
 	},
-	'GetGoodsListBySeasonal': {
+	GetGoodsListBySeasonal: {
 		url: s + 'Goods/GetGoodsListBySeasonal', //改价记录
 		method: 'get'
 	},
-	'getLogByPrice': {
+	getLogByPrice: {
 		url: s + 'Log/getLogByPrice', //改价记录详情
 		method: 'get'
 	},
-	'getStatisticsData': {
+	getStatisticsData: {
 		url: s + 'Customstatistics/getStatisticsData', //自定义商品统计
 		method: 'get'
 	},
-	'OrderstatisticsBillDelite': {
+	OrderstatisticsBillDelite: {
 		url: s + 'Orderstatistics/billDelite', //自定义商品统计详情
 		method: 'get'
 	},
-	'exportCustomStatistics': {
+	exportCustomStatistics: {
 		url: s + 'Customstatistics/exportCustomStatistics', //自定义商品导出
 		type: 'file'
 	},
-	'cardTypeGetList': {
+	cardTypeGetList: {
 		url: w + 'Cardtype/getList', //获取实体卡类型
 		method: 'get'
 	},
-	'getCardRelationList': {
+	getCardRelationList: {
 		url: w + 'Card/getCardRelationList', //获取卡关联配置列表
 		method: 'get'
 	},
-	'getCardStatistics': {
+	getCardStatistics: {
 		url: w + 'Membercard/getCardStatistics', //获取实体卡列表
 		method: 'get'
 	},
-	'activityStatisticsGetDetail': {
+	activityStatisticsGetDetail: {
 		url: w + 'activityStatistics/getDetail', //获取活动详情
 		method: 'get'
 	},
-	'obtainPay': {
+	obtainPay: {
 		url: s + 'Querybill/obtainPay',
 		method: 'post'
 	},
-	'exportExcel': {
+	exportExcel: {
 		url: s + 'Querybill/exportExcel',
-		type: 'file',
+		type: 'file'
 	},
-	'goodssalesGetItemList': {
+	goodssalesGetItemList: {
 		url: b + 'Goodssales/getItemList', //单品统计
 		method: 'post'
 	},
-	'goodssalesExportStat': {
+	goodssalesExportStat: {
 		url: b + 'Goodssales/exportStat', //单品统计-导出-创建报表任务
 		method: 'post'
 	},
-	'goodssalesGetFileUrl': {
+	goodssalesGetFileUrl: {
 		url: b + 'Goodssales/getFileUrl', //单品统计-导出-获取下载文件路径
-		method: 'post',
+		method: 'post'
 	},
-	'GoodssalesGetCateSales': {
+	GoodssalesGetCateSales: {
 		url: b + 'Goodssales/getCateSales', //零售店分类统计
 		method: 'get'
 	},
-	'GoodssalesCateSalesExport': {
+	GoodssalesCateSalesExport: {
 		url: b + 'Goodssales/cateSalesExport', //零售分类统计导出
 		type: 'file'
 	},
-	'scanPayQuery': {
+	scanPayQuery: {
 		url: w + 'Reportstatistics/scanPayQuery', //查询
-		method: 'post'
+		method: 'get'
 	},
-	'getScanTaskStatus': {
+	getScanTaskStatus: {
 		url: w + 'Reportstatistics/getTaskStatus', //查询
 		method: 'get'
 	},
-	'getScanPayData': {
+	getScanPayData: {
 		url: w + 'Reportstatistics/getScanPayData', //获取数据
 		method: 'get'
 	},
-	'exportScanPayData': {
+	exportScanPayData: {
 		url: w + 'Reportstatistics/getScanPayData', //导出获取数据
 		type: 'file'
 	},
-	'scanPayOrderDetail': {
+	scanPayOrderDetail: {
 		url: w + 'Reportstatistics/scanPayOrderDetail', //获取数据
 		method: 'get'
 	},
-	'getReverseList': {
+	getReverseList: {
 		url: s + 'reverseStatistics/getReverseList', //获取反结账列表
 		method: 'get'
 	},
-	'getReverseByOid': {
+	getReverseByOid: {
 		url: s + 'reverseStatistics/getReverseByOid', //单个反结账次数列表
 		method: 'get'
 	},
-	'getReverseDetail': {
+	getReverseDetail: {
 		url: s + 'reverseStatistics/getReverseDetail', //单个反结账次数列表
 		method: 'get'
 	},
-	'takeoutOrderQuery': {
+	takeoutOrderQuery: {
 		url: w + 'Reportstatistics/takeoutOrderQuery', //自营外卖查询
-		method: 'post'
+		method: 'get'
 	},
-	'getTakeoutData': {
+	getTakeoutData: {
 		url: w + 'Reportstatistics/getTakeoutData', //自营外卖获取数据
 		method: 'get'
 	},
-	'getTakeoutOrderDetail': {
+	getTakeoutOrderDetail: {
 		url: w + 'Reportstatistics/getTakeoutOrderDetail', //自营外卖获取订单详情
 		method: 'get'
 	},
-	'getOrderByMobileOrOid': {
+	getOrderByMobileOrOid: {
 		url: w + 'Reportstatistics/getOrderByMobileOrOid', //自营外卖手机号查询订单
 		method: 'get'
 	},
-	'rechargeQuery': {
+	rechargeQuery: {
 		url: w + 'Reportstatistics/rechargeQuery', //会员充值统计
-		method: 'post'
+		method: 'get'
 	},
-	'getRechargeData': {
+	getRechargeData: {
 		url: w + 'Reportstatistics/getRechargeData', //会员充值统计获取数据
 		method: 'get'
 	},
-	'exportRechargeData': {
+	exportRechargeData: {
 		url: w + 'Reportstatistics/getRechargeData', //会员充值统计获取数据
 		type: 'file'
 	},
-	'getGoodsInvenStatList': {
+	getGoodsInvenStatList: {
 		url: b + 'Goodsinventory/getGoodsInvenStatList', //单品库存统计(店铺)
 		method: 'get'
 	},
-	'getInventoryStat': {
+	getInventoryStat: {
 		url: b + 'Invoicingstat/getInventoryStat', //单品库存统计(品牌)
 		method: 'get'
 	},
-	'billOrderReport': {
+	billOrderReport: {
 		url: s + 'Report/billOrderReport', //挂账统计(品牌)
 		method: 'get'
 	},
-	'citicGetBillSplitList': {
+	citicGetBillSplitList: {
 		url: s + 'Citic/getBillSplitList', //中信银行对账单上海(品牌)
 		method: 'get'
 	},
-	'citicGetShopBillList': {
+	citicGetShopBillList: {
 		url: s + 'Citic/getShopBillList', //中信银行对账单上海(门店)
 		method: 'get'
 	},
-	'citicExportBillSplitList': {
+	citicExportBillSplitList: {
 		url: s + 'Citic/exportBillSplitList', //中信银行对账单上海导出
 		type: 'file'
 	},
-	'citicGetTransferData': {
+	citicGetTransferData: {
 		url: s + 'Citic/getTransferData', //获取中信一键转账报文
 		method: 'get'
 	},
-	'ceshi': {
+	ceshi: {
 		url: 'http://127.0.0.1:5060', //解析报文数据
 		method: 'post',
 		source: true,
 		type: 'text'
 	},
-	'citicGetTransferResult': {
+	citicGetTransferResult: {
 		url: s + 'Citic/getTransferResult', //解析报文数据
 		method: 'post'
 	},
-	'citicGetQueryData': {
+	citicGetQueryData: {
 		url: s + 'Citic/getQueryData', //获取转账结果查询报文
 		method: 'get'
 	},
-	'citicGetQueryResult': {
+	citicGetQueryResult: {
 		url: s + 'Citic/getQueryResult', //解析转账结果查询报文
 		method: 'post'
 	},
-	'adjustRecord': {
+	adjustRecord: {
 		url: w + 'MemberConsume/adjustRecord', //积分调整记录
 		method: 'get'
 	},
-	'ExportadjustRecord': {
+	ExportadjustRecord: {
 		url: w + 'MemberConsume/adjustRecord', //积分调整记录
 		type: 'file'
 	},
-	'getDepositPlanList': {
-		url: w + 'Depositplan/getDepositPlanList', //获取方案列表
-	},
-	'getScanPayOrderByCodes': {
-		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
-		method:'post'
-	},
-	'exportgetScanPayOrderByCodes': {
-		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
-		type: 'file',
-		method:'post'
-	},	
-	'customPackageStatistics': {
+	customPackageStatistics: {
 		url: s + 'Customstatistics/customPackageStatistics', //自定义套餐统计
 		method: 'post'
 	},
-	'exportCustomPackageStatistics': {
+	exportCustomPackageStatistics: {
 		url: s + 'Customstatistics/exportCustomPackageStatistics', //自定义套餐统计导出
 		type: 'file',
 		method: 'post'
-	},
-	"BusinessGetStatByShopIds":{
-        url: b + "Business/getStatByShopIds", //品牌按店查询店铺统计数据
-        method: "get"
-    },
-
+	}
 };
