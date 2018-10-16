@@ -23,9 +23,24 @@
 					</el-date-picker>
 					<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 				</li>
-				<li v-if="!isBrand" style="line-height: 46px;">
+				<!-- <li v-if="!isBrand" style="line-height: 46px;">
 					<div v-on:click="selectBusinessHours" :class="{'selected':isOpenTime}" style="width:20px;height:20px;cursor: pointer;border:1px solid #28A8E0;margin:13px 10px;float: left;"></div>
 					<span style="font-size: 16px;">按营业时间</span>
+				</li> -->
+				<li v-if="!isBrand">
+					<el-select v-model="conType" @change="selectType" placeholder="请选择类型" style="width:150px;">
+						<el-option v-for="item in conTypeList" :key="item.type" :label="item.name" :value="item.type"></el-option>
+					</el-select>
+				</li>
+				<li v-if="!isBrand && conType=='0'">
+					<el-select v-model="conSize" @change="selectTypeTwo" placeholder="请选择类型" style="width:150px;">
+						<el-option v-for="item in conTypeSize" :key="item.type" :label="item.name" :value="item.type"></el-option>
+					</el-select>
+				</li>
+				<li v-if="!isBrand && conType=='1'">
+					<el-select v-model="conShifts" @change="selectTypeBan" placeholder="请选择班次" style="width:150px;">
+						<el-option v-for="item in shiftList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+					</el-select>
 				</li>
 				<div style="display:inline-block;">
 					<!--区域选择框-->
@@ -283,7 +298,15 @@ export default {
 			orderListInDays: [],
 			paymentList: [{ num: 0, paymentName: '' }],
 			areaId: '',
-			tableId: ''
+			tableId: '',
+
+			conType:'0',//按日别或交接班
+			conSize:'1',//营业时间和自然日
+			conShifts:'',//班次
+			conTypeList:[{type:'0',name:'按日别'},{type:'1',name:'按交接班'}],
+			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'}],
+			shiftList:[],//交接班次列表
+			baseDetial:{},//店铺的基本信息
 		};
 	},
 	methods: {
@@ -370,6 +393,44 @@ export default {
 			if (column.label == '优惠总额' && column.property == 'discount') {
 				this.openDiscount(this.payTotalNum);
 			}
+		},
+		selectType(){
+			if(this.conType == '0'){
+				this.selectTypeTwo();
+			}
+		},
+		selectTypeTwo(){
+			this.getOrderListInDay(this.dateTime);
+		},
+		selectTypeBan(){
+			this.getOrderListInDay(this.dateTime);
+		},
+		//获取交接班班次信息
+		async getChangeShifts() {
+			//获取店铺基本信息
+			this.baseDetial = await http.baseGet({
+				data: {}
+			});
+			let arr = await http.getChangeShifts({
+				data: {}
+			});
+			let shiftsArr = [];
+			let shifts = this.baseDetial.changeShifts.split(',');
+			for(let i=0;i<arr.length;i++){
+				for(let key in shifts){
+					if(shifts[key] == arr[i].id){
+						shiftsArr.push(arr[i]);
+					}
+
+				}
+			}
+			this.shiftList = shiftsArr;
+		},
+		//获取店铺基本信息
+		async baseGet() {
+			this.baseDetial = await http.baseGet({
+				data: { shopId: this.shopId }
+			});
 		},
 		//初始化按钮,true时表示离开,false,表示进入
 		initBtn(flag) {
@@ -555,7 +616,7 @@ export default {
 			);
 			let newEndTime = utils.format(new Date(this.endTime), 'yyyy-MM-dd');
 			this.newpayTotalNum = [];
-			let res = await http.oneDayOrderData({
+			let res = await http.oneDayOrderDataNew({
 				data: {
 					trueShopId: this.dataDetial
 						? this.dataDetial.itemDetial.shopId
@@ -568,13 +629,15 @@ export default {
 						time == newEndTime
 							? this.getTime(endDay)
 							: this.getTime(time + ' 23:59:59'),
-					isOpenTime: Number(this.isOpenTime),
+					isOpenTime: Number(this.conSize),
 					page: this.dayPage.page,
 					num: this.dayPage.num, //一页显示多少
 					oid: this.orderNumber,
 					areaId: this.areaId,
 					tableId: this.tableId,
-					status: this.status
+					status: this.status,
+					type:this.conType,//0代表按自然日，1代表按交接班
+					typeId:this.conType == '0'?this.conSize:this.conShifts//对应type的id，type为1的时候，该字段为班次id
 				}
 			});
 			if (res) {
@@ -867,6 +930,7 @@ export default {
 		this.$route.query.arear == 1 ? this.initBtn() : this.initBtn(true);
 		sessionStorage.removeItem('order');
 		sessionStorage.removeItem('titleDetial');
+		this.getChangeShifts();
 	},
 	components: {
 		// calendar: () =>
