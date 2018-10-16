@@ -4,12 +4,15 @@ module.exports = {
     "children": [{
         "path": "",
         "props": {
-            "details_con": (route) => {
-                return {
-                    tab: 3
-                };
-            }
+            tab: 3
         },
+        // "props": {
+        //     "details_con": (route) => {
+        //         return {
+        //             tab: 3
+        //         };
+        //     }
+        // },
         "url": "src/module/invoicing_system/invoicing/goods_count_history"
     }, {
         "path": "detail",

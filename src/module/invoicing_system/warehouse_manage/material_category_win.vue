@@ -7,14 +7,20 @@
 	<div>
 		<win @winEvent="closeSelfWin" :align="'center'" :width="580" :height="300">
 			<span slot="title">{{title}}</span>
-			<div id="tan" slot="content" v-cloak>
-				<div class="tanbox" style="margin-top:70px;">
-					<h3 class="oH3">分类名 :</h3>
-					<input class="input" v-model="categoryName" maxlength="20" style="width:300px;border: 1px solid #CCCCCC;" placeholder="请输入分类名" type="text" />
-				</div>
-				<div class="tanbox" style="margin-top:20px;">
-					<h3 class="oH3">排序 :</h3>
-					<sub-add :minnum='1' :bindnum="sort" @toClick="changeSort" :sign='false'></sub-add>
+			<div slot="content" v-cloak class="container">
+				<div class="content">
+					<div>
+						<span class="label"> 分类名 : </span>  
+						<el-input class="input" v-model="categoryName" maxlength="20" style="width:240px;" placeholder="请输入分类名" ></el-input>
+					</div>
+					<div class="label-top">
+						<span class="label">分类编码 :</span>
+						<el-input class="input" v-model="barCode" maxlength="4" style="width:240px;" placeholder="请输入分类编码" ></el-input>						
+					</div>
+					<div class="label-top">
+						<span class="label">排序 :</span>
+						<el-input-number v-model="sort" :min="1" :max="255" label="排序" style="margin-left:10px;"></el-input-number>
+					</div>
 				</div>
 			</div>
 		</win>
@@ -26,8 +32,9 @@ export default {
 	data() {
 		return {
 			title: '', //弹窗的标题
-			sort: null, //排序值
+			sort: '', //排序值
 			categoryName: '', //分类名
+			barCode:'',
 		};
 	},
 	props: {
@@ -37,7 +44,8 @@ export default {
 		        {
 		            categoryName:           分类名
 		            sort:                   排序值
-		            title:                  标题
+					title:                  标题
+					barCode:				分类编码
 		        }
 		*/
 	},
@@ -52,10 +60,6 @@ export default {
 				}
 			}
 		},
-		//获取排序的结果
-		changeSort(res) {
-			this.sort = res;
-		},
 		//合格返回true
 		checkForm() {
 			this.categoryName = this.categoryName.trim();
@@ -67,183 +71,60 @@ export default {
 				sort: {
 					reg: /^[1-9]\d{0,2}$/,
 					pro: '排序数字在0-256之间!'
+				},
+				barCode:{
+					reg:/^[0-9A-Za-z]{1,4}$/,
+					pro:'分类编码由1-4个大写字母,数字组成!'
 				}
 			}, this)) return false;
 			return true;
 		},
+		
+
 		//获取弹窗的点击结果
 		closeSelfWin(res) {
 			if(res == 'ok') {
 				if(!this.checkForm()) return;
+				this.barCode += '';
+				this.barCode = this.barCode.toUpperCase();
+				
 				let obj = {
 					categoryName: this.categoryName,
-					sort: this.sort
+					sort: this.sort,
+					barCode: this.barCode
 				};
 				this.$emit('throwCommonWin', res, obj);
 			} else {
 				this.$emit('throwCommonWin', res);
 			}
 		},
+
 	},
 	components: {
-		subAdd: () =>
-			import( /*webpackChunkName:'subadd'*/ 'src/components/subadd'),
 		win: () =>
-			import( /*webpackChunkName:'win'*/ 'src/components/win')
+			import( /*webpackChunkName:'win_element'*/ 'src/components/win_element')
 	},
 
 };
 </script>
 <style lang='less' scoped>
-	#tan .tanbox {
-		width: 100%;
-		height: 40px;
-		margin-left: 50px;
-	}
-	
-	#tan .tanbox .oH3 {
-		float: left;
-		width: 80px;
-		height: 40px;
-		line-height: 40px;
-		text-align: right;
-		font-size: 16px;
-		margin-right: 20px;
-	}
-	
-	#synchronousTan .cList {
-		width: 100%;
-		border: 1px solid #cdcdcd;
-		border-left: 120px solid #F8F8F8;
-		position: relative;
-		margin-top: 20px;
-	}
-	
-	#synchronousTan .cList .title {
-		width: 120px;
-		color: #323232;
-		text-align: center;
-		position: absolute;
-		top: 50%;
-		left: -120px;
-		line-height: 100%;
-		font-size: 18px;
-		transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-		-moz-transform: translateY(-50%);
-		-webkit-transform: translateY(-50%);
-		-o-transform: translateY(-50%);
-		padding: 5px 10px;
-		z-index: 5;
-	}
-	
-	#synchronousTan .cList .oUl {
-		width: 100%;
-		min-height: 60px;
-		padding: 10px 20px;
-		overflow: hidden;
-		border-left: 1px solid #cdcdcd;
-	}
-	
-	#synchronousTan .cList .oLi {
-		height: 40px;
-		min-width: 80px;
-		line-height: 40px;
-		float: left;
-		text-align: center;
-		padding: 0 10px;
-		color: #555555;
-		cursor: pointer;
-	}
-	
-	#synchronousTan .oLi .addinput {
-		width: 165px;
-		height: 34px;
-		float: left;
-		border: 1px solid #cdcdcd;
-		margin-top: 15px;
-		display: none;
-	}
-	
-	#synchronousTan .oLi .oDiv {
-		width: 34px;
-		height: 32px;
-		border-left: 1px solid #cdcdcd;
-		float: right;
-	}
-	
-	#synchronousTan .openoperation {
-		display: none;
-	}
-	
-	#synchronousTan .title:hover .openoperation {
-		display: block;
-	}
-	
-	#synchronousTan .oLi:hover .openoperation {
-		display: block;
-	}
-	
-	#synchronousTan .addclassification {
-		width: 210px;
-		height: 45px;
-		background-color: #29A7E1;
-		margin-top: 30px;
-		cursor: pointer;
-	}
-	
-	#synchronousTan .addclassification img {
-		width: 22px;
-		height: 22px;
-		margin-top: 9px;
-		margin-left: 34px;
-		float: left;
-	}
-	
-	#synchronousTan .addclassification h3 {
-		width: 120px;
-		height: 45px;
-		line-height: 45px;
-		color: #fff;
-		text-align: center;
-		float: left;
-	}
-	
-	#synchronousTan .borderTop {
-		width: 122px;
-		height: 100%;
-		border-left: 1px solid #cdcdcd;
-		position: absolute;
-		top: -1px;
-		left: -120px;
-		border-top: 1px solid #cdcdcd;
-	}
-	
-	#synchronousTan .borderBottom {
-		width: 122px;
-		height: 100%;
-		border-left: 1px solid #cdcdcd;
-		position: absolute;
-		bottom: -1px;
-		left: -120px;
-		border-bottom: 1px solid #cdcdcd;
-	}
-	
-	.brand span:nth-child(2),
-	.brand span:nth-child(4) {
+.container{
+	position: relative;
+	height:100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;	
+}
+.content{
+	.label{
 		display: inline-block;
-		width: 20px;
-		height: 20px;
-		text-align: center;
-		border-radius: 20px;
-		vertical-align: middle;
+		min-width: 60px;
+		text-align: right;
+		height:40px;
+		line-height: 40px;
 	}
-	
-	.isbrand {
-		color: #ffddab;
+	.label-top{
+		margin-top:20px;
 	}
-	
-	.isshop {
-		color: #a4e2fc;
-	}
+}
 </style>

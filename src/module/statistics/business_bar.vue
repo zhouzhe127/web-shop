@@ -27,59 +27,59 @@ export default {
 		return {
 			dataBar: {
 				xAxis: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: [],
 					passengerFlow: [],
 				},
 				total: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: [],
 					passengerFlow: [],
 				},
 				eatIn: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: [],
 					passengerFlow: [],
 				},
-				takeOut: {
-					business: [],
+				takeout: {
+					turnover: [],
 					amount: [],
 					discount: [],
-					orderNumber: [],
+					orderNum: [],
 					passengerFlow: [],
 				},
 				quickPayment:{
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: [],
 					passengerFlow: [],
 				}
 			},
 			tabList: [
-				{ type: 'business', name: '营业总额' },
+				{ type: 'turnover', name: '营业总额' },
 				{ type: 'discount', name: '优惠总额' },
 				{ type: 'amount', name: '入账金额' },
-				{ type: 'orderNumber', name: '订单量' },
+				{ type: 'orderNum', name: '订单量' },
 				{ type: 'passengerFlow', name: '客流量' }
 			],
 			checkList: [
 				{ name: '总值', className: 'total' ,color:'#ff9800'},
 				{ name: '堂吃', className: 'eatIn' ,color:'#fcd030'},
-				{ name: '外卖', className: 'takeOut' ,color:'#1b88ee'},
+				{ name: '外卖', className: 'takeout' ,color:'#1b88ee'},
 				{ name: '快捷支付', className: 'quickPayment' ,color:'#a16bff'},
 			],
 			xNameBar: '店铺名称',
 			yNameBar: ['营业总额', '优惠总额', '入账金额', '订单量', '客流量'],
 			yNameIndexBar: 0,
 			tabIndex: 0,
-			barType: 'business',
+			barType: 'turnover',
 			sliderBarEnd: 100,
 			options: ['日', '周', '月', '季度', '年'],
 			barDom: null,
@@ -130,14 +130,15 @@ export default {
 						xBar.push(item.shopName);
 					}
 				}
+				
 				for (let xKey in this.dataBar.xAxis) {
 					//店铺名称加入x轴
 					this.dataBar.xAxis[xKey] = xBar;
 				}
 				for (let j in bar[i]) {
-					//2遍历 j = eatIn/takeOut/total/quickPayment/
+					//2遍历 j = eatIn/takeout/total/quickPayment/
 					for (let k in bar[i][j]) {
-						//3遍历 k = business/amount/orderNumber/discount/passengerFlow
+						//3遍历 k = turnover/amount/orderNum/discount/passengerFlow
 						this.dataBar[j][k].push(bar[i][j][k]);
 					}
 				}
@@ -340,7 +341,7 @@ export default {
 		.eatIn:hover i {
 			border: 1px solid #fcd030;
 		}
-		.takeOut:hover i {
+		.takeout:hover i {
 			border: 1px solid #1b88ee;
 		}
 		.quickPayment:hover i {
@@ -356,7 +357,7 @@ export default {
 			background: url(../../res/icon/white_select.png) #fcd030 center
 				no-repeat;
 		}
-		.takeOut.active i {
+		.takeout.active i {
 			border: 1px solid #1b88ee;
 			background: url(../../res/icon/white_select.png) #1b88ee center
 				no-repeat;

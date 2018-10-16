@@ -23,7 +23,7 @@
 				</div>
 				<div class="box">
 					<span>外卖</span>
-					<p :title="sales.takeOut[item.field]">{{sales.takeOut[item.field]}}</p>
+					<p :title="sales.takeout[item.field]">{{sales.takeout[item.field]}}</p>
 				</div>
 				<div class="box">
 					<span>快捷支付</span>
@@ -40,50 +40,50 @@ export default {
 	data() {
 		return {
 			eachList:[
-				{name:'营业总额（元）',field:'business',iconShow:true},
+				{name:'营业总额（元）',field:'turnover',iconShow:true},
 				{name:'优惠总额（元）',field:'discount',iconShow:true},
 				{name:'入账金额（元）',field:'amount',iconShow:true},
-				{name:'订单量（单）',field:'orderNumber'},
+				{name:'订单量（单）',field:'orderNum'},
 			],
 			sales: {
 				eatIn: {//堂吃
-					business: 0,//营业总额
+					turnover: 0,//营业总额
 					amount: 0,//入账金额
-					orderNumber: 0,//订单量
+					orderNum: 0,//订单量
 					discount: 0,//优惠总额
 					passengerFlow:0,
 				},
-				takeOut: {//外卖
-					business: 0,
+				takeout: {//外卖
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0,
 					passengerFlow:0,
 				},
 				total: {//总值
-					business: 0,
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0,
 					passengerFlow:0,
 				},
 				businessMom: {//环比
-					business: 0,
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0,
 					passengerFlow:0,
 				},
 				quickPayment:{//快捷支付
-					business: 0,
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0,
 					passengerFlow:0,
 				}
 			},
 			salesPoint: {//小数点后两位
-				business: '00',
+				turnover: '00',
 				discount: '00',
 				amount: '00'
 			},
@@ -91,12 +91,9 @@ export default {
 		};
 	},
 	watch: {
-		specific: 'setSalesData'
+		'specific': 'analytic'
 	},
 	methods: {
-		setSalesData() {
-			this.analytic();
-		},
 		analytic() {
 			//解析 统计数据 需要将数据组合成0.00的形式，保留两位小数，且小数点后字体更小 用salesPoint分开存储
 			let sales = this.specific;
@@ -112,7 +109,7 @@ export default {
 			for (let i in sales) {
 				if (i == 'total') {
 					for (let n in sales[i]) {
-						if (n != 'orderNumber') {
+						if (n != 'orderNum') {
 							let str = sales[i][n] + '';
 							let arr = str.split('.');
 							if (arr[0]) sales[i][n] = parseInt(arr[0]);

@@ -31,6 +31,15 @@
 				<template v-if="v.type == 5">
 					<el-button @click="v.fn" :type="v.className" :key="i+keyRan" plain>{{v.name}}</el-button>
 				</template>
+				<template v-if="v.type == 6">
+					<form id="form_import_good" :key="i+keyRan" class = 'elfire' enctype="multipart/form-data">
+						<input id="fireinput" type="file" @change='v.fn' accept=".xls,.xlsx" :name="v.inputName" :style='v.styles' :class='v.className' class="import-input" onclick="this.value = ''" />
+						<!-- <a href="javascript:;" class="import-btn" :class='v.className' :style='v.styles'>{{v.name}}</a> -->
+						<label for="fireinput"></label>
+						<el-button class = 'elbtn' :type="v.className" :key="i+keyRan">{{v.name}}
+						</el-button>
+					</form>
+				</template>
 			</template>
 		</section>
 	</div>
@@ -176,6 +185,19 @@ a {
 			img {
 				vertical-align: middle;
 			}
+		}
+	}
+	.elfire{
+		display: inline-block;
+		position: relative;
+		input{
+			display:none;
+		}
+		label{
+			width:100%;
+			height:100%;
+			cursor: pointer;
+			position:absolute;
 		}
 	}
 	.import-form {

@@ -63,6 +63,7 @@ class Main {
 
             if (to.path == "/" || global.checkLogin()) {
                 store.commit('setPageTools', {});
+                store.commit('setFixButton', {});
                 ajax.abortLoad();
                 next();
             } else {

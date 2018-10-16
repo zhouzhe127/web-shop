@@ -315,7 +315,7 @@
 		},
 		methods: {
 			async init() {
-				let data = await http.getDetails({
+				let data = await http.InvoicingGetGoodsDetail({
 					data: {
 						gid: this.gid,
 					}

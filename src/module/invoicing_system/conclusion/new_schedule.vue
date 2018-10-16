@@ -892,9 +892,9 @@
 						});
 						let obj = {
 							id: item.itemId,
-							name: item.itemName
+							name: item.itemName,
+							barCode: item.barCode,
 						};
-						console.log(item);
 						this.itemList.material.push(obj);
 					}
 				}

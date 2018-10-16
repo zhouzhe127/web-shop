@@ -27,53 +27,53 @@ export default {
 		return {
 			dataLine: {
 				xAxis: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
 				total: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
 				eatIn: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
-				takeOut: {
-					business: [],
+				takeout: {
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
 				quickPayment:{
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				}
 			},
 			tabList: [
-				{ type: 'business', name: '营业总额' },
+				{ type: 'turnover', name: '营业总额' },
 				{ type: 'discount', name: '优惠总额' },
 				{ type: 'amount', name: '入账金额' },
-				{ type: 'orderNumber', name: '订单量' },
+				{ type: 'orderNum', name: '订单量' },
 			],
 			checkList: [
 				{ name: '总值', className: 'total' ,color:'#ff9800'},
 				{ name: '堂吃', className: 'eatIn' ,color:'#fcd030'},
-				{ name: '外卖', className: 'takeOut' ,color:'#1b88ee'},
+				{ name: '外卖', className: 'takeout' ,color:'#1b88ee'},
 				{ name: '快捷支付', className: 'quickPayment' ,color:'#a16bff'},
 			],
 			xName: '日期',
 			yNameLine: ['营业总额', '优惠总额', '入账金额', '订单量'],
 			yNameIndexLine: 0,
 			tabIndex: 0,
-			lineType: 'business',
+			lineType: 'turnover',
 			options: ['日', '周', '月', '季度', '年'],
 			lineDom: null,
 			lineSelect: {
@@ -331,7 +331,7 @@ export default {
 		.eatIn:hover i {
 			border: 1px solid #fcd030;
 		}
-		.takeOut:hover i {
+		.takeout:hover i {
 			border: 1px solid #1b88ee;
 		}
 		.quickPayment:hover i {
@@ -347,7 +347,7 @@ export default {
 			background: url(../../res/icon/white_select.png) #fcd030 center
 				no-repeat;
 		}
-		.takeOut.active i {
+		.takeout.active i {
 			border: 1px solid #1b88ee;
 			background: url(../../res/icon/white_select.png) #1b88ee center
 				no-repeat;

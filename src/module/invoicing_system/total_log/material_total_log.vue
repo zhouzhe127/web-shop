@@ -133,7 +133,7 @@
             <div class="dialog-content">
                 <div class="column">
                     <div>物料名称:{{materialInfo.name}}</div>
-                    <div>物料简码:{{materialInfo.BC}}</div>
+                    <div>物料编码:{{materialInfo.barCode}}</div>
                     <div>品牌:{{materialInfo.brandName}}</div>
                     <div>批次数:{{materialInfo.batchNum}}</div>
                     <div>物料类型:{{materialInfo.typeName}}</div>
@@ -332,6 +332,25 @@ export default {
             this.materialInfo = info;            
         },
 
+        //获取地址栏参数
+        getQueryData(){
+            let {ms_name:name,ms_operationType:operationType,ms_sTime:sTime,ms_eTime:eTime} = this.$route.query;
+            if(name != undefined && operationType && sTime && eTime){
+                sTime = Number(sTime * 1000);
+                eTime = Number(eTime * 1000);
+                sTime = new Date(sTime);
+                eTime = new Date(eTime);
+                this.condition.time = [sTime,eTime];
+    
+                this.condition.goodsName = name;
+    
+                operationType = operationType.split(',');
+                this.condition.operationType = operationType.map(ele=>{
+                    return Number(ele);
+                });
+            }
+        },
+
 
 
         //匹配
@@ -414,14 +433,25 @@ export default {
     mounted(){
         this.initData();
         this.initCondition();
+        this.getQueryData();
         this.initPageObj();
     },
     activated(){
+        this.getQueryData();        
         this.getOperationList('material');
         this.getCategoryList();
         this.getWarehouseList();
         this.filterReset('filter',this.pageObj.currentPage);
     },
+    beforeRouteLeave(to,from,next){
+        let query = 'ms_name,ms_operationType,ms_sTime,ms_eTime'.split(',');
+        for(let key of query){
+            if(to.query[key] != undefined){
+                delete to.query[key];
+            }
+        }
+        next();
+    }
 };
 </script>
 <style lang='less' scoped>

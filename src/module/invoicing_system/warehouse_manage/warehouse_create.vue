@@ -120,11 +120,14 @@
 			}
 		},
 		mounted() {
-			this.getOwner();
+			
+		},
+		destroyed(){
+			storage.session('store_owner',null);
 		},
 		components: {
 			addStoreBlong: () =>
-				import( /*webpackChunkName:'create_store_blong_win'*/ './create_store_blong_win'),
+				import( /*webpackChunkName:'store_owner'*/ './store_owner'),
 			addressSelect: () =>
 				import( /*webpackChunkName: 'address_linkage'*/ 'src/components/address_linkage'),
 			onOff: () =>
@@ -147,7 +150,6 @@
 				this.isShared = res ? 1 : 0;
 			},
 			openStoreBlong() {
-				this.sendObj.owner = this.param.owner;
 				this.comObj = this.sendObj;
 				this.showCom = 'addStoreBlong';
 			},
@@ -163,6 +165,7 @@
 							this.param.owner = '0,' + obj.id;
 						}
 					}
+					this.sendObj.selectId = obj.id;
 				}
 				this.showCom = null;
 			},
@@ -288,13 +291,6 @@
 						}
 					});
 				}
-			},
-			async getOwner() { //获取品牌列表
-				let data = await http.invoicing_getOwners();
-				this.sendObj = {
-					allList: data,
-					isBrand: this.isBrand,
-				};
 			},
 		},
 

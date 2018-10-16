@@ -134,7 +134,7 @@
 			<section class="listBox" style="width:100%;height:auto;margin-top: 20px;">
 				<com-table :listName="'批次列表'" :titleData="titleList" :allTotal="allList.length" :introData="newbatchDetail">
 					<div class="infoDetail" slot="con-0" slot-scope="props">
-						<a href="javascript:void(0);" @click="addDetailhouse(props.data,1)" style="color:#5ebee8;">入库</a>|
+						<a href="javascript:void(0);" @click="addDetailhouse(props.data,1)" style="color:#5ebee8;" v-if="inventConfigs.commonStock==1">入库</a><span v-if="inventConfigs.commonStock==1">|</span>
 						<a href="javascript:void(0);" @click="batchLose(props.data)" style="color:red;">耗损</a>
 						<!-- <a href="javascript:void(0);" @click="revamp(props.data)" style="color:orange;">修改</a> -->
 					</div>
@@ -146,8 +146,9 @@
 			</section>
 			<!-- <operating-record v-if="tabactive==1" :gid="shopList.id"></operating-record> -->
 			<div style="margin-top:10px;padding-bottom:30px;">
-				<page-turn :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page" @pageNum="changePage"
-				    ref="pageTurn"></page-turn>
+				<!-- <page-turn :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page" @pageNum="changePage"
+				    ref="pageTurn"></page-turn> -->
+				<el-pagination @current-change="changePage" background :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(allList.length)"></el-pagination>	
 			</div>
 		</section>
 
@@ -192,6 +193,7 @@
 				shelveNum: 0,
 				loseShow: false,
 				loseItem: '',
+				inventConfigs:{},//进销存配置
 				titleList: [{
 					titleName: '操作',
 					titleStyle: {
@@ -230,7 +232,7 @@
 		methods: {
 			async init() {
 				//获取详情
-				let data = await http.getDetails({
+				let data = await http.InvoicingGetGoodsDetail({
 					data: {
 						gid: this.shopList.id
 					}
@@ -344,7 +346,7 @@
 				return num;
 			},
 			changePage: function (currentPage) {
-				this.page = currentPage.page;
+				this.page = currentPage;
 				this.newbatchDetail = this.allList.slice(
 					(this.page - 1) * 10,
 					(this.page - 1) * 10 + 10
@@ -464,7 +466,8 @@
 			handBtn() {
 				this.$store.commit('setPageTools', [{
 					name: '返回',
-					className: ['back'],
+					type: 4,
+					className: '',
 					fn: () => {
 						storage.session('tabactive', 0);
 						window.history.go(-1);
@@ -472,7 +475,8 @@
 				},
 				{
 					name: '下架',
-					className: ['wearhouse create'],
+					type: 5,
+					className: 'primary',
 					fn: () => {
 						this.soldShow = true;
 						this.$store.commit('setPageTools', []);
@@ -480,7 +484,8 @@
 				},
 				{
 					name: '上架',
-					className: ['wearhouse handle'],
+					type: 4,
+					className: 'primary',
 					fn: () => {
 						this.putawayshow = true;
 					}
@@ -508,6 +513,7 @@
 		mounted: function () {
 			this.shopList = storage.session('goodsDetail');
 			this.shopId = storage.session('itemId');
+			this.inventConfigs = storage.session('inventConfigs');
 			this.handBtn();
 			this.init();
 		},
@@ -539,9 +545,9 @@
 	.infoDetail {
 		display: inline-block;
 		display: flex;
+		justify-content: space-around;
 		a {
 			display: inline-block;
-			width: 50%;
 			text-align: center;
 		}
 	}

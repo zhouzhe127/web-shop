@@ -4,62 +4,220 @@
 -->
 <template>
 	<div id = "invo-config">
-		<div class="head">进销存权限</div>
-
+		<div class="head">
+			<span>进销存权限</span>
+			<div></div>
+		</div>
 		<div class="content">
-			<div class="assign-tips">
+			<div class="tips-div" style="padding-bottom:20px;">
 				<span class="tips-icon"></span>
-				进销存权限统一由品牌指派,如有权限需求请联系品牌权限管理人员
+				<span class="tips-word">
+					进销存权限统一由品牌指派,如有权限需求请联系品牌权限管理人员
+				</span>
 			</div>
 			<ul class="config-list">
 				<li v-for="(item,index) in configList" :key="index">
-					<span>{{item.name}}&nbsp;:&nbsp;{{item.status == 0 ? '关' : '开'}}</span>
+					<span>{{item.name}}&nbsp;:&nbsp;{{item.status == 0 ? '关闭' : '开启'}}</span>
 				</li>
 			</ul>
 		</div>
 
-		<div class="head-short">是否启用配置</div>
-		<div class="config-switch">
-			<span class="label">商品&nbsp;,&nbsp;物料应用</span>
-			<div class="mul-sel">
-				<span class="list" :class="{'checkbox':item.isSelect}" @click="chooseList(item,index)" v-for="(item,index) in config" :key="index">{{item.name}}</span>
+
+		<div class="head">
+			<span>是否启用配置</span>
+			<div></div>
+		</div>
+		<div class="content">
+			<span class="label">商品 , 物料应用</span>
+			<div class="label-content">
+				<el-checkbox v-for="(item,index) in config" :key="index" v-model="item.isSelect" :label="item.name" border @change="goodsMaterial"></el-checkbox>
 			</div>
+			
 		</div>
 
 
-		<div class="head-short">是否可以售卖</div>
-		<div class="sale-switch">
-			货架商品不足时
-			<span class="on-off">
-				<on-off @statusChange="getOnOff" :status="saleSwitch"></on-off>
+		<div class="head">
+			<span>
+				是否可以售卖
 			</span>
-			<div class="sale">
-				<span class="tips-icon"></span>
-				<span class="tips-word">开关开启时,销售后货架商品数量可以为负数,下次上架后补充完整</span>
+			<div></div>
+		</div>
+		<div class="content">
+			<span class="label" >货架商品不足时</span>
+			<div class="label-content" style="line-height:40px;">
+				<el-switch
+					v-model="condition.isShelveMinus"
+					active-color="#34A9AA"
+					inactive-color="#909399"
+					active-text="开"
+					inactive-text="关"
+					@change="(res)=>{changeSwitch('isShelveMinus',res)}"
+				>
+				</el-switch>
+				<div class="in-block">
+					<div class="tips-div" >
+						<span class="tips-icon"></span>
+						<span class="tips-word">
+							开关开启时,销售后货架商品数量可以为负数,下次上架后补充完整						
+						</span>
+					</div>
+				</div>
 			</div>
 		</div>
 
-
-		<div class="head-short" v-if="isBrand">分销价格名称</div>
-		<div class="sale-switch" style="padding-left:0;height:auto;padding-bottom:30px;" v-if="isBrand">
-
-			<li class="list" v-for="(item,index) in distribution" :key="index">
-				<div class="label">
-					<span class="index">{{index > 8 ? index+1 : '0'+(index+1)}}</span>
-					<span >分销价格名称</span>
-				</div>
-				<div class="label-tag">
-					<input type="text" class="price" placeholder="请输入分销价格名称" maxlength="10" v-model="item.name" :class="{'error-flag':item.errorFlag}">
-					<span class="icon-container" @click="delAdd('del',item,index)" ><i class="del-icon"></i></span>
-					<span class="icon-container" @click="delAdd('add',item,index)" v-if="distribution.length-1 == index"><i class="add-icon"></i></span>
-				</div>
-			</li>
+		<!-- 品牌开关 -->
+		<div class="head" v-if="isBrand">
+			<span>编码配置</span>
+			<div></div>
+		</div>
+		<div class="content" v-if="isBrand">
+			<div>
+				<el-button @click="openDialog">变更</el-button>
+			</div>
+			<p>
+				<span>
+					分类 : {{condition.multiCategory ? '物料可以存在多个分类' : '物料不能存在多个分类'}}
+				</span>
+			</p>
+			<p>
+				<span>
+					物料编码排序 : {{condition.sortByBarCode ? '开启' : '关闭'}}
+				</span>
+			</p>
+			<p>
+				物料编码 : 
+				<span v-for="(item,index) in mCode" :key="index" v-if="item.id == condition.wholeBarCode">
+					{{item.name}}
+				</span>
+			</p>
 		</div>
 
-		<div class="bottom">
-			<div class="gray btn-com" @click="clickBtn('cancel')">取消</div>
-			<div class="yellow btn-com"  @click="clickBtn('ok')">确定</div>
-		</div>		
+		<!-- 品牌开关 -->
+		<div class="head" v-if="isBrand">
+			<span>采购单配置</span>
+			<div></div>
+		</div>
+		<div class="content" v-if="isBrand">
+			<p>
+				采购审核 : 
+				<el-switch
+					v-model="condition.purchaseAudit"
+					active-color="#34A9AA"
+					inactive-color="#909399"
+					active-text="开"
+					inactive-text="关"
+					class="switch-left"
+					@change="(res)=>{changeSwitch('purchaseAudit',res)}"
+				>
+				</el-switch>
+			</p>
+		</div>
+
+		<!-- 品牌开关 -->
+		<div class="head" v-if="isBrand">
+			<span>入库配置</span>
+			<div></div>
+		</div>
+		<div class="content" v-if="isBrand">
+			<p>
+				是否允许直接入库 : 
+				<el-switch
+					v-model="condition.commonStock"
+					active-color="#34A9AA"
+					inactive-color="#909399"
+					active-text="开"
+					inactive-text="关"
+					class="switch-left"
+					@change="(res)=>{changeSwitch('commonStock',res)}"
+				>
+				</el-switch>
+			</p>
+			<p>
+				是否允许导入入库 : 
+				<el-switch
+					v-model="condition.importStock"
+					active-color="#34A9AA"
+					inactive-color="#909399"
+					active-text="开"
+					inactive-text="关"
+					class="switch-left"
+					@change="(res)=>{changeSwitch('importStock',res)}"
+				>
+				</el-switch>
+			</p>
+		</div>
+
+
+		<template v-if="isBrand">
+			<div class="head" >
+				<span>分销价格名称</span>
+				<div></div>
+			</div>
+			<div class="content" >
+				<li class="distribute-list" v-for="(item,index) in distribution" :key="index">
+					<div class="label" style="text-align:center;">
+						<span class="index">{{index > 8 ? index+1 : '0'+(index+1)}}</span>
+						<span >分销价格名称</span>
+					</div>
+					<div class="label-content">
+						<el-input clearable  v-model="item.name" maxlength="20" placeholder="请输入分销价格名称" style="width:240px"></el-input>
+						<span class="icon-container" @click="delAdd('del',item,index)" ><i class="del-icon"></i></span>
+						<span class="icon-container" @click="delAdd('add',item,index)" v-if="distribution.length-1 == index"><i class="add-icon"></i></span>
+					</div>
+				</li>
+			</div>
+
+			<div  class="footer" >
+				<el-button @click="clickBtn('ok')" type="primary">保存</el-button>
+			</div>
+		</template>
+
+		<div class="component" >
+			<el-dialog :title="dialog.title" :visible.sync="dialog.show" width="500px">
+				<div class="content">
+					<p>
+						物料是否存在多个分类 :
+						<el-switch
+							v-model="dialog.multiCategory"
+							active-color="#34A9AA"
+							inactive-color="#909399"
+							active-text="开"
+							inactive-text="关"
+							class="switch-left"
+						>
+						</el-switch>						
+					</p>
+					<p>
+						物料全码 :
+						<el-select style="width:240px" v-model="dialog.wholeBarCode"   placeholder="请选择" class="switch-left">
+							<el-option
+								v-for="item in mCode"
+								:key="item.id"
+								:label="item.name"
+								:value="item.id"
+							>
+							</el-option>
+						</el-select>
+					</p>
+					<p>
+						是否按物料编码排序 :
+						<el-switch
+							v-model="dialog.sortByBarCode"
+							active-color="#34A9AA"
+							inactive-color="#909399"
+							active-text="开"
+							inactive-text="关"
+							class="switch-left"
+						>
+						</el-switch>	
+					</p>
+				</div>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="clickDialogBtn('close')">取 消</el-button>
+					<el-button @click="clickDialogBtn('confirm')" type="primary">确 定</el-button>
+				</span>
+			</el-dialog>
+		</div>
 	</div>
 </template>
 <script>
@@ -69,13 +227,19 @@
 		invociUpdateSupplier					//更新配置
 		invoicingDelDistributionConfig			//删除分销价
 		invoicingGetDistributionConfig			//获取分销价
+		invoicingUpdateTopConfig				//商品物料应用
+		invoicingUpdateSaleConfig				//售卖
+		invoicingUpdateMaterialConfig			//物料编码配置
+		updatePurchaseAuditConfig				//采购审核
+		invoicingUpdateStockConfig				//入库配置
+		invoicingUpdateDistributionConfig		//分销价配置更改
 
-	问题:
-		不是只有品牌才可以设置分销价配置的吗
 
 */
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+
 export default {
 	data () {
 		return {
@@ -93,110 +257,140 @@ export default {
 				{name:'BOM单修改',status:0,attr:'updateBom'},
 				{name:'BOM单新建',status:0,attr:'createBom'},
 			],
-			config:[{name:'商品',id:0,attr:'isGoods'},{name:'物料',id:1,attr:'isMaterial'}],	//商品,物料配置
-			saleSwitch:false,																	//开启是否超卖
+			config:[
+				{name:'商品',id:0,attr:'isGoods',isSelect:false},
+				{name:'物料',id:1,attr:'isMaterial',isSelect:false}
+			],																	//商品,物料配置
+			mCode:[																//物料全码														
+				{id:0,name:'物料编码'},											 //默认值											
+				{id:1,name:'一级分类+二级分类+物料编码'},
+			],
+			
+			condition:{},														//
+			dialog:{
+				show:false,
+				title:'编码配置',
+				wholeBarCode:0,													//物料全码
+				multiCategory:false,											//物料是否存在多个分类
+				sortByBarCode:false,											//是否根据物料编码排序
+			},
 			distribution:[],		
-			isBrand:false,														
+			copyDistribution:[],												//备份
+			isBrand:false,			
 
 		};
 	},
 	methods: {
-		chooseList(item,index){
-			item.isSelect = !item.isSelect;
-			this.config.splice(index,1,item);
-		},
-		getOnOff(res){
-			this.saleSwitch = res;
-		},
-		getSelectConfig(list){
-			//获取选中的商品与物料状态
-			let temp = {};
-			for(let ele of list){
-				temp[ele.attr] = Number(ele.isSelect);
-			}
-			return temp;
-		},
-		getDistribution(){
-			let arr = [];
-			for(let ele of this.distribution){
-				ele.name = ele.name.trim();
-				if(ele.name){
-					arr.push({id:ele.id,name:ele.name});
-				}
-			}
-			return arr;
-		},
-		checkDistribution(){
-			let flag = true;
-			this.distribution = this.distribution.map((ele)=>{
-				ele.name = ele.name.trim();
-				if(Number(ele.id)>0 && !ele.name){
-					ele.errorFlag = true;
-					flag = false;
-				}else{
-					ele.errorFlag = false;
-				}
-				return ele;
-			});
-			return flag;
-		},
-		checkDistributionSameName(){
-			let flag = true;
-			for(let i=0;i<this.distribution.length;i++){
-				for(let j=i+1;j<this.distribution.length;j++){
-					if(this.distribution[i].name == this.distribution[j].name){
-						flag = false;
-						break;
-					}
-				}
-			}
-			return flag;
-		},
+		//底部确定按钮,只针对分销价
 		async clickBtn(flag){
 			let temp = {},
 				distribution = [],
-				res = {};
+				res = {},
+				retData = {};
+
 			if(flag == 'ok'){
-				if(!this.checkDistribution()){
-					this.alert('请填写需要修改的分销价格名称!');
+				let index = this.checkDistribution();
+				if(index){
+					this.alert(`请填写序号为 ${index} 的分销价格名称!`);
 					return;
 				}
-				if(!this.checkDistributionSameName()){
+				if(!this.checkSameValue(this.distribution)){
 					this.alert('分销价格名称不能相同!');
 					return;
 				}
-				temp = this.getSelectConfig(this.config);
-				temp.isShelveMinus = Number(this.saleSwitch);
-				temp.distribution = this.getDistribution();
-
-				res = await this.getHttp('invociUpdateSupplier',temp);
-				this.alert('保存成功!');
-				if(Array.isArray(res.distribution)){
-					this.distribution = res.distribution;
+				distribution = this.getDistribution();
+				if(!this.checkDistributionChange(distribution)){
+					this.alert('保存成功!');					
+					return;
 				}
-
-
-				//控制商品,物料的切换
-				let config = 0;		//1商品  2物料  0商品+物料
-				let delArr = [];
-				if(res.isGoods == 1&&res.isMaterial != 1){
-					config = 1;
-					delArr=['领料管理','BOM单管理','单位配置','物料分类'];
-				}else if(res.isGoods != 1&&res.isMaterial == 1){
-					config = 2;
-					delArr=['称重商品配置','货架管理'];
+				retData = await this.getHttp('invoicingUpdateDistributionConfig',{distribution});
+				if(Array.isArray(retData.distribution)){
+					this.alert('保存成功!');
+					this.distribution = retData.distribution;
+					this.copyDistribution = utils.deepCopy(this.distribution);			
+				}else{
+					this.alert('保存失败!');					
 				}
-				this.$store.commit('setasideDel',delArr);
-				storage.session('inventConfigure',config);
-
-			}else if(flag == 'cancel'){
-				this.$router.go(-1);
 			}
 		},
+		//dialog
+		async clickDialogBtn(sym){
+			let subData = {};
+			if(sym == 'confirm'){
+				//确定
+				subData = {
+					multiCategory : Number(this.dialog.multiCategory),
+					sortByBarCode : Number(this.dialog.sortByBarCode),
+					wholeBarCode : this.dialog.wholeBarCode
+				};
+				await this.getHttp('invoicingUpdateMaterialConfig',subData);
+				this.condition.multiCategory = this.dialog.multiCategory;
+				this.condition.sortByBarCode = this.dialog.sortByBarCode;
+				this.condition.wholeBarCode = this.dialog.wholeBarCode;				
+			}
+			this.dialog.show = false;
+		},
+		openDialog(){
+			this.dialog.show = true;
+			this.dialog.multiCategory = this.condition.multiCategory;
+			this.dialog.sortByBarCode = this.condition.sortByBarCode;
+			this.dialog.wholeBarCode = this.condition.wholeBarCode;
+		},
+
+		//商品物料应用
+		async goodsMaterial(bool){
+			let temp = this.getSelectConfig(this.config);
+			let ctrl = {};
+			await this.getHttp('invoicingUpdateTopConfig',temp);
+
+			ctrl = this.getControData();
+			//控制商品,物料的切换
+			this.controlSideBar(ctrl);
+		},
+
+		//开关切换
+		async changeSwitch(sym,bool){
+			let subData = {};
+			let condition = this.condition;
+			let url = '';
+			switch(sym){
+				case 'isShelveMinus'://售卖
+					subData[sym] = Number(bool);
+					url = 'invoicingUpdateSaleConfig';
+					break;				
+				case 'purchaseAudit'://采购审核
+					subData[sym] = Number(bool);
+					url = 'updatePurchaseAuditConfig';
+					break;
+				case 'commonStock'://入库配置
+				case 'importStock':
+					subData['commonStock'] = Number(condition['commonStock']);
+					subData['importStock'] = Number(condition['importStock']);
+					url = 'invoicingUpdateStockConfig';
+					break;
+			}
+			await this.getHttp(url,subData);
+			if(sym == 'purchaseAudit'){
+				let ctrl = this.getControData();
+				//控制商品,物料的切换
+				this.controlSideBar(ctrl);
+			}
+			if(sym == 'importStock' || sym == 'commonStock'){
+				let ctrl = this.getControData();
+				this.controlSideBar(ctrl);
+				storage.session('inventConfigs',ctrl);
+			}
+		},
+
+
+		//分销价的添加与删除
 		async delDistribution(item,index){
 			let retData;
 			if(Number(item.id) > 0){
 				retData = await this.getHttp('invoicingDelDistributionConfig',{id:item.id});
+				this.copyDistribution = this.copyDistribution.filter((ele)=>{
+					return ele.id != item.id;
+				});
 			}else{
 				retData = true;
 			}
@@ -204,13 +398,13 @@ export default {
 				this.distribution.splice(index,1);
 			}
 			if(this.distribution.length == 0){
-				this.distribution.push({id:0,name:''});
+				this.addDistribution();				
 			}
 		},
 		delAdd(flag,item,index){
 			if(flag == 'add'){
 				if(this.distribution.length <= 9){
-					this.distribution.push({id:0,name:''});
+					this.addDistribution();
 				}else{
 					this.alert('最多可设置10个分销价格!');
 				}
@@ -227,26 +421,180 @@ export default {
 			}
 
 		},
-		alert(content,fn){
-			let obj = {
-				title:'温馨提示',
-				content,
-				winType:'alert',
+		addDistribution(){
+			this.distribution.push({id:0,name:'',errorFlag:false});			
+		},
+
+
+
+		//格式化数据
+		formatData(){
+			let condition = this.condition;
+			let attrs = 'commonStock,importStock,purchaseAudit,multiCategory,sortByBarCode'.split(',');
+			let temp = {};
+			let distribution = [];
+
+			//商品,物料应用
+			temp = this.getSelectConfig(this.config);
+
+			//是否可以售卖
+			temp.isShelveMinus = Number(condition.isShelveMinus);
+
+			//品牌配置
+			if(this.isBrand){
+				for(let attr of attrs){
+					temp[attr] = Number(condition[attr]);
+				}
+				temp.wholeBarCode = condition.wholeBarCode;
+			}else{
+				temp.distribution = [];
+			}
+			return temp;
+		},
+		//获取商品与物料的选中状态
+		getSelectConfig(list){
+			let temp = {};
+			for(let ele of list){
+				temp[ele.attr] = Number(ele.isSelect);
+			}
+			return temp;
+		},
+		//获取填写的分销价
+		getDistribution(){
+			let arr = [];
+			for(let ele of this.distribution){
+				ele.name = ele.name.trim();
+				if(ele.name){
+					arr.push({id:ele.id,name:ele.name});
+				}
+			}
+			return arr;
+		},
+		//获取部分当前配置的结果
+		getControData(){
+			let obj = this.getSelectConfig(this.config);
+			let condition = this.condition;
+			obj.purchaseAudit = Number(condition.purchaseAudit);
+			obj.importStock = Number(condition.importStock);
+			obj.commonStock = Number(condition.commonStock);
+
+			return obj;
+		},
+		//控制侧边栏的显示
+		controlSideBar(res){
+			//控制商品,物料的切换
+			let config = 0;		//1商品  2物料  0商品+物料
+			let delArr = [];
+			if(res.isGoods == 1&&res.isMaterial != 1){
+				config = 1;
+				delArr=['领料管理','BOM单管理','单位配置','物料分类'];
+			}else if(res.isGoods != 1&&res.isMaterial == 1){
+				config = 2;
+				delArr=['称重商品配置','货架管理'];
+			}
+			if(res.purchaseAudit != 1){
+				delArr.push('采购审核');	
+			}
+			this.$store.commit('setasideDel',delArr);
+			storage.session('inventConfigure',config);
+		},
+
+
+		initData(){
+			let currentShop = storage.session('userShop').currentShop;
+			this.isBrand = currentShop.ischain == 3;
+		},
+		async initConfig(obj){
+			if(!obj) obj = await this.getHttp('invociGetSupplier');
+
+			let {isGoods,isMaterial} = obj;
+
+			//权限
+			this.configList = this.initList(this.configList,obj,'attr','status');
+
+			//商品,物料应用
+			this.config = this.initList(this.config,{isGoods,isMaterial},'attr','isSelect');
+
+			//是否可以售卖,直接入库,导入入库,采购审核...
+			this.condition = {
+				isShelveMinus: obj.isShelveMinus == 1,											//开启是否超卖
+				commonStock: obj.commonStock == 1,												//物料直接入库
+				importStock: obj.importStock == 1,												//物料导入入库
+				purchaseAudit: obj.purchaseAudit == 1,											//采购审核
+				multiCategory: obj.multiCategory == 1,											//物料是否存在多个分类
+				sortByBarCode: obj.sortByBarCode == 1,											//是否根据物料编码排序
+				wholeBarCode: Number(obj.wholeBarCode)											//物料全码
 			};
 
-			if(typeof fn == 'function'){
-				obj.winType = 'confirm';
-				obj.callback = fn;
+			this.dialog.multiCategory = this.condition.multiCategory;
+			this.dialog.sortByBarCode = this.condition.sortByBarCode;
+			this.dialog.wholeBarCode = this.condition.wholeBarCode;
+		},
+		async initDistribute(distribution){
+			if(!this.isBrand) return;
+
+			if(!distribution) distribution = await this.getHttp('invoicingGetDistributionConfig');
+
+			if(Array.isArray(distribution)){
+				this.distribution  = distribution;
+			}
+			if(this.distribution.length == 0){
+				this.addDistribution();
+			}
+			this.copyDistribution = utils.deepCopy(this.distribution);
+		},
+
+
+		//校验分销价是否变更
+		checkDistributionChange(newDis){
+			let oldDis = [...this.copyDistribution];
+
+			if(newDis.length != oldDis.length){
+				return true;
 			}
 
-			this.$store.commit('setWin',obj);
+			oldDis = this.sortList(oldDis);
+			newDis = this.sortList(newDis);				
+
+			for(let i = 0;i < oldDis.length; i += 1){
+				if(oldDis[i].name != newDis[i].name){
+					return true;
+				}
+			}
 		},
-		async getHttp(url,data={}){
-			let res = await http[url]({data});
-			return res;
+		sortList(arr,attr='id'){
+			let temp = arr.sort((x,y)=>{
+				return x[attr] - y[attr];
+			});
+			return temp;
 		},
+		//检验是否有分销价格修改为空,返回false为不存在
+		checkDistribution(){
+			for(let i = 0 ;i < this.distribution.length; i += 1){
+				let ele = this.distribution[i];
+				ele.name = ele.name.trim();
+				if(Number(ele.id) > 0 && !ele.name){
+					let index = i + 1;
+					index = index > 9 ? index : '0'+index;
+					return index;
+				}				
+			}
+			return false;
+		},
+		//检验是否重名,true表示无重名
+		checkSameValue(list,attr='name'){
+			let flag = true;
+			for(let i = 0; i < list.length; i += 1){
+				for(let j = i+1; j < list.length ;j += 1){
+					if(list[i][attr] == list[j][attr]){
+						return false;
+					}
+				}
+			}
+			return true;
+		},
+		//数组与对象匹配		
 		initList(...reset){
-			//数组与对象匹配
 			let [list=[],obj={},marry='attr',key='status'] = reset;
 			list = list.map((ele)=>{
 				for(let attr in obj){
@@ -259,53 +607,62 @@ export default {
 			});
 			return list;
 		},
-		initData(){
-			let currentShop = storage.session('userShop').currentShop;
-			this.isBrand = currentShop.ischain == 3;
-		}
+		alert(content,fn,title='提示信息',){
+			this.$alert(content, title, {
+				confirmButtonText: '确定',
+				callback: action => {
+					action = action == 'confirm' ? 'ok' :'cancel';
+					if(typeof fn == 'function') fn(action);
+				}
+			});
+		},
+		async getHttp(url,data={}){
+			let res = await http[url]({data});
+			return res;
+		},
 	},
 	async mounted(){
 		this.initData();
-		let obj = await this.getHttp('invociGetSupplier');
-		let {isGoods,isMaterial,isShelveMinus} = obj;
-		let distribution = [];
-		this.configList = this.initList(this.configList,obj,'attr','status');
-		this.config = this.initList(this.config,{isGoods,isMaterial},'attr','isSelect');
-		this.saleSwitch = isShelveMinus == 1;
+		this.initConfig();
 
-
-		distribution = await this.getHttp('invoicingGetDistributionConfig');
-		if(Array.isArray(distribution)){
-			this.distribution = distribution;
-		}
-		if(this.distribution.length == 0){
-			this.distribution.push({id:0,name:''});
-		}
-	},
-	components: {
-		onOff:()=>import(/*webpackChunkName:'on_off'*/'src/components/on_off'),
-		mulSel:()=>import(/*webpackChunkName:'mul_select'*/'src/components/mul_select'),
+		this.initDistribute();
 	},
 };
 </script>
 <style lang='less' scoped>
 @import url('./z_less.less');
-.tips-icon{
-	.whb(25px,25px);
-	float:left;
-	margin-right:5px;
-	background: url('../../../res/images/handle-tips.png') center center no-repeat;
-}
 .in-block{
 	display: inline-block;
 	vertical-align: middle;
 }
-.tips-word{
-	color:#a5a5a5;
-	font-size:14px;	
+.wcolor(@color:@wc,@size:14px){
+	color:@color;
+	font-size:@size;
+}
+p{
+	margin:20px 0;
+	.wcolor;
+}
+
+//提示文字
+.tips-div{
+	display:flex;
+	flex-flow: row nowrap;
+	justify-content: flex-start;
+	align-items: center;
+	.tips-icon{
+		.whb(25px,25px);
+		margin-right:5px;
+		background: url('../../../res/images/handle-tips.png') center center no-repeat;		
+	}
+	.tips-word{
+		color:#a5a5a5;
+		font-size:14px;	
+	}
 }
 
 
+//添加删除icon
 .del-add{
 	.whb(20px,20px,none);
 	.in-block;	
@@ -318,12 +675,6 @@ export default {
 	background: url("../../../res/images/gray-add.png") right bottom no-repeat;
 	.del-add;
 }
-.error-flag{
-	border:1px solid #ff3d04;
-	box-shadow: 0 0 5px 0 #ff3d04;
-}
-
-
 .icon-container{
 	.whb(40px,40px,none);	
 	.in-block;
@@ -331,126 +682,91 @@ export default {
 	text-align: center;
 	cursor: pointer;
 }
+
+.content{
+	padding:20px 0 20px 50px;
+}
+
+//开关左边距离
+.switch-left{
+	margin-left:15px;
+}
+
 #invo-config{
 	.head{
-		.split-div(80%);
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: center;
+		max-width: 1436px;
+		span{
+			height:23px;
+			line-height: 23px;
+			font-size: 16px; 
+			border-left:2px solid @ey;
+			padding-left:10px;
+			padding-right:5px;
+			flex-grow: 0;			
+		}
+		div{
+			flex-grow: 1;
+			border-bottom:2px dashed #ddd;
+			height:13px;
+		}
 	}
-	.head-short{
-		.split-div(50%);
+
+	//配置列表
+	.assign-tips{
+		padding-bottom:25px;
+		.wcolor(#a5a5a5,14px);
+		line-height: 28px;
 	}
-	.content{
-		padding-top:22px;
-		.assign-tips{
-			padding-left:25px;
-			padding-bottom:25px;
-			color:#a5a5a5;
+	.config-list{
+		max-width: 470px;
+		margin:0;
+		padding:0;
+		li{
+			height:40px;
+			color:@wc;
 			font-size:14px;
-			line-height: 28px;
-		}
-		.config-list{
-			max-width: 470px;
-			margin:0;
-			padding:0;
-			li{
-				height:60px;
-				color:#333;
-				font-size:14px;
-				list-style: none;
-				float:left;
-				span{float:right}
-				&:nth-child(even){
-					width:69%;
-				}
-				&:nth-child(odd){
-					width:30%;
-				}
-			}
-			&:after{
-				.clear;
-			}
-		}
-	}
-	.config-switch{
-		padding-left:30px;
-		padding-top:25px;
-		height:100px;
-		.label{
-			vertical-align: middle;
-			margin-right:20px;
-		}
-		.mul-sel{
-			.list{
-				min-width: 100px;
-				height: 40px;
-				line-height: 38px;
-				border:1px solid #ccc;
-				padding: 0 15px;
-				text-align: center;
-				vertical-align: middle;
-				display: inline-block;
-				margin-right:7px;
-				cursor: pointer;
-				user-select: none;
-			}
-			.radio{
-				border:1px solid @y;
-				color:@y;
-			}
-			.checkbox{
-				background: url("../../../res/images/sign.png") right bottom no-repeat;
-				.radio;
-			}
-			display:inline-block;
-			vertical-align: middle;
-
-		}
-	}
-	.sale-switch{
-		height:100px;
-		padding-left:30px;
-		padding-top:25px;	
-		line-height: 40px;
-		.on-off{
-			display: inline-block;
-			vertical-align: middle;
-			margin-left:20px;
-			margin-right: 20px;
-		}
-		.sale{
-			display: inline-block;
-			line-height:28px;
-		}	
-		.list{
 			list-style: none;
-			margin-bottom:20px;
-			&:last-child{
-				margin-bottom:0;
+			float:left;
+			span{float:right}
+			&:nth-child(even){
+				width:69%;
 			}
-			.label{
-				float:left;
-				width:150px;
-				text-align: right;
-				line-height: 42px;
-				padding-right:15px;
+			&:nth-child(odd){
+				width:30%;
 			}
-			.label-tag{
-				.in-block;
-				.price{
-					.whb(210px,38px,1px solid #ccc);
-					padding-left:10px;
-					outline: none;
-					margin-right:20px;
-				}
-			}
-
 		}
-	}	
-	.bottom{	
-		padding-top:20px;
-		padding-left:153px;
-        .btn-com{
-            .btn(200px,50px,16px,#fff);
-        }
+		&:after{
+			.clear;
+		}
+	}
+
+	.label{
+		float:left;
+		width:110px;
+		text-align: right;
+		line-height: 40px;
+		margin-right:20px;
+		.wcolor;
+	}
+	.label-content{
+		display: inline-block;
+	}
+	//分销价
+	.distribute-list{
+		list-style: none;
+		margin-bottom:20px;
+		&:last-child{
+			margin-bottom:0;
+		}
+	}
+
+	//底部按钮
+	.footer{
+		padding-left:60px;
+		padding-top: 30px;
 	}
 }
 </style>

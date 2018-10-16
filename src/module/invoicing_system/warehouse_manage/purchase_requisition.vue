@@ -556,7 +556,7 @@
 						temp.unit = ele.unitTips.selUnitId;
 						temp.unitName = ele.unitTips.selUnitName;
 						temp.type = 2;
-						temp.barCode = '';
+						temp.barCode = ele.barCode;
 						temp.itemName = ele.name;
 						let num = ele.needsNum * ele.unitTips.selUnitVal;
 						temp.num = num.toFixed(3);

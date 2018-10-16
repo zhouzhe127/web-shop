@@ -253,12 +253,12 @@ export default {
 .main {
   margin-top: 20px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #ebeef5;
   position: relative;
   overflow: hidden;
   .headBox {
     height: 50px;
-    border-bottom: 1px #cccccc solid;
+    border-bottom: 1px #ebeef5 solid;
     .head {
       width:100%;
       height: 50px;
@@ -286,7 +286,7 @@ export default {
       top: 0;
     }
     .positionBox {
-      box-shadow: 0px -2px 10px rgba(0,0,0,.12);
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.08);
       position: absolute;
       left: 0;
       background-color: #ffffff;
@@ -295,7 +295,7 @@ export default {
       .conList {
         display: flex;
         justify-content: space-between;
-        border-bottom: 1px #cccccc solid;
+        border-bottom: 1px #ebeef5 solid;
         height: 50px;
         line-height: 50px;
         &:last-child {
@@ -311,7 +311,7 @@ export default {
         }
       }
       .active {
-        background-color: #F4F6F9;
+        background-color: #FBF7EB;
       }
     }
     .min {
@@ -319,7 +319,7 @@ export default {
     }
     .contentBox {
       .title {
-        background: #e6e6e6;
+        background: #f5f7fa;
         display: flex;
         justify-content: space-between;
         height: 40px;

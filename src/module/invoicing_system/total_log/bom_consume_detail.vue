@@ -5,7 +5,7 @@
         <div class="content">
             <div class="col">
                 <li>物料名称:&nbsp;{{materialInfo.name}}</li>
-                <li>物料简码:&nbsp;{{materialInfo.BC}}</li>
+                <li>物料编码:&nbsp;{{materialInfo.barCode}}</li>
                 <li>品牌:&nbsp;{{materialInfo.brandName}}</li>
                 <li>批次数:&nbsp;{{materialInfo.num}}</li>
             </div>

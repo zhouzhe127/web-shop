@@ -49,7 +49,7 @@ export default {
 					{ value: 0,name: '活动优惠券' },
 					{ value: 0,name: '外卖活动补贴' }
 				],
-				orderNumber: [
+				orderNum: [
 					//订单占比
 					{ value: 0,name: '堂吃'},
 					{ value: 0,name: '外卖'},
@@ -82,7 +82,7 @@ export default {
 			],
 			formatPie: ['￥', '￥', ' '],
 			pieDom: [null, null, null],
-			pieType: ['goods', 'discount', 'orderNumber'],
+			pieType: ['goods', 'discount', 'orderNum'],
 			coverShow: false
 		};
 	},
@@ -112,7 +112,7 @@ export default {
 		},
 		analytic() {
 			let proportion = this.pie;
-			let obj = { goods: [], discount: [], orderNumber: [] };
+			let obj = { goods: [], discount: [], orderNum: [] };
 			//先将后台返回的数据转换成如下格式 方便循环
 			for (let x in obj) {
 				for (let m in proportion[x]) {

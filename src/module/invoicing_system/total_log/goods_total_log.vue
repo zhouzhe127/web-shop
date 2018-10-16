@@ -349,28 +349,11 @@ export default {
     },
     activated(){
         this.getOperationList();
+        
         this.getCategoryList();
         this.getWarehouseList();
         this.filterReset('filter',this.pageObj.currentPage);
     },
-    /*
-    beforeRouteEnter(to,from,next){
-        if(from.meta.comName == 'materialTotalLog'){
-            to.meta.keepAlive = true;
-        }else{
-            to.meta.keepAlive = false;            
-        }
-        next();
-    },
-    beforeRouteLeave(to,from,next){
-        if(to.meta.comName == 'materialTotalLog'){
-            from.meta.keepAlive = true;
-        }else{
-            from.meta.keepAlive = false;            
-        }
-        next();
-    },
-    */
 };
 </script>
 <style lang='less' scoped>

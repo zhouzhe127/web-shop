@@ -183,9 +183,6 @@ let need = {
 		weighGoodsList: {
 			name: 'weighGoodsList'
 		}, //"称重商品配置",
-		freeGoods: {
-			name: 'freeGoods'
-		}, //"赠品统计",
 		multiChannelMenu: {
 			name: 'multiChannelMenu'
 		}, //"多渠道菜单",
@@ -339,6 +336,9 @@ let need = {
 		memberSend: {
 			name: 'memberSend'
 		}, //会员推送信息
+		freeGoods: {
+			name: 'freeGoods'
+		}, //赠品统计
 		onlineOrderConfig: {
 			name: 'onlineOrderConfig'
 		}, //在线点单配置
@@ -435,9 +435,6 @@ let need = {
 		WorkingBOM: {
 			name: 'processbomList'
 		}, //加工BOM单
-		materialWorking: {
-			name: 'processHistory'
-		},
 		balanceAdjustRecord: {
 			//余额调整记录
 			name: 'balanceAdjustRecord'
@@ -450,13 +447,17 @@ let need = {
 			//批量日志
 			name: 'batchLog'
 		},
-		getGoodsLogList: {
-			//总日志列表
+		getGoodsLogList: { //总日志列表
 			name: 'totalLog'
 		},
-		customPackageStatistics: {
-			//自定义套餐
-			name: 'customPackageStatistics'
+		getPurchaseOrderList: { //采购单管理
+			name: 'purchaseManagement'
+		},
+		statisticStart: { //物料统计
+			name: 'dataCenter'
+		},
+		getPurchaseOrderReviewList: { //采购审核
+			name: 'purchaseAudit'
 		}
 	}
 };

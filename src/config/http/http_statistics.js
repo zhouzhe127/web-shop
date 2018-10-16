@@ -435,4 +435,9 @@ export default {
 		type: 'file',
 		method: 'post'
 	},
+	"BusinessGetStatByShopIds":{
+        url: b + "Business/getStatByShopIds", //品牌按店查询店铺统计数据
+        method: "get"
+    },
+
 };

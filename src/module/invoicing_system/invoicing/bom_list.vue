@@ -42,26 +42,26 @@
 					</el-select>
 				</div>
 				<div class="inline-box button-box">
-					<el-button @click="filter" type="success">筛选</el-button>
+					<el-button @click="filter" type="primary">筛选</el-button>
                		<el-button @click="reset" type="info">重置</el-button>
 				</div>
 			</div>
 		</div>
 		<el-table :data="list" stripe border style="width: 100%">
-		    <el-table-column type="index" :index="indexMethod" label="序号" width="150">
+		    <el-table-column type="index" :index="indexMethod" label="序号" width="100">
 		    </el-table-column>
-		    <el-table-column prop="itemName" label="商品名称">
+		    <el-table-column prop="itemName" label="商品名称" min-width="200">
 		    </el-table-column>
-		    <el-table-column prop="createName" label="创建人">
+		    <el-table-column prop="createName" label="创建人" width="150">
 		    </el-table-column>
-		    <el-table-column label="创建时间">
+		    <el-table-column label="创建时间" width="200">
 		    	<template slot-scope="scope">
 		        	{{formatTime(scope.row.createTime)}}
 		      	</template>
 		    </el-table-column>
-		    <el-table-column prop="bomNum" label="BOM单编号">
+		    <el-table-column prop="bomNum" label="BOM单编号" width="200">
 		    </el-table-column>
-		    <el-table-column label="BOM类型">
+		    <el-table-column label="BOM类型" width="100">
 		    	<template slot-scope="scope">
 		        	{{setBomType(scope.row.isPublic)}}
 		      	</template>
@@ -149,7 +149,7 @@
 		methods: {
 			initBtn(){
 				let arr = [
-					{name: '新建BOM单',className: 'success',type:4,
+					{name: '新建BOM单',className: 'primary',type:4,
 						fn: () => {
 							this.$router.push({
 								path: 'bomList/bomCreate',

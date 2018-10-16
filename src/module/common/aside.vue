@@ -273,9 +273,19 @@
 					config = 2;
 					this.asideDel = ['称重商品配置', '货架管理'];
 				}
+				if(res.purchaseAudit != 1){
+					this.asideDel.push('采购审核');					
+				}else{
+					if(this.asideDel.includes('采购审核')){
+						this.asideDel = this.asideDel.filter((ele)=>{
+							return ele != '采购审核';
+						});
+					}
+				}
 				this.getData();
 				invoicfig = false;
 				storage.session('inventConfigure', config);
+				storage.session('inventConfigs', res);
 				this.$store.commit('setContentDisplay',config);
 			}
 		},

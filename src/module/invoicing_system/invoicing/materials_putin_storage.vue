@@ -20,7 +20,7 @@
 					</div>
 				</li>
 				<li>
-					<div>物料简码：{{materialInfo.BC}}</div>
+					<div>物料编码：{{materialInfo.barCode}}</div>
 					<div>默认单位：{{unitInfoDefault}}</div>
 					<div>分类：{{cateInfoName}}</div>
 				</li>

@@ -12,6 +12,9 @@
 					<router-view name="details_con"></router-view>
 				</div>
 			</div>
+			<div class="fixButton" v-if="buttonKey.length>0">
+				<food-btn></food-btn>
+			</div>
 		</div>
 	</div>
 </template>
@@ -22,7 +25,7 @@
 		data() {
 			return {
 				userData: storage.session('userShop'),
-				screenWidth: '',
+				screenWidth: '',  
 				fixWidth: ''
 			};
 		},
@@ -47,6 +50,9 @@
 		computed: {
 			asideWidth: function () {
 				return this.$store.state.asideWidth;
+			},
+			buttonKey() {
+				return Object.keys(this.$store.state.fixButton);
 			}
 		},
 		destroyed: function () {
@@ -61,6 +67,10 @@
 				this.fixWidth.style.width = this.screenWidth - 15 + 'px';
 				this.$store.commit('setusableWidth', this.screenWidth);
 			}
+		},
+		components:{
+			foodBtn: () =>
+				import ( /*webpackChunkName:'foodfix_btn'*/ 'src/module/common/foodfix_btn')
 		}
 	};
 </script>

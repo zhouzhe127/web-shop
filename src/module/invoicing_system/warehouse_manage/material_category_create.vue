@@ -10,12 +10,6 @@
 				<img src="../../../res/images/add.png" alt="添加" />
 				<h3>添加一级分类</h3>
 			</div>
-			<template v-if="ischain == 1 || ischain == 2">
-				<span style="background-color: #fcaa30;margin-left: 10px;"></span>
-				<span style="margin-left: 5px;">品牌同步</span>
-				<span style="background-color: #6cc2e6;margin-left: 10px;"></span>
-				<span style="margin-left: 5px;">门店自建</span>
-			</template>
 		</section>
 		<div class="cList" v-for="(item,index) in category" :key="index">
 			<div class="borderTop"></div>
@@ -23,12 +17,8 @@
 
 			<section class="title">
 				<div class="oneTitle" style="word-wrap:break-word">
-					<span v-if="ischain == 1 || ischain == 2">
-        			<span class="oneName"  v-bind:title = "item.name" style="color: #fcaa30;" v-if="item.id < 100000">{{item.name | sliceStr}}</span>
-					<span class="oneName" v-bind:title="item.name" style="color: #6cc2e6;;" v-else>{{item.name | sliceStr}}</span>
-					</span>
-					<span v-else>
-        			<span  v-bind:title = "item.name">{{item.name}}</span>
+					<span>
+						<span  v-bind:title = "item.name">{{item.name}}</span>
 					</span>
 					<div class="openoperation operation">
 						<img src="../../../res/icon/iconchange.png" @click="openOnecategoryEdit(item,index)" />
@@ -41,12 +31,8 @@
 			<ul class="oUl">
 				<template v-for="(itemChild,chindex) in item.child">
 					<li class="oLi" :key="chindex">
-						<span v-if="ischain == 1 || ischain == 2">
-            			<span style="word-wrap:break-word; color: #fcaa30;" v-bind:title = "itemChild.name" v-if="itemChild.id < 100000">{{itemChild.name}}</span>
-						<span style="word-wrap:break-word; color: #6cc2e6;;" v-bind:title="itemChild.name" v-else>{{itemChild.name}}</span>
-						</span>
-						<span v-else>
-            			<span style="word-wrap:break-word" v-bind:title = "itemChild.name" >{{itemChild.name}}</span>
+						<span>
+							<span style="word-wrap:break-word" v-bind:title = "itemChild.name" >{{itemChild.name}}</span>
 						</span>
 						<div class="openoperation" style="margin-top:-35px ;">
 							<img src="../../../res/icon/change.png" @click="openTwoCategoryEdit(itemChild,chindex)" />
@@ -56,6 +42,7 @@
 				</template>
 
 				<li class="oLi" style="line-height: 30px;">
+					<!--
 					<div class="addinput" v-if="item.showAdd">
 						<input type="text" class="input second" v-model="childObj.name" maxlength="20" placeholder="输入二级分类" v-cloak/>
 						<div class="oDiv" style="border:1px solid #ff00000;" @click="addTwoCategory(item,index)">
@@ -63,7 +50,8 @@
 							<img src="../../../res/icon/iconright.png" alt="" />
 						</div>
 					</div>
-					<img class="addTwo" src="../../../res/images/adds.png" @click="showInput(item,index)" alt="add" />
+					-->
+					<img class="addTwo" src="../../../res/images/adds.png" @click="openTwoCategoryAdd(item)" alt="add" />
 				</li>
 			</ul>
 		</div>
@@ -83,122 +71,108 @@ import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
-			isBrand: null, //是否是品牌 
-			ischain: null, //直营还是单店
-
 			originCategory: [], //原始的分类
 			category: [], //所有的分类 已经组织的分类
+			showCom: '',
+			comObj: {},
+			flag: {}, //当前编辑的状态
+			winName:{
+				oneAdd:'oneAdd',
+				oneEdit:'oneEdit',
+				twoEdit:'twoEdit',
+				twoAdd:'twoAdd'
+			},
+
 			childObj: {//二级分类的名字
 				sort: 255,
 				name: ''
 			}, 
-			showCom: '',
-			comObj: {},
-			flag: {
-				id: '',
-				name: '',
-				sort: '',
-				win: ''
-			}, //当前编辑的状态
 		};
 	},
 	methods: {
 		async closeCommonWin(res, obj) {
-			this.showCom = '';
-			if(res != 'ok') return;
+			if(res != 'ok'){
+				this.initFlag();
+				this.showCom = '';
+				return;			
+			} 
+
 			let result = null;
 			let temp = {};
+			let winName = this.winName;
+
 			switch(this.flag.win) {
-				case 'oneAdd': //添加一级分类
-					if(this.checkSame(this.originCategory, obj.categoryName)) {
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							content: '分类名重名!'
-						});
-						break;
+				case winName.twoAdd://添加二级分类				
+				case winName.oneAdd: //添加一级分类
+					if(this.checkSame(this.originCategory,'name', obj.categoryName)) {
+						this.alert('分类名重名!');
+						return;
+					}
+					if(this.checkSame(this.originCategory,'barCode', obj.barCode)) {
+						this.alert('分类编码重复!');
+						return;
 					}
 					temp = {
 						name: obj.categoryName,
 						pid: this.flag.pid,
-						sort: obj.sort
+						sort: obj.sort,
+						barCode:obj.barCode
 					};
 					result = await this.MaterialAddCategory(temp);
 					if(result) {
-						result.showAdd = false;
 						result.child = [];
 						this.originCategory.push(result);
 						this.category = this.organizeCategory(this.originCategory);
 						this.category = this.sortCategory(this.category);
 					}
 					break;
-				case 'oneEdit': //修改一级分类
-					if(this.checkSame(this.originCategory, obj.categoryName, this.flag.id)) {
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							content: '分类名重名!'
-						});
-						break;
+				case winName.oneEdit: //修改一级分类
+				case winName.twoEdit: //修改二级分类
+					if(this.checkSame(this.originCategory,'name', obj.categoryName, this.flag.id)) {
+						this.alert('分类名重名!');
+						return;
+					}
+					if(this.checkSame(this.originCategory,'barCode', obj.barCode,this.flag.id)) {
+						this.alert('分类编码重复!');
+						return;
 					}
 					temp = {
 						name: obj.categoryName,
 						cid: this.flag.id,
-						sort: obj.sort
+						sort: obj.sort,
+						barCode:obj.barCode						
 					};
-					if(this.flag.name != obj.categoryName || this.flag.sort != obj.sort) {
+					if(this.flag.name != obj.categoryName || this.flag.sort != obj.sort || this.flag.barCode != obj.barCode) {
 						result = await this.MaterialEditCategory(temp);
 						if(result) {
-							result.showAdd = false;
 							result.child = [];
 							this.originCategory = this.filterCategoryById(this.originCategory, result.id);
 							this.originCategory.push(result);
 							this.category = this.organizeCategory(this.originCategory);
 							this.category = this.sortCategory(this.category);
-	
 						}
 					}
 					break;
-				case 'twoEdit': //修改二级分类
-					if(this.checkSame(this.originCategory, obj.categoryName, this.flag.id)) {
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							content: '分类名重名!'
-						});
-						break;
-					}
-					temp = {
-						name: obj.categoryName,
-						cid: this.flag.id,
-						sort: obj.sort
-					};
-					if(this.flag.name != obj.categoryName || this.flag.sort != obj.sort) {
-						result = await this.MaterialEditCategory(temp);
-						this.originCategory = this.filterCategoryById(this.originCategory, result.id);
-						this.originCategory.push(result);
-						this.category = this.organizeCategory(this.originCategory);
-					}
-					break;
-			}
 
-			this.flag = {
-				id: '',
-				name: '',
-				sort: '',
-				win: ''
-			};
+			}
+			this.initFlag();
+			this.showCom = '';
 		},
 		//添加一级分类
 		openOneCategoryAdd() {
 			this.comObj = {
 				categoryName: '',
 				sort: 1,
-				title: '添加一级分类'
+				title: '添加一级分类',
+				barCode:'',
 			};
 			this.flag = {
 				id: '',
 				name: '',
-				sort: '',
-				win: 'oneAdd',
-				pid: 0
+				sort: 1,
+				win: this.winName.oneAdd,
+				pid: 0,
+				barCode:'',				
 			};
 			this.showCom = 'categoryWin';
 		},
@@ -208,13 +182,15 @@ export default {
 				categoryName: item.name,
 				sort: item.sort,
 				title: '修改一级分类',
+				barCode: item.barCode,				
 			};
 			this.flag = {
 				id: item.id,
 				name: item.name,
 				sort: item.sort,
-				win: 'oneEdit',
-				pid: item.pid
+				win: this.winName.oneEdit,
+				pid: 0,
+				barCode: item.barCode,				
 			};
 			this.showCom = 'categoryWin';
 
@@ -225,59 +201,40 @@ export default {
 				categoryName: item.name,
 				sort: item.sort,
 				title: '修改二级分类',
+				barCode: item.barCode,								
 			};
 			this.flag = {
 				id: item.id,
 				name: item.name,
 				sort: item.sort,
-				win: 'twoEdit',
-				pid: item.pid
+				win: this.winName.twoEdit,
+				pid: item.pid,
+				barCode: item.barCode,								
+			};
+			this.showCom = 'categoryWin';
+		},
+		//添加二级分类
+		openTwoCategoryAdd(item){
+			this.comObj = {
+				categoryName: '',
+				sort: 1,
+				title: '添加二级分类',
+				barCode: '',								
+			};
+			this.flag = {
+				id: '',
+				name: '',
+				sort: 1,
+				win: this.winName.twoAdd,
+				pid: item.id,
+				barCode: '',												
 			};
 			this.showCom = 'categoryWin';
 		},
 
-		//添加二级分类
-		addTwoCategory(item) {
-			let temp = {
-				name: this.childObj.name,
-				pid: item.id,
-				sort: this.childObj.sort
-			};
-			if(this.checkSame(this.originCategory, this.childObj.name)) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					content: '分类名重名!'
-				});
-				return;
-			}
-			if(!global.checkData({
-				name: {
-					reg: /^[^!@#$%^&*.,.;,]{1,20}$/,
-					pro: '分类名最多20字且不包含特殊字符!'
-				}
-			}, this.childObj)) return;
 
-			this.MaterialAddCategory(temp).then((result) => {
-				if(result) {
-					this.originCategory.push(result);
-					this.category = this.organizeCategory(this.originCategory);
-					this.childObj = {
-						sort: 255,
-						name: ''
-					}; //二级分类的名字
-				}
-			});
-		},
-		//删除一级分类
-		deleteOneCategory(item) {
-			if(item.child && item.child.length > 0) {
-				this.$store.commit('setWin', {
-					winType: 'alert',
-					title: '温馨提示',
-					content: '该分类下存在二级分类,不能删除!'
-				});
-				return false;
-			}
+		//删除分类
+		delCategory(item){
 			this.$store.commit('setWin', {
 				winType: 'confirm',
 				title: '温馨提示',
@@ -294,43 +251,43 @@ export default {
 				}
 			});
 		},
+		//删除一级分类
+		deleteOneCategory(item) {
+			if(item.child && item.child.length > 0) {
+				this.alert('该分类下存在二级分类,不能删除!');
+				return;
+			}
+			this.delCategory(item);
+
+		},
 		//删除二级分类
 		deleteTwoCategory(item) {
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '温馨提示',
-				content: '确认删除该分类吗?',
-				callback: (res) => {
-					if(res == 'ok') {
-						this.MaterialDelCategory(item.id).then(() => {
-							this.originCategory = this.filterCategoryById(this.originCategory, item.id);
-							this.category = this.organizeCategory(this.originCategory);
-						});
-					}
-				}
-			});
+			this.delCategory(item);
 		},
 
-		//---------function---------
-		//输入框的展示
-		showInput(item) {
-			this.childObj.name = '';
-			this.category = this.category.map((ele) => {
-				if(item.id == ele.id) {
-					ele.showAdd = true;
-				} else {
-					ele.showAdd = false;
-				}
-				return ele;
-			});
+
+
+
+		initFlag(){
+			this.flag = {
+				id: '',
+				name: '',
+				sort: 1,
+				win: '',
+				barCode:'',
+			};
 		},
+
+
+
+
+
 		//组织分类数据
 		organizeCategory(cate) {
 			let temp = cate;
 			let arr = [];
 			cate.forEach((ele) => {
 				ele.child = [];
-				ele.showAdd = false;
 				if(ele.pid == 0) {
 					for(let i = 0, len = temp.length; i < len; i++) {
 						if(ele.id == temp[i].pid && ele.id != temp[i].id) {
@@ -350,11 +307,13 @@ export default {
 			return temp;
 		},
 		//校验是否有相同的分类名
-		checkSame(category, name, id) {
-			if(id) category = this.filterCategoryById(category, id);
+		checkSame(...args) {
+			let [category, attr='name',value,id] = args;
+			let temp = [...category];
+			if(id) temp = this.filterCategoryById(temp, id);
 
-			let flag = category.some((ele) => {
-				if(ele.name == name) {
+			let flag = temp.some((ele) => {
+				if(ele[attr] == value) {
 					return true;
 				}
 			});
@@ -370,7 +329,15 @@ export default {
 			});
 			return temp;
 		},
-
+		alert(content,fn,title='提示信息',){
+			this.$alert(content, title, {
+				confirmButtonText: '确定',
+				callback: action => {
+					action = action == 'confirm' ? 'ok' :'cancel';
+					if(typeof fn == 'function') fn(action);
+				}
+			});
+		},
 		//获取物料分类
 		async MaterialGetCategoryList() {
 			let res = await http.MaterialGetCategoryList({
@@ -400,6 +367,9 @@ export default {
 		},
 	},
 	mounted() {
+		this.initFlag();
+
+
 		this.MaterialGetCategoryList().then((res) => {
 			this.originCategory = utils.deepCopy(res);
 			this.category = this.organizeCategory(res);
