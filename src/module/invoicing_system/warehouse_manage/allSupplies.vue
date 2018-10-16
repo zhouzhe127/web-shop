@@ -229,7 +229,6 @@ export default {
 		border: 1px #ccc solid;
 		width: 100%;
 		height: auto;
-		float: left;
 		.homeTitle {
 			background: #e6e6e6;
 			overflow: hidden;
