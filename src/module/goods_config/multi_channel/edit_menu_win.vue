@@ -11,8 +11,7 @@
 				</div>
 				<div class="tas-change">
 					<span class="tas-text">必点起售数量</span>
-					<input type="text" placeholder="请输入数量" maxlength="3" style="width:150px;padding-left:20px;"
-						   :onkeyup="minNum=minNum.replace(/\D/,'')" v-model="minNum" />
+					<input type="text" placeholder="请输入数量" maxlength="3" style="width:150px;padding-left:20px;" :onkeyup="minNum=minNum.replace(/\D/,'')" v-model="minNum" />
 				</div>
 				<div style="clear: both"></div>
 				<ul class="neckTab" v-show="typeC==2">
@@ -26,45 +25,44 @@
 					</div>
 					<ul v-if="!isPackage" class="noPackage">
 						<!--一级分类选择框-->
-						<elCategory  @selectCategory = "newselectOneArea" :itemIndex="oneArea.oneAreaIndex" :categoryArr="oneArea.oneAreaList" :itemArea = "oneArea" style="float: left;"></elCategory>
+						<elCategory @selectCategory="newselectOneArea" :itemIndex="oneArea.oneAreaIndex" :categoryArr="oneArea.oneAreaList" :itemArea="oneArea" style="float: left;"></elCategory>
 						<!--二级级分类选择框-->
-						<elCategory  @selectCategory = "newselectTwoArea" :itemIndex="twoArea.twoAreaIndex" :categoryArr="twoArea.twoAreaList"  :itemArea = "twoArea" style="float: left;"></elCategory>
+						<elCategory @selectCategory="newselectTwoArea" :itemIndex="twoArea.twoAreaIndex" :categoryArr="twoArea.twoAreaList" :itemArea="twoArea" style="float: left;"></elCategory>
 
 						<!--<li style="width:210px;float: left;">-->
-							<!--&lt;!&ndash;一级分类选择框&ndash;&gt;-->
-							<!--<section class="staList fl detLi">-->
-								<!--<section v-on:click="showOneArea" class="tableList">-->
-									<!--<span class="oSpan">{{oneArea.oneAreaName}}</span>-->
-									<!--<div class="fl">-->
-										<!--<i></i>-->
-									<!--</div>-->
-								<!--</section>-->
-								<!--<div v-if="oneArea.oneAreaBtn" class="detDiv">-->
-									<!--<i class="detI"></i>-->
-									<!--<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">-->
-										<!--<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>-->
-									<!--</div>-->
-								<!--</div>-->
-							<!--</section>-->
+						<!--&lt;!&ndash;一级分类选择框&ndash;&gt;-->
+						<!--<section class="staList fl detLi">-->
+						<!--<section v-on:click="showOneArea" class="tableList">-->
+						<!--<span class="oSpan">{{oneArea.oneAreaName}}</span>-->
+						<!--<div class="fl">-->
+						<!--<i></i>-->
+						<!--</div>-->
+						<!--</section>-->
+						<!--<div v-if="oneArea.oneAreaBtn" class="detDiv">-->
+						<!--<i class="detI"></i>-->
+						<!--<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">-->
+						<!--<section v-for="(item,index) in oneArea.oneAreaList" :key="index" v-on:click='selectOneArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>-->
+						<!--</div>-->
+						<!--</div>-->
+						<!--</section>-->
 						<!--</li>-->
 						<!--<li style="width:210px;margin-left: 20px;float: left;">-->
-							<!--&lt;!&ndash;二级级分类选择框&ndash;&gt;-->
-							<!--<section class="staList fl detLi">-->
-								<!--<section v-on:click="showTwoArea" class="tableList">-->
-									<!--<span class="oSpan">{{twoArea.twoAreaName}}</span>-->
-									<!--<div class="fl">-->
-										<!--<i></i>-->
-									<!--</div>-->
-								<!--</section>-->
-								<!--<div v-if="twoArea.twoAreaBtn" class="detDiv" style="left: -180px;">-->
-									<!--<i class="detI" style="left: 290px;"></i>-->
-									<!--<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">-->
-										<!--<section v-for="(item,index) in twoArea.twoAreaList" :key="index" v-on:click='selectTwoArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>-->
-									<!--</div>-->
-								<!--</div>-->
-							<!--</section>-->
+						<!--&lt;!&ndash;二级级分类选择框&ndash;&gt;-->
+						<!--<section class="staList fl detLi">-->
+						<!--<section v-on:click="showTwoArea" class="tableList">-->
+						<!--<span class="oSpan">{{twoArea.twoAreaName}}</span>-->
+						<!--<div class="fl">-->
+						<!--<i></i>-->
+						<!--</div>-->
+						<!--</section>-->
+						<!--<div v-if="twoArea.twoAreaBtn" class="detDiv" style="left: -180px;">-->
+						<!--<i class="detI" style="left: 290px;"></i>-->
+						<!--<div style="width:100%;height: 100%;overflow-y: auto;z-index: 16;">-->
+						<!--<section v-for="(item,index) in twoArea.twoAreaList" :key="index" v-on:click='selectTwoArea(index,item)' class="shoName" :class="{'shoName-select-one':item && item.selected}">{{item.name}}</section>-->
+						<!--</div>-->
+						<!--</div>-->
+						<!--</section>-->
 						<!--</li>-->
-
 
 						<!--搜索-->
 						<li style="width:180px;margin-left: 20px;float: left">
@@ -78,7 +76,7 @@
 						<a @click="selectPack(-1)" class="raduobtn" :class="{'selectbtn' : packBtn == -1}" href="javascript:void(0);">全部</a>
 						<a @click="selectPack(0)" class="raduobtn" :class="{'selectbtn' : packBtn == 0}" href="javascript:void(0);">固定套餐</a>
 						<a @click="selectPack(1)" class="raduobtn" :class="{'selectbtn' : packBtn == 1}" href="javascript:void(0);">可选套餐</a>
-						<a @click="selectPack(2)" class="raduobtn" :class="{'selectbtn' : packBtn == 2}" href="javascript:void(0);" v-show="showDefined">自定义套餐</a>
+						<a @click="selectPack(2)" class="raduobtn" :class="{'selectbtn' : packBtn == 2}" href="javascript:void(0);" v-show="weiShow&&showDefined">自定义套餐</a>
 					</div>
 				</section>
 				<ul class="aUl">
@@ -124,18 +122,18 @@ import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
-//			oneArea: {
-//				oneAreaBtn: false, //一级分类
-//				oneAreaName: '请选择一级分类',
-//				oneAreaIndex: -1, //分类下标
-//				oneAreaList: [{ id: '0', name: '全部' }] //一级分类列表
-//			},
-//			twoArea: {
-//				twoAreaBtn: false, //二级分类
-//				twoAreaName: '请选择二级分类',
-//				twoAreaIndex: -1, //分类下标
-//				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
-//			},
+			//			oneArea: {
+			//				oneAreaBtn: false, //一级分类
+			//				oneAreaName: '请选择一级分类',
+			//				oneAreaIndex: -1, //分类下标
+			//				oneAreaList: [{ id: '0', name: '全部' }] //一级分类列表
+			//			},
+			//			twoArea: {
+			//				twoAreaBtn: false, //二级分类
+			//				twoAreaName: '请选择二级分类',
+			//				twoAreaIndex: -1, //分类下标
+			//				twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+			//			},
 
 			oneArea: {
 				name: '请选择一级分类',
@@ -145,7 +143,7 @@ export default {
 			twoArea: {
 				name: '请选择二级分类',
 				twoAreaIndex: -1, //分类下标
-				twoAreaList:[],   //二级分类列表
+				twoAreaList: [] //二级分类列表
 			},
 
 			packlist: [], //所有的套餐列表
@@ -181,19 +179,24 @@ export default {
 			search: '', //搜索
 
 			objGoods: {}, //对市别商品id做处理，避免多重循环
-            peoGoods: {}, //人均商品id做处理，避免多重循环
-			mustGoods:{},//必点商品id做处理，避免多重循环
+			peoGoods: {}, //人均商品id做处理，避免多重循环
+			mustGoods: {}, //必点商品id做处理，避免多重循环
 
 			fatherGoods: [],
 			fatherPacks: [],
 
-			showDefined:true,//是否展示自定套餐
+			showDefined: true, //是否展示自定套餐(所有渠道的必点商品及必点子商品不展示)
+			weiShow: true //是否展示自定套餐(微店渠道下不展示)
 		};
 	},
 	props: ['getGoods', 'getPacks', 'goodCom'],
 	created() {
-//		document.addEventListener('click', this.myClick);
+		//		document.addEventListener('click', this.myClick);
 		this.getOneAreaList(); //获取分类列表
+		//微店渠道下不展示自定义套餐
+		if (Number(this.goodCom.id) >= 7 && Number(this.goodCom.id) <= 11) {
+			this.weiShow = false;
+		}
 		//初始化数据
 		this.init();
 	},
@@ -228,14 +231,14 @@ export default {
 		changeType(i) {
 			this.saveData();
 			this.typeC = i;
-			this.showDefined=(i==2?false:true);
-			this.packBtn=-1;
+			this.showDefined = i == 2 ? false : true;
+			this.packBtn = -1;
 			this.fuData();
 		},
 		queryTo(v) {
 			this.saveData();
 			this.mustSon = v;
-			this.packBtn=-1;
+			this.packBtn = -1;
 			this.fuData();
 		},
 		//切换前保存数据
@@ -279,11 +282,10 @@ export default {
 		fuData() {
 			this.search = ''; //清空搜索数据
 			this.isPackage = false; //切回默认的商品
-			if (this.oneArea.oneAreaIndex!= -1) {
-
+			if (this.oneArea.oneAreaIndex != -1) {
 				this.oneArea.name = '请选择一级分类';
 				this.oneArea.oneAreaIndex = -1;
-				this.twoArea={
+				this.twoArea = {
 					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
 					twoAreaList: [] //二级分类列表
@@ -294,114 +296,129 @@ export default {
 				}
 			}
 			console.log('切换时复制');
-			let nowGoods = utils.deepCopy(this.fatherGoods);   //商品
-			let nowPacks = utils.deepCopy(this.fatherPacks);   //套餐
+			let nowGoods = utils.deepCopy(this.fatherGoods); //商品
+			let nowPacks = utils.deepCopy(this.fatherPacks); //套餐
 			switch (this.typeC + '') {
 				case '0':
 					this.isOnlyGoods = false;
 					this.goodsIds = this.oneG;
 					this.packages = this.oneP;
 
-                    //过滤多规格子菜
-                    for (let i = 0; i < nowGoods.length; i++) {
-                        if (nowGoods[i].groupId != '0') {
-                            nowGoods.splice(i, 1);
-                            i--;
-                        }
-                    }
-                    //对商品id做处理，避免多重循环
-                    if (JSON.stringify(this.objGoods) == '{}') {
-                        for (let i = 0; i < nowGoods.length; i++) {
-                            if (this.objGoods[nowGoods[i].id]) {
-                                console.log('有重复id');
-                            } else {
-                                this.objGoods[nowGoods[i].id] = i;
-                            }
-                        }
-                    }
-                    //
-                    for (let j = 0; j < this.goodsIds.length; j++) {
-                        let index = this.objGoods[this.goodsIds[j]];
-                        if (index || index != undefined) {
-                            nowGoods[index].selected = true;
-                        }
-                    }
+					//过滤多规格子菜
+					for (let i = 0; i < nowGoods.length; i++) {
+						if (nowGoods[i].groupId != '0') {
+							nowGoods.splice(i, 1);
+							i--;
+						}
+					}
+					//对商品id做处理，避免多重循环
+					if (JSON.stringify(this.objGoods) == '{}') {
+						for (let i = 0; i < nowGoods.length; i++) {
+							if (this.objGoods[nowGoods[i].id]) {
+								console.log('有重复id');
+							} else {
+								this.objGoods[nowGoods[i].id] = i;
+							}
+						}
+					}
+					//
+					for (let j = 0; j < this.goodsIds.length; j++) {
+						let index = this.objGoods[this.goodsIds[j]];
+						if (index || index != undefined) {
+							nowGoods[index].selected = true;
+						}
+					}
 					break;
 				case '1':
 					this.isOnlyGoods = true;
 					this.goodsIds = this.twoG;
 
-                    //过滤多规格主菜、斤两菜、自定义菜,及市别未选择的菜和下架的菜
-                    for (let i = 0; i < nowGoods.length; i++) {
-                        if (nowGoods[i].isGroup == '1' || nowGoods[i].type != '0'||this.oneG.indexOf(nowGoods[i].id)==-1||nowGoods[i].status == '2') {
-                            nowGoods.splice(i, 1);
-                            i--;
-                        }
-                    }
-                    //对人均商品id做处理，避免多重循环
-                    this.peoGoods={};
+					//过滤多规格主菜、斤两菜、自定义菜,及市别未选择的菜和下架的菜
 					for (let i = 0; i < nowGoods.length; i++) {
-                            if (this.peoGoods[nowGoods[i].id]) {
-                                console.log('有重复id');
-                            } else {
-                                this.peoGoods[nowGoods[i].id] = i;
-                            }
+						if (
+							nowGoods[i].isGroup == '1' ||
+							nowGoods[i].type != '0' ||
+							this.oneG.indexOf(nowGoods[i].id) == -1 ||
+							nowGoods[i].status == '2'
+						) {
+							nowGoods.splice(i, 1);
+							i--;
+						}
 					}
-                    //设置选中的为true
-                    for (let j = 0; j < this.goodsIds.length; j++) {
-                        let index = this.peoGoods[this.goodsIds[j]];
-                        if (index || index != undefined) {
-                            nowGoods[index].selected = true;
-                        }
-                    }
+					//对人均商品id做处理，避免多重循环
+					this.peoGoods = {};
+					for (let i = 0; i < nowGoods.length; i++) {
+						if (this.peoGoods[nowGoods[i].id]) {
+							console.log('有重复id');
+						} else {
+							this.peoGoods[nowGoods[i].id] = i;
+						}
+					}
+					//设置选中的为true
+					for (let j = 0; j < this.goodsIds.length; j++) {
+						let index = this.peoGoods[this.goodsIds[j]];
+						if (index || index != undefined) {
+							nowGoods[index].selected = true;
+						}
+					}
 					break;
 				case '2':
 					this.isOnlyGoods = false;
-					if (!this.mustSon) {//必点
+					if (!this.mustSon) {
+						//必点
 						this.goodsIds = this.threeG;
 						this.packages = this.threeP;
-					} else {//必点子
+					} else {
+						//必点子
 						this.goodsIds = this.fourG;
 						this.packages = this.fourP;
 					}
-                    //过滤多规格主菜，及市别未选择的菜
-                    for (let i = 0; i < nowGoods.length; i++) {
-                        if (nowGoods[i].isGroup == '1'||this.oneG.indexOf(nowGoods[i].id)==-1) {
-                            nowGoods.splice(i, 1);
-                            i--;
-                        }
-                    }
-                    if (!this.mustSon) {
-                        for (let i = 0; i < nowGoods.length; i++) {//过滤必点子选择过的
-                            if (this.fourG.includes(nowGoods[i].id)) {
-                                nowGoods.splice(i, 1);
-                                i--;
-                            }
-                        }
-                    } else {
-                        for (let i = 0; i < nowGoods.length; i++) {//过滤下架,及必点选择过的
-                            if (nowGoods[i].status == '2'||this.threeG.includes(nowGoods[i].id)) {
-                                nowGoods.splice(i, 1);
-                                i--;
-                            }
-                        }
-                    }
-                    //对商品id做处理，避免多重循环
-                    this.mustGoods={};
+					//过滤多规格主菜，及市别未选择的菜
 					for (let i = 0; i < nowGoods.length; i++) {
-                            if (this.mustGoods[nowGoods[i].id]) {
-                                console.log('有重复id');
-                            } else {
-                                this.mustGoods[nowGoods[i].id] = i;
-                            }
+						if (
+							nowGoods[i].isGroup == '1' ||
+							this.oneG.indexOf(nowGoods[i].id) == -1
+						) {
+							nowGoods.splice(i, 1);
+							i--;
+						}
+					}
+					if (!this.mustSon) {
+						for (let i = 0; i < nowGoods.length; i++) {
+							//过滤必点子选择过的
+							if (this.fourG.includes(nowGoods[i].id)) {
+								nowGoods.splice(i, 1);
+								i--;
+							}
+						}
+					} else {
+						for (let i = 0; i < nowGoods.length; i++) {
+							//过滤下架,及必点选择过的
+							if (
+								nowGoods[i].status == '2' ||
+								this.threeG.includes(nowGoods[i].id)
+							) {
+								nowGoods.splice(i, 1);
+								i--;
+							}
+						}
+					}
+					//对商品id做处理，避免多重循环
+					this.mustGoods = {};
+					for (let i = 0; i < nowGoods.length; i++) {
+						if (this.mustGoods[nowGoods[i].id]) {
+							console.log('有重复id');
+						} else {
+							this.mustGoods[nowGoods[i].id] = i;
+						}
 					}
 					//
-                    for (let j = 0; j < this.goodsIds.length; j++) {
-                        let index = this.mustGoods[this.goodsIds[j]];
-                        if (index || index != undefined) {
-                            nowGoods[index].selected = true;
-                        }
-                    }
+					for (let j = 0; j < this.goodsIds.length; j++) {
+						let index = this.mustGoods[this.goodsIds[j]];
+						if (index || index != undefined) {
+							nowGoods[index].selected = true;
+						}
+					}
 					break;
 			}
 
@@ -410,53 +427,69 @@ export default {
 			this.goodList = nowGoods;
 
 			//套餐过滤
-			if (this.typeC==2) {
-                for (let i = 0;i < nowPacks.length; i++) {
-                    if (!this.oneP.includes(nowPacks[i].id)||nowPacks[i].type==2) {//过滤市别中未选择的,及可选套餐
-                        nowPacks.splice(i, 1);
-                        i--;
-                    }
-                }
-                if (!this.mustSon) {
-                    for (let i = 0; i < nowPacks.length; i++) {//过滤必点子选择过的
-                        if (this.fourP.includes(nowPacks[i].id)) {
-                            nowPacks.splice(i, 1);
-                            i--;
-                        }
-                    }
-                } else {
-                    for (let i = 0;i < nowPacks.length; i++) {//过滤下架的,及必点选择过的
-                        if (nowPacks[i].status == '2'||this.threeP.includes(nowPacks[i].id)) {
-                            nowPacks.splice(i, 1);
-                            i--;
-                        }
-                    }
-                }
-			}
-			if(this.typeC!=1){
-                for (let j = 0; j < nowPacks.length; j++) { //设置选择过的为true
-                    if(this.packages.includes(nowPacks[j].id)){
-                        nowPacks[j].selected = true;
+			if (this.typeC == 2) {
+				for (let i = 0; i < nowPacks.length; i++) {
+					if (
+						!this.oneP.includes(nowPacks[i].id) ||
+						nowPacks[i].type == 2
+					) {
+						//过滤市别中未选择的,及可选套餐
+						nowPacks.splice(i, 1);
+						i--;
 					}
-                }
-                this.packlist= nowPacks;
-                this.packCom= nowPacks;
+				}
+				if (!this.mustSon) {
+					for (let i = 0; i < nowPacks.length; i++) {
+						//过滤必点子选择过的
+						if (this.fourP.includes(nowPacks[i].id)) {
+							nowPacks.splice(i, 1);
+							i--;
+						}
+					}
+				} else {
+					for (let i = 0; i < nowPacks.length; i++) {
+						//过滤下架的,及必点选择过的
+						if (
+							nowPacks[i].status == '2' ||
+							this.threeP.includes(nowPacks[i].id)
+						) {
+							nowPacks.splice(i, 1);
+							i--;
+						}
+					}
+				}
+			}
+			if (this.typeC != 1) {
+				for (let j = 0; j < nowPacks.length; j++) {
+					//设置选择过的为true
+					if (this.packages.includes(nowPacks[j].id)) {
+						nowPacks[j].selected = true;
+					}
+				}
+				this.packlist = nowPacks;
+				this.packCom = nowPacks;
 			}
 		},
 		//确定
 		async channelEditGoods() {
 			let temp = [];
-			this.twoG.forEach(ele => {  //人均商品
+			this.twoG.forEach(ele => {
+				//人均商品
 				let obj = {};
 				obj.gid = ele;
 				obj.goodsNum = '1';
 				temp.push(obj);
 			});
-			for(let i=0;i<this.oneG.length;i++){  //选中多规格主菜时，把其子菜id也传递给后台
-			    for(let j=0;j<this.getGoods.length;j++){
-			        if(this.oneG[i]==this.getGoods[j].id&&this.getGoods[j].myId&&this.getGoods[j].myId.length>0){
-			            this.oneG=this.oneG.concat(this.getGoods[j].myId);
-			            break;
+			for (let i = 0; i < this.oneG.length; i++) {
+				//选中多规格主菜时，把其子菜id也传递给后台
+				for (let j = 0; j < this.getGoods.length; j++) {
+					if (
+						this.oneG[i] == this.getGoods[j].id &&
+						this.getGoods[j].myId &&
+						this.getGoods[j].myId.length > 0
+					) {
+						this.oneG = this.oneG.concat(this.getGoods[j].myId);
+						break;
 					}
 				}
 			}
@@ -476,29 +509,35 @@ export default {
 			return res;
 		},
 		//处理数据
-		chuDate(){
-		    let [two,three,four,threeT,fourT]=[utils.deepCopy(this.twoG),utils.deepCopy(this.threeG),utils.deepCopy(this.fourG),utils.deepCopy(this.threeP),utils.deepCopy(this.fourP)];
-            this.twoG=two.filter((v)=>{
-		        return this.oneG.includes(v);
+		chuDate() {
+			let [two, three, four, threeT, fourT] = [
+				utils.deepCopy(this.twoG),
+				utils.deepCopy(this.threeG),
+				utils.deepCopy(this.fourG),
+				utils.deepCopy(this.threeP),
+				utils.deepCopy(this.fourP)
+			];
+			this.twoG = two.filter(v => {
+				return this.oneG.includes(v);
 			});
-			this.threeG=three.filter((v)=>{
-		        return this.oneG.includes(v);
+			this.threeG = three.filter(v => {
+				return this.oneG.includes(v);
 			});
-            this.fourG=four.filter((v)=>{
-                return this.oneG.includes(v);
-            });
-            this.threeP=threeT.filter((v)=>{
-                return this.oneP.includes(v);
-            });
-            this.fourP=fourT.filter((v)=>{
-                return this.oneP.includes(v);
-            });
+			this.fourG = four.filter(v => {
+				return this.oneG.includes(v);
+			});
+			this.threeP = threeT.filter(v => {
+				return this.oneP.includes(v);
+			});
+			this.fourP = fourT.filter(v => {
+				return this.oneP.includes(v);
+			});
 		},
 		//弹窗
 		goodListWin(res) {
 			if (res == 'ok') {
-				this.saveData();//保存数据
-                this.chuDate();//处理数据
+				this.saveData(); //保存数据
+				this.chuDate(); //处理数据
 				if (
 					Number(this.minNum) < 1 &&
 					this.threeG.length + this.threeP.length > 0
@@ -510,17 +549,18 @@ export default {
 					});
 					return false;
 				}
-                if (
-                    Number(this.minNum) > 0&&
-					((this.threeG.length + this.threeP.length)==0||(this.fourG.length + this.fourP.length)==0)
-                ) {
-                    this.$store.commit('setWin', {
-                        title: '提示信息',
-                        winType: 'alter',
-                        content: '当起售数量大于0须配置必点商品及必点子商品'
-                    });
-                    return false;
-                }
+				if (
+					Number(this.minNum) > 0 &&
+					(this.threeG.length + this.threeP.length == 0 ||
+						this.fourG.length + this.fourP.length == 0)
+				) {
+					this.$store.commit('setWin', {
+						title: '提示信息',
+						winType: 'alter',
+						content: '当起售数量大于0须配置必点商品及必点子商品'
+					});
+					return false;
+				}
 				if (
 					this.threeG.length == 0 &&
 					this.threeP.length == 0 &&
@@ -546,14 +586,14 @@ export default {
 		//商品和套餐的切换，商品index =0 ；套餐index = 1
 		getGoodList(index) {
 			this.allGood = true;
-			this.search='';
+			this.search = '';
 			if (index == 0) {
 				this.isPackage = false;
 				this.goodsCom = this.goodList;
 
 				this.oneArea.name = '请选择一级分类';
 				this.oneArea.oneAreaIndex = -1;
-				this.twoArea={
+				this.twoArea = {
 					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
 					twoAreaList: [] //二级分类列表
@@ -565,9 +605,11 @@ export default {
 		},
 		//选择商品或者套餐
 		choseGood(item) {
-			if (this.isGoods) {//多选
+			if (this.isGoods) {
+				//多选
 				item.selected = !item.selected;
-			} else {//单选
+			} else {
+				//单选
 				for (let i = 0; i < this.goodsCom.length; i++) {
 					this.goodsCom[i].selected = false;
 				}
@@ -616,25 +658,48 @@ export default {
 					} else {
 						if (this.oneGoodList.goodsList.length > 0) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
-								for (let i = 0; i < this.oneGoodList.goodsList.length; i++) {
-									this.oneGoodList.goodsList[i].selected = false;
-									if (this.goodsCom[m].id == this.oneGoodList.goodsList[i].id) {
+								for (
+									let i = 0;
+									i < this.oneGoodList.goodsList.length;
+									i++
+								) {
+									this.oneGoodList.goodsList[
+										i
+									].selected = false;
+									if (
+										this.goodsCom[m].id ==
+										this.oneGoodList.goodsList[i].id
+									) {
 										this.goodsCom[m].selected = false;
 									}
 								}
 							}
 						}
-						if (this.oneGoodList.child && this.oneGoodList.child.length > 0) {
+						if (
+							this.oneGoodList.child &&
+							this.oneGoodList.child.length > 0
+						) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
-								for (let i = 0; i < this.oneGoodList.child.length; i++) {
+								for (
+									let i = 0;
+									i < this.oneGoodList.child.length;
+									i++
+								) {
 									for (
 										let j = 0;
-										j < this.oneGoodList.child[i].goodsList.length;
+										j <
+										this.oneGoodList.child[i].goodsList
+											.length;
 										j++
 									) {
-										this.oneGoodList.child[i].goodsList[j].selected = false;
+										this.oneGoodList.child[i].goodsList[
+											j
+										].selected = false;
 										if (
-											this.goodsCom[m].id==this.oneGoodList.child[i].goodsList[j].id
+											this.goodsCom[m].id ==
+											this.oneGoodList.child[i].goodsList[
+												j
+											].id
 										) {
 											this.goodsCom[m].selected = false;
 										}
@@ -658,26 +723,48 @@ export default {
 					} else {
 						if (this.oneGoodList.goodsList.length > 0) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
-								for (let i = 0; i < this.oneGoodList.goodsList.length; i++) {
-									this.oneGoodList.goodsList[i].selected = true;
-									if (this.goodsCom[m].id == this.oneGoodList.goodsList[i].id) {
+								for (
+									let i = 0;
+									i < this.oneGoodList.goodsList.length;
+									i++
+								) {
+									this.oneGoodList.goodsList[
+										i
+									].selected = true;
+									if (
+										this.goodsCom[m].id ==
+										this.oneGoodList.goodsList[i].id
+									) {
 										this.goodsCom[m].selected = true;
 									}
 								}
 							}
 						}
-						if (this.oneGoodList.child && this.oneGoodList.child.length > 0) {
+						if (
+							this.oneGoodList.child &&
+							this.oneGoodList.child.length > 0
+						) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
-								for (let i = 0; i < this.oneGoodList.child.length; i++) {
+								for (
+									let i = 0;
+									i < this.oneGoodList.child.length;
+									i++
+								) {
 									for (
 										let j = 0;
-										j < this.oneGoodList.child[i].goodsList.length;
+										j <
+										this.oneGoodList.child[i].goodsList
+											.length;
 										j++
 									) {
-										this.oneGoodList.child[i].goodsList[j].selected = true;
+										this.oneGoodList.child[i].goodsList[
+											j
+										].selected = true;
 										if (
 											this.goodsCom[m].id ==
-											this.oneGoodList.child[i].goodsList[j].id
+											this.oneGoodList.child[i].goodsList[
+												j
+											].id
 										) {
 											this.goodsCom[m].selected = true;
 										}
@@ -690,13 +777,12 @@ export default {
 			}
 		},
 
-
 		//一级分类框返回
 		newselectOneArea(index) {
 			this.oneArea.oneAreaIndex = index;
 			this.twoArea.twoAreaIndex = -1;
 			let item = this.oneArea.oneAreaList[index];
-			this.selectOneArea(index,item);
+			this.selectOneArea(index, item);
 		},
 		//二级分类框返回
 		newselectTwoArea(index) {
@@ -712,28 +798,30 @@ export default {
 				this.oneArea.oneAreaList[i].selected = false;
 			}
 			item.selected = true;
-//			this.oneArea.oneAreaBtn = false;
+			//			this.oneArea.oneAreaBtn = false;
 			//选择一级，清空所选二级
-//			this.twoArea.twoAreaName = '请选择二级分类';
+			//			this.twoArea.twoAreaName = '请选择二级分类';
 			this.twoArea.name = '请选择二级分类';
-			this.twoArea.twoAreaList=[]; //二级分类制空
+			this.twoArea.twoAreaList = []; //二级分类制空
 
 			if (index == 0) {
 				//选择一级分类下的全部，为选择全部商品，包含一级分类下的和二级分类下的商品
 				this.allGood = true;
 				this.goodsCom = this.goodList;
-//				this.oneArea.oneAreaName = '全部';
+				//				this.oneArea.oneAreaName = '全部';
 				this.oneArea.name = '全部';
 			} else {
 				this.allGood = false;
-//				this.oneArea.oneAreaName = item.name;
+				//				this.oneArea.oneAreaName = item.name;
 				this.oneArea.name = item.name;
 				this.oneArea.oneAreaIndex = index;
 				let goodList = this.goodList;
 				item.goodsList = [];
 				//初始化二级分类，且让一级分类中的菜品为空
-				if(item.child.length>0){
-					this.twoArea.twoAreaList = [{ id: '0', name: '全部二级分类' }];
+				if (item.child.length > 0) {
+					this.twoArea.twoAreaList = [
+						{ id: '0', name: '全部二级分类' }
+					];
 					for (let i = 0; i < item.child.length; i++) {
 						item.child[i].selected = false; //让所有的二级分类都处于未选中状态
 						this.twoArea.twoAreaList.push(item.child[i]);
@@ -762,7 +850,7 @@ export default {
 		//选择二级分类
 		selectTwoArea(item) {
 			this.search = '';
-//			this.twoArea.twoAreaName = item.name;
+			//			this.twoArea.twoAreaName = item.name;
 			this.twoArea.name = item.name;
 			//单选
 			let twoList = this.twoArea.twoAreaList;
@@ -770,7 +858,7 @@ export default {
 				twoList[i].selected = false;
 			}
 			item.selected = true;
-//			this.twoArea.twoAreaBtn = false;
+			//			this.twoArea.twoAreaBtn = false;
 			let dowArr = this.newOneGoodList;
 			let selectArr = {};
 			if (item.id == 0) {
@@ -786,32 +874,32 @@ export default {
 			}
 		},
 
-//		//显示一级分类
-//		showOneArea(e) {
-//			e.stopPropagation();
-//			this.twoArea.twoAreaBtn = false;
-//			this.oneArea.oneAreaBtn = !this.oneArea.oneAreaBtn;
-//		},
-//		//显示二级分类
-//		showTwoArea(e) {
-//			e.stopPropagation();
-//			if (this.L1ID == 0) {
-//				this.$store.commit('setWin', {
-//					title: '温馨提示',
-//					winType: 'alert',
-//					content: '请先选择一个一级分类'
-//				});
-//				return false;
-//			}
-//			this.oneArea.oneAreaBtn = false;
-//			this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
-//		},
-
+		//		//显示一级分类
+		//		showOneArea(e) {
+		//			e.stopPropagation();
+		//			this.twoArea.twoAreaBtn = false;
+		//			this.oneArea.oneAreaBtn = !this.oneArea.oneAreaBtn;
+		//		},
+		//		//显示二级分类
+		//		showTwoArea(e) {
+		//			e.stopPropagation();
+		//			if (this.L1ID == 0) {
+		//				this.$store.commit('setWin', {
+		//					title: '温馨提示',
+		//					winType: 'alert',
+		//					content: '请先选择一个一级分类'
+		//				});
+		//				return false;
+		//			}
+		//			this.oneArea.oneAreaBtn = false;
+		//			this.twoArea.twoAreaBtn = !this.twoArea.twoAreaBtn;
+		//		},
 
 		//获取分类列表
 		async getOneAreaList() {
-			let list,areaList = storage.session('areaList');
-			if(areaList) {
+			let list,
+				areaList = storage.session('areaList');
+			if (areaList) {
 				list = areaList;
 			} else {
 				list = await http.getCategoryList({
@@ -825,12 +913,12 @@ export default {
 				list[i].selected = false;
 			}
 			list.unshift({ id: '0', name: '全部' });
-			this.oneArea.oneAreaList=utils.deepCopy(list);
+			this.oneArea.oneAreaList = utils.deepCopy(list);
 		},
-//		myClick() {
-//			this.oneArea.oneAreaBtn = false;
-//			this.twoArea.twoAreaBtn = false;
-//		},
+		//		myClick() {
+		//			this.oneArea.oneAreaBtn = false;
+		//			this.twoArea.twoAreaBtn = false;
+		//		},
 		//搜索功能
 		searchGoods() {
 			let secGoods = [];
@@ -843,21 +931,21 @@ export default {
 				}
 			}
 			this.goodsCom = secGoods;
-			if (this.oneArea.oneAreaIndex!= -1) {
+			if (this.oneArea.oneAreaIndex != -1) {
 				this.oneArea.name = '请选择一级分类';
-				this.oneArea.oneAreaIndex=-1;
-				this.twoArea={
+				this.oneArea.oneAreaIndex = -1;
+				this.twoArea = {
 					name: '请选择二级分类',
 					twoAreaIndex: -1, //分类下标
 					twoAreaList: [] //二级分类列表
 				};
-//				this.oneArea.oneAreaName = '请选择一级分类';
-//				this.twoArea = {
-//					twoAreaBtn: false, //二级分类
-//					twoAreaName: '请选择二级分类',
-//					twoAreaIndex: -1, //分类下标
-//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
-//				};
+				//				this.oneArea.oneAreaName = '请选择一级分类';
+				//				this.twoArea = {
+				//					twoAreaBtn: false, //二级分类
+				//					twoAreaName: '请选择二级分类',
+				//					twoAreaIndex: -1, //分类下标
+				//					twoAreaList: [{ id: '0', name: '全部二级分类' }] //二级分类列表
+				//				};
 				this.allGood = true;
 				for (let i = 0; i < this.oneArea.oneAreaList.length; i++) {
 					this.oneArea.oneAreaList[i].selected = false;
@@ -898,7 +986,8 @@ export default {
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
+		elCategory: () =>
+			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
 	}
 };
 </script>
@@ -967,14 +1056,14 @@ export default {
 			border-bottom: 2px solid #00a1ea;
 		}
 	}
-	.oCont{
+	.oCont {
 		width: 100%;
 		.Box {
 			height: 42px;
 			border: 1px solid #ff9801;
 			cursor: pointer;
 			box-sizing: border-box;
-			width:160px;
+			width: 160px;
 			float: left;
 			.oDe {
 				width: 50%;
@@ -991,7 +1080,7 @@ export default {
 				color: #fff;
 			}
 		}
-		.noPackage{
+		.noPackage {
 			float: left;
 			margin-left: 20px;
 			.staList {
@@ -1003,9 +1092,9 @@ export default {
 				position: relative;
 				cursor: pointer;
 				/*.detImg {*/
-					/*position: absolute;*/
-					/*right: 0px;*/
-					/*top: 15px;*/
+				/*position: absolute;*/
+				/*right: 0px;*/
+				/*top: 15px;*/
 				/*}*/
 				.tableList {
 					height: 40px;
@@ -1066,10 +1155,10 @@ export default {
 						border-color: #fff #fff #45404b #fff;
 					}
 					/*.detH3 {*/
-						/*height: 30px;*/
-						/*line-height: 30px;*/
-						/*text-align: left;*/
-						/*color: #e6e6e7;*/
+					/*height: 30px;*/
+					/*line-height: 30px;*/
+					/*text-align: left;*/
+					/*color: #e6e6e7;*/
 					/*}*/
 					.shoName {
 						height: 40px;
@@ -1087,8 +1176,11 @@ export default {
 				}
 			}
 		}
-		.isPackages{
-			width:100%;height: 50px;overflow: hidden;padding-top:10px;
+		.isPackages {
+			width: 100%;
+			height: 50px;
+			overflow: hidden;
+			padding-top: 10px;
 			.raduobtn {
 				width: 100px;
 				height: 40px;
@@ -1099,19 +1191,18 @@ export default {
 				background-color: #fff;
 				color: #333;
 			}
-			.selectbtn{
+			.selectbtn {
 				background-color: #2fa8dd;
 				color: #fff;
 			}
 		}
-
 	}
-	.aUl{
+	.aUl {
 		width: 100%;
 		height: auto;
 		overflow: auto;
 		padding: 10px;
-		.aLi{
+		.aLi {
 			padding: 0 15px;
 			height: 40px;
 			line-height: 40px;
@@ -1125,7 +1216,8 @@ export default {
 		}
 		.shoName-select {
 			border-color: #ff9800;
-			background: url(../../../res/images/sign.png?18274) right bottom no-repeat;
+			background: url(../../../res/images/sign.png?18274) right bottom
+				no-repeat;
 		}
 		.onecate {
 			width: 100%;
@@ -1164,8 +1256,13 @@ export default {
 			}
 		}
 	}
-	.allX{
-		width:100%;height: 40px;background-color: #f7f7f7;position: fixed;bottom: 50px;left: 0;
+	.allX {
+		width: 100%;
+		height: 40px;
+		background-color: #f7f7f7;
+		position: fixed;
+		bottom: 50px;
+		left: 0;
 		.isallselect {
 			cursor: pointer;
 			width: 100px;
@@ -1185,60 +1282,51 @@ export default {
 	}
 }
 
-
 /*.statisticsList ul {*/
-	/*width: 100%;*/
-	/*margin: 0;*/
-	/*position: absolute;*/
-	/*top: 43px;*/
-	/*left: 0;*/
-	/*z-index: 10;*/
-	/*background: #fff;*/
+/*width: 100%;*/
+/*margin: 0;*/
+/*position: absolute;*/
+/*top: 43px;*/
+/*left: 0;*/
+/*z-index: 10;*/
+/*background: #fff;*/
 /*}*/
 /*.statisticsList ul li {*/
-	/*text-align: center;*/
-	/*height: 41px;*/
-	/*border: 1px #b3b3b3 solid;*/
-	/*border-top: 0;*/
-	/*background: #fff;*/
-	/*cursor: pointer;*/
+/*text-align: center;*/
+/*height: 41px;*/
+/*border: 1px #b3b3b3 solid;*/
+/*border-top: 0;*/
+/*background: #fff;*/
+/*cursor: pointer;*/
 /*}*/
 
-
 /*.overHid {*/
-	/*white-space: nowrap;*/
-	/*overflow: hidden;*/
-	/*text-overflow: ellipsis;*/
+/*white-space: nowrap;*/
+/*overflow: hidden;*/
+/*text-overflow: ellipsis;*/
 /*}*/
 
 /*.selected {*/
-	/*background: url(../../../res/icon/selected.png) center center no-repeat,*/
-		/*#28a8e0;*/
+/*background: url(../../../res/icon/selected.png) center center no-repeat,*/
+/*#28a8e0;*/
 /*}*/
-
-
 
 /*.return {*/
-	/*position: absolute;*/
-	/*right: 100px;*/
-	/*top: -50px;*/
-	/*z-index: 2;*/
-	/*width: 100px;*/
-	/*line-height: 40px;*/
-	/*text-align: center;*/
-	/*border: 1px solid #ff8c01;*/
-	/*color: #ff8c01;*/
-	/*cursor: pointer;*/
-	/*height: 40px;*/
+/*position: absolute;*/
+/*right: 100px;*/
+/*top: -50px;*/
+/*z-index: 2;*/
+/*width: 100px;*/
+/*line-height: 40px;*/
+/*text-align: center;*/
+/*border: 1px solid #ff8c01;*/
+/*color: #ff8c01;*/
+/*cursor: pointer;*/
+/*height: 40px;*/
 /*}*/
 
-
-
-
-
-
 /*.dis-type {*/
-	/*background-color: #f2f2f2 !important;*/
-	/*border: none !important;*/
+/*background-color: #f2f2f2 !important;*/
+/*border: none !important;*/
 /*}*/
 </style>
