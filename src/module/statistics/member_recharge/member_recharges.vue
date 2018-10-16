@@ -28,7 +28,7 @@
 					<a class="order-order-searchA" @click="getPhone('phone')">
 						<span class="order-order-search"></span>
 					</a> -->
-					<el-input class="fl" v-model="orderNumber" placeholder="请输入内容" style="width:202px;"></el-input>
+					<el-input class="fl" v-model="orderNumber" placeholder="请输入手机号码" style="width:202px;"></el-input>
 					<el-button class="fl" type="primary" icon="el-icon-search" @click="getPhone('phone')"></el-button>
 				</div>
 			</div>

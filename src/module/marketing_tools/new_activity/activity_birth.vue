@@ -150,8 +150,8 @@ export default {
 				id: 2
 			}
 			],
-			durationId: -1, //活动期限
-			durationName: '全部', //状态
+			durationId: 0, //活动期限
+			durationName: '永久', //状态
 			explain: '', //生日活动说明
 			isclick: false, //保存时只能点击一次
 			pushdateNum: '', //推送日期
