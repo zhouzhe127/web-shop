@@ -1,13 +1,6 @@
 <template>
 	<div id="supplise">
-		<div class="search-module">
-			<!-- <input type="text" class="search-input" v-model="goodsName" placeholder="请输入物料名称"> -->
-			<!-- <div class="sleBtn">
-              <select-store @emit="getDrop" :sorts="oneCate" :isSingle="true" :tipName="'请选择一级分类'"></select-store>
-            </div>
-            <div class="sleBtn" @click="checkOne">
-              <select-store @emit="getNext" :sorts="twoCate" :isSingle="true" :tipName="'请选择二级分类'" ref="twosel"></select-store>
-            </div> -->
+		<!-- <div class="search-module">
 			<div class="sleType">
 				<el-input v-model="goodsName" placeholder="请输入物料名称"></el-input>
 			</div>
@@ -16,12 +9,8 @@
 					<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
 				</el-select>
 			</div>
-			<!-- <div class="inline-box" v-if="tabactive==1">
-				<select-btn :sorts="classfiy" :name="'全部类型'" ref="select"></select-btn>
-			</div> -->
 			<div class="inline-box" v-if="tabactive==1">
 				仓库所属：
-				<!-- <select-btn :sorts="wareVal" :name="'全部'" @selOn="selectWare" ref="selects"></select-btn> -->
 				<div class="sleType">
 					<el-select v-model="selWare" @change="selectWare" placeholder="全部">
 						<el-option v-for="item in wareList" :key="item.shopId" :label="item.shopName" :value="item.shopId"></el-option>
@@ -31,6 +20,26 @@
 			<div class="button-box">
 				<div @click="search" class="blue filter">筛选</div>
 				<div @click="reset" class="gray reset">重置</div>
+			</div>
+		</div> -->
+		<div class="asideone">
+			<div class="sleType">
+				<el-input v-model="goodsName" placeholder="请输入物料名称"></el-input>
+			</div>
+			<div class="sleType">
+				<el-select v-model="typeValue" placeholder="全部类型">
+					<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="timebox">
+				<span>仓库所属：</span>
+				<el-select multiple collapse-tags v-model="selWare" placeholder="全部类型">
+					<el-option v-for="item in wareList" :key="item.shopId" :label="item.shopName" :value="item.shopId"></el-option>
+				</el-select>
+			</div>
+			<div class="sleType">
+				<el-button @click="search" type="primary">筛选</el-button>
+				<el-button @click="reset" type="info">重置</el-button>
 			</div>
 		</div>
 		<section class="listBox">
@@ -67,8 +76,9 @@
 			<!--列表表尾 标题--请求不到后台数据时不显示-->
 			<div v-if="allList.length == 0" id="emptyData">目前没有可操作数据</div>
 		</section>
-		<div style="float:right; margin-top:10px">
-			<page-turn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn>
+		<div style="margin-top:10px">
+			<!-- <page-turn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn> -->
+			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(allCount)"></el-pagination>
 		</div>
 	</div>
 </template>
@@ -84,12 +94,8 @@ export default {
 			pageTotal: 0,
 			num: 10,
 			goodsName: '', //搜索名称
-			sleName: '',
-			typeCate: ['物料'],
 			wareGoods: '全部',
-			selWare: '', //选择的仓库
-			classfiy: ['全部类型', '物料'],
-			shopIds: '',
+			selWare: [], //选择的仓库
 			allCount: 0,
 			typeCate: [{
 				value:-1,
@@ -112,8 +118,8 @@ export default {
 		async init() {
 			let data = await http.invoic_getMaterialListByShopIds({
 				data: {
-					shopIds: this.shopIds,
-					search: this.sleName,
+					shopIds: this.selWare.join(','),
+					search: this.goodsName,
 					page: this.page,
 					type:this.typeValue
 				}
@@ -152,25 +158,18 @@ export default {
 				}
 			});
 		},
-		selectWare(sle){
-			this.shopIds = sle==-1? this.wareList[0].all:sle;
-			console.log(this.shopIds);
-		},
 		search() {
 			//点击筛选
-			this.sleName = this.goodsName;
 			this.init();
 		},
 		reset() {
 			this.goodsName = '';
-			this.sleName = '';
-			this.selWare = '';
+			this.selWare = this.wareList.map(v=>v.shopId);
 			this.typeValue = -1;
-			this.shopIds = this.wareList[0].all;
 			this.init();
 		},
 		pageChange(page) {
-			this.page = page.page;
+			this.page = page;
 			this.init();
 		},
 		alert(con, title) {
@@ -181,8 +180,7 @@ export default {
 		},
 	},
 	mounted() {
-		console.log(this.wareList)
-		this.shopIds = this.wareList[0].all;
+		this.selWare = this.wareList.map(v=>v.shopId);
 		this.init();
 	},
 	components: {
@@ -202,44 +200,30 @@ export default {
 			display: block;
 		}
 	}
-	
-	.search-module {
-		padding-bottom: 16px;
-		.sleType{
-			width: 170px;
-			display: inline-block;
-			margin-right: 15px;
+	.topstyle {
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 100%;
+				height: 15px;
+			}
 		}
-		.inline-box {
-			display: inline-block;
-			margin-right: 10px;
+
+		.asideone {
+			margin-bottom: 15px;
+			.sleType {
+				width: 170px;
+				margin-right: 10px;
+				display: inline-block;
+				.topstyle
+			}
+
+			.timebox {
+				display: inline-block;
+				margin-right: 10px;
+				.topstyle
+			}
 		}
-		.button-box {
-			display: inline-block;
-		}
-		.sleBtn {
-			display: inline-block;
-			margin-right: 10px;
-		}
-		.search-select {
-			display: inline-block;
-			margin-right: 10px;
-		}
-		.search-btn {
-			width: 100px;
-			height: 40px;
-			line-height: 40px;
-			color: #fff;
-			font-size: 16px;
-			margin-right: 10px;
-			display: inline-block;
-			text-align: center;
-		}
-		.filter,
-		.reset {
-			.search-btn;
-		}
-	}
 	
 	.listBox {
 		border: 1px #ccc solid;

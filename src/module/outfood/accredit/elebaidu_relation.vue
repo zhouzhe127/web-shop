@@ -110,13 +110,13 @@ export default {
 				});
 				this.eleGoods = data;
 				//判断是否有关联菜品
-				// for (let j = 0; j < this.eleGoods.length; j++) {
-				// 	for (let k = 0; k < this.eleGoods[j].list.length; k++) {
-				// 		if (this.eleGoods[j].list[k].goodsId !== '') {
-				// 			this.edit = true;
-				// 		}
-				// 	}
-				// }
+				for (let j = 0; j < this.eleGoods.length; j++) {
+					for (let k = 0; k < this.eleGoods[j].list.length; k++) {
+						if (this.eleGoods[j].list[k].goodsId !== '') {
+							this.edit = true;
+						}
+					}
+				}
 				//没有关联自动关联
 				// if (!this.edit) {
 				// 	for (let i = 0; i < this.eleGoods.length; i++) {
@@ -171,11 +171,11 @@ export default {
 						}
 					}
 					//判断是否有关联菜品
-					// for (let j = 0; j < goods[0].list.length; j++) {
-					// 	if (goods[0].list[j].goodsId !== '') {
-					// 		this.edit = true;
-					// 	}
-					// }
+					for (let j = 0; j < goods[0].list.length; j++) {
+						if (goods[0].list[j].goodsId !== '') {
+							this.edit = true;
+						}
+					}
 					//没有关联自动关联
 					// if (!this.edit) {
 					// 	for (let j = 0; j < goods[0].list.length; j++) {
