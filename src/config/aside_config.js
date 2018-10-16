@@ -458,6 +458,9 @@ let need = {
 		},
 		getPurchaseOrderReviewList: { //采购审核
 			name: 'purchaseAudit'
+		},
+		materialWorking:{			//加工物料
+			name:'processMaterial'
 		}
 	}
 };

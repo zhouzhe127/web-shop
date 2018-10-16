@@ -177,7 +177,7 @@ export default {
                 total:0,                     //总页数
                 count:0,                     //总记录数
                 currentPage:1,               //当前页
-                num:10,                     //每页加载的数量
+                num:100,                      //每页加载的数量
                 flag:true,                   //是否搜索,true:搜索
                 rest:[],                     //选择的所有的加工bom单
             },
