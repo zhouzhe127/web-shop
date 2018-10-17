@@ -172,8 +172,11 @@ export default {
 				this.eleShopid = info.areaShopId;
 				//后台获取的菜品数据处理为数组id
 				let arr = [];
-				for (let i in JSON.parse(info.goodsIds)) {
-					arr.push(parseInt(i));
+				let infoGoodsIds = JSON.parse(info.goodsIds);
+				for (let i in infoGoodsIds) {
+					if(infoGoodsIds[i].length>0){
+						arr.push(parseInt(i));
+					}
 				}
 				this.goodsIds = arr;
 				this.goods = info.goodsIds;
