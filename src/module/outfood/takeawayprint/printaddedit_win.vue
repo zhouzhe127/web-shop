@@ -174,7 +174,7 @@ export default {
 				let arr = [];
 				let infoGoodsIds = JSON.parse(info.goodsIds);
 				for (let i in infoGoodsIds) {
-					if(infoGoodsIds[i].length>0){
+					if(infoGoodsIds[i].length>0||info.areaIds!=2){
 						arr.push(parseInt(i));
 					}
 				}
@@ -279,9 +279,9 @@ export default {
 						title: '操作提示',
 						content: '确认删除打印机？',
 						winType: 'confirm',
-						callback: status => {
+						callback: async status => {
 							if (status == 'ok') {
-								this.deletePrint();
+								await this.deletePrint();
 								this.$emit('toClick', res, status);
 							}
 						}
