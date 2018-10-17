@@ -38,11 +38,11 @@
 			</div>
 		</div>
 		<!--统计数据-->
-		<specific :specific="sales"></specific>
+		<specific :cover="coverShow" :specific="sales"></specific>
 		<!--饼图-->
 		<pieChart :pie="pie" :cover="coverShow" :echarts="echarts" v-if="isOneShow"></pieChart>
-		<!--柱状图-->
-		<barChart :bar="bar" :cover="coverShow" :echarts="echarts" :shopList="shopList" v-if="isBrand && !isOneShow"></barChart>
+		<!--柱状图 各个店铺的数据-->
+		<barChart :bar="bar" :cover="coverShowShop" :echarts="echarts" :shopList="shopList" v-if="isBrand && !isOneShow"></barChart>
 		<!--条形图-->
 		<lineChart :line="line" :cover="coverShow" :echarts="echarts"></lineChart>
 
@@ -80,6 +80,7 @@ export default {
 			isOneStore: '', //是否单店 用于判断
 			isOneShow: '', //是否单店 用于显示
 			coverShow: false, //加载gif
+			coverShowShop:false,
 			storeListShow: false, //店铺列表显示
 			allSelected: true, //选中全部
 			sales: null,
@@ -241,6 +242,7 @@ export default {
 		//遍历获取店铺数据-暂时先用递归 下版本优化异步加载
 		eachGetShopData(){
 			let shopIds = [];
+			this.coverShowShop = true;
 			if(this.shopIds.length>5){
 				let start = this.eachRequestNum*5;
 				let end = (this.eachRequestNum+1)*5;
@@ -252,6 +254,7 @@ export default {
 				}else{
 					this.eachRequestNum = 0;
 					this.bar = this.eachRequestObj;
+					this.coverShowShop = false;
 				}
 			}else{
 				this.getShopData(this.shopIds);
@@ -296,9 +299,7 @@ export default {
 		async getTaskId(){//轮询请求
 			if (!this.repeat) {
 				//轮询未结束 防止重复轮询
-				this.$store.commit('setWin', {title: '提示信息',
-					content:'当前查询尚未结束，请结束后再进行查询或刷新浏览器重新查询！'
-				});
+				this.$message({message: `当前查询尚未结束，请结束后再进行查询或刷新浏览器重新查询！`,type: 'error'});
 				return;
 			}
 			http.createBusinessTask({
@@ -324,20 +325,13 @@ export default {
 								//失败
 								this.stopRepeat();
 								//失败
-								this.$store.commit('setWin', {
-									title: '提示信息',
-									content: '请求失败，请重试！'
-								});
+								this.$message({message: `请求失败，请重试！`,type: 'error'});
 							}
 						});
 				},1000,600,false,() => {
 					this.stopRepeat();
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '请求超时，请重试！'
-					});
-				}
-				);
+					this.$message({message: `请求超时，请重试！`,type: 'error'});
+				});
 			});
 		},
 		validate() {
@@ -346,17 +340,11 @@ export default {
 				start = parseInt(this.startTime / 1000 / 3600 / 24),
 				end = parseInt(this.endTime / 1000 / 3600 / 24);
 			if (start > end) {
-				this.$store.commit('setWin', {
-					title: '提示信息',
-					content: '开始时间不能大于结束时间'
-				});
+				this.$message({message: `开始时间不能大于结束时间`,type: 'error'});
 				isPass = false;
 			}
 			if (this.isBrand && !this.shopIds.length) {
-				this.$store.commit('setWin', {
-					title: '提示信息',
-					content: '没有可选店铺'
-				});
+				this.$message({message: `没有可选店铺`,type: 'error'});
 				isPass = false;
 			}
 			return isPass;
