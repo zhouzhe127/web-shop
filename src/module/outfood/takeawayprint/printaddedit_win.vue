@@ -178,6 +178,10 @@ export default {
 						arr.push(parseInt(i));
 					}
 				}
+				if(info.packageIds){
+					let packageIdsarr = info.packageIds.split(',');
+					arr = [...arr,...packageIdsarr];
+				}
 				this.goodsIds = arr;
 				this.goods = info.goodsIds;
 				this.isAreaid = info.areaShopId;
