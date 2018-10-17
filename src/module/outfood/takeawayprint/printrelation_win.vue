@@ -33,7 +33,7 @@
 				</section>
 			</section>
 			<section class="comList" v-if="selectgoods.length>0">
-				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='areaIndex[0]==2?"shelfId":"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
+				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
 			</section>
 		</section>
 
@@ -117,7 +117,7 @@ export default {
 						}
 					} else if (this.areaIndex[0] == 2) {
 						for (let j = 0; j < this.mtgoods.length; j++) {
-							if (this.goodsIds[i] == this.mtgoods[j].shelfId) {
+							if (this.goodsIds[i] == this.mtgoods[j].goodsId) {
 								let packageIds = [];
 								if (this.mtgoods[j].packageIds != '') {
 									packageIds.push(this.mtgoods[j].packageIds);
@@ -304,7 +304,7 @@ export default {
 			} else if (this.areaIndex[0] == 2) {
 				for (let i = 0; i < this.mtgoods.length; i++) {
 					if(this.mtgoods[i].packageIds) this.mtgoods[i].goodsId = this.mtgoods[i].packageIds;
-					this.mtgoods[i].shelfId = this.mtgoods[i].specId[0]||this.mtgoods[i].packageIds? this.mtgoods[i].goodsId:-i+1;
+					this.mtgoods[i].goodsId = this.mtgoods[i].specId[0]||this.mtgoods[i].packageIds? this.mtgoods[i].goodsId:-i+1;
 					if (id === undefined || id === '全部') {
 						let item = this.mtgoods[i];
 						if (!(item.categoryName instanceof Array)) {
@@ -344,7 +344,9 @@ export default {
 			if (this.areaIndex[0]) {
 				this.goodsIndex = [];
 				for (let i = 0; i < this.selectgoods.length; i++) {
-					this.goodsIndex.push(this.selectgoods[i].goodsId);
+					if(this.selectgoods[i].goodsId>0){
+						this.goodsIndex.push(this.selectgoods[i].goodsId);
+					}
 				}
 				this.goodsIndex = utils.unique(this.goodsIndex);
 			}
