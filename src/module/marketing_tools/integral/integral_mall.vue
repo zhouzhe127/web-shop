@@ -201,6 +201,7 @@ export default {
 				type: true,
 				format: 'yyyy.MM.dd'
 			}).format;
+			arr.showStatus = arr.status == 0 ? '已上架' : '已下架';
 			this.$set(this.goodLists, i, arr);
 		},
 		//删除
@@ -211,7 +212,8 @@ export default {
 					uid: this.uid
 				}
 			});
-			this.goodLists.splice(i, 1);
+			//this.goodLists.splice(i, 1);
+			this.getActivityGoodsList();
 		},
 		//删除
 		del(i, gid) {
