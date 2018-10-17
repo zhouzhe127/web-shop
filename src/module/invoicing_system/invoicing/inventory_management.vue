@@ -63,7 +63,7 @@
 		<invent-supplies v-if="tabactive==1" :page2="page2" @page="suppage" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
 		<div class="somePage" v-if="tabactive==0">
 			<!-- <page-turn :total="total" :isNoJump="false" :isNoPaging='true' :page="page" @pageNum="changePage" ref="pageTurn"></page-turn> -->
-			<el-pagination @current-change="changePage" background :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(count)"></el-pagination>
+			<el-pagination background @current-change="changePage" :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(count)"></el-pagination>
 		</div>
 		<printing-win v-if="winshow" @winEvent="winEvent" ref="print" :title="win.title" :goodsDel="win.goodsDel" :listDel="win.list"></printing-win>
 	</div>
@@ -176,7 +176,7 @@
 			async init() {
 				let data = await http.inventoryGoodsList({
 					data: {
-						page: this.page,
+						page: page,
 						num: this.num,
 						type: this.listType,
 						goodsName: this.searchName,
@@ -207,8 +207,8 @@
 					this.goodsdetail = utils.deepCopy(this.goodsdetail);
 				}
 			},
-			suppage(page) {
-				page2 = page;
+			suppage(pages) {
+				page2 = pages;
 				console.log(page);
 			},
 			addCount: function (num) {
@@ -396,10 +396,11 @@
 		},
 		async mounted () {
 			this.shopId = storage.session('itemId');
-			this.page = page;
+			console.log(this.page);
 			this.settype();
 			//			this.addEduce();
 			await this.init();	
+			this.page = page;
 		},
 		destroyed() {
 			storage.session('tabactive', null);

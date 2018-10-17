@@ -64,6 +64,7 @@
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import global from 'src/manager/global';
+	let page2 = 1;
 	export default {
 		data() {
 			return {
@@ -115,7 +116,7 @@
 			async init() {
 				let data = await http.getMaterialList({
 					data: {
-						page: this.page,
+						page: page2,
 						name: this.goodsName,
 						cid: this.sleCate[this.sleCate.length-1],
 						type: this.typeValue,
@@ -125,6 +126,7 @@
 				this.allList = data.list;
 				this.pageTotal = data.total;
 				this.count = data.count;
+				this.page = page2;
 				let arr = [];
 				for (let item of this.allList) {
 					arr.push(item.id);
@@ -267,6 +269,7 @@
 			},
 			pageChange(page) {
 				this.page = page;
+				page2 = this.page;
 				this.$emit('page', this.page);
 				this.init();
 			},
@@ -278,7 +281,7 @@
 			}
 		},
 		mounted() {
-			this.page = this.page2;
+			page2 = this.page2;
 			this.init();
 			this.getCate();
 		},
