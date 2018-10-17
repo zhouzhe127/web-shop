@@ -113,55 +113,71 @@ export default {
 			isBrand: false, //是否是品牌
 
 			eachList: [
-				{ name: '营业总额（元）', field: 'business', iconShow: true, data: [] },
-				{ name: '优惠总额（元）', field: 'discount', iconShow: true, data: [] },
-				{ name: '入账金额（元）', field: 'amount', iconShow: true, data: [] },
-				{ name: '订单量（单）', field: 'orderNumber', data: [] }
+				{
+					name: '营业总额（元）',
+					field: 'turnover',
+					iconShow: true,
+					data: []
+				},
+				{
+					name: '优惠总额（元）',
+					field: 'discount',
+					iconShow: true,
+					data: []
+				},
+				{
+					name: '入账金额（元）',
+					field: 'amount',
+					iconShow: true,
+					data: []
+				},
+				{ name: '订单量（单）', field: 'orderNum', data: [] }
 			],
 			//方块的原始数据
 			sales: {
 				eatIn: {
 					//堂吃
-					business: 0, //营业总额
+					turnover: 0, //营业总额
 					amount: 0, //入账金额
-					orderNumber: 0, //订单量
+					orderNum: 0, //订单量
 					discount: 0 //优惠总额
 				},
-				takeOut: {
+				takeout: {
 					//外卖
-					business: 0,
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0
 				},
 				quickPayment: {
 					//快捷支付
-					business: 0,
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0
 				},
 				total: {
 					//总值
-					business: 0,
+					turnover: 0,
 					amount: 0,
-					orderNumber: 0,
+					orderNum: 0,
 					discount: 0
 				}
 			},
 			salesPoint: {
 				//小数点后两位
-				business: '00',
+				turnover: '00',
 				discount: '00',
 				amount: '00'
 			},
 
 			tipsContent: {
-				business:
+				turnover:
 					'该时间段内所有堂吃商品原价+堂吃服务费+外卖商品原价 = 营业总额（不计入退品）',
 				discount:
 					'活动优惠券、店内优惠（整单减免、整单折扣、整单强折、单品减免、单品折扣、赠菜金额、积分抵扣）以及外卖活动优惠金额',
-				amount: '入账总额 = 营业总额 - 优惠总额（不计入未入账的支付方式的金额）'
+				amount:
+					'入账总额 = 营业总额 - 优惠总额（不计入未入账的支付方式的金额）'
 			},
 
 			coverShow: true, //数据加载时的动画
@@ -177,38 +193,40 @@ export default {
 			noticeList: [], //通知列表
 			updateList: [], //更新列表
 			noticeContent: {}, //通知内容
-			isContent: false, //展示通知内容
+			isContent: false //展示通知内容
 
-//            brandId:''
+			//            brandId:''
 		};
 	},
 	async created() {
 		this.newTime = utils.format(new Date().getTime(), 'yyyy-MM-dd');
 		this.userData = storage.session('userShop'); //获取店铺数据
-		let v=this.userData.currentShop;
-		this.isBrand=v.ischain == '3' ? true : false; //是否为品牌
-//        this.brandId=(v.ischain==0||v.ischain==3)?v.id:v.brandId;
-//        console.log(this.brandId);
+		let v = this.userData.currentShop;
+		this.isBrand = v.ischain == '3' ? true : false; //是否为品牌
+		//        this.brandId=(v.ischain==0||v.ischain==3)?v.id:v.brandId;
+		//        console.log(this.brandId);
 		if (this.isBrand) {
-		    let liId=storage.session('shopList');
-		    console.log(liId);
-		    if(liId.length>0){
-                for (let item of liId) {
-                    //组合店铺列表
-                    this.userShopIdStr.push(item.id);
-                    let obj = {
-                        id: item.id,
-                        name: item.shopName
-                    };
-                    this.shopList.push(obj);
-                }
-                //品牌下店铺id拼接
-                for (let i = 0; i < this.userShopIdStr.length / 8; i++) {
-                    this.shopIds.push(this.userShopIdStr.slice(i * 8, i * 8 + 8));
-                }
-			}else {
-                this.shopIds=[[]];
-                this.shopList={};
+			let liId = storage.session('shopList');
+			console.log(liId);
+			if (liId.length > 0) {
+				for (let item of liId) {
+					//组合店铺列表
+					this.userShopIdStr.push(item.id);
+					let obj = {
+						id: item.id,
+						name: item.shopName
+					};
+					this.shopList.push(obj);
+				}
+				//品牌下店铺id拼接
+				for (let i = 0; i < this.userShopIdStr.length / 8; i++) {
+					this.shopIds.push(
+						this.userShopIdStr.slice(i * 8, i * 8 + 8)
+					);
+				}
+			} else {
+				this.shopIds = [[]];
+				this.shopList = {};
 			}
 			console.log(this.shopIds);
 		}
@@ -221,7 +239,7 @@ export default {
 		async getNoticeList() {
 			let data = await http.getSurveyNoticeList({
 				data: {
-//				    shopId:this.brandId
+					//				    shopId:this.brandId
 				}
 			});
 			if (data) {
@@ -236,13 +254,13 @@ export default {
 		},
 		//跳转到内容中心
 		async toContent(v) {
-		    if(!v.isContent){
-		        return
+			if (!v.isContent) {
+				return;
 			}
 			let res = await http.noticeSurveyGetOne({
 				data: {
-					id: v.id,
-//                    shopId:this.brandId
+					id: v.id
+					//                    shopId:this.brandId
 				}
 			});
 			if (res) {
@@ -314,30 +332,30 @@ export default {
 			let res = await http.TurnoverGetBrandStat({
 				data: { type: 1 }
 			});
-			this.sales.eatIn.business = res.ePrice;
+			this.sales.eatIn.turnover = res.ePrice;
 			this.sales.eatIn.amount = res.eRealPrice;
-			this.sales.eatIn.orderNumber = res.eOrderNum;
+			this.sales.eatIn.orderNum = res.eOrderNum;
 			this.sales.eatIn.discount = res.eDiscount;
 
-			this.sales.quickPayment.business = res.kPrice;
+			this.sales.quickPayment.turnover = res.kPrice;
 			this.sales.quickPayment.amount = res.kRealPrice;
-			this.sales.quickPayment.orderNumber = res.kOrderNum;
+			this.sales.quickPayment.orderNum = res.kOrderNum;
 			this.sales.quickPayment.discount = res.kDiscount;
 
-			this.sales.takeOut.business = res.tPrice;
-			this.sales.takeOut.amount = res.tRealPrice;
-			this.sales.takeOut.orderNumber = res.tOrderNum;
-			this.sales.takeOut.discount = res.tDiscount;
+			this.sales.takeout.turnover = res.tPrice;
+			this.sales.takeout.amount = res.tRealPrice;
+			this.sales.takeout.orderNum = res.tOrderNum;
+			this.sales.takeout.discount = res.tDiscount;
 
-			this.sales.total.business = res.Price;
+			this.sales.total.turnover = res.Price;
 			this.sales.total.amount = res.RealPrice;
-			this.sales.total.orderNumber = res.OrderNum;
+			this.sales.total.orderNum = res.OrderNum;
 			this.sales.total.discount = res.Discount;
 
 			this.sales.selfTakeOut = {}; //自营外卖
-			this.sales.selfTakeOut.business = res.sPrice;
+			this.sales.selfTakeOut.turnover = res.sPrice;
 			this.sales.selfTakeOut.amount = res.sRealPrice;
-			this.sales.selfTakeOut.orderNumber = res.sOrderNum;
+			this.sales.selfTakeOut.orderNum = res.sOrderNum;
 			this.sales.selfTakeOut.discount = res.sDiscount;
 
 			//处理数据
@@ -351,33 +369,33 @@ export default {
 				this.bar[v] = {};
 				this.bar[v].eatIn = {};
 				this.bar[v].quickPayment = {};
-				this.bar[v].takeOut = {};
+				this.bar[v].takeout = {};
 				this.bar[v].total = {};
 				this.bar[v].selfTakeOut = {};
 
-				this.bar[v].eatIn.business = data[v].ePrice;
+				this.bar[v].eatIn.turnover = data[v].ePrice;
 				this.bar[v].eatIn.amount = data[v].eRealPrice;
-				this.bar[v].eatIn.orderNumber = data[v].eOrderNum;
+				this.bar[v].eatIn.orderNum = data[v].eOrderNum;
 				this.bar[v].eatIn.discount = data[v].eDiscount;
 
-				this.bar[v].quickPayment.business = data[v].kPrice;
+				this.bar[v].quickPayment.turnover = data[v].kPrice;
 				this.bar[v].quickPayment.amount = data[v].kRealPrice;
-				this.bar[v].quickPayment.orderNumber = data[v].kOrderNum;
+				this.bar[v].quickPayment.orderNum = data[v].kOrderNum;
 				this.bar[v].quickPayment.discount = data[v].kDiscount;
 
-				this.bar[v].takeOut.business = data[v].tPrice;
-				this.bar[v].takeOut.amount = data[v].tRealPrice;
-				this.bar[v].takeOut.orderNumber = data[v].tOrderNum;
-				this.bar[v].takeOut.discount = data[v].tDiscount;
+				this.bar[v].takeout.turnover = data[v].tPrice;
+				this.bar[v].takeout.amount = data[v].tRealPrice;
+				this.bar[v].takeout.orderNum = data[v].tOrderNum;
+				this.bar[v].takeout.discount = data[v].tDiscount;
 
-				this.bar[v].total.business = data[v].Price;
+				this.bar[v].total.turnover = data[v].Price;
 				this.bar[v].total.amount = data[v].RealPrice;
-				this.bar[v].total.orderNumber = data[v].OrderNum;
+				this.bar[v].total.orderNum = data[v].OrderNum;
 				this.bar[v].total.discount = data[v].Discount;
 
-				this.bar[v].selfTakeOut.business = data[v].sPrice;
+				this.bar[v].selfTakeOut.turnover = data[v].sPrice;
 				this.bar[v].selfTakeOut.amount = data[v].sRealPrice;
-				this.bar[v].selfTakeOut.orderNumber = data[v].sOrderNum;
+				this.bar[v].selfTakeOut.orderNum = data[v].sOrderNum;
 				this.bar[v].selfTakeOut.discount = data[v].sOrderNum;
 			}
 			this.coverShow = false;
@@ -389,14 +407,17 @@ export default {
 			for (let i in sales) {
 				if (i == 'total') {
 					for (let n in sales[i]) {
-						if (n != 'orderNumber') {
+						if (n != 'orderNum') {
 							let str = sales[i][n] + '';
 							let arr = str.split('.');
 							if (arr[1]) {
 								if (arr[1].length <= 1) {
 									arr[1] = arr[1] + '0';
 								}
-								this.salesPoint[n] = (arr[1] + '').substring(0, 2);
+								this.salesPoint[n] = (arr[1] + '').substring(
+									0,
+									2
+								);
 							} else {
 								this.salesPoint[n] = '00';
 							}
@@ -407,7 +428,7 @@ export default {
 		},
 		//处理数据
 		doDate() {
-			let forData = ['business', 'discount', 'amount', 'orderNumber'];
+			let forData = ['turnover', 'discount', 'amount', 'orderNum'];
 			for (let i = 0; i < forData.length; i++) {
 				this.eachList[i].data = [];
 				if (this.sales.eatIn[forData[i]] != 0) {
@@ -419,13 +440,13 @@ export default {
 								: Number(this.sales.eatIn[forData[i]]).toFixed(2)
 					};
 				}
-				if (this.sales.takeOut[forData[i]] != 0) {
+				if (this.sales.takeout[forData[i]] != 0) {
 					this.eachList[i].data[this.eachList[i].data.length] = {
 						name: '外卖',
 						showData:
 							i == 3
-								? this.sales.takeOut[forData[i]]
-								: Number(this.sales.takeOut[forData[i]]).toFixed(2)
+								? this.sales.takeout[forData[i]]
+								: Number(this.sales.takeout[forData[i]]).toFixed(2)
 					};
 				}
 				if (this.sales.quickPayment[forData[i]] != 0) {
@@ -447,7 +468,7 @@ export default {
 					};
 				}
 				this.eachList[i].total = parseInt(this.sales.total[forData[i]]);
-				this.eachList[i].totalPie = this.sales.total[forData[i]];//饼图上显示时，保留小数点
+				this.eachList[i].totalPie = this.sales.total[forData[i]]; //饼图上显示时，保留小数点
 			}
 			//给饼图添加一项数据
 			this.pie.totalHuo = {
@@ -457,35 +478,48 @@ export default {
 			//添加详细的优惠金额
 			if (!this.isBrand) {
 				this.pie.discount = {
-					giveGoods:Number(this.oneDiscount.giveGoods.price).toFixed(2), //赠品金额
-					orderDiscount:Number(this.oneDiscount.orderDiscount.price).toFixed(2), // 整单折扣
-					orderDiscountForce: Number(this.oneDiscount.orderDiscountForce.price).toFixed(2), //整单强折
-					goodsDiscount: Number(this.oneDiscount.goodsDiscount.price).toFixed(2), //单品折扣
+					giveGoods: Number(this.oneDiscount.giveGoods.price).toFixed(
+						2
+					), //赠品金额
+					orderDiscount: Number(
+						this.oneDiscount.orderDiscount.price
+					).toFixed(2), // 整单折扣
+					orderDiscountForce: Number(
+						this.oneDiscount.orderDiscountForce.price
+					).toFixed(2), //整单强折
+					goodsDiscount: Number(
+						this.oneDiscount.goodsDiscount.price
+					).toFixed(2), //单品折扣
 					coupon: Number(this.oneDiscount.coupon.price).toFixed(2), //活动优惠券
 					takeout: Number(this.oneDiscount.takeout.price).toFixed(2), //外卖活动补贴
 					self: Number(this.oneDiscount.self.price).toFixed(2), //自营外卖活动补贴
-					other: Number(this.oneDiscount.pointDeduction.price +
-                            this.oneDiscount.vipDiscount.price +
-                            this.oneDiscount.vipReduction.price +
-                            this.oneDiscount.fastPaymentPoint.price +
-                            this.oneDiscount.fastPaymentDiscount.price +
-                            this.oneDiscount.orderReduction.price).toFixed(2)
+					other: Number(
+						this.oneDiscount.pointDeduction.price +
+							this.oneDiscount.vipDiscount.price +
+							this.oneDiscount.vipReduction.price +
+							this.oneDiscount.fastPaymentPoint.price +
+							this.oneDiscount.fastPaymentDiscount.price +
+							this.oneDiscount.orderReduction.price
+					).toFixed(2)
 					//堂吃积分抵扣、会员折扣、会员减免、快捷支付积分抵扣、快捷支付优惠金额、整单减免
 				};
 			} else {
-				this.pie.orderNumber = {
-					eatIn: this.sales.eatIn.orderNumber,
-					takeOut: this.sales.takeOut.orderNumber,
-					selfTakeOut: this.sales.selfTakeOut.orderNumber,
-					quickPayment: this.sales.quickPayment.orderNumber
+				this.pie.orderNum = {
+					eatIn: this.sales.eatIn.orderNum,
+					takeout: this.sales.takeout.orderNum,
+					selfTakeOut: this.sales.selfTakeOut.orderNum,
+					quickPayment: this.sales.quickPayment.orderNum
 				};
 			}
 		}
 	},
 	components: {
-		pieChart: () => import(/*webpackChunkName: 'survey_pie'*/ './survey_pie'),
-		lineChart: () => import(/*webpackChunkName: 'survey_line'*/ './survey_line'),
-		barChart: () => import(/*webpackChunkName: 'survey_bar'*/ './survey_bar')
+		pieChart: () =>
+			import(/*webpackChunkName: 'survey_pie'*/ './survey_pie'),
+		lineChart: () =>
+			import(/*webpackChunkName: 'survey_line'*/ './survey_line'),
+		barChart: () =>
+			import(/*webpackChunkName: 'survey_bar'*/ './survey_bar')
 	}
 };
 </script>

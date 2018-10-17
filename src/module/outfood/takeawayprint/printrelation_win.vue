@@ -77,6 +77,7 @@ export default {
 	},
 	methods: {
 		getRelation: function(res) {
+			console.log(res);
 			if(res[res.length-1]>=0){
 				if (res.length > 0) {
 					this.goodsIndex = res;
@@ -92,6 +93,7 @@ export default {
 				//将选中的菜品转为后台需要的数据格式
 				let goods = {};
 				let allPackageIds = [];
+
 				this.goodsLength = this.goodsIndex.length;
 				this.goodsIds = this.goodsIndex;
 				for (let i = 0; i < this.goodsIds.length; i++) {
@@ -129,6 +131,7 @@ export default {
 								].specId;
 							}
 						}
+						console.log(goods);
 					} else if (this.areaIndex[0] == 3) {
 						for (let j = 0; j < this.baidugoods.length; j++) {
 							if (
@@ -151,9 +154,9 @@ export default {
 						}
 					}
 				}
-				console.log(goods)
 				this.goods = JSON.stringify(goods);
 			}
+			console.log(this.goodsIndex);
 			this.goodsIndex = utils.unique(this.goodsIndex);
 			let postData = {
 				goods: this.goods,
@@ -300,7 +303,8 @@ export default {
 				}
 			} else if (this.areaIndex[0] == 2) {
 				for (let i = 0; i < this.mtgoods.length; i++) {
-					this.mtgoods[i].shelfId = this.mtgoods[i].specId[0]||-i+1;
+					if(this.mtgoods[i].packageIds) this.mtgoods[i].goodsId = this.mtgoods[i].packageIds;
+					this.mtgoods[i].shelfId = this.mtgoods[i].specId[0]? this.mtgoods[i].goodsId:-i+1;
 					if (id === undefined || id === '全部') {
 						let item = this.mtgoods[i];
 						if (!(item.categoryName instanceof Array)) {
@@ -316,7 +320,6 @@ export default {
 						}
 					}
 				}
-				console.log(arr);
 			} else if (this.areaIndex[0] == 3) {
 				for (let i = 0; i < this.baidugoods.length; i++) {
 					if (id === undefined || id === '全部') {
@@ -339,6 +342,7 @@ export default {
 		},
 		wholeOnCom: function() {
 			if (this.areaIndex[0]) {
+				this.goodsIndex = [];
 				for (let i = 0; i < this.selectgoods.length; i++) {
 					this.goodsIndex.push(this.selectgoods[i].goodsId);
 				}
@@ -350,13 +354,12 @@ export default {
 				for (let i = 0; i < this.selectgoods.length; i++) {
 					this.goodsIndex = this.goodsIndex.filter(x=>{
 						return x!=this.selectgoods[i].goodsId;
-					})
+					});
 				}
 			}
 		}
 	},
 	mounted() {
-		console.log(this.pObj.areaIndex);
 		this.areaIndex = this.pObj.areaIndex;
 		this.goodsIds = this.pObj.goodsIds;
 		this.eleShopId = this.pObj.eleShopid;

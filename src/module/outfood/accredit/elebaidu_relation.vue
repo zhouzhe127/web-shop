@@ -44,6 +44,20 @@ import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 const goodList = storage.session('goodList');
 const packlist = storage.session('packageList'); //所有套餐
+if (goodList) {
+	for (let i = 0; i < goodList.length; i++) {
+		//过滤掉称重商品下架商品
+		if (
+			goodList[i].type == 1 ||
+			goodList[i].type == 2 ||
+			goodList[i].status == 2 ||
+			goodList[i].isGroup == 1
+		) {
+			goodList.splice(i, 1);
+			i--;
+		}
+	}
+}
 export default {
 	data() {
 		return {

@@ -22,6 +22,7 @@
                 end-placeholder="结束日期"
                 format="yyyy-MM-dd"
                 :clearable="false"
+                :default-time="['00:00:00', '23:59:59']"
                 >
             </el-date-picker>
         </div>
@@ -946,9 +947,10 @@ export default {
         elShopList: () =>
             import ( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
     },
-    beforeDestroy(){
+    beforeRouteLeave(to,from,next){
         //清除定时器
-        Timer.clear(this.timerTask.mList);
+        this.clearTaskTimer('mList');
+        next();
     },
 };
 </script>
