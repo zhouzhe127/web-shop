@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="table-body" v-for="(bom,bomIndex) in bomDetails" :key="bomIndex">
-                    <div class="body-left" :style="calcStyle(bom.list.length)"> 
+                    <div class="body-left" :style="calcStyle(bom.list.length)">  
                         <div class="sum">
                             <li>
                                 <span class="word">
@@ -744,6 +744,7 @@ export default {
         },
         calcStyle(len){
             //计算产料物料的居中
+            console.log(len);
             let h = 0,
                 height = 70;
             if(len > 1){
@@ -939,7 +940,6 @@ export default {
         }
         .table-body{
             border-bottom:2px solid #f7f7f7;
-            max-height:800px;
             &:after{
                 .clear;
             }
