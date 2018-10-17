@@ -33,7 +33,7 @@
 			</div>
 			<div class="timebox">
 				<span>仓库所属：</span>
-				<el-select multiple collapse-tags v-model="selWare" placeholder="全部类型">
+				<el-select multiple collapse-tags v-model="selWare" placeholder="请选择店铺">
 					<el-option v-for="item in wareList" :key="item.shopId" :label="item.shopName" :value="item.shopId"></el-option>
 				</el-select>
 			</div>
