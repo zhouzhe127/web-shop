@@ -174,7 +174,7 @@ export default {
 				let arr = [];
 				let infoGoodsIds = JSON.parse(info.goodsIds);
 				for (let i in infoGoodsIds) {
-					if(infoGoodsIds[i].length>0||info.areaIds!=2){
+					if(infoGoodsIds[i].length>0||info.areaIds==3){
 						arr.push(parseInt(i));
 					}
 				}
@@ -492,7 +492,7 @@ export default {
 		getReturnInfo: function(res, item) {
 			if(res=='ok'){
 				this.goods = item.goods;
-				this.packageIds = item.packageIds;
+				this.packageIds = item.packageIds.join(',');
 				this.goodsLength = item.goodsLength;
 				this.goodsIds = item.goodsIds;
 			}

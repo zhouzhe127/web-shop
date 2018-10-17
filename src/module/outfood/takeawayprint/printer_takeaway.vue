@@ -160,14 +160,16 @@ export default {
 				title: this.title
 			};
 		},
-		async getReturnInfo() {
+		async getReturnInfo(res) {
 			// if (cancelStatus) {
 			// 	setTimeout(async () => {
 			// 		await this.init();
 			// 	}, 2000);
 			// 	return;
 			// }
-			await this.init();
+			if(res!='close'){
+				await this.init();
+			}
 			this.showCom = '';
 		},
 		//授权
