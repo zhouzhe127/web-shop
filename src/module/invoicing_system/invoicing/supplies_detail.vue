@@ -5,7 +5,7 @@
 		<div class="headBox">
 			<div class="headTitle">
 				物料信息
-				<a @click="showDetail=!showDetail" v-if="isBrand">{{!showDetail ? '展开' : '收起'}}</a>
+				<a @click="showDetail=!showDetail" v-if="isBrand&&goodsDetail.distributionRela&&goodsDetail.distributionRela.length>0">{{!showDetail ? '展开' : '收起'}}</a>
 			</div>
 			<div class="innerBox">
 				<ul>
@@ -74,7 +74,7 @@
 				<el-button @click="delList" type="info">删除</el-button>
 			</div>
 		</div>
-		<div class="area-detail" v-if="isBrand&&showDetail&&goodsDetail.distributionRela">
+		<div class="area-detail" v-if="isBrand&&showDetail&&goodsDetail.distributionRela&&goodsDetail.distributionRela.length>0">
 			<li v-for="(wa,waIndex) in goodsDetail.distributionRela" :key="waIndex">
 				<span>{{waIndex+1}}</span>
 				<i>{{wa.distributionName}}&nbsp;:&nbsp;{{wa.value}}/<strong v-for="(u,i) in goodsDetail.unit" :key="i" v-if="u.muId==wa.unitId">{{u.name}}</strong></i>
