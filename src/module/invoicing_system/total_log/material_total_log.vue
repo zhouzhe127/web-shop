@@ -437,9 +437,9 @@ export default {
         this.getQueryData();
         this.initPageObj();
     },
-    activated(){
+    async activated(){
         this.getQueryData();        
-        this.getOperationList('material');
+        await this.getOperationList('material');
         this.getCategoryList();
         this.getWarehouseList();
         this.filterReset('filter',this.pageObj.currentPage);
