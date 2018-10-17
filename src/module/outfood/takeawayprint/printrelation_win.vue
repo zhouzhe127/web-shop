@@ -304,7 +304,7 @@ export default {
 			} else if (this.areaIndex[0] == 2) {
 				for (let i = 0; i < this.mtgoods.length; i++) {
 					if(this.mtgoods[i].packageIds) this.mtgoods[i].goodsId = this.mtgoods[i].packageIds;
-					this.mtgoods[i].goodsId = this.mtgoods[i].specId[0]||this.mtgoods[i].packageIds? this.mtgoods[i].goodsId:-i+1;
+					this.mtgoods[i].goodsId = this.mtgoods[i].specId[0]||this.mtgoods[i].packageIds? this.mtgoods[i].goodsId:-i-1;
 					if (id === undefined || id === '全部') {
 						let item = this.mtgoods[i];
 						if (!(item.categoryName instanceof Array)) {
