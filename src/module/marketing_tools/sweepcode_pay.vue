@@ -409,18 +409,21 @@
 						staffId: userId
 					}
 				});
-				let arrList = [];
-				this.restaurants.map((item) => {
-					if (userId == item.staffId) {
-						if (arrList.indexOf(item.staffId) > -1) {
-							return;
-						}
-						arrList.push(item);
-						this.taList = this.taList.concat(arrList);
-					}
-					return item;
+				// let arrList = [];
+				// this.restaurants.map((item) => {
+				// 	if (userId == item.staffId) {
+				// 		if (arrList.indexOf(item.staffId) > -1) {
+				// 			return;
+				// 		}
+				// 		arrList.push(item);
+				// 		this.taList = this.taList.concat(arrList);
+				// 	}
+				// 	return item;
 
-				});
+				// });
+				if(data){
+					this.getsweepcodeConfig();
+				}				
 				//console.log(data, 'data');
 			},
 			async getUserList() { //获取下拉框中所有员工的列表

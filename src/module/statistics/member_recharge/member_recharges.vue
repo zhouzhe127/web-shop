@@ -638,7 +638,9 @@ export default {
 			this.phonetotal.push(data.list.total);
 			for (let item of data.list.list) {
 				if (this.ischain == '3') {
-					item.shopName = this.getshopName(item.fromId);
+					let showId = '';
+					showId = item.fromId == '0' ? item.shopId : item.fromId;
+					item.shopName = this.getshopName(showId);
 				} else {
 					item.shopName = this.getshopName(item.shopId);
 				}
