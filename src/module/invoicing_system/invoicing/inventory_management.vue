@@ -60,7 +60,7 @@
 				<span slot="con-9" slot-scope="props" v-if="props.data.goodsNum" :title="Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus)">{{addCount(Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus))}}{{props.data.unit}}</span>
 			</com-table>
 		</section>
-		<invent-supplies v-show="tabactive==1" :page2="page2" @page="suppage" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
+		<invent-supplies v-if="tabactive==1" :page2="page2" @page="suppage" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
 		<div class="somePage" v-if="tabactive==0">
 			<!-- <page-turn :total="total" :isNoJump="false" :isNoPaging='true' :page="page" @pageNum="changePage" ref="pageTurn"></page-turn> -->
 			<el-pagination @current-change="changePage" background :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(count)"></el-pagination>
@@ -165,8 +165,7 @@
 				let str = `/admin/inventoryManagement/${v}`;
 				if (to.path == str || v == 'picking') check = false;
 			});
-			console.log(check);
-			if (check||shopId!=storage.session('shipId')) {
+			if (check||shopId!=storage.session('shopId')) {
 				page = 1;
 				tabactive = 0;
 				page2 = 1;
