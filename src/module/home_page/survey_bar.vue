@@ -38,57 +38,65 @@ export default {
 		return {
 			dataBar: {
 				xAxis: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
 				total: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
 				eatIn: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				},
-				takeOut: {
-					business: [],
+				takeout: {
+					turnover: [],
 					amount: [],
 					discount: [],
-					orderNumber: []
+					orderNum: []
 				},
 				selfTakeOut: {
-					business: [],
+					turnover: [],
 					amount: [],
 					discount: [],
-					orderNumber: []
+					orderNum: []
 				},
 				quickPayment: {
-					business: [],
+					turnover: [],
 					amount: [],
-					orderNumber: [],
+					orderNum: [],
 					discount: []
 				}
 			},
 			tabList: [
-				{ type: 'business', name: '营业总额' },
+				{ type: 'turnover', name: '营业总额' },
 				{ type: 'discount', name: '优惠总额' },
 				{ type: 'amount', name: '入账金额' },
-				{ type: 'orderNumber', name: '订单量' }
+				{ type: 'orderNum', name: '订单量' }
 			],
-			barType: 'business',
+			barType: 'turnover',
 			tabIndex: 0,
 
 			checkList: [
 				{ name: '总值', className: 'total', color: '#ff9800' },
 				{ name: '堂吃', className: 'eatIn', color: '#fcd030' },
-				{ name: '外卖', className: 'takeOut', color: '#1b88ee' },
-				{ name: '自营外卖', className: 'selfTakeOut', color: '#ee2125' },
-				{ name: '快捷支付', className: 'quickPayment', color: '#a16bff' }
+				{ name: '外卖', className: 'takeout', color: '#1b88ee' },
+				{
+					name: '自营外卖',
+					className: 'selfTakeOut',
+					color: '#ee2125'
+				},
+				{
+					name: '快捷支付',
+					className: 'quickPayment',
+					color: '#a16bff'
+				}
 			],
 			barSelect: {
 				总值: true,
@@ -130,33 +138,33 @@ export default {
 					this.bar[v] = {};
 					this.bar[v].eatIn = {};
 					this.bar[v].quickPayment = {};
-					this.bar[v].takeOut = {};
+					this.bar[v].takeout = {};
 					this.bar[v].total = {};
 					this.bar[v].selfTakeOut = {};
 
-					this.bar[v].eatIn.business = data[v].ePrice;
+					this.bar[v].eatIn.turnover = data[v].ePrice;
 					this.bar[v].eatIn.amount = data[v].eRealPrice;
-					this.bar[v].eatIn.orderNumber = data[v].eOrderNum;
+					this.bar[v].eatIn.orderNum = data[v].eOrderNum;
 					this.bar[v].eatIn.discount = data[v].eDiscount;
 
-					this.bar[v].quickPayment.business = data[v].kPrice;
+					this.bar[v].quickPayment.turnover = data[v].kPrice;
 					this.bar[v].quickPayment.amount = data[v].kRealPrice;
-					this.bar[v].quickPayment.orderNumber = data[v].kOrderNum;
+					this.bar[v].quickPayment.orderNum = data[v].kOrderNum;
 					this.bar[v].quickPayment.discount = data[v].kDiscount;
 
-					this.bar[v].takeOut.business = data[v].tPrice;
-					this.bar[v].takeOut.amount = data[v].tRealPrice;
-					this.bar[v].takeOut.orderNumber = data[v].tOrderNum;
-					this.bar[v].takeOut.discount = data[v].tDiscount;
+					this.bar[v].takeout.turnover = data[v].tPrice;
+					this.bar[v].takeout.amount = data[v].tRealPrice;
+					this.bar[v].takeout.orderNum = data[v].tOrderNum;
+					this.bar[v].takeout.discount = data[v].tDiscount;
 
-					this.bar[v].total.business = data[v].Price;
+					this.bar[v].total.turnover = data[v].Price;
 					this.bar[v].total.amount = data[v].RealPrice;
-					this.bar[v].total.orderNumber = data[v].OrderNum;
+					this.bar[v].total.orderNum = data[v].OrderNum;
 					this.bar[v].total.discount = data[v].Discount;
 
-					this.bar[v].selfTakeOut.business = data[v].sPrice;
+					this.bar[v].selfTakeOut.turnover = data[v].sPrice;
 					this.bar[v].selfTakeOut.amount = data[v].sRealPrice;
-					this.bar[v].selfTakeOut.orderNumber = data[v].sOrderNum;
+					this.bar[v].selfTakeOut.orderNum = data[v].sOrderNum;
 					this.bar[v].selfTakeOut.discount = data[v].sOrderNum;
 				}
 			}
@@ -188,9 +196,9 @@ export default {
 					this.dataBar.xAxis[xKey] = xBar;
 				}
 				for (let j in bar[i]) {
-					//2遍历 j = eatIn/takeOut/total/quickPayment/
+					//2遍历 j = eatIn/takeout/total/quickPayment/
 					for (let k in bar[i][j]) {
-						//3遍历 k = business/amount/orderNumber/discount/passengerFlow
+						//3遍历 k = turnover/amount/orderNum/discount/passengerFlow
 						this.dataBar[j][k].push(bar[i][j][k]);
 					}
 				}
@@ -205,7 +213,9 @@ export default {
 		},
 		//实例化图表
 		initEchart() {
-			this.barDom = this.echarts.init(document.getElementById('bar-charts'));
+			this.barDom = this.echarts.init(
+				document.getElementById('bar-charts')
+			);
 			this.setBarListData(this.dataBar, this.barType); //循环设置柱状图图样式列表
 			this.barDom.setOption(this.getBarData(this.dataBar, this.barType));
 		},
@@ -294,7 +304,9 @@ export default {
 				this.tabIndex = index;
 				this.barType = this.tabList[index].type;
 				this.setBarListData(this.dataBar, this.barType); //循环设置柱状图图样式列表
-				this.barDom.setOption(this.getBarData(this.dataBar, this.barType)); //重置柱状图表数据
+				this.barDom.setOption(
+					this.getBarData(this.dataBar, this.barType)
+				); //重置柱状图表数据
 			}
 		}
 	}
@@ -391,7 +403,7 @@ export default {
 		.eatIn:hover i {
 			border: 1px solid #fcd030;
 		}
-		.takeOut:hover i {
+		.takeout:hover i {
 			border: 1px solid #1b88ee;
 		}
 		.quickPayment:hover i {
@@ -402,23 +414,28 @@ export default {
 		}
 		.total.active i {
 			border: 1px solid #ff9800;
-			background: url(../../res/icon/white_select.png) #ff9800 center no-repeat;
+			background: url(../../res/icon/white_select.png) #ff9800 center
+				no-repeat;
 		}
 		.eatIn.active i {
 			border: 1px solid #fcd030;
-			background: url(../../res/icon/white_select.png) #fcd030 center no-repeat;
+			background: url(../../res/icon/white_select.png) #fcd030 center
+				no-repeat;
 		}
-		.takeOut.active i {
+		.takeout.active i {
 			border: 1px solid #1b88ee;
-			background: url(../../res/icon/white_select.png) #1b88ee center no-repeat;
+			background: url(../../res/icon/white_select.png) #1b88ee center
+				no-repeat;
 		}
 		.quickPayment.active i {
 			border: 1px solid #a16bff;
-			background: url(../../res/icon/white_select.png) #a16bff center no-repeat;
+			background: url(../../res/icon/white_select.png) #a16bff center
+				no-repeat;
 		}
 		.selfTakeOut.active i {
 			border: 1px solid #ee2125;
-			background: url(../../res/icon/white_select.png) #ee2125 center no-repeat;
+			background: url(../../res/icon/white_select.png) #ee2125 center
+				no-repeat;
 		}
 
 		.check-div {

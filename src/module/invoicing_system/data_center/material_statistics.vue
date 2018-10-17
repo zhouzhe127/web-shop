@@ -947,9 +947,10 @@ export default {
         elShopList: () =>
             import ( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
     },
-    beforeDestroy(){
+    beforeRouteLeave(to,from,next){
         //清除定时器
-        Timer.clear(this.timerTask.mList);
+        this.clearTaskTimer('mList');
+        next();
     },
 };
 </script>
