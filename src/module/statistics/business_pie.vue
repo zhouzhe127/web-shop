@@ -24,7 +24,7 @@
 					<!--饼图容器-->
 					<div id="pie-3"></div>
 				</div>
-				<div v-if="coverShow" class="loding-cover pie-cover"><img src="../../res/images/preloader.gif"/></div>
+				<div v-if="coverShow" class="loding-cover pie-cover"><i class="el-icon-loading"></i></div>
 			</div>
 		</div>
 	</div>
@@ -288,12 +288,15 @@ export default {
 	bottom: 0;
 	left: 0;
 	width: 100%;
+	height: 100%;
 	z-index: 9;
 	background: #fff;
+	opacity: 0.7;
 	text-align: center;
+	display: flex;
+	i{display: inline-block;font-size: 40px;margin: auto;color: #666;opacity: 1;}
 }
 .pie-cover {
 	height: 250px;
-	padding-top: 50px;
 }
 </style>
