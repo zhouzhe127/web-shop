@@ -343,8 +343,11 @@
 			async updatePointConfig() {
 				if (this.testInfo()) {
 					let obj = {};
-
-					obj.channel = this.selectCanal.join(',');
+                    let channel = '';
+                    for(let item of this.selectCanal){
+                        channel += item;
+                    }
+					obj.channel = channel;
 					obj.maxPointRate = this.maxPointRate;
 					obj.point = this.point;
 					obj.pointCash = this.pointCash;
