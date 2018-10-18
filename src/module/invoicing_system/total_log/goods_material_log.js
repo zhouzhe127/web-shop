@@ -145,8 +145,7 @@ export default {
         //是否可以查看记录
         canViewHistory(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
-			
-            let temp = null;
+			let temp = null;
 			temp =  this.getAttr(config,item.type,'type','canViewHistory');
 			if(typeof temp == 'function'){
 				return !temp(item);
