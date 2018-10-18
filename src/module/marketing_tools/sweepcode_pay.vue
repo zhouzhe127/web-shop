@@ -66,24 +66,23 @@
 			<div class="online-box2 clearfix">
 				<span class="online-sub fl">积分抵扣</span>
 				<onOff :key='1' :status="pointSwitch" @statusChange="openpointSwitch"></onOff>
+				<!-- <onOff :key='1' :status="shareSwitch" @statusChange="openshareSwitch"></onOff> -->
 			</div>
 			<!-- 会员折扣与优惠券是否共享 -->
 			<!-- <div class="online-box clearfix">
             <span class="online-sub fl" style="line-height:16px;">会员折扣与优惠券共享</span>
             <onOff :key='1' :status="shareSwitch" @statusChange="openshareSwitch"></onOff>
         </div> -->
-			<div style="position:relative;">
-				<div class="online-box clearfix">
-					<span class="online-sub fl">开启用餐人数</span>
-					<onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff>
-				</div>
-				<!-- 用餐人数 -->
-				<div class="online-box dinnerNum clearfix" v-if='payMeals'>
-					<span class="online-sub required fl"></span>
-					<span class="discount">用餐</span>
-					<input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
-					<span class="discount">人</span>
-				</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl">开启用餐人数</span>
+				<onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff>
+			</div>
+			<!-- 用餐人数 -->
+			<div class="online-box clearfix" v-if='payMeals' style="padding-left: 330px;">
+				<span class="online-sub required fl"></span>
+				<span class="discount">用餐</span>
+				<input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
+				<span class="discount">人</span>
 			</div>
 			<!-- 开启用餐人数-->
 			<!-- 开启优惠规则 -->
