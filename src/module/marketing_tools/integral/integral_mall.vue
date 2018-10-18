@@ -206,47 +206,71 @@
 					type: true,
 					format: 'yyyy.MM.dd'
 				}).format;
-				good[i].showStatus = good[i].status == 0 ? '已上架' : '已下架';
-			}
-		},
-		//上下架
-		async ActivityShelves(i, gid, status) {
-			let res = await http.ActivityShelves({
-				data: {
-					id: gid,
-					status: status == 0 ? 1 : 0,
-					uid: this.uid
-				}
-			});
-			let arr = res;
-			arr.createTime = utils.getTime({
-				time: arr.createTime,
-				type: true,
-				format: 'yyyy.MM.dd'
-			}).format;
-			arr.showStatus = arr.status == 0 ? '已上架' : '已下架';
-			this.$set(this.goodLists, i, arr);
-		},
-		//删除
-		async ActivityDel(i, gid) {
-			await http.ActivityDel({
-				data: {
-					id: gid,
-					uid: this.uid
-				}
-			});
-			//this.goodLists.splice(i, 1);
-			this.getActivityGoodsList();
-		},
-		//删除
-		del(i, gid) {
-			this.$store.commit('setWin', {
-				title: '提示信息',
-				winType: 'confirm',
-				content: '确认删除商品',
-				callback: res => {
-					if (res == 'ok') {
-						this.ActivityDel(i, gid);
+				arr.showStatus = arr.status == 0 ? '已上架' : '已下架';
+				this.$set(this.goodLists, i, arr);
+			},
+			//删除
+			async ActivityDel(i, gid) {
+				await http.ActivityDel({
+					data: {
+						id: gid,
+						uid: this.uid
+					}
+				});
+				//this.goodLists.splice(i, 1);
+				this.getActivityGoodsList();
+			},
+			//删除
+			del(i, gid) {
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					winType: 'confirm',
+					content: '确认删除商品',
+					callback: res => {
+						if (res == 'ok') {
+							this.ActivityDel(i, gid);
+						}
+					}
+				});
+			},
+			//翻页
+			// pageChange(page) {
+			// 	this.page = page.page;
+			// 	this.getActivityGoodsList();
+			// },
+			// openUse() {
+			// 	this.isShop == 'shop' ?
+			// 		(this.isShop = 'exchange') :
+			// 		(this.isShop = 'shop');
+			// 	if (
+			// 		(this.ischain == '0' || this.ischain == '3') &&
+			// 		this.isShop == 'shop'
+			// 	) {
+			// 		setTimeout(() => {
+			// 			this.initBtn();
+			// 		});
+			// 	}
+			// },
+			//模板选择
+			setTemplateType() {
+				this.isTemplate = true;
+			},
+			//添加积分商品
+			openWin() {
+				this.editInfos = '';
+				this.isWin = true;
+			},
+			//上下架
+			shelves(i, gid, status) {
+				this.ActivityShelves(i, gid, status);
+			},
+			//编辑
+			edit(index, gid) {
+				for (let i = 0; i < this.goodLists.length; i++) {
+					if (this.goodLists[i].id == gid) {
+						this.editInfos = this.goodLists[i];
+						storage.session('editInfos', this.editInfos);
+						break;
 					}
 				}
 				this.$router.push('/admin/integralMall/addIntegralMall');
