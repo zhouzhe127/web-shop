@@ -598,6 +598,7 @@
 							barCode: this.goodsItem.barCode,
 							batchId: value[i].batchId,
 							num: value[i].outNum,
+							name: this.goodsItem.goodsName,
 						};
 						if(value[i].outNum) {
 							arr.push(obj);
@@ -629,6 +630,7 @@
 								batchId: item.batchId,
 								num: Number(item.twoNum) * parseInt(selUnitObj.value),
 								selectUnitName: this.materialItem.selectName,
+								name: this.materialItem.name,
 							};
 							totalNum += Number(item.twoNum);
 							supArr.push(obj);
@@ -697,6 +699,7 @@
 							barCode: item.barCode,
 							batchId: '',
 							num: item.selectNum || '',
+							name: item.goodsName,
 						};
 						let isExist = false; //该条数据是否已存在
 						for(let out of this.goodsOut) {
@@ -745,6 +748,7 @@
 							batchId: '',
 							num: supNum,
 							selectUnitName: item.selectName,
+							name: item.name,
 						};
 						if(this.isBrand){
 							Object.assign(supObj,{
