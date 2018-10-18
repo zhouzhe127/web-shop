@@ -68,7 +68,10 @@
     </div>
 
     <div class="content">
-        <el-table :data="tableData" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
+        <el-table :data="tableData"  
+            v-loading="loading.mList" 
+            element-loading-text="加载中,请稍后..."
+            stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
 
             <el-table-column  min-width="150px"  label="物料名称" fixed="left">
                 <span slot-scope="{row,column}" @click="viewDetail(row,'name')" class="yellow-font">{{row['name']}}</span>
@@ -394,6 +397,9 @@ export default {
                 mList:'',                                //表格数据的定时器
                 mExport:'',                              //导出的定时器
             },
+            loading:{
+                mList:false,
+            }
         };
     },
     methods: {
@@ -414,17 +420,19 @@ export default {
             if(!this.checkCondition(subDate)){
                 return;
             }
-
+            this.loading.mList = true;
             this.timerTask.mList = await this.createTask({
                 subDate,
                 url:'MaterialstatisticStatisticStart',
                 success:(taskId)=>{
                     this.clearTaskTimer('mList');
                     this.getList(taskId);
+                    this.loading.mList = false;
                 },
                 fail:()=>{
                     this.alert('查询失败,请重新查询!');
                     this.clearTaskTimer('mList');
+                    this.loading.mList = false;                    
                 }
             });
 
