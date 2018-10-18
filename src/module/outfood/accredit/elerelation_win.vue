@@ -36,7 +36,7 @@
 				<section class="fl" style="width: 100%;height: auto;margin-bottom: 10px;">
 					<a href="javascript:void(0)" class="allsome">全部</a>
 				</section>
-				<section class="comList">
+				<section class="comList" v-if="fixed.length>0">
 					<mul-select @selOn="packChange" :styles="{backgroundColor: '#F1F1F1'}" :list="fixed" :name="'packageName'"
 					 :isradio="true" :selects="fixedIndex" :keys="'id'"></mul-select>
 				</section>
@@ -196,7 +196,7 @@
 				}
 				if (!this.search) {
 					this.selectgoods = this.goodsArr;
-					this.fixed = this.newfixed;
+					this.fixed = utils.deepCopy(this.newfixed);
 				} else {
 					this.selectgoods = arr;
 					this.fixed = res;

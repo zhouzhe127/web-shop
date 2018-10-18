@@ -975,6 +975,7 @@ export default {
 			obj.barCode = res.barCode;//条形码 物料编码
 			obj.unit = '';//单位id
 			obj.supplierId = this.supplierList.length ? this.supplierList[0].id:'';//供应商id
+			obj.unitPriceBan = res.unitPriceBan;
 
 			let tipName='',listName='',resName='',alrName='';
 			if(type==1){//商品
@@ -1060,7 +1061,7 @@ export default {
 		},
 		//自动计算单价
 		computePrice(res,isTotal){
-			let reg = /\d+|\d+\.\d+/;
+			let reg = /^\d+(\.?\d+)?$/;
 			if(!res.num) return; //必须有数量才能计算
 			if(!reg.test(res.totalPrice) && !reg.test(res.unitPrice)) return;//都不是数字 不计算
 			
@@ -1189,23 +1190,36 @@ export default {
 			}
 			this.supplierList = data;
 		},
-		//获取一二级分类 物料
+		//获取一二级分类
 		getCategoryList(){
+			//商品
 			http.getCategoryList().then((data)=>{
-				this.setCategory(data,1);
+				let one = [];
+				for(let item of data){
+					let obj={};
+					if(item.pid == 0){
+						obj.value = item.id;
+						obj.label = item.name;
+					}
+					if(item.child.length){
+						let children = [];
+						for(let cItem of item.child){
+							children.push({value:cItem.id,label:cItem.name});
+						}
+						obj.children = children;
+					}
+					one.push(obj);
+				}
+				one.unshift({value:-1,label:'全部分类'});
+				this.gOneSort = one;
 			});
+			//物料
 			http.invoiv_getCategoryList().then((data)=>{
-				this.setCategory(data,2);
+				this.setCategory(data);
 			});
 		},
 		//设置分类列表
-		setCategory(data,type){
-			let sortName='';
-			if(type==1){
-				sortName='gOneSort';
-			}else{
-				sortName='mOneSort';
-			}
+		setCategory(data){
 			let one = [];
 			for(let item of data){
 				if(item.pid == 0){
@@ -1213,8 +1227,8 @@ export default {
 				}
 			}
 			one.unshift({value:-1,label:'全部分类'});
-			this[sortName] = one;
-			for(let one of this[sortName]){
+			this.mOneSort = one;
+			for(let one of this.mOneSort){
 				let two = [];
 				for(let item of data){
 					if(one.value==item.pid){
