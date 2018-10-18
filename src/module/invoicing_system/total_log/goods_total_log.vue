@@ -109,8 +109,8 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column}">
-                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
-                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row.type)}">批次详情</span>
+                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row)}">查看记录</span>
+                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row)}">批次详情</span>
                     </template>
                 </el-table-column>
 
@@ -349,8 +349,8 @@ export default {
         this.initPageObj();
         this.initCondition();
     },
-    activated(){
-        this.getOperationList();
+    async activated(){
+        await this.getOperationList();
         
         this.getCategoryList();
         this.getWarehouseList();
