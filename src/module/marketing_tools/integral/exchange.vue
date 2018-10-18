@@ -40,8 +40,8 @@
 			</div>
 		</div>
 		<div class="integralInfo">
-			<span class="fl">已消费：{{usedNum}}份</span>
-			<span class="fl">未消费：{{useNum}}份</span>
+			<span class="fl">已核销:{{usedNum}}份</span>
+			<span class="fl">未核销:{{useNum}}份</span>
 		</div>
 		<!-- <com-table :listHeight='80' :showHand="false" :showTitle='2' :listWidth="1400" :introData="useLists" :titleData="titleList">
 			<div class="imgshow" slot="con-2" slot-scope="props">
