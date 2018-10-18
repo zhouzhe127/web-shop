@@ -91,8 +91,8 @@
 				</el-table-column>
 				<el-table-column label="券码" width="100" align="center">
 					<template slot-scope="scope">
-						<span v-if="scope.row.goodsType == '0'">--</span>
-						<span v-else>{{scope.row.code}}</span>
+						<span v-if="scope.row.goodsType == '1'">--</span>
+						<span v-else>{{scope.row.code == '' ? '--' : scope.row.code}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="领取门店" width="150" align="center">

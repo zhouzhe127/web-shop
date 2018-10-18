@@ -1,3 +1,10 @@
+<!--
+    **物料加工-详情
+    *
+    * 黄一帆
+    * *
+    *
+-->
 <template>
 	<div class="process-detail">
 		<template v-if='!printShow'>

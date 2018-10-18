@@ -1,3 +1,10 @@
+<!--
+    **新建加工BOM单
+    *
+    * 黄一帆
+    * *
+    *
+-->
 <template>
 	<div>
 		<div class="line-title">
@@ -74,7 +81,6 @@
 <script>
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
 
 export default {
 	data() {
@@ -299,7 +305,7 @@ export default {
 				this.setDelId(this.matList[index].itemId);
 				this.matList.splice(index,1);
 				this.matObj.list = this.matList;//原料列表
-			}).catch(()=>{});
+			}).catch();
 		},
 		wareSort(index){//打开弹框-仓库消耗排序
 			this.handleIndex = index;

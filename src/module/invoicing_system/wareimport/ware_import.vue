@@ -1,16 +1,14 @@
 /* * @Author: zhouzhe * @Date: 2018-04-26 13:50:23 */
 <template>
 	<div id="wareImport">
-		<el-radio-group v-model="tabactive" fill="rgb(255, 152, 0)" size="medium" @change="tebClick">
+		<el-radio-group v-model="tabactive" fill="#e1bb4a" size="medium" @change="tebClick">
 			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
 		</el-radio-group>
-		<el-tooltip content="Top center" placement="top">
-		</el-tooltip>
 		<div class="serBox">
 			<h1>操作时间：</h1>
 			<div class="timer">
 				<el-date-picker v-model="timeAll" type="daterange" align="right" unlink-panels range-separator="至"
-				    start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 				</el-date-picker>
 			</div>
 			<div class="inpBox">
@@ -38,7 +36,7 @@
 			</el-table-column>
 		</el-table>
 		<div class="page-box">
-			<el-pagination @current-change="pageChange" :current-page="page" layout="total, prev, pager, next, jumper" :total="allTotal"></el-pagination>
+			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="allTotal"></el-pagination>
 		</div>
 	</div>
 </template>
@@ -53,22 +51,21 @@
 		data() {
 			return {
 				titleList: [{
-						titleName: '操作'
-					},
-					{
-						titleName: '操作时间'
-					},
-					{
-						titleName: '操作人',
-						dataName: 'creator'
-					}
-				],
+					titleName: '操作'
+				},
+				{
+					titleName: '操作时间'
+				},
+				{
+					titleName: '操作人',
+					dataName: 'creator'
+				}],
 				allTotal: 0,
 				page: 1,
 				pageTotal: 0,
-				timeAll:[utils.getTime({
+				timeAll: [utils.getTime({
 					time: new Date() - global.timeConst.ONEMONTH
-				}).start,utils.getTime({
+				}).start, utils.getTime({
 					time: new Date()
 				}).end],
 				createUser: '', //操作人
@@ -81,6 +78,7 @@
 				checkFile: '',
 				cdn: global.cdnUrl,
 				inventConfigure: 0,
+				inventConfigs: {},
 				pickerOptions: {
 					shortcuts: [{
 						text: '最近一周',
@@ -118,6 +116,7 @@
 		// },
 		activated() {
 			this.inventConfigure = storage.session('inventConfigure') || 0;
+			this.inventConfigs = storage.session('inventConfigs');
 			this.tabactive = this.inventConfigure == 0 ? 0 : this.inventConfigure - 1;
 			this.heardBtn();
 			this.init();
@@ -128,7 +127,7 @@
 				let data = await http.invoicing_getBatchStorageRecords({
 					data: {
 						startTime: parseInt(this.timeAll[0] / 1000),
-						endTime: parseInt(this.timeAll[1] / 1000),
+						endTime: parseInt(utils.getTime({time:this.timeAll[1]}).end / 1000),
 						page: this.page,
 						creator: this.createUser,
 						num: 10,
@@ -156,9 +155,9 @@
 			searchReset() {
 				this.createUser = '';
 				this.page = 1;
-				this.timeAll=[utils.getTime({
+				this.timeAll = [utils.getTime({
 					time: new Date() - global.timeConst.ONEMONTH
-				}).start,utils.getTime({
+				}).start, utils.getTime({
 					time: new Date()
 				}).end];
 				this.init();
@@ -168,24 +167,25 @@
 				this.init();
 			},
 			heardBtn() {
-				this.$store.commit('setPageTools', [{
-						name: '导出模板',
-						className: 'success',
-						type:5,
-						fn: () => {
-							if (this.tabactive == 1) {
-								window.location.href = this.cdn + '/suppliestemple.xlsx?v=1';
-							}
-							if (this.tabactive == 0) {
-								window.location.href = this.cdn + '/goodstemple.xlsx?v=1';
-							}
+				let arr = [{
+					name: '导出模板',
+					className: 'success',
+					type: 5,
+					fn: () => {
+						if (this.tabactive == 1) {
+							window.location.href = this.cdn + '/suppliestemple.xlsx?v=1';
 						}
-					},
-					{
+						if (this.tabactive == 0) {
+							window.location.href = this.cdn + '/goodstemple.xlsx?v=1';
+						}
+					}
+				}];
+				if (this.inventConfigs.importStock == 1) {
+					arr.push({
 						name: '入库导入',
 						className: 'success',
 						inputName: 'file',
-						type:1,
+						type: 6,
 						fn: async () => { //e
 							let data = await http.invoicing_warehouseImport({
 								data: {
@@ -211,8 +211,9 @@
 							});
 
 						},
-					}
-				]);
+					});
+				}
+				this.$store.commit('setPageTools', arr);
 			},
 			async checkUp() {
 				let data = await http.invoicing_taskInfo({
@@ -283,10 +284,12 @@
 				margin-top: 15px;
 			}
 		}
-		.inpBox{
+
+		.inpBox {
 			display: inline-block;
 			margin: 0 15px;
 		}
+
 		@import url("./warecom");
 	}
 </style>

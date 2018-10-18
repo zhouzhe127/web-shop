@@ -70,28 +70,28 @@
 			</div>
 			<div class="main">
 				<div class="list">
-					<el-table :data="list" stripe border style="width: 100%">
-					    <el-table-column prop="name" label="仓库名称">
+					<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					    <el-table-column prop="name" label="仓库名称" width="200">
 					    </el-table-column>
-					    <el-table-column label="共享状态">
+					    <el-table-column label="共享状态" width="100">
 					    	<template slot-scope="scope">
 					        	{{setShared(scope.row.isShared)}}
 					      	</template>
 					    </el-table-column>
-					    <el-table-column prop="code" label="仓库编号">
+					    <el-table-column prop="code" label="仓库编号" width="200">
 					    </el-table-column>
-					    <el-table-column prop="ownerName" label="仓库所属">
+					    <el-table-column prop="ownerName" label="仓库所属" min-width="200">
 					    </el-table-column>
-					    <el-table-column prop="area.length" label="区域总数">
+					    <el-table-column prop="area.length" label="区域总数" width="100">
 					    </el-table-column>
-					    <el-table-column label="商品种类">
+					    <el-table-column label="商品种类" width="100">
 					    	<template slot-scope="scope">
 					        	{{Number(scope.row.KindWeightKg||scope.row.kindWeightKg) + Number(scope.row.kindGoods) + Number(scope.row.kindWeightG)}}
 					      	</template>
 					    </el-table-column>
-					    <el-table-column prop="kindMaterial" label="物料种类">
+					    <el-table-column prop="kindMaterial" label="物料种类" width="100">
 					    </el-table-column>
-					    <el-table-column label="仓库地址">
+					    <el-table-column label="仓库地址" min-width="200">
 					    	<template slot-scope="scope">
 					        	{{scope.row.provinceName}} {{scope.row.cityName}} {{scope.row.townName}} {{scope.row.place}}
 					      	</template>
@@ -161,8 +161,6 @@
 				import( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 			addressLinkage: () =>
 				import( /*webpackChunkName: 'address_linkage'*/ 'src/components/address_linkage'),
-			selectStore: () =>
-				import( /*webpackChunkName: 'select_store'*/ 'src/components/el_shopList'),
 			operationCom: () =>
 				import( /*webpackChunkName: 'operation'*/ './warehouse_operation')
 		},
@@ -413,11 +411,11 @@
 		}
 	}
 	.warehouse-lists{
-		.choose-btn{width: 100%;height: 40px;cursor: pointer;margin-bottom:15px;}
+		.choose-btn{width: 100%;height: 40px;cursor: pointer;margin-bottom:20px;}
 		.el-input{width: 210px;}
 		.filter{width: 100%;
 			.block{display: inline-block;}
-			.inline-box{display: inline-block;vertical-align: middle;margin-right: 10px;padding-bottom: 15px;
+			.inline-box{display: inline-block;vertical-align: middle;margin-right: 10px;padding-bottom: 20px;
 				.inline-span{display: inline-block;}
 			}
 			.input-check{font-size: 16px;color: #333;

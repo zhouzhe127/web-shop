@@ -20,7 +20,7 @@
 			<ul>
 				<li v-for="(item,index) in showList" :key="index">
 					<div class="infoDetail">
-						<a href="javascript:void(0);" @click="showDetail(item)" style="color:#5ebee8;">入库</a>|
+						<a href="javascript:void(0);" @click="showDetail(item)" style="color:#5ebee8;" v-if="inventConfigs.commonStock==1">入库</a><span v-if="inventConfigs.commonStock==1">|</span>
 						<a href="javascript:void(0);" @click="addListhouse(item)" style="color:red;">耗损</a>
 						<!-- <a href="javascript:void(0);" @click="openBar(item)" style="color:orange;">修改</a> -->
 					</div>
@@ -39,7 +39,8 @@
 			<div v-if="showList.length == 0" id="emptyData">目前没有显示数据</div>
 		</div>
 		<div class="page-box">
-			<page-btn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-btn>
+			<!-- <page-btn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-btn> -->
+			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(goodsList.length)"></el-pagination>
 		</div>
 	</div>
 </template>
@@ -56,7 +57,8 @@
 				num: 10,
 				showList: '',
 				relation: '',
-				isMin: ''
+				isMin: '',
+				inventConfigs:{}//进销存配置
 			};
 		},
 		props: ['goodsData', 'selUnit'],
@@ -65,7 +67,7 @@
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
 			},
 			pageChange(page) {
-				this.page = page.page;
+				this.page = page;
 				this.resetGoods(this.goodsList);
 			},
 			resetGoods(arr) {
@@ -74,7 +76,7 @@
 				this.showList = arr.slice((this.page - 1) * 10, this.page * 10);
 			},
 			getpiceunit(id){
-				let str = ''
+				let str = '';
 				for(let item of this.goodsData.relation){
 					if(id == item.muId){
 						str = item.name;
@@ -123,11 +125,13 @@
 		},
 		mounted() {
 			if(this.goodsData){
+				this.inventConfigs = storage.session('inventConfigs');
 				this.init();
 			}
 		},
 		watch: {
 			goodsData() {
+				this.inventConfigs = storage.session('inventConfigs');
 				this.init();
 			}
 		},

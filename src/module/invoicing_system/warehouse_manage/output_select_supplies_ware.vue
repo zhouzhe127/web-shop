@@ -318,7 +318,8 @@ export default {
 			let obj = {
 				material: [{
 					id: res.id,
-					name: res.name
+					name: res.name,
+					barCode: res.barCode,
 				}]
 			};
 			let data = await http.invoic_getMatchItemList({

@@ -1,31 +1,53 @@
 /* * @Author: zhouzhe * @Date: 2018-05-07 17:57:05 */
 
 <template>
-	<div id="inventory" v-if="conshow" v-cloak>
-		<ul class="tebBox" v-if="inventConfigure==0">
+	<div id="inventory" v-cloak>
+		<!-- <ul class="tebBox" v-if="inventConfigure==0">
 			<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
-		</ul>
+		</ul> -->
+		<el-radio-group v-if="inventConfigure==0" v-model="tabactive" fill="#e1bb4a" size="medium" @change="tebClick">
+			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
+		</el-radio-group>
 		<!--列表数据-->
-		<section style="clear:both;margin-top: 20px;" v-if="tabactive==0">
+		<section v-if="tabactive==0">
 			<section class="statisticsList" style="vertical-align: middle;margin-bottom: 20px;">
-				<section class="filter">
+				<!-- <section class="filter">
 					<input v-model="searchName" type="text" placeholder="请输入商品名" />
-					<!--<input type="text" placeholder="请输入仓库名称"/>-->
 					<input v-model="searchCode" type="text" placeholder="请输入条形码" />
 					<input v-model="secBarCode" type="text" placeholder="请输入副条形码" />
-					<!--商品类型选择框-->
 					<div class="selBox">
 						<select-btn :sorts="goodsList" :name="allGoods" @selOn="selectList" ref="select"></select-btn>
 						<a @click="searchList" href="javascript:void(0);" class="blue" style="width: 100px;height: 40px;line-height: 40px;margin-right: 8px;">筛选</a>
 						<a @click="searchReset" href="javascript:void(0);" class="gray" style="width: 100px;height: 40px;line-height: 40px;">重置</a>
 					</div>
-				</section>
+				</section> -->
+				<div class="asideone">
+					<div class="sleType">
+						<el-input v-model="searchName" placeholder="请输入商品名"></el-input>
+					</div>
+					<div class="sleType">
+						<el-input v-model="searchCode" placeholder="请输入条形码"></el-input>
+					</div>
+					<div class="sleType">
+						<el-input v-model="secBarCode" placeholder="请输入副条形码"></el-input>
+					</div>
+					<div class="sleType">
+						<el-select v-model="listType" placeholder="全部类型">
+							<el-option v-for="item in goodsList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						</el-select>
+					</div>
+					<div class="sleType">
+						<el-button @click="searchList" type="primary">筛选</el-button>
+						<el-button @click="searchReset" type="info">重置</el-button>
+					</div>
+				</div>
 			</section>
-			<com-table :listName="'商品列表'" :fixed="2" :titleData="titleList" :allTotal="count" :introData="goodsdetail" :listWidth="1500">
+			<com-table :listName="'商品列表'" :fixed="2" :titleData="titleList" :allTotal="count" :introData="goodsdetail"
+			 :listWidth="1500">
 				<div class="infoDetail" slot="con-0" slot-scope="props">
 					<a href="javascript:void(0);" @click="showDetail(props.data,props.index)" style="color:#5ebee8;">查看详情</a>
-					<span>|</span>
-					<a href="javascript:void(0);" @click="addListhouse(props.data)" style="color:red;">入库</a>
+					<span v-if="inventConfigs&&inventConfigs.commonStock==1">|</span>
+					<a href="javascript:void(0);" @click="addListhouse(props.data)" v-if="inventConfigs&&inventConfigs.commonStock==1" style="color:red;">入库</a>
 					<span v-if="ischain!=3">|</span>
 					<a href="javascript:void(0);" @click="openBar(props.data)" style="color:orange;" v-if="ischain!=3">打印条码</a>
 				</div>
@@ -38,9 +60,10 @@
 				<span slot="con-9" slot-scope="props" v-if="props.data.goodsNum" :title="Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus)">{{addCount(Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus))}}{{props.data.unit}}</span>
 			</com-table>
 		</section>
-		<invent-supplies v-show="tabactive==1" :page2="page2" @page="suppage" :tabactive='tabactive'></invent-supplies>
+		<invent-supplies v-if="tabactive==1" :page2="page2" @page="suppage" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
 		<div class="somePage" v-if="tabactive==0">
-			<page-turn :total="total" :isNoJump="false" :isNoPaging='true' :page="page" @pageNum="changePage" ref="pageTurn"></page-turn>
+			<!-- <page-turn :total="total" :isNoJump="false" :isNoPaging='true' :page="page" @pageNum="changePage" ref="pageTurn"></page-turn> -->
+			<el-pagination background @current-change="changePage" :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(count)"></el-pagination>
 		</div>
 		<printing-win v-if="winshow" @winEvent="winEvent" ref="print" :title="win.title" :goodsDel="win.goodsDel" :listDel="win.list"></printing-win>
 	</div>
@@ -51,7 +74,8 @@
 	import utils from 'src/verdor/utils';
 	let tabactive = 0;
 	let page = 1;
-	let page2 = 1
+	let page2 = 1;
+	let shopId = storage.session('shopId');
 	export default {
 		data() {
 			return {
@@ -63,7 +87,7 @@
 				searchCode: '', //查询条码
 				secBarCode: '', //副条形码
 				allGoods: '全部类型', //商品分类
-				goodsList: ['全部类型', '普通商品', '称重商品'], //商品分类列表
+				goodsList: [{value:-1,label:'全部类型'},{value:0,label:'普通商品'} ,{value:1,label:'称重商品'}], //商品分类列表
 				listType: -1, //列表中选中的id
 				total: 1,
 				page: 1,
@@ -79,7 +103,7 @@
 				totalList: 0,
 				count: 0,
 				ischain: storage.session('userShop').currentShop.ischain,
-				inventConfigure:0,
+				inventConfigure: 0,
 				titleList: [{
 					titleName: '操作',
 					titleStyle: {
@@ -128,17 +152,20 @@
 				{
 					titleName: '总量'
 				}],
-				conshow:true,
-				page2:1
+				page2: 1,
+				inventConfigs: {} //进销存配置
 			};
 		},
-		beforeRouteLeave(to,from,next){
-			let arr = ['detail','suppliesDetail','materialsPutinStorage','putStroage','picking','warehouseCount','materialCreate'];
-			arr.map(v=>{
+		beforeRouteLeave(to, from, next) {
+			let check = true;
+			let arr = ['detail', 'suppliesDetail', 'materialsPutinStorage', 'putStroage', 'picking', 'warehouseCount',
+				'materialCreate'
+			];
+			arr.map(v => {
 				let str = `/admin/inventoryManagement/${v}`;
-				if(to.path==str||v=='picking') this.check = false;
-			})
-			if(this.check){
+				if (to.path == str || v == 'picking') check = false;
+			});
+			if (check||shopId!=storage.session('shopId')) {
 				page = 1;
 				tabactive = 0;
 				page2 = 1;
@@ -149,7 +176,7 @@
 			async init() {
 				let data = await http.inventoryGoodsList({
 					data: {
-						page: this.page,
+						page: page,
 						num: this.num,
 						type: this.listType,
 						goodsName: this.searchName,
@@ -180,8 +207,8 @@
 					this.goodsdetail = utils.deepCopy(this.goodsdetail);
 				}
 			},
-			suppage(page){
-				page2 = page;
+			suppage(pages) {
+				page2 = pages;
 				console.log(page);
 			},
 			addCount: function (num) {
@@ -203,8 +230,6 @@
 				this.checkGoods = this.goodsdetail;
 				this.listType = -1;
 				this.page = 1;
-				this.$refs.select.sortName = '全部类型';
-				this.$refs.select.selected = 0;
 				this.init();
 			},
 			//查询
@@ -230,7 +255,7 @@
 			},
 			//打印条码
 			async openBar(list) {
-				let data = await http.getDetails({
+				let data = await http.InvoicingGetGoodsDetail({
 					data: {
 						gid: list.gid,
 						shopId: this.shopId
@@ -302,13 +327,13 @@
 				this.winshow = false;
 			},
 			changePage: function (currentPage) {
-				this.page = currentPage.page;
+				this.page = currentPage;
 				page = this.page;
 				this.init();
 			},
-			selectList: function (select) {
-				this.listType = select - 1;
-			},
+			// selectList: function (select) {
+			// 	this.listType = select - 1;
+			// },
 			tebClick(index) {
 				this.tabactive = index;
 				tabactive = index;
@@ -322,23 +347,24 @@
 				});
 			},
 			addEduce() {
-//				this.$store.commit('setPageTools', [{
-//					name: '导出',
-//					className: ['import-form'],
-//					fn: async () => {
-//						await http.Invent_getReport({
-//							data: {
-//								format: 'csv'
-//							}
-//						});
-//					}
-//				}]);
+				//				this.$store.commit('setPageTools', [{
+				//					name: '导出',
+				//					className: ['import-form'],
+				//					fn: async () => {
+				//						await http.Invent_getReport({
+				//							data: {
+				//								format: 'csv'
+				//							}
+				//						});
+				//					}
+				//				}]);
 				this.$store.commit('setPageTools', []);
 			},
 			suppliesBtn() {
 				this.$store.commit('setPageTools', [{
 					name: '领料',
-					className: ['wearhouse create'],
+					type: 5,
+					className: 'primary',
 					fn: () => {
 						this.$router.push({
 							path: 'pickingList/picking'
@@ -347,36 +373,43 @@
 				},
 				{
 					name: '新建物料',
-					className: ['wearhouse handle'],
+					type: 4,
+					className: 'primary',
 					fn: () => {
 						this.$router.push({
 							path: 'inventoryManagement/materialCreate'
 						});
 					}
 				}]);
+			},
+			settype(){
+				this.inventConfigure = storage.session('inventConfigure') || 0;
+				this.inventConfigs = storage.session('inventConfigs');
+				this.tabactive = this.inventConfigure == 0 ? 0 : this.inventConfigure - 1;
+				if (storage.session('tabactive') && this.inventConfigure == 0)
+					this.tabactive = storage.session('tabactive');
+				if(this.inventConfigure == 0) this.tabactive = tabactive;
 			}
 		},
 		beforeMount() {
 			this.page2 = page2;
 		},
-		mounted: function () {
+		async mounted () {
 			this.shopId = storage.session('itemId');
-			this.inventConfigure = storage.session('inventConfigure')||0;
-			this.tabactive = this.inventConfigure==0?0:this.inventConfigure-1;
-			if (storage.session('tabactive')&&this.inventConfigure==0)
-				this.tabactive = storage.session('tabactive');
-			this.tabactive = tabactive;
-			this.page = page;	
-//			this.addEduce();
-			this.init();
+			console.log(this.page);
+			this.settype();
+			//			this.addEduce();
+			await this.init();	
+			this.page = page;
 		},
 		destroyed() {
 			storage.session('tabactive', null);
 		},
-		computed:{
+		computed: {
 			contentRefs: function () {
 				return this.$store.state.contentDislpay;
 			},
+
 		},
 		watch: {
 			tabactive() {
@@ -386,16 +419,15 @@
 					this.suppliesBtn();
 				}
 			},
-			contentRefs(){
-				this.inventConfigure = this.contentRefs;
-				this.tabactive = this.contentRefs==0?0:this.contentRefs-1;
+			contentRefs() {
+				this.settype();
 			}
 		},
 		components: {
-			selectBtn: () =>
-				import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
-			pageTurn: () =>
-				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
+			// selectBtn: () =>
+			// 	import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
+			// pageTurn: () =>
+			// 	import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 			printingWin: () =>
 				import ( /*webpackChunkName: 'printing_win'*/ './printing_win'),
 			inventSupplies: () =>
@@ -406,13 +438,6 @@
 	};
 </script>
 <style type="text/css" lang="less" scoped>
-	@media only screen and (max-width:1250px) {
-		.selBox {
-			margin-top: 10px;
-			display: block;
-		}
-	}
-
 	#inventory {
 		overflow: hidden;
 	}
@@ -421,37 +446,40 @@
 		display: inline-block;
 		color: orange;
 		cursor: pointer;
+
 		li {
 			border: 1px orange solid;
 			display: inline-block;
 			padding: 10px 40px;
 		}
+
 		.active {
 			background-color: orange;
 			color: #ffffff;
 		}
 	}
-
-	.selBox {
-		margin-right: 40px;
-		display: inline-block;
-	}
-
 	.infoDetail {
 		display: inline-block;
 		display: flex;
 		justify-content: space-around;
+
 		a {
 			display: inline-block;
 			text-align: center;
 		}
 	}
-
-	.filter input {
-		width: 160px;
-		height: 41px;
-		padding-left: 5px;
-		margin-right: 20px;
+	.asideone {
+		.sleType {
+			width: 170px;
+			margin-right: 10px;
+			display: inline-block;
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 100%;
+				height: 15px;
+			}
+		}
 	}
 
 	#inventory .somePage {

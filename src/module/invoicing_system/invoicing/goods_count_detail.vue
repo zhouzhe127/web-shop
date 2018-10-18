@@ -33,7 +33,7 @@
 			<el-table v-if="tab == 2" :data="tableData" style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
 				<el-table-column label="序号" align="center"  prop="itemIndex"></el-table-column>
 				<el-table-column label="物料名称" align="center"  width="150px" prop="itemName"></el-table-column>
-				<el-table-column label="物料简码" align="center"  width="150px" prop="barCode"></el-table-column>
+				<el-table-column label="物料编码" align="center"  width="150px" prop="barCode"></el-table-column>
 				<el-table-column label="仓库所属" align="center" width="150px"  prop="storeName"></el-table-column>
 				<el-table-column label="盘库前" align="center" width="150px" prop="before"></el-table-column>
 				<el-table-column label="盘库后" align="center" width="150px" prop="after"></el-table-column>

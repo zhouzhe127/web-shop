@@ -5,109 +5,160 @@
 -->
 <template>
 	<div id="material-create">
-		<div class="split-title">
-			新建物料
+		<div class="head">
+			<span>新建物料</span>
+			<div></div>
 		</div>
+
 		<div>
-			<div class="label-content">
+			<div class="label-content pt-20">
 				<label class="required label">物料名称</label>
-				<input type="text" v-model="materialName" class="input" maxlength="20" placeholder="请输入物料名称">
+				<el-input clearable v-model="materialName" maxlength="20" class="el-in" placeholder="请输入物料名称"></el-input>
 			</div>
+
+
 			<div class="label-content">
-				<label class="require label">物料简码</label>
-				<input type="text" v-model="materialCode" class="input" maxlength="20" placeholder="请输入物料简码">
+				<label class="required label">物料编码</label>
+				<el-input clearable v-model="materialCode"  maxlength="6" class="el-in" placeholder="请输入物料编码"></el-input>
 			</div>
+
+
 			<div class="label-content">
 				<label class="required label">物料类型</label>
-				<div style="width:210px;display:inline-block;">
-					<el-select v-model="typeValue" placeholder="全部类型">
-						<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
-					</el-select>
-				</div>
+				<el-select v-model="typeValue" placeholder="全部类型" class="el-in">
+					<el-option 
+						v-for="item in typeCate" 
+						:key="item.value" 
+						:label="item.label" 
+						:value="item.value"
+					></el-option>
+				</el-select>
 			</div>
+
+
 			<div class="label-content">
 				<label class="required label">物料分类</label>
-				<div class="img-div" @click="openCategoryWin('category')">
-					<img src="../../../res/images/add.png" alt="添加">添加分类
+				<div class="icon-div" @click="openCategoryWin(winName.category)">
+					<span class="el-icon-circle-plus-outline"></span>
+					添加物料分类
 				</div>
-				<span class="tips" v-show="selectCategory.length>0">
+
+				<span class="tips" v-show="selectCategory.length > 0">
                     (已选择:
                         <i v-for="(item,index) in selectCategory" :key="index">{{item.name}}<i v-if="index!=selectCategory.length-1">,</i></i>
                     )
                 </span>
 			</div>
+
 			<div class="label-content">
-				<label class="label">品牌</label>
-				<div class="img-div" @click="openAddBrand('brand')">
-					<img src="../../../res/images/add.png" alt="添加">添加品牌
+				<label class="label required-no">品牌</label>
+
+				<div class="icon-div" @click="openAddBrand(winName.brand)">
+					<span class="el-icon-circle-plus-outline"></span>
+					添加品牌
 				</div>
-				<span class="tips" v-show="selectBrand.length>0">
+				<span class="tips" v-show="selectBrand.length > 0">
                     (已选择:
                         <i v-for="(item,index) in selectBrand" :key="index">{{item.name}}</i>
                     )
                 </span>
 			</div>
+
 			<div class="label-content">
 				<label class="required label">保质期</label>
-				<input type="text" class="input validity-input" maxlength="3" v-model="validityObj.time">
-				<div class="validity" @click="hideUnitSelect">
-					<span class="validity-num">{{validityObj.type}}</span>
-					<span class="validity-trangle"></span>
-					<ul class="validity-ul" v-show="validityObj.show">
-						<li v-for="(item,index) in validityTypeArr" :key="index" @click="getValidity(item)">{{item.name}}</li>
-					</ul>
-				</div>
+				<el-input placeholder="请输入保质期" v-model="validityObj.time" @change="(res)=>{typeRatio(validityObj,'time','validate')}" class="el-in" maxlength="3">
+					<el-select v-model="validityObj.type" slot="append" placeholder="请选择" class="el-append">
+						<el-option
+							v-for="item in validityTypeArr"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"
+						></el-option>
+					</el-select>
+				</el-input>
 			</div>
+
 			<div class="label-content">
 				<label class="required label">物料单位</label>
-				<div class="img-div" @click="openAddUnitWin('unit')">
-					<img src="../../../res/images/add.png" alt="添加">添加单位
+
+				<div class="icon-div" @click="openAddUnitWin(winName.unit)">
+					<span class="el-icon-circle-plus-outline"></span>
+					添加单位
 				</div>
-				<span class="tips" v-show="selectUnit.length>0">
+				<span class="tips" v-show="selectUnit.length > 0">
                     (已选择:
                         <i v-for="(item,index) in selectUnit" :key="index">{{item.name}}<i v-if="index!=selectUnit.length-1">,</i></i>
                     )
                 </span>
 			</div>
-			<div class="label-content" v-show="selectUnit.length>0">
+
+			<!-- 单位选择 -->
+			<div class="label-content" v-show="selectUnit.length > 0">
 				<label class="required label">默认单位</label>
-				<mul-select :width="210" :sorts="selectUnitName" :name="unitObj.de" @emit="getSelectUnitDe" style="margin-left:-3px;"></mul-select>
-			</div>
-			<div class="label-content" v-show="selectUnit.length>0">
-				<label class="required label">最小单位</label>
-				<mul-select :width="210" :sorts="selectUnitName" :name="unitObj.min" @emit="getSelectUnitMin" style="margin-left:-3px;"></mul-select>
-			</div>
-			<div class="label-content" v-for="(item,index) in groupUnit" :key="index" v-if="item.unitId!=unitObj.minId">
-				<label :class="{'required':index==0,'label':true}">{{index==0 ? '单位换算' : ''}}</label>
-				<div class="unit-div">
-					<input type="text" v-model="item.value" placeholder="请输入数字" maxlength="15">
-					<span :title="item.minName">{{item.minName}}</span>
-				</div>
-				<span class="equal-unit">=1&nbsp;{{item.unitName}}</span>
-			</div>
-		</div>
-		<div class="split-title" v-if="isBrand">
-			分销价格
-		</div>
-		<div class="label-content" v-if="isBrand" v-for="(list,index) in dispiceArr" :key="index">
-			<div class="inline-box">
-				<label class="require label">{{list.name}}</label>
-				<div class="input-box">
-					<el-input v-model="list.value" placeholder="请输入价格"></el-input>
-				</div>
-			</div>
-			<div class="inline-box">
-				<label class="require label">单位</label>
-				<el-select v-model="list.unitId" placeholder="请选择单位">
-					<el-option v-for="item in selectUnit" :key="item.id" :label="item.name" :value="item.id"></el-option>
+				<el-select v-model="convertUnit.defUnitId" @change="(res)=>{changeUnit(res,'defUnitName')}" placeholder="请选择默认单位" class="el-in">
+					<el-option
+						v-for="item in selectUnit"
+						:key="item.id"
+						:label="item.name"
+						:value="item.id"
+					></el-option>
 				</el-select>
 			</div>
+
+			<div class="label-content" v-show="selectUnit.length > 0">
+				<label class="required label">最小单位</label>
+				<el-select v-model="convertUnit.minUnitId" @change="(res)=>{changeUnit(res,'minUnitName')}" placeholder="请选择最小单位" class="el-in">
+					<el-option
+						v-for="item in selectUnit"
+						:key="item.id"
+						:label="item.name"
+						:value="item.id"
+					></el-option>
+				</el-select>
+			</div>
+
+			<!-- 单位换算 -->
+			<div class="label-content" v-for="(item,index) in groupUnit" :key="index" v-if="item.unitId != convertUnit.minUnitId">
+				<label :class="{'required':index == 0,'label':true}">{{ index == 0 ? '单位换算' : ''}}</label>
+
+				<el-input placeholder="请输入数字" v-model="item.value" class="el-in" maxlength="15" @change="()=>{typeRatio(item,'value','unit')}">
+					<template slot="append">
+						{{convertUnit.minUnitName}}
+					</template>
+				</el-input>
+				<span class="equal-unit"> = 1 {{item.unitName}}</span>
+			</div>
 		</div>
-		<div class="bottom">
-			<div class="gray-btn gray" @click="clickBtn('cancel')">取消</div>
-			<div class="new-btn new" @click="clickBtn('continue')">继续新建</div>
-			<div class="yellow-btn yellow" @click="clickBtn('ok')">确定</div>
+
+		<!-- 分销价 -->
+		<div class="head" v-if="isBrand">
+			<span>分销价格</span>
+			<div></div>
 		</div>
+		<div class="pt-20" v-if="isBrand">
+			<div class="label-content"  v-for="(list,index) in dispiceArr" :key="index">
+				<div class="inline-box">
+					<label class="required-no label">{{list.name}}</label>
+					<div class="input-box">
+						<el-input v-model="list.value" placeholder="请输入价格" @change="(res)=>{typeRatio(list,'value','distribute')}"></el-input>
+					</div>
+				</div>
+				<div class="inline-box">
+					<label class="required-no label">单位</label>
+					<el-select v-model="list.unitId" placeholder="请选择单位" class="el-in">
+						<el-option 
+							v-for="item in selectUnit" 
+							:key="item.id" 
+							:label="item.name" 
+							:value="item.id"
+						></el-option>
+					</el-select>
+				</div>
+			</div>
+		</div>
+
+
+
 		<component 
 			:is="showCom" 
 			:pObj="comObj" 
@@ -123,10 +174,9 @@
 </template>
 <script>
 /*
-	    1)默认单位是否可以等于最小单位?
-	    2)当只选了一个单位的时候默认单位是否等于最小单位?
-
-	*/
+	说明:
+		1.分销价1-10位,可以位0,保留两位小数
+*/
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
@@ -138,38 +188,6 @@ export default {
 				{id: 1,name: '日'},
 				{id: 2,name: '年'},
 			],
-			flag: '', //当前打开的弹窗
-			isBrand: false,
-
-			showCom: '',
-			comObj: {},
-
-			validityObj: {
-				time: '',
-				type: '日',
-				show: false
-			}, //保质期
-			materialName: '', //物料名称
-			materialCode: '', //物料简码
-
-			category: [], //物料分类
-			selectCategory: [], //选择的分类
-
-			units: [], //单位列表
-			selectUnitName: [], //单位名,
-			selectUnit: [], //选中的单位
-			unitObj: {
-				min: '请选择最小单位',
-				minId: '',
-				de: '请选择默认单位',
-				deId: ''
-			}, //最小单位与默认单位
-			groupUnit: [], //换率
-
-			selectBrand: [], //选择的品牌
-			brandList: [], //品牌列表
-			dispiceArr:[],//分销价数组
-			updateArr:[],
 			typeCate: [{
 				value:0,
 				label:'成品'
@@ -180,60 +198,77 @@ export default {
 				value:2,
 				label:'普通物料'
 			}],
-			typeValue:'',
+
+			winName:{					//弹窗名
+				category:'category',
+				brand:'brand',
+				unit:'unit',
+			},
+
+			flag: '', 					//当前打开的弹窗标识
+			isBrand: false,				//是否是品牌
+
+			showCom: '',				//展示的弹窗名
+			comObj: {},
+
+
+
+			validityObj: {
+				time: '',
+				type: 1,
+			}, 							//保质期
+			materialName: '', 			//物料名称
+			materialCode: '', 			//物料编码
+			typeValue:'',				//物料类型
+
+			category: [], 				//物料分类
+			selectCategory: [], 		//选择的分类
+
+			selectBrand: [], 			//选择的品牌
+			brandList: [], 				//品牌列表
+
+			units: [], 					//单位列表
+			selectUnit: [], 			//选中的单位
+
+			dispiceArr:[],				//分销价数组
+			convertUnit:{},				//单位换算选择的单位
+
+			groupUnit: [], 				//换率
+
 		};
 	},
 	methods: {
 		closeCommonWin(arr, res) {
+			let winName = this.winName;
+			let tempObj = {};
 			if(res == 'cancel' || res == 'close') {
 				this.showCom = '';
+				this.flag = '';
 				return;
 			}
 			switch(this.flag) {
-				case 'category':
+				case winName.category:
 					this.selectCategory = arr;
-					// console.log(this.selectCategory);
 					break;
-				case 'brand':
+				case winName.brand:
 					this.selectBrand = arr;
 					break;
-				case 'unit':
+				case winName.unit:
 					if(arr.length > 5) {
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							content: '最多可添加5个单位哦!'
-						});
+						this.$message('最多可添加5个单位哦!');
 						return;
 					}
 					this.selectUnit = arr;
-					this.selectUnitName = this.selectUnit.map((ele) => {
-						return ele.name;
-					});
 					this.groupUnit = [];
+					this.initConvert();
 					if(this.selectUnit.length == 1) {
-						let temp = this.selectUnit[0];
-						this.unitObj = {
-							min: temp.name,
-							minId: temp.id,
-							de: temp.name,
-							deId: temp.id
+						tempObj = this.selectUnit[0];
+						this.convertUnit = {
+							defUnitId: tempObj.id,
+							defUnitName: tempObj.name,
+							minUnitId: tempObj.id,
+							minUnitName: tempObj.name,							
 						};
-
-						let obj = {
-							'unitId': temp.id, //单位id
-							'unitName': temp.name, //单位名
-							'value': temp.id == this.unitObj.minId ? 1 : '', //换算
-							'minId': this.unitObj.minId, //最小单位id
-							'minName': this.unitObj.min, //最小单位名字    
-						};
-						this.groupUnit.push(obj);
-					} else {
-						this.unitObj = {
-							min: '请选择最小单位',
-							minId: '',
-							de: '请选择默认单位',
-							deId: ''
-						}; //最小单位与默认单位
 					}
 					break;
 			}
@@ -273,127 +308,113 @@ export default {
 				tips: '请先配置品牌',
 			};
 		},
-
-		//----------event-------------
-		//获取保质期
-		getValidity(item) {
-			this.validityObj.type = item.name;
-		},
-		//隐藏下拉框
-		hideUnitSelect(event) {
-			this.validityObj.show = !this.validityObj.show;
-			event.cancelBubble = true;
-		},
-		//获取默认
-		getSelectUnitDe(index) {
-			this.units.some((ele) => {
-				if(ele.name == this.selectUnitName[index]) {
-					this.unitObj.de = ele.name;
-					this.unitObj.deId = ele.id;
-					return true;
+		//默认,最小单位选择
+		changeUnit(unitId,sym){
+			this.convertUnit[sym] = this.getEle(this.selectUnit,unitId,'id').name;
+			if(sym == 'minUnitName'){
+				this.groupUnit = [];
+				let temp = this.selectUnit.filter((ele)=>{
+					return ele.id != unitId;
+				});
+				for(let ele of temp){
+					let obj = {
+						unitId:ele.id,
+						unitName:ele.name,
+						value:''
+					};
+					this.groupUnit.push(obj);
 				}
-			});
-		},
-		//最小单位
-		getSelectUnitMin(index) {
-			this.selectUnit.some((ele) => {
-				if(ele.name == this.selectUnitName[index]) {
-					this.unitObj.min = ele.name;
-					this.unitObj.minId = ele.id;
-					return true;
-				}
-			});
-
-			this.groupUnit = [];
-			for(let i = 0, len = this.selectUnit.length; i < len; i++) {
-				let temp = this.selectUnit[i];
-				let obj = {
-					'unitId': temp.id, //单位id
-					'unitName': temp.name, //单位名
-					'value': temp.id == this.unitObj.minId ? 1 : '', //换算
-					'minId': this.unitObj.minId, //最小单位id
-					'minName': this.unitObj.min, //最小单位名字    
-				};
-				this.groupUnit.push(obj);
-			}
-			let val = null;
-			this.groupUnit = this.groupUnit.filter((ele) => {
-				if(!ele.value) return true;
-				val = ele;
-			});
-			if(val) this.groupUnit.push(val);
-		},
-		//提交数据
-		clickBtn(flag) {
-			storage.session('tabactive', 1);
-			switch(flag) {
-				case 'continue':
-				case 'ok':
-					if(!this.checkform()) return;
-					let obj = this.formatData();
-
-					this.MaterialAddMaterial(obj).then(() => {
-						if(flag == 'ok') this.$router.go(-1);
-						if(flag == 'continue') {
-							this.$store.commit('setWin', {
-								title: '温馨提示',
-								content: '新建物料成功!'
-							});
-							this.initData();
-						}
-					});
-					break;
-				case 'cancel':
-					this.$router.go(-1); //返回到上一个页面
-					break;
 			}
 		},
-		//----------utils-----------
+		//输入换算比例,输入分销价
+		typeRatio(item,attr,sym){
+			let val = '',
+				temp = [],
+				reg = '';
+			
+			if(sym == 'distribute'){
+				reg = /([1-9]\d{0,9}|0)(\.\d{1,2})?/;
+			}else if(sym == 'validate'){
+				reg = /[1-9]\d{0,2}/;
+			}else{
+				reg = /[1-9]\d{0,10}(\.\d{1,3})?/;
+			}
+
+			val = item[attr] + '';
+			val = val.trim();
+			temp = val.match(reg)
+			if(!temp){
+				temp = [];
+				temp[0] = '';
+			}
+			item[attr] = temp[0];
+		},
+
+
+
 		formatData() {
+			let brandId = '',	
+				distributionData = [],				//分销价
+				convertUnit = this.convertUnit,
+				arr = [],							//分类id
+				unitData = [],						//换算比例
+				obj = {};							//最终提交的数据
+
 			//品牌
-			let brandId = null;
 			if(this.selectBrand[0]) {
 				brandId = this.selectBrand[0].id;
 			}
-			//保质期
-			let validityType = null;
-			this.validityTypeArr.some((ele) => {
-				if(ele.name == this.validityObj.type) {
-					validityType = ele.id;
-				}
-			});
 
 			//分类id
-			let arr = [];
 			this.selectCategory.forEach((ele) => {
 				arr.push(ele.id);
 			});
 
 			//换率
-			let unitData = [];
 			this.groupUnit.forEach((ele) => {
-				let de = ele.unitId == this.unitObj.deId ? 1 : 0;
-				let min = ele.unitId == this.unitObj.minId ? 1 : 0;
 				let obj = {
 					muId: ele.unitId,
 					value: ele.value,
-					isDefault: de,
-					isMin: min
+					isDefault: ele.unitId == convertUnit.defUnitId ? 1 : 0,
+					isMin: 0
 				};
 				unitData.push(obj);
 			});
+			unitData.push({
+				muId: convertUnit.minUnitId,
+				value: 1,
+				isDefault: convertUnit.minUnitId == convertUnit.defUnitId ? 1 : 0 ,
+				isMin: 1				
+			});
 
-			let obj = {
+
+			obj = {
 				name: this.materialName,
-				BC: this.materialCode,
-				brandId: brandId,
+				barCode: this.materialCode,
+				brandId,
 				validity: this.validityObj.time,
-				validityType: validityType,
+				validityType: this.validityObj.type,
 				cids: arr.join(','),
 				unitData: unitData,
 				type:this.typeValue
 			};
-			if(this.isBrand) obj.distributionData = this.updateArr;
+
+			//分销价
+			if(this.isBrand){
+				for(let ele of this.dispiceArr){
+					console.log(ele);
+					if(ele.value !== '' && ele.unitId !== ''){
+						distributionData.push({
+							distributionId:ele.distributionId,
+							value:ele.value,
+							name:ele.name,
+							unitId:ele.unitId
+						});
+					}
+				}	
+				console.log(distributionData);
+				obj.distributionData = distributionData;
+			}
 			return obj;
 		},
 		//返回true表示合格
@@ -401,131 +422,166 @@ export default {
 			if(!global.checkData({
 				materialName: {
 					cond: '$$.length>0 && $$.length<=20',
-					pro: '请输入20字以内的名称!'
+					pro: '请输入20字以内的物料名称!'
 				},
 				materialCode: {
-					reg: /^[0-9A-Za-z]{0,20}$/,
-					pro: '简码由英文,数字组成!'
+					reg: /^[0-9A-Za-z]{1,6}$/,
+					pro: '编码由1-6位英文,数字组成!'
 				}
 			}, this)) return;
-			if(this.typeValue===''){
+
+			if(this.typeValue === ''){
 				this.$message.error('请选择物料类型!');
 				return;
 			}
-			if(!global.checkData({
-				time: {
-					reg: /[1-9]\d{0,2}/,
-					pro: '保质期由1-3位数字组成!'
-				}
-			}, this.validityObj)) return;
+
 			if(this.selectCategory.length == 0) {
-				this.$store.commit('setWin', {
-					content: '请选择分类!',
-					title: '温馨提示'
-				});
+				this.$message.error('请选择分类!');
 				return;
 			}
+
 			if(this.selectUnit.length == 0) {
-				this.$store.commit('setWin', {
-					content: '请选择单位!',
-					title: '温馨提示'
-				});
+				this.$message.error('请选择单位!');
 				return;
 			}
-			if(!this.unitObj.minId || !this.unitObj.deId) {
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					content: '请选择最小单位与默认单位!'
-				});
-				return;
+
+			if(this.convertUnit.defUnitId === ''){
+				this.$message.error('请选择默认单位!');	
+				return;			
 			}
-			let flag = this.groupUnit.some((ele) => {
-				let regVal = /^[1-9]\d{0,10}(\.\d{0,3})?$/;
-				if(!regVal.test(ele.value)) {
-					this.$store.commit('setWin', {
-						title: '温馨提示',
-						content: '请输入大于1的换算数字,最多可含3位小数!'
-					});
-					return true;
+			if(this.convertUnit.minUnitId === ''){
+				this.$message.error('请选择最小单位!');	
+				return;			
+			}
+
+			for(let ele of this.groupUnit){
+				if(!ele.value){
+					this.$message.error('请输入换算比例!');	
+					return;
 				}
-			});
-			let check = true;
-			if(this.isBrand){
-				this.updateArr = [];
-				this.dispiceArr.map(v=>{
-					if(v.value!==''){
-						if(v.unitId === ''){
-							this.$store.commit('setWin', {
-								title: '温馨提示',
-								content: '请选择分销价单位！'
-							});
-							check = false;
-						}
-						this.updateArr.push(v);
-						if(!/^([+-]?)\d*\.?\d+$/.test(v.value)){
-							this.$message({
-                                message: '请输入正确价格！',
-                                type: 'warning'
-                            });
-                            check = false;
-						}
-					}
-					
-				})
 			}
-			console.log(check)
-			if(!check) return false;
-			if(flag) return false;
+
+
+			if(this.isBrand){
+				for(let ele of this.dispiceArr){
+					if(ele.value !== '' && !ele.unitId){
+						let tips = `请为 ${ele.name} 分销价选择相应的单位!`
+						this.$message.error(tips);						
+						return;
+					}
+				}
+			}
 			return true;
 		},
+		async clickBtn(flag) {
+			let temp = {};
+			storage.session('tabactive', 1);
+			switch(flag) {
+				case 'continue':
+				case 'ok':
+					if(!this.checkform()) return;
+					let obj = this.formatData();
+
+					temp = await this.MaterialAddMaterial(obj);
+					this.alert('新建物料成功!');
+
+					if(flag == 'continue') {
+						this.initCondtion();
+						this.initConvert();
+					}else{
+						this.$router.go(-1);
+					}
+					break;
+				case 'cancel':
+					this.$router.go(-1); //返回到上一个页面
+					break;
+			}
+		},		
+
+
+
+		initData(){
+			let userData = storage.session('userShop');
+			this.isBrand = userData.currentShop.ischain == 3;
+		},
 		//重新初始化数据
-		initData() {
-			this.flag = '';
-			this.showCom = '';
+		initCondtion() {
+			this.groupUnit = [];			//单位换算关系
+			this.flag = '';					//当前打开的弹窗
+			this.showCom = '';				//当前展示的弹窗
 			this.comObj = {};
-			this.materialName = ''; //物料名称
-			this.materialCode = ''; //物料简码
-			this.selectUnit = []; //选中的单位
-			this.selectCategory = [];
-			this.selectBrand = [];
-			this.typeValue = '';
-			this.unitObj = {
-				min: '',
-				minId: '',
-				de: '',
-				deId: ''
-			}; //最小单位与默认单位
-			this.groupUnit = [];
-			this.validityObj = {
+			this.materialName = ''; 		//物料名称
+			this.materialCode = ''; 		//物料简码
+			this.selectUnit = []; 			//选中的单位
+			this.typeValue = '';			//物料类型
+			this.selectCategory = [];		//选择中的分类
+			this.selectBrand = [];			//选择的品牌
+			this.validityObj = {			//保质期
 				time: '',
-				type: '日',
-				show: false
+				type: 1,
 			};
-			this.dispiceArr.map(v=>{
+			this.dispiceArr.forEach(v=>{	//分销价
 				v.value = '';
 				v.unitId = '';
 			});
 		},
-		//获取分类列表
-		async MaterialGetCategoryList() {
-			let res = await http.MaterialGetCategoryList({
-				data: {}
-			});
-			return res;
+		initConvert(){
+			this.convertUnit = {				//单位换算选择的单位
+				defUnitId:'',
+				defUnitName:'',
+				minUnitId:'',
+				minUnitName:'',
+			};
 		},
-		//获取物料单位
-		async MaterialGetUnitList() {
-			let res = await http.MaterialGetUnitList({
-				data: {}
-			});
-			return res;
+		initBtn(){
+			this.$store.commit('setFixButton',[
+				{
+					name: '取消',
+					type:'1',
+					className:'info',
+					fn:()=>{
+						this.clickBtn('cancel');
+					}
+				},
+				{
+					name: '继续新建',
+					type:'2',
+					className:'',
+					fn:()=>{
+						this.clickBtn('continue');
+					}
+				},
+				{
+					name: '确定',
+					type:'1',
+					className:'primary',
+					fn:()=>{
+						this.clickBtn('ok');
+					}
+				},
+			]);
 		},
-		//获取品牌
-		async InvoicingBrandList() {
-			let res = await http.InvoicingBrandList({
-				data: {}
+
+
+
+    	getEle(arr,val,attr){
+			let temp = {};
+			for(let ele of arr){
+				if(ele[attr] == val){
+					temp = ele;
+					break;
+				}
+			}
+			return temp;
+        },
+		alert(content,fn,title='提示信息',){
+			this.$alert(content, title, {
+				confirmButtonText: '确定',
+				callback: action => {
+					action = action == 'confirm' ? 'ok' :'cancel';
+					if(typeof fn == 'function') fn(action);
+				}
 			});
-			return res;
 		},
 		//新建物料
 		async MaterialAddMaterial(obj) {
@@ -534,32 +590,15 @@ export default {
 			});
 			return res;
 		},
-		//获取分销价
-		async getDistr() {
-			let res = await http.invoicingGetDistributionConfig();
-			if(!Array.isArray(res)){
-				res = [];
-			}
-			res.map(v=>{
-				let obj = {};
-				Object.assign(obj,{
-					distributionId:v.id,
-					value:'',
-					name:v.name,
-					unitId:''
-				});
-				this.dispiceArr.push(obj);
+		//获取分类列表
+		async MaterialGetCategoryList() {
+			let res = await http.MaterialGetCategoryList({
+				data: {}
 			});
-		},
-		domEvent() {
-			this.validityObj.show = false;
-		},
-	},
-	mounted() {
-		let userData = storage.session('userShop');
-		this.isBrand = userData.currentShop.ischain == '3'? true : false;
-		this.MaterialGetCategoryList().then((res) => {
-			let temp = res;
+			let temp = [];
+
+			if(!Array.isArray(res)) res = [];
+			temp = [...res];
 			res.forEach((ele) => {
 				ele.child = [];
 				if(ele.pid == 0) {
@@ -571,33 +610,104 @@ export default {
 					this.category.push(ele);
 				}
 			});
-		});
+		},
+		//获取物料单位
+		async MaterialGetUnitList() {
+			let res = await http.MaterialGetUnitList({
+				data: {}
+			});
+			if(Array.isArray(res)){
+				this.units = res;
+			}
+		},
+		//获取品牌
+		async InvoicingBrandList() {
+			let res = await http.InvoicingBrandList({
+				data: {}
+			});
+			if(Array.isArray(res)){
+				this.brandList = res;
+			}
+		},
+		//获取分销价
+		async getDistr() {
+			if(!this.isBrand) return;
+			
+			let res = await http.invoicingGetDistributionConfig();
+			if(!Array.isArray(res)){
+				res = [];
+			}
+			res.forEach(v=>{
+				let obj = {
+					distributionId:v.id,
+					name:v.name,
+					value:'',				
+					unitId:''					
+				};
+				this.dispiceArr.push(obj);
+			});
+		},
+	},
+	mounted() {
+		this.initData();
+		this.initConvert();
+		this.initBtn();
 
-		this.MaterialGetUnitList().then((res) => {
-			this.units = res;
-		});
-
-		this.InvoicingBrandList().then((res) => {
-			this.brandList = res;
-		});
+		this.MaterialGetCategoryList();
+		this.MaterialGetUnitList();
+		this.InvoicingBrandList();
 		this.getDistr();
-		document.addEventListener('click', this.domEvent);
 	},
 	components: {
 		unitBrand: () =>
 			import( /*webpackChunkName:'unit_brand_win'*/ './unit_brand_win'),
-		mulSelect: () =>
-			import( /*webpackChunkName:'select_btn'*/ 'src/components/select_btn'),
 		addCategory: () =>
 			import( /*webpackChunkName:'add_category_com'*/ 'src/components/add_category_com'),
 
 	},
-	beforeDestroy() {
-		document.removeEventListener('click', this.domEvent);
-	},
 };
 </script>
 <style lang='less' scoped>
+
+	.head{
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: center;
+		max-width: 1436px;
+		margin-top:20px;
+		span{
+			height:23px;
+			line-height: 23px;
+			border-left:2px solid #E1BB4A;
+			padding-left:10px;
+			padding-right:5px;
+			flex-grow: 0;			
+		}
+		div{
+			flex-grow: 1;
+			border-bottom:2px dashed #ddd;
+			height:13px;
+		}
+	}
+	
+	.el-in{
+		width:240px;
+	}
+	.el-append{
+		width:70px;
+	}
+	.required-no{
+		&:after{
+			position: relative;
+			top: -8px;
+			right: -2px;
+			content: "*";
+			visibility: hidden;
+		}
+	}
+	.pt-20{
+		padding-top:20px;
+	}
 	#material-create {
 		.mixin(@color, @height, @size) {
 			color: @color;
@@ -605,154 +715,42 @@ export default {
 			line-height: @height;
 			font-size: @size;
 		}
-		;
 		.inline {
 			margin-left: -3px;
 			display: inline-block;
 			vertical-align: middle;
 		}
-		.split-title {
-			text-indent: 15px;
-			border-left: 2px solid #29a8e0;
-			margin-bottom: 30px;
-			.mixin(#333, 20px, 16px);
-			&:after {
-				content: '';
-				display: inline-block;
-				border: 1px dashed #ddd;
-				width: 470px;
-				position: relative;
-				left: 20px;
-				top: -4px;
-			}
-		}
 		.label-content {
-			// border:1px solid #ff0000;
 			padding-bottom: 20px;
+			.label {
+				.mixin(#333, 40px, 14px);
+				width: 115px;
+				text-align: right;
+				display: inline-block;
+				padding-right: 20px;
+				vertical-align: middle;
+			}
+			.icon-div{
+				height: 40px;
+				width: 210px;
+				line-height: 40px;
+				.inline;	
+				cursor: pointer;
+				color: #E1BB4A;
+
+			}
+			.tips {
+				margin-left: 10px;
+			}
 			.inline-box{
 				display: inline-block;
 				margin-right: 20px;
 			}
 			.input-box{
 				display: inline-block;
-				width: 210px;
+				width: 240px;
 			}
-			.label {
-				.mixin(#333, 40px, 14px);
-				width: 115px;
-				text-align: right;
-				display: inline-block;
-				// border:1px solid #ff0000;
-				padding-right: 20px;
-				vertical-align: middle;
-			}
-			.input {
-				.mixin(#333, 40px, 14px);
-				display: inline-block;
-				height: 40px;
-				width: 210px;
-				border: 1px solid #ccc;
-				vertical-align: middle;
-				margin-left: -3px;
-			}
-			.tips {
-				margin-left: 10px;
-			}
-			.img-div {
-				height: 40px;
-				width: 210px;
-				background-color: #29a8e0;
-				color: #fff;
-				color: #fff;
-				font-size: 14px;
-				line-height: 40px;
-				text-align: center;
-				cursor: pointer;
-				.inline;
-				img {
-					position: relative;
-					padding-right: 15px;
-					display: inline-block;
-					vertical-align: middle;
-				}
-			}
-			.validity-input {
-				width: 120px;
-				color: #333;
-			}
-			.validity {
-				.inline;
-				height: 40px;
-				margin-left: 7px;
-				color: #333;
-				width: 80px;
-				border: 1px solid #ccc;
-				.validity-num {
-					width: 40px;
-					height: 38px;
-					display: inline-block;
-					text-align: center;
-					vertical-align: middle;
-					.mixin(#333, 38px, 14px);
-					border-right: 1px solid #ccc;
-				}
-				.validity-trangle {
-					position: relative;
-					top: 13px;
-					margin-left: 12px;
-					border: 7px solid transparent;
-					border-top: 9px solid #ccc;
-				}
-				.validity-ul {
-					margin: 0;
-					padding: 0;
-					margin-top: -2px;
-					z-index: 11;
-					width: 80px;
-					position: relative;
-					margin-left: -1px;
-					li {
-						list-style: none;
-						height: 32px;
-						border: 1px solid #ccc;
-						border-bottom: 0;
-						text-align: center;
-						.mixin(#333, 32px, 14px);
-						cursor: pointer;
-						background-color: #fff;
-						&:last-child {
-							border-bottom: 1px solid #ccc;
-						}
-					}
-				}
-			}
-			.unit-div {
-				.inline;
-				width: 210px;
-				height: 40px;
-				border: 1px solid #ccc;
-				input[type='text'] {
-					width: 167px;
-					height: 38px;
-					padding: 0;
-					border: 0;
-					outline: none;
-					text-indent: 15px;
-					float: left;
-					font-size: 14px;
-				}
-				span {
-					width: 37px;
-					height: 40px;
-					text-align: center;
-					vertical-align: middle;
-					.mixin(#333, 40px, 14px);
-					border-left: 1px solid #ccc;
-					float: left;
-					text-overflow: ellipsis;
-					overflow: hidden;
-				}
-			}
+
 			.equal-unit {
 				margin-left: 10px;
 				font-size: 14px;

@@ -62,7 +62,7 @@
 						<span class="push_l required fl">
 							推送链接
 						</span>
-						<input class="inp fl" type="text" placeholder="请输入推送链接" v-model="item.url">
+						<input class="inp fl" type="text" placeholder="示例:http://www.baidu.com" v-model="item.url">
 					</div>
 					<!-- 二级图文推送 -->
 					<section class="clearfix" style="margin-bottom:20px;">
@@ -104,7 +104,7 @@
 								<span class="push_l required fl">
 							推送链接
 						</span>
-								<input class="inp fl" type="text" placeholder="请输入推送链接" v-model="int.url">
+								<input class="inp fl" type="text" placeholder="示例:http://www.baidu.com" v-model="int.url">
 							</div>
 						</div>
 					</section>

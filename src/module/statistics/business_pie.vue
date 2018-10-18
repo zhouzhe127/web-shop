@@ -24,7 +24,7 @@
 					<!--饼图容器-->
 					<div id="pie-3"></div>
 				</div>
-				<div v-if="coverShow" class="loding-cover pie-cover"><img src="../../res/images/preloader.gif"/></div>
+				<div v-if="coverShow" class="loding-cover pie-cover"><i class="el-icon-loading"></i></div>
 			</div>
 		</div>
 	</div>
@@ -49,7 +49,7 @@ export default {
 					{ value: 0,name: '活动优惠券' },
 					{ value: 0,name: '外卖活动补贴' }
 				],
-				orderNumber: [
+				orderNum: [
 					//订单占比
 					{ value: 0,name: '堂吃'},
 					{ value: 0,name: '外卖'},
@@ -82,7 +82,7 @@ export default {
 			],
 			formatPie: ['￥', '￥', ' '],
 			pieDom: [null, null, null],
-			pieType: ['goods', 'discount', 'orderNumber'],
+			pieType: ['goods', 'discount', 'orderNum'],
 			coverShow: false
 		};
 	},
@@ -112,7 +112,7 @@ export default {
 		},
 		analytic() {
 			let proportion = this.pie;
-			let obj = { goods: [], discount: [], orderNumber: [] };
+			let obj = { goods: [], discount: [], orderNum: [] };
 			//先将后台返回的数据转换成如下格式 方便循环
 			for (let x in obj) {
 				for (let m in proportion[x]) {
@@ -288,12 +288,15 @@ export default {
 	bottom: 0;
 	left: 0;
 	width: 100%;
+	height: 100%;
 	z-index: 9;
 	background: #fff;
+	opacity: 0.7;
 	text-align: center;
+	display: flex;
+	i{display: inline-block;font-size: 40px;margin: auto;color: #666;opacity: 1;}
 }
 .pie-cover {
 	height: 250px;
-	padding-top: 50px;
 }
 </style>

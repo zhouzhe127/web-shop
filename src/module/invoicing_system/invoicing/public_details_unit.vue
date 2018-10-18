@@ -5,7 +5,7 @@
             <div class="innerBox">
                 <ul>
                     <li><span>物料名称：</span><span>{{materialInfo.name}}</span></li>
-                    <li><span>物料简码：</span><span>{{materialInfo.BC}}</span></li>
+                    <li><span>物料编码：</span><span>{{materialInfo.barCode}}</span></li>
                     <li><span>品牌：</span><span>{{materialInfo.brandName||'无'}}</span></li>
                     <li><span>批次数：</span><span>{{materialInfo.batchNum}}</span></li>
                 </ul>

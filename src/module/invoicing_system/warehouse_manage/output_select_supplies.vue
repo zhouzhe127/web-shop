@@ -321,11 +321,13 @@ export default {
 		if(!this.type) {
 			this.$store.commit('setPageTools', [{name: '确定',className: ['firstBtn wearhouse'],
 				fn: () => {
+					this.$store.commit('setPageTools',[]);
 					this.$emit('select', this.sleList);
 				}
 			},
 			{name: '取消',className: ['abrogate'],
 				fn: () => {
+					this.$store.commit('setPageTools',[]);
 					this.$emit('select', false);
 				}
 			}]);

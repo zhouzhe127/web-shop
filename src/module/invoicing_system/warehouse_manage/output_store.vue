@@ -41,14 +41,14 @@
                 <label class="label required">出货仓库</label>
                 <div class="add" @click="openAddStoreWin('out')"> 添加仓库</div>
                 <span class="select-store" >
-                    {{outWarehouse?"(已选择:"+outWarehouse.name+")":"请添加仓库"}}
+                    {{outWarehouse?"(已选择: "+outWarehouse.name+")":"请添加仓库"}}
                 </span>
             </div>
             <div class="store-list" style="margin-bottom:20px;">
                 <label class="label required">入货仓库</label>
                 <div class="add" @click="openAddStoreWin('in')">添加仓库</div>
                 <span class="select-store">
-                  {{inWarehouse?"(已选择:"+inWarehouse.name+")":"请添加仓库"}}
+                  {{inWarehouse?"(已选择: "+inWarehouse.name+")":"请添加仓库"}}
                 </span>
             </div>
             <div class="store-list" style="margin-bottom:20px;">
@@ -167,13 +167,11 @@
                 <div class="gray" @click="returnBefore">取消</div>
                 <div class="yellow" @click="sure">确定</div>
             </div>
-            <transition name="fade">
-                <component
-                    :is="showCom"
-                    :pObj="comObj"
-                    @throwWin="winWarehouse"
-                ></component>
-            </transition>
+			<component
+				:is="showCom"
+				:pObj="comObj"
+				@throwWin="winWarehouse"
+			></component>
 		</div>
     </div>
 	<!-- 添加商品 srcShopId源店铺(出)  dstShopId目标店铺(入)-->
@@ -288,7 +286,6 @@
 		mounted() {
 			this.isBrand = storage.session('userShop').currentShop.ischain == '3'? true : false;
 			this.initData();
-			this.getWarehouse();
 			this.getDistr();
 		},
 		components: {
@@ -297,7 +294,7 @@
 			materialBatch: () =>
 				import( /*webpackChunkName: 'output_material_batch_win'*/ './output_material_batch_win'), //物料批次选择
 			addStore: () =>
-				import( /*webpackChunkName:'choose_warehouse_win'*/ './choose_warehouse_win'),
+				import( /*webpackChunkName:'warehouse_select'*/ './warehouse_select'),
 			selectBtn: () =>
 				import( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
 			selectGoods: () =>
@@ -305,6 +302,9 @@
 			selectMaterial: () =>
 				import( /*webpackChunkName: 'output_select_supplies_ware'*/ './output_select_supplies_ware'),
 	
+		},
+		destroyed(){
+			storage.session('warehouse_select',null);
 		},
 		methods: {
 			addGoods(type) { //添加商品-物料
@@ -349,12 +349,12 @@
 				this.bouncedType = 0;
 				if(flag == 'in') {
 					this.isPutIn = 'in';
-					this.comObj.owner = this.inWarehouse;
+					this.comObj.selectId = this.inWarehouseId;
 					this.comObj.title = '选择入货仓库';
 					this.showCom = 'addStore';
 				} else if(flag == 'out') {
 					this.isPutIn = 'out';
-					this.comObj.owner = this.outWarehouse;
+					this.comObj.selectId = this.outWarehouseId;
 					this.comObj.title = '选择出货仓库';
 					this.showCom = 'addStore';
 				}
@@ -387,27 +387,23 @@
 						isEmpty = false;
 					}
 					if(!isEmpty && value.id == this[otherName + 'WarehouseId']) { //获取仓库信息后-如果出入货仓库相同
-						this.$store.commit('setWin', {
-							title: '操作提示',
-							winType: 'confirm',
-							content: `该仓库为${otherTip}仓库，是否替换为${tip}仓库`,
-							callback: (res) => {
-								if(res == 'ok') {
-									let obj = {
-										allList: this.wareList,
-										title: `选择${tip}仓库`,
-										owner: value,
-									};
-									this.comObj = obj;
-									this.setWareInformation(otherName, '');
-									this.setWareInformation(propName, value);
-									this.showCom = ''; //关闭弹窗
-									for(let i of this.clearArr) {
-										this[i] = [];
-									}
-								}
+						this.$confirm(`该仓库为${otherTip}仓库，是否替换为${tip}仓库？`, '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							let obj = {
+								title: `选择${tip}仓库`,
+								selectId: value.id,
+							};
+							this.comObj = obj;
+							this.setWareInformation(otherName, '');
+							this.setWareInformation(propName, value);
+							this.showCom = ''; //关闭弹窗 
+							for(let i of this.clearArr) {
+								this[i] = [];
 							}
-						});
+						}).catch(()=>{});
 					} else { //两个仓库不相同
 						if(value.id != this[propName + 'WarehouseId']) {
 							for(let i of this.clearArr) {
@@ -424,11 +420,15 @@
 			setWareInformation(name, value) { //设置仓库信息
 				this[name + 'WarehouseId'] = value ? value.id : '';
 				this[name + 'Warehouse'] = value ? value : '';
-				this[name + 'ShopId'] = value ? value.shopId : '';
+				if(value.shopId!='0'){
+					this[name + 'ShopId'] = value.shopId;
+				}else{
+					this[name + 'ShopId'] = value.brandId;
+				}
 			},
 			getSleGoods(res) { //选择商品后，解析列表
 				this.$store.commit('setPageTools', []);
-				this.selectType = 0;
+				if(res.length) this.selectType = 0;
 				this.showSleGoods = false;
 				this.showMain = true;
 				this.sleGoods = res;
@@ -451,11 +451,10 @@
 					arr.push(obj);
 				}
 				this.goodsDetails = arr;
-				this.selectType = this.goodsDetails.length ? 0 : 1;
 			},
 			getSleMaterial(res) { //选择物料后，解析列表
 				this.$store.commit('setPageTools', []);
-				this.selectType = 1;
+				if(res.length) this.selectType = 1;
 				this.sleMaterial = res;
 				this.showSleMaterial = false;
 				this.showMain = true;
@@ -661,10 +660,7 @@
 				this.userId = userData.user.id;
 			},
 			myAlert(content) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: content,
-				});
+				this.$message({message: content,type: 'error'});
 			},
 			async sure() { //确认提交
 				if(!this.addVeri()) return;
@@ -823,30 +819,6 @@
 					});
 				}else{
 					this.isClick = false;//接口报错，还能继续点击
-				}
-			},
-			async getWarehouse() {//获取仓库列表
-				let data = await http.warehouseList();
-				let arr = [];
-				if(data) {
-					for(let item of data) {
-						let obj = {
-							id: item.id,
-							name: item.name,
-						};
-						if(item.shopId != 0) { //单店
-							obj.ischain = 0;
-							obj.shopId = item.shopId;
-						} else { //品牌
-							obj.ischain = 1;
-							obj.shopId = item.brandId;
-						}
-						arr.push(obj);
-					}
-					this.wareList = arr;
-					this.comObj = {
-						allList: arr,
-					};
 				}
 			},
 			//获取分销价

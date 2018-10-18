@@ -1,6 +1,6 @@
 <template>
 	<div id="supplise">
-		<div class="search-module">
+		<!-- <div class="search-module">
 			<div class="sleType">
 				<el-input v-model="goodsName" placeholder="请输入物料名称"></el-input>
 			</div>
@@ -17,11 +17,36 @@
 			</div>
 			<div @click="search" class="blue filter">筛选</div>
 			<div @click="reset" class="gray reset">重置</div>
+		</div> -->
+		<div class="asideone">
+			<div class="sleType">
+				<el-input v-model="goodsName" placeholder="请输入物料名称"></el-input>
+			</div>
+			<div class="sleType">
+				<el-select v-model="typeValue" placeholder="全部类型">
+					<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+			<div class="sleType">
+				<el-cascader :options="cataList" expand-trigger="hover" :placeholder="'请选择分类'" v-model="sleCate" @change="getDrop" change-on-select></el-cascader>
+			</div>
+			<!-- <div class="sleType" style="width:200px">
+				<select-store @emit="getDrop" :sorts="oneCate" :isSingle="true" :tipName="'请选择一级分类'"></select-store>
+			</div>
+			<div class="sleType" style="width:200px">
+				<select-store @emit="getNext" :sorts="twoCate" :isSingle="true" :tipName="'请选择二级分类'" ref="twosel"></select-store>
+			</div> -->
+			<div class="sleType">
+				<el-button @click="search" type="primary">筛选</el-button>
+				<el-button @click="reset" type="info">重置</el-button>
+			</div>
 		</div>
-		<com-table v-if="tabactive == 1" :listName="'物料列表'" :titleData="titleList" :allTotal="count" :introData="allList" :listWidth="1500">
+		<com-table v-if="tabactive == 1" :listName="'物料列表'" :titleData="titleList" :allTotal="count" :introData="allList"
+		 :listWidth="1500">
 			<div class="infoDetail" slot="con-0" slot-scope="props">
 				<a href="javascript:void(0);" @click="addDetailhouse(props.data)" style="color:#5ebee8;">查看详情</a>|
-				<a href="javascript:void(0);" @click="batchLose(props.data)" style="color:red;">入库</a>|
+				<a href="javascript:void(0);" v-if="inventConfigs.commonStock==1" @click="batchLose(props.data)" style="color:red;">入库</a><span
+				 v-if="inventConfigs.commonStock==1">|</span>
 				<a href="javascript:void(0);" @click="revamp(props.data)" style="color:orange;">盘库</a>
 			</div>
 			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
@@ -29,7 +54,9 @@
 			<span slot="con-5" slot-scope="props" v-if="props.data.goodsNum">{{getNum(props.data.goodsNum.surplus,props.data.unit)}}</span>
 		</com-table>
 		<div style="margin-top:10px">
-			<page-turn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn>
+			<!-- <page-turn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn> -->
+			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper"
+			 :total="Number(count)"></el-pagination>
 		</div>
 	</div>
 </template>
@@ -37,39 +64,40 @@
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import global from 'src/manager/global';
-	let page = 1;
+	let page2 = 1;
 	export default {
 		data() {
 			return {
 				allList: '',
-				cataList: '',
+				cataList: [],
 				page: 1,
 				pageTotal: 0,
 				num: 10,
-				oneCate: [],
-				twoCate: [],
-				oneSle: '',
-				twoSle: '',
+				sleCate:[],//选中的分类
+				// oneCate: [],
+				// twoCate: [],
+				// oneSle: '',
+				// twoSle: '',
 				goodsName: '', //搜索名称
 				typeCate: [{
-					value:-1,
-					label:'全部类型'
-				},{
-					value:0,
-					label:'成品'
-				},{
-					value:1,
-					label:'半成品'
-				},{
-					value:2,
-					label:'普通物料'
+					value: -1,
+					label: '全部类型'
+				}, {
+					value: 0,
+					label: '成品'
+				}, {
+					value: 1,
+					label: '半成品'
+				}, {
+					value: 2,
+					label: '普通物料'
 				}],
-				typeValue:-1,
+				typeValue: -1,
 				count: 0,
 				titleList: [{
 					titleName: '操作',
 					titleStyle: {
-						width: '25%'
+						width: '250px'
 					}
 				}, '序号',
 				{
@@ -77,27 +105,28 @@
 					dataName: 'name'
 				},
 				{
-					titleName: '物料简码',
-					dataName: 'BC'
+					titleName: '物料编码',
+					dataName: 'barCode'
 				},
 				'物料类型', '数量/重量']
 			};
 		},
-		props:['tabactive','page2'],
+		props: ['tabactive', 'page2', 'inventConfigs'],
 		methods: {
 			async init() {
 				let data = await http.getMaterialList({
 					data: {
-						page: this.page,
+						page: page2,
 						name: this.goodsName,
-						cid: this.twoSle ? this.twoSle.id ? this.twoSle.id : '' : this.oneSle.id ? this.oneSle.id : '',
-						type:this.typeValue,
-						num:10
+						cid: this.sleCate[this.sleCate.length-1],
+						type: this.typeValue,
+						num: 10
 					}
 				});
 				this.allList = data.list;
 				this.pageTotal = data.total;
 				this.count = data.count;
+				this.page = page2;
 				let arr = [];
 				for (let item of this.allList) {
 					arr.push(item.id);
@@ -120,10 +149,28 @@
 			},
 			async getCate() {
 				let data = await http.invoiv_getCategoryList();
-				this.cataList = data;
-				for (let item of this.cataList) {
-					if (item.pid == 0) this.oneCate.push(item);
+				// this.cataList = data;
+				console.log(data);
+				let arr = [];
+				for (let item of data) {
+					item.value = item.id;
+					item.label = item.name;
+					if (item.pid == 0) {
+						let childArr = [];
+						data.forEach(v => {
+							if (item.id == v.pid && item.id != 0) {
+								childArr.push(v);
+							}
+						});
+						if(childArr.length>0) item.children = childArr;
+						arr.push(item);
+					}
 				}
+				this.cataList = arr;
+				console.log(arr);
+				// for (let item of this.cataList) {
+				// 	if (item.pid == 0) this.oneCate.push(item);
+				// }
 			},
 			addDetailhouse(item) {
 				this.$router.push({
@@ -158,43 +205,46 @@
 			reset() {
 				this.page = 1;
 				this.goodsName = '';
-				this.oneSle = '';
-				this.twoSle = '';
+				// this.oneSle = '';
+				// this.twoSle = '';
 				this.typeValue = -1;
-				for (let item of this.oneCate) {
-					item.selected = false;
-				}
-				this.oneCate = utils.deepCopy(this.oneCate);
-				for (let item of this.twoCate) {
-					item.selected = false;
-				}
-				this.twoCate = utils.deepCopy(this.twoCate);
+				this.sleCate = [];
+				// for (let item of this.oneCate) {
+				// 	item.selected = false;
+				// }
+				// this.oneCate = utils.deepCopy(this.oneCate);
+				// for (let item of this.twoCate) {
+				// 	item.selected = false;
+				// }
+				// this.twoCate = utils.deepCopy(this.twoCate);
 				this.init();
 			},
 			getDrop(sle) {
-				for (let item of sle) {
-					if (item.selected) {
-						this.oneSle = item;
-						break;
-					} else {
-						this.oneSle = '';
-					}
-				}
-				this.twoCate = [];
-				for (let item of this.cataList) {
-					if (item.pid == this.oneSle.id) this.twoCate.push(item);
-				}
+				console.log(sle);
+				this.sleCate = sle;
+				// for (let item of sle) {
+				// 	if (item.selected) {
+				// 		this.oneSle = item;
+				// 		break;
+				// 	} else {
+				// 		this.oneSle = '';
+				// 	}
+				// }
+				// this.twoCate = [];
+				// for (let item of this.cataList) {
+				// 	if (item.pid == this.oneSle.id) this.twoCate.push(item);
+				// }
 			},
-			getNext(sle) {
-				for (let item of sle) {
-					if (item.selected) {
-						this.twoSle = item;
-						break;
-					} else {
-						this.twoSle = '';
-					}
-				}
-			},
+			// getNext(sle) {
+			// 	for (let item of sle) {
+			// 		if (item.selected) {
+			// 			this.twoSle = item;
+			// 			break;
+			// 		} else {
+			// 			this.twoSle = '';
+			// 		}
+			// 	}
+			// },
 			getNum(num, nuit) {
 				let value = null;
 				let showName = null;
@@ -218,8 +268,9 @@
 				}
 			},
 			pageChange(page) {
-				this.page = page.page;
-				this.$emit('page',this.page)
+				this.page = page;
+				page2 = this.page;
+				this.$emit('page', this.page);
 				this.init();
 			},
 			alert(con, title) {
@@ -230,7 +281,7 @@
 			}
 		},
 		mounted() {
-			this.page = this.page2;
+			page2 = this.page2;
 			this.init();
 			this.getCate();
 		},
@@ -247,19 +298,23 @@
 <style lang="less" scoped>
 	.search-module {
 		margin-top: 20px;
-		.sleType{
+
+		.sleType {
 			width: 170px;
 			display: inline-block;
 			margin-right: 15px;
 		}
+
 		.sleBtn {
 			display: inline-block;
 			margin-right: 20px;
 		}
+
 		.search-select {
 			display: inline-block;
 			margin-right: 15px;
 		}
+
 		.search-btn {
 			width: 1rem;
 			height: 40px;
@@ -270,22 +325,35 @@
 			display: inline-block;
 			text-align: center;
 		}
+
 		.filter,
 		.reset {
 			.search-btn;
 		}
 	}
 
+	.asideone {
+		.sleType {
+			width: 170px;
+			margin-right: 10px;
+			display: inline-block;
+
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 100%;
+				height: 15px;
+			}
+		}
+	}
+
 	.infoDetail {
 		display: inline-block;
-		display: -webkit-box;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: -webkit-flex;
 		display: flex;
+		justify-content: space-around;
+
 		a {
 			display: inline-block;
-			width: 33.33%;
 			text-align: center;
 		}
 	}

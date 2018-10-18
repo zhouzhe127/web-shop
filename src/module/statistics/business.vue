@@ -38,11 +38,11 @@
 			</div>
 		</div>
 		<!--统计数据-->
-		<specific :specific="sales"></specific>
+		<specific :cover="coverShow" :specific="sales"></specific>
 		<!--饼图-->
 		<pieChart :pie="pie" :cover="coverShow" :echarts="echarts" v-if="isOneShow"></pieChart>
-		<!--柱状图-->
-		<barChart :bar="bar" :cover="coverShow" :echarts="echarts" :shopList="shopList" v-if="isBrand && !isOneShow"></barChart>
+		<!--柱状图 各个店铺的数据-->
+		<barChart :bar="bar" :cover="coverShowShop" :echarts="echarts" :shopList="shopList" v-if="isBrand && !isOneShow"></barChart>
 		<!--条形图-->
 		<lineChart :line="line" :cover="coverShow" :echarts="echarts"></lineChart>
 
@@ -80,14 +80,15 @@ export default {
 			isOneStore: '', //是否单店 用于判断
 			isOneShow: '', //是否单店 用于显示
 			coverShow: false, //加载gif
+			coverShowShop:false,
 			storeListShow: false, //店铺列表显示
 			allSelected: true, //选中全部
-			sales: [],
-			pie: [],
-			bar: [],
-			line: [],
+			sales: null,
+			pie: null,
+			bar: null,
+			line: null,
 			tipsContent: {
-				business:
+				turnover:
 					'该时间段内所有堂吃商品原价+堂吃服务费+外卖商品原价 = 营业总额（不计入退品）',
 				discount:
 					'活动优惠券、店内优惠（整单减免、整单折扣、整单强折、单品减免、单品折扣、赠菜金额、积分抵扣）以及外卖活动优惠金额',
@@ -109,6 +110,8 @@ export default {
 			timerId:'',//轮询id
 			isShowStore:false,//已选中店铺列表 是否展开
 			storeShowH:'20px',
+			eachRequestNum:0,//记录循环调用次数
+			eachRequestObj:{},//循环请求获取的数据 最后在赋值给bar
 		};
 	},
 	components: {
@@ -236,15 +239,52 @@ export default {
 			this.line = data.list;
 			this.coverShow = false;
 		},
+		//遍历获取店铺数据-暂时先用递归 下版本优化异步加载
+		eachGetShopData(){
+			let shopIds = [];
+			this.coverShowShop = true;
+			if(this.shopIds.length>5){
+				let start = this.eachRequestNum*5;
+				let end = (this.eachRequestNum+1)*5;
+				shopIds = this.shopIds.slice(start,end);
+				if(shopIds.length){
+					this.eachRequestNum++;
+					this.getShopData(shopIds);
+					this.eachGetShopData();
+				}else{
+					this.eachRequestNum = 0;
+					this.bar = this.eachRequestObj;
+					this.coverShowShop = false;
+				}
+			}else{
+				this.getShopData(this.shopIds);
+				this.bar = this.eachRequestObj;
+			}
+		},
+		//获取店铺数据
+		async getShopData(shopIds){
+			let data = await http.BusinessGetStatByShopIds({data:{
+				startTime: this.reqStartTime,
+				endTime: this.reqEndTime,
+				shopIds: shopIds.join('-'),
+				isOpenTime: this.openTime,
+			}});
+			if(data){
+				for(let key in data){
+					this.$set(this.eachRequestObj,key,data[key]);
+				}
+			}
+		},
 		//获取品牌数据
 		async getDataBrand() {
 			let data = await http.statisticsBrandBusiness({
 				data: {
-					startTime: this.reqStartTime,
-					endTime: this.reqEndTime,
-					dateType: this.selectedType + 1,
-					shopIds: this.shopIds.join('-'),
-					isOpenTime: this.openTime,
+					// startTime: this.reqStartTime,
+					// endTime: this.reqEndTime,
+					// dateType: this.selectedType + 1,
+					// shopIds: this.shopIds.join('-'),
+					// isOpenTime: this.openTime,
+					taskId: this.taskId,
 				}
 			});
 			Timer.clear(this.timerId);
@@ -252,21 +292,14 @@ export default {
 			this.coverShow = false; //停止加载动画
 			if(data){
 				this.sales = data.sales;
-				this.bar = data.columnar;
 				this.line = data.list;
 				this.coverShow = false;
-			}else{
-				this.$store.commit('setWin', {title: '提示信息',
-					content:'请求失败，请重试...'
-				});	
 			}
 		},
 		async getTaskId(){//轮询请求
 			if (!this.repeat) {
 				//轮询未结束 防止重复轮询
-				this.$store.commit('setWin', {title: '提示信息',
-					content:'当前查询尚未结束，请结束后再进行查询或刷新浏览器重新查询！'
-				});
+				this.$message({message: `当前查询尚未结束，请结束后再进行查询或刷新浏览器重新查询！`,type: 'error'});
 				return;
 			}
 			http.createBusinessTask({
@@ -292,20 +325,13 @@ export default {
 								//失败
 								this.stopRepeat();
 								//失败
-								this.$store.commit('setWin', {
-									title: '提示信息',
-									content: '请求失败，请重试！'
-								});
+								this.$message({message: `请求失败，请重试！`,type: 'error'});
 							}
 						});
 				},1000,600,false,() => {
 					this.stopRepeat();
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '请求超时，请重试！'
-					});
-				}
-				);
+					this.$message({message: `请求超时，请重试！`,type: 'error'});
+				});
 			});
 		},
 		validate() {
@@ -314,17 +340,11 @@ export default {
 				start = parseInt(this.startTime / 1000 / 3600 / 24),
 				end = parseInt(this.endTime / 1000 / 3600 / 24);
 			if (start > end) {
-				this.$store.commit('setWin', {
-					title: '提示信息',
-					content: '开始时间不能大于结束时间'
-				});
+				this.$message({message: `开始时间不能大于结束时间`,type: 'error'});
 				isPass = false;
 			}
 			if (this.isBrand && !this.shopIds.length) {
-				this.$store.commit('setWin', {
-					title: '提示信息',
-					content: '没有可选店铺'
-				});
+				this.$message({message: `没有可选店铺`,type: 'error'});
 				isPass = false;
 			}
 			return isPass;
@@ -398,6 +418,9 @@ export default {
 				//多店 品牌
 				this.isBrandSend = 1;
 				this.getTaskId();
+				//执行循环前，先清除保存的数据
+				this.eachRequestObj = {};
+				this.eachGetShopData();
 			}
 			
 		},

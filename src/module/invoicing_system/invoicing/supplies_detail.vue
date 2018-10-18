@@ -5,7 +5,7 @@
 		<div class="headBox">
 			<div class="headTitle">
 				物料信息
-				<a @click="showDetail=!showDetail" v-if="isBrand">{{!showDetail ? '展开' : '收起'}}</a>
+				<a @click="showDetail=!showDetail" v-if="isBrand&&goodsDetail.distributionRela&&goodsDetail.distributionRela.length>0">{{!showDetail ? '展开' : '收起'}}</a>
 			</div>
 			<div class="innerBox">
 				<ul>
@@ -14,8 +14,8 @@
 						<span>{{goodsDetail.name||"--"}}</span>
 					</li>
 					<li>
-						<span>物料简码：</span>
-						<span>{{goodsDetail.BC||"--"}}</span>
+						<span>物料编码：</span>
+						<span>{{goodsDetail.barCode||"--"}}</span>
 					</li>
 					<li>
 						<span>品牌：</span>
@@ -74,7 +74,7 @@
 				<el-button @click="delList" type="info">删除</el-button>
 			</div>
 		</div>
-		<div class="area-detail" v-if="isBrand&&showDetail&&goodsDetail.distributionRela">
+		<div class="area-detail" v-if="isBrand&&showDetail&&goodsDetail.distributionRela&&goodsDetail.distributionRela.length>0">
 			<li v-for="(wa,waIndex) in goodsDetail.distributionRela" :key="waIndex">
 				<span>{{waIndex+1}}</span>
 				<i>{{wa.distributionName}}&nbsp;:&nbsp;{{wa.value}}/<strong v-for="(u,i) in goodsDetail.unit" :key="i" v-if="u.muId==wa.unitId">{{u.name}}</strong></i>
@@ -114,52 +114,52 @@
 			if (storage.session('publicDetailReturn')) this.tabactive = 1;
 			this.isBrand = storage.session('userShop').currentShop.ischain == '3' ? true : false;
 			this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: ['back'],
-					fn: () => {
-						storage.session('warehouseDetailDestroy', true); //用于判断 是否从详情页返回
-						storage.session('tabactive', 1);
-						if (storage.session('publicDetailReturn')) {
-							this.$router.push({
-								path: '/admin/inventoryManagement'
-							});
-						} else {
-							window.history.go(-1);
-						}
-					}
-				},
-				{
-					name: '盘库',
-					className: ['pickCheck'],
-					fn: () => {
-						let obj = this.$route.query;
-						obj.id = this.mid;
+				name: '返回',
+				type: 4,
+				className: '',
+				fn: () => {
+					storage.session('warehouseDetailDestroy', true); //用于判断 是否从详情页返回
+					storage.session('tabactive', 1);
+					if (storage.session('publicDetailReturn')) {
 						this.$router.push({
-							path: 'warehouseCount',
-							query: obj
+							path: '/admin/inventoryManagement'
 						});
+					} else {
+						window.history.go(-1);
 					}
 				}
-			]);
+			},
+			{
+				name: '盘库',
+				type: 4,
+				className: 'primary',
+				fn: () => {
+					let obj = this.$route.query;
+					obj.id = this.mid;
+					this.$router.push({
+						path: 'warehouseCount',
+						query: obj
+					});
+				}
+			}]);
 			this.mid = this.$route.query.id;
 			this.init();
 		},
 		methods: {
 			async init() {
 				let res = await http.All([{
-						httpId: 'invoic_getMaterialDetail',
-						data: {
-							mid: this.mid,
-							isDistribution: 1
-						}
-					},
-					{
-						httpId: 'invoic_getMaterialBatch',
-						data: {
-							mid: this.mid
-						}
+					httpId: 'invoic_getMaterialDetail',
+					data: {
+						mid: this.mid,
+						isDistribution: 1
 					}
-				]);
+				},
+				{
+					httpId: 'invoic_getMaterialBatch',
+					data: {
+						mid: this.mid
+					}
+				}]);
 				this.goodsDetail = res[0].data;
 				this.goodsData = res[1].data;
 				// utils.sortByAll(this.goodsData.relation, 'value', true);

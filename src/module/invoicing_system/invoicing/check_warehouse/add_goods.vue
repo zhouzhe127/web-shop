@@ -24,8 +24,8 @@
 			</div>
 			<div class="inline-box">
 				<div class="button-box">
-					<span class="blue" @click="filter">筛选</span>
-					<span class="gray" @click="reset">重置</span>
+					<el-button type="primary" @click="filter">筛选</el-button>
+					<el-button type="info" @click="reset">重置</el-button>
 				</div>
 			</div>
 		</div>
@@ -45,7 +45,12 @@
 			<span slot="con-7" slot-scope="props">{{props.data.surplus}}{{props.data.unit}}</span>
 		</com-table>
 		<div class="page-box">
-			<pageBtn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></pageBtn>
+			<el-pagination @current-change="pageChange"
+				:current-page="page"
+				background
+				layout="prev, pager, next"
+				:page-count="pageTotal">
+			</el-pagination>
 		</div>
 		
 		<model-name :name="modelName" :title="modelTitle" v-if="nameWinShow" @emit="nameWinEmit"></model-name>
@@ -161,17 +166,7 @@
 		methods: {
 			initBtn() {
 				let arr = [
-					{name: '确定',style: 'background: #fe8d01;border: 1px solid #fe8d01;color: #fff;',
-						fn: () => {
-							this.confirmClick();
-						}
-					},
-					{name: '保存模板',style: 'background: none;border: 1px solid #fe8d01;color: #fe8d01;',
-						fn: () => {
-							this.saveModel();
-						}
-					},
-					{name: '取消',style: 'background: #b3b3b3;border: 1px solid #b3b3b3;color: #fff;',
+					{name: '取消',className: 'info',type:4,
 						fn: () => {
 							if(!this.selObj && this.isEdit){
 								window.history.go(-1);
@@ -185,10 +180,18 @@
 							}
 						}
 					},
+					{name: '保存模板',className: 'primary',type:4,
+						fn: () => {
+							this.saveModel();
+						}
+					},
 				];
-				if(!this.selObj && this.isEdit){
-					arr.splice(0,1);
-					arr[0].style = 'background: #fe8d01;border: 1px solid #fe8d01;color: #fff;';
+				if(this.selObj || !this.isEdit){
+					arr.push({name: '确定',className: 'primary',type:4,
+						fn: () => {
+							this.confirmClick();
+						}
+					});
 				}
 				this.$store.commit('setPageTools', arr);
 			},
@@ -508,9 +511,8 @@
 				this.areaList = [];
 				this.getData();
 			},
-			pageChange(obj) { //分页 获取页数
-				this.page = Number(obj.page);
-				this.pageShow = Number(obj.num);
+			pageChange(res) { //分页 获取页数
+				this.page = res;
 				this.getData();
 			},
 			listHandle(index) { //列表操作,点击单个radio按钮

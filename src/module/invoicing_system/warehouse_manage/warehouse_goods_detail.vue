@@ -135,7 +135,7 @@ export default {
 		},
 		async getDetail() {
 			//获取详情
-			let data = await http.getDetails({
+			let data = await http.InvoicingGetGoodsDetail({
 				data: {
 					gid: this.goodsTitle.id,
 					shopIds: this.goodsTitle.shopId || '',

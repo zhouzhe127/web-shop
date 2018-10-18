@@ -35,8 +35,8 @@
 				<div class="search-box fl">
 					<!-- <span class="search-btn blue" @click="getStoreList">筛选</span>
 					<span class="reset-btn gray" @click="resetFun">重置</span> -->
-					<el-button type="primary" @click="getStoreList">筛选</el-button>
-					<el-button type="info" @click="resetFun">重置</el-button>
+					<el-button type="primary" @click="getStoreList" style="width:100px;">筛选</el-button>
+					<el-button type="info" @click="resetFun" style="width:100px;">重置</el-button>
 				</div>
 			</div>
 		</div>
@@ -379,12 +379,12 @@
 					this.selectShopId = this.shopsList.map((v) => {
 						return v.id;
 					});
-					let selectNameStr = '';
+					let selectNameStr = [];
 					for (let i = 0; i < this.shopsList.length; i++) {
-
-						selectNameStr = selectNameStr + this.shopsList[i].name + ',';
+						//selectNameStr = selectNameStr + this.shopsList[i].name + ',';
+						selectNameStr.push(this.shopsList[i].name);
 					}
-					this.selectName = selectNameStr;
+					this.selectName = selectNameStr.join(',');
 				} else {
 					this.selectShopId.push(this.userShop.currentShop.id);
 					this.selectName = this.userShop.currentShop.name;
@@ -520,7 +520,6 @@
 	#member-store .search-box {
 		display: inline-block;
 		vertical-align: middle;
-		width: 200px;
 		height: 40px;
 		margin-left: 20px;
 	}
@@ -541,6 +540,7 @@
 	}
 
 	#member-store .btn {
+		font-size: 16px;
 		margin-bottom: 10px;
 	}
 
@@ -567,7 +567,7 @@
 	}
 
 	#member-store .btn .active {
-		background: #28A8E0;
+		background: #E1BB4A;
 		color: #fff;
 	}
 

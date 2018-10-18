@@ -67,24 +67,24 @@
 	            </div>
             </div>
         </div>
-        <el-table :data="dispatchingRecord" stripe border style="width: 100%">
-		    <el-table-column prop="dispatchingRecordType" label="调度状态">
+        <el-table :data="dispatchingRecord" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+		    <el-table-column prop="dispatchingRecordType" label="调度状态" width="150">
 		    </el-table-column>
-		    <el-table-column prop="receiptNumber" label="调度单号">
+		    <el-table-column prop="receiptNumber" label="调度单号" min-width="250">
 		    </el-table-column>
-		    <el-table-column prop="outWname" label="出货仓库">
+		    <el-table-column prop="outWname" label="出货仓库" min-width="200">
 		    </el-table-column>
-		    <el-table-column prop="intoWname" label="入货仓库">
+		    <el-table-column prop="intoWname" label="入货仓库" min-width="200">
 		    </el-table-column>
-		    <el-table-column label="创建时间">
+		    <el-table-column label="创建时间" width="250">
 		    	<template slot-scope="scope">
 		        	{{timeConversion(scope.row.createTime)}}
 		      	</template>
 		    </el-table-column>
-		    <el-table-column prop="createName" label="操作人">
+		    <el-table-column prop="createName" label="操作人" width="150">
 		    </el-table-column>
-		    <el-table-column label="操作" align="center">
-		    	<template slot-scope="scope" fixed="right" width="180" >
+		    <el-table-column label="操作" fixed="right" width="150">
+		    	<template slot-scope="scope">
 		        	<el-button @click="dispatchingDetail(scope.row,1)" v-if="scope.row.dynamic != 1"
 		        		type="text" size="small">查看详情</el-button>
 		        	<el-button @click="dispatchingDetail(scope.row,2)" v-if="scope.row.dynamic == 2"
@@ -421,12 +421,12 @@ export default {
 <style lang='less' scoped>
 .operation{
     .oprationTime{width: 80px;height:100%;line-height:40px;font-size:15px;float: left}
-    .chooseTime{width: 100%;margin-top: 15px;margin-bottom: 15px;
+    .chooseTime{width: 100%;margin-top: 15px;margin-bottom: 20px;
         .box{display: inline-block;vertical-align: middle;}
         &:after{content: '';clear: both;zoom: 1;display: block;}
     }
     .block-box{display: inline-block;}
-    .inline-box{display: inline-block;margin-right: 10px;margin-bottom: 15px;
+    .inline-box{display: inline-block;margin-right: 10px;margin-bottom: 20px;
         span{vertical-align: middle;}
         ul{width: 100%;max-height: 200px;margin: 0;position: absolute;
             top: 43px;left: 0;z-index: 10;background: #fff;overflow-y: auto;border-bottom: 1px solid #ccc;

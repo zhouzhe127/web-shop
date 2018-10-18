@@ -25,14 +25,15 @@
 				抵扣渠道
 			</div>
 			<div class="fl selectbtns">
-				<span v-for="(item,index) in canalList" :key='index' :class="{sign:selectCanal.indexOf(item.index)!=-1}" @click="doMore(item.index)">{{item.name}}</span>
-			</div>
+				<!-- <span v-for="(item,index) in canalList" :key='index' :class="{sign:selectCanal.indexOf(item.index)!=-1}" @click="doMore(item.index)">{{item.name}}</span> --> 
+                <mulSelect :list.sync="canalList" :selects.sync="selectCanal" :styles="{'marginRight':'8px'}" :name='"name"' :key='"id"'></mulSelect>
+            </div>
 		</div>
 		<div class="ic-line">
 			<div class="text required" style="margin-left:130px;">
 				积分抵扣比例
 			</div>
-			<div class="integralDiv">
+			<!-- <div class="integralDiv">
 				积分
 			</div>
 			<input type="text" class="input fl inputOne" v-model="point" maxlength="8">
@@ -42,7 +43,17 @@
 			<div class="integralNum" style="">
 				元
 			</div>
-			<input type="text" class="input fl inputTwo" v-model="pointCash" maxlength="8">
+			<input type="text" class="input fl inputTwo" v-model="pointCash" maxlength="8"> -->
+
+            <el-input v-model="point" class="fl inputOne" maxlength="8">
+                <template slot="suffix">积分</template>
+            </el-input>
+            <div class="text fl" style="margin: 0 10px;">
+				:
+			</div>
+            <el-input v-model="pointCash" class="fl inputOne" maxlength="8">
+                <template slot="suffix">元</template>
+            </el-input> 
 		</div>
 		<div class="ic-title">
 			<div class="text">
@@ -56,44 +67,57 @@
 			<div class="text">
 				积分抵扣上限
 			</div>
-			<template v-for="(item,index) in maxList">
+			<!-- <template v-for="(item,index) in maxList" >
 				<div class="fl integralTop" :class="{icSelect:index == maxSelect}" @click="changeSelect('maxSelect',index)" :key="index">
 					{{item}}
-				</div>
-			</template>
+				</div>  
+			</template> -->
+            <el-radio-group v-model="maxSelectName" class="fl">
+					<el-radio v-for="(item,index) in maxList" :key="index" :label="item" border @change.native="clicktheRadio(item,index)"></el-radio>
+			</el-radio-group>
 		</div>
 		<template v-if="maxSelect == 1">
 			<div class="ic-line">
 				<div class="text" style="margin-left:168px;">
 					计算方式
 				</div>
-				<template v-for="(item,index) in computerWay">
+				<!-- <template v-for="(item,index) in computerWay">
 					<div class="fl computeStyle" :class="{icSelect:index == selectComputerWay}" @click="changeSelect('selectComputerWay',index)"
 					    :key="index">
 						{{item}}
 					</div>
-				</template>
+				</template> -->
+                <el-radio-group v-model="computerWayName" class="fl">
+					<el-radio v-for="(item,index) in computerWay" :key="index" :label="item" border @change.native="selectComputer(item,index)"></el-radio>
+			    </el-radio-group>
 			</div>
 			<div class="ic-line">
 				<div class="text" style="margin-left:154px;">
 					最多为订单
 				</div>
-				<div class="maxOrder">
+				<!-- <div class="maxOrder">
 					%
 				</div>
-				<input type="text" class="input orderInput" v-model="maxDate.percentage" maxlength="3" placeholder="请输入百分比">
-			</div>
+				<input type="text" class="input orderInput" v-model="maxDate.percentage" maxlength="3" placeholder="请输入百分比"> -->
+
+                <el-input v-model="maxDate.percentage" class="fl totalInput" type="text" maxlength="3" placeholder="请输入百分比">
+                    <template slot="suffix">%</template>
+                </el-input>
+            </div>
 		</template>
 
 		<div class="ic-line" v-if="maxSelect == 2">
 			<div class="text" style="margin-left: 154px;">
 				最多金额为
 			</div>
-			<div class="maxNumber">
+			<!-- <div class="maxNumber">
 				元
 			</div>
-			<input type="text" class="input numInput" v-model="maxDate.money" maxlength="10" placeholder="请输入金额">
-		</div>
+			<input type="text" class="input numInput" v-model="maxDate.money" maxlength="10" placeholder="请输入金额"> -->
+            <el-input v-model="maxDate.money" class="input numInput" type="text" maxlength="10" placeholder="请输入金额">
+                <template slot="suffix">元</template>
+            </el-input>
+        </div>
 		<div class="ic-title">
 			<div class="text">
 				积分使用上限
@@ -106,10 +130,13 @@
 			<div class="text required" style="margin-left: 116px;">
 				最多使用总积分
 			</div>
-			<div class="useIntegral">
+			<!-- <div class="useIntegral">
 				%
 			</div>
-			<input type="text" class="input useInput" v-model="maxPointRate" maxlength="3" placeholder="请输入百分比">
+			<input type="text" class="input useInput" v-model="maxPointRate" maxlength="3" placeholder="请输入百分比"> -->
+            <el-input v-model="maxPointRate" class="useInput" type="text" maxlength="3" placeholder="请输入百分比">
+                <template slot="suffix">%</template>
+            </el-input>
 		</div>
 		<div class="ic-title" style="margin-top: 10px;">
 			<div class="text">
@@ -123,12 +150,17 @@
 			<div class="text" style="margin-left: 168px;">
 				计算方式
 			</div>
-			<template v-for="(item,index) in conditionList">
+			<!-- <template v-for="(item,index) in conditionList">
 				<div class="fl numStyleOne" :class="{icSelect:index == selectConditionList}" @click="changeSelect('selectConditionList',index)"
 				    :key="index">
 					{{item}}
 				</div>
-			</template>
+                <el-radio v-model="radio3" class="fl numStyleOne" :label="item" @click="changeSelect('selectConditionList',index)" border></el-radio>
+			</template> -->
+
+            <el-radio-group v-model="conditionListName" class="fl">
+					<el-radio v-for="(item,index) in conditionList" :key="index" :label="item" border @change.native="conditionSelect(item,index)"></el-radio>
+			</el-radio-group>
 		</div>
 		<div class="ic-line" v-if="selectConditionList != 0">
 			<div class="text required" style="margin-left: 144px;" v-if="selectConditionList == 1">
@@ -137,11 +169,15 @@
 			<div class="text required" style="margin-left: 158px;" v-if="selectConditionList == 2">
 				总消费满
 			</div>
-			<div class="totalNumber">
+			<!-- <div class="totalNumber">
 				元
 			</div>
-			<input type="text" class="input fl totalInput" v-model="minCash" maxlength="10" placeholder="请输入金额">
-			<div class="fl" style="margin-left: 10px;">
+			<input type="text" class="input fl totalInput" v-model="minCash" maxlength="10" placeholder="请输入金额"> -->
+			<el-input v-model="minCash" class="fl totalInput" type="text" maxlength="10" placeholder="请输入金额">
+                <template slot="suffix">元</template>
+            </el-input>
+            
+            <div class="fl" style="margin-left: 10px;">
 				允许使用
 			</div>
 		</div>
@@ -156,17 +192,24 @@
 			<div class="text" style="margin-left: 168px;">
 				使用方式
 			</div>
-			<template v-for="(item,index) in userWay">
+			<!-- <template v-for="(item,index) in userWay">
 				<div class="fl useStyleOne" :class="{icSelect:index == selectUserWay}" @click="changeSelect('selectUserWay',index)" :key="index">
 					{{item}}
 				</div>
-			</template>
+                <el-radio v-model="radio4" class="fl useStyleOne" :label="item" @click="changeSelect('selectUserWay',index)" :key="index" border></el-radio>
+			</template> -->
+
+            <el-radio-group v-model="userWayName" class="fl">
+				<el-radio v-for="(item,index) in userWay" :key="index" :label="item" border @change.native="userWaySelect(item,index)"></el-radio>
+			</el-radio-group>
+
 			<img src="../../res/images/prompt.png" class="useImg" />
 			<div class="text" style="margin-left: 4px;">
 				最大限度使用
 			</div>
 		</div>
-		<a href="javascript:void(0);" class="yellow useA" @click="updatePointConfig" v-if="update">保存</a>
+		<!-- <a href="javascript:void(0);" class="yellow useA" @click="updatePointConfig" v-if="update">保存</a> -->
+        <el-button type="primary" class="yellow useA" @click="updatePointConfig" v-if="update">保存</el-button>
 	</div>
 </template>
 <script>
@@ -182,34 +225,39 @@
 				canalList: [
 					{
 						name: 'pos收银',
-						index: '1'
+						id: '1'
 					},
 					{
 						name: '微店',
-						index: '2'
+						id: '2'
 					},
 					{
 						name: '扫码支付',
-						index: '3'
+						id: '3'
 					}
 				], //抵扣渠道列表
-				selectCanal: '1,2,3',
+				selectCanal: [],
 				point: null, //积分抵扣值
 				pointCash: null, //抵扣金额数
 				maxList: ['无条件', '按百分比', '按现金消费'], //积分抵扣上限的方式列表
+				maxSelectName: '无条件',
 				maxSelect: 0, //积分抵扣上限的选择
 				maxDate: {
 					money: null,
 					percentage: null
 				}, //设置规则里面的 输入框 百分比 和 元
 				maxPointRate: null, //可使用的总积分
+				computerWayName: '打折前',
 				computerWay: ['打折前', '打折后'], // 设置规则里面的 计算方式
 				selectComputerWay: 0, //选中的计算方式
+				conditionListName: '无条件',
 				conditionList: ['无条件', '人均消费', '总消费'], //积分抵扣条件列表
 				selectConditionList: 0,
 				minCash: null, //使用积分的条件金额
+				userWayName: '手动输入',
 				userWay: ['手动输入', '自动计算'], //使用方式
-				selectUserWay: 0
+				selectUserWay: 0,
+				checked3: true
 			};
 		},
 		mounted() {
@@ -235,7 +283,7 @@
 					} else {
 						this.selectCanal = this.selectCanal.concat(res);
 					}
-				}
+				} 
 			},
 			//初始化
 			async getPointConfig() {
@@ -257,8 +305,13 @@
 				if (info.channel == '0') {
 					info.channel = '';
 				}
-				info.channel += '';
-				this.selectCanal = info.channel;
+				info.channel += ''; 
+
+				this.selectCanal = [];
+				for (let i = 0; i < info.channel.length; i++) {
+					this.selectCanal.push(info.channel[i]);
+				}
+
 
 				this.point = info.point;
 				this.pointCash = info.pointCash;
@@ -276,17 +329,22 @@
 					this.maxSelect = 2;
 					this.maxDate.money = info.maxRuleValue;
 				}
+				this.maxSelectName = this.maxList[this.maxSelect];
+				this.computerWayName = this.computerWay[this.selectComputerWay];
+
 				this.maxPointRate = info.maxPointRate;
 				this.selectConditionList = info.pointUseRule;
+				this.conditionListName = this.conditionList[this.selectConditionList];
 				this.minCash = info.minCash;
 				this.selectUserWay = info.useMode;
+				this.userWayName = this.userWay[this.selectUserWay];
 			},
 			//保存
 			async updatePointConfig() {
 				if (this.testInfo()) {
 					let obj = {};
 
-					obj.channel = this.selectCanal;
+					obj.channel = this.selectCanal.join(',');
 					obj.maxPointRate = this.maxPointRate;
 					obj.point = this.point;
 					obj.pointCash = this.pointCash;
@@ -381,6 +439,7 @@
 					});
 					return false;
 				}
+
 				if (this.maxSelect == 1) {
 					if (!znum.test(this.maxDate.percentage) ||
 						this.maxDate.percentage - 0 > 100 ||
@@ -439,11 +498,25 @@
 			changeSelect(item, index) {
 				//改变积分抵扣上限
 				this[item] = index;
-			}
+			},
+			clicktheRadio: function (item, index) {
+				this.maxSelect = index;
+			},
+			conditionSelect: function (item, index) {
+				this.selectConditionList = index;
+			},
+			selectComputer: function (item, index) {
+				this.selectComputerWay = index;
+			},
+			userWaySelect: function (item, index) {
+				this.selectUserWay = index;
+			},
 		},
 		components: {
 			onOff: () =>
-				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off')
+				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
+			mulSelect: () =>
+				import ( /*webpackChunkName: 'mul_select'*/ 'src/components/mul_select'),
 		}
 	};
 </script>
@@ -493,7 +566,7 @@
 
 	/*多选*/
 
-	.ic-line .selectbtns {
+	/* .ic-line .selectbtns {
 		width: 400px;
 		height: 40px;
 	}
@@ -508,7 +581,7 @@
 		text-align: center;
 		cursor: pointer;
 		margin-right: 8px;
-	}
+	} */
 
 	.sign {
 		background: url("../../res/images/sign.png") right bottom no-repeat;
@@ -533,20 +606,13 @@
 	}
 
 	.ic-line .inputOne {
-		width: 100px;
-		border: 1px solid rgb(189, 190, 191);
-	}
-
-	.ic-line .inputTwo {
-		width: 100px;
-		border: 1px solid rgb(189, 190, 191);
-	}
-
+		width: 100px; 
+	} 
 	.ic-line .integralTop {
 		width: 100px;
 		height: 40px;
 		text-align: center;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 		margin-right: 10px;
 		cursor: pointer;
 	}
@@ -555,7 +621,7 @@
 		width: 100px;
 		height: 40px;
 		text-align: center;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 		margin-right: 10px;
 		cursor: pointer;
 	}
@@ -571,7 +637,7 @@
 
 	.ic-line .orderInput {
 		width: 210px;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 	}
 
 	.ic-line .maxNumber {
@@ -585,7 +651,7 @@
 
 	.ic-line .numInput {
 		width: 210px;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 	}
 
 	.ic-line .useIntegral {
@@ -599,14 +665,14 @@
 
 	.useInput {
 		width: 210px;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 	}
 
 	.numStyleOne {
 		width: 100px;
 		height: 40px;
 		text-align: center;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 		margin-right: 10px;
 		cursor: pointer;
 	}
@@ -622,14 +688,14 @@
 
 	.totalInput {
 		width: 200px;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 	}
 
 	.useStyleOne {
 		width: 100px;
 		height: 40px;
 		text-align: center;
-		border: 1px solid rgb(189, 190, 191);
+		/* border: 1px solid rgb(189, 190, 191); */
 		margin-right: 10px;
 		cursor: pointer;
 	}
