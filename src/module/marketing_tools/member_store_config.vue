@@ -24,8 +24,9 @@
 		<!-- 保存 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
-			<a href="javascript:;" class="blue" style="width:200px;" @click="addconfig">保存</a>
-		</div>
+			<!-- <a href="javascript:;" class="blue" style="width:200px;" @click="addconfig">保存</a> -->
+            <el-button type="primary" class="blue" style="width:200px;" @click="addconfig">保存</el-button>
+        </div>
 	</div>
 </template>
 <script>

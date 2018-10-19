@@ -16,12 +16,18 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">在线点单模版选择</span>
 			<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }" @click="chooseIntegral('1',index)">{{item.name}}</span>
-		</div>
+            <!-- <el-radio-group v-model="integralName" class="fl"  style="margin-right: 14px;">
+				<el-radio v-for="(item,index) in integralList" :key="index" :label="item.name" border @change.native="chooseIntegral('1',index)"></el-radio>
+			</el-radio-group> -->
+        </div>
 		<!-- 自助点单模版选择 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">自助点单模版选择</span>
 			<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOff == index }" @click="chooseIntegral('2',index)">{{item.name}}</span>
-		</div>
+             <!-- <el-radio-group v-model="integralName" class="fl"  style="margin-right: 14px;">
+				<el-radio v-for="(item,index) in integralList" :key="index" :label="item.name" border @change.native="chooseIntegral('2',index)"></el-radio>
+			</el-radio-group> -->
+        </div>
 		<!-- 模版展示 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">模版展示</span>
@@ -39,7 +45,8 @@
 		<!-- 保存 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
-			<a href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig()">保存</a>
+			<!-- <a href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig()">保存</a> -->
+		    <el-button type="primary" class="yellow fl" @click="saveConfig()" style="width: 200px;">保存</el-button> 
 		</div>
 	</div>
 </template>
@@ -51,19 +58,21 @@ import http from 'src/manager/http';
 export default {
 	data() {
 		return {
-			integralList: [{
-				name: '横版风格'
-			},
-			{
-				name: '竖版风格'
-			}
+			integralName: '横版风格',
+			integralList: [
+				{
+					name: '横版风格'
+				},
+				{
+					name: '竖版风格'
+				}
 			],
 			integralOn: 0, //横版风格
 			integralOff: 0, //竖版风格
 		};
 	},
 	methods: {
-		chooseIntegral: function(type, index) {
+		chooseIntegral: function (type, index) {
 			if (type == '1') {
 				this.integralOn = index;
 			} else if (type == '2') {
@@ -89,19 +98,19 @@ export default {
 		},
 		async getWechatConfig() {
 			let data = await http.getWechatConfig();
-			if(data){
-				if(data.onlineStyle){
-					this.integralOn = data.onlineStyle - 1;//在线模版
+			if (data) {
+				if (data.onlineStyle) {
+					this.integralOn = data.onlineStyle - 1; //在线模版
 				}
-				if(data.selfhelpStyle){
-					this.integralOff = data.selfhelpStyle - 1;//自助模版
+				if (data.selfhelpStyle) {
+					this.integralOff = data.selfhelpStyle - 1; //自助模版
 				}
 			}
 		}
 	},
 	components: {
 		'singleSelect': () =>
-			import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+			import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 	},
 	mounted() {
 		this.getWechatConfig();

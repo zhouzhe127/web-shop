@@ -26,11 +26,15 @@
 						</el-option>
 					</el-select>
 				</div>
+
+                
 				<!-- 门店 -->
 				<div class="orderNum fl" v-if="ischain == '3'">
 					<span class="title fl">门店</span>
 					<elShopList @chooseShop="getSelectShopList" :shopIds="selectShopId"></elShopList>
 				</div>
+
+
 				<!-- 筛选重置 -->
 				<div class="search-box fl">
 					<!-- <span class="search-btn blue" @click="getStoreList">筛选</span>
@@ -43,9 +47,29 @@
 		<p class="btn">
 			<span class="all" v-for="(item,index) in storeList" :key='index' v-bind:class="{'active':indexOn == index }" @click="chooseStore(index)">{{item.name}}</span>
 		</p>
-		<p class="btn" v-if="ischain == '3'">
-			选择门店:{{selectName}}
-		</p>
+		<!-- <p class="btn" v-if="ischain == '3'">
+			选择门店:{{selectName}} -->
+            <!-- <div class="choiceshop_l" >
+                选择店铺:   
+                <span @click="stretch" v-if="show">收起</span>
+                <span @click="stretch" v-if="!show">展开</span>  
+            </div> 
+            <div class="choiceshop_r" v-if="show">
+                {{selectName}}               
+            </div>  -->
+		<!-- </p> -->
+
+        <!-- 已经选择的店铺 -->
+        <div class="btn" v-if="ischain == '3'"> 
+            <div class="choiceshop_l">
+                选择店铺:    
+                    <span @click="stretch" v-html="hide?'收起':'展开'"></span> 
+            </div>  
+            <div class="choiceshop_r" v-if="hide" ref="reference">
+                {{selectName}}           
+            </div>  
+        </div>
+
 		<com-table :listHeight='80' :showHand='true' :key="index" :showTitle='2' :listWidth="1300" :introData="packageList" :titleData="titleList" :allTotal="count" :listName="'储值方案'">
 			<div class="doBtn" slot="con-0" slot-scope="props">
 				<span @click="clickDetail(props.data)">查看详情</span>
@@ -161,32 +185,34 @@
 			return {
 				startTime: (new Date()).setHours(0, 0, 0, 0) - (global.timeConst.THREEMONTHS), //.getZero(), //日期组件的开始时间
 				endTime: (new Date()).setHours(23, 59, 59, 999),
-				expirationTimeList: [{ //过期时间
-					name: '全部渠道',
-					id: 0
-				},
-				{
-					name: '微信',
-					id: 1
-				},
-				{
-					name: 'POS收银',
-					id: 2
-				}
+				expirationTimeList: [
+					{ //过期时间
+						name: '全部渠道',
+						id: 0
+					},
+					{
+						name: '微信',
+						id: 1
+					},
+					{
+						name: 'POS收银',
+						id: 2
+					}
 				],
 				expirationTimeId: 0,
 				expirationTime: '全部渠道', //状态
 				shopsList: [], // 卡属门店  
 				shopsName: '选择适用门店',
-				storeList: [{
-					name: '全部'
-				},
-				{
-					name: '固定方案'
-				},
-				{
-					name: '自定义方案'
-				}
+				storeList: [
+					{
+						name: '全部'
+					},
+					{
+						name: '固定方案'
+					},
+					{
+						name: '自定义方案'
+					}
 				],
 				indexOn: 0,
 				packageList: [], //筛选时方案列表显示
@@ -197,62 +223,63 @@
 				show: false,
 				index: null,
 				item: null,
-				titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: '220px',
-						flex: 'none'
+				titleList: [
+					{
+						titleName: '操作',
+						titleStyle: {
+							width: '220px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '创建时间',
+						titleStyle: {
+							width: '160px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '方案名称',
+						dataName: 'name'
+					},
+					{
+						titleName: '储值金额'
+					},
+					{
+						titleName: '支付金额'
+					},
+					{
+						titleName: '渠道',
+						titleStyle: {
+							width: '120px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '赠送条件',
+						titleStyle: {
+							width: '180px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '赠送内容',
+						titleStyle: {
+							width: '220px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '方案类型'
+					},
+					{
+						titleName: '排序',
+						dataName: 'sort'
+					},
+					{
+						titleName: '操作人',
+						dataName: 'createUid'
 					}
-				},
-				{
-					titleName: '创建时间',
-					titleStyle: {
-						width: '160px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '方案名称',
-					dataName: 'name'
-				},
-				{
-					titleName: '储值金额'
-				},
-				{
-					titleName: '支付金额'
-				},
-				{
-					titleName: '渠道',
-					titleStyle: {
-						width: '120px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '赠送条件',
-					titleStyle: {
-						width: '180px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '赠送内容',
-					titleStyle: {
-						width: '220px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '方案类型'
-				},
-				{
-					titleName: '排序',
-					dataName: 'sort'
-				},
-				{
-					titleName: '操作人',
-					dataName: 'createUid'
-				}
 				],
 				userShop: '',
 				ischain: '',
@@ -262,27 +289,32 @@
 				page: 1,
 				num: 10,
 				endTotal: 1,
-				count: '0'
+				count: '0',
+				hide: true
 			};
 		},
 		methods: {
+			//展开，收起
+			stretch: function () {
+				this.hide = !this.hide;
+			},
 			pageChange(obj) { //翻页
 				this.page = obj.page;
 				this.num = obj.num;
 				this.getStoreList();
 			},
-			startTimeChange: function(data) {
+			startTimeChange: function (data) {
 				this.startTime = new Date(data).setHours(0, 0, 0, 0);
 			},
-			endTimeChange: function(data) {
+			endTimeChange: function (data) {
 				this.endTime = new Date(data).setHours(23, 59, 59, 999);
 			},
-			selexpirationTime: function(i) {
+			selexpirationTime: function (i) {
 				//this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
 				this.expirationTimeId = i; //点击卡类型对应的id
 			},
 			//时间显示
-			translateTime: function(time) {
+			translateTime: function (time) {
 				return utils.format(time, 'yyyy-MM-dd/hh:mm');
 			},
 			async getStoreList() {
@@ -358,17 +390,17 @@
 				this.$router.push('/admin/memberStoredValueScheme/solution');
 			},
 			//打开创建方案页面
-			openStore: function() {
+			openStore: function () {
 				this.$router.push('/admin/memberStoredValueScheme/solution');
 			},
 
 			//方案列表点击选择方案
-			chooseStore: function(index) {
+			chooseStore: function (index) {
 				this.page = 1;
 				this.indexOn = index;
 				this.getStoreList();
 			},
-			getShopList: function() {
+			getShopList: function () {
 				// 获取卡属门店店铺列表
 				this.selectShopId = [];
 				if (this.ischain == '3') { // 处理品牌逻辑
@@ -406,7 +438,7 @@
 			// 	}
 			// 	this.selectShopId = idArr.join(',');
 			// },
-			resetFun: function() {
+			resetFun: function () {
 				this.startTime = new Date().setHours(0, 0, 0, 0) - (global.timeConst.THREEMONTHS);
 				this.endTime = new Date().setHours(23, 59, 59, 999);
 				this.expirationTimeId = 0;
@@ -414,7 +446,7 @@
 				this.getShopList();
 				this.getStoreList();
 			},
-			getSelectShopList: function(res) {
+			getSelectShopList: function (res) {
 				this.selectShopId = res;
 				let selectNameStr = '';
 				for (let i = 0; i < this.shopsList.length; i++) {
@@ -442,27 +474,26 @@
 						this.openStore();
 					},
 					className: 'userLabel'
-				}]);
+				}]); 
 			}
 			this.getShopList();
-			this.getStoreList();
-
+			this.getStoreList(); 
 		},
 		components: {
 			detail: () =>
-				import ( /* webpackChunkName:'member_store_detail' */ './member_store_detail'),
+				import( /* webpackChunkName:'member_store_detail' */ './member_store_detail'),
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 			Calendar: () =>
-				import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
+				import( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+				import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 			elShopList: () =>
 				import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
 			selectStore: () =>
-				import ( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
+				import( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
 			pageElement: () =>
-				import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 		}
 	};
 </script>
@@ -538,11 +569,30 @@
 	#member-store .search-box .search-btn {
 		margin-right: 20px;
 	}
+    #member-store .btn{
+       width: 100%;
+		overflow: hidden;
+		margin-bottom: 20px;  
+    }
 
-	#member-store .btn {
+	#member-store .btn .choiceshop_l {
+		float: left;
 		font-size: 16px;
-		margin-bottom: 10px;
+		line-height: 24px;
 	}
+    #member-store .btn .choiceshop_l span{
+        color:#29abe2; 
+        padding:0 5px;
+        display: inline-block;
+    }
+    #member-store .btn .choiceshop_r {
+		float: left;
+		width: 900px;
+		font-size: 16px;
+		line-height: 24px;
+        height: auto;
+	}
+     
 
 	#member-store .btn .all {
 		width: 121px;

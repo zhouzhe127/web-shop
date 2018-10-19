@@ -283,7 +283,7 @@
 					} else {
 						this.selectCanal = this.selectCanal.concat(res);
 					}
-				} 
+				}
 			},
 			//初始化
 			async getPointConfig() {
@@ -305,7 +305,7 @@
 				if (info.channel == '0') {
 					info.channel = '';
 				}
-				info.channel += ''; 
+				info.channel += '';
 
 				this.selectCanal = [];
 				for (let i = 0; i < info.channel.length; i++) {
@@ -343,8 +343,11 @@
 			async updatePointConfig() {
 				if (this.testInfo()) {
 					let obj = {};
-
-					obj.channel = this.selectCanal.join(',');
+					let channel = '';
+					for (let item of this.selectCanal) {
+						channel += item;
+					}
+					obj.channel = channel;
 					obj.maxPointRate = this.maxPointRate;
 					obj.point = this.point;
 					obj.pointCash = this.pointCash;
@@ -514,9 +517,9 @@
 		},
 		components: {
 			onOff: () =>
-				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
+				import( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
 			mulSelect: () =>
-				import ( /*webpackChunkName: 'mul_select'*/ 'src/components/mul_select'),
+				import( /*webpackChunkName: 'mul_select'*/ 'src/components/mul_select'),
 		}
 	};
 </script>
