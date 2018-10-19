@@ -42,10 +42,7 @@ export default {
 	data() {
 		return {
 			pieCheckList: [{ title: '消费总额占比' }, { title: '订单占比' }],
-			pieCheckListOne: [
-				{ title: '营业金额占比' },
-				{ title: '优惠金额占比' }
-			],
+			pieCheckListOne: [{ title: '营业金额占比' }, { title: '优惠金额占比' }],
 			//饼图数据，只需要给定数量 插件会自动计算百分百，饼图显示按如下循序显示 对应后台返回数据循序
 			dataPie: {
 				totalHuo: [
@@ -53,7 +50,7 @@ export default {
 					{ value: 0, name: '优惠金额' },
 					{ value: 0, name: '实收金额' }
 				],
-				orderNum: [
+				orderNumber: [
 					//订单占比
 					{ value: 0, name: '堂吃' },
 					{ value: 0, name: '外卖' },
@@ -88,7 +85,7 @@ export default {
 			},
 			formatPie: ['￥', ' ', '￥', '￥'],
 			pieDom: [null, null, null, null],
-			pieType: ['totalHuo', 'orderNum', 'goods', 'discount']
+			pieType: ['totalHuo', 'orderNumber', 'goods', 'discount']
 		};
 	},
 	props: ['pie', 'echarts', 'isBrand'],
@@ -100,7 +97,7 @@ export default {
 					{ value: 0, name: '优惠金额' },
 					{ value: 0, name: '实收金额' }
 				],
-				orderNum: [
+				orderNumber: [
 					//订单占比
 					{ value: 0, name: '堂吃' },
 					{ value: 0, name: '外卖' },
@@ -198,8 +195,8 @@ export default {
 		chuData() {
 			let proportion = this.pie;
 			let obj = this.isBrand
-				? { totalHuo: [], orderNum: [] }
-				: { totalHuo: [], orderNum: [], goods: [], discount: [] };
+				? { totalHuo: [], orderNumber: [] }
+				: { totalHuo: [], orderNumber: [], goods: [], discount: [] };
 			//先将后台返回的数据转换成如下格式 方便循环
 			for (let x in obj) {
 				for (let m in proportion[x]) {

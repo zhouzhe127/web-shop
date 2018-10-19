@@ -26,56 +26,52 @@ export default {
 		return {
 			dataLine: {
 				xAxis: {
-					turnover: [],
+					business: [],
 					amount: [],
-					orderNum: [],
+					orderNumber: [],
 					discount: []
 				},
 				total: {
-					turnover: [],
+					business: [],
 					amount: [],
-					orderNum: [],
+					orderNumber: [],
 					discount: []
 				},
 				eatIn: {
-					turnover: [],
+					business: [],
 					amount: [],
-					orderNum: [],
+					orderNumber: [],
 					discount: []
 				},
-				takeout: {
-					turnover: [],
+				takeOut: {
+					business: [],
 					amount: [],
-					orderNum: [],
+					orderNumber: [],
 					discount: []
 				},
 				quickPayment: {
-					turnover: [],
+					business: [],
 					amount: [],
-					orderNum: [],
+					orderNumber: [],
 					discount: []
 				}
 			},
 			//tab,选择y类型
 			tabList: [
-				{ type: 'turnover', name: '营业总额' },
+				{ type: 'business', name: '营业总额' },
 				{ type: 'discount', name: '优惠总额' },
 				{ type: 'amount', name: '入账金额' },
-				{ type: 'orderNum', name: '订单量' }
+				{ type: 'orderNumber', name: '订单量' }
 			],
 			tabIndex: 0,
-			lineType: 'turnover',
+			lineType: 'business',
 
 			//折线选择
 			checkList: [
 				{ name: '总值', className: 'total', color: '#ff9800' },
 				{ name: '堂吃', className: 'eatIn', color: '#fcd030' },
-				{ name: '外卖', className: 'takeout', color: '#1b88ee' },
-				{
-					name: '快捷支付',
-					className: 'quickPayment',
-					color: '#a16bff'
-				}
+				{ name: '外卖', className: 'takeOut', color: '#1b88ee' },
+				{ name: '快捷支付', className: 'quickPayment', color: '#a16bff' }
 			],
 			lineSelect: {
 				总值: true,
@@ -85,7 +81,7 @@ export default {
 			},
 
 			lineDom: null,
-			seriesData: [] //一种类型的y，折线图样式列表，默认是turnover（营业总额）
+			seriesData: [] //一种类型的y，折线图样式列表，默认是business（营业总额）
 		};
 	},
 	mounted() {
@@ -117,13 +113,9 @@ export default {
 		},
 		//实例化图表
 		initEchart() {
-			this.lineDom = this.echarts.init(
-				document.getElementById('line-charts')
-			);
+			this.lineDom = this.echarts.init(document.getElementById('line-charts'));
 			this.setLineListData(this.dataLine, this.lineType); //循环设置折线图样式列表
-			this.lineDom.setOption(
-				this.getLineData(this.dataLine, this.lineType)
-			);
+			this.lineDom.setOption(this.getLineData(this.dataLine, this.lineType));
 		},
 		//设置折线图的样式
 		setLineListData($data, $name) {
@@ -212,9 +204,7 @@ export default {
 				this.tabIndex = index;
 				this.lineType = this.tabList[index].type;
 				this.setLineListData(this.dataLine, this.lineType); //循环设置折线图样式列表
-				this.lineDom.setOption(
-					this.getLineData(this.dataLine, this.lineType)
-				); //重置柱状图表数据
+				this.lineDom.setOption(this.getLineData(this.dataLine, this.lineType)); //重置柱状图表数据
 			}
 		},
 		//折线个数选择
@@ -224,9 +214,7 @@ export default {
 				name = this.checkList[index].name;
 			this.lineSelect[name] = !this.lineSelect[name];
 			this.setLineListData(this.dataLine, this.lineType); //循环设置折线图样式列表
-			this.lineDom.setOption(
-				this.getLineData(this.dataLine, this.lineType)
-			);
+			this.lineDom.setOption(this.getLineData(this.dataLine, this.lineType));
 		}
 	}
 };
@@ -322,7 +310,7 @@ export default {
 		.eatIn:hover i {
 			border: 1px solid #fcd030;
 		}
-		.takeout:hover i {
+		.takeOut:hover i {
 			border: 1px solid #1b88ee;
 		}
 		.quickPayment:hover i {
@@ -330,23 +318,19 @@ export default {
 		}
 		.total.active i {
 			border: 1px solid #ff9800;
-			background: url(../../res/icon/white_select.png) #ff9800 center
-				no-repeat;
+			background: url(../../res/icon/white_select.png) #ff9800 center no-repeat;
 		}
 		.eatIn.active i {
 			border: 1px solid #fcd030;
-			background: url(../../res/icon/white_select.png) #fcd030 center
-				no-repeat;
+			background: url(../../res/icon/white_select.png) #fcd030 center no-repeat;
 		}
-		.takeout.active i {
+		.takeOut.active i {
 			border: 1px solid #1b88ee;
-			background: url(../../res/icon/white_select.png) #1b88ee center
-				no-repeat;
+			background: url(../../res/icon/white_select.png) #1b88ee center no-repeat;
 		}
 		.quickPayment.active i {
 			border: 1px solid #a16bff;
-			background: url(../../res/icon/white_select.png) #a16bff center
-				no-repeat;
+			background: url(../../res/icon/white_select.png) #a16bff center no-repeat;
 		}
 	}
 }
