@@ -176,7 +176,7 @@ export default {
 			this.inte();
 		},
 		payBtn: function(index) {
-			this.page = 1;
+			this.page = 0;
 			this.payChannel = this.payList[index].id;
 			this.inte();
 		}

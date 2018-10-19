@@ -40,11 +40,7 @@ export default {
 		url: r + 'Spu/getOne',
 		method: 'get'
 	},
-	'retailGoodUpOrDownShelf': { //零售商品上下架----零售
-		url: r + 'Spu/upOrDownShelf',
-		method: 'post'
-	},
-	'getCategoryList': {
+	getCategoryList: {
 		url: s + 'category/getCategoryList', //获取商品分类
 		method: 'get'
 	},

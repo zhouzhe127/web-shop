@@ -14,9 +14,15 @@
 					<!--日期选择和搜索框-->
 					<el-date-picker style="width:150px;cursor: pointer;float: left" :clearable="false" v-model="startT" type="date" format="yyyy-MM-dd" value-format="timestamp">
 					</el-date-picker>
+					<!--<section class="fl">-->
+					<!--<calendar :pObj="startObj" @throwTime="getStartTime" style=""></calendar>-->
+					<!--</section>-->
 					<span class="to">至</span>
 					<el-date-picker style="width:150px;cursor: pointer;float: left" :clearable="false" v-model="endT" type="date" format="yyyy-MM-dd" value-format="timestamp">
 					</el-date-picker>
+					<!--<section class="fl">-->
+					<!--<calendar :pObj="endObj" @throwTime="getEndTime"></calendar>-->
+					<!--</section>-->
 					<li>
 						<div v-on:click="selectBusinessHours" :class="{'selected':isOpenTime}" class="checkBox"></div>
 						<span style="font-size: 16px;">按营业时间</span>
@@ -26,18 +32,26 @@
 						<el-select v-model="reasonId">
 							<el-option v-for="(item,i) in reasonList" :key="i" :label="item.reasonName" :value="item.id"></el-option>
 						</el-select>
+						<!--<selectBtn @emit="changeWxType" :sorts="reasonList.map(v=>v.reasonName)" :name="busisName" :selected.sync="busisNatureSel"></selectBtn>-->
 					</li>
 					<li>
 						<el-button v-on:click="getReverList()" type="primary">搜索</el-button>
 						<el-button v-on:click="resetting()" type="info">重置</el-button>
+						<!--<a class="fl blue secBtn" v-on:click="getReverList()" href="javascript:void(0)">筛选</a>-->
+						<!--<a class="fl gray recBtn" v-on:click="resetting()" href="javascript:void(0)">重置</a>-->
 					</li>
 					<li>
 						<el-input v-model="orderOid" clearable placeholder="请输入订单号" style="width:200px;" :maxlength="20">
 							<el-button slot="append" icon="el-icon-search" @click="searchOid"></el-button>
 						</el-input>
+						<!--<span>-->
+						<!--<input type="text" placeholder="请输入订单号" v-model="orderOid"  />-->
+						<!--<a class="order-order-searchA fi fi-search" v-on:click="searchOid()"></a>-->
+						<!--</span>-->
 					</li>
 				</ul>
 			</div>
+
 			<section v-show='isAll' style="margin-bottom:20px;">
 				<el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="reverseList" border>
 					<el-table-column fixed min-width="150" align="center" label="订单号">
@@ -56,7 +70,11 @@
 					</el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="createUser" label="操作人"></el-table-column>
 				</el-table>
+				<!--<com-table @tableEvent="tableEvent" :listHeight='50' :listWidth="1100" :showHand="false" :fixed="1" :titleData="titleList" :introData="reverseList">-->
+				<!--<div slot="con-0" slot-scope="props" @click="openOid(props.data.oid)">{{props.data.oid}}</div>-->
+				<!--</com-table>-->
 			</section>
+
 			<section v-show="!isAll" style="margin-bottom:20px;">
 				<el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="reverseOneList" border>
 					<el-table-column fixed min-width="150" align="center" label="订单号">
@@ -79,11 +97,19 @@
 					</el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="createUser" label="操作人"></el-table-column>
 				</el-table>
+
+				<!--<com-table @tableEvent="tableEvent" :listHeight='50' :listWidth="1100" :showHand="false" :fixed="1" :titleData="shoptitleList" :introData="reverseOneList">-->
+				<!--<div slot="title-0" style="color:#29abe2;cursor:pointer;" slot-scope="props" @click="openOidDetial(oid)">{{oid}}</div>-->
+				<!--<div slot="con-0" slot-scope="props">{{'第' +(props.index+1) +'次'}}</div>-->
+				<!--</com-table>-->
 			</section>
 			<!-- 翻页 -->
 			<div style="margin-top: 10px" v-show='isAll'>
 				<el-pagination @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size="num" :page-count="totalNum" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]" background></el-pagination>
 			</div>
+			<!--<section v-show='isAll' class="turn-page">-->
+			<!--<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(totalNum)" :isNoJump="true"></pageElement>-->
+			<!--</section>-->
 		</section>
 		<orderDetail :detail="oidDetial" :isDelete="false" v-if="isShow" @detailShow="retOidDetial"></orderDetail>
 	</div>
@@ -99,11 +125,120 @@ export default {
 			totalNum: 1, //总页数
 			startT: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
 			endT: new Date().setHours(0, 0, 0, 0), //日期组件的结束时间
+			//			startObj: {
+			//				time: new Date().setHours(0, 0, 0, 0),
+			//				width: 170
+			//			}, //日期组件的开始时间
+			//			endObj: {
+			//				time: new Date().setHours(23, 59, 59, 999),
+			//				width: 170
+			//			}, //日期组件的结束时间
 			isOpenTime: false, //是否按营业时间 默认 false 0 否
+			//			titleList: [
+			//				{
+			//					titleName: '订单号',
+			//					dataName: 'oid',
+			//					titleStyle: {
+			//						width: '15%'
+			//					},
+			//					conStyle: {
+			//						color: '#29abe2',
+			//						cursor: 'pointer'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账次数',
+			//					dataName: 'times',
+			//					titleStyle: {
+			//						width: '10%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账前(消费/实收)',
+			//					dataName: 'oldPrice',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账后(消费/实收)',
+			//					dataName: 'newPrice',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账时间',
+			//					dataName: 'time',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账原因',
+			//					dataName: 'reason',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '操作人',
+			//					dataName: 'createUser',
+			//					titleStyle: {
+			//						width: '10%'
+			//					}
+			//				}
+			//			],
+			//			shoptitleList: [
+			//				{
+			//					titleName: '订单号',
+			//					dataName: 'oid',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账前(消费/实收)',
+			//					dataName: 'oldPrice',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账后(消费/实收)',
+			//					dataName: 'newPrice',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账时间',
+			//					dataName: 'time',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '反结账原因',
+			//					dataName: 'reason',
+			//					titleStyle: {
+			//						width: '15%'
+			//					}
+			//				},
+			//				{
+			//					titleName: '操作人',
+			//					dataName: 'createUser',
+			//					titleStyle: {
+			//						width: '10%'
+			//					}
+			//				}
+			//			],
 
 			isAll: true, //初始为所有订单页面
 			reverseList: [], //反结账列表
 
+			//			busisName: '请选择', //选中的商户性质名称
+			//			busisNatureSel: -1, //选中的商户性质
 			reasonList: [], //反结账原因列表
 			reasonId: 0, //反结账原因id
 
@@ -175,6 +310,7 @@ export default {
 			this.endT = new Date().setHours(0, 0, 0, 0);
 			this.isOpenTime = false;
 			this.reasonId = 0;
+			//			this.busisName = '请选择';
 			this.init();
 		},
 		//初始化获得反结账列表
@@ -215,6 +351,16 @@ export default {
 			}
 			this.reverseList = list;
 		},
+		//		changeWxType: function(e) {
+		//
+		//			console.log(this.reasonList);
+		//			console.log(e);
+		//			this.busisNatureSel = e;
+		//			this.reasonId = this.reasonList[e].id;
+		//			this.busisName = this.reasonList[e].reasonName;
+		//
+		//			console.log(this.reasonId);
+		//		},
 		async openOid(oid) {
 			this.oid = oid;
 			let del = await http.getReverseDetail({
@@ -244,6 +390,14 @@ export default {
 				this.isShow = true;
 			}
 		},
+		//		//选择开始时间
+		//		getStartTime: function(receiveTime) {
+		//			this.startT = new Date(receiveTime).getTime(); //毫秒
+		//		},
+		//		//选择结束时间
+		//		getEndTime: function(receiveTime) {
+		//			this.endT= new Date(receiveTime).getTime(); //毫秒
+		//		},
 		//点击按营业时间
 		selectBusinessHours: function() {
 			this.isOpenTime = !this.isOpenTime;
@@ -267,6 +421,13 @@ export default {
 			}
 			return true;
 		},
+		//翻页
+		//		getPageNum: function(obj) {
+		//			this.page = obj.page;
+		//			this.num = obj.num;
+		//			this.getReverList();
+		//		},
+
 		//每页显示多少行
 		numChange(e) {
 			this.num = e;
@@ -280,6 +441,14 @@ export default {
 		}
 	},
 	components: {
+		//		calendar: () =>
+		//			import(/*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
+		//		pageElement: () =>
+		//			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+		//		comTable: () =>
+		//			import(/*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+		//		selectBtn: () =>
+		//			import(/* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 		orderDetail: () =>
 			import(/*webpackChunkName: "delete_detail"*/ '../statistics/delete_detail')
 	}

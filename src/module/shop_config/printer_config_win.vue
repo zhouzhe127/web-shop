@@ -2,6 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
+ * @Last Modified time: 2018-09-14 18:43:41
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
@@ -98,19 +99,14 @@
 								active-color="#E1BB4A"
 								inactive-color="#e6e6e6">
 							</el-switch>
-							<el-radio-group size="small" v-model="isLocal" v-if="isShowLogo &&(orderTypeIndex ==0||orderTypeIndex ==1)">
+						</el-form-item>
+						<el-form-item label="显示位置" v-if="isShowLogo &&(orderTypeIndex ==0||orderTypeIndex ==1)">
+							<el-radio-group v-model="isLocal">
 								<div style="margin-bottom:2px;">
 									<el-radio v-for="(item,i) in localArr" :key="i" :label="item.type" border>{{item.name}}</el-radio>
 								</div>
 							</el-radio-group>
 						</el-form-item>
-						<!-- <el-form-item label="显示位置" v-if="isShowLogo &&(orderTypeIndex ==0||orderTypeIndex ==1)">
-							<el-radio-group v-model="isLocal" v-if="isShowLogo &&(orderTypeIndex ==0||orderTypeIndex ==1)">
-								<div style="margin-bottom:2px;">
-									<el-radio v-for="(item,i) in localArr" :key="i" :label="item.type" border>{{item.name}}</el-radio>
-								</div>
-							</el-radio-group>
-						</el-form-item> -->
 						<el-form-item label="显示支付二维码" v-if="orderTypeIndex ==1" >
 							<el-switch
 								v-model="isQrcode"

@@ -575,6 +575,7 @@ export default {
 		//添加规格
 		addGroup(len = 1) {
 			for (let i = 0; i < len; i++) {
+				console.log(this.groupData);
 				if (this.groupData.length < 3) {
 					let obj = {
 						showValidity: false, //是否显示保质期下拉框
@@ -846,6 +847,7 @@ export default {
 		},
 		//获取本组件的点击结果
 		closeSelfWin(res) {
+			// console.log(res);
 			if (res == 'close') {
 				this.$emit('throwAddGoodsWin', 'close');
 				return;
@@ -927,6 +929,16 @@ export default {
 			let cids = []; //分类id  最终提交的为字符串
 			let attrId = []; //口味的id 最终提交的为字符串
 			let groupData = []; //多规格数据
+
+			//保质期的类型
+			console.log(this.good.validityType);
+			// this.validityTypeArr.some(ele => {
+			// 	if (ele.id == this.good.validityType) {
+			// 		submitValidityType = ele.id;return true;
+			// 	}
+			// });
+			console.log(this.good.validityType);
+
 			//分类的id
 			for (let ele of this.selectCategory) {
 				cids.push(ele.id);
@@ -950,6 +962,7 @@ export default {
 			}
 
 			//多规格
+			// console.log(this.groupData);
 			if (this.good.type == 0 && this.good.isGroup == 1) {
 				this.groupData.forEach(ele => {
 					let group = {
@@ -987,6 +1000,14 @@ export default {
 						group.secBarCode = ele.secBarCode;
 						group.validity = parseInt(ele.validity);
 						group.validityType = ele.validityType * 1;
+						// console.log(group.validityType);
+						// console.log(ele.validityType);
+						// this.validityTypeArr.some((val) => {
+						// 	if (val.id == ele.validityType) {
+						// 		group.validityType = val.id;
+						// 		return true;
+						// 	}
+						// });
 					}
 					groupData.push(group);
 				});
@@ -1402,6 +1423,7 @@ export default {
 		// },
 		//是否是多规格
 		toggleIsGroup(res) {
+			console.log(res);
 			if (
 				res == 0 &&
 				this.editGoodsId &&
@@ -1424,6 +1446,7 @@ export default {
 		},
 		//开启进销存
 		toggleIsInvoicing(res) {
+			console.log(res);
 			if (res == 1 && this.good.isStock == 1) {
 				this.alertWin('进销存和库存只能开启一个!');
 				return;

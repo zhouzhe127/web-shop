@@ -14,7 +14,7 @@
 				<section style="width:100%;overflow:hidden;">
 					<el-form :model="good" ref="good" label-width="80px">
 						<el-form-item required label="商品名称">
-							<el-input v-model="good.name" maxlength="45" placeholder="请输入商品名称" style="width:270px;"></el-input>
+							<el-input v-model="good.goodsName" maxlength="45" placeholder="请输入商品名称" style="width:270px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="商品单位">
 							<el-input v-model="good.unit" maxlength="5" placeholder="请输入商品单位" style="width:270px;"></el-input>
@@ -23,347 +23,278 @@
 							<el-input-number v-model="good.sort" style="width:150px;" :min="1" :max="255"></el-input-number>
 						</el-form-item>
 						<el-form-item required label="商品品牌">
-							<span class="addIcon" @click="openCommonWin('brand')">
-								<i class="el-icon-circle-plus-outline"></i>
-								<span>添加商品品牌</span>
-								<span v-if="selectBrandObj.name" class="sign" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
-							</span>
+							<el-button type="primary" style="margin:0 10px;">添加商品品牌</el-button>
 						</el-form-item>
-						<el-form-item required label="商品条码">
+						<el-form-item v-if="good.isGroup =='0'" required label="商品条码">
 							<el-input v-model="good.barCode" maxlength="13" placeholder="输入条码" style="width:270px;"></el-input>
-							<el-button size="mini" @click="setBarCode('barCode',null)" style="width:82px;" type="primary">条码生成</el-button>
+							<el-button size="mini" @click="setBarCode('barCode',null,null)" style="width:82px;" type="primary">条码生成</el-button>
 						</el-form-item>
 						<el-form-item required label="分类">
 							<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
-							<span @click="openCommonWin('category')" class="addIcon">
-								<i class="el-icon-circle-plus-outline"></i>
-								<span>添加分类</span>
-							</span>
-							<!-- <el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button> -->
+							<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
 						</el-form-item>
 						<el-form-item required label="商品图片">
-							<span class="addIcon" style="position:absolute;">
-								<form enctype="multipart/form-data" id="img_upload">
-									<!-- <el-input placeholder="请输入内容"  type="file"  @change="uploadGoodsImg" ></el-input> -->
-									<input type="file" @change="uploadGoodsImg" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" class="good-image-file" />
-								</form>
-								<i class="el-icon-circle-plus-outline"></i>
-								<span>添加商品图片</span>
-							</span>
-
-							<section style="width:100%;margin-top:48px;">
-								<!-- overflow:auto;min-height:170px; -->
-								<div class="good-image" v-for="(good,index) in goodPicList" :key="index" style="margin:10px;">
+							<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加商品</el-button>
+							<section style="width:100%;overflow:auto;">
+								<div class="good-image">
 									<div class="good-image-div" id="image">
 										<img v-if="!!good.imageName" :src="(good.imageName.indexOf('http')>-1)?good.imageName: imgHost+good.imageName" width="225" height="150">
 										<img v-else src="../../../res/images/busis.png" width="225" height="150" alt="商品" />
-
-										<!-- <a class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
+										<a class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
 										<a class="good-image-edit">编辑图片</a>
 										<form enctype="multipart/form-data" id="img_upload">
 											<input type="file" @change="uploadGoodsImg" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" class="good-image-file" />
-										</form> -->
+										</form>
 									</div>
-									<h3 style="text-align:center;">
-										<i class="el-icon-remove-outline"></i>
-										<span>移除</span>
-									</h3>
 								</div>
 							</section>
 						</el-form-item>
-					</el-form>
-					<el-form :model="good" ref="good" :inline="true" label-width="85px">
 						<el-form-item label="副条码">
-							<el-switch v-model="good.switch[0]" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-						</el-form-item>
-						<el-form-item label="商品唯一码">
-							<el-switch v-model="good.switch[1]" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-						</el-form-item>
-						<el-form-item label="生产日期">
-							<el-switch v-model="good.switch[2]" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-						</el-form-item>
-						<el-form-item label="保质期">
-							<el-switch v-model="good.switch[3]" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<el-switch v-model="good.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<span>商品唯一码</span>
+							<el-switch v-model="good.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<span>生产日期</span>
+							<el-switch v-model="good.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<span>保质期</span>
+							<el-switch v-model="good.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 						</el-form-item>
 					</el-form>
-					<el-form :model="good" ref="good" :inline="true" label-width="85px">
-						<el-form-item required label="供应商">
-							<el-tabs v-model="suppierId" type="card" @tab-click="changehand" style="max-width:500px;">
-								<el-tab-pane v-for="item in suppierList" :key="item.id" :label="item.name" :name='item.id'></el-tab-pane>
-							</el-tabs>
-						</el-form-item>
-						<el-form-item label="">
-							<span class="addIcon">
-								<i class="el-icon-circle-plus-outline"></i>
-								<span>添加供应商</span>
-							</span>
-						</el-form-item>
+				</section>
+
+				<section v-if="good.type!=2" style="width:100%;">
+					<el-form :model="good" ref="good" :inline="true" label-width="105px">
+						<!--		普通菜		-->
+						<template v-if="good.type==0 && good.isInvoicing==1">
+							<el-form-item v-if="good.isGroup =='0'" label="品牌" style="width:350px;">
+								<el-button @click="openCommonWin('brand')" type="primary" style="width:100px;">选择品牌</el-button>
+								<span v-if="selectBrandObj.name" class="sign" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" required label="条码" style="width:310px;">
+								<el-input v-model="good.barCode" maxlength="13" placeholder="输入条码" style="width:200px;">
+									<el-button slot="append" @click="setBarCode('barCode',null,null)" style="width:82px;padding:0;">获取条码</el-button>
+								</el-input>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" label="保质期" style="width:350px;">
+								<el-input v-model="good.validity" maxlength="3" placeholder="输入保质期" style="width:120px;"></el-input>
+								<el-select v-model="good.validityType" style="width:60px">
+									<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}} </el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" label="副条码" style="width:310px;">
+								<el-input v-model="good.secBarCode" maxlength="13" placeholder="输入副条码" style="width:200px;">
+									<el-button slot="append" @click="setBarCode('secBarCode',null,null)" style="width:82px;padding:0;">获取副条码</el-button>
+								</el-input>
+							</el-form-item>
+							<el-form-item v-if="good.isGroup =='0'" required label="规格">
+								<el-input v-model="good.specifications" maxlength="21" placeholder="输入规格" style="width:220px;"></el-input>
+							</el-form-item>
+						</template>
+						<!--		称重菜		-->
+						<template v-if="good.type==1 && good.isCode==1">
+							<el-form-item label="品牌" style="width:350px;">
+								<el-button @click="openCommonWin('brand')" type="primary" style="width:100px;">选择品牌</el-button>
+								<span v-if="selectBrandObj.name" class="sign" style="width:120px;padding:0 10px;">{{selectBrandObj.name}}</span>
+							</el-form-item>
+							<el-form-item required label="类别(识别码)" style="width:310px;">
+								<el-select v-model="identifyName" style="width:200px" @change="funSelectList">
+									<el-option v-for="(item,i) in barList" :key="i" :value="i" :label="item.name">{{item.name}} </el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="保质期" style="width:350px;">
+								<el-input v-model="good.validity" maxlength="3" placeholder="输入保质期" style="width:120px;"></el-input>
+								<el-select v-model="good.validityType" style="width:60px">
+									<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}} </el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item required label="商品识别码">
+								<el-input v-model="good.identifyCode" maxlength="5" placeholder="输入商品识别码" style="width:213px;">
+									<el-button slot="append" @click="setBarCode('identifyCode',null,null)" style="width:82px;padding:0;">生成识别码</el-button>
+								</el-input>
+							</el-form-item>
+						</template>
 					</el-form>
-					<el-form :model="good" ref="good" label-width="85px">
-						<el-form-item required label="商品规格">
-							<div class="goodsSizeBox">
-								<section v-for="(item,index) in titleList" :key="index">
-									<section class="sizeTop">
-										<el-autocomplete v-if="item.isadd" class="inline-input" v-model="item.name" size="small" @focus="getFocus(item,index)" @blur="addSpecValue(item,true)" :fetch-suggestions="querySearch" placeholder="请输入内容" :name="'name'" :label="'name'" clearable @select="handleSelect"></el-autocomplete>
-										<div v-else class="sizeL">{{item.name}}</div>
-										<!-- <el-select size="small" v-model="item.name" filterable :placeholder="item.name" style="width:130px;">
-											<el-option v-for="items in options" :key="items.name" :label="items.name" :value="items.name"></el-option>
-										</el-select> -->
-										<span v-if="item.isadd" @click="delSizeOne(titleList,index,true)" class="addIcon" style="color:#606266;float:right;">
-											<i class="el-icon-remove-outline"></i>
-											<span>移除</span>
-										</span>
-									</section>
-									<section class="sizeBox">
-										<section class="sizeI" v-for="(size,i) in item.value" :key="i">
-											<el-autocomplete class="inline-input" v-if="size.isadd" v-model="size.name" size="small" @focus="getFocus(item,index,i)" @blur="addSpecValue(size,false,item.id)" :fetch-suggestions="querySearch" @select="handleSelect" clearable style="width:100px;"></el-autocomplete>
-											<div v-else class="sizeL">{{size.name}}</div>
-											<span v-if="size.isadd" @click="delSizeOne(item.value,i,false,index)" class="addIcon" style="color:#313234;float:right;">
-												<i class="el-icon-remove-outline"></i>
-												<span>移除</span>
-											</span>
-										</section>
-										<span @click="addSize(item,index)" class="addIcon">
-											<i class="el-icon-circle-plus-outline"></i>
-											<span>添加</span>
-										</span>
-									</section>
-								</section>
-								<section class="sizeTop">
-									<el-button @click="addSizeOne(titleList)" size="small" type="primary" style="width:140px;">
-										<i class="el-icon-plus"></i>
-										<span>添加规格</span>
-									</el-button>
-								</section>
-							</div>
+				</section>
+
+				<section v-if="good.type!=2" style="width:100%;">
+					<el-form :model="good" ref="good" label-width="80px">
+						<el-form-item required label="分类">
+							<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
+							<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
 						</el-form-item>
-						<el-form-item label="耐克直营">
-							<section>
-								<el-button size="small" type="primary" style="width:140px;">规格还原</el-button>
-								<el-button size="small" type="primary" style="width:140px;">条码生成</el-button>
+						<el-form-item v-if="good.id" label="来源">
+							<span v-if="good.id>100000">门店自建</span>
+							<span v-if="good.id>0&&good.id<100000">品牌同步</span>
+						</el-form-item>
+						<el-form-item v-show="good.isGroup=='0' && good.isCode!=1" label="口味">
+							<span v-for="(att,index) in selectAttr" :key="index" v-on:click="deleteSelectAttr(index)" class="sign">{{att.name}}</span>
+							<el-button @click="openCommonWin('attr')" type="primary" style="width:100px;">添加口味</el-button>
+						</el-form-item>
+						<el-form-item v-show="good.type==0" label="多规格">
+							<el-switch v-model="good.isGroup" active-value="1" inactive-value="0" @change="toggleIsGroup" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<el-button v-if="good.isGroup==1" @click="addGroup(1)" type="primary" style="width:140px;">添加规格</el-button>
+						</el-form-item>
+						<template v-if="good.isGroup=='1' && good.type==0" v-for="(group,groupIndex) in groupData">
+							<section :key="groupIndex">
+								<el-form-item required :label="'规格'+(groupIndex+1)">
+									<el-input v-model="group.goodsName" maxlength="6" placeholder="规格名称" style="width:90px;"></el-input>
+									<span class="required" style="color:#606266">售价</span>
+									<el-input v-model="group.price" maxlength="10" placeholder="售价" style="width:90px;"></el-input>
+									<span style="color:#606266">元</span>
+									<span style="color:#606266">成本</span>
+									<el-input v-model="group.cost" maxlength="10" placeholder="成本" style="width:90px;"></el-input>
+									<span style="color:#606266">元</span>
+									<span class="required" style="color:#606266">单位</span>
+									<el-input v-model="group.unit" maxlength="10" placeholder="单位" style="width:60px;"></el-input>
+									<el-button @click="deleteGroup(group,groupIndex)" size="mini" round type="primary" style="width:80px;">解除关联</el-button>
+								</el-form-item>
+								<el-form-item v-if="good.isInvoicing==1" required label="条码">
+									<el-input v-model="group.barCode" maxlength="13" placeholder="输入条码" style="width:200px;">
+										<el-button slot="append" @click="setBarCode('groupBarCode',group,groupIndex)" style="width:70px;padding:0;">获取条码</el-button>
+									</el-input>
+									<span style="margin-left:10px;color:#606266">副条码</span>
+									<el-input v-model="group.secBarCode" maxlength="13" placeholder="输入副条码" style="width:200px;">
+										<el-button slot="append" @click="setBarCode('groupSecBarCode',group,groupIndex)" style="width:80px;padding:0;">获取副条码</el-button>
+									</el-input>
+								</el-form-item>
+								<el-form-item v-if="good.isInvoicing==1" label="保质期">
+									<el-input v-model="group.validity" maxlength="3" placeholder="输入保质期" style="width:105px;"></el-input>
+									<el-select v-model="group.validityType" style="width:60px">
+										<el-option v-for="item in validityTypeArr" :key="item.id" :value="item.id" :label="item.name">{{item.name}}</el-option>
+									</el-select>
+									<span v-if="good.isVip =='1'" class="required">会员价格</span>
+									<el-input v-if="good.isVip =='1'" v-model="group.vipPrice" maxlength="10" placeholder="输入会员价" style="width:120px;"></el-input>
+								</el-form-item>
+								<el-form-item v-if="good.isVip =='1' && good.isInvoicing==0" required label="会员价格" style="width:300px;">
+									<el-input v-model="group.vipPrice" maxlength="10" placeholder="输入会员价" style="width:120px;"></el-input>
+								</el-form-item>
+								<el-form-item v-if="!group.id" label="">
+									<el-button @click="openMultipleAddRelativeGoodWin(group,groupIndex)" type="primary" style="width:140px;">添加关联商品</el-button>
+									<span v-if="group.relativeGood.goodsName" style="width:120px;padding:0 10px;">已关联商品：</span>
+									<span v-if="group.relativeGood.goodsName" @click="deleteRelativeGood(group,groupIndex)" class="sign" style="padding:0 10px;">{{group.relativeGood.goodsName}}</span>
+								</el-form-item>
+								<el-form-item label="">
+									<el-button @click="openMultipleAttrWin(group,groupIndex)" type="primary" style="width:140px;">添加口味</el-button>
+									<span v-for="(att,attIndex) in group.attr" :key="attIndex" v-on:click="deleteSelectAttrMul(group.attr,attIndex,att)" class="sign">{{att.name}}</span>
+								</el-form-item>
 							</section>
-							<section style="margin-top:20px;">
-								<el-table ref="multipleTable" size="small" :header-cell-style="{'background-color':'#f5f7fa'}" :data="groupData" border style="width: 100%">
-									<el-table-column fixed align="center" min-width="100" :label="titleList[0].name">
-										<template slot-scope="scope">
-											<span class="titleNames">{{scope.row.name}}</span>
-										</template>
-									</el-table-column>
-									<el-table-column v-if="titleList[1]&&titleList.length>1" fixed show-overflow-tooltip align="center" :label="titleList[1].name">
-										<template slot-scope="scope">
-											<span class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{lineHeight:(item.value.length>0?item.value.length:1)*50+'px'}">
-												<span>{{item.name}}</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column v-if="titleList&&titleList.length===3" fixed show-overflow-tooltip align="center" :label="titleList[2].name">
-										<template slot-scope="scope">
-											<span class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{lineHeight:(item.value.length>0?item.value.length:1)*50+'px'}">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">{{items.name}}</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="150" align="center" prop="price" label="生产日期">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-date-picker size="small" v-model="scope.row.time" type="date" placeholder="选择日期" style="width:140px;"></el-date-picker>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{lineHeight:(item.value.length>0?item.value.length:1)*50+'px'}">
-												<el-date-picker size="small" v-model="item.time" type="date" placeholder="选择日期" style="width:140px;"></el-date-picker>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{lineHeight:(item.value.length>0?item.value.length:1)*50+'px'}">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-date-picker size="small" v-model="items.time" type="date" placeholder="选择日期" style="width:140px;"></el-date-picker>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="150" align="center" prop="price" label="保质期">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-input size="small" placeholder="保质期" v-model="scope.row.validity" class="input-with-select" style="width:80px;"></el-input>
-												<el-select size="small" v-model="scope.row.validityType" slot="append" placeholder="月" style="width:60px;">
-													<el-option v-for="itemss in validityTypeArr" :key="itemss.id" :value="itemss.name" :label="itemss.name">{{itemss.name}}</el-option>
-												</el-select>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{lineHeight:(item.value.length>0?item.value.length:1)*50+'px'}">
-												<el-input size="small" placeholder="保质期" v-model="item.validity" class="input-with-select" style="width:80px;">
-												</el-input>
-												<el-select size="small" v-model="item.validityType" slot="append" placeholder="月" style="width:60px;">
-													<el-option v-for="itemss in validityTypeArr" :key="itemss.id" :value="itemss.name" :label="itemss.name">{{itemss.name}}</el-option>
-												</el-select>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{lineHeight:(item.value.length>0?item.value.length:1)*50+'px'}">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-input size="small" placeholder="保质期" v-model="items.validity" class="input-with-select" style="width:80px;"></el-input>
-													<el-select size="small" v-model="items.validityType" slot="append" placeholder="月" style="width:60px;">
-														<el-option v-for="itemss in validityTypeArr" :key="itemss.id" :value="itemss.name" :label="itemss.name">{{itemss.name}}</el-option>
-													</el-select>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="120" align="center" prop="price" label="售价">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												￥
-												<el-input size="small" v-model="scope.row.price" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												￥
-												<el-input size="small" v-model="item.price" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													￥
-													<el-input size="small" v-model="items.price" class="input-with-select" style="width:60px;"></el-input>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="120" align="center" prop="costPrice" label="成本">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												￥
-												<el-input size="small" v-model="scope.row.costPrice" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												￥
-												<el-input size="small" v-model="item.costPrice" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													￥
-													<el-input size="small" v-model="items.costPrice" class="input-with-select" style="width:60px;"></el-input>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="120" align="center" prop="price" label="数量">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-input size="small" v-model="scope.row.price" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<el-input size="small" v-model="item.price" class="input-with-select" style="width:60px;"></el-input>
-												<!-- <span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													￥<el-input size="small" v-model="items.price" class="input-with-select" style="width:60px;"></el-input>
-												</span> -->
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-input size="small" v-model="items.price" class="input-with-select" style="width:60px;"></el-input>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="150" align="center" prop="price" label="条码">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-input size="small" v-model="scope.row.barCode" class="input-with-select" style="width:120px;"></el-input>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<el-input size="small" v-model="item.barCode" class="input-with-select" style="width:120px;"></el-input>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-input size="small" v-model="items.barCode" class="input-with-select" style="width:120px;"></el-input>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="150" align="center" prop="price" label="副条码">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-input size="small" v-model="scope.row.viceCode" class="input-with-select" style="width:120px;"></el-input>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<el-input size="small" v-model="item.viceCode" class="input-with-select" style="width:120px;"></el-input>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-input size="small" v-model="items.viceCode" class="input-with-select" style="width:120px;"></el-input>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="120" align="center" prop="price" label="图片">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-input size="small" v-model="scope.row.price" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<el-input size="small" v-model="item.image" class="input-with-select" style="width:60px;"></el-input>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-input size="small" v-model="items.image" class="input-with-select" style="width:60px;"></el-input>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column show-overflow-tooltip min-width="120" align="center" prop="price" label="是否参与优惠">
-										<template slot-scope="scope">
-											<span class="titleNames" v-if="titleList.length==1">
-												<el-switch v-model="scope.row.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-											</span>
-											<span v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<el-switch v-model="item.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-											</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span class="titleNames" v-for="(items,i) in item.value" :key="i">
-													<el-switch v-model="items.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
-												</span>
-											</span>
-										</template>
-									</el-table-column>
-									<el-table-column :fixed="'right'" min-width="120" align="center" label="操作">
-										<template slot-scope="scope">
-											<span @click="delGood(groupData,scope.row,scope.$index)" class="titleNames" v-if="titleList.length==1" :style="{color: scope.row.isadd?'#FD3F1F':'',cursor:scope.row.isadd?'pointer':''}">删除</span>
-											<span @click="delGood(scope.row.value,item,i)" v-if="titleList.length==2" class="titleName" v-for="(item,i) in scope.row.value" :key="i" :style="{color: item.isadd?'#FD3F1F':'',cursor:item.isadd?'pointer':''}">删除</span>
-											<span v-if="titleList.length==3" class="titleName" v-for="(item,i) in scope.row.value" :key="i">
-												<span @click="delGood(item.value,items,ix)" class="titleNames" v-for="(items,ix) in item.value" :key="ix" :style="{color: items.isadd?'#FD3F1F':'',cursor:items.isadd?'pointer':''}">删除</span>
-											</span>
-										</template>
-									</el-table-column>
-								</el-table>
-							</section>
+						</template>
+
+					</el-form>
+				</section>
+				<section v-if="good.type!=2" class="titleTop" style="width:100%;">
+					<div class="relative-info">
+						<i></i>
+						<h3>关联信息</h3>
+						<div class="dian"></div>
+					</div>
+					<el-form :model="good" ref="good" :inline="true" label-width="100px">
+						<el-form-item label="参与优惠" style="width:200px;">
+							<el-switch v-model="good.isDiscount" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="服务费" style="width:200px;">
+							<el-switch v-model="good.serviceCharge" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="推荐菜" style="width:200px;">
+							<el-switch v-model="good.isRecommend" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="开启进销存" style="width:200px;">
+							<el-switch v-model="good.isInvoicing" active-value="1" inactive-value="0" @change="toggleIsInvoicing" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="自取" v-if="good.type==0" style="width:200px;">
+							<el-switch v-model="good.isSelf" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="识别码" v-if="good.type==1" style="width:200px;">
+							<el-switch v-model="good.isCode" active-value="1" inactive-value="0" @change="toggleIsCode" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item v-if="ischain !='3'" label="开启库存" style="width:200px;">
+							<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="参与会员 ">
+							<el-switch v-model="isVipShow" @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<template v-if="isVipShow">
+								<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border style="margin-left:10px;">会员价格</el-radio>
+								<el-radio @click="getVipRadio('2')" v-model="good.isVip" label="2" border>会员折扣</el-radio>
+							</template>
+							<template v-if="good.isVip == '1' && good.isGroup==0">
+								<span style="color:#606266;margin:0 20px;">会员价格</span>
+								<el-input v-model="good.vipPrice" maxlength="10" placeholder="输入会员价" style="width:120px;"></el-input>
+							</template>
+						</el-form-item>
+						<el-form-item label="时价菜" style="width:200px;">
+							<el-switch v-model="good.isSeasonal" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+						</el-form-item>
+						<el-form-item label="描述" prop="description">
+							<el-input type="textarea" placeholder="请输入描述" maxlength="100" :autosize="{minRows: 3, maxRows: 6}" v-model="good.description" style="width:500px;"></el-input>
 						</el-form-item>
 					</el-form>
 				</section>
 			</section>
+			<section v-if="good.type==2">
+				<el-form :model="good" ref="good" :inline="true" label-width="100px">
+					<el-form-item required label="分类">
+						<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
+						<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
+					</el-form-item>
+				</el-form>
+			</section>
 			<section>
 				<el-button @click="back" type="info">取消</el-button>
-				<el-button @click="createGood" type="primary">保存</el-button>
+				<el-button @click="back" type="primary">保存</el-button>
 			</section>
 		</div>
-		<component :is="showCom" :pObj="comObj" :pGoodsList="comObj" @throwCommonWin="closeCommonWin"></component>
+		<component :is="showCom" :pObj="comObj" :pGoodsList="comObj" @throwCommonWin="closeCommonWin" @throwGoodListWin="closeMultipleAddRelativeGoodWin"></component>
 	</div>
 </template>
 <script>
 /*
+	1)多规格商品最少两个规格
+	2)已创建的商品不可修改商品的类型 (type)
+	3)创建商品,并开启多规格时,可以选择关联商品,不显示关联商品,多规格添加关联商品是单选,即只能关联一个商品
+	4)称重商品开启了识别码的时候,商品的单位不可以修改 (unit)  但是通过切换识别码却可以间接的改变单位;
+	5)称重商品的barcode字段由称重商品的类别识别码(code)与生成的5位数字商品识别码组成(identifyCode),显示商品识别码时,只显示barcode的后5位.(商品识别码一定要是5位)
+	6)(添加关联商品):只显示上架的普通商品,多规格主菜和子菜都不显示
+	7)普通的菜的为条码,称重菜的为识别码
+	8)普通菜,称重菜:进销存和库存只能开启一个,不能同时开启
+	9)编辑商品的时候若开启了进销存,则不能开启多规格,若开启了多规格和进销存,则不能取消多规格
+	10)每种类型的商品最少要有一个分类(品牌同步商品不可以修改分类)
+	11)多规格关联商品不能修改关联
+	12)品牌能够修改
+	13)0:上架,2:下架:1估清
+	14)称重菜开启识别码时,去除口味,即不能添加口味
+	15)保质期和成本不是必须填写的
+	16)图片上传之后在点击保存才有效
+	17)编辑自定义菜品时,自定义菜品的分类不能删除也不能修改
+	18)下架多规格商品时,需要把子菜的id也提交上去
+	19)普通菜关联商品的时候,当该商品开启进销存,则可以关联的商品也是要已经开启进校存
+	20)称重菜开启识别码只能否选择g,Kg,称重菜开启进销存默认开启了商品识别码.
+	21)编辑商品的时候,当该商品已经关联了BOM单,不能开启进销存
+	22)多规格菜:开启了进销存的多规格菜,添加关联商品的时候不能选择已经关联了BOM单的商品.
+	23)商品的售价,成本,会员价格可以为0
+
+	问题:
+	1)普通菜关联了BOM单,然后开启多规格,能否开启进销存.
+	2)多规格关联商品的时候是否需要把条码,副条码,保质期,会员价格自动添上去.
+
+	逻辑:
 
 */
 import http from 'src/manager/http';
-// import global from 'src/manager/global';
-import utils from 'src/verdor/utils';
+import global from 'src/manager/global';
 export default {
 	data() {
 		return {
-			focusDetial: {}, //获取焦点的详情
-			isValue: false, //选择的是否是规格
-			suppierId: '',
-			goodPicList: [],
+			// testImg:'this.src="' + require('../../../res/images/busis.png') + '"',//加载图片失败默认显示的图片
+			// testImg:`this.src=${require('../../../res/images/busis.png')}`,//加载图片失败默认显示的图片
+			goodsType: [
+				{ type: 0, name: '普通菜品' },
+				{ type: 1, name: '称重菜品' },
+				{ type: 2, name: '自定义菜品' }
+			], //商品类型
 			validityTypeArr: [
 				{ id: 0, name: '月' },
 				{ id: 1, name: '日' },
 				{ id: 2, name: '年' }
 			], //保质期的类型
-			titleList: [{ name: '', id: '', isadd: true, value: [] }], //表格规格头部
-			// isTrue: true,
-			isBlur: false, //是否是添加规格
-			sizeIndex: 0, //规格下标
-			sizeValIndex: 0, //规格值下标
 			unitArr: [
 				{ id: 0, name: '斤' },
 				{ id: 1, name: '两' },
@@ -390,7 +321,7 @@ export default {
 				attr: [], //口味
 				type: 0, //商品的类型
 				sort: 1, //获取商品的排序值
-				name: '', //商品名
+				goodsName: '', //商品名
 				brandId: '', //添加的品牌id
 				BC: '', //简码
 				price: '', //售价
@@ -401,15 +332,7 @@ export default {
 				description: '', //描述
 				validity: '', //保质期时间
 				validityType: 0, //保质期的类型 0:月 1:日 2:年
-				switch: ['0', '0', '1', '0'], //商品各个开关
-				CodeOne: '0',
-				CodeTwo: '1',
-				Codethr: '0',
-				Codefour: '1',
-				spec: '[{id:"",name:"",isadd:true,value:[]}]', //规格数据
-				valuationType: 1, //计价方式 (1.计数 2.计重)
-				specValueList: [], //获取规格列表
-
+				isGroup: 0, //是否是多规格
 				isDiscount: false, //是否开启折扣
 				serviceCharge: false, //是否开启服务费
 				isRecommend: false, //是否开启推荐菜
@@ -433,7 +356,6 @@ export default {
 
 			attr: [], //所有的口味列表
 			brandList: [], //品牌列表
-			suppierList: [],
 			barList: [], //类别识别码
 
 			showCom: null, //需要展示的组件
@@ -456,9 +378,9 @@ export default {
 				uploadImg: 'uploadImg', //上传图片
 				downChildGoods: 'downChildGoods', //删除规格
 				getAttr: 'getAttr', //获取口味
-				getGoodsDetail: 'getRetailGoodsDetail', //获取商品详情
+				getGoodsDetail: 'getGoodsDetail', //获取商品详情
 				goodEdit: 'goodEdit', //编辑商品
-				// createGood: 'createGood', //添加商品
+				createGood: 'createGood', //添加商品
 				brandList: 'brandList', //获取品牌列表
 				GoodWeighgoodsGetList: 'GoodWeighgoodsGetList', //获取识别码
 				goodUpOrDownShelf: 'goodUpOrDownShelf' //商品的上下架
@@ -481,774 +403,56 @@ export default {
 			}
 		*/
 	},
-	mounted() {
-		for (let attr in this.pObj) {
-			this[attr] = this.pObj[attr];
-		}
-		this.category = this.pObj.category;
-		console.log(this.suppierList);
-		this.shopId = this.pObj.shopId;
-		// let arr = [
-		// 	{
-		// 		id: 1,
-		// 		name: 'size',
-		// 		value: [
-		// 			{ id: 1, name: '48码' },
-		// 			{ id: 2, name: '47码' },
-		// 			{ id: 3, name: '46码' }
-		// 		]
-		// 	},
-		// 	{
-		// 		id: 2,
-		// 		name: '颜色',
-		// 		value: [
-		// 			{ id: 4, name: '红色' },
-		// 			{ id: 5, name: '白色' },
-		// 			{ id: 6, name: '蓝色' }
-		// 		]
-		// 	},
-		// 	{
-		// 		id: 3,
-		// 		name: '质量',
-		// 		value: [
-		// 			{ id: 7, name: '很好' },
-		// 			{ id: 8, name: '一般' },
-		// 			{ id: 9, name: '很差' }
-		// 		]
-		// 	}
-		// ];
-		this.specGetList(); //获取规格列表
-		this.asyncRequest();
-	},
-	// watch: {
-	//     titleList: 'changetitleList'
-	// },
 	methods: {
-		delGood(arr, item, index) {
-			// console.log(arr);
-			// console.log(item);
-			if (item.isadd) {
-				this.$store.commit('setWin', {
-					winType: 'confirm',
-					title: '温馨提示',
-					content: '确认删除此商品',
-					callback: callbackRes => {
-						if (callbackRes == 'ok') {
-							arr.splice(index, 1);
-						}
-					}
-				});
-			} else {
-				return false;
-			}
-		},
-		getGoodDetial() {
-			let that = this;
-			// console.log(that.good.spec);
-			let titleList = JSON.parse(that.good.spec);
-			this.titleList = titleList;
-			// console.log(titleList);
-		},
-		alertWin(info) {
-			this.$store.commit('setWin', { title: '温馨提示', content: info });
-		},
-		getFocus(item, index, i) {
-			this.focusDetial = item;
-			this.sizeIndex = index;
-			this.isBlur = false;
-			if (i > -1) {
-				this.isValue = true;
-				this.sizeValIndex = i;
-				this.focusDetial = item.value[i];
-			} else {
-				this.isValue = false;
-				this.sizeValIndex = 0;
-			}
-			console.log(this.focusDetial);
-		},
-		//添加规格接口--失去焦点
-		addSpecValue(item, bel, rid) {
-			//rid为父id
-			let that = this;
-			setTimeout(async () => {
-				let isAdd = true;
-				for (let i = 0; i < that.specValueList.length; i++) {
-					if (that.specValueList[i].name + '' == item.name + '') {
-						isAdd == false;
-						item.id = that.specValueList[i].id;
-						item.specId = that.specValueList[i].specId;
-						item.name = that.specValueList[i].value;
-						break;
-					}
-				}
-				if (item.name.trim().length == 0) {
-					// that.alertWin('规格名字不能为空！');
-					return false;
-				}
-				if (isAdd && bel && !item.id && !that.isBlur) {
-					item.id = await http.addSpec({
-						data: {
-							name: item.name
-						}
-					});
-					that.changetitleList();
-				} else if (isAdd && !bel && !item.id && !that.isBlur) {
-					item.id = await http.addSpecValue({
-						data: {
-							specId: rid,
-							name: item.name
-						}
-					});
-					// that.changetitleList();
-				}
-			}, 500);
-		},
-		//获取规格列表
-		async specGetList() {
-			let list = await http.specGetList({ data: {} });
-			for (let i = 0; i < list.length; i++) {
-				list[i].value = list[i].name;
-			}
-			this.specValueList = list;
-		},
-		// //添加规格
-		// async addSpec(item){
-		// 	let res = await http.addSpec({data:{
-		// 			name: item.name
-		// 		}});
-		// 	return res;
-		// },
-		//添加规格值
-		// async addSpecVal(item,rid){
-		// 	let res = await http.addSpecValue({data:{
-		//             specId:rid,
-		// 			name: item.name
-		// 		}});
-		// 	return res;
-		// },
-		changetitleList() {
-			let titleList = utils.deepCopy(this.titleList);
-			// let titleList = this.titleList;
-			let groupData = utils.deepCopy(this.groupData);
-			console.log(groupData);
-			let keys = [
-				'name',
-				'specId',
-				'barCode',
-				'viceCode',
-				'costPrice',
-				// 'retailPrice',
-				'price',
-				'image',
-				'isDiscount',
-				'status',
-				'validityType' //保质期
-			];
-			// let oneitem = titleList[0];
-			// let arr = [].push(oneitem);
-			let onelist = titleList[0].value; //[{"id":1,"name":"48码"},{"id":2,"name":"47码"},{"id":3,"name":"46码"}]
-			if (titleList.length == 1) {
-				for (let i = 0; i < groupData.length; i++) {
-					for (let key of keys) {
-						onelist[i][key] = groupData[i][key];
-						onelist[i].specId = groupData[i].id;
-					}
-				}
-			}
-			if (titleList.length > 1) {
-				for (let i = 0; i < onelist.length; i++) {
-					let twolist = utils.deepCopy(titleList[1].value); //[{"id":4,"name":"红色"},{"id":5,"name":"白色"},{"id":6,"name":"蓝色"}]}
-					// let twolist =JSON.parse(JSON.stringify(titleList[1].value));//[{"id":4,"name":"红色"},{"id":5,"name":"白色"},{"id":6,"name":"蓝色"}]}
-					for (let m = 0; m < twolist.length; m++) {
-						for (let key of keys) {
-							if (!twolist[m][key]) {
-								twolist[m][key] = keys[key];
-							}
-						}
-						twolist[m].specId = twolist[m].id;
-					}
-					onelist[i].value = twolist;
-					if (titleList.length == 3) {
-						for (let j = 0; j < onelist[i].value.length; j++) {
-							let thrlist = utils.deepCopy(titleList[2].value);
-							// let thrlist = JSON.parse(JSON.stringify(titleList[2].value));
-
-							for (let n = 0; n < thrlist.length; n++) {
-								for (let key of keys) {
-									if (!thrlist[n][key]) {
-										thrlist[n][key] = keys[key];
-									}
-								}
-								thrlist[n].specId = thrlist[n].id;
-							}
-							onelist[i].value[j].value = thrlist;
-						}
-					}
-				}
-			}
-			this.groupData = utils.deepCopy(onelist);
-			console.log(this.titleList);
-			console.log(this.groupData);
-		},
-		handleSelect(item) {
-			// console.log(item);
-			let keys = [
-				'id',
-				'specId',
-				'name',
-				'barCode',
-				'viceCode',
-				'costPrice',
-				// 'retailPrice',
-				'price',
-				'image',
-				'isDiscount',
-				'status',
-				'validityType' //保质期
-			];
-			let obj = {
-				id: '',
-				name: '',
-				isadd: true,
-				value: []
-			};
-			for (let i = 0; i < this.titleList.length; i++) {
-				for (let j = 0; j < this.titleList[i].value.length; j++) {
-					if (
-						item.name == this.titleList[i].name ||
-						(item.name == this.titleList[i].value[j].name &&
-							item.id == this.titleList[i].value[j].id)
-					) {
-						// console.log('22222');
-						this.focusDetial.name = '';
-						this.focusDetial.id = '';
-						this.focusDetial.isadd = true;
-						this.alertWin('此规格已选，请换一种！');
-						return false;
-					}
-				}
-			}
-			if (!this.isValue) {
-				// let arr = this.titleList[this.sizeIndex];
-				// let isadd = true;
-				// this.titleList[this.sizeIndex].id = item.id;
-				// this.titleList.push(obj);
-				this.titleList[this.sizeIndex].id = item.id;
-				this.titleList[this.sizeIndex].name = item.name;
-				// this.changetitleList();
-			} else {
-				// console.log(this.titleList);
-
-				let groupData = utils.deepCopy(this.groupData);
-				// let keys = [
-				// 	'name',
-				// 	'barCode',
-				// 	'viceCode',
-				// 	'costPrice',
-				// 	// 'retailPrice',
-				// 	'price',
-				// 	'image',
-				// 	'isDiscount',
-				// 	'status'
-				// ];
-				for (let key of keys) {
-					obj[key] = '';
-					obj.isadd = true;
-					obj.name = item.name;
-					obj.specId = item.id;
-				}
-
-				if (this.sizeIndex == 0) {
-					if (this.titleList.length > 1) {
-						obj.value = utils.deepCopy(this.titleList[1].value);
-						for (let m = 0; m < obj.value.length; m++) {
-							obj.value[m].isadd = true;
-							obj.value[m].barCode = '';
-							obj.value[m].viceCode = '';
-							obj.value[m].price = '';
-							obj.value[m].image = '';
-							obj.value[m].isDiscount = '0';
-							obj.value[m].costPrice = '';
-						}
-					}
-					if (this.focusDetial.id == '') {
-						groupData.push(obj);
-					} else {
-						groupData[this.sizeValIndex].name = item.name;
-						groupData[this.sizeValIndex].specId = item.id;
-						groupData[this.sizeValIndex].id = item.id;
-					}
-				} else if (this.sizeIndex == 1) {
-					for (let i = 0; i < groupData.length; i++) {
-						if (this.titleList.length > 2) {
-							obj.value = utils.deepCopy(
-								groupData[i].value[0].value
-							);
-							// console.log(obj.value);
-							for (let m = 0; m < obj.value.length; m++) {
-								obj.value[m].isadd = true;
-								obj.value[m].barCode = '';
-								obj.value[m].viceCode = '';
-								obj.value[m].price = '';
-								obj.value[m].image = '';
-								obj.value[m].isDiscount = '0';
-								obj.value[m].costPrice = '';
-							}
-						}
-						if (this.focusDetial.id == '') {
-							groupData[i].value.push(obj);
-						} else {
-							groupData[i].value[this.sizeValIndex].name =
-								item.name;
-							groupData[i].value[this.sizeValIndex].specId =
-								item.id;
-							groupData[i].value[this.sizeValIndex].id = item.id;
-						}
-					}
-				} else if (this.sizeIndex == 2) {
-					for (let i = 0; i < groupData.length; i++) {
-						for (let j = 0; j < groupData[i].value.length; j++) {
-							if (this.focusDetial.id == '') {
-								groupData[i].value[j].value.push(obj);
-							} else {
-								groupData[i].value[j].value[
-									this.sizeValIndex
-								].name =
-									item.name;
-								groupData[i].value[j].value[
-									this.sizeValIndex
-								].specId =
-									item.id;
-								groupData[i].value[j].value[
-									this.sizeValIndex
-								].id =
-									item.id;
-							}
-						}
-					}
-				}
-				this.groupData = utils.deepCopy(groupData);
-				// console.log(this.groupData);
-				// if (this.sizeIndex == 0) {
-				//     console.log(this.focusDetial);
-				//     console.log(item.name);
-				//     for(let i=0;i<this.groupData.length;i++){
-				//         // if(item.name == this.groupData[i].name){
-				//         //     this.sizeValIndex = i;
-				//         // }else{
-				//         //     this.sizeValIndex = this.groupData.length-1;
-				//         // }
-				//         // if(item.name == this.groupData[i].name){
-				//         //     this.alertWin('此规格已选，请换一种！');
-				//         //     return false;
-				//         // }
-				//     }
-				//     this.groupData[this.sizeValIndex].name = item.name;
-				//     this.groupData[this.sizeValIndex].specId = item.id;
-				//     console.log(this.groupData);
-				// } else if (this.sizeIndex == 1) {
-				//     console.log(this.sizeIndex);
-				//     for (let i = 0; i < this.groupData.length; i++) {
-				//         if (this.groupData[i].value[this.sizeValIndex]) {
-				//             this.groupData[i].value[this.sizeValIndex].name = item.name;
-				//             this.groupData[i].value[this.sizeValIndex].specId = item.id;
-				//         } else {
-				//             let det = {};
-				//             for (let key of keys) {
-				//                 det[key] = keys[key];
-				//             }
-				//             det.specId = item.id;
-				//             det.name = item.name;
-				//             this.groupData[i].value[this.sizeValIndex].push(det);
-				//         }
-				//     }
-				// } else if (this.sizeIndex == 2) {
-				//     for (let i = 0; i < this.groupData.length; i++) {
-				//         for (let j = 0;j < this.groupData[i].value.length;j++) {
-				//             if (this.groupData[i].value[j].value[this.sizeValIndex]) {
-				//                 this.groupData[i].value[j].value[this.sizeValIndex].name =item.name;
-				//                 this.groupData[i].value[j].value[this.sizeValIndex].specId =item.id;
-				//             } else {
-				//                 let det = {};
-				//                 for (let key of keys) {
-				//                     if(!det[key])
-				//                     det[key] = keys[key];
-				//                 }
-				//                 det.specId = item.id;
-				//                 det.name = item.name;
-				//                 this.groupData[i].value[j].value[
-				//                     this.sizeValIndex
-				//                 ].push(det);
-				//             }
-				//         }
-				//     }
-				// }
-			}
-			// console.log(item);
-			this.isBlur = true;
-		},
-		querySearch(queryString, cb) {
-			let restaurants = this.specValueList;
-			let results = [];
-			if (queryString == '' || !queryString) {
-				results = restaurants;
-			} else {
-				results = restaurants.filter(e => {
-					if (
-						e.name
-							.toLowerCase()
-							.indexOf(queryString.toLowerCase()) === 0
-					) {
-						return true;
-					}
-				});
-			}
-			cb(results);
-		},
-		async createGood() {
-			let isOk = this.isOk();
-			if (isOk) {
-				let detial = this.formatData();
-				// console.log(this.editGoodsId);
-				if (this.editGoodsId) {
-					this.$emit('throwAddGoodsWin', 'edit');
-				} else {
-					let gooddetial = await http.createRetailGood({
-						data: detial
-					});
-					if (gooddetial) {
-						this.alertWin('添加商品成功!');
-					}
-					this.$emit('throwAddGoodsWin', 'add');
-				}
-			}
-		},
-		isOk() {
-			if (this.good.name.trim().length == 0) {
-				this.alertWin('商品名称不能为空');
-				return false;
-			}
-			console.log(this.selectCategory);
-			if (this.selectCategory.length == 0) {
-				this.alertWin('请选择品牌！');
-				return false;
-			}
-			if (!this.selectBrandObj.id) {
-				this.alertWin('请选择分类！');
-				return false;
-			}
-			if (this.goodPicList.length == 0) {
-				this.alertWin('请添加商品图片！');
-				return false;
-			}
-			if (this.suppierId.length == '') {
-				this.alertWin('请选择供应商！');
-				return false;
-			}
-			return true;
-		},
-		//格式化数据
-		formatData() {
-			let obj = {}; //需要提交的所有数据
-			//分类的id
-			console.log(this.selectCategory);
-			obj.categoryId = this.selectCategory[0].id;
-			obj.brandId = this.selectBrandObj.id; //品牌id
-
-			obj.shopId = this.shopId;
-			obj.image = JSON.stringify(this.goodPicList);
-			obj.switch = this.good.switch.join('');
-			obj.suppierId = this.suppierId; //供应商id
-			let titleList = this.titleList;
-			obj.spec = JSON.stringify(this.titleList);
-			let arr = this.groupData;
-			let keyss = [
-				'viceCode',
-				'costPrice',
-				'specId',
-				'price',
-				'image',
-				'isDiscount',
-				'barCode',
-				'status'
-			];
-			// let newObj = {};
-			// for (let key of keyss) {
-			//     newObj[key] = '';
-			// }
-			// console.log(newObj);
-			console.log(arr);
-			let goodArr = [];
-			for (let i = 0; i < arr.length; i++) {
-				if (titleList.length > 1) {
-					for (let j = 0; j < arr[i].value.length; j++) {
-						if (titleList.length == 2) {
-							let newObj = {};
-							for (let key of keyss) {
-								if (arr[i].value[j][key]) {
-									newObj[key] = arr[i].value[j][key];
-								} else {
-									newObj[key] = '';
-								}
-							}
-							// console.log(newObj);
-							newObj.specValueIds =
-								arr[i].id + ',' + arr[i].value[j].specId;
-							// newObj.viceCode = arr[i].value[j].viceCode;
-							// newObj.costPrice = arr[i].value[j].costPrice;
-							// // newObj.retailPrice = arr[i].value[j].retailPrice;
-							// newObj.price = arr[i].value[j].price;
-							// newObj.image = arr[i].value[j].image;
-							// newObj.isDiscount = arr[i].value[j].isDiscount;
-							// newObj.barCode = arr[i].value[j].barCode;
-							// newObj.status = arr[i].value[j].status;
-							goodArr.push(newObj);
-							// console.log(goodArr);
-						}
-						if (titleList.length == 3) {
-							for (
-								let k = 0;
-								k < arr[i].value[j].value.length;
-								k++
-							) {
-								let newObj = {};
-								for (let key of keyss) {
-									newObj[key] = arr[i].value[j].value[k][key];
-								}
-								newObj.specValueIds =
-									arr[i].id +
-									',' +
-									arr[i].value[j].specId +
-									',' +
-									arr[i].value[j].value[k].specId;
-								// newObj.viceCode = arr[i].value[j].value[k].viceCode;
-								// newObj.costPrice = arr[i].value[j].value[k].costPrice;
-								// // newObj.retailPrice = arr[i].value[j].value[k].retailPrice;
-								// newObj.price = arr[i].value[j].value[k].price;
-								// newObj.image = arr[i].value[j].value[k].image;
-								// newObj.isDiscount = arr[i].value[j].value[k].isDiscount;
-								// newObj.barCode = arr[i].value[j].value[k].barCode;
-								// newObj.status = arr[i].value[j].value[k].status;
-								goodArr.push(newObj);
-							}
-						}
-					}
-				} else {
-					goodArr = arr;
-				}
-			}
-			console.log(goodArr);
-			// return false;
-			obj.skus = JSON.stringify(goodArr);
-			let keys = [
-				'sort',
-				'name',
-				// 'price',
-				'barCode',
-				'valuationType'
-				// 'validity','isInvoicing','isStock','isDiscount','serviceCharge','isRecommend',
-				// 'isSelf','isCode','isVip','isSeasonal','isGroup','vipPrice','vipDiscount','description',
-				// 'specifications','barCode','secBarCode'
-			];
-			for (let key of keys) {
-				obj[key] = this.good[key];
-			}
-			return obj;
-		},
-		// createFilter(queryString) {
-		//     return restaurant => {
-		//         return (
-		//             restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-		//         );
-		//     };
-		// },
-		//删除规格和规格值
-		/* eslint-disable */
-		delSizeOne(list, index, bel, sizeIndex) {
-			if (bel) {
-				//如果删除规格
-				this.sizeIndex = index; //规格的下标
-			} else {
-				this.sizeIndex = sizeIndex; //规格值所在规格下的下标
-			}
-			let title = '确定删除 "' + list[index].name + '" 此规格';
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '温馨提示',
-				content: title,
-				callback: callbackRes => {
-					if (callbackRes == 'ok') {
-						list.splice(index, 1);
-						let groupData = utils.deepCopy(this.groupData);
-						if (!bel) {
-							if (this.sizeIndex == 0) {
-								groupData.splice(index, 1);
-							} else {
-								if (this.sizeIndex == 1) {
-									for (let i = 0; i < groupData.length; i++) {
-										groupData[i].value.splice(index, 1);
-									}
-								} else if (this.sizeIndex == 2) {
-									for (let i = 0; i < groupData.length; i++) {
-										for (
-											let j = 0;
-											j < groupData[i].value.length;
-											j++
-										) {
-											groupData[i].value[j].value.splice(
-												index,
-												1
-											);
-										}
-									}
-								}
-							}
-							this.groupData = utils.deepCopy(groupData);
-						} else {
-							this.changetitleList();
-						}
-					}
-				}
-			});
-		},
-		//添加规格
-		addSizeOne(list) {
-			let obj = {
-				id: '',
-				name: '',
-				isadd: true,
-				specId: '',
-				// barCode: '', //商品条码
-				// viceCode: '', //商品副条码
-				// specValueIds: '', //规格值id集合 (多个以","分割)
-				// costPrice: '', //成本
-				// retailPrice: '', //建议零售价
-				// price: '', //价钱
-				// image: '',
-				// isDiscount: '0',
-				// status: '0', //商品状态
-				value: [
-					// {
-					//     id: '',
-					//     name: '',
-					//     isadd: true,
-					//     value: [],
-					//     specId: '',
-					//     // barCode: '', //商品条码
-					//     // viceCode: '', //商品副条码
-					//     // specValueIds: '', //规格值id集合 (多个以","分割)
-					//     // costPrice: '', //成本
-					//     // retailPrice: '', //建议零售价
-					//     // price: '', //价钱
-					//     // image: '',
-					//     // isDiscount: '0',
-					//     // status: '0' //商品状态
-					// }
-				]
-			};
-
-			if (list.length == 3) {
-				this.$store.commit('setWin', {
-					winType: 'alert',
-					title: '温馨提示',
-					content: '最多只能添加三种规格！'
-				});
-				return false;
-			}
-			list.push(obj);
-			this.changetitleList();
-		},
-		addSize(item, index) {
-			// console.log(index);
-			this.sizeIndex = index;
-			if (item.id == '') {
-				this.alertWin('请先添加商品规格!');
-				return false;
-			}
-			let obj = {
-				id: '',
-				name: '',
-				isadd: true,
-				value: []
-			};
-			item.value.push(obj);
-
-			// let groupData = utils.deepCopy(this.groupData);
-			// let keys = [
-			//             'name',
-			// 			'barCode',
-			// 			'viceCode',
-			// 			'costPrice',
-			// 			// 'retailPrice',
-			// 			'price',
-			// 			'image',
-			// 			'isDiscount',
-			// 			'status'
-			// 		];
-			// for (let key of keys) {
-			// 	obj[key] = '';
-			// 	obj.isadd = true;
-			// }
-			// if (index == 0) {
-			//     if (this.titleList.length > 1) {
-			//         obj.value =  utils.deepCopy(this.titleList[1].value);
-			//         for(let m=0;m<obj.value.length;m++){
-			//             obj.value[m].isadd = true;
-			//             obj.value[m].barCode = '';
-			//             obj.value[m].viceCode = '';
-			//             obj.value[m].price = '';
-			//             obj.value[m].image = '';
-			//             obj.value[m].isDiscount = '0';
-			//             obj.value[m].costPrice = '';
-			//         }
-			//     }
-			//     groupData.push(obj);
-			// } else {
-			//     if (index == 1) {
-			//         for (let i = 0; i < groupData.length; i++) {
-			//             if (this.titleList.length > 2) {
-			//                 obj.value =  utils.deepCopy(groupData[i].value[0].value);
-			//                 console.log(obj.value);
-			//                 for(let m = 0;m<obj.value.length;m++){
-			//                     obj.value[m].isadd = true;
-			//                     obj.value[m].barCode = '';
-			//                     obj.value[m].viceCode = '';
-			//                     obj.value[m].price = '';
-			//                     obj.value[m].image = '';
-			//                     obj.value[m].isDiscount = '0';
-			//                     obj.value[m].costPrice = '';
-			//                 }
-			//             }
-			//             groupData[i].value.push(obj);
-			//         }
-			//     } else if (index == 2) {
-			//         for (let i = 0; i < groupData.length; i++) {
-			//             for (let j = 0; j < groupData[i].value.length; j++) {
-			//                 groupData[i].value[j].value.push(obj);
-			//             }
-			//         }
-			//     }
-			// }
-			// this.groupData = utils.deepCopy(groupData);
-		},
 		//返回按钮点击
 		back: function() {
-			this.$emit('throwAddGoodsWin', 'back');
+			this.$emit('throwAddGoodsWin', 'this.config');
 		},
-		//切换供应商
-		changehand() {
-			console.log(this.suppierId);
+		// 切换开通会员后，折扣和会员价格
+		getVipRadio(res) {
+			this.good.isVip = res;
+		},
+		//会员开通关闭
+		openVipRadio(res) {
+			this.isVipShow = res;
+			if (this.isVipShow) {
+				this.good.isVip = '1';
+			} else {
+				this.good.isVip = '0';
+			}
+		},
+		//切换商品的类型
+		toggleGoodType(id) {
+			if (this.editGoodsId) return;
+			this.good.isInvoicing = 0;
+			this.good.isStock = 0;
+			this.good.isCode = 0;
+			this.good.isGroup = 0;
+
+			this.good.type = id;
+			switch ('' + this.good.type) {
+				case '0':
+					this.good.unit = '';
+					// this.good.validityType = '月';
+					break;
+				case '1':
+					this.good.unit = '斤';
+					// this.good.validityType = '月';
+					break;
+				case '2':
+					this.selectCategory = [];
+					break;
+			}
 		},
 		//编辑图片
 		async uploadGoodsImg() {
-			let imgUrl = await http.uploadImg({
-				formId: 'img_upload',
+			this.good.imageName = await this.getHttp(this.mapHttp.uploadImg, {
 				data: {
-					// type: 5,
+					type: 5,
 					shopId: this.shopId
-				}
+				},
+				formId: 'img_upload'
 			});
-			this.goodPicList.push(imgUrl);
 		},
 		//删除图片
 		deleteGoodImg() {
@@ -1273,32 +477,6 @@ export default {
 			let barCode = '90' + ((Math.random() * 90000000) | 10000000) + '';
 			return barCode;
 		},
-		//写入条码,副条码,商品识别码
-		setBarCode(flag, group) {
-			let attr = null;
-			switch (flag) {
-				case 'barCode': //主条码
-				case 'secBarCode': //副条码
-					this.good.tips = `确认重新设置${
-						flag == 'barCode' ? '主' : '副'
-					}条码?`;
-					this.writeBarCode(this.good, flag, this.generatorBarCode);
-					break;
-				case 'groupBarCode': //多规格的主条码
-				case 'groupSecBarCode': //多规格的副条码
-					attr = flag == 'groupBarCode' ? 'barCode' : 'secBarCode';
-					group.tips = `确认重新设置${
-						flag == 'groupBarCode' ? '主' : '副'
-					}条码?`;
-					this.writeBarCode(group, attr, this.generatorBarCode);
-					// this.groupData.splice(index, 1, group);
-					break;
-				case 'identifyCode':
-					this.good.tips = `确认重新设置识条码?`;
-					this.writeBarCode(this.good, flag, this.generatorCode);
-					break;
-			}
-		},
 		//设置副条码,条码,识别码
 		writeBarCode(obj, attr, fn) {
 			obj[attr] = String(obj[attr]);
@@ -1315,11 +493,183 @@ export default {
 				obj[attr] = fn();
 			}
 		},
+		//写入条码,副条码,商品识别码
+		setBarCode(flag, group, index) {
+			let attr = null;
+			switch (flag) {
+				case 'barCode': //主条码
+				case 'secBarCode': //副条码
+					this.good.tips = `确认重新设置${
+						flag == 'barCode' ? '主' : '副'
+					}条码?`;
+					this.writeBarCode(this.good, flag, this.generatorBarCode);
+					break;
+				case 'groupBarCode': //多规格的主条码
+				case 'groupSecBarCode': //多规格的副条码
+					attr = flag == 'groupBarCode' ? 'barCode' : 'secBarCode';
+					group.tips = `确认重新设置${
+						flag == 'groupBarCode' ? '主' : '副'
+					}条码?`;
+					this.writeBarCode(group, attr, this.generatorBarCode);
+					this.groupData.splice(index, 1, group);
+					break;
+				case 'identifyCode':
+					this.good.tips = `确认重新设置识条码?`;
+					this.writeBarCode(this.good, flag, this.generatorCode);
+					break;
+			}
+		},
+		//删除口味
+		deleteSelectAttr(index) {
+			this.selectAttr.splice(index, 1);
+		},
+		//删除口味(多规格)---attr(该组中所有选中的口味), index(当前操作口味相应的索引), att(当前操作的口味)
+		deleteSelectAttrMul(attr, index) {
+			attr.splice(index, 1);
+		},
 		//点击删除选中的分类
 		deleteSelectCategory(cat, index) {
 			if (this.good.type == 2 && this.editGoodsId) return;
 			this.selectCategory.splice(index, 1);
 		},
+		//保质期的的选择 (普通菜与称重菜)
+		// funGetGoodValidityType(e) {
+		// 	console.log(e);
+		// 	this.good.validityType = e;
+		// },
+		//保质期下拉框的显示(多规格)
+		// toggleGroupShowValidityTyep(group,index){
+		// 	this.groupData.forEach((ele,eleIndex)=>{
+		// 		if(index==eleIndex){
+		// 			group.showValidity=!group.showValidity;
+		// 		}else{
+		// 			ele.showValidity=false;
+		// 		}
+		// 	});
+		// 	this.groupData.splice(index,1,group);
+		// },
+		//保质期的选择(多规格)
+		// funSelectValidityType(event, group,index) {
+		// 	let res = event.target.innerHTML;
+		// 	group.validityType = res;
+		// 	group.showValidity = false;
+		// 	this.groupData.splice(index,1,group);
+		// },
+		//添加规格
+		addGroup(len = 1) {
+			for (let i = 0; i < len; i++) {
+				console.log(this.groupData);
+				if (this.groupData.length < 3) {
+					let obj = {
+						showValidity: false, //是否显示保质期下拉框
+						relativeGood: {}, //关联的商品(对象)
+						attr: [] //口味
+					};
+					this.assignObj(obj);
+					obj.validityType = 0; //保质期类别,月日年
+					this.groupData.push(obj);
+				} else {
+					this.alertWin('商品规格不能超过三个!');
+					break;
+				}
+			}
+		},
+		//删除规格
+		deleteGroup(group, index) {
+			if (this.groupData.length == 2) {
+				this.alertWin('多规格商品最少添加两种规格!');
+				return;
+			}
+			//说明是解除已经存在的规格
+			if (this.editGoodsId && group.id) {
+				this.$store.commit('setWin', {
+					winType: 'confirm',
+					title: '温馨提示',
+					content:
+						'确认解除此种规格的关联？，若取消则此规格商品重新变为单独的普通商品！',
+					callback: res => {
+						if (res == 'ok') {
+							let downChildObj = {
+								shopId: this.shopId,
+								brandId: this.brandId,
+								goodsId: group.id
+							};
+							this.getHttp(this.mapHttp.downChildGoods, {
+								data: downChildObj
+							}).then(res => {
+								if (res) {
+									this.groupData.splice(index, 1);
+									this.$emit(
+										'throwAddGoodsWin',
+										'releaserelation'
+									);
+								}
+							});
+						}
+					}
+				});
+			} else {
+				this.groupData.splice(index, 1);
+			}
+		},
+
+		//--------		称重菜		-----------
+		//单位下拉框的显示
+		// funToggleUnit() {
+		// 	if(this.good.type==1 && this.good.isCode==1){
+		// 		this.showUnit=false;
+		// 		this.alertWin('请先选择类别识别码!');
+		// 	}else{
+		// 		this.showUnit = !this.showUnit;
+		// 	}
+		// },
+		//获取单位(称重)
+		// funGetUnit(event) {
+		// 	if (this.editGoodsId && this.good.isCode==1)  return ;
+		// 	this.good.unit = event.target.innerHTML;
+		// 	this.showUnit = false;
+		// },
+		//称重商品识别码下拉框的展示
+		// funShowList() {
+		// 	this.barList || (this.barList = []);
+		// 	if (this.barList.length == 0) {
+		// 		this.showBarList = false;
+		// 		this.alertWin('类别识别码列表为空，请在进销存管理中称重商品配置中添加');
+		// 		return;
+		// 	}
+		// 	this.showBarList = !this.showBarList;
+		// },
+		//选择称重商品的识别码
+		funSelectList(oneList) {
+			this.identifyName = this.barList[oneList].name;
+			this.good.unit = this.barList[oneList].weightCompany;
+			this.good.code = this.barList[oneList].code;
+			this.showBarList = false;
+		},
+		//称重商品识别码的生成
+		generatorCode() {
+			if (this.identifyCodeMax) {
+				this.identifyCodeMax++;
+			} else {
+				let min = 10000;
+				for (let ele of this.goodsList) {
+					if (ele.barCode && ele.barCode.length == 7) {
+						ele.barCode = ele.barCode.trim();
+						let str = ele.barCode.slice(2);
+						str = parseInt(str);
+						min = min > str ? min : str;
+					}
+				}
+				this.identifyCodeMax = min + 1;
+			}
+
+			if (this.identifyCodeMax > 99999) {
+				this.identifyCodeMax = 10000;
+			}
+			return this.identifyCodeMax;
+		},
+
+		//--------	win	---------
 		//添加分类,口味(非多规格),品牌窗口
 		async openCommonWin(flag) {
 			this.flag = flag;
@@ -1344,7 +694,7 @@ export default {
 					this.comObj = {
 						category: this.category,
 						selectCategory: this.selectCategory,
-						radio: false
+						radio: this.good.type == 2 ? false : true
 					};
 					break;
 				case 'brand':
@@ -1368,11 +718,6 @@ export default {
 					this.selectAttr = data;
 					break;
 				case 'category':
-					// if (data[0]) {
-					// 	this.selectCategory = data[0];
-					// } else {
-					// 	this.selectCategory = [];
-					// }
 					this.selectCategory = data;
 					break;
 				case 'brand':
@@ -1386,128 +731,992 @@ export default {
 					this.groupData[this.nowGroupIndex].attr = data;
 			}
 		},
+		//添加多规格的口味
+		async openMultipleAttrWin(group, groupIndex) {
+			if (this.attr.length == 0) {
+				this.attr = await this.getHttp(this.mapHttp.getAttr);
+			}
+			this.showCom = 'addAttr';
+			this.flag = 'multipleAttr';
+			this.nowGroupIndex = groupIndex;
+			this.comObj = {
+				radio: true,
+				selectAttr: group.attr,
+				attr: this.attr,
+				title: '选择口味',
+				height: 650,
+				width: 765
+			};
+		},
+		//添加多规格的关联商品
+		openMultipleAddRelativeGoodWin(group, groupIndex) {
+			this.showCom = 'addRelative';
+			// 只显示上架的普通商品,多规格主菜和子菜都不显示
+			let goods = this.goodsList.filter(ele => {
+				if (ele.status == 0 || ele.status == 1) {
+					if (
+						ele.type == 0 &&
+						!Number(ele.groupId) &&
+						!Number(ele.isGroup) &&
+						this.editGoodsId != ele.id
+					) {
+						if (this.good.isInvoicing == ele.isInvoicing) {
+							return true;
+						}
+					}
+				}
+			});
+			//当开启了进销存,则不能添加已经关联了BOM单的商品
+			if (this.good.isInvoicing == 1) {
+				goods = goods.filter(ele => {
+					return ele.isBom != 1;
+				});
+			}
+			let tempArr = [];
+			if (group.id) {
+				tempArr.push(group.id);
+			} else {
+				tempArr.push(group.relativeGood.id);
+			}
+			this.nowGroupIndex = groupIndex;
+			this.comObj = {
+				title: '关联商品',
+				type: 1,
+				goodsList: goods,
+				selGoods: tempArr,
+				goodRadio: true,
+				showSelectAll: 2
+			};
+		},
+		//关闭添加多规格的关联商品
+		closeMultipleAddRelativeGoodWin(flag, obj) {
+			this.showCom = '';
+			if (flag != 'ok') return;
+			let temp = obj.goodArr[0];
+			if (typeof temp != 'object') return;
+			temp.name = temp.goodsName;
+			this.groupData[this.nowGroupIndex].relativeGood = temp;
+			this.groupData[this.nowGroupIndex].price = temp.price;
+			this.groupData[this.nowGroupIndex].cost = temp.cost;
+			this.groupData[this.nowGroupIndex].unit = temp.unit;
+			let attrs = temp.attr;
+			attrs.forEach(ele => {
+				let attr = {
+					id: ele.attrId,
+					name: ele.name,
+					options: ele.options
+				};
+				this.groupData[this.nowGroupIndex].attr.push(attr);
+			});
+		},
+		//删除选中的关联商品(多规格)
+		deleteRelativeGood(group) {
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				winType: 'confirm',
+				content: '是否删除该关联商品?',
+				callback: res => {
+					if (res == 'ok') {
+						group.relativeGood = {};
+						group.price = '';
+						group.cost = '';
+						group.unit = '';
+						group.attr = [];
+						let temp = this.groupData.pop();
+						this.groupData.push(temp);
+					}
+				}
+			});
+		},
+		//获取本组件的点击结果
+		closeSelfWin(res) {
+			// console.log(res);
+			if (res == 'close') {
+				this.$emit('throwAddGoodsWin', 'close');
+				return;
+			}
+			//编辑商品
+			if (this.editGoodsId) {
+				if (res == 'ok') {
+					if (!this.checkForm()) return;
+					let data = this.formatData(); //返回格式化的数据
+					this.getHttp(this.mapHttp.goodEdit, { data }).then(
+						result => {
+							this.alertWin('保存商品成功!');
+							this.$emit('throwAddGoodsWin', 'edit', result);
+						}
+					);
+				}
+				if (res == 'cancel') {
+					let str = `确定${this.status == 2 ? '上' : '下'}架该商品?`;
+
+					this.$store.commit('setWin', {
+						winType: 'confirm',
+						title: '温馨提示',
+						content: str,
+						callback: callbackRes => {
+							if (callbackRes == 'ok') {
+								str = this.editGoodsId + ',';
+
+								if (this.groupData.length > 0) {
+									let arrStr = [];
+									this.groupData.forEach(ele => {
+										arrStr.push(ele.id);
+									});
+									str = str + arrStr.join(',');
+								}
+								this.getHttp(this.mapHttp.goodUpOrDownShelf, {
+									data: {
+										goodsId: str,
+										shopId: this.shopId,
+										status: this.status == 2 ? 0 : 2
+									}
+								}).then(() => {
+									str =
+										this.status == 2
+											? '上架成功!'
+											: '下架成功!';
+									this.alertWin(str);
+									this.$emit('throwAddGoodsWin', 'updown');
+								});
+							}
+						}
+					});
+				}
+			} else {
+				//添加商品
+				if (res == 'ok') {
+					if (!this.checkForm()) return;
+					let data = this.formatData();
+					this.getHttp(this.mapHttp.createGood, { data }).then(
+						result => {
+							if (!data) return;
+							this.alertWin('添加商品成功!');
+							this.$emit('throwAddGoodsWin', 'add', result);
+						}
+					);
+				} else {
+					this.$emit('throwAddGoodsWin', 'cancel');
+				}
+			}
+		},
+		//-------		store win		---------
+		alertWin(info) {
+			this.$store.commit('setWin', { title: '温馨提示', content: info });
+		},
+		//----------		表单		----------
+		//格式化数据
+		formatData() {
+			let obj = {}; //需要提交的所有数据
+			// let submitValidityType; 			//需要提交的保质期类型id,
+			let cids = []; //分类id  最终提交的为字符串
+			let attrId = []; //口味的id 最终提交的为字符串
+			let groupData = []; //多规格数据
+
+			//保质期的类型
+			console.log(this.good.validityType);
+			// this.validityTypeArr.some(ele => {
+			// 	if (ele.id == this.good.validityType) {
+			// 		submitValidityType = ele.id;return true;
+			// 	}
+			// });
+			console.log(this.good.validityType);
+
+			//分类的id
+			for (let ele of this.selectCategory) {
+				cids.push(ele.id);
+			}
+
+			//口味的id
+			for (let ele of this.selectAttr) {
+				attrId.push(ele.id);
+			}
+
+			//品牌id
+			if (
+				(this.good.isInvoicing == 1 &&
+					this.good.type == 0 &&
+					this.selectBrandObj.id) ||
+				(this.good.isCode == 1 &&
+					this.good.type == 1 &&
+					this.selectBrandObj.id)
+			) {
+				obj.brandId = this.selectBrandObj.id;
+			}
+
+			//多规格
+			// console.log(this.groupData);
+			if (this.good.type == 0 && this.good.isGroup == 1) {
+				this.groupData.forEach(ele => {
+					let group = {
+						goodsName: ele.goodsName,
+						price: ele.price,
+						cost: ele.cost,
+						unit: ele.unit,
+						groupAttrs: '', //口味
+						id: '' //关联商品的id
+					};
+
+					if (this.good.isVip == 1) {
+						group.vipPrice = ele.vipPrice;
+					}
+					if (this.good.isVip == 2) {
+						group.vipDiscount = ele.vipDiscount;
+					}
+
+					//关联的商品id
+					let relativeGood = ele.relativeGood;
+					if (relativeGood) group.id = relativeGood.id; //关联商品的id
+
+					//口味id
+					group.groupAttrs = '';
+					let tempAttr = [];
+					ele.attr || (ele.attr = []);
+					ele.attr.forEach(e => {
+						tempAttr.push(e.id);
+					});
+					group.groupAttrs = tempAttr.join(',');
+
+					if (this.good.isInvoicing == 1) {
+						//条码,保质期,保质期类型
+						group.barCode = ele.barCode;
+						group.secBarCode = ele.secBarCode;
+						group.validity = parseInt(ele.validity);
+						group.validityType = ele.validityType * 1;
+						// console.log(group.validityType);
+						// console.log(ele.validityType);
+						// this.validityTypeArr.some((val) => {
+						// 	if (val.id == ele.validityType) {
+						// 		group.validityType = val.id;
+						// 		return true;
+						// 	}
+						// });
+					}
+					groupData.push(group);
+				});
+			}
+
+			//称重菜品的识别码
+			if (this.good.type == 1 && this.good.isCode == 1) {
+				this.good.barCode = this.good.code + this.good.identifyCode;
+			}
+			if (this.good.type == 1 && this.good.isCode == 0) {
+				this.good.barCode = '';
+			}
+
+			if (this.editGoodsId) obj.goodsId = this.editGoodsId;
+
+			obj.shopId = this.shopId;
+			let keys = [
+				'sort',
+				'type',
+				'goodsName',
+				'BC',
+				'price',
+				'unit',
+				'cost',
+				'imageName',
+				'validity',
+				'isInvoicing',
+				'isStock',
+				'isDiscount',
+				'serviceCharge',
+				'isRecommend',
+				'isSelf',
+				'isCode',
+				'isVip',
+				'isSeasonal',
+				'isGroup',
+				'vipPrice',
+				'vipDiscount',
+				'description',
+				'specifications',
+				'barCode',
+				'secBarCode'
+			];
+			for (let key of keys) {
+				obj[key] = this.good[key];
+			}
+			obj.cids = cids.join(',');
+			obj.validityType = this.good.validityType;
+			obj.attrs = attrId.join(',');
+
+			if (this.good.type == 0 && this.good.isGroup == 1) {
+				obj.groupData = groupData;
+			}
+			return obj;
+		},
+		//校验表单 不合格返回false
+		checkForm() {
+			//---------- 		分类		-------------
+			if (this.selectCategory.length == 0) {
+				this.alertWin('请选择分类!');
+				return false;
+			}
+			//----------		商品名,简码,描述		---------------
+			if (this.good.type == 0 || this.good.type == 1) {
+				if (
+					!global.checkData(
+						{
+							goodsName: {
+								cond:
+									'$$.length>0 && $$.length<45 && ((/^[^!@#$%&*]+$/).test($$))',
+								pro: '请输入45字以内的名称且不能含有特殊字符!'
+							},
+							BC: {
+								reg: /^[0-9A-Za-z]{0,20}$/,
+								pro: '简码由英文,数字组成!'
+							},
+							description: {
+								cond: '$$.length<=100',
+								pro: '描述内容不能超过100字哦!'
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+			}
+
+			//----------		称重菜,普通菜:售价,单位(普通菜),成本,会员	-----------
+			if (
+				(this.good.type == 0 && !Number(this.good.isGroup)) ||
+				this.good.type == 1
+			) {
+				if (
+					!global.checkData(
+						{
+							price: {
+								reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+								pro: '请输入正确的售价!'
+							},
+							cost: {
+								reg: /(((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$)|(^((\s)*(\t)*)?$)/,
+								pro: '请输入正确的成本格式!'
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+
+				if (Number(this.good.price) > 100000) {
+					this.alertWin('售价超过10万!');
+					return false;
+				}
+
+				let unitTips = '';
+				if (this.good.type == 1) {
+					unitTips = '请输入单位且不能超过5个字符!';
+				}
+				if (this.good.type == 0 && !Number(this.good.isCode)) {
+					unitTips = '请选择单位!';
+				}
+				if (
+					!global.checkData(
+						{
+							unit: {
+								cond: '$$.length>0 && $$.length<6',
+								pro: unitTips
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+
+				if (Number(this.good.cost) > 100000) {
+					this.alertWin('成本超过10万!');
+					return false;
+				}
+
+				if (this.good.isVip == 1) {
+					if (
+						!global.checkData(
+							{
+								vipPrice: {
+									reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+									pro: '请输入正确的会员价格!'
+								}
+							},
+							this.good
+						)
+					)
+						return false;
+
+					if (Number(this.good.vipPrice) > Number(this.good.price)) {
+						this.alertWin('会员价格不能大于售价!');
+						return false;
+					}
+					if (Number(this.good.vipPrice) > 100000) {
+						this.alertWin('会员价格超过10万!');
+						return false;
+					}
+				}
+			}
+
+			//----------		普通菜:条码,副条码,规格,保质期,-----------------
+			if (
+				this.good.type == 0 &&
+				this.good.isGroup != 1 &&
+				this.good.isInvoicing == 1
+			) {
+				if (
+					!global.checkData(
+						{
+							barCode: {
+								cond:
+									'$$.length>0 && (/^\\d{10,13}$/).test($$)',
+								pro: '请输入条码,条码由10-13位数字组成!'
+							},
+							specifications: {
+								cond:
+									'$$.length>0 && ((/^[^!@#$%&*/\\s]+$/).test($$))',
+								pro: '请输入规格且不含特殊字符!'
+							},
+							validity: {
+								reg: /(^\d{0,3}$)|(^((\s)*(\t)*)?$)/,
+								pro: '保质期由1-3位数字组成!'
+							},
+							secBarCode: {
+								reg: /(^\d{10,13}$)|(^((\s)*(\t)*)?$)/,
+								pro: '副条码由10-13位数字组成!'
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+			}
+
+			//-----------		称重菜:识别码,保质期,单位	------------------------------
+			if (this.good.type == 1) {
+				if (this.good.isCode == 1) {
+					this.good.identifyCode += '';
+					if (
+						!global.checkData(
+							{
+								code: {
+									cond: '$$.length>0',
+									pro: '请选择类别识别码!'
+								},
+								unit: {
+									cond: '$$.length>0',
+									pro: '请选择类别识别码!'
+								},
+								identifyCode: {
+									reg: /^\d{5}$/,
+									pro: '请输入商品识别码,识别码由5位数字组成!'
+								},
+								validity: {
+									reg: /(^\d{0,3}$)|(^((\s)*(\t)*)?$)/,
+									pro: '保质期由1-3位数字组成!'
+								}
+							},
+							this.good
+						)
+					)
+						return false;
+				}
+
+				if (
+					!Number(this.good.isCode) &&
+					this.good.unit.trim().length == 0
+				) {
+					this.alertWin('请选择单位!');
+					return false;
+				}
+			}
+			//----------------普通菜多规格BOM单校验-----------------------
+
+			if (
+				this.good.type == 0 &&
+				this.good.isGroup == 1 &&
+				this.good.isInvoicing == 1
+			) {
+				let flagGroup = this.groupData.some(group => {
+					if (group.relativeGood.isBom == 1) {
+						let str =
+							'所关联的' +
+							group.relativeGood.name +
+							' 商品已关联BOM单,请选择其它商品!';
+						this.alertWin(str);
+						return true;
+					}
+				});
+				if (flagGroup) return false;
+			}
+
+			//------------------普通菜多规格---------------------------
+			if (this.good.type == 0 && this.good.isGroup == 1) {
+				let flag = this.groupData.some(ele => {
+					this.test = ele;
+					if (
+						!global.checkData(
+							{
+								goodsName: {
+									reg: /^[^<>\s]+$/,
+									pro: '请输入不含特殊字符的规格名!'
+								},
+								price: {
+									reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+									pro: '请输入正确的售价格式!'
+								},
+								unit: {
+									cond: '$$.length>0 && $$.length<6',
+									pro: '请输入1-5个字符组成的单位!'
+								},
+								cost: {
+									reg: /(((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$)|(^((\s)*(\t)*)?$)/,
+									pro: '请输入正确的成本格式!'
+								}
+							},
+							this.test
+						)
+					)
+						return true;
+
+					if (Number(ele.price) > 100000) {
+						this.alertWin('售价超过10万!');
+						return true;
+					}
+
+					if (Number(ele.cost) > 100000) {
+						this.alertWin('成本超过10万!');
+						return true;
+					}
+
+					if (this.good.isInvoicing == 1) {
+						if (
+							!global.checkData(
+								{
+									barCode: {
+										reg: /^\d{10,13}$/,
+										pro: '主条码由10-13位数字组成!'
+									},
+									secBarCode: {
+										reg: /(^\d{10,13}$)|(^((\s)*(\t)*)?$)/,
+										pro: '副条码由10-13位数字组成!'
+									},
+									validity: {
+										reg: /(^\d{0,3}$)|(^((\s)*(\t)*)?$)/,
+										pro: '保质期由1-3位数字组成!'
+									}
+								},
+								this.test
+							)
+						)
+							return true;
+					}
+
+					if (this.good.isVip == 1) {
+						if (
+							!global.checkData(
+								{
+									vipPrice: {
+										reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+										pro: '请输入正确的会员价格!'
+									}
+								},
+								this.test
+							)
+						)
+							return true;
+
+						if (Number(ele.vipPrice) > 100000) {
+							this.$store.commit('setWin', {
+								title: '温馨提示',
+								content: '会员价格超过10万!'
+							});
+							return true;
+						}
+						if (this.good.isVip == 1) {
+							let price = ele.price;
+							let vipPrice = ele.vipPrice;
+							if (Number(vipPrice) > Number(price)) {
+								this.alertWin('会员价格不能大于售价!');
+								return true;
+							}
+						}
+					}
+				});
+				if (flag) return false;
+				//--------		规格名相同	-----------
+				flag = this.groupData.some((ele, index) => {
+					let goodsName = ele.goodsName;
+					for (
+						let i = index + 1, len = this.groupData.length;
+						i < len;
+						i++
+					) {
+						let temp = this.groupData[i].goodsName;
+						if (goodsName == temp) {
+							this.alertWin('规格名称不能相同!');
+							return true;
+						}
+					}
+				});
+				if (flag) return false;
+			}
+
+			//---------		商品重名		----------
+			if (
+				this.checkGoodsName(
+					this.goodsList,
+					this.good.name,
+					this.editGoodsId
+				)
+			)
+				return false;
+
+			return true;
+		},
+		//校验时是否有相同的商品名 false:表示没有一样的
+		checkGoodsName(goods, name, id) {
+			if (this.good.type == 2) return false;
+			if (id)
+				goods = goods.filter(ele => {
+					return ele.id != id;
+				});
+			let flag = goods.some(ele => {
+				if (ele.goodsName == name) {
+					this.alertWin('商品名重名!');
+					return true;
+				}
+			});
+			return flag;
+		},
+
+		//----------		开关		---------
+		//多个开关的切换
+		// switchFn(res,flag) {
+		// 	switch(flag){
+		// 		case 'sort':				//获取排序值
+		// 			this.good[flag] = parseInt(res);
+		// 			break;
+		// 		case 'isDiscount':			//是否优惠
+		// 		case 'isRecommend':
+		// 		case 'serviceCharge':
+		// 		case 'isSelf':
+		// 		case 'isSeasonal':
+		// 		case 'isVip':
+		// 			this.good[flag] = res ? 1 : 0;
+		// 			break;
+		// 	}
+		// },
+		//是否是多规格
+		toggleIsGroup(res) {
+			console.log(res);
+			if (
+				res == 0 &&
+				this.editGoodsId &&
+				this.good.isInvoicing == 1 &&
+				this.good.isGroup == 1
+			) {
+				this.alertWin('商品已参与进销存核销,多规格不能取消!');
+				this.good.isGroup = 1;
+				return;
+			}
+			if (res == 1 && this.editGoodsId && this.good.isInvoicing == 1) {
+				this.$set(this.good, 'isGroup', 0);
+				this.alertWin('商品已参与进销存核销,不能开启多规格!');
+				return;
+			}
+			this.good.isGroup = res;
+			if (this.good.isGroup == 1 && this.groupData.length < 2) {
+				this.addGroup(2);
+			}
+		},
+		//开启进销存
+		toggleIsInvoicing(res) {
+			console.log(res);
+			if (res == 1 && this.good.isStock == 1) {
+				this.alertWin('进销存和库存只能开启一个!');
+				return;
+			}
+
+			//校验BOM单
+			if (
+				this.good.type == 0 &&
+				this.editGoodsId &&
+				this.good.isBom == 1 &&
+				res == 1
+			) {
+				this.alertWin('该商品已经关联BOM单,不能开启进销存!');
+				return;
+			}
+			//子菜关联了BOM单,不能开启进销存.
+			if (this.good.type == 0 && this.good.isGroup == 1 && res == 1) {
+				let [goodsName, tipsWord] = ['', ''];
+				let bomFlag = this.groupData.some(group => {
+					if (group.relativeGood.isBom == 1) {
+						goodsName = group.relativeGood.name;
+						return true;
+					}
+				});
+				if (bomFlag) {
+					tipsWord =
+						'所关联的 ' +
+						goodsName +
+						' 商品已关联BOM单,不可开启进销存!';
+					this.alertWin(tipsWord);
+					return;
+				}
+			}
+
+			this.good.isInvoicing = res;
+
+			//请求识别码
+			if (
+				this.good.type == 1 &&
+				this.good.isCod == 0 &&
+				this.good.isInvoicing == 1
+			) {
+				this.good.isCode = 1;
+				if (
+					this.good.type == 1 &&
+					this.good.isCode == 1 &&
+					this.barList.length == 0
+				) {
+					this.getHttp(this.mapHttp.GoodWeighgoodsGetList, {
+						data: { shopId: this.shopId, brandId: this.brandId }
+					}).then(barList => {
+						this.barList = barList;
+					});
+				}
+			}
+		},
+		//开启库存
+		toggleIsStock(res) {
+			if (res && this.good.isInvoicing == 1) {
+				this.alertWin('进销存和库存只能开启一个!');
+				return;
+			}
+			this.good.isStock = res;
+		},
+		//识别码
+		async toggleIsCode(res) {
+			this.good.isCode = res;
+			//同步关闭识别码与进销存
+			if (
+				this.good.type == 1 &&
+				this.good.isCode == 0 &&
+				this.good.isInvoicing == 1
+			) {
+				this.good.isInvoicing = 0;
+			}
+			//称重商品开启识别码,不能选择口味
+			if (this.good.isCode == 1) {
+				this.selectAttr = [];
+			}
+			//请求识别码
+			if (
+				this.good.type == 1 &&
+				this.good.isCode == 1 &&
+				this.barList.length == 0
+			) {
+				this.barList = await this.getHttp(
+					this.mapHttp.GoodWeighgoodsGetList,
+					{ data: { shopId: this.shopId, brandId: this.brandId } }
+				);
+			}
+		},
+
+		//-------		初始化		-----
+
+		//初始化数据
+		initData() {
+			for (let attr in this.pObj) {
+				this[attr] = this.pObj[attr];
+			}
+		},
+		//初始化弹窗按钮
+		initWinBtn() {
+			this.btnOk = { content: '确定', style: null };
+			this.btnCancel = { content: '取消', style: null };
+
+			if (!this.editGoodsId) return;
+
+			if (this.status == 2) {
+				this.btnCancel = {
+					content: '上架',
+					style: 'background-color:#22aae0'
+				};
+			} else {
+				this.btnCancel = {
+					content: '下架',
+					style: 'background-color:#22aae0'
+				};
+			}
+			this.btnOk = { content: '保存', style: 'background-color:#f8941f' };
+		},
+		//组合公共属性
+		assignObj(obj = {}) {
+			let temp = {};
+			let keys = [
+				'barCode',
+				'secBarCode',
+				'cost',
+				'goodsName',
+				'price',
+				'unit',
+				'validity',
+				'validityType',
+				'vipPrice'
+			];
+			for (let key of keys) {
+				temp[key] = '';
+			}
+			Object.assign(obj, temp);
+			return keys;
+		},
+		//初始化商品
+		async initGoods(res) {
+			if (this.good.isVip * 1 > 0) {
+				this.isVipShow = true;
+			}
+			//为good添加字段
+			this.$set(this.good, 'code', ''); //称重商品的类别识别码
+			this.$set(this.good, 'identifyCode', ''); //称重商品的商品识别码
+			if (!this.good.secBarCode) this.$set(this.good, 'secBarCode', '');
+			this.good.validityType = +this.good.validityType; //将年月日的id转化为数字
+			//将保质期类型(数字)映射为文字
+			// if (res.type == 0 || res.type == 1) {
+			// 	for(let ele of this.validityTypeArr){
+			// 		if(ele.id == res.validityType){
+			// 			this.good.validityType = ele.name;
+			// 			break;
+			// 		}
+			// 	}
+			// }
+
+			//初始化称重商品识别码code(类别识别码),identifyCode(商品识别码),identifyName(类名识别码的文字名称)
+			if (this.good.type == 1 && this.good.isCode == 1) {
+				this.barList = await this.getHttp(
+					this.mapHttp.GoodWeighgoodsGetList,
+					{ data: { shopId: this.shopId, brandId: this.brandId } }
+				);
+				this.good.barCode += '';
+				this.good.code = this.good.barCode.substr(0, 2);
+				this.good.identifyCode = this.good.barCode.slice(2);
+				this.barList.some(ele => {
+					if (ele.code == this.good.code) {
+						this.identifyName = ele.name;
+						return true;
+					}
+				});
+			}
+
+			//1.groupData添加showValidity字段控制日期的显示与隐藏,2.将保质期的类型映射为文字,3.映射关联商品
+			if (this.good.type == 0 && this.good.isGroup == 1) {
+				this.groupData = res.groupData;
+				for (let group of this.groupData) {
+					group.showValidity = false;
+					group.relativeGood = {};
+					if (!group.barCode) group.barCode = '';
+					if (!group.secBarCode) group.secBarCode = '';
+					if (!group.validity) group.validity = '';
+					if (!group.validityType) group.validityType = 0;
+					group.validityType = +group.validityType;
+					this.goodsList.some(ele => {
+						if (group.id == ele.id) {
+							group.relativeGood = {
+								id: ele.id,
+								name: ele.goodsName,
+								goodsName: ele.goodsName,
+								isBom: ele.isBom
+							};
+							return true;
+						}
+					});
+
+					// let flag=this.validityTypeArr.some((ele) => {
+					// 	if(ele.id == group.validityType){
+					// 		group.validityType = ele.id;
+					// 		return true;
+					// 	}
+					// });
+					// if(!flag) group.validityType='1';
+				}
+			}
+
+			//获取选中的品牌
+			if (this.good.type != 2) {
+				this.brandList.some(ele => {
+					if (ele.id == this.good.brandId) {
+						this.selectBrandObj = ele;
+						return true;
+					}
+				});
+			}
+
+			res.attr || (res.attr = []);
+			this.selectAttr = res.attr; //       Array
+			res.cate || (res.cate = []);
+			this.selectCategory = res.cate; //       Array
+		},
+		//同步请求商品识别码,品牌列表,商品详情
+		async asyncRequest() {
+			if (
+				this.editGoodsId &&
+				this.good.type == 1 &&
+				this.good.isCode == 1
+			) {
+				this.barList = await this.getHttp(
+					this.mapHttp.GoodWeighgoodsGetList,
+					{ data: { shopId: this.shopId, brandId: this.brandId } }
+				);
+			}
+			this.brandList = await this.getHttp(this.mapHttp.brandList);
+			let res = null;
+			if (this.editGoodsId) {
+				res = await this.getHttp(this.mapHttp.getGoodsDetail, {
+					data: {
+						goodsId: this.editGoodsId,
+						shopId: this.shopId
+					}
+				});
+			}
+			if (res) {
+				this.good = res;
+				this.initGoods(res);
+			}
+		},
 		//请求数据
 		async getHttp(url, obj = {}) {
 			let res = await http[url](obj);
 			return res;
 		},
-		//同步请求商品识别码,品牌列表,商品详情
-		async asyncRequest() {
-			// if(this.editGoodsId && this.good.type==1 && this.good.isCode==1){
-			// 	this.barList = await this.getHttp(this.mapHttp.GoodWeighgoodsGetList,{data:{shopId:this.shopId,brandId:this.brandId}});
-			// }
-			// this.brandList = await this.getHttp(this.mapHttp.brandList);
-			let res = null;
-			if (this.editGoodsId) {
-				res = await this.getHttp(this.mapHttp.getGoodsDetail, {
-					data: {
-						id: this.editGoodsId
-					}
-				});
-			} else {
-				this.changetitleList();
-			}
-			if (res) {
-				this.good = res;
-				this.good.switch = this.good.switch.split('').splice(1, 4);
-				this.titleList = JSON.parse(this.good.spec);
-				let groupData = this.good.skus;
-				// this.groupData = groupData;
-				// this.getGoodDetial();
-				this.changetitleList();
-				// this.initGoods(res);
-				let goodArr = utils.deepCopy(this.groupData);
-				let titleList = this.titleList;
-				let keys = [
-					'name',
-					'barCode',
-					'viceCode',
-					'costPrice',
-					// 'retailPrice',
-					'price',
-					'image',
-					'isDiscount',
-					'status'
-				];
-				titleList[0].isadd = false;
-				if (titleList.length > 1) {
-					titleList[1].isadd = false;
-					for (let i = 0; i < goodArr.length; i++) {
-						goodArr[i].isadd = false;
-						titleList[0].value[i].isadd = false;
-						// let spuId = groupData[i].specValueIds.split(',');
-						for (let j = 0; j < goodArr[i].value.length; j++) {
-							goodArr[i].value[j].isadd = false;
-							titleList[1].value[j].isadd = false;
-							if (titleList.length == 3) {
-								titleList[2].isadd = false;
-								for (
-									let k = 0;
-									k < goodArr[i].value[j].value.length;
-									k++
-								) {
-									goodArr[i].value[j].value[k].isadd = false;
-									titleList[2].value[k].isadd = false;
-									for (let m = 0; m < groupData.length; m++) {
-										let spuId = groupData[
-											m
-										].specValueIds.split(',');
-										// console.log(goodArr[i].id);
-										// console.log(goodArr[i].value[j].specId);
-										// console.log(goodArr[i].value[j].value[k].specId);
-										if (
-											spuId[0] == goodArr[i].id &&
-											spuId[1] ==
-												goodArr[i].value[j].specId &&
-											spuId[2] ==
-												goodArr[i].value[j].value[k]
-													.specId
-										) {
-											// goodArr[i].value[j].value[k].viceCode = groupData[m].viceCode;
-											// goodArr[i].value[j].value[k].costPrice = groupData[m].costPrice;
-											// goodArr[i].value[j].value[k].price = groupData[m].price;
-											// goodArr[i].value[j].value[k].image = groupData[m].image;
-											// goodArr[i].value[j].value[k].isDiscount = groupData[m].isDiscount;
-											for (let key of keys) {
-												if (groupData[i][key]) {
-													goodArr[i].value[j].value[
-														k
-													][key] =
-														groupData[m][key];
-												}
-											}
-										}
-									}
-								}
-							} else {
-								for (let m = 0; m < groupData.length; m++) {
-									let spuId = groupData[m].specValueIds.split(
-										','
-									);
-									// goodArr[i].value[j].value = [];
-									if (
-										spuId[0] == goodArr[i].id &&
-										spuId[1] == goodArr[i].value[j].specId
-									) {
-										for (let key of keys) {
-											if (groupData[i][key]) {
-												goodArr[i].value[j][key] =
-													groupData[m][key];
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					this.groupData = goodArr;
-				} else {
-					this.groupData = groupData;
+		//捕捉弹窗的事件冒泡
+		winCancelBubble() {
+			if (this.good.type == 0) {
+				if (this.good.isGroup == 1 && this.good.isInvoicing == 1) {
+					this.groupData = this.groupData.map(ele => {
+						ele.showValidity = false;
+						return ele;
+					});
 				}
-				// console.log(goodArr);
-				// console.log(titleList);
+				if (this.good.isGroup != 1 && this.good.isInvoicing == 1) {
+					this.showValidity = false;
+				}
+			}
+			if (this.good.type == 1) {
+				if (this.good.isCode == 1) this.showValidity = false;
+				this.showUnit = false;
+			}
+			if (this.good.type == 1 && this.good.isCode == 1) {
+				this.showBarList = false;
 			}
 		}
+	},
+	mounted() {
+		this.initData();
+		this.initWinBtn();
+		this.asyncRequest();
+		document.addEventListener('click', this.winCancelBubble, false);
+	},
+	beforeDestroy() {
+		document.removeEventListener('click', this.winCancelBubble);
 	},
 	components: {
 		win: () => import(/*webpackChunkName:'win'*/ 'src/components/win'),
@@ -1522,74 +1731,7 @@ export default {
 	}
 };
 </script>
-<style>
-#detail-addgoods .el-table .cell {
-	padding: 0;
-	/* line-height: 50px; */
-}
-#detail-addgoods .el-table td {
-	padding: 0;
-}
-#detail-addgoods .el-table__body-wrapper {
-	z-index: 1;
-}
-#detail-addgoods .titleName {
-	border-bottom: 1px solid #ebeef5;
-	line-height: 50px;
-	display: block;
-	width: 100%;
-	/* vertical-align: bottom; */
-}
-#detail-addgoods .titleNames {
-	border-bottom: 1px solid #ebeef5;
-	line-height: 49px;
-	height: 49px;
-	display: block;
-	width: 100%;
-	/* vertical-align: bottom; */
-}
-#detail-addgoods .titleName:last-child {
-	border-bottom: none;
-}
-#detail-addgoods .titleNames:last-child {
-	border-bottom: none;
-}
-</style>
 <style lang="less" scoped>
-#detail-addgoods {
-	.addIcon {
-		margin: 0 10px;
-		color: #e2bc4d;
-		cursor: pointer;
-	}
-	.goodsSizeBox {
-		border: 1px solid #dcdfe6;
-		width: 100%;
-		min-height: 300px;
-		padding: 10px;
-		.sizeTop {
-			background: #f5f5f5;
-			height: 40px;
-			line-height: 40px;
-			padding-left: 10px;
-		}
-		.sizeBox {
-			padding: 10px 20px;
-			.sizeI {
-				margin-right: 15px;
-				display: inline-block;
-				.sizeL {
-					display: inline-block;
-					height: 30px;
-					line-height: 30px;
-					padding: 0 15px;
-					border: 1px solid #dcdfe6;
-					color: #606266;
-				}
-			}
-		}
-	}
-}
 .win-content {
 	.sign {
 		font-size: 14px;
@@ -1631,13 +1773,6 @@ export default {
 		float: left;
 		border-bottom: 1px dashed #ccc;
 	}
-}
-.good-image-file {
-	position: absolute;
-	height: 40px;
-	opacity: 0;
-	// width: 115px;
-	cursor: pointer;
 }
 .good-image {
 	float: left;
@@ -1683,6 +1818,44 @@ export default {
 		width: 50%;
 		opacity: 0;
 		cursor: pointer;
+	}
+	// .good-barCode {
+	// 	margin-top: 0;
+	// 	margin-bottom: 15px;
+	// 	float: left;
+	// 	width: 320px;
+	// }
+	// .good-getBarCode {
+	// 	width: 80px;
+	// 	height: 40px;
+	// 	line-height: 40px;
+	// }
+}
+.relative-info {
+	width: 100%;
+	height: 40px;
+	margin: 10px;
+	line-height: 40px;
+	position: relative;
+	i {
+		width: 4px;
+		height: 28px;
+		position: absolute;
+		top: 6px;
+		left: 0;
+		background-color: #f8931f;
+	}
+	h3 {
+		width: 73px;
+		height: 40px;
+		margin-left: 20px;
+		float: left;
+	}
+	div {
+		width: 540px;
+		margin: 20px 5px;
+		float: left;
+		border-bottom: 1px dashed #ccc;
 	}
 }
 </style>
