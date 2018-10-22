@@ -35,8 +35,8 @@
 				<div class="search-box fl">
 					<!-- <span class="search-btn blue" @click="getStoreList">筛选</span>
 					<span class="reset-btn gray" @click="resetFun">重置</span> -->
-					<el-button type="primary" @click="getStoreList">筛选</el-button>
-					<el-button type="info" @click="resetFun">重置</el-button>
+					<el-button type="primary" @click="getStoreList" style="width:100px;">筛选</el-button>
+					<el-button type="info" @click="resetFun" style="width:100px;">重置</el-button>
 				</div>
 			</div>
 		</div>
@@ -46,109 +46,233 @@
 		<p class="btn" v-if="ischain == '3'">
 			选择门店:{{selectName}}
 		</p>
-		<com-table :listHeight='80' :showHand='true' :key="index" :showTitle='2' :listWidth="1300" :introData="packageList" :titleData="titleList" :allTotal="count" :listName="'储值方案'">
+		<!-- <com-table :listHeight='80' :showHand='true' :key="index" :showTitle='2' :listWidth="1300" :introData="packageList" :titleData="titleList" :allTotal="count" :listName="'储值方案'">
 			<div class="doBtn" slot="con-0" slot-scope="props">
-				<span @click="clickDetail(props.data)">查看详情</span>
-				<span @click="editDetail(props.data)" v-show="isFlag">编辑</span>
-				<span @click="delList(props.data,props.index)" v-show="isFlag">删除</span>
+				<span @click="clickDetail(scope.row)">查看详情</span>
+				<span @click="editDetail(scope.row)" v-show="isFlag">编辑</span>
+				<span @click="delList(scope.row,props.index)" v-show="isFlag">删除</span>
 			</div>
-			<div slot="con-1" slot-scope="props">{{translateTime(props.data.createTime)}}</div>
-			<div slot="con-3" slot-scope="props">{{props.data.type == 2 ? "-" :props.data.deposit}}</div>
-			<div slot="con-4" slot-scope="props">{{props.data.type == 2 ? "-" :props.data.payment}}</div>
+			<div slot="con-1" slot-scope="props">{{translateTime(scope.row.createTime)}}</div>
+			<div slot="con-3" slot-scope="props">{{scope.row.type == 2 ? "-" :scope.row.deposit}}</div>
+			<div slot="con-4" slot-scope="props">{{scope.row.type == 2 ? "-" :scope.row.payment}}</div>
 			<div slot="con-5" slot-scope="props">
-				<template v-if="props.data.channel == 12 || props.data.channel == 21">
+				<template v-if="scope.row.channel == 12 || scope.row.channel == 21">
 					微信、POS收银
 				</template>
-				<template v-if="props.data.channel == 1">
+				<template v-if="scope.row.channel == 1">
 					微信
 				</template>
-				<template v-if="props.data.channel == 2">
+				<template v-if="scope.row.channel == 2">
 					POS收银
 				</template>
 			</div>
 			<div slot="con-6" slot-scope="props">
-				<template v-if="props.data.type == 1">-</template>
-				<template v-if="props.data.type == 2">
-					<template v-if="props.data.depositRule == 2">
-						{{props.data.deposit}} &lt;=支付金额 &lt;= {{props.data.payment}}
+				<template v-if="scope.row.type == 1">-</template>
+				<template v-if="scope.row.type == 2">
+					<template v-if="scope.row.depositRule == 2">
+						{{scope.row.deposit}} &lt;=支付金额 &lt;= {{scope.row.payment}}
 					</template>
-					<template v-if="props.data.depositRule == 1">
-						支付金额 = {{props.data.deposit}}
+					<template v-if="scope.row.depositRule == 1">
+						支付金额 = {{scope.row.deposit}}
 					</template>
-					<template v-if="props.data.depositRule == 3">
-						支付金额 &gt;= {{props.data.deposit}}
+					<template v-if="scope.row.depositRule == 3">
+						支付金额 &gt;= {{scope.row.deposit}}
 					</template>
-					<template v-if="props.data.depositRule == 4">
-						支付金额 &lt;= {{props.data.deposit}}
+					<template v-if="scope.row.depositRule == 4">
+						支付金额 &lt;= {{scope.row.deposit}}
 					</template>
 				</template>
 			</div>
 			<div slot="con-7" slot-scope="props" class="giftcontent">
-				<template v-if="props.data.type == 1">
-					<template v-if="props.data.giftAmount == 0 && props.data.giftPoint == 0 && props.data.couponIds == ''">
+				<template v-if="scope.row.type == 1">
+					<template v-if="scope.row.giftAmount == 0 && scope.row.giftPoint == 0 && scope.row.couponIds == ''">
 						-
 					</template>
-					<template v-if="props.data.giftAmount == 0 && props.data.giftPoint != 0">
-						赠送{{props.data.giftPoint}}积分
+					<template v-if="scope.row.giftAmount == 0 && scope.row.giftPoint != 0">
+						赠送{{scope.row.giftPoint}}积分
 					</template>
-					<template v-if="props.data.giftAmount != 0 && props.data.giftPoint == 0">
-						赠送金额{{props.data.giftAmount}}元
+					<template v-if="scope.row.giftAmount != 0 && scope.row.giftPoint == 0">
+						赠送金额{{scope.row.giftAmount}}元
 					</template>
-					<template v-if="props.data.giftAmount != 0 && props.data.giftPoint != 0">
-						赠送金额{{props.data.giftAmount}}元，赠送{{props.data.giftPoint}}积分
+					<template v-if="scope.row.giftAmount != 0 && scope.row.giftPoint != 0">
+						赠送金额{{scope.row.giftAmount}}元，赠送{{scope.row.giftPoint}}积分
 					</template>
-					<template v-if="props.data.couponIds">
-						<template v-for="item in props.data.couponIds">
+					<template v-if="scope.row.couponIds">
+						<template v-for="item in scope.row.couponIds">
 							赠送{{item.name}}优惠券{{item.num}}张
 						</template>
 					</template>
 				</template>
-				<template v-if="props.data.type == 2">
-					<template v-if="props.data.giftAmountRule == 0 && props.data.giftPointRule == 0">
+				<template v-if="scope.row.type == 2">
+					<template v-if="scope.row.giftAmountRule == 0 && scope.row.giftPointRule == 0">
 						-
 					</template>
-					<template v-if='props.data.giftAmountRule == 1'>
-						<template v-if="props.data.giftAmount == 0">
+					<template v-if='scope.row.giftAmountRule == 1'>
+						<template v-if="scope.row.giftAmount == 0">
 							-
 						</template>
 						<template v-else>
-							赠送固定储值金额{{props.data.giftAmount}}元 ,
+							赠送固定储值金额{{scope.row.giftAmount}}元 ,
 						</template>
 					</template>
-					<template v-if="props.data.giftAmountRule == 2">
-						<template v-if="props.data.giftAmount == 0">
+					<template v-if="scope.row.giftAmountRule == 2">
+						<template v-if="scope.row.giftAmount == 0">
 						</template>
 						<template v-else>
-							按比例赠送储值金额{{props.data.giftAmount}}%,
+							按比例赠送储值金额{{scope.row.giftAmount}}%,
 						</template>
 					</template>
-					<template v-if="props.data.giftPointRule == 1">
-						<template v-if="props.data.giftPoint == 0">
+					<template v-if="scope.row.giftPointRule == 1">
+						<template v-if="scope.row.giftPoint == 0">
 							-
 						</template>
 						<template v-else>
-							赠送固定积分{{props.data.giftPoint}}分
+							赠送固定积分{{scope.row.giftPoint}}分
 						</template>
 					</template>
-					<template v-if="props.data.giftPointRule == 2">
-						<template v-if="props.data.giftPoint == 0">
+					<template v-if="scope.row.giftPointRule == 2">
+						<template v-if="scope.row.giftPoint == 0">
 							-
 						</template>
 						<template v-else>
-							按比例赠送积分{{props.data.giftPoint}}%
+							按比例赠送积分{{scope.row.giftPoint}}%
 						</template>
 					</template>
 				</template>
 			</div>
-			<div slot="con-8" slot-scope="props">{{props.data.type == 1 ? "固定方案" : "自定义方案"}}</div>
-		</com-table>
+			<div slot="con-8" slot-scope="props">{{scope.row.type == 1 ? "固定方案" : "自定义方案"}}</div>
+		</com-table> -->
+		<!-- 下面的表格 -->
+		<div class="list_box" style="width:100%;">
+			<div class="list_title">
+				<div class="list_title_l fl">
+					<span>储值方案</span>
+					<span></span>
+					<span>共
+								<a href="javascript:;">{{count}}</a>条记录</span>
+				</div>
+				<div class="list_title_r fr">
+				</div>
+			</div>
+			<el-table :data="packageList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+				<el-table-column fixed label="操作" width="200" align="center">
+					<template slot-scope="scope">
+						<el-button size="medium" type="text" @click="clickDetail(scope.row)" style="color: rgb(40, 168, 224);">查看详情</el-button>
+						<span style="padding:0 5px;color: #D2D2D2" v-show="isFlag">|</span>
+						<el-button size="medium" type="text" @click="editDetail(scope.row)" v-show="isFlag" style="color: #ff8d00;">编辑</el-button>
+						<span style="padding:0 5px;color: #D2D2D2" v-show="isFlag">|</span>
+						<el-button size="medium" type="text" @click="delList(scope.row,scope.$index)" v-show="isFlag" style="color: #fd3f1f;">删除</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="时间" align="center" width="150">
+					<template slot-scope="scope">
+						<span>{{translateTime(scope.row.createTime)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="方案名称" prop="name" align="center" width="150">
+				</el-table-column>
+				<el-table-column label="储值金额" align="center" width="100">
+					<template slot-scope="scope">
+						<span>{{scope.row.type == 2 ? "-" :scope.row.deposit}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="支付金额" align="center" width="100">
+					<template slot-scope="scope">
+						<span>{{scope.row.type == 2 ? "-" :scope.row.payment}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="渠道" align="center" width="100">
+					<template slot-scope="scope">
+						<span>{{getchannelName(scope.row.channel)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="赠送条件" align="center" width="150">
+					<template slot-scope="scope">
+						<div v-if="scope.row.type == 2">
+							<span v-if="scope.row.depositRule == 2">{{scope.row.deposit}} &lt;=支付金额 &lt;= {{scope.row.payment}}</span>
+							<span v-if="scope.row.depositRule == 1">
+							支付金额 = {{scope.row.deposit}}
+						</span>
+							<span v-if="scope.row.depositRule == 3">
+							支付金额 &gt;= {{scope.row.deposit}}
+						</span>
+							<span v-if="scope.row.depositRule == 4">
+							支付金额 &lt;= {{scope.row.deposit}}
+						</span>
+						</div>
+						<div v-if="scope.row.type == 1">
+							<span>-</span>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="赠送内容" align="center" width="250">
+					<template slot-scope="scope">
+						<div v-if="scope.row.type == 1">
+							<span v-if="scope.row.giftAmount == 0 && scope.row.giftPoint == 0 && scope.row.couponIds == ''">-</span>
+							<span v-if="scope.row.giftAmount == 0 && scope.row.giftPoint != 0">
+								赠送{{scope.row.giftPoint}}积分
+							</span>
+							<span v-if="scope.row.giftAmount != 0 && scope.row.giftPoint == 0">
+								赠送金额{{scope.row.giftAmount}}元
+							</span>
+							<span v-if="scope.row.giftAmount != 0 && scope.row.giftPoint != 0">
+								赠送金额{{scope.row.giftAmount}}元，赠送{{scope.row.giftPoint}}积分
+							</span>
+							<span v-if="scope.row.couponIds">
+								<span v-for="item in scope.row.couponIds">
+									赠送{{item.name}}优惠券{{item.num}}张
+								</span>
+							</span>
+						</div>
+						<div v-if="scope.row.type == 2">
+							<span v-if="scope.row.giftAmountRule == 0 && scope.row.giftPointRule == 0">-</span>
+							<span v-if='scope.row.giftAmountRule == 1'>
+								<span v-if="scope.row.giftAmount == 0">-</span>
+							<span v-else>赠送固定储值金额{{scope.row.giftAmount}}元 ,</span>
+							</span>
+							<span v-if="scope.row.giftAmountRule == 2">
+								<span v-if="scope.row.giftAmount == 0"></span>
+							<span v-else>按比例赠送储值金额{{scope.row.giftAmount}}%,</span>
+							</span>
+							<span v-if="scope.row.giftPointRule == 1">
+								<span v-if="scope.row.giftPoint == 0">-</span>
+							<span v-else>赠送固定积分{{scope.row.giftPoint}}分</span>
+							</span>
+							<span v-if="scope.row.giftPointRule == 2">
+								<span v-if="scope.row.giftPoint == 0">-</span>
+							<span v-else>按比例赠送积分{{scope.row.giftPoint}}%</span>
+							</span>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="方案类型" align="center" width="120">
+					<template slot-scope="scope">
+						<span>{{scope.row.type == 1 ? "固定方案" : "自定义方案"}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="排序" prop="sort" align="center" width="100">
+				</el-table-column>
+				<el-table-column label="操作人" prop="createUid" align="center" width="100">
+					<!-- <template slot-scope="scope">
+						<el-button size="medium" type="text" @click="changeStuas(scope.row.id,scope.row.status)" style="color: rgb(40, 168, 224);">{{scope.row.status =='1' ? '启用' : '禁用'}}</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="medium" type="text" @click="proedit(scope.row.id)" style="color: #ff8d00;">编辑</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="medium" type="text" @click="dels(scope.row.id)" style="color: #fd3f1f;">删除</el-button>
+					</template> -->
+				</el-table-column>
+			</el-table>
+		</div>
 		<div class="store">
 			<detail :id='id' v-if='show' :shopsList='shopsList' @winEvent='winEvent'></detail>
 		</div>
 		<!-- 翻页 -->
-		<section class="turn-page">
+		<!-- <section class="turn-page">
 			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-		</section>
+		</section> -->
+		<div class="pageWrap">
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
+		</div>
 	</div>
 </template>
 <script type='text/javascript'>
@@ -197,63 +321,6 @@
 				show: false,
 				index: null,
 				item: null,
-				titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: '220px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '创建时间',
-					titleStyle: {
-						width: '160px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '方案名称',
-					dataName: 'name'
-				},
-				{
-					titleName: '储值金额'
-				},
-				{
-					titleName: '支付金额'
-				},
-				{
-					titleName: '渠道',
-					titleStyle: {
-						width: '120px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '赠送条件',
-					titleStyle: {
-						width: '180px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '赠送内容',
-					titleStyle: {
-						width: '220px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '方案类型'
-				},
-				{
-					titleName: '排序',
-					dataName: 'sort'
-				},
-				{
-					titleName: '操作人',
-					dataName: 'createUid'
-				}
-				],
 				userShop: '',
 				ischain: '',
 				selectName: '请选择店铺', //选择的店铺名
@@ -266,11 +333,11 @@
 			};
 		},
 		methods: {
-			pageChange(obj) { //翻页
-				this.page = obj.page;
-				this.num = obj.num;
-				this.getStoreList();
-			},
+			// pageChange(obj) { //翻页
+			// 	this.page = obj.page;
+			// 	this.num = obj.num;
+			// 	this.getStoreList();
+			// },
 			startTimeChange: function(data) {
 				this.startTime = new Date(data).setHours(0, 0, 0, 0);
 			},
@@ -379,12 +446,12 @@
 					this.selectShopId = this.shopsList.map((v) => {
 						return v.id;
 					});
-					let selectNameStr = '';
+					let selectNameStr = [];
 					for (let i = 0; i < this.shopsList.length; i++) {
-
-						selectNameStr = selectNameStr + this.shopsList[i].name + ',';
+						//selectNameStr = selectNameStr + this.shopsList[i].name + ',';
+						selectNameStr.push(this.shopsList[i].name);
 					}
-					this.selectName = selectNameStr;
+					this.selectName = selectNameStr.join(',');
 				} else {
 					this.selectShopId.push(this.userShop.currentShop.id);
 					this.selectName = this.userShop.currentShop.name;
@@ -426,6 +493,30 @@
 					}
 				}
 				this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
+			},
+			getchannelName: function(id) { //获取渠道名称
+				let channelName = '--';
+				let channelArr = [];
+				for (let item of this.expirationTimeList) {
+					for (let i = 0; i < id.length; i++) {
+						if (id[i] == item.id) {
+							channelArr.push(item.name);
+							break;
+						}
+					}
+				}
+				channelName = channelArr.join(',');
+				return channelName;
+			},
+			//每页显示多少条数据
+			handleSizeChange(p) {
+				this.num = p;
+				this.getStoreList();
+			},
+			//页码跳转
+			pageChange(p) {
+				this.page = p;
+				this.getStoreList();
 			},
 		},
 		mounted() {
@@ -520,7 +611,6 @@
 	#member-store .search-box {
 		display: inline-block;
 		vertical-align: middle;
-		width: 200px;
 		height: 40px;
 		margin-left: 20px;
 	}
@@ -541,6 +631,7 @@
 	}
 
 	#member-store .btn {
+		font-size: 16px;
 		margin-bottom: 10px;
 	}
 
@@ -567,7 +658,7 @@
 	}
 
 	#member-store .btn .active {
-		background: #28A8E0;
+		background: #E1BB4A;
 		color: #fff;
 	}
 

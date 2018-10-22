@@ -110,7 +110,7 @@
 				'物料类型', '数量/重量']
 			};
 		},
-		props: ['tabactive', 'page2', 'inventConfigs'],
+		props: ['tabactive', 'inventConfigs'],
 		methods: {
 			async init() {
 				let data = await http.getMaterialList({
@@ -267,7 +267,6 @@
 			},
 			pageChange(page) {
 				this.page = page;
-				this.$emit('page', this.page);
 				this.init();
 			},
 			alert(con, title) {
@@ -277,8 +276,11 @@
 				});
 			}
 		},
+		activated() {
+			this.init();
+			this.getCate();
+		},
 		mounted() {
-			this.page = this.page2;
 			this.init();
 			this.getCate();
 		},

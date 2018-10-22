@@ -11,11 +11,13 @@
             <div class="in-block">
                 <el-date-picker
                     v-model="condition.time"
-                    type="datetimerange"
+                    type="daterange"
                     :editable="false"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     format="yyyy-MM-dd"
+                    :default-time="['00:00:00', '23:59:59']"
+
                     >
                 </el-date-picker>
             </div>
@@ -107,8 +109,8 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="150px">
                     <template slot-scope="{row,column}">
-                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row.type)}">查看记录</span>
-                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row.type)}">批次详情</span>
+                        <span @click="viewHistory(row)" class="view view-detail" :class="{'view-detail-disable':canViewHistory(row)}">查看记录</span>
+                        <span @click="viewBatchDetail(row)" class="view" :class="{'view-detail-disable':canviewBatchDetail(row)}">批次详情</span>
                     </template>
                 </el-table-column>
 
@@ -347,8 +349,8 @@ export default {
         this.initPageObj();
         this.initCondition();
     },
-    activated(){
-        this.getOperationList();
+    async activated(){
+        await this.getOperationList();
         
         this.getCategoryList();
         this.getWarehouseList();

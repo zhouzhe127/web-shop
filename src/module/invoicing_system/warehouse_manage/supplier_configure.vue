@@ -65,12 +65,11 @@
 			</div>
 		</div>
 
-		<!-- 品牌开关 -->
-		<div class="head" v-if="isBrand">
+		<div class="head" >
 			<span>编码配置</span>
 			<div></div>
 		</div>
-		<div class="content" v-if="isBrand">
+		<div class="content" >
 			<div>
 				<el-button @click="openDialog">变更</el-button>
 			</div>
@@ -113,12 +112,11 @@
 			</p>
 		</div>
 
-		<!-- 品牌开关 -->
-		<div class="head" v-if="isBrand">
+		<div class="head" >
 			<span>入库配置</span>
 			<div></div>
 		</div>
-		<div class="content" v-if="isBrand">
+		<div class="content" >
 			<p>
 				是否允许直接入库 : 
 				<el-switch
@@ -303,6 +301,11 @@ export default {
 					this.alert('保存成功!');					
 					return;
 				}
+				if(distribution.length == 0){
+					this.alert('请先填写分销价名称!');
+					return;
+				}
+				
 				retData = await this.getHttp('invoicingUpdateDistributionConfig',{distribution});
 				if(Array.isArray(retData.distribution)){
 					this.alert('保存成功!');

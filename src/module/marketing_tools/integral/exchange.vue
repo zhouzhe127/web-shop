@@ -40,8 +40,8 @@
 			</div>
 		</div>
 		<div class="integralInfo">
-			<span class="fl">已消费：{{usedNum}}份</span>
-			<span class="fl">未消费：{{useNum}}份</span>
+			<span class="fl">已核销:{{usedNum}}份</span>
+			<span class="fl">未核销:{{useNum}}份</span>
 		</div>
 		<!-- <com-table :listHeight='80' :showHand="false" :showTitle='2' :listWidth="1400" :introData="useLists" :titleData="titleList">
 			<div class="imgshow" slot="con-2" slot-scope="props">
@@ -91,8 +91,8 @@
 				</el-table-column>
 				<el-table-column label="券码" width="100" align="center">
 					<template slot-scope="scope">
-						<span v-if="scope.row.goodsType == '0'">--</span>
-						<span v-else>{{scope.row.code}}</span>
+						<span v-if="scope.row.goodsType == '1'">--</span>
+						<span v-else>{{scope.row.code == '' ? '--' : scope.row.code}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="领取门店" width="150" align="center">

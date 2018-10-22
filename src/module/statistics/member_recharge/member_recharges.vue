@@ -28,7 +28,7 @@
 					<a class="order-order-searchA" @click="getPhone('phone')">
 						<span class="order-order-search"></span>
 					</a> -->
-					<el-input class="fl" v-model="orderNumber" placeholder="请输入内容" style="width:202px;"></el-input>
+					<el-input class="fl" v-model="orderNumber" placeholder="请输入手机号码" style="width:202px;"></el-input>
 					<el-button class="fl" type="primary" icon="el-icon-search" @click="getPhone('phone')"></el-button>
 				</div>
 			</div>
@@ -638,7 +638,9 @@ export default {
 			this.phonetotal.push(data.list.total);
 			for (let item of data.list.list) {
 				if (this.ischain == '3') {
-					item.shopName = this.getshopName(item.fromId);
+					let showId = '';
+					showId = item.fromId == '0' ? item.shopId : item.fromId;
+					item.shopName = this.getshopName(showId);
 				} else {
 					item.shopName = this.getshopName(item.shopId);
 				}

@@ -44,6 +44,20 @@ import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 const goodList = storage.session('goodList');
 const packlist = storage.session('packageList'); //所有套餐
+if (goodList) {
+	for (let i = 0; i < goodList.length; i++) {
+		//过滤掉称重商品下架商品
+		if (
+			goodList[i].type == 1 ||
+			goodList[i].type == 2 ||
+			goodList[i].status == 2 ||
+			goodList[i].isGroup == 1
+		) {
+			goodList.splice(i, 1);
+			i--;
+		}
+	}
+}
 export default {
 	data() {
 		return {
@@ -110,13 +124,13 @@ export default {
 				});
 				this.eleGoods = data;
 				//判断是否有关联菜品
-				// for (let j = 0; j < this.eleGoods.length; j++) {
-				// 	for (let k = 0; k < this.eleGoods[j].list.length; k++) {
-				// 		if (this.eleGoods[j].list[k].goodsId !== '') {
-				// 			this.edit = true;
-				// 		}
-				// 	}
-				// }
+				for (let j = 0; j < this.eleGoods.length; j++) {
+					for (let k = 0; k < this.eleGoods[j].list.length; k++) {
+						if (this.eleGoods[j].list[k].goodsId !== '') {
+							this.edit = true;
+						}
+					}
+				}
 				//没有关联自动关联
 				// if (!this.edit) {
 				// 	for (let i = 0; i < this.eleGoods.length; i++) {
@@ -171,11 +185,11 @@ export default {
 						}
 					}
 					//判断是否有关联菜品
-					// for (let j = 0; j < goods[0].list.length; j++) {
-					// 	if (goods[0].list[j].goodsId !== '') {
-					// 		this.edit = true;
-					// 	}
-					// }
+					for (let j = 0; j < goods[0].list.length; j++) {
+						if (goods[0].list[j].goodsId !== '') {
+							this.edit = true;
+						}
+					}
 					//没有关联自动关联
 					// if (!this.edit) {
 					// 	for (let j = 0; j < goods[0].list.length; j++) {

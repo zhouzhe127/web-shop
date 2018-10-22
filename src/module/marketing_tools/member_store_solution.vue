@@ -3,8 +3,204 @@
 		<p class="btn">
 			<span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span>
 		</p>
+		<!-- 方案设置 -->
+		<div class="set-line">
+			<div class="titles">方案设置</div>
+			<div class="line"></div>
+		</div>
 		<!--固定方案-->
-		<div v-if="indexOn == 0">
+		<section v-if="indexOn == 0">
+			<!-- 活动标题 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">方案名</span>
+				<div class="rightHalf">
+					<el-input v-model="name" maxlength="10" placeholder="请输入方案名称"></el-input>
+				</div>
+			</div>
+			<!-- 排序 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">排序</span>
+				<div class="rightHalf">
+					<el-input-number v-model="num" @change="handleChange" :min="1" :max="255" label="描述文字"></el-input-number>
+				</div>
+			</div>
+			<!-- 显示渠道 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">显示渠道</span>
+				<div class="rightHalf">
+					<mulSelect :list='ditchList' :selects="selects" :styles="{'border-radius':'4px','marginRight':'8px'}" :name='"name"' :key='"id"'></mulSelect>
+				</div>
+			</div>
+			<!-- 选择门店 -->
+			<div class="online-box clearfix" v-if="flag && ischain == '3'">
+				<span class="online-sub fl required">储值适用门店</span>
+				<div class="rightHalf">
+					<el-button type="primary" icon="el-icon-plus" @click="openshopWin" style="width:179px;">选择门店</el-button>
+					<span style="color: #A5A5A5;" v-if="fixedslectsShopIds.length > 0">已选择{{fixedslectsShopIds.length}}家门店</span>
+				</div>
+			</div>
+			<!-- 储值金额 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">储值金额</span>
+				<div class="rightHalf">
+					<el-input placeholder="请输入金额" v-model="deposit" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('deposit')">
+						<template slot="suffix">元</template>
+					</el-input>
+				</div>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">支付金额</span>
+				<div class="rightHalf">
+					<el-input placeholder="请输入金额" v-model="payment" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('payment')">
+						<template slot="suffix">元</template>
+					</el-input>
+				</div>
+			</div>
+		</section>
+		<section v-if="indexOn == 1">
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">方案名</span>
+				<div class="rightHalf">
+					<el-input v-model="defName" maxlength="10" placeholder="请输入方案名称"></el-input>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="ischain == '3'">
+				<span class="online-sub fl required">储值适用门店</span>
+				<div class="rightHalf">
+					<el-button type="primary" icon="el-icon-plus" @click="openshopWin" style="width:179px;">选择门店</el-button>
+					<span style="color: #A5A5A5;" v-if="customslectsShopIds.length > 0">已选择{{customslectsShopIds.length}}家门店</span>
+				</div>
+			</div>
+			<!-- 排序 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">排序</span>
+				<div class="rightHalf">
+					<el-input-number v-model="defNum" @change="changeDef" :min="1" :max="255" label="描述文字"></el-input-number>
+				</div>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">赠送条件</span>
+				<div class="rightHalf">
+					<el-select v-model="typeName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
+						<el-option v-for="item in conditionList" :key="item.id" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="conditionOn == 0">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<span>当储值在</span>
+					<el-input placeholder="请输入金额" v-model="defDeposit" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('defDeposit')">
+						<template slot="suffix">元</template>
+					</el-input>
+					<span>至</span>
+					<el-input placeholder="请输入金额" v-model="defPayment" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('defPayment')">
+						<template slot="suffix">元</template>
+					</el-input>
+					<span>时，可赠送</span>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="conditionOn == 1">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<span>当储值金额</span>
+					<el-select v-model="rangeName" placeholder="请选择" @change="chooseRange" style="color:#c0c4cc;width: 179px;">
+						<el-option v-for="item in rangeList" :key="item.id" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+					<el-input placeholder="请输入金额" v-model="defDeposit" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('defDeposit')">
+						<template slot="suffix">元</template>
+					</el-input>
+					<span>时，可赠送</span>
+				</div>
+			</div>
+		</section>
+		<!-- 赠送内容 -->
+		<!-- 方案设置 -->
+		<div class="set-line">
+			<div class="titles">赠送内容</div>
+			<div class="line"></div>
+		</div>
+		<section v-if="indexOn == 0">
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">赠送优惠券</span>
+				<div class="rightHalf">
+					<el-button type="primary" icon="el-icon-plus" @click="openCouponWin" style="width:179px;">添加关联优惠券</el-button>
+					<span style="color: #A5A5A5;" v-if="couponIds.length >= 1">已关联{{couponIds.length}}张优惠券</span>
+				</div>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">支付金额</span>
+				<div class="rightHalf">
+					<el-input placeholder="请输入金额" v-model="giftAmount" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('giftAmount')">
+						<template slot="suffix">元</template>
+					</el-input>
+				</div>
+			</div>
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">赠送积分</span>
+				<div class="rightHalf">
+					<el-input placeholder="请输入金额" v-model="giftPoint" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+						<template slot="suffix">积分</template>
+					</el-input>
+				</div>
+			</div>
+		</section>
+		<section v-if="indexOn == 1">
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">赠送金额</span>
+				<div class="rightHalf">
+					<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in presentList" v-bind:class="{'presentActive':presentOn == index }"
+						    @click="choosePresent(index)">{{item.name}}</span>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="presentOn == 0">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<span>赠送</span>
+					<el-input placeholder="请输入金额" v-model="defGiftAmount" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('defGiftAmount')" style="width:179px;">
+						<template slot="suffix">元</template>
+					</el-input>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="presentOn == 1">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<span>赠送</span>
+					<el-input placeholder="请输入比例" v-model="defGiftAmount" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" style="width:179px;">
+						<template slot="suffix">%</template>
+					</el-input>
+				</div>
+			</div>
+			<!-- 赠送积分 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl required">赠送积分</span>
+				<div class="rightHalf">
+					<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in integralList" v-bind:class="{'presentActive':integralOn == index }"
+						    @click="chooseIntegral(index)">{{item.name}}</span>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="integralOn == 0">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<span>赠送积分为</span>
+					<el-input placeholder="请输入金额" v-model="defGiftPoint" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="6" style="width:179px;">
+						<template slot="suffix">分</template>
+					</el-input>
+				</div>
+			</div>
+			<div class="online-box clearfix" v-if="integralOn == 1">
+				<span class="online-sub fl"></span>
+				<div class="rightHalf">
+					<span>赠送积分为固定金额的</span>
+					<el-input placeholder="请输入金额" v-model="defGiftPoint" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" style="width:179px;">
+						<template slot="suffix">%</template>
+					</el-input>
+				</div>
+			</div>
+		</section>
+		<!-- <div v-if="indexOn == 0">
 			<div class="solutionSet">
 				<p class="headLine">方案设置
 					<span class="borderLine"></span>
@@ -26,26 +222,23 @@
 							<mulSelect :list='ditchList' :selects="selects" :styles="{'background-color':'rgb(240,240,240)'}" :name='"name"' :key='"id"'></mulSelect>
 						</div>
 					</li>
-					<!-- 储值适用门店 -->
+					储值适用门店
 					<li class="setItem" v-if="flag && ischain == '3'">
 						<span class="itemLeft">储值适用门店</span>
 						<a href="javascript:void(0);" class="addclassify" @click="openshopWin">选择门店</a>
 						<span style="color: #A5A5A5;" v-if="fixedslectsShopIds.length > 0">已选择{{fixedslectsShopIds.length}}家门店</span>
-                       
 					</li>
 					<li class="setItem">
 						<span class="itemLeft required">储值金额</span>
 						<section>
-							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="deposit" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('deposit')"
-							/>
+							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="deposit" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('deposit')" />
 							<span class="fl unit">元</span>
 						</section>
 					</li>
 					<li class="setItem" style="margin-bottom: 30px;">
 						<span class="itemLeft required">支付金额</span>
 						<section>
-							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="payment" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('payment')"
-							/>
+							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="payment" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('payment')" />
 							<span class="fl unit">元</span>
 						</section>
 					</li>
@@ -64,46 +257,44 @@
 					<li class="setItem">
 						<span class="itemLeft">赠送金额</span>
 						<section>
-							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="giftAmount" onkeyup="value=value.replace(/[^\d\.]/g,'')"
-							    maxlength="6" @blur="formatValue('giftAmount')" />
+							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="giftAmount" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('giftAmount')" />
 							<span class="fl unit">元</span>
 						</section>
 					</li>
 					<li class="setItem">
 						<span class="itemLeft">赠送积分</span>
 						<section>
-							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="giftPoint" onkeyup="value=value.replace(/[^\d]/g,'')"
-							    maxlength="6" />
+							<input type="text" placeholder="请输入金额" class="inp sum fl" v-model="giftPoint" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="6" />
 							<span class="fl unit">积分</span>
 						</section>
 					</li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 		<!--自定义方案-->
-		<div v-if="indexOn == 1">
-			<div class="solutionSet">
-				<p class="headLine">方案设置
+		<!-- <div v-if="indexOn == 1">
+			<div class="solutionSet"> -->
+		<!-- <p class="headLine">方案设置
 					<span class="borderLine"></span>
-				</p>
-				<ul class="setBox">
-					<li class="setItem">
+				</p> -->
+		<!-- <ul class="setBox"> -->
+		<!-- <li class="setItem">
 						<span class="itemLeft required">方案名</span>
 						<input type="text" placeholder="请输入名称" class="inp" maxlength="10" v-model="defName" />
-					</li>
-					<!-- 储值适用门店 -->
-					<li class="setItem" v-if="ischain == '3'">
+					</li> -->
+		<!-- 储值适用门店 -->
+		<!-- <li class="setItem" v-if="ischain == '3'">
 						<span class="itemLeft">储值适用门店</span>
 						<a href="javascript:void(0);" class="addclassify" @click="openshopWin">选择门店</a>
 						<span style="color: #A5A5A5;" v-if="customslectsShopIds.length > 0">已选择{{customslectsShopIds.length}}家门店</span>
-					</li>
-					<li class="setItem">
+					</li> -->
+		<!-- <li class="setItem">
 						<span class="itemLeft required">排序</span>
 						<section class="sortInp">
 							<subadd :bindnum="defNum" :maxnum="255" :minnum="1" :sign='false' @toClick="changeDef"></subadd>
 						</section>
-					</li>
-					<li class="setItem">
+					</li> -->
+		<!-- <li class="setItem">
 						<span class="itemLeft required">赠送条件</span>
 						<div class="filtrate fl" @click="getClick()">
 							<span class="extent">{{typeName}}</span>
@@ -114,26 +305,24 @@
 						<ul class="filtBox" v-show="willShow">
 							<li v-for="(item,index) in conditionList" :key='index' @click="choseType(index,item)">{{item.name}}</li>
 						</ul>
-					</li>
-					<li class="setItem" style="width: 800px;margin-bottom: 30px;" v-if="conditionOn == 0">
+					</li> -->
+		<!-- <li class="setItem" style="width: 800px;margin-bottom: 30px;" v-if="conditionOn == 0">
 						<span class="itemLeft" style="width: 9%;"></span>
 						<section>
 							<span class="fl">当储值在</span>
 							<div class="fl" style="margin: 0 10px;">
-								<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defDeposit" onkeyup="value=value.replace(/[^\d\.]/g,'')"
-								    maxlength="6" @blur="formatValue('defDeposit')"/>
+								<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defDeposit" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('defDeposit')" />
 								<span class="fl unit">元</span>
 							</div>
 							<span class="fl">至</span>
 							<div class="fl" style="margin: 0 10px;">
-								<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defPayment" onkeyup="value=value.replace(/[^\d\.]/g,'')"
-								    maxlength="6" @blur="formatValue('defPayment')"/>
+								<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defPayment" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('defPayment')" />
 								<span class="fl unit">元</span>
 							</div>
 							<span>时，可赠送</span>
 						</section>
-					</li>
-					<li class="setItem" style="width: 800px;margin-bottom: 30px;" v-if="conditionOn == 1">
+					</li> -->
+		<!-- <li class="setItem" style="width: 800px;margin-bottom: 30px;" v-if="conditionOn == 1">
 						<span class="itemLeft" style="width: 9%;"></span>
 						<section>
 							<span class="fl" style="margin-right: 10px;">当储值金额</span>
@@ -147,49 +336,46 @@
 								<li v-for="(item,index) in rangeList" :key='index' @click="chooseRange(index,item)">{{item.name}}</li>
 							</ul>
 							<div class="fl" style="margin: 0 10px;">
-								<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defDeposit" onkeyup="value=value.replace(/[^\d\.]/g,'')"
-								    maxlength="6" @blur="formatValue('defDeposit')"/>
+								<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defDeposit" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('defDeposit')" />
 								<span class="fl unit">元</span>
 							</div>
 							<span>时，可赠送</span>
 						</section>
-					</li>
-				</ul>
-			</div>
-			<div class="freeContent">
-				<p class="headLine">赠送内容
+					</li> -->
+		<!-- 	</ul>
+			</div> -->
+		<!-- <div class="freeContent"> -->
+		<!-- <p class="headLine">赠送内容
 					<span class="borderLine"></span>
-				</p>
-				<ul class="setBox">
-					<li class="setItem">
+				</p> -->
+		<!-- 	<ul class="setBox"> -->
+		<!-- <li class="setItem">
 						<span class="itemLeft">赠送金额</span>
 						<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in presentList" v-bind:class="{'presentActive':presentOn == index }"
 						    @click="choosePresent(index)">{{item.name}}</span>
-					</li>
-					<li class="setItem" v-if="presentOn == 0 || presentOn == 1">
+					</li> -->
+		<!-- <li class="setItem" v-if="presentOn == 0 || presentOn == 1">
 						<span class="itemLeft"></span>
 						<section>
 							<span class="fl">赠送</span>
 							<div class="fl" style="margin: 0 10px;">
 								<template v-if="presentOn == 0">
-									<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defGiftAmount" onkeyup="value=value.replace(/[^\d\.]/g,'')"
-									    maxlength="6" @blur="formatValue('defGiftAmount')"/>
+									<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defGiftAmount" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue('defGiftAmount')" />
 									<span class="fl unit">元</span>
 								</template>
 								<template v-if="presentOn == 1">
-									<input type="text" placeholder="请输入比例" class="inp sum fl" style="width: 135px;" v-model="defGiftAmount" onkeyup="value=value.replace(/[^\d]/g,'')"
-									    maxlength="4" />
+									<input type="text" placeholder="请输入比例" class="inp sum fl" style="width: 135px;" v-model="defGiftAmount" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" />
 									<span class="fl unit">%</span>
 								</template>
 							</div>
 						</section>
-					</li>
-					<li class="setItem">
+					</li> -->
+		<!-- <li class="setItem">
 						<span class="itemLeft">赠送积分</span>
 						<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in integralList" v-bind:class="{'presentActive':integralOn == index }"
 						    @click="chooseIntegral(index)">{{item.name}}</span>
-					</li>
-					<li class="setItem" v-if="integralOn == 0 || integralOn == 1">
+					</li> -->
+		<!-- <li class="setItem" v-if="integralOn == 0 || integralOn == 1">
 						<span class="itemLeft"></span>
 						<section>
 							<span class="fl">
@@ -202,22 +388,20 @@
 							</span>
 							<div class="fl" style="margin: 0 10px;">
 								<template v-if="integralOn == 0">
-									<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defGiftPoint" onkeyup="value=value.replace(/[^\d]/g,'')"
-									    maxlength="6" />
+									<input type="text" placeholder="请输入金额" class="inp sum fl" style="width: 135px;" v-model="defGiftPoint" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="6" />
 									<span class="fl unit">分</span>
 								</template>
 								<template v-if="integralOn == 1">
-									<input type="text" placeholder="请输入比例" class="inp sum fl" style="width: 135px;" v-model="defGiftPoint" onkeyup="value=value.replace(/[^\d]/g,'')"
-									    maxlength="4" />
+									<input type="text" placeholder="请输入比例" class="inp sum fl" style="width: 135px;" v-model="defGiftPoint" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" />
 									<span class="fl unit">%</span>
 								</template>
 							</div>
 						</section>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<ul class="setBox" style="margin-top: 39px;">
+					</li> -->
+		<!-- 	</ul>
+			</div> -->
+		<!-- </div> -->
+	<!-- 	<ul class="setBox" style="margin-top: 39px;">
 			<li class="setItem">
 				<span class="itemLeft"></span>
 				<section class="buttons">
@@ -225,7 +409,14 @@
 					<a href="javascript:void(0);" class="blue" style="width: 200px;" @click="creatStore">保存</a>
 				</section>
 			</li>
-		</ul>
+		</ul> -->
+		<div class="online-box clearfix">
+			<span class="online-sub fl"></span>
+			<div class="rightHalf">
+				<el-button type="info" style="width: 200px;" @click="backList">取消</el-button>
+				<el-button type="primary" style="width: 200px;" @click="creatStore">保存</el-button>
+			</div>
+		</div>
 		<coupon @compareArr='ca' v-if='show' @couponChange='couponChange' @winEvent='winEvent' :couponIds='couponIds'></coupon>
 		<!-- 选择工作门店 -->
 		<select-work-shop-win :slectsShopIds="slectsShopIds" :isEdit="isEdit" @closeWin="closeShopWin" v-if="isShowShopWin"></select-work-shop-win>
@@ -241,75 +432,69 @@
 		data() {
 			return {
 				ischain: '',
-				bannerList: [
-					{
-						name: '固定方案'
-					},
-					{
-						name: '自定义方案'
-					}
+				bannerList: [{
+					name: '固定方案'
+				},
+				{
+					name: '自定义方案'
+				}
 				], //固定还是自定义方案，数组
 				//          bannerOn: '',//判断是固定方案还是自定义方案，默认固定
 				indexOn: 0, //默认固定
 				isFlag: true, //编辑方案是固定和自定义是否可以切换
 				num: 1, //排序输入框默认值
 				defNum: 1, //自定义排序输入框默认值
-				presentList: [
-					{
-						name: '赠送固定储值金额'
-					},
-					{
-						name: '按比例赠送储值金额'
-					}
+				presentList: [{
+					name: '赠送固定储值金额'
+				},
+				{
+					name: '按比例赠送储值金额'
+				}
 				],
 				presentOn: '-1',
-				integralList: [
-					{
-						name: '赠送固定积分'
-					},
-					{
-						name: '按比例赠送积分'
-					}
+				integralList: [{
+					name: '赠送固定积分'
+				},
+				{
+					name: '按比例赠送积分'
+				}
 				],
 				integralOn: '-1',
-				conditionList: [
-					{
-						name: '满足储值区间可赠送',
-						index: 0
-					},
-					{
-						name: '满足储值条件可赠送',
-						index: 1
-					}
+				conditionList: [{
+					name: '满足储值区间可赠送',
+					id: 0
+				},
+				{
+					name: '满足储值条件可赠送',
+					id: 1
+				}
 				],
 				conditionOn: 0,
 				typeName: '满足储值区间可赠送',
 				willShow: false, //活动类型框是否显示
-				ditchList: [
-					{
-						id: 1,
-						name: '微信'
-					},
-					{
-						id: 2,
-						name: 'POS收银'
-					}
+				ditchList: [{
+					id: 1,
+					name: '微信'
+				},
+				{
+					id: 2,
+					name: 'POS收银'
+				}
 				],
 				ditchOn: '-1',
 				selects: [],
-				rangeList: [
-					{
-						name: '等于',
-						value: '1'
-					},
-					{
-						name: '大于等于',
-						value: '3'
-					},
-					{
-						name: '小于等于',
-						value: '4'
-					}
+				rangeList: [{
+					name: '等于',
+					id: '1'
+				},
+				{
+					name: '大于等于',
+					id: '3'
+				},
+				{
+					name: '小于等于',
+					id: '4'
+				}
 				],
 				rangeShow: false,
 				rangeName: '等于',
@@ -345,7 +530,7 @@
 			};
 		},
 		watch: {
-			'selects': function () {
+			'selects': function() {
 				this.flag = false;
 				for (let item of this.selects) {
 					if (item == '2') {
@@ -382,7 +567,7 @@
 			storage.session('editdetail', null);
 		},
 		methods: {
-			openshopWin: function () {
+			openshopWin: function() {
 				this.isShowShopWin = true;
 				if (this.indexOn == 0) {
 					this.slectsShopIds = this.fixedslectsShopIds;
@@ -412,15 +597,15 @@
 			changeDef(num) {
 				this.defNum = num;
 			},
-			change(num) {
-				this.num = num;
-			},
+			// change(num) {
+			// 	this.num = num;
+			// },
 			//选择固定或者自定义方案
-			chooseBanner: function (index) {
+			chooseBanner: function(index) {
 				this.indexOn = index;
 			},
 			//赠送何种金额
-			choosePresent: function (index) {
+			choosePresent: function(index) {
 				if (this.presentOn == index) {
 					this.presentOn = '-1';
 					this.defGiftAmount = '';
@@ -431,7 +616,7 @@
 				}
 			},
 			//赠送何种积分
-			chooseIntegral: function (index) {
+			chooseIntegral: function(index) {
 
 				if (this.integralOn == index) {
 					this.integralOn = '-1';
@@ -443,21 +628,22 @@
 				}
 			},
 			//选择何种支付方式
-			chooseDitch: function (index) {
+			chooseDitch: function(index) {
 				this.selects = index;
 				this.channel = this.selects;
 
 			},
 
 			//选择区间范围
-			chooseRange: function (index, item) {
-				this.rangeOn = index;
-				this.rangeName = item.name;
-				this.rangeShow = false;
-				this.depositRule = item.value;
+			chooseRange: function(item) {
+				//console.log(item)
+				//this.rangeOn = index;
+				// this.rangeName = item.name;
+				// this.rangeShow = false;
+				this.depositRule = item;
 			},
 			//显示活动类型
-			getClick: function () {
+			getClick: function() {
 				if (this.willShow == true) {
 					this.willShow = false;
 				} else {
@@ -465,7 +651,7 @@
 				}
 			},
 			//显示区间条件
-			getRange: function () {
+			getRange: function() {
 				if (this.rangeShow == true) {
 					this.rangeShow = false;
 				} else {
@@ -473,13 +659,13 @@
 				}
 			},
 			//选择满足何种赠送条件
-			choseType: function (index, item) {
+			choseType: function(index, item) {
 				this.conditionOn = index;
 				this.typeName = item.name;
 				this.willShow = false;
 			},
 			//返回
-			backList: function () {
+			backList: function() {
 				this.$router.push('/admin/memberStoredValueScheme');
 			},
 
@@ -500,21 +686,19 @@
 					this.giftPointRule = '';
 					this.depositRule = '';
 					this.slectsShopIds = this.flag ? this.fixedslectsShopIds : []; //固定方案的id
-					if (!global.checkData(
-						{
-							name: '请填写方案名',
-							channel: '请选择显示渠道',
-							deposit: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写储值金额'
-							},
-							payment: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写支付金额'
-							},
+					if (!global.checkData({
+						name: '请填写方案名',
+						channel: '请选择显示渠道',
+						deposit: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写储值金额'
+						},
+						payment: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写支付金额'
+						},
 
-						}, this)) return false;
-
+					}, this)) return false;
 				}
 				//判断必填项是否填写完整
 				if (this.type == 2) {
@@ -543,20 +727,16 @@
 					}
 					if (this.conditionOn == 0) {
 						this.depositRule = 2;
-
-						if (!global.checkData(
-							{
-								defDeposit: {
-									cond: `$$!=''&&!isNaN($$)`,
-									pro: '请正确填写自定义赠送条件起始金额'
-								},
-								defPayment: {
-									cond: `$$!=''&&!isNaN($$)`,
-									pro: '请正确填写自定义赠送条件结束金额'
-								},
-
-							}, this)) return false;
-
+						if (!global.checkData({
+							defDeposit: {
+								cond: `$$!=''&&!isNaN($$)`,
+								pro: '请正确填写自定义赠送条件起始金额'
+							},
+							defPayment: {
+								cond: `$$!=''&&!isNaN($$)`,
+								pro: '请正确填写自定义赠送条件结束金额'
+							},
+						}, this)) return false;
 						//判断储值金额区间
 						if (this.depositRule == 2) {
 							if ((Number(this.defDeposit) - Number(this.defPayment)) > 0) {
@@ -568,16 +748,14 @@
 						}
 					}
 					if (this.conditionOn == 1) {
-						if (!global.checkData(
-							{
-								defDeposit: {
-									cond: `$$!=''&&!isNaN($$)`,
-									pro: '请正确填写自定义赠送条件起始金额'
-								},
-							}, this)) return false;
+						if (!global.checkData({
+							defDeposit: {
+								cond: `$$!=''&&!isNaN($$)`,
+								pro: '请正确填写自定义赠送条件起始金额'
+							},
+						}, this)) return false;
 					}
 				}
-
 				//判断赠送金额条件
 				if (this.presentOn == 0 && this.type == 2) {
 					if (this.defGiftAmount == 0) {
@@ -656,7 +834,7 @@
 
 			},
 			//点击编辑或者修改时数据回填
-			editDetail: function () {
+			editDetail: function() {
 				this.indexOn = this.editdetail.type - 1;
 				this.type = this.editdetail.type;
 				this.name = this.editdetail.name;
@@ -734,11 +912,73 @@
 			},
 			formatValue: function(model) {
 				this[model] = utils.toFloatStr(this[model], 2);
-			},			
+			},
+			handleChange: function(value) {
+				this.num = value;
+			},
+			selexpirationTime: function(val) { //活动期限
+				//this.durationName = this.durationList[i].name; //点击对应的名字
+				this.conditionOn = val; //点击对应的id
+				//console.log(this.durationId)
+			},
 		}
 	};
 </script>
 <style scoped>
+	#solutionStore {
+		max-width: 1400px;
+		height: auto;
+	}
+
+	#solutionStore .set-line {
+		width: 1000px;
+		height: 28px;
+		line-height: 28px;
+		border-left: 4px solid #28a8e0;
+		margin: 15px 0 35px;
+		position: relative;
+	}
+
+	#solutionStore .set-line .titles {
+		float: left;
+		margin-left: 12px;
+		width: 100px;
+		font-size: 16px;
+		text-align: left;
+	}
+
+	#solutionStore .set-line .line {
+		display: inline-block;
+		width: 870px;
+		border-bottom: 1px dashed #d9d9d9;
+		margin-bottom: 5px;
+	}
+
+	#solutionStore .online-box {
+		width: 100%;
+		height: auto;
+		min-height: 40px;
+		margin-bottom: 29px;
+	}
+
+	#solutionStore .online-box .online-sub {
+		display: block;
+		font-size: 16px;
+		width: 150px;
+		height: 40px;
+		line-height: 40px;
+		color: #333;
+		text-align: right;
+		margin-right: 14px;
+	}
+
+	#solutionStore .online-box .rightHalf {
+		max-width: 900px;
+		height: auto;
+		float: left;
+		line-height: 40px;
+	}
+
 	#solutionStore .solution {
 		width: 101px;
 		height: 42px;
@@ -762,15 +1002,26 @@
 		display: block;
 		font-size: 16px;
 		text-align: center;
+		border: 1px solid #dcdfe6;
 		line-height: 41px;
 		cursor: pointer;
 		margin: 0;
-		background: #F2F2F2;
-		color: #333;
+		background: #fff;
+		color: #606266;
+	}
+
+	#solutionStore .btn .store:first-child {
+		border-radius: 4px 0 0 4px;
+		border-right: 0;
+	}
+
+	#solutionStore .btn .store:last-child {
+		border-radius: 0px 4px 4px 0px;
+		border-left: 0;
 	}
 
 	#solutionStore .btn .active {
-		background: #28A8E0;
+		background: #e1bb4a;
 		color: #fff;
 	}
 
@@ -924,11 +1175,12 @@
 	#solutionStore .freeFix {
 		width: 212px;
 		height: 40px;
-		border: 1px #D2D2D2 solid;
+		border: 1px #dcdfe6 solid;
 		display: inline-block;
 		line-height: 40px;
 		text-align: center;
 		cursor: pointer;
+		border-radius: 4px;
 	}
 
 	#solutionStore .presentActive {

@@ -96,6 +96,7 @@
 </template>
 <script>
 
+import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
 
@@ -123,6 +124,7 @@ export default {
 			},
 			winShow:false,
 			isExamine:false,//是否审核页面
+			isBrand:true,//是否为品牌
 		};
 	},
 	components:{
@@ -133,12 +135,19 @@ export default {
 		if(from.path=='/admin/purchaseAudit'){
 			next(function(self){
 				self.isExamine = true;
+				storage.session('purchaseDetailExamine',true);
 			});
 		}else{
 			next();	
 		}
 	},
+	destroyed(){
+		storage.session('purchaseDetailExamine',null);
+	},
 	mounted(){
+		let isExamine = storage.session('purchaseDetailExamine');
+		if(isExamine) this.isExamine = true;
+			
 		this.initBtn();
 		this.id = this.$route.query.id;
 		if(this.id){
@@ -171,47 +180,52 @@ export default {
 		setBtnShow(){
 			let arr=[];
 			if(this.detail.status=='0'){//未审核
-				arr = [
-					{name: '取消申请',className: 'primary',type:4,
-						fn: () => {
-							this.setOrderStatus(4,'取消申请');
+				if(this.isExamine){//从审核页面进来
+					arr = [{name: '审核通过',className: 'primary',type:4,
+							fn: () => {
+								this.setOrderStatus(2,'审核通过');
+							}
+						},
+						{name: '审核不通过',className: 'primary',type:4,
+							fn: () => {
+								this.setOrderStatus(1,'审核不通过');
+							}
 						}
-					},
-					
-				];
-				if(this.isExamine){
-					arr.push({name: '审核通过',className: 'primary',type:4,
-						fn: () => {
-							this.setOrderStatus(2,'审核通过');
-						}
-					},
-					{name: '审核不通过',className: 'primary',type:4,
-						fn: () => {
-							this.setOrderStatus(1,'审核不通过');
-						}
-					});
+					];
+				}else{//非审核
+					arr = [
+						{name: '取消申请',className: 'primary',type:4,
+							fn: () => {
+								this.setOrderStatus(4,'取消申请');
+							}
+						},
+					];
 				}
-			}else if(this.detail.status=='2'){//审核通过
-				arr = [
-					{name: '确认入库',className: 'primary',type:4,
-						fn: () => {
-							this.intoStorege();
+			}else if(this.detail.status=='2' && !this.isExamine){//审核通过
+				if(!this.isExamine){//非审核
+					arr = [
+						{name: '确认入库',className: 'primary',type:4,
+							fn: () => {
+								this.intoStorege();
+							}
+						},
+						{name: '重新提交',className: 'primary',type:4,
+							fn: () => {
+								this.resetSubmit();
+							}
 						}
-					},
-					{name: '重新提交',className: 'primary',type:4,
-						fn: () => {
-							this.resetSubmit();
-						}
-					}
-				];
+					];
+				}
 			}else if(this.detail.status=='1' || this.detail.status=='4'){//审核不通过 已取消
-				arr = [
-					{name: '重新提交',className: 'primary',type:4,
-						fn: () => {
-							this.resetSubmit();
+				if(!this.isExamine){//非审核
+					arr = [
+						{name: '重新提交',className: 'primary',type:4,
+							fn: () => {
+								this.resetSubmit();
+							}
 						}
-					}
-				];
+					];
+				}
 			}
 			this.btnArr.splice(1);
 			this.btnArr.push(...arr);

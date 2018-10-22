@@ -22,6 +22,7 @@
                 end-placeholder="结束日期"
                 format="yyyy-MM-dd"
                 :clearable="false"
+                :default-time="['00:00:00', '23:59:59']"
                 >
             </el-date-picker>
         </div>
@@ -67,7 +68,10 @@
     </div>
 
     <div class="content">
-        <el-table :data="tableData" stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
+        <el-table :data="tableData"  
+            v-loading="loading.mList" 
+            element-loading-text="加载中,请稍后..."
+            stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
 
             <el-table-column  min-width="150px"  label="物料名称" fixed="left">
                 <span slot-scope="{row,column}" @click="viewDetail(row,'name')" class="yellow-font">{{row['name']}}</span>
@@ -393,6 +397,9 @@ export default {
                 mList:'',                                //表格数据的定时器
                 mExport:'',                              //导出的定时器
             },
+            loading:{
+                mList:false,
+            }
         };
     },
     methods: {
@@ -413,17 +420,19 @@ export default {
             if(!this.checkCondition(subDate)){
                 return;
             }
-
+            this.loading.mList = true;
             this.timerTask.mList = await this.createTask({
                 subDate,
                 url:'MaterialstatisticStatisticStart',
                 success:(taskId)=>{
                     this.clearTaskTimer('mList');
                     this.getList(taskId);
+                    this.loading.mList = false;
                 },
                 fail:()=>{
                     this.alert('查询失败,请重新查询!');
                     this.clearTaskTimer('mList');
+                    this.loading.mList = false;                    
                 }
             });
 
@@ -946,9 +955,10 @@ export default {
         elShopList: () =>
             import ( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
     },
-    beforeDestroy(){
+    beforeRouteLeave(to,from,next){
         //清除定时器
-        Timer.clear(this.timerTask.mList);
+        this.clearTaskTimer('mList');
+        next();
     },
 };
 </script>

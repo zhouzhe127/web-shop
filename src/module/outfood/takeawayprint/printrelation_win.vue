@@ -33,7 +33,8 @@
 				</section>
 			</section>
 			<section class="comList" v-if="selectgoods.length>0">
-				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='areaIndex[0]==2?"shelfId":"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}" @selOn="getRelation"></mulSelect>
+				<mulSelect :list="selectgoods" :selects="goodsIndex" :name='"goodsName"' :keys='"goodsId"' :isradio="false" :styles="{'background-color':'#F1F1F1'}"
+				 @selOn="getRelation"></mulSelect>
 			</section>
 		</section>
 
@@ -41,373 +42,392 @@
 </template>
 
 <script>
-import http from 'src/manager/http';
-import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
+	import http from 'src/manager/http';
+	import storage from 'src/verdor/storage';
+	import utils from 'src/verdor/utils';
 
-let userData = storage.session('userShop');
-let brandId;
-if (userData.currentShop.brandId) {
-	brandId = userData.currentShop.brandId;
-} else {
-	brandId = 0;
-}
-export default {
-	props: {
-		pObj: null
-	},
-	data() {
-		return {
-			L1ID: null,
-			L2ID: 0,
-			shopIndex: null,
-			category: [],
-			child: [],
-			selectgoods: [],
-			goodsCom: [],
-			goodsIndex: [],
-			selectPackages: [],
-			show: -1,
-			title: '添加关联菜品',
-			areaIndex: null, //区域id
-			goodsIds: null, //商品id
-			eleShopId: null, //选中的店铺id
-			goods: null
-		};
-	},
-	methods: {
-		getRelation: function(res) {
-			if(res[res.length-1]>=0){
-				if (res.length > 0) {
-					this.goodsIndex = res;
-				}
-			}else{
-				res.pop();
-				this.$message.error('该商品未关联！');
-			}
-			
+	let userData = storage.session('userShop');
+	let brandId;
+	if (userData.currentShop.brandId) {
+		brandId = userData.currentShop.brandId;
+	} else {
+		brandId = 0;
+	}
+	export default {
+		props: {
+			pObj: null
 		},
-		getWinClickResult: function(res) {
-			if (res == 'ok') {
-				//将选中的菜品转为后台需要的数据格式
-				let goods = {};
-				let allPackageIds = [];
-				this.goodsLength = this.goodsIndex.length;
-				this.goodsIds = this.goodsIndex;
-				for (let i = 0; i < this.goodsIds.length; i++) {
-					if (this.areaIndex[0] == 1) {
-						for (let j = 0; j < this.goodsCom.length; j++) {
-							if (this.goodsIds[i] == this.goodsCom[j].goodsId) {
-								let packageIds = [];
-								if (this.goodsCom[j].packageIds != '') {
-									packageIds.push(
-										this.goodsCom[j].packageIds
-									);
-								}
-								allPackageIds = allPackageIds.concat(
-									packageIds
-								);
-								this.packageIds = allPackageIds.toString();
-								goods[this.goodsIds[i] + ''] = this.goodsCom[
-									j
-								].specId;
-							}
-						}
-					} else if (this.areaIndex[0] == 2) {
-						for (let j = 0; j < this.mtgoods.length; j++) {
-							if (this.goodsIds[i] == this.mtgoods[j].shelfId) {
-								let packageIds = [];
-								if (this.mtgoods[j].packageIds != '') {
-									packageIds.push(this.mtgoods[j].packageIds);
-								}
-								allPackageIds = allPackageIds.concat(
-									packageIds
-								);
-								this.packageIds = allPackageIds.toString();
-								goods[this.mtgoods[j].goodsId + ''] = this.mtgoods[
-									j
-								].specId;
-							}
-						}
-					} else if (this.areaIndex[0] == 3) {
-						for (let j = 0; j < this.baidugoods.length; j++) {
-							if (
-								this.goodsIds[i] == this.baidugoods[j].goodsId
-							) {
-								let packageIds = [];
-								if (this.baidugoods[j].packageIds != '') {
-									packageIds.push(
-										this.baidugoods[j].packageIds
-									);
-								}
-								allPackageIds = allPackageIds.concat(
-									packageIds
-								);
-								this.packageIds = allPackageIds.toString();
-								goods[this.goodsIds[i] + ''] = this.baidugoods[
-									j
-								].specId;
-							}
-						}
-					}
-				}
-				console.log(goods)
-				this.goods = JSON.stringify(goods);
-			}
-			this.goodsIndex = utils.unique(this.goodsIndex);
-			let postData = {
-				goods: this.goods,
-				packageIds: this.packageIds,
-				goodsLength: this.goodsIndex.length,
-				goodsIds: this.goodsIndex
+		data() {
+			return {
+				L1ID: null,
+				L2ID: 0,
+				shopIndex: null,
+				category: [],
+				child: [],
+				selectgoods: [],
+				goodsCom: [],
+				goodsIndex: [],
+				selectPackages: [],
+				show: -1,
+				title: '添加关联菜品',
+				areaIndex: null, //区域id
+				goodsIds: null, //商品id
+				eleShopId: null, //选中的店铺id
+				goods: null
 			};
-			this.$emit('toClick', res, postData);
 		},
-		async catecarygoods(index) {
-			// 请求商品列表
-			if (index < 1) {
-				return;
-			} else {
-				let res = await http.getGoodsByCategoryId({
-					data: {
-						type: 1,
-						categoryId: this.category[index].categoryId
+		methods: {
+			getRelation: function (res) {
+				if (res[res.length - 1] >= 0) {
+					if (res.length > 0) {
+						this.goodsIndex = res;
 					}
-				});
-				for (let i = 0; i < res.length; i++) {
-					this.goodsCom.push(res[i]);
+				} else {
+					res.pop();
+					this.$message.error('该商品未关联！');
 				}
-				this.goodReady();
-				this.catecarygoods(index - 1);
-			}
-		},
-		changeL1ID: function(id) {
-			this.L1ID = id;
-			this.L2ID = 0;
-			this.goodReady(id);
-		},
-		changeL2ID: function(id) {
-			this.L2ID = id;
-			this.goodReady(id);
-		},
-		incategory: function(cids) {
-			if (this.L1ID == 0) return true;
-			if (cids.indexOf(this.L1ID) >= 0 && this.L2ID == 0) {
-				return true;
-			} else if (cids.indexOf(this.L2ID) >= 0) {
-				return true;
-			}
-			return false;
-		},
-		async requestAllList(id) {
-			// 饿了么请求分类列表
-			if (this.areaIndex[0] == 1) {
-				let res = await http.takeoutGetCategoryList({
-					data: {
-						eleShopId: this.eleShopId
-					}
-				});
-				this.category = res;
-				if (res) {
-					this.category.unshift({
-						categoryName: '全部',
-						categoryId: 0
-					});
-				}
-				this.catecarygoods(this.category.length - 1);
-			} else if (this.areaIndex[0] == 2) {
-				let res = await http.getMtGoods({ data: {} });
-				this.category = res.typeList;
-				if (res) {
-					this.category.unshift({
-						categoryName: '全部',
-						categoryId: 0
-					});
-				}
-				this.mtgoods = res.goodsList;
-				this.goodReady();
-				let arr = [];
-				for (let i = 0; i < this.mtgoods.length; i++) {
-					if (id === undefined || id === '全部') {
-						let item = this.mtgoods[i];
-						if (!(item.categoryName instanceof Array)) {
-							arr = arr.concat(item);
-						} else {
-							if (this.incategory(item.categoryName)) {
-								arr = arr.concat(item);
+
+			},
+			getWinClickResult: function (res) {
+				let allPackageIds = [];
+				if (res == 'ok') {
+					//将选中的菜品转为后台需要的数据格式
+					let goods = {};
+
+					this.goodsLength = this.goodsIndex.length;
+					this.goodsIds = this.goodsIndex;
+					for (let i = 0; i < this.goodsIds.length; i++) {
+						if (this.areaIndex[0] == 1) {
+							for (let j = 0; j < this.goodsCom.length; j++) {
+								if (this.goodsIds[i] == this.goodsCom[j].goodsId) {
+									let packageIds = [];
+									if (this.goodsCom[j].packageIds != '') {
+										packageIds.push(
+											this.goodsCom[j].packageIds
+										);
+										allPackageIds = allPackageIds.concat(
+											packageIds
+										);
+									} else {
+										goods[this.goodsIds[i] + ''] = this.goodsCom[
+											j
+										].specId;
+									}
+
+								}
+							}
+						} else if (this.areaIndex[0] == 2) {
+							for (let j = 0; j < this.mtgoods.length; j++) {
+								if (this.goodsIds[i] == this.mtgoods[j].goodsId) {
+									let packageIds = [];
+									if (this.mtgoods[j].packageIds != '') {
+										packageIds.push(this.mtgoods[j].packageIds);
+										allPackageIds = allPackageIds.concat(
+											packageIds
+										);
+									} else {
+										goods[this.mtgoods[j].goodsId + ''] = this.mtgoods[
+											j
+										].specId;
+									}
+
+								}
+							}
+						} else if (this.areaIndex[0] == 3) {
+							for (let j = 0; j < this.baidugoods.length; j++) {
+								if (
+									this.goodsIds[i] == this.baidugoods[j].goodsId
+								) {
+									let packageIds = [];
+									if (this.baidugoods[j].packageIds != '') {
+										packageIds.push(
+											this.baidugoods[j].packageIds
+										);
+										allPackageIds = allPackageIds.concat(
+											packageIds
+										);
+									} else {
+										
+										goods[this.goodsIds[i] + ''] = this.baidugoods[
+											j
+										].specId;
+									}
+
+								}
 							}
 						}
-					} else {
-						if (this.mtgoods[i].categoryName == id) {
-							arr = arr.concat(this.mtgoods[i]);
-						}
 					}
-				}
-			} else if (this.areaIndex[0] == 3) {
-				let res = await http.getBaiduGoods({
-					data: {
-						type: 1,
-						brandId: brandId
-					}
-				});
-				this.category = res.categoryList;
-				if (res) {
-					this.category.unshift({
-						categoryName: '全部',
-						categoryId: 0
-					});
-				}
-				this.baidugoods = res.goodsList;
-				this.goodReady();
-				let arr = [];
-				for (let i = 0; i < this.baidugoods.length; i++) {
-					if (id === undefined || id === '全部') {
-						let item = this.baidugoods[i];
-						if (!(item.categoryName instanceof Array)) {
-							arr = arr.concat(item);
-						} else {
-							if (this.incategory(item.categoryName)) {
-								arr = arr.concat(item);
-							}
-						}
-					} else {
-						if (this.baidugoods[i].categoryName == id) {
-							arr = arr.concat(this.baidugoods[i]);
-						}
-					}
-				}
-			}
-		},
-		goodReady: function(id) {
-			let arr = [];
-			//饿了么美团数据格式不同 需要判断,eleme根据id选中，美团根据name选中
-			if (this.areaIndex[0] == 1) {
-				for (let i = 0; i < this.goodsCom.length; i++) {
-					if (id === undefined || id === 0) {
-						let item = this.goodsCom[i];
-						if (!(item.categoryId instanceof Array)) {
-							arr = arr.concat(item);
-						} else {
-							if (this.incategory(item.categoryId)) {
-								arr = arr.concat(item);
-							}
-						}
-					} else {
-						if (this.goodsCom[i].categoryId == id) {
-							arr = arr.concat(this.goodsCom[i]);
-						}
-					}
-				}
-			} else if (this.areaIndex[0] == 2) {
-				for (let i = 0; i < this.mtgoods.length; i++) {
-					this.mtgoods[i].shelfId = this.mtgoods[i].specId[0]||-i+1;
-					if (id === undefined || id === '全部') {
-						let item = this.mtgoods[i];
-						if (!(item.categoryName instanceof Array)) {
-							arr.push(item);
-						} else {
-							if (this.incategory(item.categoryName)) {
-								arr.push(item);
-							}
-						}
-					} else {
-						if (this.mtgoods[i].categoryName == id) {
-							arr.push(this.mtgoods[i]);
-						}
-					}
-				}
-				console.log(arr);
-			} else if (this.areaIndex[0] == 3) {
-				for (let i = 0; i < this.baidugoods.length; i++) {
-					if (id === undefined || id === '全部') {
-						let item = this.baidugoods[i];
-						if (!(item.categoryName instanceof Array)) {
-							arr.push(item);
-						} else {
-							if (this.incategory(item.categoryName)) {
-								arr.push(item);
-							}
-						}
-					} else {
-						if (this.baidugoods[i].categoryName == id) {
-							arr.push(this.baidugoods[i]);
-						}
-					}
-				}
-			}
-			this.selectgoods = arr;
-		},
-		wholeOnCom: function() {
-			if (this.areaIndex[0]) {
-				for (let i = 0; i < this.selectgoods.length; i++) {
-					this.goodsIndex.push(this.selectgoods[i].goodsId);
+					this.goods = JSON.stringify(goods);
 				}
 				this.goodsIndex = utils.unique(this.goodsIndex);
-			}
-		},
-		wholeOffCom: function() {
-			if (this.areaIndex[0]) {
-				for (let i = 0; i < this.selectgoods.length; i++) {
-					this.goodsIndex = this.goodsIndex.filter(x=>{
-						return x!=this.selectgoods[i].goodsId;
-					})
+				let postData = {
+					goods: this.goods,
+					packageIds: allPackageIds,
+					goodsLength: this.goodsIndex.length,
+					goodsIds: this.goodsIndex
+				};
+				this.$emit('toClick', res, postData);
+			},
+			async catecarygoods(index) {
+				// 请求商品列表
+				if (index < 1) {
+					return;
+				} else {
+					let res = await http.getGoodsByCategoryId({
+						data: {
+							type: 1,
+							categoryId: this.category[index].categoryId
+						}
+					});
+					for (let i = 0; i < res.length; i++) {
+						this.goodsCom.push(res[i]);
+					}
+					this.goodReady();
+					this.catecarygoods(index - 1);
+				}
+			},
+			changeL1ID: function (id) {
+				this.L1ID = id;
+				this.L2ID = 0;
+				this.goodReady(id);
+			},
+			changeL2ID: function (id) {
+				this.L2ID = id;
+				this.goodReady(id);
+			},
+			incategory: function (cids) {
+				if (this.L1ID == 0) return true;
+				if (cids.indexOf(this.L1ID) >= 0 && this.L2ID == 0) {
+					return true;
+				} else if (cids.indexOf(this.L2ID) >= 0) {
+					return true;
+				}
+				return false;
+			},
+			async requestAllList(id) {
+				// 饿了么请求分类列表
+				if (this.areaIndex[0] == 1) {
+					let res = await http.takeoutGetCategoryList({
+						data: {
+							eleShopId: this.eleShopId
+						}
+					});
+					this.category = res;
+					if (res) {
+						this.category.unshift({
+							categoryName: '全部',
+							categoryId: 0
+						});
+					}
+					this.catecarygoods(this.category.length - 1);
+				} else if (this.areaIndex[0] == 2) {
+					let res = await http.getMtGoods({
+						data: {}
+					});
+					this.category = res.typeList;
+					if (res) {
+						this.category.unshift({
+							categoryName: '全部',
+							categoryId: 0
+						});
+					}
+					this.mtgoods = res.goodsList;
+					this.goodReady();
+					let arr = [];
+					for (let i = 0; i < this.mtgoods.length; i++) {
+						if (id === undefined || id === '全部') {
+							let item = this.mtgoods[i];
+							if (!(item.categoryName instanceof Array)) {
+								arr = arr.concat(item);
+							} else {
+								if (this.incategory(item.categoryName)) {
+									arr = arr.concat(item);
+								}
+							}
+						} else {
+							if (this.mtgoods[i].categoryName == id) {
+								arr = arr.concat(this.mtgoods[i]);
+							}
+						}
+					}
+				} else if (this.areaIndex[0] == 3) {
+					let res = await http.getBaiduGoods({
+						data: {
+							type: 1,
+							brandId: brandId
+						}
+					});
+					this.category = res.categoryList;
+					if (res) {
+						this.category.unshift({
+							categoryName: '全部',
+							categoryId: 0
+						});
+					}
+					this.baidugoods = res.goodsList;
+					this.goodReady();
+					let arr = [];
+					for (let i = 0; i < this.baidugoods.length; i++) {
+						if (id === undefined || id === '全部') {
+							let item = this.baidugoods[i];
+							if (!(item.categoryName instanceof Array)) {
+								arr = arr.concat(item);
+							} else {
+								if (this.incategory(item.categoryName)) {
+									arr = arr.concat(item);
+								}
+							}
+						} else {
+							if (this.baidugoods[i].categoryName == id) {
+								arr = arr.concat(this.baidugoods[i]);
+							}
+						}
+					}
+				}
+			},
+			goodReady: function (id) {
+				let arr = [];
+				//饿了么美团数据格式不同 需要判断,eleme根据id选中，美团根据name选中
+				if (this.areaIndex[0] == 1) {
+					for (let i = 0; i < this.goodsCom.length; i++) {
+						if (this.goodsCom[i].packageIds) this.goodsCom[i].goodsId = this.goodsCom[i].packageIds;
+						if (id === undefined || id === 0) {
+							let item = this.goodsCom[i];
+							if (!(item.categoryId instanceof Array)) {
+								arr = arr.concat(item);
+							} else {
+								if (this.incategory(item.categoryId)) {
+									arr = arr.concat(item);
+								}
+							}
+						} else {
+							if (this.goodsCom[i].categoryId == id) {
+								arr = arr.concat(this.goodsCom[i]);
+							}
+						}
+					}
+				} else if (this.areaIndex[0] == 2) {
+					for (let i = 0; i < this.mtgoods.length; i++) {
+						if (this.mtgoods[i].packageIds) this.mtgoods[i].goodsId = this.mtgoods[i].packageIds;
+						this.mtgoods[i].goodsId = this.mtgoods[i].specId[0] || this.mtgoods[i].packageIds ? this.mtgoods[i].goodsId : -i -
+							1;
+						if (id === undefined || id === '全部') {
+							let item = this.mtgoods[i];
+							if (!(item.categoryName instanceof Array)) {
+								arr.push(item);
+							} else {
+								if (this.incategory(item.categoryName)) {
+									arr.push(item);
+								}
+							}
+						} else {
+							if (this.mtgoods[i].categoryName == id) {
+								arr.push(this.mtgoods[i]);
+							}
+						}
+					}
+				} else if (this.areaIndex[0] == 3) {
+					for (let i = 0; i < this.baidugoods.length; i++) {
+						if (this.baidugoods[i].packageIds) this.baidugoods[i].goodsId = this.baidugoods[i].packageIds;
+						if (id === undefined || id === '全部') {
+							let item = this.baidugoods[i];
+							if (!(item.categoryName instanceof Array)) {
+								arr.push(item);
+							} else {
+								if (this.incategory(item.categoryName)) {
+									arr.push(item);
+								}
+							}
+						} else {
+							if (this.baidugoods[i].categoryName == id) {
+								arr.push(this.baidugoods[i]);
+							}
+						}
+					}
+				}
+				this.selectgoods = arr;
+			},
+			wholeOnCom: function () {
+				if (this.areaIndex[0]) {
+					this.goodsIndex = [];
+					for (let i = 0; i < this.selectgoods.length; i++) {
+						if (this.selectgoods[i].goodsId > 0) {
+							this.goodsIndex.push(this.selectgoods[i].goodsId);
+						}
+					}
+					this.goodsIndex = utils.unique(this.goodsIndex);
+				}
+			},
+			wholeOffCom: function () {
+				if (this.areaIndex[0]) {
+					for (let i = 0; i < this.selectgoods.length; i++) {
+						this.goodsIndex = this.goodsIndex.filter(x => {
+							return x != this.selectgoods[i].goodsId;
+						});
+					}
 				}
 			}
+		},
+		mounted() {
+			this.areaIndex = this.pObj.areaIndex;
+			this.goodsIds = this.pObj.goodsIds;
+			this.eleShopId = this.pObj.eleShopid;
+			this.L1ID = this.areaIndex[0] == 1 ? 0 : '全部';
+			this.shopIndex = this.areaIndex;
+			this.goodsIndex = this.goodsIds;
+			this.requestAllList();
+		},
+		components: {
+			win: () =>
+				import( /*webpackChunkName: "win"*/ 'src/components/win'),
+			mulSelect: () =>
+				import( /*webpackChunkName: "mul_select"*/ 'src/components/mul_select')
 		}
-	},
-	mounted() {
-		console.log(this.pObj.areaIndex);
-		this.areaIndex = this.pObj.areaIndex;
-		this.goodsIds = this.pObj.goodsIds;
-		this.eleShopId = this.pObj.eleShopid;
-		this.L1ID = this.areaIndex[0] == 1 ? 0 : '全部';
-		this.shopIndex = this.areaIndex;
-		this.goodsIndex = this.goodsIds;
-		this.requestAllList();
-	},
-	components: {
-		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		mulSelect: () =>
-			import(/*webpackChunkName: "mul_select"*/ 'src/components/mul_select')
-	}
-};
+	};
 </script>
 
 <style scoped>
-.selectbtns {
-	width: auto;
-}
-.selectbtns span {
-	background-color: #fff;
-}
-.selectbtns span:hover {
-	background-color: #fff;
-}
-.relatedForm {
-	width: 980px;
-	height: 500px;
-	padding: 30px;
-}
-.comList {
-	width: 100%;
-	height: auto;
-	overflow: hidden;
-	margin-bottom: 30px;
-}
-.comList .selectbtns {
-	width: 100%;
-}
-.comList .selectbtns span,
-.packageList span {
-	background-color: #f1f1f1;
-}
-.comList .selectbtns span:hover,
-.packageList span:hover {
-	background-color: #f1f1f1;
-}
-.loading {
-	width: 128px;
-	margin: 200px auto;
-}
-</style>
+	.selectbtns {
+		width: auto;
+	}
 
+	.selectbtns span {
+		background-color: #fff;
+	}
+
+	.selectbtns span:hover {
+		background-color: #fff;
+	}
+
+	.relatedForm {
+		width: 980px;
+		height: 500px;
+		padding: 30px;
+	}
+
+	.comList {
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		margin-bottom: 30px;
+	}
+
+	.comList .selectbtns {
+		width: 100%;
+	}
+
+	.comList .selectbtns span,
+	.packageList span {
+		background-color: #f1f1f1;
+	}
+
+	.comList .selectbtns span:hover,
+	.packageList span:hover {
+		background-color: #f1f1f1;
+	}
+
+	.loading {
+		width: 128px;
+		margin: 200px auto;
+	}
+</style>

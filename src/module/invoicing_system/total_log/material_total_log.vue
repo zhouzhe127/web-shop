@@ -11,10 +11,11 @@
             <div class="in-block">
                 <el-date-picker
                     v-model="condition.time"
-                    type="datetimerange"
+                    type="daterange"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     format="yyyy-MM-dd"
+                    :default-time="['00:00:00', '23:59:59']"
                     >
                 </el-date-picker>
             </div>
@@ -436,9 +437,9 @@ export default {
         this.getQueryData();
         this.initPageObj();
     },
-    activated(){
+    async activated(){
         this.getQueryData();        
-        this.getOperationList('material');
+        await this.getOperationList('material');
         this.getCategoryList();
         this.getWarehouseList();
         this.filterReset('filter',this.pageObj.currentPage);
