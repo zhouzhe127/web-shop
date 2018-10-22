@@ -119,8 +119,12 @@
 			</div>
 			<!-- 选择店铺 -->
 			<div class="theSelected">
-				<div class="choice">选择店铺：</div>
-				<div class="shopName">{{selectName}}</div>
+				<div class="choice">选择店铺：
+                      <span @click="stretch" v-html="show?'收起':'展开'"></span> 
+                </div>
+				<div v-if="show">
+                    {{selectName}}
+                </div>
 			</div>
 			<!-- body -->
 			<section v-if='!phone'>
@@ -261,7 +265,7 @@
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import global from 'src/manager/global';
-import { mixin } from './mixin.js';
+import {mixin} from './mixin.js';
 
 export default {
 	mixins: [mixin],
@@ -288,7 +292,8 @@ export default {
 			dataList: [{ //按天状态
 				name: '按天数',
 				id: 1
-			}, {
+			},
+			{
 				name: '按详情',
 				id: 0
 			}], //卡类型筛选列表
@@ -325,10 +330,11 @@ export default {
 			phonelist: [],
 			planId: [], //充值方案Id集合
 			intervalLeft: '', //实付区间1
-			intervalRight: '' //实付区间2
+			intervalRight: '', //实付区间2
+			show: true,
 		};
 	},
-	created: function() {
+	created: function () {
 		this.isBrand = false; //品牌店的状态 品牌店铺下面有一个店铺操作
 		this.userShop = storage.session('userShop');
 		this.ischain = this.userShop.currentShop.ischain;
@@ -358,13 +364,17 @@ export default {
 		// }
 	},
 	methods: {
-		startTimeChange: function(data) {
+		//展开，收起
+		stretch: function () {
+			this.show = !this.show;
+		},
+		startTimeChange: function (data) {
 			this.startTime = new Date(data).setHours(0, 0, 0, 0);
 		},
-		endTimeChange: function(data) {
+		endTimeChange: function (data) {
 			this.endTime = new Date(data).setHours(23, 59, 59, 999);
 		},
-		openShop: function() { //店铺选择弹窗的消失和隐藏
+		openShop: function () { //店铺选择弹窗的消失和隐藏
 			if (this.isBrand) {
 				this.shopListBtn = !this.shopListBtn; //标识取反    
 			} else {
@@ -372,7 +382,7 @@ export default {
 				return false;
 			}
 		},
-		getshopIdorshopName: function() {
+		getshopIdorshopName: function () {
 			//默认全部选中
 			if (this.ischain == '3') {
 				let brandShop = storage.session('userShop').currentShop; //品牌店铺
@@ -403,7 +413,7 @@ export default {
 			}
 		},
 		// 获取卡属门店店铺列表
-		clickShopList: function(arr) {
+		clickShopList: function (arr) {
 			this.shopsList = arr;
 			let idArr = [];
 			let nameArr = [];
@@ -420,13 +430,13 @@ export default {
 			this.selectShopId = idArr.join(',');
 		},
 		// 选择电子卡或实体卡
-		selCard: function(value) {
+		selCard: function (value) {
 			this.cardId = value;
 			// this.cardhigh = this.cardList[i].name; //点击卡类型对应的名字
 			// this.cardId = this.cardList[i].id; //点击卡类型对应的id
 		},
 		// 按天数或详情
-		selData: function(value) {
+		selData: function (value) {
 			this.dataId = value;
 			// this.datahigh = this.dataList[i].name; //点击卡类型对应的名字
 			// this.dataId = this.dataList[i].id; //点击卡类型对应的id
@@ -540,7 +550,7 @@ export default {
 				this.setPage();
 			}
 		},
-		getshopName: function(id) {
+		getshopName: function (id) {
 			let shopName = '';
 			for (let item of this.shopsList) {
 				if (item.id == id) {
@@ -549,7 +559,7 @@ export default {
 			}
 			return shopName;
 		},
-		showoneshopDetail: function(item) {
+		showoneshopDetail: function (item) {
 			if (this.dataId == '1') {
 				this.showtype = 'one';
 			} else {
@@ -568,7 +578,7 @@ export default {
 				}
 			}]);
 		},
-		checkData: function(type) {
+		checkData: function (type) {
 			let re = /^1\d{10}$/;
 			if ((this.endTime - this.startTime) > global.timeConst.THREEMONTHS) {
 				this.valiData('只能查询间隔三个月的数据');
@@ -597,11 +607,11 @@ export default {
 			}
 			return true;
 		},
-		selectBusinessHours: function() {
+		selectBusinessHours: function () {
 			//是否开启营业模式
 			this.isOpenTime = !this.isOpenTime;
 		},
-		filterReset: function() {
+		filterReset: function () {
 			//重置
 			this.startTime = new Date().setHours(0, 0, 0, 0); //.getZero();
 			this.endTime = (new Date()).setHours(23, 59, 59, 999);
@@ -673,7 +683,7 @@ export default {
 			this.planId = id;
 		},
 	},
-	mounted: function() {
+	mounted: function () {
 		this.$store.commit('setPageTools', [{
 			name: '导出',
 			className: ['fd-blue'],
@@ -682,33 +692,33 @@ export default {
 			}
 		}]);
 		this.rechargeQuery();
-		document.onclick = function() {
+		document.onclick = function () {
 			this.constructionsBtn = false;
 		};
 	},
 	components: {
 		Calendar: () =>
-			import ( /*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
+			import( /*webpackChunkName: "calendar_type"*/ 'src/components/calendar_type'),
 		SelectStore: () =>
-			import ( /*webpackChunkName: "select_store"*/ 'src/components/select_store'),
+			import( /*webpackChunkName: "select_store"*/ 'src/components/select_store'),
 		PageElement: () =>
-			import ( /*webpackChunkName: "page_element"*/ 'src/components/page_element'),
+			import( /*webpackChunkName: "page_element"*/ 'src/components/page_element'),
 		selectBtn: () =>
-			import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+			import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 		ComTable: () =>
-			import ( /*webpackChunkName:"com_table" */ 'src/components/com_table'),
+			import( /*webpackChunkName:"com_table" */ 'src/components/com_table'),
 		oneshoprecharge: () =>
-			import ( /*webpackChunkName: "member_recharges_oneshop"*/ './member_recharges_oneshop'),
+			import( /*webpackChunkName: "member_recharges_oneshop"*/ './member_recharges_oneshop'),
 		oneshopdetail: () =>
-			import ( /*webpackChunkName: "member_recharges_onedetail"*/ './member_recharges_onedetail'),
+			import( /*webpackChunkName: "member_recharges_onedetail"*/ './member_recharges_onedetail'),
 		'coupon-detail': () =>
-			import ( /*webpackChunkName: "member_recharge_couponwin"*/ './member_recharge_couponwin'),
+			import( /*webpackChunkName: "member_recharge_couponwin"*/ './member_recharge_couponwin'),
 		'recharge-phone': () =>
-			import ( /*webpackChunkName: "member_recharges_phone"*/ './member_recharges_phone'),
+			import( /*webpackChunkName: "member_recharges_phone"*/ './member_recharges_phone'),
 		paymentWin: () =>
-			import ( /*webpackChunkName: "payment_win"*/ './payment_win'),
+			import( /*webpackChunkName: "payment_win"*/ './payment_win'),
 		'prepaid-plan': () =>
-			import ( /*webpackChunkName:"prepaid_phone_plan" */ './prepaid_phone_plan.vue'),
+			import( /*webpackChunkName:"prepaid_phone_plan" */ './prepaid_phone_plan.vue'),
 	},
 };
 </script>
@@ -1031,9 +1041,14 @@ export default {
 			font-size: 16px;
 			color: #333;
 		}
-		.choice {
-			width: 80px;
-		}
+		// .choice {
+		// 	width: 80px;
+        // }
+        .choice span{
+			color:#29abe2; 
+            padding:0 5px;
+            display: inline-block;
+        }
 	}
 	.sta_body {
 		max-width: 1452px;

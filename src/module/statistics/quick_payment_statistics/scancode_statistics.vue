@@ -38,11 +38,12 @@
 			<!-- 已经选择的店铺 -->
 			<div class="choiceshop">
 				<div class="choiceshop_l">
-					选择店铺:
-				</div>
-				<div class="choiceshop_r">
-					{{selectName}}
-				</div>
+					选择店铺:    
+                        <span @click="stretch" v-html="show?'收起':'展开'"></span> 
+				</div>  
+				<div class="choiceshop_r" v-if="show" ref="reference">
+					{{selectName}}           
+				</div> 
 			</div>
 			<section style="margin-bottom:20px;">
 				<!-- <com-table @tableEvent="tableEvent" :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
@@ -92,8 +93,7 @@
 					<div class="list_title_l fl">
 						<span>快捷支付统计</span>
 						<span></span>
-						<span>共
-								<a href="javascript:;">{{allFormList.length}}</a>个条目</span>
+						<span>共<a href="javascript:;">{{allFormList.length}}</a>个条目</span>
 					</div>
 					<div class="list_title_r fr">
 					</div>
@@ -175,19 +175,33 @@
 				loading: false, //状态
 				timerqueue: [],
 				transmitId: [], //传递给选择店铺页面的id
+				show: true,
+				shopText: '900',
 			};
 		},
 		methods: {
+			//展开，收起
+			stretch: function () {
+				this.show = !this.show;
+			},
+			// shopText:function(obj,size,msg){
+			//     let length = size - text(obj).value.length;
+			//     if(length > 900){
+			//         show = true;
+			//     }else{
+			//        show = false;
+			//     }
+			// },
 			//选择开始时间
-			getStartTime: function(receiveTime) {
+			getStartTime: function (receiveTime) {
 				this.startObj.time = receiveTime; //毫秒
 			},
 			//选择结束时间
-			getEndTime: function(receiveTime) {
+			getEndTime: function (receiveTime) {
 				this.endObj.time = receiveTime; //毫秒
 			},
 			//点击按营业时间
-			selectBusinessHours: function() {
+			selectBusinessHours: function () {
 				this.isOpenTime = !this.isOpenTime;
 			},
 			// getSelectShopList: function(res) {
@@ -205,7 +219,7 @@
 			// 		selectNameStr == '' ? '请选择店铺' : selectNameStr.join(',');
 			// },
 			//选择店铺返回
-			getSelectShopList: function(res) {
+			getSelectShopList: function (res) {
 				console.log(this.postSelectShopList);
 				this.transmitId = res;
 				let selectNameStr = '';
@@ -220,7 +234,7 @@
 				this.shopIds = res.join(',');
 				this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
 			},
-			checkData: function() {
+			checkData: function () {
 				if (
 					this.endObj.time - this.startObj.time >
 					global.timeConst.THREEMONTHS
@@ -259,7 +273,7 @@
 				return true;
 			},
 			//重置
-			resetting: function() {
+			resetting: function () {
 				this.startObj.time = new Date().setHours(0, 0, 0, 0);
 				this.endObj.time = new Date().setHours(23, 59, 59, 999);
 				this.isOpenTime = false;
@@ -274,7 +288,7 @@
 			// 	this.num = obj.num;
 			// 	this.setPage();
 			// },
-			setPage: function() {
+			setPage: function () {
 				this.endTotal = Math.ceil(this.allFormList.length / this.num);
 				let pageStart = (this.page - 1) * this.num;
 				let pageEnd = this.page * this.num;
@@ -350,7 +364,7 @@
 					});
 				}
 			},
-			getshopName: function(id) {
+			getshopName: function (id) {
 				let shopName = '';
 				for (let item of this.postSelectShopList) {
 					if (item.id == id) {
@@ -370,12 +384,12 @@
 					}
 				}]);
 			},
-			showoneshopDetail: function(item) {
+			showoneshopDetail: function (item) {
 				this.showtype = 'one';
 				this.constructionsName = this.getshopName(item.shopId); //店铺名称
 				this.constructionsId = item.shopId;
 			},
-			getshopIdorshopName: function() {
+			getshopIdorshopName: function () {
 				//默认全部选中
 				if (this.ischain == '3') {
 					let selectShopList = storage.session('shopList');
@@ -425,13 +439,13 @@
 		},
 		components: {
 			calendar: () =>
-				import ( /*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
 			pageElement: () =>
-				import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+				import( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 			comTable: () =>
-				import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+				import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 			oneshopStatics: () =>
-				import ( /*webpackChunkName: "scancode_shopstatistics"*/ './scancode_shopstatistics'),
+				import( /*webpackChunkName: "scancode_shopstatistics"*/ './scancode_shopstatistics'),
 			elShopList: () =>
 				import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList')
 		},
@@ -464,6 +478,12 @@
 					this.Export();
 				}
 			}]);
+			let a = this.$refs.reference.offsetWidth;
+			if (this.$refs.reference && a >= 901) {
+				this.show = false;
+			} else {
+				this.show = true; 
+			}
 		},
 		destroyed() {
 			clearInterval(this.timer);
@@ -546,11 +566,17 @@
 		font-size: 16px;
 		line-height: 24px;
 	}
+    #scancode .choiceshop .choiceshop_l span{
+        color:#29abe2; 
+        padding:0 5px;
+        display: inline-block;
+    }
 
 	#scancode .choiceshop .choiceshop_r {
 		float: left;
 		width: 900px;
 		font-size: 16px;
 		line-height: 24px;
+        height: auto;
 	}
 </style>
