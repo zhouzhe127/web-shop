@@ -2,20 +2,20 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-25 14:04:20
+ * @Last Modified time: 2018-10-22 18:25:49
  * @Module:店铺配置——打印机管理
 **/
 <template>
 	<section class="fl" id="printer" style="width:100%;">
 		<div>
-			<el-select v-model="terType" @change="showList" placeholder="请选择服务终端" style="width:170px;">
+			<!-- <el-select v-model="terType" @change="showList" placeholder="请选择服务终端" style="width:170px;">
 				<el-option
 					v-for="(item,i) in newTerminalList" 
 					:key="i"
 					:label="item.name"
 					:value="item.id">
 				</el-option>
-			</el-select>
+			</el-select> -->
 			<!-- <span>打印机类型</span> -->
 			<el-select v-model="selectType" @change="showList" placeholder="请选择打印机类型" style="width:170px;">
 				<el-option
@@ -30,16 +30,16 @@
 			</el-input>
 			<el-button @click="reseat" type="info">重置</el-button>
 		</div>
-		<div style="padding:10px 0;color:#606266;" v-if="oldId!==''">
+		<!-- <div style="padding:10px 0;color:#606266;" v-if="oldId!==''">
 			<span>打印服务总端口配置</span>
 			<el-button @click="selectTerminal" size="small" type="primary" style="margin:0 10px;">终端配置</el-button>
 			<span style="color:#ccc;">当前配置：</span>
 			<span style="color:#ccc;">{{terminalName}}</span>
-		</div>
-		<el-radio-group v-model="selectTab" style="margin:10px 0;">
+		</div> -->
+		<!-- <el-radio-group v-model="selectTab" style="margin:10px 0;">
 			<el-radio-button label="0">打印机列表</el-radio-button>
 			<el-radio-button label="1">打印服务终端</el-radio-button>
-		</el-radio-group>
+		</el-radio-group> -->
 		<div v-if="selectTab==0" style="margin:10px 0;">
 			<el-table
 				stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
@@ -149,13 +149,13 @@ export default {
 					this.openWin({pid:null,types:'addPrint',index:null,bel:false});
 				},
 			},
-			{
-				name: '添加打印服务终端',
-				className: ['addStaff', 'export-btn'],
-				fn:()=>{
-					this.openWin({pid:null,types:'addPrint',index:null,bel:true});
-				}
-			}
+			// {
+			// 	name: '添加打印服务终端',
+			// 	className: ['addStaff', 'export-btn'],
+			// 	fn:()=>{
+			// 		this.openWin({pid:null,types:'addPrint',index:null,bel:true});
+			// 	}
+			// }
 		]);
 		this.getPrinterList();
 	},

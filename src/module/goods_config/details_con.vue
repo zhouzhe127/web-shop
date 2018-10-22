@@ -1,8 +1,7 @@
 /**
  * @Author: 曾伟福 
  * @Date: 2018-09-04 14:04:23 
- * @Last Modified by: zhigang.li
- * @Last Modified time: 2018-10-12 16:49:40
+ * @Last Modified by: 孔伟研
  * @Module:商品管理
 **/
 
@@ -50,7 +49,7 @@
 				</el-radio-group>
 				<div v-if="selectTab==1" class="boxTop" style="display:inline-block">
 					<span v-if="ischain=='1'||ischain=='2'" class="aSpan">
-						<i class="aI" style=""></i>品牌指派
+						<i class="aI" style=""></i>品牌同步
 					</span>
 					<span v-if="ischain=='1'||ischain=='2'" class="aSpan" style="color:#2ea7e0;">
 						<i class="aI" style="background:#2ea7e0;"></i>门店自建

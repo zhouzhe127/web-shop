@@ -30,6 +30,10 @@ export default {
 		url: r + 'Spec/getList', //获取规格列表----零售
 		method: 'post'
 	},
+	getListBySpecId: {
+		url: r + 'SpecValue/getListBySpecId', //获取规格的子规格----零售
+		method: 'get'
+	},
 	createRetailGood: {
 		//创建商品----零售
 		url: r + 'Spu/add',
@@ -40,7 +44,15 @@ export default {
 		url: r + 'Spu/getOne',
 		method: 'get'
 	},
-	getCategoryList: {
+	retailGoodUpOrDownShelf: { //零售商品上下架----零售
+		url: r + 'Spu/upOrDownShelf',
+		method: 'post'
+	},
+	goodRetailEdit: { //编辑商品----零售
+		url: r + 'Spu/edit',
+		method: 'post'
+	},
+	'getCategoryList': {
 		url: s + 'category/getCategoryList', //获取商品分类
 		method: 'get'
 	},
