@@ -45,13 +45,13 @@ module.exports = {
                     maxInitialRequests: 5,
                     minSize: 0
                 },
-                vendor: {
-                    test: /node_modules/,
-                    chunks: 'initial',
-                    name: 'verdor',
-                    priority: 10,
-                    enforce: true,
-                }
+                // vendor: {
+                //     test: /node_modules/,
+                //     chunks: 'initial',
+                //     name: 'verdor',
+                //     priority: 10,
+                //     enforce: true,
+                // }
             }
         },
         runtimeChunk: {
