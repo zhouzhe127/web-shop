@@ -145,6 +145,9 @@
 				} else {
 					this.toRouter(item.child[0].name);
 				}
+				this.$nextTick(()=>{
+					this.$store.commit('setasideWidth', this.$refs.mainElent.clientWidth);
+				});
 			},
 			changeCon: function (item, index) {
 				if (item.child && item.child.length > 0) {

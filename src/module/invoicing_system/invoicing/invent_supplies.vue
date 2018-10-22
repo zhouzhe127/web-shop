@@ -64,7 +64,6 @@
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import global from 'src/manager/global';
-	let page2 = 1;
 	export default {
 		data() {
 			return {
@@ -111,12 +110,12 @@
 				'物料类型', '数量/重量']
 			};
 		},
-		props: ['tabactive', 'page2', 'inventConfigs'],
+		props: ['tabactive', 'inventConfigs'],
 		methods: {
 			async init() {
 				let data = await http.getMaterialList({
 					data: {
-						page: page2,
+						page: this.page,
 						name: this.goodsName,
 						cid: this.sleCate[this.sleCate.length-1],
 						type: this.typeValue,
@@ -126,7 +125,6 @@
 				this.allList = data.list;
 				this.pageTotal = data.total;
 				this.count = data.count;
-				this.page = page2;
 				let arr = [];
 				for (let item of this.allList) {
 					arr.push(item.id);
@@ -269,8 +267,6 @@
 			},
 			pageChange(page) {
 				this.page = page;
-				page2 = this.page;
-				this.$emit('page', this.page);
 				this.init();
 			},
 			alert(con, title) {
@@ -280,8 +276,11 @@
 				});
 			}
 		},
+		activated() {
+			this.init();
+			this.getCate();
+		},
 		mounted() {
-			page2 = this.page2;
 			this.init();
 			this.getCate();
 		},
