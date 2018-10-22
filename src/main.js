@@ -22,7 +22,10 @@ import 'src/components/index.css';
 import ElementUI from 'src/components/element-ui.common';
 
 
-// Vue.use(ElementUI);
+if(process.env.NODE_ENV === 'development'){
+	Vue.use(ElementUI);
+}
+
 if (module.hot) {
     module.hot.accept();
 }
@@ -121,7 +124,7 @@ class Main {
 
 
         //生产环境下，屏蔽输出
-        if (!process.env.ASSET_PATH) {
+        if (process.env.NODE_ENV === 'production') {
             let log = console.log;
             console.log = function () {};
         }
