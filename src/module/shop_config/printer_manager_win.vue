@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:54 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-20 15:56:00
+ * @Last Modified time: 2018-10-22 18:29:28
  * @Module:打印机管理弹窗
 **/
 <template>
@@ -16,11 +16,11 @@
 							<el-radio class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item required label="打印服务终端">
+					<!-- <el-form-item required label="打印服务终端">
 						<el-radio-group v-model="terminaIndex">
 							<el-radio class="labItem" size="small" v-for="(item,i) in newTerminalList" :key="i" :label="item.id" border>{{item.name}}</el-radio>
 						</el-radio-group>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item required label="打印机名称">
 						<el-input v-model="printerName" placeholder = "请输入名称" maxlength="30" style = "width:300px;"></el-input>
 					</el-form-item>
@@ -409,7 +409,7 @@ export default {
 			// this.printDetial = await http.getPrintDetial({
 			// 	data: { shopId: this.shopId, printerId: this.printerId }
 			// });
-			console.log(this.printDetial);
+			// console.log(this.printDetial);
 			this.terminaIndex = this.printDetial.printTerminalId+'';
 			this.printerName = this.printDetial.printerName;
 			this.ip = this.printDetial.ip;
