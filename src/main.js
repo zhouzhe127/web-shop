@@ -1,25 +1,28 @@
+/* eslint-disable */
 import babelPolyfill from 'babel-polyfill';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import routerConfig from './config/routes'
 import App from './app';
-import VueRouter from "vue-router";
-import "src/res/css/layout.css";
-import "src/res/css/reset.css";
-import "src/res/css/font-icon.css";
-import global from "src/manager/global";
+import VueRouter from 'vue-router';
+import 'src/res/css/layout.css';
+import 'src/res/css/reset.css';
+import 'src/res/css/font-icon.css';
+import global from 'src/manager/global';
 import {
     store
-} from "src/manager/store";
-import ajax from "src/verdor/ajax";
-import directive from "src/manager/directive";
-// import DataBase from "src/verdor/database";
-import storgae from "src/verdor/storage"
-import utils from "src/verdor/utils"
+} from 'src/manager/store';
+import ajax from 'src/verdor/ajax';
+import directive from 'src/manager/directive';
+// import DataBase from 'src/verdor/database';
+import storgae from 'src/verdor/storage'
+import utils from 'src/verdor/utils'
 import 'src/components/index.css';
 // import ElementUI from 'src/components/main';
 import ElementUI from 'src/components/element-ui.common';
-Vue.use(ElementUI);
+
+
+// Vue.use(ElementUI);
 if (module.hot) {
     module.hot.accept();
 }
@@ -32,7 +35,7 @@ class Main {
         var cdn = process.env.ASSET_PATH;
         try {
             //php环境中
-            cdn = httpDomain.cdn + "static/";
+            cdn = httpDomain.cdn + 'static/';
             global.isPhpEnv = true;
             global.uploadUrl = httpDomain.uploadUrl;
             global.host = httpDomain.host;
@@ -43,25 +46,25 @@ class Main {
         global.cdnUrl = cdn;
         let router = new VueRouter({
             routes: routerConfig,
-            // mode:"history"
+            // mode:'history'
         })
         global.router = router;
         //全局钩子，判断当前是否是登录状态
         router.beforeEach((to, from, next) => {
 
-            store.dispatch("debugCont", "准备切换为: " + to.path);
+            store.dispatch('debugCont', '准备切换为: ' + to.path);
             /* 非主内容区域,content区域需要滚动 */
             if (to.path != '/') {
 
-                if (to.path.indexOf("/brandAudit") > -1) {
-                    store.commit("setContentDisplay", true)
+                if (to.path.indexOf('/brandAudit') > -1) {
+                    store.commit('setContentDisplay', true)
                 } else {
-                    store.commit("setContentDisplay", false)
+                    store.commit('setContentDisplay', false)
                 }
 
             }
 
-            if (to.path == "/" || global.checkLogin()) {
+            if (to.path == '/' || global.checkLogin()) {
                 store.commit('setPageTools', {});
                 ajax.abortLoad();
                 next();
@@ -77,33 +80,33 @@ class Main {
         })
 
         router.afterEach((to, from) => {
-            store.dispatch("debugCont", to.path + " 切换完成");
+            store.dispatch('debugCont', to.path + ' 切换完成');
         })
 
-        document.addEventListener("error", function (e) {
+        document.addEventListener('error', function (e) {
             let elem = e.target;
             let name = elem.tagName.toLowerCase();
             if (name === 'script' && elem.src.indexOf(cdn) > -1) {
-                store.commit("setWin", {
-                    content: "版本已经更新,请清除缓存,然后刷新页面",
+                store.commit('setWin', {
+                    content: '版本已经更新,请清除缓存,然后刷新页面',
                     callback: () => {
 
                     }
                 });
             }
             if (name === 'img') {
-                elem.src = require("../src/res/images/busis.png");
+                elem.src = require('../src/res/images/busis.png');
             }
         }, true)
 
-        document.addEventListener("click", (e) => {
+        document.addEventListener('click', (e) => {
             if (e.target.id != 'debug') {
-                store.dispatch("debugCont", "点击了:" + e.target.textContent);
+                store.dispatch('debugCont', '点击了:' + e.target.textContent);
             }
         })
 
         window.onerror = function (msg, fileName, line, col, error) {
-            store.dispatch("debugCont", "程序报错了: " + msg);
+            store.dispatch('debugCont', '程序报错了: ' + msg);
             return true;
         }
 

@@ -22,8 +22,23 @@ var webpackConfig = merge(baseWebpackConfig, {
         filename: jsName,
         path: path.resolve(__dirname,"../", `${configs.dest}static`),
         publicPath,
-        chunkFilename: 'js/async/[name].js?[chunkhash:8]'
-    },
+		chunkFilename: 'js/async/[name].js?[chunkhash:8]',
+		libraryTarget: 'umd',
+		umdNamedDefine: true
+	},
+	externals:{
+		"babel-polyfill":{
+			root: 'BabelPolyfill',
+			commonjs: 'babel-polyfill',
+			commonjs2: 'babel-polyfill',
+			amd: 'babel-polyfill'
+		},
+		'vue' : 'Vue',
+        'vuex' : 'Vuex',
+        'vue-router' : 'VueRouter',
+        'src/components/element-ui.common' : 'Element',
+	},
+	
     module: {
         
     },
