@@ -459,6 +459,10 @@ let need = {
 		getPurchaseOrderReviewList: { //采购审核
 			name: 'purchaseAudit'
 		},
+		customPackageStatistics: {
+			//自定义套餐
+			name: 'customPackageStatistics'
+		},
 		materialWorking:{			//加工物料
 			name:'processMaterial'
 		}
