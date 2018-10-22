@@ -18,6 +18,7 @@
 					<span class="order-order-search" href="javascript:void(0)"></span>
 					</span>
 				</div>
+
 				<!--品牌店铺选择-->
 				<div class="filbox fl">
 					<span style="font-size:16px;" v-if="ischain == '3'">选择店铺</span>
@@ -34,8 +35,21 @@
 				<div class="search-box fl">
 					<span class="search-btn blue" @click="getStatistics">筛选</span>
 					<span class="reset-btn gray" @click="resetFun">重置</span>
-				</div>
+				</div> 
 			</div>
+            <!-- 已经选择的店铺 -->
+                
+            <div class="choiceshop"  v-if="ischain == '3'">
+                <div class="choiceshop_l" >
+                    选择店铺:   
+                        <span @click="stretch" v-if="show">收起</span>
+                        <span @click="stretch" v-if="!show">展开</span>  
+                </div> 
+                <div class="choiceshop_r" v-if="show"> 
+                    {{selShopid}}
+                </div> 
+            </div>
+ 
 			<!-- 环比 同比 -->
 			<div class="compared">
 				<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span>
@@ -339,10 +353,15 @@ export default {
 				dataName: 'num'
 			}
 			],
-			timerqueue: []
+			timerqueue: [],
+			show:false
+
 		};
 	},
-	methods: {
+	methods:{
+		stretch: function () {
+			this.show = !this.show;
+		},
 		startTimeChange(time) {
 			//开始时间
 			this.startTime = time;
@@ -737,6 +756,29 @@ export default {
 #evaluation {
 	padding-bottom: 40px;
 	min-width: 1245px;
+}
+
+#evaluation .choiceshop {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#evaluation .choiceshop .choiceshop_l {
+    float: left;
+    font-size: 16px;
+    line-height: 24px;
+}
+#evaluation .choiceshop .choiceshop_l span{
+    color:#29abe2; 
+    padding:0 5px;
+    display: inline-block;
+}
+#evaluation .choiceshop .choiceshop_r {
+    float: left;
+    width: 900px;
+    font-size: 16px;
+    line-height: 24px;
 }
 
 #evaluation .filter {
