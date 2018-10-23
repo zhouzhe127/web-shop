@@ -460,7 +460,7 @@ let need = {
 			name: 'purchaseAudit'
 		},
 		materialWorking:{			//加工物料
-			name:'processMaterial'
+			name:'processHistory'
 		}
 	}
 };
