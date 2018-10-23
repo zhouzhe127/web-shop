@@ -75,7 +75,7 @@ export default {
 				{ id: 7, name: '在线点单' },
 				{ id: 8, name: '自助点单' },
 				{ id: 9, name: '外卖' },
-				//				{ id: 10, name: '自提' },
+				{ id: 10, name: '自提' },
 				{ id: 11, name: '快递' }
 			],
 			packMenuId: 1, //选中渠道类型，默认桌台模式
