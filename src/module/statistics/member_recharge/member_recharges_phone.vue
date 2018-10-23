@@ -18,12 +18,20 @@
 				</el-table-column>
 				<el-table-column prop="totalWeChat" label="微信" width="107" align="center">
 				</el-table-column>
+				<el-table-column prop="totalSQWeChat" label="收钱吧微信" width="111" align="center">
+					</el-table-column>				
 				<el-table-column prop="totalAliPay" label="支付宝" width="107" align="center">
 				</el-table-column>
+				<el-table-column prop="totalSQAliPay" label="收钱吧支付宝" width="111" align="center">
+					</el-table-column>				
 				<el-table-column prop="totalZXWeChat" label="中信微信" width="107" align="center">
 				</el-table-column>
+				<el-table-column prop="totalZXSHWeChat" label="中信(上海)微信" width="111" align="center">
+					</el-table-column>				
 				<el-table-column prop="totalZXAliPay" label="中信支付宝" width="107" align="center">
 				</el-table-column>
+				<el-table-column prop="totalZXSHAliPay" label="中信(上海)支付宝" width="111" align="center">
+					</el-table-column>				
 				<el-table-column prop="totalOtherPay" label="自定义支付" width="107" align="center">
 					<template slot-scope="scope">
 						<span style="color: #27a8e0;" @click="openPayment(scope.$index, scope.row,'all')">{{scope.row.totalOtherPay}}</span>
