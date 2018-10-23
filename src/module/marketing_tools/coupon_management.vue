@@ -91,7 +91,7 @@
 				<page v-if="total>1" :page="page" @pageNum="pageChange" :total="total" :len="10"></page>
 			</footer> -->
 		</section>
-		<breakCoupon v-if="couponType == 1 || couponType == 2" :couponDetail='couponDetail' @changeMnage='getcouponResult'></breakCoupon>
+		<breakCoupon v-if="couponType == 1 || couponType == 2 || couponType == 8" :couponDetail='couponDetail' @changeMnage='getcouponResult'></breakCoupon>
 		<discountCoupon v-if="couponType == 3 || couponType == 4" :couponDetail='couponDetail' @changeMnage='getcouponResult'></discountCoupon>
 		<giveCoupon v-if="couponType == 5" :couponDetail='couponDetail' @changeMnage='getcouponResult'></giveCoupon>
 		<vouchersCoupon v-if="couponType == 6" :couponDetail='couponDetail' @changeMnage='getcouponResult'></vouchersCoupon>
@@ -146,7 +146,8 @@ export default {
 				4: '整单打折',
 				5: '赠菜',
 				6: '代金券',
-				7: '积分卡券'
+				7: '积分卡券',
+				8: '随机立减'
 			},
 			unbindWin: false, //同步优惠券的弹窗
 			asyncId: '', //同步优惠券的id

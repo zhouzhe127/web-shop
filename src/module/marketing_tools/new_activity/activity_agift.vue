@@ -344,7 +344,7 @@ export default {
 				this.valiData('活动结束时间应大于当前时间');
 				return false;
 			}
-			if (this.selectsList.length == 0) {
+			if (this.ischain == '3' && this.selectsList.length == 0) {
 				this.valiData('请选择活动范围');
 				return false;
 			}
@@ -478,6 +478,7 @@ export default {
 		let userData = storage.session('userShop');
 		this.ischain = userData.currentShop.ischain;
 		this.shopName = userData.currentShop.name;
+		this.shopId = userData.currentShop.id;
 		let activityInfo = storage.session('activityInfo');
 		if (activityInfo) {
 			if (activityInfo.isShowdetail) {
