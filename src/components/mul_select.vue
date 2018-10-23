@@ -160,5 +160,6 @@
 		background-size: 100%;
 		float: left;
 		margin-top: 12px;
+		margin-right: 10px;
 	}
 </style>
