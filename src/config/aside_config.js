@@ -464,7 +464,7 @@ let need = {
 			name: 'customPackageStatistics'
 		},
 		materialWorking:{			//加工物料
-			name:'processMaterial'
+			name:'processHistory'
 		}
 	}
 };
