@@ -90,7 +90,7 @@ export default {
 			],
 			type: 0,
 			index: 0,
-			terminaIndex:'-1',//打印服务终端id
+			terminaIndex:'0',//打印服务终端id
 			num: 255,
 			sign: '',
 			printerName: '',
