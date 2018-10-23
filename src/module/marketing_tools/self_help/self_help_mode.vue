@@ -211,7 +211,7 @@ export default {
 			wininfo: {}, // json.data
 			upPayInfo: {}, //结账功能的数据
 			linkUrl: '', //链接地址
-			show: true,
+			show: false,
 			modifyindex: 0,
 			publicNumber: false, //公众号标题提醒
 			isattention: false, //是否开启关注公众号

@@ -26,7 +26,7 @@
 		<!-- 关联功能 -->
 		<div class="pay-window-box">
 			<span class="fl pay-window-sub required">关联功能</span>
-			<div class="rightHalf" v-if="flag">
+			<div class="rightHalf">
 				<el-radio-group v-model="goodsTypeName" class="fl">
 					<el-radio v-for="(item,index) in goodlist" :key="index" :label="item.name" border @change.native="clicktheRadio(item)" :disabled="item.status"></el-radio>
 				</el-radio-group>
@@ -34,11 +34,11 @@
 					<span :key='index' :class="type == index ? 'signa associated' : 'associated'" v-on:click="tabTypes(index,'1')" v-if="item.type">{{item.name}}</span>
 				</template> -->
 			</div>
-			<div class="rightHalf" v-else>
+			<!-- <div class="rightHalf" v-else>
 				<template v-for="(it,ind) in goodlist">
 					<span :key='ind' :class="type == ind ? 'signa unassociated' : 'unassociated'" v-if="it.type">{{it.name}}</span>
 				</template>
-			</div>
+			</div> -->
 		</div>
 		<!-- 开启关联功能 -->
 		<div class="pay-window-box" v-show="opentheFunction">
@@ -147,10 +147,13 @@
 		<div class="pay-window-box clearfix" v-if="type == '3'">
 			<span class="fl pay-window-sub required">快递费用</span>
 			<div class="rightHalf">
-				<section class="fl">
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="shippingfee" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('shippingfee')" />
-					<span>元</span>
-				</section>
+				<!-- <section class="fl"> -->
+				<!-- <input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="shippingfee" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('shippingfee')" />
+					<span>元</span> -->
+				<el-input class="fl" placeholder="请输入正整数" v-model="shippingfee" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('shippingfee')" style="width:179px;">
+					<template slot="suffix">元</template>
+				</el-input>
+				<!-- </section> -->
 				<div class="fl handle-tips">
 					<i></i> 无法使用积分抵扣
 				</div>
@@ -182,19 +185,22 @@
 			<span class="fl" v-if="type == '1'">
 					<mulSelect :list.sync="takeoutList" :selects.sync="takeoutSelect" :name='"name"' :key='"id"' :styles="{'border-radius':'4px'}"></mulSelect>
 				</span>
+			<span class="fl" v-if="type == '2'">
+					<mulSelect :list.sync="inviteList" :selects.sync="inviteSelect" :name='"name"' :key='"id"' :styles="{'border-radius':'4px','margin-right':'8px'}"></mulSelect>
+				</span>
 			<span class="fl" v-if="type == '3'">
 					<mulSelect :list.sync="courierList" :selects.sync="courierSelect" :name='"name"' :key='"id"' :styles="{'border-radius':'4px'}"></mulSelect>
 				</span>
 		</div>
 		<!-- 用餐人数 -->
-		<div class="pay-window-box clearfix" v-if="type == '0'">
+		<div class="pay-window-box clearfix" v-if="type == '0' || type == '2'">
 			<span class="fl pay-window-sub">用餐人数</span>
 			<onOff class="fl" :key='1' :status="personStatus" @statusChange="ispersonStatus"></onOff>
 			<div class="fl handle-tips">
 				<i></i> 关闭后,默认用餐人数为1人
 			</div>
 		</div>
-		<div class="pay-window-box clearfix" v-if="type == '0' && personStatus">
+		<div class="pay-window-box clearfix" v-if="(type == '0' || type == '2') && personStatus">
 			<span class="fl pay-window-sub"></span>
 			<div class="rightHalf">
 				<span class="required fl ceiling">上限人数</span>
@@ -210,8 +216,9 @@
 		<!-- 可配送区域 -->
 		<div class="pay-window-box clearfix" v-if="type == '0'">
 			<span class="fl pay-window-sub">可配送范围</span>
-			<a href="javascript:void(0);" class="addclassify" v-on:click="isarea" v-show="area == false">添加关联区域</a>
-			<a href="javascript:void(0);" class="related-area" v-on:click="isarea" v-show="area == true">关联区域</a>
+			<!-- <a href="javascript:void(0);" class="addclassify" v-on:click="isarea" v-show="area == false">添加关联区域</a>
+			<a href="javascript:void(0);" class="related-area" v-on:click="isarea" v-show="area == true">关联区域</a> -->
+			<el-button type="primary" icon="el-icon-plus" @click="isarea" style="width:179px;">添加关联区域</el-button>
 			<span style="margin-left: 20px;" v-if="areaLength != '' && areaLength != 0 ">已选{{areaLength}}个区域</span>
 		</div>
 		<!-- 管理区域 -->
@@ -235,8 +242,15 @@
 		<div class="pay-window-box clearfix">
 			<span class="fl pay-window-sub">必点商品</span>
 			<div class="rightHalf">
-				<singleSelect class="fl" :index='result' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="evaluationList" :name="'name'" :key='"id"'></singleSelect>
-				<div class="prompting fl" @click="isPublicNumber('2')">
+				<el-radio-group v-model="evaluationName" class="fl">
+					<el-radio v-for="(item,index) in evaluationList" :key="index" :label="item.name" border @change.native="haveIndex(item)" style="width:100px;text-align:center;"></el-radio>
+				</el-radio-group>
+				<el-tooltip class="item" effect="dark" content="仅提醒:用户下单时,提醒其必点商品,允许跳过.不选择必点商品同样允许下单.
+							提醒并必点:用户下单时,提醒其必点商品,，不允许跳过.不选择必点商品不允许下单." placement="right">
+					<i class="el-icon-question" style="color:#44404a;font-size: 24px;margin-top:8px;margin-left:10px;"></i>
+				</el-tooltip>
+				<!-- <singleSelect class="fl" :index='result' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="evaluationList" :name="'name'" :key='"id"'></singleSelect> -->
+				<!-- <div class="prompting fl" @click="isPublicNumber('2')">
 					<div class="detDiv" v-if="isPublic['2']">
 						<i class="detI triright"></i>
 						<h3 class="detH3">
@@ -244,14 +258,15 @@
 							<p>提醒并必点:用户下单时,提醒其必点商品,，不允许跳过.不选择必点商品不允许下单.</p>
 						</h3>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<!-- 提醒内容 -->
 		<div class="pay-window-box clearfix">
 			<span class="fl pay-window-sub">提醒内容</span>
 			<div class="rightHalf">
-				<input type="text" class="fl custom" placeholder="请输入提醒内容" v-model="mustGoodsRemind" maxlength="50" />
+				<!-- <input type="text" class="fl custom" placeholder="请输入提醒内容" v-model="mustGoodsRemind" maxlength="50" /> -->
+				<el-input class="fl" v-model="mustGoodsRemind" placeholder="请输入提醒内容" maxlength="50" style="width:179px;"></el-input>
 				<div class="fl handle-tips">
 					<i></i> 限50字,必点商品名称用{goods}代替
 				</div>
@@ -265,10 +280,17 @@
 				<div class="pay-window-box clearfix" style="margin-top: 10px;" v-if="manypeopleStatus">
 					<span class="fl pay-window-sub" style="width: 80px;text-align: left;">单用户必点</span>
 					<div class="rightHalf" style="width: 300px;">
-						<template v-for="(item,index) in singleUser">
+						<el-radio-group v-model="userName" class="fl">
+							<el-radio v-for="(item,index) in singleUser" :key="index" :label="item.name" border @change.native="isWhether(item)" style="width:100px;text-align:center;"></el-radio>
+						</el-radio-group>
+						<el-tooltip class="item" effect="dark" content="是:每增加一个购物车判断必点,否则不允许下单.
+						否:整单判断必点商品,一个订单下至少存在一个必点商品,否则不允许下单." placement="right">
+							<i class="el-icon-question" style="color:#44404a;font-size: 24px;margin-top:8px;margin-left:10px;"></i>
+						</el-tooltip>
+						<!-- <template v-for="(item,index) in singleUser">
 							<span :key='index' :class="userStatus == index ? 'signa associated' : 'associated'" v-on:click="tabTypes(index,'2')">{{item.name}}</span>
-						</template>
-						<div class="prompting fl" @click="isPublicNumber('3')">
+						</template> -->
+						<!-- <div class="prompting fl" @click="isPublicNumber('3')">
 							<div class="detDiv" v-if="isPublic['3']">
 								<i class="detI triright"></i>
 								<h3 class="detH3">
@@ -276,7 +298,7 @@
 							<p>否:整单判断必点商品,一个订单下至少存在一个必点商品,否则不允许下单.</p>
 						</h3>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -420,7 +442,8 @@
 		<div class="pay-window-box clearfix">
 			<span class="fl pay-window-sub"></span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="blue fl" style="width: 200px;" @click="saveConfig">保存</a>
+				<!-- <a href="javascript:void(0);" class="blue fl" style="width: 200px;" @click="saveConfig">保存</a> -->
+				<el-button type="primary" style="width: 200px;" @click="saveConfig">保存</el-button>
 			</div>
 		</div>
 	</div>
@@ -463,7 +486,7 @@
 					},
 					{
 						'type': '2',
-						'name': '自取',
+						'name': '自提',
 						'status': false
 					},
 					{
@@ -536,17 +559,19 @@
 					id: 2,
 					name: '必点'
 				}],
+				evaluationName: '仅提醒',
 				result: 0, //必点商品选中的
 				mustGoodsRemind: '', //t提醒内容
 				manypeopleStatus: false, //多人下单的状态
 				singleUser: [{
-					id: 1,
+					id: 2,
 					name: '是'
 				}, {
-					id: 2,
+					id: 1,
 					name: '否'
 				}],
-				userStatus: 0, //单用户必点状态
+				userName: '是', //但用户必点名称
+				userStatus: 2, //单用户必点状态
 				isPublic: {
 					'0': false,
 					'1': false,
@@ -822,17 +847,6 @@
 						this.valiData('配餐时间不得超过60分钟');
 						return false;
 					}
-					if (this.personStatus && utils.trim(this.mealsNum) == '') {
-						this.$store.commit('setWin', {
-							content: '用餐人数不能为空',
-							time: 1000
-						});
-						return false;
-					}
-					if (this.personStatus && !reg.test(this.mealsNum)) {
-						this.valiData('用餐人数为1-20的正整数');
-						return false;
-					}
 				}
 				if (this.type == '1') {
 					// 起送费的判断
@@ -888,6 +902,19 @@
 						}
 					}
 				}
+				if (this.type == '2' || this.type == '0') {
+					if (this.personStatus && utils.trim(this.mealsNum) == '') {
+						this.$store.commit('setWin', {
+							content: '用餐人数不能为空',
+							time: 1000
+						});
+						return false;
+					}
+					if (this.personStatus && !reg.test(this.mealsNum)) {
+						this.valiData('用餐人数为1-20的正整数');
+						return false;
+					}
+				}
 				if (this.type == '3') {
 					// 配送费的判断
 					if (this.shippingfee == '') {
@@ -937,6 +964,13 @@
 				this.personStatus = Boolean(Number(item.confineStatus)); //是否开启用餐人数的状态
 				this.mealsNum = item.personConfine; //用餐人数
 				this.type = item.type - 1; // 对应的功能类型
+				for(let item of this.goodlist){
+					item.status = true;
+					if(item.type == this.type){
+						item.status = false;
+					}
+				}
+				this.goodsTypeName = this.goodlist[this.type].name;
 				if (item.customContent != '') {
 					this.configure = item.customContent.split('!#!'); //获取支付规则
 				}
@@ -968,6 +1002,9 @@
 							case 2:
 								this.takeoutSelect.push(fillContent[i]);
 								break;
+							case 3:
+								this.inviteSelect.push(fillContent[i]);
+								break;
 							case 4:
 								this.courierSelect.push(fillContent[i]);
 								break;
@@ -982,14 +1019,27 @@
 						this.areaLength = utils.isEmptyObject(this.areaSelect) == true ? '' : this.areaSelect.length;
 					}
 				}
-				this.result = item.mustGoodsStatus - 1; //必点商品
+				this.result = item.mustGoodsStatus; //必点商品
+				if(this.result == 2){
+					this.evaluationName = '必点';
+				}
+				//this.evaluationName = this.evaluationList[this.result].name; //必点商品
 				this.mustGoodsRemind = item.mustGoodsRemind; //提醒内容
+				//console.log(item.multiOrderStatus)
 				this.manypeopleStatus = Boolean(Number(item.multiOrderStatus)); //多人下单开关
 				if (this.manypeopleStatus) { //单人必点
-					if (item.multiOrderStatus == 2) {
-						this.userStatus = 0;
-					} else if (item.multiOrderStatus == 1) {
-						this.userStatus = 1;
+					// if (item.multiOrderStatus == 2) {
+					// 	this.userStatus = 0;
+					// } else if (item.multiOrderStatus == 1) {
+					// 	this.userStatus = 1;
+					// }
+					this.userStatus = item.multiOrderStatus;
+					//this.userName = this.singleUser[this.userStatus].name;
+					for(let item of this.singleUser){
+						if(this.userStatus == item.id){
+							this.userName = item.name;
+							break;
+						}
 					}
 				}
 				//当外卖的时候 给使用时间段赋值
@@ -1123,21 +1173,23 @@
 				// 		'cost': it.cost
 				// 	});
 				// }
-				item.mustGoodsStatus = this.result + 1; //必点商品
+				item.mustGoodsStatus = this.result; //必点商品
 				item.mustGoodsRemind = this.mustGoodsRemind; //提醒内容
 				//多人下单开关
 				//是 传2
 				//否 传1
 				//关掉传0
 				if (this.manypeopleStatus) {
-					if (this.userStatus == 0) {
-						item.multiOrderStatus = 2;
-					} else if (this.userStatus == 1) {
-						item.multiOrderStatus = 1;
-					}
+					// if (this.userStatus == 0) {
+					// 	item.multiOrderStatus = 2;
+					// } else if (this.userStatus == 1) {
+					// 	item.multiOrderStatus = 1;
+					// }
+					item.multiOrderStatus = this.userStatus;
 				} else {
 					item.multiOrderStatus = 0;
 				}
+				//console.log(item.multiOrderStatus)
 				//item.multiOrderStatus = this.manypeopleStatus ? this.userStatus + 1 : 0; //多人下单开关
 				if (this.isUpdata == '1') {
 					this.checkoutMenu[this.modifyindex] = item;
@@ -1247,8 +1299,9 @@
 			// 	// 将对应的下标的规则从数组里面删除掉
 			// 	this.distances.splice(i, 1);
 			// },
-			haveIndex(i) { //评价模式
-				this.result = i;
+			haveIndex(item) { //评价模式
+				//console.log(item)
+				this.result = item.id;
 			},
 			returnPay: function() { //返回按钮
 				this.$emit('winEvent', false);
@@ -1644,6 +1697,9 @@
 						}
 					}, 1000);
 				}
+			},
+			isWhether: function(item) {
+				this.userStatus = item.id;
 			}
 		},
 		components: {

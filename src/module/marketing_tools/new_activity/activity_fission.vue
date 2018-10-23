@@ -128,7 +128,7 @@ export default {
 				}).start
 			},
 			endObj: {
-				time: new Date().getTime()
+				time: new Date().setHours(23, 59, 59, 999)
 			},
 			dates: new Date().getTime(), //当前时间
 			returnInt: 1, //相差天数
