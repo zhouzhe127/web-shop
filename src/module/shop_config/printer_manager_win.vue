@@ -90,7 +90,7 @@ export default {
 			],
 			type: 0,
 			index: 0,
-			terminaIndex:'-1',//打印服务终端id
+			terminaIndex:'0',//打印服务终端id
 			num: 255,
 			sign: '',
 			printerName: '',
@@ -228,14 +228,14 @@ export default {
 					});
 				}
 			}else{
-				if (this.terminaIndex == '-1') {
-					this.$store.commit('setWin', {
-						title: '错误提示',
-						winType: 'alert',
-						content: '选择打印服务终端'
-					});
-					return false;
-				}
+				//if (this.terminaIndex == '-1') {
+				//	this.$store.commit('setWin', {
+				//		title: '错误提示',
+				//		winType: 'alert',
+				//		content: '选择打印服务终端'
+				//	});
+				//	return false;
+				//}
 				if (this.printerName == '') {
 					this.$store.commit('setWin', {
 						title: '错误提示',
