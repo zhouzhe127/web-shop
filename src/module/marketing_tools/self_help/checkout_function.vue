@@ -486,7 +486,7 @@
 					},
 					{
 						'type': '2',
-						'name': '自取',
+						'name': '自提',
 						'status': false
 					},
 					{
