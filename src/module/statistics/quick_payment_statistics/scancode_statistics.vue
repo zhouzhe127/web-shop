@@ -36,7 +36,7 @@
 				</ul>
 			</div>
 			<!-- 已经选择的店铺 -->
-			<div class="choiceshop">
+			<!-- <div class="choiceshop">
 				<div class="choiceshop_l">
 					选择店铺:    
                         <span @click="stretch" v-html="show?'收起':'展开'"></span> 
@@ -44,6 +44,13 @@
 				<div class="choiceshop_r" v-if="show" ref="reference">
 					{{selectName}}           
 				</div> 
+			</div> -->
+            <div class="store-show" :style="{'height':storeShowH}">
+				<i>已选择店铺：</i>
+				<div class="store-block">
+					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
+					<div>{{selectName}}</div>
+				</div>
 			</div>
 			<section style="margin-bottom:20px;">
 				<!-- <com-table @tableEvent="tableEvent" :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
@@ -174,24 +181,20 @@
 				taskId: '', //任务队列的id
 				loading: false, //状态
 				timerqueue: [],
-				transmitId: [], //传递给选择店铺页面的id
-				show: true,
-				shopText: '900',
+				transmitId: [], //传递给选择店铺页面的id 
+				isShowStore:false,//已选中店铺列表 是否展开
+				storeShowH:'20px',
 			};
 		},
-		methods: {
-			//展开，收起
-			stretch: function () {
-				this.show = !this.show;
+		methods: { 
+			openStore(){//展开收起-已选中店铺列表
+				if(this.isShowStore==true){//展开时点击
+					this.storeShowH = '20px';
+				}else{
+					this.storeShowH = 'auto';
+				}
+				this.isShowStore = !this.isShowStore;
 			},
-			// shopText:function(obj,size,msg){
-			//     let length = size - text(obj).value.length;
-			//     if(length > 900){
-			//         show = true;
-			//     }else{
-			//        show = false;
-			//     }
-			// },
 			//选择开始时间
 			getStartTime: function (receiveTime) {
 				this.startObj.time = receiveTime; //毫秒
@@ -478,12 +481,6 @@
 					this.Export();
 				}
 			}]);
-			let a = this.$refs.reference.offsetWidth;
-			if (this.$refs.reference && a >= 901) {
-				this.show = false;
-			} else {
-				this.show = true; 
-			}
 		},
 		destroyed() {
 			clearInterval(this.timer);
@@ -491,7 +488,7 @@
 		}
 	};
 </script>
-<style type="text/css" scoped>
+<style  type="text/css" scoped>
 	#scancode {
 		/*overflow: hidden;*/
 		height: 100%;
@@ -554,29 +551,36 @@
 		line-height: 40px;
 		margin-left: 10px;
 	}
-
-	#scancode .choiceshop {
+	
+  	#scancode .store-show {
 		width: 100%;
+		margin-bottom: 10px;
+		display: block;
 		overflow: hidden;
-		margin-bottom: 20px;
+		line-height: 20px;
+		position: relative; 
 	}
-
-	#scancode .choiceshop .choiceshop_l {
+	#scancode .store-show i {
 		float: left;
-		font-size: 16px;
-		line-height: 24px;
+		position: absolute;
+		left: 0;
+		top: 0;
+	
 	}
-    #scancode .choiceshop .choiceshop_l span{
-        color:#29abe2; 
-        padding:0 5px;
-        display: inline-block;
-    }
-
-	#scancode .choiceshop .choiceshop_r {
+	#scancode .store-show .store-block{
+		overflow: hidden;
+		width: 100%;
+		padding-left: 84px;
+	}
+	#scancode .store-show .store-block em{
 		float: left;
-		width: 900px;
-		font-size: 16px;
-		line-height: 24px;
-        height: auto;
+		color: #09f;
+		margin-right: 5px;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	#scancode .store-show .store-block 	span {
+		float: left;
+		color: #333;
 	}
 </style>

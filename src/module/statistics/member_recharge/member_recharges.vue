@@ -118,13 +118,20 @@
 				<el-button type="info" @click="filterReset">重置</el-button>
 			</div>
 			<!-- 选择店铺 -->
-			<div class="theSelected">
-				<div class="choice">选择店铺：
-                      <span @click="stretch" v-html="show?'收起':'展开'"></span> 
+			<!-- <div class="theSelected" :style="{'height':storeShowH}">
+				<div class="choice" >选择店铺：
+                	<span @click="openStore">{{isShowStore?'收起':'展开'}}</span>  
                 </div>
-				<div v-if="show">
+				<div v-if="isShowStore" >
                     {{selectName}}
                 </div>
+			</div> -->
+			<div class="store-show" :style="{'height':storeShowH}">
+				<i>已选择店铺：</i>
+				<div class="store-block">
+					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
+					<div>{{selectName}}</div>
+				</div>
 			</div>
 			<!-- body -->
 			<section v-if='!phone'>
@@ -331,7 +338,8 @@ export default {
 			planId: [], //充值方案Id集合
 			intervalLeft: '', //实付区间1
 			intervalRight: '', //实付区间2
-			show: true,
+			isShowStore:false,//已选中店铺列表 是否展开
+			storeShowH:'20px',
 		};
 	},
 	created: function () {
@@ -364,9 +372,13 @@ export default {
 		// }
 	},
 	methods: {
-		//展开，收起
-		stretch: function () {
-			this.show = !this.show;
+		openStore(){//展开收起-已选中店铺列表
+			if(this.isShowStore == true){//展开时点击
+				this.storeShowH = '20px';
+			}else{
+				this.storeShowH = 'auto'; 
+			}
+			this.isShowStore = !this.isShowStore;
 		},
 		startTimeChange: function (data) {
 			this.startTime = new Date(data).setHours(0, 0, 0, 0);
@@ -1030,25 +1042,27 @@ export default {
 		line-height: 42px;
 		margin-right: 180px;
 	}
-	.theSelected {
-		width: 100%;
-		height: auto;
-		overflow: hidden;
-		margin-bottom: 16px;
-		.choice,
-		.shopName {
-			float: left;
-			font-size: 16px;
-			color: #333;
-		}
-		// .choice {
-		// 	width: 80px;
-        // }
-        .choice span{
-			color:#29abe2; 
-            padding:0 5px;
-            display: inline-block;
-        }
+	.store-show {
+			width: 100%;
+			margin-bottom: 10px;
+			display: block;
+			overflow: hidden;
+			line-height: 20px;
+			position: relative;
+			i {float: left;position: absolute;left: 0;top: 0;}
+			.store-block{
+				overflow: hidden;
+				width: 100%;
+				padding-left: 84px;
+				em{
+					float: left;color: #09f;margin-right: 5px;
+					cursor: pointer;text-decoration: underline;
+				}
+				span {
+					float: left;
+					color: #333;
+				}
+			}
 	}
 	.sta_body {
 		max-width: 1452px;
