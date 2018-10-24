@@ -28,7 +28,7 @@
 					</section>
 					<section class="obox">
 						<h2 class="required">品牌名称</h2>
-						<input v-model="brandName" maxlength="15" type="text" class="input" placeholder="输入名称">
+						<input v-model="brandName" maxlength="40" type="text" class="input" placeholder="输入名称">
 					</section>
 					<section class="obox">
 						<h2 class="required">负责人姓名</h2>
