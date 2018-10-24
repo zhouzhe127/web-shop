@@ -10,7 +10,9 @@
 		<div class="topR" style="position: relative">
 			<section class="fl">
 				<label class="commodity-name fl">开启取整</label>
-				<on-off :status="on" @statusChange="getIsDiscountToggle" class="on_off"></on-off>
+				<el-switch style="height: 40px;line-height: 40px" v-model="on" active-color="#E1BB4A" inactive-color="#e6e6e6">
+				</el-switch>
+				<!--<on-off :status="on" @statusChange="getIsDiscountToggle" class="on_off"></on-off>-->
 			</section>
 		</div>
 		<template v-if="on">
@@ -25,7 +27,7 @@
 				</ul>
 			</div>
 		</template>
-		<a href="javascript:void(0);" v-on:click="keepOn" class="yellow">保存</a>
+		<a href="javascript:void(0);" v-on:click="keepOn">保存</a>
 	</section>
 </template>
 
@@ -46,9 +48,9 @@ export default {
 		this.init();
 	},
 	methods: {
-		getIsDiscountToggle(res) {
-			this.on = res;
-		},
+		//		getIsDiscountToggle(res) {
+		//			this.on = res;
+		//		},
 		async init() {
 			let res = await http.getPriceRule({
 				data: {
@@ -130,14 +132,8 @@ export default {
 		height: 40px;
 		line-height: 40px;
 	}
-	.on_off {
-		position: absolute;
-		left: 100px;
-		width: 88px;
-	}
 	.picName {
 		ul {
-			// width: 602px;
 			height: 50px;
 			float: left;
 			border: 1px solid #b1b1b1;
@@ -149,6 +145,7 @@ export default {
 				border-right: 1px solid #b1b1b1;
 				position: relative;
 				box-sizing: border-box;
+				cursor: pointer;
 				h3 {
 					line-height: 30px;
 					font-size: 16px;
@@ -182,7 +179,12 @@ export default {
 		float: left;
 		margin: 10px 0;
 		width: 250px;
+		height: 50px;
+		line-height: 50px;
 		clear: both;
+		background-color: #e1bb4a;
+		color: white;
+		font-size: 16px;
 	}
 }
 </style>

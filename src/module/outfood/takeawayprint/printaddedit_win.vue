@@ -485,7 +485,7 @@ export default {
 			this.showCom = 'printerRelation';
 			this.comObj = {
 				areaIndex: this.areaIndex,
-				goodsIds: this.goodsIds,
+				goodsIds: utils.deepCopy(this.goodsIds),
 				eleShopid: this.eleShopid
 			};
 		},

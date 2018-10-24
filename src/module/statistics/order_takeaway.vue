@@ -1056,7 +1056,7 @@ export default {
 			: orderTakeaway ? orderTakeaway.isOpenTime : true;
 		this.isBrand = userData.currentShop.ischain == '3' ? true : false;
 		this.dataDetial = dataDetial;
-		this.selectTypeNum = dataDetial ? dataDetial.type : null;
+		this.selectTypeNum = dataDetial ? dataDetial.type : '';
 		this.brandId = brandId;
 		this.shopId = shopId;
 		// this.startObj = { time: this.startTime };
