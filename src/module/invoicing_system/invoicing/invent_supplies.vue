@@ -148,7 +148,6 @@
 			async getCate() {
 				let data = await http.invoiv_getCategoryList();
 				// this.cataList = data;
-				console.log(data);
 				let arr = [];
 				for (let item of data) {
 					item.value = item.id;
@@ -165,10 +164,6 @@
 					}
 				}
 				this.cataList = arr;
-				console.log(arr);
-				// for (let item of this.cataList) {
-				// 	if (item.pid == 0) this.oneCate.push(item);
-				// }
 			},
 			addDetailhouse(item) {
 				this.$router.push({
