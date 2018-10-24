@@ -260,7 +260,7 @@
 							<span class="online-sub fl required">快速配置菜单</span>
 							<div class="rightHalf">
 								<el-radio-group v-model="validName" class="fl">
-									<el-radio v-for="(item,index) in validList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
+									<el-radio v-for="(item,index) in validList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)" style="margin-bottom: 10px;"></el-radio>
 								</el-radio-group>
 								<div class="fl handle-tips">
 									<i></i> 后续会推出更多的功能菜单哦~
@@ -318,15 +318,18 @@
 				secondary: [],
 				ruleIndex: 0, //点中的第几个	
 				groupId: '',
-				validName: '卖手店长',
+				validName: '卖手默认',
 				validList: [{
 					'id': 0,
-					'name': '卖手店长'
+					'name': '卖手默认'
 				}, {
 					'id': 1,
-					'name': '卖手店员'
+					'name': '卖手店长'
 				}, {
 					'id': 2,
+					'name': '卖手店员'
+				}, {
+					'id': 3,
 					'name': '卖手收银'
 				}],
 				validId: 0,
