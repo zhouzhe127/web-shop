@@ -1254,51 +1254,6 @@
 				// 将输入的规则保存下来
 				// square.rulesList = this.configure;
 			},
-			// adddistance: function() {
-			// 	for (let item of this.distances) {
-			// 		if (Number(item.distance) <= Number(item.defaultdis)) {
-			// 			this.$store.commit('setWin', {
-			// 				content: '请填写结束距离,并且结束距离应大于起始距离'
-			// 			});
-			// 			return false;
-			// 		}
-			// 		if (item.cost == '' || item.distance == '') {
-			// 			this.$store.commit('setWin', {
-			// 				content: '完善配送范围填写，或删除配送区域'
-			// 			});
-			// 			return false;
-			// 		}
-			// 		if (Number(item.cost) > 999 || Number(item.cost) < 0) {
-			// 			this.$store.commit('setWin', {
-			// 				content: '配送费区间0~999'
-			// 			});
-			// 			return false;
-			// 		}
-			// 	}
-			// 	if (this.distances.length == 5) {
-			// 		this.$store.commit('setWin', {
-			// 			content: '最多添加五条！',
-			// 			time: 1000
-			// 		});
-			// 		return false;
-			// 	}
-			// 	this.distances.push({
-			// 		'defaultdis': '',
-			// 		'distance': '',
-			// 		'cost': ''
-			// 	});
-			// },
-			// deldistance: function(i) {
-			// 	if (i == 0) {
-			// 		this.$store.commit('setWin', {
-			// 			content: '默认项无法删除',
-			// 			time: 1000
-			// 		});
-			// 		return false;
-			// 	}
-			// 	// 将对应的下标的规则从数组里面删除掉
-			// 	this.distances.splice(i, 1);
-			// },
 			haveIndex(item) { //评价模式
 				//console.log(item)
 				this.result = item.id;
