@@ -182,10 +182,14 @@
 				}
 				return materialList;
 			},
-			getUnitName(unit,id){//获取单位名称
+			getUnitName(unit,id,isValue){//获取单位名称
 				for(let item of unit){
 					if(item.muId==id){
-						return item.name;
+						if(isValue){//是否返回比例
+							return item.value;
+						}else{
+							return item.name;	
+						}
 					}
 				}
 			},
