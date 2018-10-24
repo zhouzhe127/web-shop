@@ -146,9 +146,6 @@
 				</el-table>
 			</div>
 			<!-- 翻页 -->
-			<!-- <section class="turn-page">
-				<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-			</section> -->
 			<div class="pageWrap">
 				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
 			</div>
@@ -344,28 +341,6 @@
 			memberDetail: () =>
 				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_manage_detail'),
 		},
-		// created() {
-		// 	let obj1 = {
-		// 		titleStyle: {
-		// 			fontSize: 16 + 'px'
-		// 		}
-		// 	};
-		// 	let obj2 = {
-		// 		conStyle: {
-		// 			'color': '#ff9800'
-		// 		}
-		// 	};
-		// 	for (let item of this.titleList) {
-		// 		if (item.dataName != 'totalOtherPay') {
-		// 			Object.assign(item, obj1, obj2);
-		// 		}
-		// 	}
-		// 	for (let item of this.shoptitleList) {
-		// 		if (item.dataName != 'cardNumber' && item.dataName != 'createTime') {
-		// 			Object.assign(item, obj1);
-		// 		}
-		// 	}
-		// },
 		mounted() {
 			this.$store.commit('setPageTools', [{
 				name: '返回',

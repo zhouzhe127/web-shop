@@ -209,16 +209,6 @@
 			returnShopstatic: function() {
 				this.$emit('scanorderResult', 'static');
 			},
-			// getPageNum: function(obj) {
-			// 	this.page = obj.page;
-			// 	this.num = obj.num;
-			// 	this.getRechargeData();
-			// },
-			// openStore: function(item) { //打开新增用户标签的弹窗
-			//     this.showWin = true; //打开弹窗
-			//     this.isPopupwindow = 'getAppliedWin';
-			//     this.oid = item.oid;
-			// },
 			async getRechargeData() {
 				let data = await http.getRechargeData({
 					data: {
@@ -346,28 +336,6 @@
 			memberDetail: () =>
 				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_manage_detail'),
 		},
-		// created() {
-		// 	let obj1 = {
-		// 		titleStyle: {
-		// 			fontSize: 16 + 'px'
-		// 		}
-		// 	};
-		// 	let obj2 = {
-		// 		conStyle: {
-		// 			'color': '#ff9800'
-		// 		}
-		// 	};
-		// 	for (let item of this.titleList) {
-		// 		if (item.dataName != 'totalOtherPay') {
-		// 			Object.assign(item, obj1, obj2);
-		// 		}
-		// 	}
-		// 	for (let item of this.shoptitleList) {
-		// 		if (item.dataName != 'cardNumber' && item.dataName != 'createTime') {
-		// 			Object.assign(item, obj1);
-		// 		}
-		// 	}
-		// },
 		mounted() {
 			this.$store.commit('setPageTools', [{
 				name: '返回',
