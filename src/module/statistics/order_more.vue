@@ -17,18 +17,33 @@
 				<li v-if="!isBrand">
 					<!--日期选择和搜索框-->
 					<section class="statisticsList fl">
-						<el-date-picker :clearable="false" v-model="startTime" type="datetime" placeholder="选择日期">
+						<el-date-picker :clearable="false" v-model="startTime" type="datetime" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
-						<el-date-picker :clearable="false" v-model="endTime" type="datetime" placeholder="选择日期">
+						<el-date-picker :clearable="false" v-model="endTime" type="datetime" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 					</section>
 				</li>
-				<li v-if="!isBrand" style="line-height: 46px;">
+				<li v-if="!isBrand">
+					<el-select v-model="conType" @change="selectType" placeholder="请选择类型" style="width:150px;">
+						<el-option v-for="item in conTypeList" :key="item.type" :label="item.name" :value="item.type"></el-option>
+					</el-select>
+				</li>
+				<li v-if="!isBrand && conType=='0'">
+					<el-select v-model="conSize" @change="selectTypeTwo" placeholder="请选择类型" style="width:150px;">
+						<el-option v-for="item in conTypeSize" :key="item.type" :label="item.name" :value="item.type"></el-option>
+					</el-select>
+				</li>
+				<li v-if="!isBrand && conType=='1'">
+					<el-select v-model="conShifts" @change="selectTypeBan" placeholder="请选择班次" style="width:150px;">
+						<el-option v-for="item in shiftList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+					</el-select>
+				</li>
+				<!-- <li v-if="!isBrand" style="line-height: 46px;">
 					<div v-on:click="selectBusinessHours" :class="{'selected':isOpenTime}" style="width:20px;height:20px;cursor: pointer;border:1px solid #28A8E0;margin:13px 10px;float: left;"></div>
 					<span style="font-size: 16px;">按营业时间</span>
-				</li>
+				</li> -->
 				<li>
 					<section class="oDe" style="width:250px;float:left;">
 						<el-input placeholder="请输入订单号" maxlength="18" v-model="orderNumber" clearable class="input-with-select">
@@ -259,7 +274,14 @@ export default {
 			title: null, //优惠详情的弹框标题
 			// startObj: {},
 			// endObj: {},
-			paymentList: [{ num: 0, paymentName: '' }]
+			paymentList: [{ num: 0, paymentName: '' }],
+			conType:'0',//按日别或交接班
+			conSize:'1',//营业时间和自然日
+			conShifts:'',//班次
+			conTypeList:[{type:'0',name:'按日别'},{type:'1',name:'按交接班'}],
+			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'}],
+			shiftList:[],//交接班次列表
+			baseDetial:{},//店铺的基本信息
 		};
 	},
 	methods: {
@@ -334,6 +356,48 @@ export default {
 			if (column.label == '优惠总额' && column.property == 'discount') {
 				this.openDiscount(this.payTotalNum);
 			}
+		},
+		//可以做统一，但为了后期增加需求，暂时分开
+		//按类型筛选
+		selectType(){
+			if(this.conType == '0'){
+				this.selectTypeTwo();
+			}
+		},
+		//按日别筛选-自然日-营业时间
+		selectTypeTwo(){
+			this.getOrderListInDays();
+		},
+		//按交接班筛选，
+		selectTypeBan(){
+			this.getOrderListInDays();
+		},
+		//获取交接班班次信息
+		async getChangeShifts() {
+			//获取店铺基本信息
+			this.baseDetial = await http.baseGet({
+				data: { shopId: this.shopId }
+			});
+			let arr = await http.getChangeShifts({
+				data: {}
+			});
+			let shiftsArr = [];
+			let shifts = this.baseDetial.changeShifts.split(',');
+			for(let i=0;i<arr.length;i++){
+				for(let key in shifts){
+					if(shifts[key] == arr[i].id){
+						shiftsArr.push(arr[i]);
+					}
+
+				}
+			}
+			this.shiftList = shiftsArr;
+		},
+		//获取店铺基本信息
+		async baseGet() {
+			this.baseDetial = await http.baseGet({
+				data: { shopId: this.shopId }
+			});
 		},
 		initBtn(flag) {
 			let arr = [];
@@ -439,6 +503,13 @@ export default {
 				});
 				return false;
 			}
+			// if(this.conType=='1'&&this.conShifts == ''){
+			// 	this.$store.commit('setWin', {
+			// 		title: '操作提示',
+			// 		content: '交接班请选择班次!'
+			// 	});
+			// 	return false;
+			// }
 			this.allDayPage.page = 1; //搜索日期按钮，页数为0
 			this.getOrderListInDays();
 		},
@@ -484,7 +555,7 @@ export default {
 				startTime: this.startTime,
 				endTime: this.endTime,
 				dayPage: this.dayPage,
-				isOpenTime: this.isOpenTime
+				isOpenTime: this.conSize
 			};
 			storage.session('orderDetial', res);
 			this.$router.push({
@@ -519,9 +590,11 @@ export default {
 						: this.shopId,
 					startTime: parseInt(startTime / 1000),
 					endTime: parseInt(endTime / 1000),
-					isOpenTime: Number(this.isOpenTime),
+					isOpenTime: Number(this.conSize),
 					page: this.allDayPage.page,
-					num: this.allDayPage.num
+					num: this.allDayPage.num,
+					type:this.conType,//0代表按自然日，1代表按交接班
+					typeId:this.conType == '0'?this.conSize:this.conShifts//对应type的id，type为1的时候，该字段为班次id
 				}
 			});
 			let ArrNoZero = [];
@@ -619,7 +692,7 @@ export default {
 						day: startYear + '-' + startMonth + '-' + startDay, //日期，注意---和从查看详情进入传的值不一样
 						startTime: this.startTime,
 						endTime: this.endTime,
-						isOpenTime: this.isOpenTime,
+						isOpenTime: this.conSize,
 						allDayPage: this.allDayPage //多天分页信息
 					};
 					storage.session('orderOne', detial);
@@ -665,7 +738,7 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.isOpenTime)
+					isOpenTime: Number(this.conSize)
 				}
 			});
 			this.$store.commit('setWin', {
@@ -730,7 +803,7 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.isOpenTime)
+					isOpenTime: Number(this.conSize)
 				}
 			});
 		},
@@ -755,7 +828,7 @@ export default {
 				day: time, //日期
 				startTime: this.startTime,
 				endTime: this.endTime,
-				isOpenTime: this.isOpenTime,
+				isOpenTime: this.conSize,
 				allDayPage: this.allDayPage //多天分页信息
 			};
 			this.$route.query.arear = 1;
@@ -847,6 +920,7 @@ export default {
 		sessionStorage.removeItem('orderMore');
 		sessionStorage.removeItem('titleDetial');
 		this.initBtn();
+		this.getChangeShifts();
 	},
 	components: {
 		// calendar: () =>
@@ -871,7 +945,7 @@ export default {
 
 .order-order-data ul li {
 	float: left;
-	margin-right: 20px;
+	margin: 5px;
 }
 
 #statistics-order .selected {

@@ -10,12 +10,15 @@
 		<div class="topR">
 			<section class="box">
 				<label class="commodity-name">当流水号达到</label>
-				<input type="text" placeholder="请输入100的整数" v-model="serialNum" />
+				<el-input v-model="serialNum" placeholder="请输入100的整数" style="width:150px"></el-input>
+				<!--<input type="text" placeholder="请输入100的整数" v-model="serialNum" />-->
 				<span>重置流水号</span>
 			</section>
 			<section class="box">
 				<label class="commodity-name">桌牌号开关</label>
-				<on-off :status="onMenu" @statusChange="getIsDiscountToggle" class="on_off"></on-off>
+				<el-switch style="height: 40px;line-height: 40px" @change="getIsDiscountToggle" v-model="onMenu" active-color="#E1BB4A" inactive-color="#e6e6e6">
+				</el-switch>
+				<!--<on-off :status="onMenu" @statusChange="getIsDiscountToggle" class="on_off"></on-off>-->
 			</section>
 		</div>
 		<div v-if="onMenu">
@@ -36,7 +39,7 @@
 				</div>
 				<section class="box">
 					<label class="commodity-name">文字桌牌号</label>
-					<a href="javascript:void(0);" v-on:click="addWenNum()" class="addclassify" style="width:180px;">添加文字桌牌号</a>
+					<a href="javascript:void(0);" v-on:click="addWenNum()" class="addclassify">添加文字桌牌号</a>
 				</section>
 				<div class="cardBox">
 					<section class="section_one" v-for="(item,index) in wenList" :key="index">
@@ -49,7 +52,7 @@
 				</div>
 			</section>
 		</div>
-		<a href="javascript:void(0);" v-on:click="keepOn" class="yellow">保存</a>
+		<a href="javascript:void(0);" v-on:click="keepOn" class="keep">保存</a>
 		<sellingWin v-if="isShow" @throwWinResult="doThrowTanResult" :isAdd="isAdd" :itemInfo="itemInfo">
 		</sellingWin>
 	</section>
@@ -81,11 +84,7 @@ export default {
 	methods: {
 		getIsDiscountToggle(res) {
 			this.onMenu = res;
-			if (res) {
-				this.numType = 1;
-			} else {
-				this.numType = 0;
-			}
+			this.numType = Number(res);
 		},
 		async init() {
 			let res = await http.getFastSelling({
@@ -199,8 +198,6 @@ export default {
 		}
 	},
 	components: {
-		onOff: () =>
-			import(/*webpackChunkName: "on_off"*/ 'src/components/on_off'),
 		sellingWin: () =>
 			import(/*webpackChunkName: "fast_selling_win"*/ './fast_selling_win')
 	},
@@ -231,7 +228,7 @@ export default {
 	}
 	.box {
 		height: 40px;
-		margin-bottom: 40px;
+		margin-bottom: 20px;
 		.commodity-name {
 			display: inline-block;
 			width: 100px;
@@ -240,8 +237,18 @@ export default {
 			line-height: 40px;
 			text-align: right;
 		}
+		a {
+			display: inline-block;
+			width: 160px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			background-color: #e1bb4a;
+			color: white;
+			margin-top: 10px;
+		}
 		.div_wai {
-			border: 1px solid #f8941f;
+			border: 1px solid #e1bb4a;
 			display: inline-block;
 			cursor: pointer;
 			.span_type {
@@ -252,12 +259,12 @@ export default {
 				text-align: center;
 			}
 			.sel_true {
-				background-color: #f8941f;
+				background-color: #e1bb4a;
 				color: white;
 			}
 			.sel_false {
 				background-color: white;
-				color: #f8941f;
+				color: #e1bb4a;
 			}
 		}
 		input {
@@ -279,7 +286,7 @@ export default {
 			position: absolute;
 			left: 0;
 			top: 10px;
-			border-left: 6px solid #f8931f;
+			border-left: 6px solid #e1bb4a;
 		}
 		.dashed {
 			width: 800px;
@@ -314,15 +321,24 @@ export default {
 		.span_two {
 			position: absolute;
 			right: 35px;
+			cursor: pointer;
 		}
 		.img_style {
 			height: 30px;
 			padding: 5px;
 		}
 	}
-	a {
-		margin: 10px 0;
+	.keep {
+		display: block;
+		float: left;
+		margin: 20px 0;
 		width: 250px;
+		height: 50px;
+		line-height: 50px;
+		clear: both;
+		background-color: #e1bb4a;
+		color: white;
+		font-size: 16px;
 	}
 }
 </style>
