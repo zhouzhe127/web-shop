@@ -560,7 +560,7 @@
 					name: '必点'
 				}],
 				evaluationName: '仅提醒',
-				result: 0, //必点商品选中的
+				result: 1, //必点商品选中的
 				mustGoodsRemind: '', //t提醒内容
 				manypeopleStatus: false, //多人下单的状态
 				singleUser: [{
