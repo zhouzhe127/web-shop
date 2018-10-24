@@ -1,28 +1,73 @@
 <template>
 	<div id="user_group">
 		<header class="user_group_header">
-			<!-- <button @click="pushNewGroup" class="new_group">新增用户组</button> -->
 			<div class="select_keywords">
 				<i>关键字</i>
-				<input v-model="keyWords" type="text" placeholder="请输入分组名称">
-				<button @click="selectGroup" class="btn blue">筛选</button>
-				<button @click="resertGroup" class="btn gray">重置</button>
+				<!-- <input v-model="keyWords" type="text" placeholder="请输入分组名称"> -->
+				<el-input style="width:179px;margin-right: 10px;" v-model="keyWords" maxlength="10" placeholder="请输入分组名称"></el-input>
+				<el-button type="primary" style="margin-right: 10px;width:100px;" @click="selectGroup">筛选</el-button>
+				<el-button type="info" style="margin-right: 10px;width:100px;" @click="resertGroup">重置</el-button>
+				<!-- <button @click="selectGroup" class="btn blue">筛选</button>
+				<button @click="resertGroup" class="btn gray">重置</button> -->
 			</div>
 		</header>
-		<com-table class="table_width" :listHeight='80' :listName="'用户分组'" :key="index" :showTitle='1' :introData="userList" :listWidth="1437"
+		<!-- <com-table class="table_width" :listHeight='80' :listName="'用户分组'" :key="index" :showTitle='1' :introData="userList" :listWidth="1437"
 		    :titleData="titleList" :allTotal="allUserList.length" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="operate_user">
-				<span @click="exportUser(props.data.id)" class="export_user">导出用户</span>
-				<span @click="checkDetails(props.data.id)" class="show_detail">查看详情</span>
-				<span @click="editUserInfo(props.data,props.index)" class="edit_user">编辑</span>
-				<span @click="deleteUser(props.data.id,props.index)" class="delete_user">删除</span>
+				<span @click="exportUser(scope.row.id)" class="export_user">导出用户</span>
+				<span @click="checkDetails(scope.row.id)" class="show_detail">查看详情</span>
+				<span @click="editUserInfo(scope.row,props.index)" class="edit_user">编辑</span>
+				<span @click="deleteUser(scope.row.id,props.index)" class="delete_user">删除</span>
 			</div>
 			<div slot="con-1" slot-scope="props">{{num*(page -1) + props.index + 1}}</div>
-		</com-table>
+		</com-table> -->
+		<div class="list_box">
+			<div class="list_title">
+				<div class="list_title_l fl">
+					<span>用户分组</span>
+					<span></span>
+					<span>共
+								<a href="javascript:;">{{allUserList.length}}</a>条记录</span>
+				</div>
+				<div class="list_title_r fr">
+				</div>
+			</div>
+			<el-table :data="userList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+				<el-table-column fixed prop="id" label="操作" align="center" width="400">
+					<template slot-scope="scope">
+						<el-button size="mini" type="text" @click="exportUser(scope.row.id)" style="color: rgb(40, 168, 224);">导出用户</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="mini" type="text" @click="checkDetails(scope.row.id)" style="color: rgb(40, 168, 224);">查看详情</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="mini" type="text" @click="relatedPosition" style="color: #E1BB4A;">关联职位</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="mini" type="text" @click="editUserInfo(scope.row,scope.$index)" style="color: #ff8d00;">编辑</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="mini" type="text" @click="deleteUser(scope.row.id,scope.$index)" style="color: #fd3f1f;">删除</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="序号" align="center">
+					<template slot-scope="scope">
+						<span>{{num*(page -1) + scope.$index + 1}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="name" label="分组名称" align="center">
+				</el-table-column>
+				<el-table-column prop="count" label="人数" align="center">
+				</el-table-column>
+				<el-table-column label="职位" align="center">
+					<template slot-scope="scope">
+						<span>收银员</span>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
 		<!-- 翻页 -->
 		<section class="turn-page">
-			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+			<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="pageNum" :page-sizes="[10, 20, 30]"></el-pagination>
 		</section>
+		<!-- 新建和编辑 -->
 		<transition name="fade">
 			<win v-if="isShowNewGroup" :width="512" :height="169" @winEvent="winEvent">
 				<span slot="title">新增用户组</span>
@@ -34,71 +79,47 @@
 				</div>
 			</win>
 		</transition>
+		<!-- 关联职位 -->
+		<transition name="fade">
+			<win v-if="isShowPosition" :width="512" :height="169" @winEvent="winEventPosition">
+				<span slot="title">关联职位</span>
+				<div class="new_user" slot="content">
+					<div class="group_name">
+						<span class="fl required">关联职位</span>
+						<el-radio-group v-model="validName" class="fl">
+							<el-radio v-for="(item,index) in validList" :key="index" :label="item.name" border style="width:100px;text-align: center;" @change.native="clicktheRadio(item)"></el-radio>
+						</el-radio-group>
+					</div>
+				</div>
+			</win>
+		</transition>
 	</div>
 </template>
-<script>
-
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import global from 'src/manager/global';
 	export default {
 		data() {
 			return {
 				index: null,
-				titleList: [
-					{
-						titleName: '操作',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 483 + 'px',
-							flex: 'none'
-						},
-					},
-					{
-						titleName: '序号',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 318 + 'px',
-							flex: 'none'
-						},
-					},
-					{
-						titleName: '分组名称',
-						dataName: 'name',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 318 + 'px',
-							flex: 'none'
-						},
-					},
-					{
-						titleName: '人数',
-						dataName: 'count',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 318 + 'px',
-							flex: 'none'
-						},
-					}
-				],
 				allTotal: 0,
 				page: 1,
 				num: 10,
 				pageNum: 1,
 				userList: [], //展示的数组
 				isShowNewGroup: false,
+				isShowPosition: false, //关联职位
 				editUser: [],
-				list: [
-					{
-						name: '无',
-						id: 1
-					}, {
-						name: '店长',
-						id: 2
-					}, {
-						name: '组员',
-						id: 3
-					}
-				],
+				list: [{
+					name: '无',
+					id: 1
+				}, {
+					name: '店长',
+					id: 2
+				}, {
+					name: '组员',
+					id: 3
+				}],
 				groupName: '',
 				result: [],
 				keyWords: '', //  搜索关键字
@@ -107,6 +128,18 @@
 				total: 0,
 				allUserList: [], //所有的数据
 				editIndex: '', //   被编辑的数据下表
+				validName: '卖手店长',
+				validList: [{
+					'id': 0,
+					'name': '店长'
+				}, {
+					'id': 1,
+					'name': '店员'
+				}, {
+					'id': 2,
+					'name': '收银员'
+				}],
+				validId: 0,
 			};
 		},
 		methods: {
@@ -124,14 +157,20 @@
 				this.groupName = '';
 				this.editId = '';
 			},
+			winEventPosition(str) { //关联职位的弹窗回掉
+				if (str && str == 'ok') {
+					//this.addNewGroup();
+				} else {
+					this.isShowPosition = false;
+				}
+			},
 			async addNewGroup() {
-				if (!global.checkData(
-					{
-						groupName: {
-							cond: `$$.trim() != ''`,
-							pro: '请输入分组名称'
-						}
-					}, this)) {
+				if (!global.checkData({
+					groupName: {
+						cond: `$$.trim() != ''`,
+						pro: '请输入分组名称'
+					}
+				}, this)) {
 					return false;
 				}
 				if (this.isEdit) {
@@ -266,17 +305,33 @@
 					this.setPage();
 				});
 			},
-			pageChange(obj) { //翻页
-				this.page = obj.page;
-				this.num = obj.num;
-				this.setPage();
-			},
-			setPage: function () { //自定义翻页
+			// pageChange(obj) { //翻页
+			// 	this.page = obj.page;
+			// 	this.num = obj.num;
+			// 	this.setPage();
+			// },
+			setPage: function() { //自定义翻页
 				this.pageNum = Math.ceil((this.allUserList.length) / (this.num)); //根据数据总和和一页展示的数量计算出总页数
 				let pageStart = (this.page - 1) * (this.num); //起始
 				let pageEnd = (this.page) * (this.num); //结束
 				this.userList = this.allUserList.slice(pageStart, pageEnd); //即将展示页面的数组
-			}
+			},
+			relatedPosition: function() { //关联职位
+				this.isShowPosition = true;
+			},
+			//每页显示多少条数据
+			handleSizeChange(p) {
+				this.num = p;
+				this.setPage();
+			},
+			//页码跳转
+			pageChange(p) {
+				this.page = p;
+				this.setPage();
+			},
+			clicktheRadio: function(item) {
+				this.validId = item.id;
+			},
 		},
 		mounted() {
 			this.$store.commit('setPageTools', {
@@ -303,10 +358,12 @@
 <style lang="less" scoped>
 	#user_group {
 		width: 1300px;
+
 		.operate_user {
 			span {
 				padding: 0 10px;
 			}
+
 			.export_user {
 				color: RGB(40, 168, 224);
 				font-size: 16px;
@@ -314,26 +371,32 @@
 				border-right: 1px solid RGB(206, 206, 206);
 				cursor: pointer;
 			}
+
 			.show_detail {
 				color: RGB(40, 168, 224);
 				font-size: 16px;
 				cursor: pointer;
 				border-right: 1px solid RGB(206, 206, 206);
 			}
+
 			.edit_user {
 				color: RGB(255, 141, 0);
 				font-size: 16px;
 				cursor: pointer;
 				border-right: 1px solid RGB(206, 206, 206);
 			}
+
 			.delete_user {
 				color: RGB(255, 61, 4);
 				cursor: pointer;
 				font-size: 16px;
 			}
 		}
+
 		.user_group_header {
 			position: relative;
+			margin-bottom: 20px;
+
 			.new_group {
 				position: absolute;
 				top: -45px;
@@ -345,15 +408,18 @@
 				color: #fff;
 				font-size: 14px;
 			}
+
 			.select_keywords {
 				display: flex;
 				flex-direction: row;
 				align-items: center;
+
 				i {
 					font-size: 16px;
 					color: #333;
 					margin-right: 30px;
 				}
+
 				input {
 					width: 183px;
 					height: 42px;
@@ -362,16 +428,19 @@
 				}
 			}
 		}
+
 		.user_group_content {
 			border: 1px solid RGB(210, 210, 210);
 			width: 100%;
 			margin-top: 19px;
+
 			.header_bar {
 				height: 53px;
 				font-weight: bold;
 				line-height: 52px;
 				margin-left: 48px;
 				font-size: 16px;
+
 				.point {
 					display: inline-block;
 					background: #000;
@@ -380,14 +449,17 @@
 					border-radius: 50%;
 					margin: 3px 10px;
 				}
+
 				i {
 					color: RGB(255, 60, 4);
 				}
 			}
+
 			.nav_list {
 				width: 1437px;
 				height: 42px;
 				background: RGB(242, 242, 242);
+
 				.nav_header {
 					display: flex;
 					flex-direction: row;
@@ -395,18 +467,22 @@
 					flex-wrap: nowrap;
 					line-height: 42px;
 					text-align: center;
+
 					li:nth-child(1) {
 						width: 483px
 					}
+
 					.li_w {
 						width: 318px
 					}
 				}
 			}
+
 			.user_list {
 				width: 1437px;
 				border-bottom: 1px solid RGB(247, 247, 247);
 				line-height: 66px;
+
 				.nolist {
 					width: 1436px;
 					text-align: center;
@@ -414,6 +490,7 @@
 					font-size: 24px;
 					color: #E0E0E0;
 				}
+
 				ul {
 					border-top: 1px solid RGB(247, 247, 247);
 					height: 67px;
@@ -421,18 +498,22 @@
 					flex-direction: row;
 					justify-content: space-around;
 					text-align: center;
+
 					li:nth-child(1) {
 						width: 483px;
 					}
+
 					.li_w {
 						width: 318px
 					}
 				}
 			}
 		}
+
 		.turn-page {
 			margin: 10px 0 30px 0;
 		}
+
 		.btn {
 			width: 101px;
 			height: 42px;
@@ -442,25 +523,30 @@
 			font-size: 16px;
 			line-height: 41px;
 		}
+
 		.gray {
 			background: RGB(179, 179, 179)
 		}
+
 		.blue {
 			background: RGB(40, 168, 224)
 		}
 	}
 
 	.new_user {
-		padding: 35px 52px 51px 52px;
+		padding: 35px 10px 51px 20px;
+
 		.group_name {
 			height: 41px;
 			line-height: 41px;
 			margin-bottom: 19px;
+
 			span {
 				font-size: 16px;
 				color: RGB(51, 51, 51);
 				margin-right: 11px;
 			}
+
 			input {
 				width: 321px;
 				height: 41px;

@@ -1,9 +1,9 @@
 <template>
-	<win :width="589" :height="349" @winEvent="winEvent">
+	<win :width="700" :height="500" @winEvent="winEvent">
 		<span slot="title">选择微信粉丝</span>
 		<div class="user_content" slot="content">
 			<header class="user_header">
-				<el-input class="input" v-model.trim="keyWords" clearable placeholder="输入关键字"></el-input>
+				<el-input class="input" style="padding-left: 0;" v-model.trim="keyWords" clearable placeholder="输入关键字"></el-input>
 				<el-button v-on:click="selectUser" type="primary">筛选</el-button>
 				<el-button v-on:click="resertUser" type="info">重置</el-button>
 			</header>
@@ -21,8 +21,9 @@
 				<!-- 翻页 -->
 
 				<section class="turn-page">
-					<pageElement background layout="prev, pager, next" @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true">
-					</pageElement>
+					<!-- <pageElement background layout="prev, pager, next" @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true">
+					</pageElement> -->
+					<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 					<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
 				</section>
 			</footer>
@@ -41,7 +42,7 @@
 				num: 10,
 				count: '',
 				userselects: [],
-				total: '',
+				total: 1,
 				seachValue: ''
 			};
 		},
@@ -143,11 +144,21 @@
 				this.keyWords = '';
 				this.getUserList(1);
 			},
-			pageChange(obj) { //翻页
-				this.page = obj.page;
-				this.num = obj.num;
+			// pageChange(obj) { //翻页
+			// 	this.page = obj.page;
+			// 	this.num = obj.num;
+			// 	this.getUserList();
+			// },
+			//每页显示多少条数据
+			handleSizeChange(p) {
+				this.num = p;
 				this.getUserList();
 			},
+			//页码跳转
+			pageChange(p) {
+				this.page = p;
+				this.getUserList();
+			},			
 		},
 		mounted() {
 			this.userselects = [];
@@ -235,7 +246,7 @@
 		.user_footer {
 			text-align: left;
 			margin-top: 36px;
-			margin-left: 50px;
+			// margin-left: 50px;
 
 			.turn-page {
 				margin: 10px 0 30px 0;
