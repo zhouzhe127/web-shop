@@ -16,7 +16,7 @@
 				<!--选择卡属门店-->
 				<div class="filtrate fl" v-if="ischain=='3'">
 					<selectStore @emit="clickShopList" :sorts="shopsList" :tipName="shopsName"></selectStore>
-				</div>
+				</div> 
 				<!--选择卡性质-->
 				<section class="filtrate fl" v-if="ischain == '3'">
 					<!--下拉框组件-->
@@ -25,6 +25,17 @@
 				<a href="javascript:void(0);" class="blue fl" @click="getList" style="display:block;width: 95px;height: 40px;line-height: 40px;">筛选</a>
 				<a href="javascript:void(0);" class="gray fl" @click="getList('','reset')" style="display:block;width: 95px;height: 40px;line-height: 40px;margin-left: 14px;">重置</a>
 			</section>
+
+			<!-- 选择门店 -->
+            <div class="store-show" :style="{'height':storeShowH}">
+				<i>已选择店铺：</i>
+				<div class="store-block">
+					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
+					<div v-if="selectedShopList == 0">{{shopsName}}</div>
+					<div v-else>{{selectedShopList.toString()}}</div>
+				</div>
+			</div>
+
 			<com-table :listHeight='80' :listName="'实体卡应用'" :key="index" :showTitle='1' :listWidth="1300" :introData="list" :titleData="titleList"
 			    :allTotal="count">
 				<div slot="con-0" slot-scope="props" style="">
@@ -102,9 +113,9 @@
 				list: [], //制卡列表
 				count: '', // 总页数
 				shopsName: '选择卡属门店',
-				allCardName: false, // 是否全选卡类型
-				allAttrName: false, // 是否全选店铺
-				allShopName: false, // 是否全选店铺
+				// allCardName: false, // 是否全选卡类型
+				// allAttrName: false, // 是否全选店铺
+				// allShopName: false, // 是否全选店铺
 				willShow: false, //活动类型框是否显示
 				shopsList: [], // 卡属门店
 				showWin: false, //弹窗默认关闭状态
@@ -145,6 +156,9 @@
 				},
 				],
 				allTotal: 0,
+				isShowStore:false,//已选中店铺列表 是否展开
+				storeShowH:'20px',
+				selectedShopList:[],
 			};
 		},
 		props: {},
@@ -160,6 +174,14 @@
 				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 		},
 		methods: {
+			openStore(){//展开收起-已选中店铺列表
+				if(this.isShowStore==true){//展开时点击
+					this.storeShowH = '20px';
+				}else{
+					this.storeShowH = 'auto';
+				}
+				this.isShowStore = !this.isShowStore;
+			},
 			async getList(res, type) {
 				// 重置
 				if (type == 'reset') {
@@ -293,15 +315,46 @@
 				});
 				this.listObj.cardTypeId = idArr.join(',');
 			},
+			//根据店铺id匹配店铺名
+			getShopname: function() {
+				if (this.shopName != '请选择店铺') {
+					let list = this.shopName.split(',');
+					let arr = [];
+					for (let i = 0; i < list.length; i++) {
+						let obj = {};
+						if (i === 0) {
+							obj.className = 'chyellow';
+							obj.name = list[i];
+						} else if (i === 1) {
+							obj.className = 'chblue';
+							obj.name = list[i];
+						} else if (i === 2) {
+							obj.className = 'chgreen';
+							obj.name = list[i];
+						} else {
+							obj.className = '';
+							obj.name = list[i];
+						}
+						arr.push(obj);
+					}
+					this.ChartShopName = arr;
+					// this.ChartSelShop = arr.slice(0,3); 
+				} else {
+					this.shopName = '请选择店铺';
+				}  
+			},
 			// 获取卡属门店店铺列表
 			clickShopList: function (arr) {
+				console.log(arr,'arr');
 				let idArr = [];
 				arr.forEach((item) => {//,index
 					if (item.selected == true) {
-						idArr.push(item.id);
+						idArr.push(item.name);
+						this.selectedShopList = idArr; 
 					}
 				});
 				this.listObj.belongToShop = idArr.join(',');
+				
 			},
 			selexpirationTime: function (i) {
 				this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
@@ -532,6 +585,37 @@
 
 	.selectbtns span:hover {
 		background-color: inherit;
+	}
+	#useCard  .store-show {
+		width: 100%;
+		margin-bottom: 10px;
+		display: block;
+		overflow: hidden;
+		line-height: 20px;
+		position: relative; 
+	}
+	#useCard  .store-show i {
+		float: left;
+		position: absolute;
+		left: 0;
+		top: 0;
+
+	}
+	#useCard  .store-show .store-block{
+		overflow: hidden;
+		width: 100%;
+		padding-left: 84px;
+	}
+	#useCard  .store-show .store-block em{
+		float: left;
+		color: #09f;
+		margin-right: 5px;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	#useCard  .store-show .store-block 	span {
+		float: left;
+		color: #333;
 	}
 
 	/*翻页================================*/
