@@ -349,7 +349,7 @@
 			},
 			wholeOnCom: function () {
 				if (this.areaIndex[0]) {
-					this.goodsIndex = [];
+					// this.goodsIndex = [];
 					for (let i = 0; i < this.selectgoods.length; i++) {
 						if (this.selectgoods[i].goodsId > 0) {
 							this.goodsIndex.push(this.selectgoods[i].goodsId);
