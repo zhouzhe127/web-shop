@@ -10,7 +10,7 @@
 		<header class="menu_header">
 			<ul>
 				<li>
-					<span @click="selectMenu('default',0)" :class="menuIndex == 0?'btn_blue':''" class="btns">默认菜单</span>
+					<span @click="selectMenu('default',0)" :class="menuIndex == 0?'btn_blue':''" class="btns">{{defaultMenu}}</span>
 				</li>
 				<li v-for="(item,index) in menuName" :key="index">
 					<span @click="selectMenu(item,index+1)" :class="index+1 == menuIndex?'btn_blue':''" class="btns">{{item.name}}</span>
@@ -333,7 +333,8 @@
 					'name': '卖手收银'
 				}],
 				validId: 0,
-				wechatFastMenu: [] //快捷的默认菜单
+				wechatFastMenu: [], //快捷的默认菜单
+				defaultMenu: '默认菜单'
 			};
 		},
 		mounted() {
@@ -381,13 +382,16 @@
 					for (let item of this.wechatFastMenu) {
 						if (this.validList[this.validId].name == item.group) {
 							//当前用户分组的名字替换掉
-							this.menuName[this.menuIndex - 1].name = item.group;
+							if (this.menuId == 'default') {
+								this.defaultMenu = item.group;
+							} else {
+								this.menuName[this.menuIndex - 1].name = item.group;
+							}
 							this.menuList = item.menu;
 							break;
 						}
 					}
 					//this.menuIndex = this.menuName.length; //  创建新菜单 ， 然后选择光标转移至新菜单
-					this.menuId = 'newType';
 					this.isShowQuickWin = false;
 				} else {
 					this.isShowQuickWin = false;
