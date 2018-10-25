@@ -252,10 +252,10 @@
 		</transition>
 		<!-- 快速创建菜单 -->
 		<transition name="fade">
-			<win :width="591" :height="248" v-if="isShowQuickWin" @winEvent="quickWinEvent">
+			<win :width="650" :height="248" v-if="isShowQuickWin" @winEvent="quickWinEvent">
 				<span slot="title">快速配置菜单</span>
 				<div class="menu_win" slot="content">
-					<div class="menu_content_group">
+					<div class="menu_content_group" style="margin-top: 40px;">
 						<div class="online-box clearfix">
 							<span class="online-sub fl required">快速配置菜单</span>
 							<div class="rightHalf">
@@ -1752,7 +1752,7 @@
 	}
 
 	.menu_content_group .online-box .rightHalf {
-		max-width: 450px;
+		max-width: 500px;
 		height: auto;
 		float: left;
 	}

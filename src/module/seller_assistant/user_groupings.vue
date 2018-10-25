@@ -39,7 +39,7 @@
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
 						<el-button size="mini" type="text" @click="checkDetails(scope.row.id)" style="color: rgb(40, 168, 224);">查看详情</el-button>
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
-						<el-button size="mini" type="text" @click="relatedPosition" style="color: #E1BB4A;">关联职位</el-button>
+						<el-button size="mini" type="text" @click="relatedPosition(scope.row.id)" style="color: #E1BB4A;">关联职位</el-button>
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
 						<el-button size="mini" type="text" @click="editUserInfo(scope.row,scope.$index)" style="color: #ff8d00;">编辑</el-button>
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
@@ -57,7 +57,7 @@
 				</el-table-column>
 				<el-table-column label="职位" align="center">
 					<template slot-scope="scope">
-						<span>收银员</span>
+						<span>{{positionList[scope.row.position]}}</span>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -128,18 +128,25 @@
 				total: 0,
 				allUserList: [], //所有的数据
 				editIndex: '', //   被编辑的数据下表
-				validName: '卖手店长',
+				validName: '店长',
 				validList: [{
-					'id': 0,
+					'id': 1,
 					'name': '店长'
 				}, {
-					'id': 1,
+					'id': 2,
 					'name': '店员'
 				}, {
-					'id': 2,
+					'id': 3,
 					'name': '收银员'
 				}],
-				validId: 0,
+				validId: 1,
+				groupId: '', //分组Id
+				positionList: {
+					'0': '未关联职位',
+					'1': '店长',
+					'2': '店员',
+					'3': '收银员'
+				}
 			};
 		},
 		methods: {
@@ -159,18 +166,19 @@
 			},
 			winEventPosition(str) { //关联职位的弹窗回掉
 				if (str && str == 'ok') {
-					//this.addNewGroup();
+					this.bindPosition();
+					this.isShowPosition = false;
 				} else {
 					this.isShowPosition = false;
 				}
 			},
 			async addNewGroup() {
 				if (!global.checkData({
-					groupName: {
-						cond: `$$.trim() != ''`,
-						pro: '请输入分组名称'
-					}
-				}, this)) {
+						groupName: {
+							cond: `$$.trim() != ''`,
+							pro: '请输入分组名称'
+						}
+					}, this)) {
 					return false;
 				}
 				if (this.isEdit) {
@@ -305,18 +313,30 @@
 					this.setPage();
 				});
 			},
-			// pageChange(obj) { //翻页
-			// 	this.page = obj.page;
-			// 	this.num = obj.num;
-			// 	this.setPage();
-			// },
+			async bindPosition() { //关联职位
+				let res = await http.bindPosition({
+					data: {
+						groupId: this.groupId,
+						position: this.validId
+					}
+				})
+				if (res) {
+					this.$store.commit('setWin', {
+						winType: 'alert',
+						title: '提示信息',
+						content: '职位关联成功'
+					});
+					this.getUserGroup();
+				}
+			},
 			setPage: function() { //自定义翻页
 				this.pageNum = Math.ceil((this.allUserList.length) / (this.num)); //根据数据总和和一页展示的数量计算出总页数
 				let pageStart = (this.page - 1) * (this.num); //起始
 				let pageEnd = (this.page) * (this.num); //结束
 				this.userList = this.allUserList.slice(pageStart, pageEnd); //即将展示页面的数组
 			},
-			relatedPosition: function() { //关联职位
+			relatedPosition: function(id) { //关联职位
+				this.groupId = id;
 				this.isShowPosition = true;
 			},
 			//每页显示多少条数据
