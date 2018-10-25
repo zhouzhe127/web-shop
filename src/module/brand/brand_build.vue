@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="creatStores" v-cloak>
 		<template>
 			<div class="title">
