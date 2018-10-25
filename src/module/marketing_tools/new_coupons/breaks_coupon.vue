@@ -790,6 +790,10 @@
 						this.valiData('随机金额区间为0.01至9999.99，请按照规则填写');
 						return false;
 					}
+					if(this.billPrice > this.reckoningPrice){
+						this.valiData('最高金额不能小于最低金额');
+						return false;
+					}
 				}
 				//减免金额的验证
 				if (this.typeId != 2) {
