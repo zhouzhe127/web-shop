@@ -10,10 +10,6 @@
 		<div id="breakCoupon">
 			<!-- 单品 整单 -->
 			<div class="type">
-				<!-- <template v-for="(item,index) in goodlist">
-					<div v-on:click="tabTypes(item,index)" :class="{'selected' : typeId == index}" :key="index">{{item.name}}
-					</div>
-				</template> -->
 				<el-radio-group v-model="commoditySlect" class="fl">
 					<el-radio-button v-for="(item,index) in goodlist" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
 				</el-radio-group>
@@ -82,9 +78,6 @@
 					</div>
 				</div>
 				<div class="right">
-					<!-- <section class="fl reduce" v-for="(item,index) in compulsoryCreditsList" :key="index">
-						<span :class="{'sign' : compulsoryCredits == index}" v-on:click="changecompulsoryCredits(item,index)">{{item.name}}</span>
-					</section> -->
 					<el-radio-group v-model="compulsoryName" class="fl">
 						<el-radio style="width:112px;" v-for="(item,index) in compulsoryCreditsList" :key="index" :label="item.name" border @change.native="changecompulsoryCredits(item)"></el-radio>
 					</el-radio-group>
