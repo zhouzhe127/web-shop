@@ -405,27 +405,6 @@ export default {
 		selectTypeBan(){
 			this.getOrderListInDay(this.dateTime);
 		},
-		//获取交接班班次信息
-		async getChangeShifts() {
-			//获取店铺基本信息
-			this.baseDetial = await http.baseGet({
-				data: {}
-			});
-			let arr = await http.getChangeShifts({
-				data: {}
-			});
-			let shiftsArr = [];
-			let shifts = this.baseDetial.changeShifts.split(',');
-			for(let i=0;i<arr.length;i++){
-				for(let key in shifts){
-					if(shifts[key] == arr[i].id){
-						shiftsArr.push(arr[i]);
-					}
-
-				}
-			}
-			this.shiftList = shiftsArr;
-		},
 		//获取店铺基本信息
 		async baseGet() {
 			this.baseDetial = await http.baseGet({
@@ -755,6 +734,7 @@ export default {
 				this.areaList2.push(tlist[i]);
 				this.tableList.push(tlist[i]);
 			}
+			this.shiftList = res.changeShifts;
 		},
 		//点击返回按钮
 		returnPage: function() {
@@ -930,7 +910,6 @@ export default {
 		this.$route.query.arear == 1 ? this.initBtn() : this.initBtn(true);
 		sessionStorage.removeItem('order');
 		sessionStorage.removeItem('titleDetial');
-		this.getChangeShifts();
 	},
 	components: {
 		// calendar: () =>
