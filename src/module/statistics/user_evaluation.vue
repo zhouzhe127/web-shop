@@ -52,10 +52,9 @@
 				<i>已选择店铺：</i>
 				<div class="store-block">
 					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
-					<div>{{shopName}}</div>
+					<div>{{shopName}}</div>  
 				</div>
-			</div>
- 
+			</div> 
 			<!-- 环比 同比 -->
 			<div class="compared">
 				<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span>
@@ -408,16 +407,15 @@ export default {
 					arr.push(obj);
 				}
 				this.ChartShopName = arr;
-				// this.ChartSelShop = arr.slice(0,3);
 			} else {
 				this.shopName = '请选择店铺';
-			}
+			}  
 		},
 		getShop(id, name) {
 			if (id || name) {
 				this.selShopid = id;
 				this.shopName = name;
-			}
+			} 
 			this.getShopname();
 		},
 		fadeAway() {
@@ -754,6 +752,7 @@ export default {
 		this.uploadUrl = userData.uploadUrl;
 		for (let item of this.shopList) {
 			this.selShopid.push(item.id);
+			this.shopName += item.shopName + ', ';
 		}
 		this.getStatistics();
 	},

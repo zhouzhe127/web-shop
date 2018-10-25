@@ -461,6 +461,9 @@ let need = {
 		},
 		materialWorking:{			//加工物料
 			name:'processMaterial'
+		},
+		ActiveConf:{			//活跃值配置
+			name:'ActiveConf'
 		}
 	}
 };

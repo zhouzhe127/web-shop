@@ -168,7 +168,8 @@ const member_system = {
 	'1111': 'member_system/card_type',
 	'1112': 'member_system/getapplied_entitycardlist',
 	'1113': 'member_system/membercard_import',
-	'1114': 'member_system/member_analysis'
+    '1114': 'member_system/member_analysis',
+    '1115': 'member_system/member_activity_value'
 };
 const seller_assistant = {
 	'121': 'seller_assistant/gold_config',
