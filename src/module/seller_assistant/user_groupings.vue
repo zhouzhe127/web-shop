@@ -74,7 +74,8 @@
 				<div class="new_user" slot="content">
 					<div class="group_name">
 						<span class="required">分组名称</span>
-						<input v-model.trim="groupName" maxlength="20" type="text" placeholder="请输入名称">
+						<!-- <input v-model.trim="groupName" maxlength="20" type="text" placeholder="请输入名称"> -->
+						<el-input v-model="groupName" maxlength="20" placeholder="请输入分组名称" style="width:250px;"></el-input>
 					</div>
 				</div>
 			</win>
@@ -142,7 +143,7 @@
 				validId: 1,
 				groupId: '', //分组Id
 				positionList: {
-					'0': '未关联职位',
+					'0': '--',
 					'1': '店长',
 					'2': '店员',
 					'3': '收银员'
@@ -354,11 +355,13 @@
 			},
 		},
 		mounted() {
-			this.$store.commit('setPageTools', {
-				pushNewGroup: () => {
+			this.$store.commit('setPageTools', [{
+				name: '新增用户组',
+				fn: () => {
 					this.pushNewGroup();
-				}
-			});
+				},
+				className: 'el-btn-yellow'
+			}]);
 			this.getUserGroup();
 		},
 		components: {

@@ -250,7 +250,7 @@
 							张
 						</div>
 					</div> -->
-					<el-input class='fl' placeholder="请输入整数" v-model="maxCeiling" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+					<el-input class='fl' placeholder="请输入整数" v-model="maxCeiling" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
 						<template slot="suffix">张</template>
 					</el-input>
 					<!-- <input type="text" maxlength="2" class="fl" placeholder="0" style="width: 149px;height: 36px;padding: 0;border-color: #999;text-indent: 10px;outline: none; margin-left:10px;" v-model="maxCeiling" />
@@ -455,7 +455,7 @@
 				threshold: '', //指定门槛金额
 				annotation: '', //备注
 				useKnow: '', //使用须知
-				maxCeiling: 0,
+				maxCeiling: 1,
 				shopList: [], //店铺
 				isSharingId: 0,
 				isSharing: '不与其它优惠共享',
@@ -783,6 +783,12 @@
 					if (this.selectGoods.length == 0 && this.selectPackages.length == 0) {
 						this.valiData('请选择关联商品或套餐');
 						return false;
+					}
+				}
+				if (this.typeId == 1) {
+					if(this.maxCeiling > 999 || this.maxCeiling < 1){
+						this.valiData('最大使用上限1-999');
+						return false;						
 					}
 				}
 				if (this.typeId == 2) {

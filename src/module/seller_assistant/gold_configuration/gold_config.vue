@@ -261,7 +261,7 @@
 		height: 40px;
 		line-height: 40px;
 		text-indent: 25px;
-		background: url("../../../src/res/images/prompt.png") 0 center no-repeat;
+		background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
 		color: #999999;
 	}
 

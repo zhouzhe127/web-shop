@@ -207,7 +207,7 @@
 					<div class="yuan">
 						张
 					</div> -->
-					<el-input style="width:194px;" placeholder="请输入最大使用上限" v-model="maxCeiling" maxlength="6">
+					<el-input style="width:194px;" placeholder="请输入最大使用上限" v-model="maxCeiling" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')">
 						<template slot="suffix">张</template>
 					</el-input>
 				</div>
@@ -395,7 +395,7 @@ export default {
 			denomination: '', //面额
 			netAmount: '', //入账金额
 			setAmount: '', //结算金额
-			maxCeiling: '', //最大使用上限
+			maxCeiling: 1, //最大使用上限
 			editCoupon: false,
 			shopList: [],
 			isSharingId: 0,
