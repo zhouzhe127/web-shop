@@ -17,7 +17,7 @@
 				<el-button type="primary" icon="el-icon-search"></el-button>
 			</div>
 			<!-- 选择门店 -->
-			<div class="selectDate fl">
+			<div class="selectDate fl" v-if="isBrand">
 				<div class="activation fl">
 					选择门店
 				</div>
@@ -56,15 +56,25 @@
 					<span>{{couponName}}</span>
 					<span></span>
 					<span>共
-								<a href="javascript:;">12</a>条记录</span>
+								<a href="javascript:;">{{allFormList.length}}</a>条记录</span>
 				</div>
 				<div class="list_title_r fr">
 				</div>
 			</div>
-			<el-table :data="currentList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+			<el-table :data="formList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
 				<el-table-column fixed prop="shopName" label="店铺名称" align="center">
 				</el-table-column>
 				<el-table-column label="核销量" prop="useCoupon" align="center">
+				</el-table-column>
+				<el-table-column label="优惠金额" prop="orderPrice" align="center">
+					<template slot-scope="scope">
+						<span>¥{{scope.row.orderPrice}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="拉动消费" prop="couponCash" align="center">
+					<template slot-scope="scope">
+						<span>¥{{scope.row.couponCash}}</span>
+					</template>
 				</el-table-column>
 				<el-table-column label="券总额" prop="type" align="center">
 					<template slot-scope="scope">
@@ -86,6 +96,9 @@
 				</el-table-column>
 			</el-table>
 		</div>
+		<div class="pageWrap">
+			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
+		</div>
 	</div>
 </template>
 <script type="text/javascript">
@@ -95,14 +108,18 @@
 	export default {
 		data() {
 			return {
-				// startTime: (new Date()).setHours(0, 0, 0, 0), //.getZero(), 
-				// endTime: (new Date()).setHours(23, 59, 59, 999), //日期组件的结束时间
+				page: 1,
+				num: 10,
 				showshop: false, //选择门店
 				selectedCoupon: '请选择门店',
 				showCard: [], //选中的门店
 				shopList: [], //门店数组
 				currentList: [],
-				currentTotal: ''
+				currentTotal: '',
+				formList: [], //展示的数据
+				endTotal: 1,
+				allFormList: [], //所有的数据
+				isBrand: false //判断是否品牌
 			};
 		},
 		props: {
@@ -167,11 +184,31 @@
 						brandId: ''
 					}
 				});
-				this.currentList = res;
+				// this.currentList = res;
 				this.currentTotal = res.length;
+				this.allFormList = res; //身体的数据
+				this.$nextTick(() => {
+					this.setPage();
+				});
 			},
 			returnStore: function() {
 				this.$emit('throwWinResult', true);
+			},
+			setPage: function() {
+				this.endTotal = Math.ceil((this.allFormList.length) / (this.num));
+				let pageStart = (this.page - 1) * (this.num);
+				let pageEnd = (this.page) * (this.num);
+				let pageContent = this.allFormList.slice(pageStart, pageEnd);
+				this.formList = pageContent;
+			},
+			handleSizeChange(p) {
+				this.num = p;
+				this.setPage();
+			},
+			//页码跳转
+			pageChange(p) {
+				this.page = p;
+				this.setPage();
 			},
 		},
 		mounted() {
@@ -190,22 +227,22 @@
 			} else {
 				this.isBrand = false;
 			}
-			if (this.isBrand) {
-				this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
-			}
 			let arr = [];
 			let selbrr = [];
+			if (this.isBrand) {
+				this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
+			}else{
+				this.shopList = [];
+				this.shopList.push(this.userData.currentShop);
+			}
 			for (let item of this.shopList) {
 				arr.push(item.id);
-				selbrr.push(item.shopName);
+				selbrr.push(item.shopName || item.name);
 			}
 			this.showCard = arr;
 			this.selectedCoupon = selbrr.join(',');
 			this.getOneCoupon();
 		},
-		components: {
-
-		}
 	};
 </script>
 <style scoped>

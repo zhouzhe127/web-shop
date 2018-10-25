@@ -108,29 +108,39 @@
 					</el-table-column>
 					<el-table-column label="结束时间" prop="endTime" align="center" width="200">
 					</el-table-column>
-					<el-table-column label="领券量" prop="send" align="center">
+					<el-table-column label="领券量" prop="send" align="center" width="100">
 					</el-table-column>
-					<el-table-column label="券核销量" prop="use" align="center">
+					<el-table-column label="券核销量" prop="use" align="center" width="100">
 						<template slot-scope="scope">
 							<span @click="handleToCount(scope.row.id,scope.row.name,scope.row.use)" style="color: #27a8e0">{{scope.row.use}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="券核销率" prop="cancelAfterVerification" align="center">
+					<el-table-column label="券核销率" prop="cancelAfterVerification" align="center" width="100">
 					</el-table-column>
-					<el-table-column label="券面额" prop="createTime" align="center">
+					<el-table-column label="优惠金额" prop="orderPrice" align="center" width="100">
+						<template slot-scope="scope">
+							<span>¥{{scope.row.orderPrice}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="拉动消费" prop="couponCash" align="center" width="100">
+						<template slot-scope="scope">
+							<span>¥{{scope.row.couponCash}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="券面额" prop="createTime" align="center" width="100">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type == '6'">{{(scope.row.couponPrice * scope.row.use).toFixed(2)}}</span>
 							<span v-else>--</span>
 						</template>
 					</el-table-column>
-					<el-table-column label="实收金额" prop="createTime" align="center">
+					<el-table-column label="实收金额" prop="createTime" align="center" width="100">
 						<template slot-scope="scope">
 							<span v-if="scope.row.type == '6'">{{(scope.row.billPrice * scope.row.use).toFixed(2)}}</span>
 							<span v-else>--</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="结算金额" prop="createTime" align="center">
-						<template slot-scope="scope">
+						<template slot-scope="scope" width="100">
 							<span v-if="scope.row.type == '6'">{{(scope.row.reckoningPrice * scope.row.use).toFixed(2)}}</span>
 							<span v-else>{{scope.row.reckoningPrice}}</span>
 						</template>
@@ -338,9 +348,9 @@
 					this.selectedCoupon = '请选择优惠券类型';
 				}
 			},
-			tableEvent(currentPage) {
-				console.log(currentPage, '');
-			},
+			// tableEvent(currentPage) {
+			// 	console.log(currentPage, '');
+			// },
 			selectShopType(val) {
 				this.FilterName = val;
 				this.currentName = [];
@@ -361,25 +371,25 @@
 					}
 				}
 			},
-			pageNum(obj) {
-				if (this.fiterCards.length == 0) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '请选择优惠券类型',
-						winType: 'alert'
-					});
-					return false;
-				}
-				this.page = obj.page;
-				let res = {
-					start: this.startTime,
-					end: this.endTime,
-					type: this.fiterCards.join(),
-					status: this.couponStatus,
-					page: this.page
-				};
-				this.getCouponData(res);
-			},
+			// pageNum(obj) {
+			// 	if (this.fiterCards.length == 0) {
+			// 		this.$store.commit('setWin', {
+			// 			title: '提示信息',
+			// 			content: '请选择优惠券类型',
+			// 			winType: 'alert'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	this.page = obj.page;
+			// 	let res = {
+			// 		start: this.startTime,
+			// 		end: this.endTime,
+			// 		type: this.fiterCards.join(),
+			// 		status: this.couponStatus,
+			// 		page: this.page
+			// 	};
+			// 	this.getCouponData(res);
+			// },
 			// getStartTime(receiveTime) {
 			// 	this.startTime = {
 			// 		time: receiveTime
@@ -433,51 +443,55 @@
 						brandId: ''
 					}
 				});
-				this.list = utils.sortByAll(res.list, 'createTime');
-				this.listLen = res.count;
-				this.pageTotal = res.total;
-			},
-			async getOneCoupon(start, end, id) {
-				// 获取核销量方法
-				start = start.time || start;
-				end = end.time || end;
-				if (!id) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '请选择门店类型',
-						winType: 'alert'
-					});
-					return false;
-				}
-				if (end - start < 0) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '开始日期不能大于结束日期',
-						winType: 'alert'
-					});
-					return false;
-				}
-				if (end - start >= 7776000000) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '时间间隔不能大于三个月',
-						winType: 'alert'
-					});
-					return false;
-				}
-				let res = await http.getOneCoupon({
-					data: {
-						startTime: (start / 1000) | 0,
-						endTime: (end / 1000) | 0,
-						couponId: this.couponId,
-						shopIds: id,
-						ischain: this.ischain,
-						brandId: ''
+				if (res) {
+					if (res.list) {
+						this.list = utils.sortByAll(res.list, 'createTime');
 					}
-				});
-				this.currentList = res;
-				this.currentTotal = res.length;
+					this.listLen = res.count;
+					this.pageTotal = res.total;
+				}
 			},
+			// async getOneCoupon(start, end, id) {
+			// 	// 获取核销量方法
+			// 	start = start.time || start;
+			// 	end = end.time || end;
+			// 	if (!id) {
+			// 		this.$store.commit('setWin', {
+			// 			title: '提示信息',
+			// 			content: '请选择门店类型',
+			// 			winType: 'alert'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	if (end - start < 0) {
+			// 		this.$store.commit('setWin', {
+			// 			title: '提示信息',
+			// 			content: '开始日期不能大于结束日期',
+			// 			winType: 'alert'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	if (end - start >= 7776000000) {
+			// 		this.$store.commit('setWin', {
+			// 			title: '提示信息',
+			// 			content: '时间间隔不能大于三个月',
+			// 			winType: 'alert'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	let res = await http.getOneCoupon({
+			// 		data: {
+			// 			startTime: (start / 1000) | 0,
+			// 			endTime: (end / 1000) | 0,
+			// 			couponId: this.couponId,
+			// 			shopIds: id,
+			// 			ischain: this.ischain,
+			// 			brandId: ''
+			// 		}
+			// 	});
+			// 	this.currentList = res;
+			// 	this.currentTotal = res.length;
+			// },
 			async getToOut() {
 				if (this.list.length <= 0) {
 					this.$store.commit('setWin', {
@@ -489,29 +503,29 @@
 				}
 				http.exportCouponStatics({
 					data: {
-						startTime: parseInt(this.startTime.time / 1000),
-						endTime: parseInt(this.endTime.time / 1000),
-						couponType: this.fiterCards.join(),
-						couponStatus: this.couponStatus,
+						startTime: parseInt(this.startTime / 1000),
+						endTime: parseInt(this.endTime / 1000),
+						couponType: this.showCard.join(','),
+						couponStatus: this.indexOn,
 						page: this.page,
-						num: 10,
+						num: this.num,
 						format: 'csv'
 					}
 				});
 			},
 			searchInDate() {
-				this.isClick = true;
-				let stime = this.startTime.time || this.startTime;
-				let etime = this.endTime.time || this.endTime;
-				this.page = 1;
-				let obj = {
-					start: stime,
-					end: etime,
-					type: '1,2,3,4,5,6',
-					status: 0,
-					page: this.page
-				};
-				this.getCouponData(obj);
+				// this.isClick = true;
+				// let stime = this.startTime.time || this.startTime;
+				// let etime = this.endTime.time || this.endTime;
+				// this.page = 1;
+				// let obj = {
+				// 	start: stime,
+				// 	end: etime,
+				// 	type: '1,2,3,4,5,6',
+				// 	status: 0,
+				// 	page: this.page
+				// };
+				this.getCouponData();
 			},
 			// getSelect(val) {
 			// 	if (!this.isClick) {
@@ -601,15 +615,15 @@
 			},
 			handleSearchInDate() {
 				//  筛选优惠券类型
-				this.isClick = true;
-				let obj = {
-					start: this.startTime,
-					end: this.endTime,
-					type: this.fiterCards.join(),
-					status: this.couponStatus,
-					page: 1
-				};
-				this.getCouponData(obj);
+				// this.isClick = true;
+				// let obj = {
+				// 	start: this.startTime,
+				// 	end: this.endTime,
+				// 	type: this.fiterCards.join(),
+				// 	status: this.couponStatus,
+				// 	page: 1
+				// };
+				this.getCouponData();
 			},
 			initResert() {
 				// 过滤优惠券类型
@@ -641,24 +655,24 @@
 				}
 				this.$refs.selectStore.init();
 			},
-			onSelectNuclearSales() {
-				// 核销量选择
-				let start = this.currstartTime.time || this.currstartTime;
-				let end = this.currendTime.time || this.currendTime;
-				if (!this.isBrand) {
-					this.getOneCoupon(start, end, this.userData.currentShop.id);
-				} else {
-					if (this.fiterId.length == 0) {
-						this.$store.commit('setWin', {
-							title: '提示信息',
-							content: '请选择门店类型',
-							winType: 'alert'
-						});
-						return false;
-					}
-					this.getOneCoupon(start, end, this.fiterId.join());
-				}
-			},
+			// onSelectNuclearSales() {
+			// 	// 核销量选择
+			// 	let start = this.currstartTime.time || this.currstartTime;
+			// 	let end = this.currendTime.time || this.currendTime;
+			// 	if (!this.isBrand) {
+			// 		this.getOneCoupon(start, end, this.userData.currentShop.id);
+			// 	} else {
+			// 		if (this.fiterId.length == 0) {
+			// 			this.$store.commit('setWin', {
+			// 				title: '提示信息',
+			// 				content: '请选择门店类型',
+			// 				winType: 'alert'
+			// 			});
+			// 			return false;
+			// 		}
+			// 		this.getOneCoupon(start, end, this.fiterId.join());
+			// 	}
+			// },
 			searchCurrentDate() {
 				let start = this.currstartTime.time || this.currstartTime;
 				let end = this.currendTime.time || this.currendTime;

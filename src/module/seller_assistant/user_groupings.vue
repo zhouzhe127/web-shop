@@ -175,11 +175,11 @@
 			},
 			async addNewGroup() {
 				if (!global.checkData({
-						groupName: {
-							cond: `$$.trim() != ''`,
-							pro: '请输入分组名称'
-						}
-					}, this)) {
+					groupName: {
+						cond: `$$.trim() != ''`,
+						pro: '请输入分组名称'
+					}
+				}, this)) {
 					return false;
 				}
 				if (this.isEdit) {
@@ -320,7 +320,7 @@
 						groupId: this.groupId,
 						position: this.validId
 					}
-				})
+				});
 				if (res) {
 					this.$store.commit('setWin', {
 						winType: 'alert',
