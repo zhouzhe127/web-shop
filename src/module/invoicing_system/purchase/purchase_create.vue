@@ -737,7 +737,7 @@ export default {
 				type: -1,
 				name: this.matName,
 				cid: this.mCid,
-				barcode: this.matCode,
+				barCode: this.matCode,
 			}});
 			this.matList = data.list;
 			this.mCount = data.count;

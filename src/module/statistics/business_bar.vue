@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-	props: ['bar', 'cover', 'echarts', 'shopList'],
+	props: ['bar', 'cover', 'echarts', 'shopList','barObj'],
 	data() {
 		return {
 			dataBar: {
@@ -91,15 +91,23 @@ export default {
 			},
 			coverShow: false,
 			seriesData:[],//柱状图 样式列表
+			reqObj:{},
 		};
 	},
 	watch: {
-		bar: 'analytic',
 		cover: 'setCover',
-		echarts: 'initEchart'
+		echarts: 'initEchart',
+		barObj:{
+			handler(newValue, oldValue) {
+				this.reqObj = this.barObj;
+			},
+			deep: true
+		},
 	},
 	mounted() {
-		if (this.echarts) this.initEchart();
+		if (this.echarts){
+			this.initEchart();
+		}
 	},
 	methods: {
 		initEchart() {
@@ -108,6 +116,10 @@ export default {
 				document.getElementById('bar-charts')
 			);
 			this.barDom.setOption(this.getBarData(this.dataBar, this.barType));
+			this.reqObj = this.barObj;
+		},
+		async requestBarData(){
+			console.log(this.reqObj);
 		},
 		setCover() {
 			this.coverShow = this.cover;
