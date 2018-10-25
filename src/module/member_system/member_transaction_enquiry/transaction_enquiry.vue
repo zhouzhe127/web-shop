@@ -581,7 +581,7 @@ export default {
 				} else if(item.type == '2') {
 					return (parseInt(Number(item.operateGiftAmount)*100) + parseInt(Number(item.rechargeAmount)*100))/100;
 				}else{
-					return (parseInt(Number(item.operateGiftAmount)*100) + parseInt(Number(item.operateGiftAmount)*100))/100;
+					return Number(item.operateAmount);
 				}
 			}
 		},		

@@ -156,10 +156,11 @@
 						</div>
 					</div>
 					<!-- 关联优惠券 -->
-					<div class="online-box clearfix" v-if="item.interestId == '2'">
+					<div class="online-box clearfix" v-if="item.interestId == '1'">
 						<span class="online-sub fl">关联优惠券</span>
 						<div class="rightHalf">
-							<a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin(item)">选择关联优惠券</a>
+							<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin(item)">选择关联优惠券</a> -->
+							<el-button type="primary" icon="el-icon-plus" @click="openCouponWin(item)" style="width:179px;">选择关联优惠券</el-button>
 							<span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
 						</div>
 					</div>
@@ -291,15 +292,15 @@ export default {
 			msmStatus: false,
 			interestList: [{ //会员权益
 				name: '无',
-				id: 1
+				id: 0
 			},
 			{
 				name: '电子优惠券',
-				id: 2
+				id: 1
 			}
 			],
 			interestName: '无',
-			interestId: 1,
+			interestId: 0,
 			durationList: [{ //活动期限
 				name: '不设限制',
 				id: 0
@@ -328,7 +329,7 @@ export default {
 				maxConsumes: '', //最高消费的金额
 				isLoop: false, //是否循环
 				interestName: '无', //会员权益
-				interestId: 1,
+				interestId: 0,
 				couponIds: [], //优惠券
 				pushChannel: [], //消息推送渠道
 				msgContent: '' //内容设置
@@ -556,7 +557,7 @@ export default {
 				maxConsumes: '', //最高消费的金额
 				isLoop: false, //是否循环
 				interestName: '无', //会员权益
-				interestId: 1,
+				interestId: 0,
 				couponIds: [], //优惠券
 				pushChannel: [], //消息推送渠道
 				msgContent: '' //内容设置
@@ -720,7 +721,7 @@ export default {
 					this.valiData(`规则${i+1}最低消费金额不能大于最高消费金额`);
 					return false;
 				}
-				if (this.ruleList[i].interestId == 2 && this.ruleList[i].couponIds.length == 0) {
+				if (this.ruleList[i].interestId == 1 && this.ruleList[i].couponIds.length == 0) {
 					this.valiData(`规则${i+1}请关联优惠券`);
 					return false;
 				}
@@ -735,8 +736,8 @@ export default {
 					minConsume: item.minConsumess, //最低消费
 					maxConsume: item.maxConsumes, //最高消费
 					isLoop: Number(item.isLoop), //循环赠送
-					memberRights: item.durationId,
-					couponIds: item.interestId == 2 ? item.couponIds : [], //优惠券
+					memberRights: item.interestId,
+					couponIds: item.interestId == 1 ? item.couponIds : [], //优惠券
 					pushChannel: item.pushChannel.join(','), //规则
 					msgContent: item.msgContent //内容设置
 				};
@@ -820,30 +821,32 @@ export default {
 			for (let item of rule) {
 				let durationName = '';
 				let interestName = '';
-				let interestId = 1;
-				if (item.memberRights == '0') {
+				let durationId = 0;
+				if (item.minConsume == '') {
 					durationName = '不设限制';
-				} else if (item.memberRights == '1') {
+					durationId = 0;
+				} else if (item.minConsume != '' && item.minConsume != 0) {
 					durationName = '指定额度';
+					durationId = 1;
 				}
 				let couponIds = JSON.parse(item.couponIds);
 				if (couponIds.length == 0) {
 					interestName = '无';
-					interestId = 1;
+					// interestId = 0;
 				} else {
 					interestName = '电子优惠券';
-					interestId = 2;
+					// interestId = 1;
 				}
 				//console.log(item.pushChannel)
 				let obj = {
 					id: item.id,
 					durationName: durationName, //最低消费
-					durationId: item.memberRights,
+					durationId: durationId,
 					minConsumess: item.minConsume, //最低消费的金额
 					maxConsumes: item.maxConsume, //最高消费的金额
 					isLoop: Boolean(Number(item.isLoop)), //是否循环
 					interestName: interestName, //会员权益
-					interestId: interestId,
+					interestId: item.memberRights,
 					couponIds: couponIds, //优惠券
 					pushChannel: item.pushChannel == '0' ? [] : item.pushChannel.split(','), //消息推送渠道
 					msgContent: item.msgContent //内容设置
