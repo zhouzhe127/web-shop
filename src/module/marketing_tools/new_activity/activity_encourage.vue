@@ -757,6 +757,7 @@ export default {
 				this.activityDetail.selectFans = Number(this.checkedFans);//选择粉丝
 				// console.log(JSON.stringify(this.activityDetail))
 				// return false;
+				this.activityDetail.memberIds = this.memfilter;
 				await http.fissionActivity({
 					data: {
 						activityId: this.activityDetail.id,
@@ -822,10 +823,10 @@ export default {
 				let durationName = '';
 				let interestName = '';
 				let durationId = 0;
-				if (item.minConsume == '') {
+				if (item.minConsume == '0') {
 					durationName = '不设限制';
 					durationId = 0;
-				} else if (item.minConsume != '') {
+				} else if (item.minConsume != '' && item.minConsume != 0) {
 					durationName = '指定额度';
 					durationId = 1;
 				}
