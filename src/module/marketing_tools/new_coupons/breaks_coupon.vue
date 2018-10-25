@@ -98,11 +98,11 @@
 					</div>
 				</div>
 				<div class="right">
-					<el-input class="fl" placeholder="请输入最低金额" maxlength="6" v-model="billPrice" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('billPrice')" style="width:179px;">
+					<el-input class="fl" placeholder="请输入最低金额" maxlength="7" v-model="billPrice" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('billPrice')" style="width:179px;">
 						<template slot="suffix">元</template>
 					</el-input>
 					<span class="fl">至</span>
-					<el-input class="fl" placeholder="请输入最高金额" maxlength="6" v-model="reckoningPrice" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('reckoningPrice')" style="width:179px;">
+					<el-input class="fl" placeholder="请输入最高金额" maxlength="7" v-model="reckoningPrice" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="keepValue('reckoningPrice')" style="width:179px;">
 						<template slot="suffix">元</template>
 					</el-input>
 					<el-tooltip class="item fl" effect="dark" content="金额区间0.01～9999.99" placement="right">
@@ -136,7 +136,7 @@
 					<div class="yuan">
 						元
 					</div> -->
-						<el-input placeholder="请输入减免金额" v-model="deratePrice" maxlength="6">
+						<el-input placeholder="请输入减免金额" v-model="deratePrice" maxlength="7">
 							<template slot="suffix">元</template>
 						</el-input>
 					</div>
