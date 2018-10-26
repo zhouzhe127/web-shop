@@ -35,8 +35,8 @@
 				</el-popover>
 			</div>
 			<div class="selectDate fl">
-				<el-button type="primary" style="width:100px;">筛选</el-button>
-				<el-button type="info" style="width:100px;">重置</el-button>
+				<el-button type="primary" style="width:100px;" @click="getOneCoupon">筛选</el-button>
+				<el-button type="info" style="width:100px;" @click="resetFun">重置</el-button>
 			</div>
 		</div>
 		<div class="couponName">
@@ -210,6 +210,23 @@
 				this.page = p;
 				this.setPage();
 			},
+			resetFun: function() {
+				let arr = [];
+				let selbrr = [];
+				if (this.isBrand) {
+					this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
+				} else {
+					this.shopList = [];
+					this.shopList.push(this.userData.currentShop);
+				}
+				for (let item of this.shopList) {
+					arr.push(item.id);
+					selbrr.push(item.shopName || item.name);
+				}
+				this.showCard = arr;
+				this.selectedCoupon = selbrr.join(',');
+				this.getOneCoupon();
+			},
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -227,21 +244,7 @@
 			} else {
 				this.isBrand = false;
 			}
-			let arr = [];
-			let selbrr = [];
-			if (this.isBrand) {
-				this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
-			}else{
-				this.shopList = [];
-				this.shopList.push(this.userData.currentShop);
-			}
-			for (let item of this.shopList) {
-				arr.push(item.id);
-				selbrr.push(item.shopName || item.name);
-			}
-			this.showCard = arr;
-			this.selectedCoupon = selbrr.join(',');
-			this.getOneCoupon();
+			this.resetFun();
 		},
 	};
 </script>
