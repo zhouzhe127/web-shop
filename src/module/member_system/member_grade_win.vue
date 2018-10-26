@@ -56,7 +56,7 @@
 					<div class="win-box">
 						<span class="fl required">升级规则</span>
 						<span style="width: 200px;">
-							升至下一届所需活跃值 
+							升至下一级所需活跃值 
 							<input type="text" maxlength="5" v-model="totalCharges" @blur="formatValue('1')">
 						</span>
 						
