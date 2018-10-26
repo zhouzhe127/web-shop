@@ -52,26 +52,32 @@
 							<on-off @statusChange="(val)=> isService = val" :status="isService"></on-off>
 						</div>
 					</div>
-					<div class="win-box" v-if="memberInfo && memberInfo.status == '2'">
-						<span class="fl">享有会员价</span>
-						<div class="win-toggle fl">
-							<on-off @statusChange="(val)=> memberPrice = val" :status="memberPrice"></on-off>
-						</div>
+					<!-- 升级规则 -->
+					<div class="win-box">
+						<span class="fl required">升级规则</span>
+						<span style="width: 200px;">
+							升至下一届所需活跃值 
+							<input type="text" maxlength="5" v-model="totalCharges" @blur="formatValue('1')">
+						</span>
+						
 					</div>
-					<div class="win-box" v-if="memberInfo && memberInfo.status != '2'">
+
+					<!-- <div class="win-box" v-if="memberInfo && memberInfo.status != '2'">
 						<span class="fl">升级规则</span>
 						<div class="win-toggle fl">
 							<on-off @statusChange="(val)=> isNext = val" :status="isNext"></on-off>
 						</div>
 						<span class="fl" v-if="isNext == true">升级金额</span>
 						<input type="text" @blur="formatValue('1')" placeholder="请输入充值累计金额" v-model="totalCharges" v-if="isNext == true" maxlength="8" class="fl" />
-					</div>
-					<div class="win-box" v-if="isNext == true">
+					</div> -->
+                       
+					<div class="win-box">
 						<span class="fl">升级后等级</span>
 						<span class="fl" style="width: 400px;background-color: #fff;border: 1px solid #ccc;color: #666;cursor: pointer;" @click="openGrade" v-if="gradeCName == ''">选择会员等级</span>
 						<span class="fl" style="width: 270px;background-color: #fff;border: 1px solid #ccc;color: #666;cursor: pointer;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" @click="openGrade" v-else>{{gradeCName}}</span>
 						<span class="fl" style="width: 110px;background-color: #fff;border: 1px solid #ccc;color: #666;cursor: pointer;margin-left: 20px;" v-if="gradeCName !=''" @click="clean">清除等级关联</span>
-					</div>
+					</div> 
+
 					<!-- 规则 -->
 					<div class="interests">
 						<span class="fl">会员权益</span>
@@ -86,6 +92,15 @@
 							</div>
 						</section>
 					</div>
+                    
+                     <!-- v-if="isNext == true" -->
+					<div class="win-box" v-if="memberInfo && memberInfo.status == '2'">
+						<span class="fl">享有会员价</span>
+						<div class="win-toggle fl">
+							<on-off @statusChange="(val)=> memberPrice = val" :status="memberPrice"></on-off>
+						</div>
+					</div> 
+
 					<div class="win-box" style="height: 200px;border-bottom: none;">
 						<span class="fl required">设置图片</span>
 						<span class="fl" style="width: 110px;background-color: #fff;border: 1px solid #ccc;color: #666;cursor: pointer;position: relative;" id="image">
