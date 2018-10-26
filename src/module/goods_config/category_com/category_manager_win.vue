@@ -8,9 +8,11 @@
 						<el-form-item label="分类名"  required>
 							<el-input v-model="categoryName" maxlength="20" placeholder = "请输入分类名" style="width:250px;"></el-input>
 						</el-form-item>
-						<el-form-item label="分类编码" >
-							<!-- <span>{{code}}</span> -->
+						<el-form-item v-if="ischain=='0'||ischain=='3'" label="分类编码" >
 							<el-input v-model="code" maxlength="20" placeholder = "请输入分类编码" style="width:250px;"></el-input>
+						</el-form-item>
+						<el-form-item v-if="(ischain=='1'||ischain=='2') && code!=''" label="分类编码" >
+							<span >{{code}}</span>
 						</el-form-item>
 						<el-form-item required label="排序">
 							<el-input-number v-model="sort" @change="changeSort" style="width:150px;" :min="1" :max="255"></el-input-number>
@@ -24,6 +26,7 @@
 </template>
 <script>
 	import global from 'src/manager/global';
+	import storage from 'src/verdor/storage';
 	export default {
 		data() {
 			return {
@@ -31,6 +34,7 @@
 				sort: null, //排序值
 				categoryName: '', //分类名
 				code:'',//分类编码
+				ischain:''
 			};
 		},
 		props: {
@@ -47,7 +51,8 @@
 		},
 		mounted() {
 			this.initData();
-			console.log(this.pObj);
+			this.userData = storage.session('userShop');
+			this.ischain = this.userData.currentShop.ischain;
 		},
 		methods: {
 			initData() {
