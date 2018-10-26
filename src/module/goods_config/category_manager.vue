@@ -23,9 +23,12 @@
 				<span  v-if="ischain == 1 || ischain == 2">
 					<span class="oneName"  v-bind:title = "item.name" style="color: #fcaa30;" v-if="item.id < 100000">{{item.name | sliceStr}}</span>
 					<span class="oneName"  v-bind:title = "item.name" style="color: #6cc2e6;;" v-else>{{item.name | sliceStr}}</span>
+					<span v-if="item.code && item.id < 100000" style="color: #fcaa30;">({{item.code}})</span>
+					<span v-if="item.code && item.id >= 100000" style="color: #6cc2e6;">({{item.code}})</span>
 				</span>
 				<span v-else>
 					<span v-bind:title = "item.name">{{item.name | sliceStr}}</span>
+					<br><span v-if="item.code">({{item.code}})</span>
 				</span>
 				<div class="openoperation operation" >
 				   <img v-on:click="editclassification(index,item)" src="../../res/icon/iconchange.png"/>
@@ -145,29 +148,35 @@ export default{
 				title:'添加一级分类',
 				categoryName:'',
 				sort:1,
+				code:'',
 			};
 			this.flag={
 				pid:'',
 				id:'',
 				name:'',
 				marker:1,
-				sort:1
+				sort:1,
+				code:''
 			};
 		},   
 		//编辑一级分类
 		editclassification(index,item){
+			console.log(item);
 			this.showCom='categoryWin';
 			this.obj={
 				title:'修改一级分类',
 				sort:item.sort,
 				categoryName:item.name,
+				code:item.code?item.code:'',
+
 			};
 			this.flag={
 				pid:item.pid,
 				id:item.id,
 				name:item.name,
 				marker:2,
-				sort:item.sort
+				sort:item.sort,
+				code:item.code?item.code:''
 			};
 		},
 		//删除一级分类
@@ -201,7 +210,8 @@ export default{
 		delateTwo(item){
 			let obj={
 				pid:item.pid,
-				id:item.id
+				id:item.id,
+				code:item.code?item.code:''
 			};
 
 			this.$store.commit('setWin',{
@@ -225,12 +235,14 @@ export default{
 				id:item.id,
 				name:item.name,
 				marker:3,
-				sort:item.sort
+				sort:item.sort,
+				code:item.code?item.code:''
 			};
 			this.obj={
 				title:'修改二级分类',
 				categoryName:item.name,
 				sort:item.sort,
+				code:item.code?item.code:''
 			};
 		},
 		//添加二级分类
@@ -246,7 +258,8 @@ export default{
 			let obj={
 				name:this.twoName,
 				sort:255,
-				pid:item.id                        
+				pid:item.id,
+				code:item.code?item.code:''                   
 			};
 
 			this.addSecondCategory(obj).then(()=>{
@@ -268,7 +281,8 @@ export default{
 
 		//----------win-----------
 		//获取分类弹框的点击结果
-		closeWinResult(res,categoryName,sort){
+		/* eslint-disable */
+		closeWinResult(res,categoryName,sort,code){
 			if(res!='ok'){
 				this.showCom='';
 				return;
@@ -278,17 +292,19 @@ export default{
 				case '1':
 					obj={
 						name:categoryName,
-						sort:sort
+						sort:sort,
+						code:code,
 					};
 					this.addCategory(obj).then(()=>{
 						this.flushList();
 					});
 					break;
 				case '2':  
-					if(categoryName!=this.flag.name || sort!=this.flag.sort){
+					if(categoryName!=this.flag.name || sort!=this.flag.sort|| code!=this.flag.code){
 						obj={
 							name:categoryName,
 							sort:sort,
+							code:code,
 							id:this.flag.id
 						};
 						this.editCategory(obj).then(()=>{
@@ -297,10 +313,11 @@ export default{
 					}
 					break;
 				case '3':
-					if(categoryName!=this.flag.name || sort!=this.flag.sort){
+					if(categoryName!=this.flag.name || sort!=this.flag.sort|| code!=this.flag.code){
 						obj={
 							name:categoryName,
 							sort:sort,
+							code:code,
 							id:this.flag.id
 						};
 						this.editSecondCategory(obj).then(()=>{
@@ -388,6 +405,7 @@ export default{
 					shopId:this.shopId,
 					name:obj.name,
 					sort:obj.sort,
+					code:obj.code,
 					cid:obj.id
 				}
 			});
@@ -400,6 +418,7 @@ export default{
 					shopId:this.shopId,
 					name:obj.name,
 					sort:obj.sort,
+					code:obj.code,
 					pid:obj.pid
 				}
 			});
@@ -429,6 +448,7 @@ export default{
 			let res=await http.addCategory({data:{
 				shopId:this.shopId,
 				name:obj.name,
+				code:obj.code,
 				sort:obj.sort
 			}});
 			return res;
@@ -439,6 +459,7 @@ export default{
 				data:{
 					shopId:this.shopId,
 					name:obj.name,
+					code:obj.code,
 					sort:obj.sort,
 					cid:obj.id 
 				}

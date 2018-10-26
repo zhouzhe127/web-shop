@@ -3,15 +3,20 @@
 		<win @winEvent="closeSelfWin" :align="'center'" :width="580" :height="300">
 			<span slot="title">{{title}}</span>
 			<div id="tan" slot="content" v-cloak>
-				<div class="tanbox" style="margin-top:70px;">
-					<h3 class="oH3">分类名 :</h3>
-					<input class="input" v-model="categoryName" maxlength="20" style="width:300px;border: 1px solid #CCCCCC;" placeholder="请输入分类名"
-					    type="text" />
-				</div>
-				<div class="tanbox" style="margin-top:20px;">
-					<h3 class="oH3">排序 :</h3>
-					<sub-add :minnum='1' :bindnum="sort" @toClick="changeSort" :sign='false'></sub-add>
-				</div>
+				<section style="margin-top:20px;">
+					<el-form label-width="120px">
+						<el-form-item label="分类名"  required>
+							<el-input v-model="categoryName" maxlength="20" placeholder = "请输入分类名" style="width:250px;"></el-input>
+						</el-form-item>
+						<el-form-item label="分类编码" >
+							<span>{{code}}</span>
+							<el-input v-if="item.id < 100000" v-model="code" maxlength="20" placeholder = "请输入分类编码" style="width:250px;"></el-input>
+						</el-form-item>
+						<el-form-item required label="排序">
+							<el-input-number v-model="sort" @change="changeSort" style="width:150px;" :min="1" :max="255"></el-input-number>
+						</el-form-item>
+					</el-form>
+				</section>
 			</div>
 		</win>
 	</div>
@@ -25,6 +30,7 @@
 				title: '', //弹窗的标题
 				sort: null, //排序值
 				categoryName: '', //分类名
+				code:'',//分类编码
 			};
 		},
 		props: {
@@ -34,12 +40,14 @@
 			        {
 			            categoryName:           分类名
 			            sort:                   排序值
-			            title:                  标题
+						title:                  标题
+						code:'',//分类编码
 			        }
 			*/
 		},
 		mounted() {
 			this.initData();
+			console.log(this.pObj);
 		},
 		methods: {
 			initData() {
@@ -73,7 +81,7 @@
 			closeSelfWin(res) {
 				if (res == 'ok') {
 					if (!this.checkForm()) return;
-					this.$emit('throwWinResult', res, this.categoryName, this.sort);
+					this.$emit('throwWinResult', res, this.categoryName, this.sort,this.code);
 				} else {
 					this.$emit('throwWinResult', res);
 				}
