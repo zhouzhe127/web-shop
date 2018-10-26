@@ -9,7 +9,7 @@
 							<el-input v-model="categoryName" maxlength="20" placeholder = "请输入分类名" style="width:250px;"></el-input>
 						</el-form-item>
 						<el-form-item label="分类编码" >
-							<span>{{code}}</span>
+							<!-- <span>{{code}}</span> -->
 							<el-input v-model="code" maxlength="20" placeholder = "请输入分类编码" style="width:250px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="排序">
