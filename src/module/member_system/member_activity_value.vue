@@ -443,9 +443,7 @@
     				// this.goodsActive= res.goodsActive;
 				this.activeDesc = res.activeDesc;
 			}
-			this.valiData('添加成功');	
-			return true;
-			
+			return true; 
     		}
     	},
     	mounted() {
