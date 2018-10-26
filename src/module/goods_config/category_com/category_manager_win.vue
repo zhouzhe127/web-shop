@@ -10,7 +10,7 @@
 						</el-form-item>
 						<el-form-item label="分类编码" >
 							<span>{{code}}</span>
-							<el-input v-if="item.id < 100000" v-model="code" maxlength="20" placeholder = "请输入分类编码" style="width:250px;"></el-input>
+							<el-input v-model="code" maxlength="20" placeholder = "请输入分类编码" style="width:250px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="排序">
 							<el-input-number v-model="sort" @change="changeSort" style="width:150px;" :min="1" :max="255"></el-input-number>
