@@ -62,7 +62,7 @@ export default {
 				num: this.num,
 				mid: this.interData.memberId,
 				fid: this.interData.id,
-				type: '1'
+				type: 2
 			};
 			if (this.interData.memberId - 0 > 0) {
 				data.fid = '0';

@@ -82,9 +82,12 @@
 		</transition>
 		<!-- 关联职位 -->
 		<transition name="fade">
-			<win v-if="isShowPosition" :width="512" :height="169" @winEvent="winEventPosition">
+			<win v-if="isShowPosition" :width="550" :height="200" @winEvent="winEventPosition">
 				<span slot="title">关联职位</span>
 				<div class="new_user" slot="content">
+					<div class="handle-tips" style="margin-bottom: 10px;">
+						<i></i> 关联职位后，当前职位工作人员会更新至当前分组，变动用户菜单。请知悉！
+					</div>
 					<div class="group_name">
 						<span class="fl required">关联职位</span>
 						<el-radio-group v-model="validName" class="fl">
@@ -338,6 +341,8 @@
 			},
 			relatedPosition: function(id) { //关联职位
 				this.groupId = id;
+				this.validName = '店长';
+				this.validId = 1;
 				this.isShowPosition = true;
 			},
 			//每页显示多少条数据
@@ -557,7 +562,7 @@
 	}
 
 	.new_user {
-		padding: 35px 10px 51px 20px;
+		padding: 25px 10px 51px 20px;
 
 		.group_name {
 			height: 41px;
@@ -582,5 +587,13 @@
 		.table_width {
 			width: 100%;
 		}
+	}
+
+	.handle-tips {
+		height: 40px;
+		line-height: 40px;
+		text-indent: 25px;
+		background: url("../../../src/res/images/prompt.png") 0 center no-repeat;
+		color: #999999;
 	}
 </style>

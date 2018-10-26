@@ -117,14 +117,14 @@
 					</el-table-column>
 					<el-table-column label="券核销率" prop="cancelAfterVerification" align="center" width="100">
 					</el-table-column>
-					<el-table-column label="优惠金额" prop="orderPrice" align="center" width="100">
-						<template slot-scope="scope">
-							<span>¥{{scope.row.orderPrice}}</span>
-						</template>
-					</el-table-column>
-					<el-table-column label="拉动消费" prop="couponCash" align="center" width="100">
+					<el-table-column label="优惠金额" prop="couponCash" align="center" width="100">
 						<template slot-scope="scope">
 							<span>¥{{scope.row.couponCash}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="拉动消费" prop="orderPrice" align="center" width="100">
+						<template slot-scope="scope">
+							<span>¥{{scope.row.orderPrice}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="券面额" prop="createTime" align="center" width="100">

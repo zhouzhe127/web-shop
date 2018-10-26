@@ -66,14 +66,14 @@
 				</el-table-column>
 				<el-table-column label="核销量" prop="useCoupon" align="center">
 				</el-table-column>
-				<el-table-column label="优惠金额" prop="orderPrice" align="center">
-					<template slot-scope="scope">
-						<span>¥{{scope.row.orderPrice}}</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="拉动消费" prop="couponCash" align="center">
+				<el-table-column label="优惠金额" prop="couponCash" align="center">
 					<template slot-scope="scope">
 						<span>¥{{scope.row.couponCash}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="拉动消费" prop="orderPrice" align="center">
+					<template slot-scope="scope">
+						<span>¥{{scope.row.orderPrice}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="券总额" prop="type" align="center">
