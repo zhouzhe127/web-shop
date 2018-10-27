@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
     s,
     w,
@@ -56,7 +57,15 @@ let httpConfig = {
         url: s + 'image/uploadImage',
         // url:s+'image/uploadImg',
         type: "upload"
-    }
+    },
+	"AccountRegister": {
+		url: s + "Account/register", //注册
+		method: "post"
+	},
+	"AccountSendCode": {
+		url: s + "Account/sendCode", //注册验证码
+		method: "post"
+	},
 
 }
 
