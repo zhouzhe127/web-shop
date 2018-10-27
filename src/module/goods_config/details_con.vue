@@ -156,6 +156,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
+					<el-table-column min-width="100" sortable show-overflow-tooltip align="center" prop="goodCode" label="编码"></el-table-column>
 					<el-table-column min-width="100" sortable sort-by="price" show-overflow-tooltip align="center" prop="price" label="价格">
 						<!-- <template slot-scope="scope">
 							<span>{{parseFloat(scope.row.price).toFixed(2)}}</span>

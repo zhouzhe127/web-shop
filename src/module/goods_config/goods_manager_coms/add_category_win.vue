@@ -47,7 +47,8 @@
 						if(ele.isSelect){
 							let obj={
 								id:ele.id,
-								name:ele.name
+								name:ele.name,
+								code:ele.code?ele.code:''
 							};
 							arr.push(obj);
 						}
@@ -56,7 +57,8 @@
 							if(e.isSelect){
 								let obj={
 									id:e.id,
-									name:e.name
+									name:e.name,
+									code:e.code?e.code:''
 								};
 								arr.push(obj);
 							}                       

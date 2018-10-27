@@ -374,24 +374,14 @@ export default {
 		},
 		//获取交接班班次信息
 		async getChangeShifts() {
-			//获取店铺基本信息
-			this.baseDetial = await http.baseGet({
-				data: { shopId: this.shopId }
-			});
-			let arr = await http.getChangeShifts({
-				data: {}
-			});
-			let shiftsArr = [];
-			let shifts = this.baseDetial.changeShifts.split(',');
-			for(let i=0;i<arr.length;i++){
-				for(let key in shifts){
-					if(shifts[key] == arr[i].id){
-						shiftsArr.push(arr[i]);
-					}
-
+			let res = await http.getCondition({
+				data: {
+					trueShopId: this.dataDetial
+						? this.dataDetial.itemDetial.shopId
+						: this.shopId
 				}
-			}
-			this.shiftList = shiftsArr;
+			});
+			this.shiftList = res.changeShifts;
 		},
 		//获取店铺基本信息
 		async baseGet() {
