@@ -212,8 +212,8 @@
 		<!-- 抢购上限 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">抢购上限</span>
-			<el-input class="txtinp" type="text" v-model="grabCount" maxlength="3"></el-input>
-
+			<el-input class="txtinp" type="text" v-model="grabCount" maxlength="2"></el-input> 
+			
 			<!-- <el-tooltip placement="right">
                 <div slot="content">该疯抢商品一次活动内最多可抢购次数
                 <i class="el-icon-question" style="font-size:24px;"></i>
@@ -224,6 +224,9 @@
 					<i class="detI triright"></i>
 					<h3 class="detH3">该疯抢商品一次活动内最多可抢购次数</h3>
 				</div>
+			</div>
+			<div class="tips"> 
+				填写范围1至99之间。
 			</div>
 		</div>
 
@@ -480,7 +483,7 @@
 					},
 					'grabCount': {
 						cond: '$$.length>0 && ((/^([0-9])+([.][0-9]+)?$/).test($$))',
-						pro: '请输入限购上限且只能是非负数'
+						pro: '请输入限购上限，且只能是1~99之间'
 					}
 				}, this)) return false;
 				return true;
@@ -713,6 +716,13 @@
 		line-height: 40px;
 		text-indent: 25px;
 		background: url("../../../src/res/images/prompt.png") 0 center no-repeat;
+		color: #999999;
+	}
+
+	#rushedConfiguration .tips {
+		height: 40px;
+		line-height: 40px;
+		text-indent: 25px;
 		color: #999999;
 	}
 

@@ -11,17 +11,7 @@
 
 		<div class="search">
 			<span>创建时间</span>
-			<!-- <el-date-picker 
-            v-model="searchTime" 
-            type="daterange" 
-            range-separator="至" 
-            start-placeholder="startTime" 
-            end-placeholder="endTime" 
-            value-format="timestamp" 
-            :editable="false" 
-            :clearable="false"
-            >
-            </el-date-picker> -->
+			
 			<el-date-picker v-model="searchTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
 			 value-format="timestamp" :clearable="false">
 			</el-date-picker>
@@ -262,6 +252,8 @@
 					data: {
 						startTime: parseInt(this.valueTime[0] / 1000), //开始时间
 						endTime: parseInt(this.valueTime[1] / 1000), //结束时间 
+						goodsName:this.goodsName,
+						type:this.type,
 					}
 				});
 			},
