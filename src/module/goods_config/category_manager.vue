@@ -42,8 +42,8 @@
 				<li class="oLi" :key="index"> 
 					<div v-if="ischain == 1 || ischain == 2" style="margin-top:25px;">
 						<span style="color: #fcaa30;" v-bind:title = "itemChild.name" v-if="itemChild.id < 100000">{{itemChild.name | sliceStr}}</span>
-						<span style="color: #fcaa30;" v-bind:title = "itemChild.code" v-if="itemChild.id < 100000 && itemChild.code">{{itemChild.code}}</span>
 						<span style="color: #6cc2e6;;" v-bind:title = "itemChild.name"  v-else>{{itemChild.name | sliceStr}}</span>
+						<span style="color: #fcaa30;" v-bind:title = "itemChild.code" v-if="itemChild.id < 100000 && itemChild.code">{{itemChild.code}}</span>
 					</div>
 					<div v-else  style="margin-top:25px;">
 						<span v-bind:title = "itemChild.name" >{{itemChild.name | sliceStr}}</span>
@@ -169,7 +169,7 @@ export default{
 				title:'修改一级分类',
 				sort:item.sort,
 				categoryName:item.name,
-				code:item.code?item.code:'',
+				code:item.code?item.code.toUpperCase():'',
 
 			};
 			this.flag={
@@ -178,7 +178,7 @@ export default{
 				name:item.name,
 				marker:2,
 				sort:item.sort,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 		},
 		//删除一级分类
@@ -213,7 +213,7 @@ export default{
 			let obj={
 				pid:item.pid,
 				id:item.id,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 
 			this.$store.commit('setWin',{
@@ -238,17 +238,17 @@ export default{
 				name:item.name,
 				marker:3,
 				sort:item.sort,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 			this.obj={
 				title:'修改二级分类',
 				categoryName:item.name,
 				sort:item.sort,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 		},
 		//添加二级分类
-		addChild(event,item){                                        
+		addChild(event,item){  
 			this.twoName=this.twoName.trim();
 			if(!global.checkData({
 				twoName:{
@@ -256,12 +256,11 @@ export default{
 					pro:'请输入分类名！并且分类名中不能含有&和引号!'
 				}
 			},this)) return;
-
 			let obj={
 				name:this.twoName,
 				sort:255,
 				pid:item.id,
-				code:item.code?item.code:''                   
+				code:item.code?item.code.toUpperCase():''                   
 			};
 
 			this.addSecondCategory(obj).then(()=>{
@@ -289,13 +288,23 @@ export default{
 				this.showCom='';
 				return;
 			}
+			console.log(code);
+			let rrr = /^[0-9A-Za-z]{1,8}$/;
+			if(code !=''&&!rrr.test(code)){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '简码由英文,数字组成!',
+					
+				});
+				return false;
+			}
 			let obj = {};
 			switch(''+this.flag.marker){
 				case '1':
 					obj={
 						name:categoryName,
 						sort:sort,
-						code:code,
+						code:code.toUpperCase(),
 					};
 					this.addCategory(obj).then(()=>{
 						this.flushList();
@@ -306,7 +315,7 @@ export default{
 						obj={
 							name:categoryName,
 							sort:sort,
-							code:code,
+							code:code.toUpperCase(),
 							id:this.flag.id
 						};
 						this.editCategory(obj).then(()=>{
@@ -319,7 +328,7 @@ export default{
 						obj={
 							name:categoryName,
 							sort:sort,
-							code:code,
+							code:code.toUpperCase(),
 							id:this.flag.id
 						};
 						this.editSecondCategory(obj).then(()=>{
@@ -402,12 +411,13 @@ export default{
 
 		//编辑二级分类
 		async editSecondCategory(obj){
+			
 			let res=await http.editCategory({
 				data:{
 					shopId:this.shopId,
 					name:obj.name,
 					sort:obj.sort,
-					code:obj.code,
+					code:obj.code.toUpperCase(),
 					cid:obj.id
 				}
 			});
@@ -420,7 +430,7 @@ export default{
 					shopId:this.shopId,
 					name:obj.name,
 					sort:obj.sort,
-					code:obj.code,
+					code:'',
 					pid:obj.pid
 				}
 			});
@@ -450,7 +460,7 @@ export default{
 			let res=await http.addCategory({data:{
 				shopId:this.shopId,
 				name:obj.name,
-				code:obj.code,
+				code:obj.code.toUpperCase(),
 				sort:obj.sort
 			}});
 			return res;
@@ -461,7 +471,7 @@ export default{
 				data:{
 					shopId:this.shopId,
 					name:obj.name,
-					code:obj.code,
+					code:obj.code.toUpperCase(),
 					sort:obj.sort,
 					cid:obj.id 
 				}

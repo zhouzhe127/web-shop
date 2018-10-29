@@ -141,7 +141,7 @@
 
 					<section v-if="good.type!=2" style="width:100%;">
 						<el-form :model="good" ref="good" label-width="80px">
-							<el-form-item v-if="good.categoryCode!=''" label="编码">
+							<el-form-item v-if="good.categoryCode!='' && (ischain=='0'||ischain=='3')" label="编码">
 								<span>{{good.categoryCode}}</span>
 								<el-input v-model="good.goodCode" maxlength="6" placeholder="输入编码" style="width:90px;"></el-input>
 							</el-form-item>

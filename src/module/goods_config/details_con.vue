@@ -882,12 +882,7 @@ export default {
 		//初始化按钮
 		initSyncBtn() {
 			let obj = {};
-			//同步商品
-			if (this.ischain == 1 || this.ischain == 2) {
-				obj.sync = () => {
-					this.showCom = 'asyncWin';
-				};
-			}
+			
 			//添加商品，如果是表格模式，显示添加按钮
 			if (this.selectTab == 1) {
 				obj.addGood = () => {
@@ -895,7 +890,8 @@ export default {
 				};
 			}
 			//导入
-			obj.leadIn = () => {
+			obj.leadIn = function(){
+				// className:'',
 				this.importGoods().then(res => {
 					if (!res) {
 						this.$store.commit('setWin', {
@@ -937,7 +933,12 @@ export default {
 			obj.leadOut = () => {
 				this.exportGoodsList();
 			};
-			this.$store.commit('setPageTools', obj);
+			//同步商品
+			if (this.ischain == 1 || this.ischain == 2) {
+				obj.sync = () => {
+					this.showCom = 'asyncWin';
+				};
+			}this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据
 		initData() {
