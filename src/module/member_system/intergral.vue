@@ -7,7 +7,6 @@
 			<div class='topR'>
 				<section class='fl' style='clear: both;'>
 					<label class='commodity-name fl'>参与积分</label>
-					<!-- <sd-onoff :onoff.sync='on'></sd-onoff> -->
 					<on-off @statusChange='(val)=> on = val' :status='on'></on-off>
 				</section>
 			</div>
@@ -24,7 +23,6 @@
 
 					</div>
 					<on-off @statusChange='(val)=> expiration = val' :status='expiration'></on-off>
-					<!-- <sd-onoff :onoff.sync='expiration'></sd-onoff> -->
 				</section>
 			</div>
 			<div class='expiration-time'>
