@@ -95,7 +95,8 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '添加职位',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'plain',
 				fn: this.add
 			}
 		]);

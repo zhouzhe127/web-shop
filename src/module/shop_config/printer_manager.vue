@@ -143,14 +143,16 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '添加打印机',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'plain',
 				fn: ()=>{
 					this.openWin({pid:null,types:'addPrint',index:null,bel:false});
 				},
 			},
 			{
 				name: '添加打印服务终端',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'plain',
 				fn:()=>{
 					this.openWin({pid:null,types:'addPrint',index:null,bel:true});
 				}

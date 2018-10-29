@@ -4,10 +4,11 @@
 -->
 <div id="cate-gories">
 	<section class="brand">
-		<div v-on:click="openOneCategoryWin()" class="openOneCategoryWin">
+		<el-button @click="openOneCategoryWin" type="primary" style="width:150px;" icon="el-icon-plus">添加一级分类</el-button>
+		<!-- <div v-on:click="openOneCategoryWin()" class="openOneCategoryWin">
 			<img src="../../res/images/add.png" alt="添加" />
 			<h3>添加一级分类</h3>
-		</div>
+		</div> -->
 		<template v-if="ischain == 1 || ischain == 2">
 			<span style="background-color: #fcaa30;margin-left: 10px;"></span>
 			<span style="margin-left: 5px;">品牌同步</span>
