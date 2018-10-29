@@ -48,6 +48,12 @@
 					<i v-if="topData.topPackages.length != 0">{{topData.topPackages.length}}个套餐</i>
 				</span>
 			</el-form-item>
+			<el-form-item label="电子菜屏幕显示模式">
+				<el-radio-group v-model="isLandscape">
+					<el-radio label="0" border>横屏</el-radio>
+					<el-radio label="1" border>竖屏</el-radio>
+				</el-radio-group>
+			</el-form-item>
 		</el-form>
 		<div style="padding:10px 70px;">
 			<el-radio-group v-model="buttonList.flag" @change = "light">
@@ -131,7 +137,8 @@ export default {
 				topGoods: [],
 				topPackages: [],
 			},
-			customPackageName:''//自定义套餐推荐名称
+			customPackageName:'',//自定义套餐推荐名称
+			isLandscape:'0',//默认横屏
 		};
 	},
 	mounted() {
