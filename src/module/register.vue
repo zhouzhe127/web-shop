@@ -4,12 +4,12 @@
 		<section class="all">
 			<section class="text">
 				<span>手机号码:</span>
-				<input type='text' autocomplete="off" maxlength='11' v-model="telephone" name="telephone" />
+				<input type='text' autocomplete="off" @change="changeIsHave()" maxlength='11' v-model="telephone" name="telephone" />
 				<span style="color: red" v-show="isHave!=''">{{isHave}}</span>
 			</section>
 			<section class="text">
 				<span>验证码:</span>
-				<input type="text" autocomplete="off" maxlength='6' size="6" v-model="code" id="code" />
+				<input type="text" autocomplete="off" @change="changeIsHave()" maxlength='6' size="6" v-model="code" id="code" />
 				<div class="prompt" @click="prompt">
 					<span class="fr code" v-if="requestCode" style="background-color:#F39800;border-radius: 50px;cursor: pointer;">发送验证码</span>
 				</div>
@@ -32,7 +32,8 @@
 			</section>
 			<section class="button">
 				<span class="back" @click="returnLogin">返回</span>
-				<span class="res fr" @click="register">注册账户</span>
+				<span class="res fr" @click="register" v-show="isHave==''" >注册账户</span>
+				<span class="back fr" v-show="isHave!=''">注册账户</span>
 			</section>
 		</section>
 	</section>
@@ -90,7 +91,6 @@ export default {
 							this.requestCode = true;
 						}
 					}, 1000);
-					console.log(res);
 				}
 			}
 		},
@@ -119,31 +119,38 @@ export default {
 					content: '名字不能为空'
 				});
 				return;
+			}else if (this.resPassword.length<6) {
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					winType: 'alter',
+					content: '密码长度不能小于6位'
+				});
+				return;
 			}
-			let data = await http.AccountRegister({
-				data: {
-					mobile: this.telephone,
-					password: this.resPassword,
-					code: this.code,
-					codeToken: this.token,
-					name: this.nameP
-				},
-				hasError: true,
-				full: true
-			});
-			console.log(data);
-			if (data.error) {
-				this.isHave = data.error.message;
-			} else {
-				//				httpMd5.setKey(data.sdKey);
-				//				storage.session('sdkey', data.sdKey);
-				//				global.uploadUrl = data.uploadUrl = data.uploadUrl + '/';
-				//
-				//				data.isBoss = this.identity; //添加登陆者的身份
-				storage.session('userShop', data);
-				storage.session('token', data.accessToken);
-				storage.session('goingHere', true);
-				this.$router.push('brandAudit/brandBuild');
+			try{
+				let data = await http.AccountRegister({
+					data: {
+						mobile: this.telephone,
+						password: this.resPassword,
+						code: this.code,
+						codeToken: this.token,
+						name: this.nameP
+					}
+				},true);
+				if (data) {
+					storage.session('userShop', data);
+					storage.session('token', data.accessToken);
+					storage.session('goingHere', true);
+					this.$router.push('brandAudit/brandBuild');
+				}
+			}catch (err){
+				this.isHave = err.error.message;
+			}
+		},
+		//改变注册参数，让注册按钮变亮
+		changeIsHave(){
+			if(this.isHave!=''){
+				this.isHave='';
 			}
 		},
 		// 返回登陆界面
