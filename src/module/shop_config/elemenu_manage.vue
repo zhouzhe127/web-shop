@@ -49,7 +49,7 @@
 				</span>
 			</el-form-item>
 			<el-form-item label="电子菜屏幕显示模式">
-				<el-radio-group v-model="isLandscape">
+				<el-radio-group v-model="screenType">
 					<el-radio label="0" border>横屏</el-radio>
 					<el-radio label="1" border>竖屏</el-radio>
 				</el-radio-group>
@@ -138,7 +138,7 @@ export default {
 				topPackages: [],
 			},
 			customPackageName:'',//自定义套餐推荐名称
-			isLandscape:'0',//默认横屏
+			screenType:'0',//默认横屏
 		};
 	},
 	mounted() {
@@ -284,6 +284,7 @@ export default {
 			this.isWarrant = data.isWarrant == 1 ? true : false;
 			this.isShared = data.isShared == 1 ? true : false;
 			this.customPackageName = data.customPackageName;
+			this.screenType = data.screenType;
 			if (!data.elecMenuVip) {
 				this.getLogin(false);
 			}
@@ -344,6 +345,7 @@ export default {
 					topGoods: this.topData.topGoods,
 					topName: this.topData.topName,
 					customPackageName: this.customPackageName,
+					screenType:this.screenType
 				}
 			});
 			this.$store.commit('setWin', {

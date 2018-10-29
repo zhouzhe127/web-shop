@@ -1070,7 +1070,7 @@ export default {
 			}
 			// obj.goodCode = this.good.categoryCode+'-'+this.good.goodCode;
 			obj.categoryCode = this.good.categoryCode;
-			obj.goodCode = this.good.goodCode;
+			obj.goodCode = this.good.categoryCode==''?'':this.good.goodCode;
 			obj.cids = cids.join(',');
 			obj.validityType = this.good.validityType;
 			obj.attrs = attrId.join(',');

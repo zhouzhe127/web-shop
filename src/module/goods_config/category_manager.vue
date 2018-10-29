@@ -43,7 +43,7 @@
 					<div v-if="ischain == 1 || ischain == 2" style="margin-top:25px;">
 						<span style="color: #fcaa30;" v-bind:title = "itemChild.name" v-if="itemChild.id < 100000">{{itemChild.name | sliceStr}}</span>
 						<span style="color: #6cc2e6;;" v-bind:title = "itemChild.name"  v-else>{{itemChild.name | sliceStr}}</span>
-						<span style="color: #fcaa30;" v-bind:title = "itemChild.code" v-if="itemChild.id < 100000 && itemChild.code">{{itemChild.code}}</span>
+						<br><span style="color: #fcaa30;" v-bind:title = "itemChild.code" v-if="itemChild.id < 100000 && itemChild.code">({{itemChild.code}})</span>
 					</div>
 					<div v-else  style="margin-top:25px;">
 						<span v-bind:title = "itemChild.name" >{{itemChild.name | sliceStr}}</span>
