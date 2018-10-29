@@ -9,7 +9,7 @@
 							<el-input v-model="categoryName" maxlength="20" placeholder = "请输入分类名" style="width:250px;"></el-input>
 						</el-form-item>
 						<el-form-item v-if="ischain=='0'||ischain=='3'" label="分类编码" >
-							<el-input v-model="code" maxlength="20" placeholder = "请输入分类编码" style="width:250px;"></el-input>
+							<el-input v-model="code" maxlength="8" placeholder = "请输入分类编码" style="width:250px;"></el-input>
 						</el-form-item>
 						<el-form-item v-if="(ischain=='1'||ischain=='2') && code!=''" label="分类编码" >
 							<span >{{code}}</span>

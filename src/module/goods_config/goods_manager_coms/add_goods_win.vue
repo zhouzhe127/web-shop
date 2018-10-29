@@ -143,7 +143,7 @@
 						<el-form :model="good" ref="good" label-width="80px">
 							<el-form-item v-if="good.categoryCode!='' && (ischain=='0'||ischain=='3')" label="编码">
 								<span>{{good.categoryCode}}</span>
-								<el-input v-model="good.goodCode" maxlength="6" placeholder="输入编码" style="width:90px;"></el-input>
+								<el-input v-model="good.goodCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
 							</el-form-item>
 							<el-form-item required label="分类">
 								<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
@@ -261,7 +261,7 @@
 					<el-form :model="good" ref="good" label-width="100px">
 						<el-form-item v-if="good.categoryCode!=''" label="编码">
 							<span>{{good.categoryCode}}</span>
-							<el-input v-model="good.goodCode" maxlength="6" placeholder="输入编码" style="width:90px;"></el-input>
+							<el-input v-model="good.goodCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="分类">
 							<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
@@ -379,8 +379,8 @@ export default {
 
 				identifyCode: '', //(实际不存在的字段)生成的称重商品的识别码(5位)
 				code: '', //(实际不存在的字段)称重商品类别识别码 称重商品的barCode=good.code+good.identifyCode
-				categoryCode:'', //编码前段部分
-				goodCode:'', //编码后段部分
+				categoryCode: '', //编码前段部分
+				goodCode: '' //编码后段部分
 			},
 			identifyCodeMax: null, //比较所有商品识别之后生成的最大商品识别码
 			identifyName: '选择类别识别码', //称重商品类别识别码展示的文字
@@ -1111,7 +1111,20 @@ export default {
 				)
 					return false;
 			}
-
+			if (this.good.goodCode.trim().length > 0) {
+				if (
+					!global.checkData(
+						{
+							goodCode: {
+								reg: /^[0-9]{3,5}$/,
+								pro: '编码只能为数字，且3-5个字!'
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+			}
 			//----------		称重菜,普通菜:售价,单位(普通菜),成本,会员	-----------
 			if (
 				(this.good.type == 0 && !Number(this.good.isGroup)) ||
@@ -1728,8 +1741,10 @@ export default {
 			}
 			if (res) {
 				this.good = res;
-				this.good.categoryCode = res.categoryCode?res.categoryCode:'';
-				this.good.goodCode = res.goodCode?res.goodCode:'';
+				this.good.categoryCode = res.categoryCode
+					? res.categoryCode
+					: '';
+				this.good.goodCode = res.goodCode ? res.goodCode : '';
 				this.initGoods(res);
 			}
 		},
