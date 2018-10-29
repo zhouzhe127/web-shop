@@ -44,7 +44,7 @@ export default {
 		};
 	},
 	mounted() {
-		let arr = [{name:'添加反结账原因',className:'pick',fn:()=>{
+		let arr = [{name:'添加反结账原因',type: 4,className: 'primary',fn:()=>{
 			this.addReason();
 		}}];
 		this.$store.commit('setPageTools',arr);

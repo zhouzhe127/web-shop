@@ -89,7 +89,7 @@ export default {
 			arr[1] = {
 				name: '同步',
 				type: 4,
-				className: 'primary',
+				className: 'plain',
 				fn: () => {
 					this.showCom = 'attrAsync';
 				}

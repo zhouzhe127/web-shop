@@ -410,7 +410,7 @@ export default {
 				arr.push({
 					name: '添加',
 					type: 4,
-					className: 'plain',
+					className: '',
 					// style:{backgroundColor:'#ff9800',color:'#fff',marginLeft:'15px'},
 					fn: () => {
 						this.comObj = {
@@ -428,7 +428,7 @@ export default {
 				arr.push({
 					name: '同步',
 					type: 4,
-					className: 'primary',
+					className: 'plain',
 					fn: () => {
 						this.showCom = 'syncWin';
 						this.comObj = {

@@ -395,29 +395,21 @@ export default {
 				arr = [
 					{
 						name: '返回',
-						style: {
-							backgroundColor: '#fff',
-							border: '1px solid #ff8c01',
-							color: '#ff8c01'
-						},
+						type: 4,className: 'info',
 						fn: () => {
 							this.returnBrand();
 						}
 					},
 					{
 						name: '打印',
-						style: {
-							backgroundColor: '#fff',
-							border: '1px solid #20a7dd',
-							color: '#20a7dd'
-						},
+						type: 4,className: 'plain',
 						fn: () => {
 							this.printOrder();
 						}
 					},
 					{
 						name: '导出',
-						style: {},
+						type: 4,className: 'primary',
 						fn: () => {
 							this.exportOrder();
 						}

@@ -13,14 +13,12 @@
 					<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
 					</el-option>
 				</el-select>
-				<!--<selectBtn @emit="selectType" :sorts="options" class="select-btn"></selectBtn>-->
 			</section>
 			<section class="fl top_input">
-				<el-input v-model="positionName" clearable placeholder="请输入起售商品名称" style="width:220px;"></el-input>
-				<!--<input class="searchgoods" type="text" placeholder="请输入起售商品名称" v-model="positionName" />-->
+				<el-input v-model="positionName" clearable placeholder="请输入起售商品名称" style="width:220px;margin-right:20px;"></el-input>
 			</section>
-			<a href="javascript:void(0);" class="blue btn" @click="searchPosition()">筛选</a>
-			<a href="javascript:void(0);" class="gray btn" @click="resetSearch()">重置</a>
+			<el-button @click="searchPosition" type="primary">筛选</el-button>
+			<el-button @click="resetSearch" type="info">重置</el-button>
 		</section>
 
 		<section>
@@ -41,16 +39,6 @@
 				<el-table-column show-overflow-tooltip min-width="50" prop="num" align="center" label="起售数量"> </el-table-column>
 			</el-table>
 		</section>
-
-		<!--<comTable :titleData="titleData" :introData="currentList" :allTotal="newrecordList.length" :showTitle="2" :showHand="false" :fixed="0" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :listHeight="50" :listWidth="1200" :widthType="true">-->
-		<!--<span style="cursor: pointer;" slot="con-0" slot-scope="props">-->
-		<!--<span style="color:#29ABE2;font-size: 16px" @click="toEdit(props.data,props.index)">编辑</span>-->
-		<!--<span style="padding:0 20px;color: #D2D2D2;">|</span>-->
-		<!--<span style="color: #FD3F1F;font-size: 16px" @click="delJob(props.data,props.index)">删除</span>-->
-		<!--</span>-->
-		<!--<span slot="con-1" slot-scope="props">{{props.data.type==1?'单品起售':'多品联动起售'}}</span>-->
-		<!--</comTable>-->
-
 		<section style="margin-top: 10px">
 			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 			<!--<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :isNoJump="true" :numArr="[10,20,30]"></pageElement>-->
@@ -127,9 +115,9 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '添加起售商品',
-				className: ['addStaff', 'export-btn'],
+				type: 4,
+				className: 'primary',
 				fn: this.openShop,
-				type: 2
 			}
 		]);
 		this.getList();

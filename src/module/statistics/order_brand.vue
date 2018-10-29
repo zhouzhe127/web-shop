@@ -441,7 +441,7 @@ export default {
 			let arr = [
 				{
 					name: '导出',
-					style: {},
+					type: 4,className: 'primary',
 					fn: () => {
 						this.exportOrder();
 					}
