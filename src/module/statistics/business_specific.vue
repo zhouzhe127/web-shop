@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="coverShow" class="loding-cover"><i class="el-icon-loading"></i></div>
+		<div v-show="coverShow" class="loding-cover"><i class="el-icon-loading"></i></div>
 	</div>
 </template>
 
@@ -227,10 +227,10 @@ export default {
 		height: 100%;
 		z-index: 9;
 		background: #fff;
-		opacity: 0.7;
+		opacity: 0.9;
 		text-align: center;
 		display: flex;
-		i{display: inline-block;font-size: 40px;margin: auto;color: #666;opacity: 1;}
+		i{display: inline-block;font-size: 40px;margin: auto;color: #666;}
 	}
 }
 .help-icon {
