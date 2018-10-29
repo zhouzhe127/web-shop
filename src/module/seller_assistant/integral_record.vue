@@ -2,7 +2,7 @@
 	<div class="inter_gral">
 		<com-table :listHeight='80' :listName="'积分记录'" :key="index" :showTitle='1' :introData="interList" :titleData="titleList" :allTotal="count">
 			<div slot="con-0" slot-scope="props">{{interData.name}}</div>
-			<div slot="con-1" slot-scope="props">{{props.data.type | filterType}}</div>
+			<div slot="con-1" slot-scope="props">{{typeInfo[props.data.type]}}</div>
 			<div slot="con-2" slot-scope="props">{{ getType(props.data.type) + props.data.operatePoint}}</div>
 			<div slot="con-3" slot-scope="props">{{props.data.createTime | filterTime}}</div>
 		</com-table>
@@ -12,7 +12,7 @@
 		</section>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
 export default {
@@ -41,7 +41,8 @@ export default {
 			page: 1,
 			total: '',
 			count: 0,
-			num: 10
+			num: 10,
+			typeInfo:{} //来源
 		};
 	},
 	props: ['interData'],
@@ -73,6 +74,7 @@ export default {
 			this.total = res.total;
 			this.interList = res.list;
 			this.count = res.count;
+			this.typeInfo = res.typeInfo;
 		},
 		pageChange(obj) {
 			this.page = obj.page;
@@ -100,7 +102,8 @@ export default {
 				14: '退款失败',
 				15: '卡激活',
 				16: '金币记录',
-				17: '积分卡券'
+				17: '积分卡券',
+				24: '订单取消返还抵扣积分'
 			};
 			return obj[val];
 		}
