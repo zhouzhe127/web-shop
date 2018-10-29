@@ -212,12 +212,7 @@
 		<!-- 抢购上限 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">抢购上限</span>
-			<el-input class="txtinp" type="text" v-model="grabCount" maxlength="2"></el-input> 
-			
-			<!-- <el-tooltip placement="right">
-                <div slot="content">该疯抢商品一次活动内最多可抢购次数
-                <i class="el-icon-question" style="font-size:24px;"></i>
-            </el-tooltip> -->
+			<el-input class="txtinp" type="text" v-model="grabCount" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input> 
 
 			<div class="icon" @click="showText()">
 				<div class="detDiv" v-if="hiddenText">
@@ -272,7 +267,7 @@
 				shopList: [], //店铺列表
 				shopstock: [], //获取店铺库存
 				hiddenText: false,
-				grabCount: '', //限购上限
+				grabCount: '1', //限购上限
 			};
 		},
 		methods: {
@@ -585,7 +580,7 @@
 					this.shopList[i].stock = '';
 				}
 			}
-			console.log(this.grabCount);
+			// console.log(this.grabCount);
 
 		}
 	};
