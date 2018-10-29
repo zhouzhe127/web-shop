@@ -111,14 +111,11 @@ export default {
 			isShowStore:false,//已选中店铺列表 是否展开
 			storeShowH:'20px',
 			barObj:{//柱状图请求参数
-				shopId:'',
 				shopIds:'',
 				reqStartTime:'',
 				reqEndTime:'',
 				openTime:'',
 			},
-			eachRequestNum:0,//记录循环调用次数
-			eachRequestObj:{},//循环请求获取的数据 最后在赋值给bar
 		};
 	},
 	components: {
@@ -248,45 +245,16 @@ export default {
 		},
 		//遍历获取店铺数据-暂时先用递归 下版本优化异步加载
 		eachGetShopData(){
-			let arr=['shopId','shopIds','reqStartTime','reqEndTime','openTime'];
+			let arr=['shopIds','reqStartTime','reqEndTime','openTime'];
+			let obj={};
 			for(let item of arr){
-				this.barObj[item] = this[item];
+				obj[item] = this[item];
 			}
+			this.barObj = obj;
 			if(this.$refs.barRef){
-				this.$refs.barRef.requestBarData();
-			}
-			// let shopIds = [];
-			// this.coverShowShop = true;
-			// if(this.shopIds.length>5){
-			// 	let start = this.eachRequestNum*5;
-			// 	let end = (this.eachRequestNum+1)*5;
-			// 	shopIds = this.shopIds.slice(start,end);
-			// 	if(shopIds.length){
-			// 		this.eachRequestNum++;
-			// 		this.getShopData(shopIds);
-			// 		this.eachGetShopData();
-			// 	}else{
-			// 		this.eachRequestNum = 0;
-			// 		this.bar = this.eachRequestObj;
-			// 		this.coverShowShop = false;
-			// 	}
-			// }else{
-			// 	this.getShopData(this.shopIds);
-			// 	this.bar = this.eachRequestObj;
-			// }
-		},
-		//获取店铺数据
-		async getShopData(shopIds){
-			let data = await http.BusinessGetStatByShopIds({data:{
-				startTime: this.reqStartTime,
-				endTime: this.reqEndTime,
-				shopIds: shopIds.join('-'),
-				isOpenTime: this.openTime,
-			}});
-			if(data){
-				for(let key in data){
-					this.$set(this.eachRequestObj,key,data[key]);
-				}
+				this.$nextTick(()=>{
+					this.$refs.barRef.initData();
+				});
 			}
 		},
 		//获取品牌数据
@@ -431,9 +399,8 @@ export default {
 			} else {
 				//多店 品牌
 				this.isBrandSend = 1;
-				this.getTaskId();
+				//this.getTaskId();
 				//执行循环前，先清除保存的数据
-				this.eachRequestObj = {};
 				this.eachGetShopData();
 			}
 			
