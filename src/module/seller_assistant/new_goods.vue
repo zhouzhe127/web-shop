@@ -15,16 +15,26 @@
 		<!-- 商品名称 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品名称</span>
-			<input class="txtinp" type="text" v-model="name" maxlength="20" />
+			<!-- <input class="txtinp" type="text" v-model="name" maxlength="20" /> -->
+			<el-input class="txtinp" type="text" v-model="name" maxlength="20"></el-input>
 		</div>
 		<!-- 商品列表图-->
 		<div class="online-box clearfix" style="margin-bottom:0;">
 			<span class="fl online-sub required">商品列表图</span>
-			<div class="uploadImgs fl">
-				<a href="javascript:void(0);" class="addclassify fl" style="width:210px;">上传图片</a>
+			<!-- <div class="uploadImgs fl">
+				 <a href="javascript:void(0);" class="addclassify fl" style="width:210px;">上传图片</a>
 				<form enctype="multipart/form-data" id="waitImage">
 					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
 					    @change="bgNameChange('',1,'waitImage')" />
+				</form> 
+			</div> -->
+
+			<div class="uploadImgs">
+				<el-button type="primary" icon="el-icon-plus" style="width:210px;" enctype="multipart/form-data">上传图片
+				</el-button>
+				<form enctype="multipart/form-data" id="waitImage">
+					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
+					 @change="bgNameChange('',1,'waitImage')" />
 				</form>
 			</div>
 		</div>
@@ -45,13 +55,22 @@
 		<!-- 商品展示图片-->
 		<div class="online-box clearfix" style="margin-bottom:0px;">
 			<span class="fl online-sub required">商品展示图</span>
-			<div class="uploadImgs fl">
+			<!-- <div class="uploadImgs fl">
 				<a href="javascript:void(0);" class="addclassify fl" style="width:210px;">上传图片</a>
 				<form enctype="multipart/form-data" id="startImage">
 					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
 					    @change="bgNameChange('',2,'startImage')" />
 				</form>
+			</div> -->
+			<div class="uploadImgs">
+				<el-button type="primary" icon="el-icon-plus" style="width:210px;" enctype="multipart/form-data">上传图片
+				</el-button>
+				<form enctype="multipart/form-data" id="startImage">
+					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
+					 @change="bgNameChange('',2,'startImage')" />
+				</form>
 			</div>
+
 		</div>
 		<div class="online-box clearfix" style="margin-bottom: 25px;">
 			<span class="online-sub fl"></span>
@@ -70,11 +89,19 @@
 		<!-- 商品轮播图-->
 		<div class="online-box clearfix" style="margin-bottom:0px">
 			<span class="fl online-sub required">商品轮播图</span>
-			<div class="uploadImgs fl">
+			<!-- <div class="uploadImgs fl">
 				<a href="javascript:void(0);" class="addclassify fl" style="width:210px;">上传图片</a>
 				<form enctype="multipart/form-data" id="bannerImg">
 					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
 					    @change="fileBannerChange('bannerImg','1')" />
+				</form>
+			</div> -->
+			<div class="uploadImgs">
+				<el-button type="primary" icon="el-icon-plus" style="width:210px;" enctype="multipart/form-data">上传图片
+				</el-button>
+				<form enctype="multipart/form-data" id="bannerImg">
+					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
+					 @change="fileBannerChange('bannerImg','1')" />
 				</form>
 			</div>
 		</div>
@@ -104,19 +131,22 @@
 		<!-- 商品卖价 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品卖价</span>
-			<input class="txtinp" type="text" name="" v-model="price" maxlength="6" placeholder="请输入数字" v-on:blur="changeCount(price,'1')"
-			/>
+			<!-- <input class="txtinp" type="text" name="" v-model="price" maxlength="6" placeholder="请输入数字" v-on:blur="changeCount(price,'1')"/> -->
+			<el-input type="text" name="" class="txtinp" v-model="price" maxlength="6" placeholder="请输入数字" v-on:blur="changeCount(price,'1')" />
+			</el-input>
 		</div>
 		<!-- 商品原价 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品原价</span>
-			<input class="txtinp" type="text" placeholder="请输入数字" v-model="originalPrice" maxlength="6" v-on:blur="changeCount(originalPrice,'2')"
-			/>
+			<!-- <input class="txtinp" type="text" placeholder="请输入数字" v-model="originalPrice" maxlength="6" v-on:blur="changeCount(originalPrice,'2')"/>-->
+			<el-input type="text" class="txtinp" name="" placeholder="请输入数字" v-model="originalPrice" maxlength="6" v-on:blur="changeCount(originalPrice,'2')" />
+			</el-input>
 		</div>
 		<!-- 商品库存 -->
 		<div class="online-box clearfix" style="margin-bottom: 25px;">
 			<span class="online-sub fl required">商品库存</span>
-			<a href="javascript:void(0);" class="addclassify fl" style="width:210px;" @click="openStore()">增加门店库存</a>
+			<!-- <a href="javascript:void(0);" class="addclassify fl" style="width:210px;" @click="openStore()">增加门店库存</a>  -->
+			<el-button type="primary" icon="el-icon-plus" style="width:210px;" @click="openStore()">增加门店库存</el-button>
 		</div>
 		<!-- 商品库存显示 -->
 		<div class="online-box clearfix" v-show="shopstock.length > 0">
@@ -139,11 +169,19 @@
 		<!-- 商品详情图片-->
 		<div class="online-box clearfix" style="margin-bottom:0px">
 			<span class="fl online-sub required">商品详情</span>
-			<div class="uploadImgs fl">
+			<!-- <div class="uploadImgs fl">
 				<a href="javascript:void(0);" class="addclassify fl" style="width:210px;">上传图片</a>
 				<form enctype="multipart/form-data" id="detailbannerImg">
 					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
 					    @change="fileBannerChange('detailbannerImg','2')" />
+				</form>
+			</div> -->
+			<div class="uploadImgs">
+				<el-button type="primary" icon="el-icon-plus" style="width:210px;" enctype="multipart/form-data">上传图片
+				</el-button>
+				<form enctype="multipart/form-data" id="detailbannerImg">
+					<input type="file" id="bg_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''"
+					 @change="fileBannerChange('detailbannerImg','2')" />
 				</form>
 			</div>
 		</div>
@@ -154,6 +192,7 @@
 				尺寸:750px*750px(最多5张)
 			</div>
 		</div>
+
 		<!-- 商品详情图片显示-->
 		<div class="online-box clearfix" v-if="detailimgList.length > 0">
 			<span class="fl online-sub"></span>
@@ -170,11 +209,31 @@
 				</div>
 			</section>
 		</div>
+		<!-- 抢购上限 -->
+		<div class="online-box clearfix">
+			<span class="online-sub fl required">抢购上限</span>
+			<el-input class="txtinp" type="text" v-model="grabCount" maxlength="3"></el-input>
+
+			<!-- <el-tooltip placement="right">
+                <div slot="content">该疯抢商品一次活动内最多可抢购次数
+                <i class="el-icon-question" style="font-size:24px;"></i>
+            </el-tooltip> -->
+
+			<div class="icon" @click="showText()">
+				<div class="detDiv" v-if="hiddenText">
+					<i class="detI triright"></i>
+					<h3 class="detH3">该疯抢商品一次活动内最多可抢购次数</h3>
+				</div>
+			</div>
+		</div>
+
 		<!-- 取消保存 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
-			<a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="returnStore()">取消</a>
-			<a href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="addconfig()">保存</a>
+			<!-- <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="returnStore()">取消</a> -->
+			<el-button type="info" style="width: 200px;margin-right:10px;" @click="returnStore()">取消</el-button>
+			<!-- <a href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="addconfig()">保存</a> -->
+			<el-button type="primary" style="width: 200px;margin-right:10px;" @click="addconfig()">保存</el-button>
 		</div>
 		<!-- 弹窗 -->
 		<component v-if="showWin" :is="isPopupwindow" @getAppliedWin='getResult' :shopList='shopList'></component>
@@ -209,9 +268,14 @@
 				allimg: [], //图片集合
 				shopList: [], //店铺列表
 				shopstock: [], //获取店铺库存
+				hiddenText: false,
+				grabCount: '', //限购上限
 			};
 		},
 		methods: {
+			showText() {
+				this.hiddenText = !this.hiddenText;
+			},
 			async bgNameChange(imgJson, type, id) {
 				// 上传图片 背景图片回调
 				let res = await http.uploadImg({
@@ -366,8 +430,10 @@
 						listImage: this.waitingImage, //商品列表图
 						showImage: this.startingImage, //商品展示图
 						imageList: this.allimg, //轮播图
-						shopStocks: this.shopStock //库存
+						shopStocks: this.shopStock, //库存
+						grabCount: this.grabCount, //限购上限
 					}
+
 				});
 				if (data) {
 					this.$store.commit('setWin', {
@@ -379,41 +445,44 @@
 				}
 			},
 			checkForm() { //合格返回true
-				if (!global.checkData(
-					{
-						'name': {
-							cond: '$$.length>0',
-							pro: '请输入商品名称'
-						},
-						'waitingImage': {
-							cond: '$$.length > 0',
-							pro: '请上传商品列表图'
-						},
-						'startingImage': {
-							cond: '$$.length > 0',
-							pro: '请上传商品展示图'
-						},
-						'imgList': {
-							cond: '$$.length > 0',
-							pro: '请上传商品轮播图'
-						},
-						'price': {
-							cond: '$$.length>0 && ((/^([0-9])+([.][0-9]+)?$/).test($$))',
-							pro: '请输入商品卖价且只能是非负数'
-						},
-						'originalPrice': {
-							cond: '$$.length>0 && ((/^([0-9])+([.][0-9]+)?$/).test($$))',
-							pro: '请输入商品原价且只能是非负数'
-						},
-						'shopStock': {
-							cond: 'Object.keys($$).length > 0',
-							pro: '请增加门店库存'
-						},
-						'detailimgList': {
-							cond: '$$.length > 0',
-							pro: '请上传商品详情图'
-						},
-					}, this)) return false;
+				if (!global.checkData({
+					'name': {
+						cond: '$$.length > 0',
+						pro: '请输入商品名称'
+					},
+					'waitingImage': {
+						cond: '$$.length > 0',
+						pro: '请上传商品列表图'
+					},
+					'startingImage': {
+						cond: '$$.length > 0',
+						pro: '请上传商品展示图'
+					},
+					'imgList': {
+						cond: '$$.length > 0',
+						pro: '请上传商品轮播图'
+					},
+					'price': {
+						cond: '$$.length>0 && ((/^([0-9])+([.][0-9]+)?$/).test($$))',
+						pro: '请输入商品卖价且只能是非负数'
+					},
+					'originalPrice': {
+						cond: '$$.length>0 && ((/^([0-9])+([.][0-9]+)?$/).test($$))',
+						pro: '请输入商品原价且只能是非负数'
+					},
+					'shopStock': {
+						cond: 'Object.keys($$).length > 0',
+						pro: '请增加门店库存'
+					},
+					'detailimgList': {
+						cond: '$$.length > 0',
+						pro: '请上传商品详情图'
+					},
+					'grabCount': {
+						cond: '$$.length>0 && ((/^([0-9])+([.][0-9]+)?$/).test($$))',
+						pro: '请输入限购上限且只能是非负数'
+					}
+				}, this)) return false;
 				return true;
 			},
 			getShopname: function (shopId) {
@@ -452,11 +521,11 @@
 		},
 		components: {
 			onOff: () =>
-				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
+				import( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
 			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+				import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 			getAppliedWin
 		},
 		mounted() {
@@ -486,9 +555,12 @@
 					shufflingimg[i].bannerImageName = shufflingimg[i].image.substring(shufflingimg[i].image.lastIndexOf('/') + 1,
 						shufflingimg[i].image.length);
 					this.imgList.push(shufflingimg[i]);
-				} //获取轮播图片
+				} //获取轮播图片 
 				this.price = detail.price; //商品卖价
 				this.originalPrice = detail.originalPrice; //商品原价
+
+				this.grabCount = detail.grabCount; //限购上限
+
 				this.shopstock = shopstock; //店铺库存
 				for (let i = 0; i < this.shopstock.length; i++) {
 					for (let j = 0; j < this.shopList.length; j++) {
@@ -510,6 +582,8 @@
 					this.shopList[i].stock = '';
 				}
 			}
+			console.log(this.grabCount);
+
 		}
 	};
 </script>
@@ -608,7 +682,7 @@
 	#rushedConfiguration .online-box .txtinp {
 		width: 210px;
 		height: 38px;
-		text-indent: 10px;
+		/* text-indent: 10px; */
 	}
 
 	#rushedConfiguration .online-box .online-sub {
@@ -762,5 +836,55 @@
 		left: 0;
 		top: 0;
 		opacity: 0;
+	}
+
+	#rushedConfiguration .online-box .icon {
+		display: inline-block;
+		width: 18px;
+		height: 18px;
+		background: url(../../../src/res/icon/orderdetial18.png) no-repeat center;
+		position: relative;
+		vertical-align: middle;
+		cursor: pointer;
+	}
+
+	#rushedConfiguration .online-box .icon .detDiv {
+		display: inline-block;
+		width: 260px;
+		background: #45404b;
+		position: absolute;
+		top: -10px;
+		left: 35px;
+		padding: 10px;
+		box-shadow: 3px 2px 10px #ccc;
+		z-index: 100;
+	}
+
+	#rushedConfiguration .online-box .icon .detDiv .detI {
+		width: 0;
+		height: 0;
+		line-height: 0;
+		position: absolute;
+		top: 10px;
+		left: -20px;
+		right: 30%;
+		border-width: 10px;
+		border-top: 0px;
+		border-style: solid;
+		border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
+	}
+
+	#rushedConfiguration .online-box .icon .detDiv .detH3 {
+		line-height: 22px;
+		color: #e6e6e7;
+	}
+
+	#rushedConfiguration .online-box .icon .detDiv .triright {
+		width: 0;
+		height: 0;
+		border-top: 10px solid transparent;
+		border-bottom: 10px solid transparent;
+		border-right: 10px solid #45404b;
+		border-left: 10px solid transparent;
 	}
 </style>

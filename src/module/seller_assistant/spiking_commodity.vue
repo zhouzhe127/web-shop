@@ -8,15 +8,48 @@
 <template>
 	<div id="spikingCommodity">
 		<!-- 筛选 -->
+
 		<div class="search">
+			<span>创建时间</span>
+			<!-- <el-date-picker 
+            v-model="searchTime" 
+            type="daterange" 
+            range-separator="至" 
+            start-placeholder="startTime" 
+            end-placeholder="endTime" 
+            value-format="timestamp" 
+            :editable="false" 
+            :clearable="false"
+            >
+            </el-date-picker> -->
+			<el-date-picker v-model="searchTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+			 value-format="timestamp" :clearable="false">
+			</el-date-picker>
+
 			<span>关键字</span>
-			<input type="" name="" placeholder="请输入商品名称" v-model="goodsName">
-			<a href="javascript:;" class="blue" @click="getcommodity">筛选</a>
-			<a href="javascript:;" class="gray" @click="reset">重置</a>
+			<el-input v-model="goodsName" type="" name="" placeholder="请输入商品名称" style="width:200px"></el-input>
+			<!-- <input type="" name="" placeholder="请输入商品名称" v-model="goodsName"> -->
+			<!-- <a href="javascript:;" class="blue" @click="getcommodity">筛选</a> -->
+			<!-- <a href="javascript:;" class="gray" @click="reset">重置</a> -->
+			<div class="right">
+				<el-button type="primary" @click="getcommodity">筛选</el-button>
+				<el-button type="info" @click="reset">重置</el-button>
+			</div>
+
 		</div>
+
+		<!-- 当前商品、历史商品 -->
+		<div class="searchList">
+			<el-radio-group v-model="searchName">
+				<el-radio v-for="(item,index) in searchList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
+				<!-- <el-radio border >当前商品</el-radio>
+                <el-radio border >历史商品</el-radio> -->
+			</el-radio-group>
+		</div>
+
 		<!-- 列表 -->
 		<com-table :listHeight='80' :listName="'疯抢商品列表'" :showHand="false" :key="index" :listWidth="1436" :introData="goodslist"
-		    :titleData="titleList" :widthType='true'>
+		 :titleData="titleList" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="btnLink">
 				<a href="javascript:;" @click="addNewGoods(props.data,'edi')">编辑</a>
 				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a>
@@ -32,7 +65,8 @@
 		</com-table>
 		<!-- 翻页 -->
 		<section class="turn-page">
-			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]"
+			 :isNoJump="true"></pageElement>
 		</section>
 	</div>
 </template>
@@ -53,15 +87,15 @@
 				shopstock: '', //商品的库存
 				goodsimageList: '', //商品图片集合
 				goodsName: '', //商品名称
-				type:{
-					0:'下架',
-					1:'上架',
-					2:'上架',
+				type: {
+					0: '下架',
+					1: '上架',
+					2: '上架',
 				},
-				statusType:{
-					0:'上架中',
-					1:'待上架',
-					2:'已下架',
+				statusType: {
+					0: '上架中',
+					1: '待上架',
+					2: '已下架',
 				},
 				titleList: [
 					{
@@ -142,9 +176,33 @@
 						}
 					},
 				],
+				searchTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+				startTime: '',
+				endTime: '',
+				searchList: [
+					{
+						'type': '0',
+						'name': '当前商品'
+					}, {
+						'type': '1',
+						'name': '历史商品'
+					}
+				],
+				searchName: '当前商品',
 			};
 		},
 		methods: {
+			//选择开始时间
+			getStartTime(receiveTime) {
+				this.startTime = (new Date(receiveTime)).getTime(); //毫秒
+			},
+			//选择结束时间
+			getEndTime(receiveTime) {
+				this.endTime = (new Date(receiveTime)).getTime(); //毫秒
+			},
+			clicktheRadio: function (item) {
+				this.type.index = item.type;
+			},
 			async addNewGoods(item, type) {
 				if (type == 'edi') {
 					await this.getGoodsStocks(item.id);
@@ -154,6 +212,7 @@
 							allshopstock.push(this.shopstock[i]);
 						}
 					}
+
 					storage.session('shopstock', allshopstock);
 					await this.getGoodsImages(item.id);
 					let shufflingimg = []; //轮播图
@@ -167,6 +226,7 @@
 							}
 						}
 					}
+
 					storage.session('detailimg', detailimg);
 					storage.session('shufflingimg', shufflingimg);
 					storage.session('detail', item);
@@ -189,10 +249,23 @@
 						goodsName: this.goodsName
 					}
 				});
+
 				this.goodslist = data.goodsList; //获取列表
 				this.pageNum = data.total;
 				this.count = data.count;
+				this.getList();
+
 			},
+
+			async getList() {
+				await http.getList({
+					data: {
+						startTime: parseInt(this.valueTime[0] / 1000), //开始时间
+						endTime: parseInt(this.valueTime[1] / 1000), //结束时间 
+					}
+				});
+			},
+
 
 			changeFormat: function (t) {
 				t -= 0;
@@ -259,6 +332,7 @@
 					});
 					this.getcommodity();
 				}
+
 			},
 			reset: function () {
 				this.goodsName = '';
@@ -270,11 +344,11 @@
 		},
 		components: {
 			selectBtn: () =>
-				import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
+				import( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
 			pageElement: () =>
-				import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', {
@@ -282,8 +356,12 @@
 					this.addNewGoods('', 'add');
 				}
 			});
+			// if(this.Type.index == '1'){
+			//     this.searchName = '指定时间';
+			// }
 			this.uploadUrl = storage.session('userShop').uploadUrl;
 			this.getcommodity();
+			// console.log(this.Type)
 		}
 	};
 </script>
@@ -301,14 +379,13 @@
 
 	#spikingCommodity .search span {
 		font-size: 16px;
-		margin-right: 15px;
+		margin-right: 8px;
 	}
 
 	#spikingCommodity .search input {
 		width: 183px;
 		height: 41px;
 		text-indent: 10px;
-		margin-right: 15px;
 	}
 
 	#spikingCommodity .search a {
@@ -317,6 +394,17 @@
 		text-align: center;
 		line-height: 42px;
 		margin-right: 15px;
+	}
+
+	#spikingCommodity .search .right {
+		float: right;
+	}
+
+	#spikingCommodity .searchList {
+		width: 100%;
+		height: 42px;
+		margin-bottom: 18px;
+		margin-left: 78px;
 	}
 
 	#spikingCommodity .start {
