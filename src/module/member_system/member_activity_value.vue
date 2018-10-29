@@ -55,9 +55,9 @@
 		</div>
 		<div class="storageBtn" v-if="isStoredId == 1">
 			<div class="box" style='width:70px;margin-left:140px;'>比例设置</div>
-			<el-input data-min="0" v-model='storedAmount' placeholder='请输入实付金额' style="width:130px"></el-input>
+			<el-input data-min="0" v-model='storedAmount' placeholder='请输入实付金额' style="width:130px"  onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 			<i>&nbsp;：</i>
-			<el-input data-min="0" v-model='storeActive' placeholder='请输入活跃值' style="width:130px"></el-input>
+			<el-input data-min="0" v-model='storeActive' placeholder='请输入活跃值' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 		</div>
 		<!-- 用户消费 -->
 		<div class="useBtn">
@@ -70,9 +70,9 @@
 		</div>
 		<div class="useBtn" v-if="isConsumptionId == 1">
 			<div class="box" style='width:70px;margin-left:140px;'>比例设置</div>
-			<el-input data-min="0" v-model='consumptionAmount' placeholder='请输入实付金额' style="width:130px"></el-input>
+			<el-input data-min="0" v-model='consumptionAmount' placeholder='请输入实付金额' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 			<i>&nbsp;：</i>
-			<el-input data-min="0" v-model='consumptionActive' placeholder='请输入活跃值' style="width:130px"></el-input>
+			<el-input data-min="0" v-model='consumptionActive' placeholder='请输入活跃值' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 		</div>
 		<!-- 积分商城 -->
 		<div class="integralBtn">
@@ -86,7 +86,7 @@
 
 		<div class="integralBtn" v-if="integralMallActiveId == 1">
 			<div class="box" style='width:150px;margin-left:140px;'>兑换一次积分商品获得</div>
-			<el-input data-min="0" v-model='integralMallActive' placeholder='请输入活跃值' style="width:120px"></el-input>
+			<el-input data-min="0" v-model='integralMallActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 		</div>
 		<!-- 任务系统 -->
 		<div class="taskBtn">
@@ -99,7 +99,7 @@
 		</div>
 		<div class="taskBtn" v-if="taskActiveId == 1">
 			<div class="box" style='width:120px;margin-left:140px;'>完成一次任务获得</div>
-			<el-input data-min="0" v-model='taskActive' placeholder='请输入活跃值' style="width:120px"></el-input>
+			<el-input data-min="0" v-model='taskActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 		</div>
 		<!-- 购买指定商品 -->
 		<div class="specifyBtn">
@@ -119,7 +119,7 @@
 			</div>
 			<div class="specifyBtn">
 				<div class="box" style='width:100px;margin-left:140px;'>购买商品获得</div>
-				<el-input data-min="0" v-model='goodsActive' placeholder='请输入活跃值' style="width:120px"></el-input>
+				<el-input data-min="0" v-model='goodsActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
 
@@ -139,9 +139,6 @@
 </template>
 <script>
     import http from 'src/manager/http';
-    // import storage from 'src/verdor/storage';
-    // import utils from 'src/verdor/utils';
-    // import global from 'src/manager/global';
 
     export default {
     	data() {
@@ -295,8 +292,8 @@
     					isConsumption: this.isConsumptionId,
     					consumptionAmount: this.consumptionAmount,
     					consumptionActive: this.consumptionActive,
-    					integralMallActive: this.integralMallActive,
-    					taskActive: this.taskActive,
+    					integralMallActive: this.integralMallActiveId == 1 ? this.integralMallActive : '',
+    					taskActive: this.taskActiveId == 1 ? this.taskActive : '',
     					gids: this.goodsBtnId == 1 ? this.selectGoods.join(',') : '',
     					pids: this.goodsBtnId == 1 ? this.selectPackages.join(',') : '',
     					goodsActive: this.goodsBtnId == 1 ? this.goodsActive : '',
@@ -367,14 +364,6 @@
 
     				// this.expirationTime = res.expirationTime * 1000;
 
-    				// if(this.days && this.days != ''){
-    				// 	this.isReduce = res.isReduceId;
-    				// 	this.days = res.days;
-    				// 	this.reduceActive= res.reduceActive;
-    				// 	this.isReduceId ==1;
-    				// 	this.isReduceName = this.isReduceList[this.isReduceId].name;
-    				// }
-
     				// 降低活跃度规则
     				this.isReduceId = res.isReduce;
     				this.isReduceName = this.isReduceList[this.isReduceId].name;
@@ -387,19 +376,11 @@
     				this.storedAmount = res.storedAmount;
     				this.storeActive = res.storeActive;
 
-
-    				// 用户消费
-    				this.isConsumptionId = res.isConsumption;
+				// 用户消费
+				this.isConsumptionId = res.isConsumption;
     				this.isConsumptionName = this.isConsumptionList[this.isConsumptionId].name;
     				this.consumptionAmount = res.consumptionAmount;
     				this.consumptionActive = res.consumptionActive;
-
-
-    				if (res.consumptionAmount && res.consumptionActive == '') {
-    					this.isConsumptionId = 0;
-    					this.consumptionAmount = '0';
-    					this.consumptionActive = '0';
-    				}
 
     				// 积分商城
     				if (res.integralMallActive && res.integralMallActive != '') {
@@ -408,25 +389,13 @@
     					this.integralMallActiveName = this.integralMallActiveList[this.integralMallActiveId].name;
     				}
 
-    				if (res.integralMallActive && res.integralMallActive == '') {
-    					this.integralMallActiveId = 0;
-    				}
-
-    				// this.integralMallActive = res.integralMallActive;
-
-    				// 系统任务
-    				if (res.taskActive && res.taskActive != '') {
-    					this.taskActive = res.taskActive;
-    					this.taskActiveId = 1;
-    					this.taskActiveName = this.taskActiveList[this.taskActiveId].name;
-    				}
-
-    				if (res.taskActive && res.taskActive == '') {
-    					this.taskActiveId = 0;
-    				}
-
-    				// this.taskActive = res.taskActive;
-
+				// 系统任务
+				if (res.taskActive && res.taskActive != '') {
+					this.taskActive = res.taskActive;
+					this.taskActiveId = 1;
+					this.taskActiveName = this.taskActiveList[this.taskActiveId].name;
+				} 
+					
     				if (res.gids != '' || res.pids != '') {
     					this.goodsActive = res.goodsActive;
     					this.goodsBtnId = 1;
@@ -438,12 +407,9 @@
     						this.selectPackages = res.pids.split(',');
     					}
     				}
-    				// this.gids= res.gids.id;
-    				// this.pids= res.pids.id;
-    				// this.goodsActive= res.goodsActive;
-				this.activeDesc = res.activeDesc;
-			}
-			return true; 
+    				this.activeDesc = res.activeDesc;
+    			}
+    			return true;
     		}
     	},
     	mounted() {
