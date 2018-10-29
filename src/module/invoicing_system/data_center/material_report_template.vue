@@ -1,0 +1,197 @@
+<template>
+    <div class="box">
+        <select-material></select-material>
+        
+        <el-table :data="tableData"  
+            v-loading="bool" 
+            element-loading-text="加载中,请稍后..."
+            stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
+            <el-table-column  min-width="80px"  label="序号" >
+                <span slot-scope="{row,column,$index}" >
+                    {{$index+1}}
+                </span>
+            </el-table-column>
+            <el-table-column  min-width="180px"  label="报表模板名称" prop="name">
+            </el-table-column>
+
+            <el-table-column  min-width="150px"  label="创建人" prop="createUser">
+            </el-table-column>
+
+            <el-table-column  min-width="150px"  label="创建时间" prop="createTime">
+            </el-table-column>
+
+            <el-table-column  min-width="320px"  label="操作" >
+                <span slot-scope="{row,column,$index}" >
+                    <span class="operation" @click="clickOperation('edit',row,$index)">编辑</span>
+                    <span class="operation" @click="clickOperation('delete',row,$index)">删除</span>
+                    <span class="operation" @click="clickOperation('generator',row,$index)">生成报表</span>
+                    <span class="operation" @click="clickOperation('view',row,$index)">查看已生成报表</span>
+                </span>
+            </el-table-column>
+        </el-table>
+    </div>
+</template>
+<style lang='less' scoped>
+    .box{
+        padding-top:15px;
+    }
+
+    .operation{
+        color:#E1BB4A;
+        padding-right:15px;
+        height:30px;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+    }
+</style>
+<script>
+/*
+    接口:
+    获取报表模板列表:templateGetReportTemplates
+    删除自定义报表模板:templateDeleteReportTemplate
+
+*/
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+import global from 'src/manager/global';
+import http from 'src/manager/http';
+import Timer from 'src/verdor/timer';
+export default {
+    data () {
+        return {
+            bool:false,
+            tableData:[
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+            ],
+        };
+    },
+    methods: {
+        clickOperation(sym,row,index){
+            let {id,name} = row;
+            switch(sym){
+                case 'edit':
+                    break;
+                case 'delete':
+                    this.delTemplate(id,index);
+                    break;                
+                case 'generator':
+                    break;                
+                case 'view':
+                    this.$router.push({path:'/admin/dataCenter/finishedReport',query:{tempName:name,tempId:id}});
+                    break;                
+
+            }
+
+        },
+        //删除模板
+        delTemplate(id,index){
+            this.$confirm('确认删除该模板?', '操作提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.getHttp('templateDeleteReportTemplate',{id}).then((res)=>{
+                    this.tableData.splice(index,1);
+                });
+            }).catch(() => {
+                console.log('cancel');
+            });
+        },
+
+
+        //获取模板列表
+        async getTemplateList(){
+            let tableData = [];
+            tableData = await this.getHttp('templateGetReportTemplates');
+            if(Array.isArray(tableData)){
+                this.tableData = this.changeTableAttr(this.tableData);
+                this.initTableData(this.tableData);
+            }
+        },
+        initTableData(table){
+            for(let ele of table){
+                ele.createTime = this.generatorDate(ele.createTime * 1000).str;
+            }
+        },
+        //前后台字段转换
+        changeTableAttr(table){
+            let arr = [];
+            let count = 1;
+            for(let ele of table){
+                let temp = {
+                    id:count++,
+                    name:'模板名',
+                    createUser:'创建人',
+                    createTime: parseInt(Date.now() / 1000)
+                };
+                arr.push(temp);
+            }
+            return arr;
+        },
+        initBtn(){
+            this.$store.commit('setPageTools',[
+                {
+                    name: '新增报表模板',
+                    type:'4',
+                    className:'primary',
+                    fn:()=>{
+                        
+                    }
+                },
+            ]);
+        },
+        //生成时间对象
+		generatorDate(time){
+			//生成日期对象
+			let date = {};
+			if(!time){
+				time = new Date();
+			}else if(typeof time == 'number' || typeof time == 'string'){
+				time = Number(time);
+				time = new Date(time);
+			}
+			date = {
+				year: time.getFullYear(),
+				month: time.getMonth(),
+				day: time.getDate(),
+				hour: time.getHours(),
+				minute: time.getMinutes(),
+				second:time.getSeconds(),
+				week:0,
+				str:'',
+                time:'',
+                dateTime:'',          
+			}
+			let {year,month,day,hour,minute} = date;
+            month += 1;
+			hour = hour > 9 ? hour : '0'+hour;
+			minute = minute > 9 ? minute : '0'+minute;
+            date.time = `${hour}:${minute}`;
+            date.dateTime = `${year}-${month}-${day}`;
+			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
+			return date;
+		},
+		async getHttp(url,obj={},err=false){
+			let res = await http[url]({data:obj},err);
+			return res;
+        },
+    },
+    mounted(){
+        this.initBtn();
+        this.getTemplateList();
+
+    },
+    components:{
+        selectMaterial:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
+    }
+};
+</script>
