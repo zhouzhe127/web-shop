@@ -103,7 +103,7 @@
 		</div>
 		<!-- 购买指定商品 -->
 		<div class="specifyBtn">
-			<div class="box" style='width:130px;margin-left:120px;'>购买指定商品</div>
+			<div class="box" style='width:130px;margin-left:90px;'>购买指定商品</div>
 			<div class="pic">
 				<el-radio-group v-model="goodsBtnName">
 					<el-radio v-for="(item,index) in goodsBtnList" :key="index" :label="item.name" border @change.native="goodsBtnPic(item)"></el-radio>
@@ -306,27 +306,27 @@
     			}
     		},
     		checkData() {
-    			if (this.isReduceId == 1 && (this.days == '' || this.reduceActive == '')) {
+    			if (this.isReduceId == 1 && (this.days == '' || this.reduceActive == '') || (this.days == '0' || this.reduceActive == '0')) { 
     				this.valiData('天数或者活跃值不能为空或者0');
     				return false;
     			}
 
-    			if (this.isStoredId == 1 && (this.storedAmount == '' || this.storeActive == '')) {
+    			if (this.isStoredId == 1 && (this.storedAmount == '' || this.storeActive == '') || (this.storedAmount == '0' || this.storeActive == '0')) {
     				this.valiData('储值比例值不能为空或者0');
     				return false;
     			}
 
-    			if (this.isConsumptionId == 1 && (this.storedAmount == '' || this.consumptionActive == '')) {
+    			if (this.isConsumptionId == 1 && (this.storedAmount == '' || this.consumptionActive == '')||(this.storedAmount == '0' || this.consumptionActive == '0')) {
     				this.valiData('消费比例值不能为空或者0');
     				return false;
     			}
     			// 积分商城兑换
-    			if (this.integralMallActiveId == 1 && this.integralMallActive == '') {
+    			if (this.integralMallActiveId == 1 && (this.integralMallActive == ''||this.integralMallActive == '0')) {
     				this.valiData('积分商城兑换获得活跃值不能为空或者0');
     				return false;
     			}
 
-    			if (this.taskActiveId == 1 && this.taskActive == '') {
+    			if (this.taskActiveId == 1 && (this.taskActive == '' ||this.taskActive == '0') ) {
     				this.valiData('任务系统获得活跃值不能为空或者0');
     				return false;
     			}
@@ -336,7 +336,7 @@
     				return false;
     			}
 
-    			if (this.goodsBtnId == 1 && this.goodsActive == '') {
+    			if (this.goodsBtnId == 1 && (this.goodsActive == '' || this.goodsActive == '0')) {
     				this.valiData('指定商品获得活跃值不能为空或者0');
     				return false;
     			}
