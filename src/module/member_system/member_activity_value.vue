@@ -35,7 +35,7 @@
 				</div>
 			</section>
 		</div>
-		<div class="reduce" style='display:block;float:left;width:100%;line-height:40px;margin-left:140px;margin-bottom:20px;'
+		<div class="reduce" style='display:block;float:left;width:100%;line-height:40px;margin-left:120px;margin-bottom:20px;'
 		 v-if="isReduceId == 1">
 			<span>用户在&nbsp;<el-input v-model="days" placeholder="请输入数字1~99" maxlength="2" style='width:135px' onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>&nbsp;
 				天之内，没有消费行为。降低&nbsp;<el-input v-model="reduceActive" placeholder="请输入数字1~99" style='width:135px' maxlength="2"
@@ -336,16 +336,17 @@
     				return false;
     			}
 
-    			if (this.goodsBtnId == 1 && (this.goodsActive == '' || this.goodsActive == '0')) {
-    				this.valiData('指定商品获得活跃值不能为空或者0');
-    				return false;
-    			}
+			if (this.goodsBtnId == 1 && (this.goodsActive == '' || this.goodsActive == '0')) {
+				this.valiData('指定商品获得活跃值不能为空或者0');
+				return false;
+			}
+                
 
-
-    			if (this.activeDesc.length > 200) {
-    				this.valiData('文字说明字数不能大于200');
-    				return false;
-    			}
+			if (this.activeDesc.length > 200) {
+				this.valiData('文字说明字数不能大于200');
+				return false;
+			}
+                
 
     			return true;
     		},
