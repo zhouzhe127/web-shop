@@ -142,7 +142,7 @@
 				// 		break;
 				// 	}
 				// }
-				console.log('多选');
+				//console.log('多选');
 				for (let i = 0; i < res.length; i++) {
 					this.$set(res[i], 'selected', false);
 					if (this.shopIds.includes(res[i].id)) {

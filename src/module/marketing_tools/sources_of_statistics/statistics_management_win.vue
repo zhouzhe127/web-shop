@@ -13,9 +13,7 @@
 				<section v-if="types == 'edit'">
 					<div class="name" style="padding-top:20px;padding-left: 20px;">
 						<span class="required " style="margin-right: 20px;">来源名称 </span>
-
-						<input type="text" maxlength="16" class="input" style="width: 335px;line-height:40px;" placeholder="输入名称" v-model="sname"
-						/>
+						<input type="text" maxlength="16" class="input" style="width: 335px;line-height:40px;" placeholder="输入名称" v-model="sname" />
 					</div>
 					<div class="code-operation" style="margin: 20px 0;padding-left: 20px;">
 						二维码：
@@ -28,16 +26,14 @@
 				<section v-if="types == 'add'">
 					<div class="name" style="padding: 80px 0 80px 20px;height:350px">
 						<span class="required " style="margin-right: 20px;">来源名称</span>
-						<input type="text" maxlength="16" class="input" style="width: 335px;" placeholder="输入名称" v-model="sname"
-						/>
+						<input type="text" maxlength="16" class="input" style="width: 335px;" placeholder="输入名称" v-model="sname" />
 					</div>
 				</section>
 			</div>
 		</div>
 	</win>
 </template>
-
-<script>
+<script type="text/javascript">
 	import win from 'src/components/win.vue';
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
@@ -99,7 +95,7 @@
 			}
 		},
 		methods: {
-			statisticsManagementWin: function (res) {
+			statisticsManagementWin: function(res) {
 				let item = {};
 				item.name = this.sname;
 				item.imageUrl = this.simgUrl;
