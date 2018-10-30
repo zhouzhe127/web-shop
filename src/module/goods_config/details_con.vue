@@ -155,9 +155,9 @@
 							<span v-if="ischain=='0'||ischain=='3'" @click="openAddWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.goodsName}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column fixed min-width="100" show-overflow-tooltip align="center" prop="goodCode" label="编码">
+					<el-table-column fixed min-width="100" show-overflow-tooltip align="center" prop="goodsCode" label="编码">
 						<template slot-scope="scope">
-							<span>{{scope.row.categoryCode}}-{{scope.row.goodCode}}</span>
+							<span>{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
