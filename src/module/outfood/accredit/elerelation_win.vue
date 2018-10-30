@@ -1,225 +1,289 @@
 <template>
-	<win :width="width" :height="height" @winEvent="winEvent" :align="'center'">
-		<span slot="title">{{title}}</span>
-		<div id="tan" slot="content" slot-scope="props" style="height:100%">
-			<section id="getGoods" style="padding: 20px;">
-				<section>
-					<section class="search fr" style="margin-right: 20px;">
-						<input type="text" placeholder="请输入名称" class="search-input" v-on:keyup="keyUp" v-model="search" />
-						<a href="javascript:void(0);" v-on:click="keyUp" class="search-btn" style="background-color:#29A7E1;"></a>
-					</section>
-					<section class="place fl">
-						<section class="class-Parent">
-							<template v-for="(item,i) in category">
-								<span v-if="item.id == L1ID" :key="i" class="on" v-on:click="changeL1ID(item.id,i)">{{item.name}}</span>
-								<span v-else :key="i" v-on:click="changeL1ID(item.id,i)">{{item.name}}</span>
-							</template>
-						</section>
-						<section class="class-Child">
-							<template v-if="child.length > 0 " v-for="(item,i) in child">
-								<span v-if="item.id == L2ID" :key="i" v-on:click="changeL2ID(item.id)" class="second-on">{{item.name}}</span>
-								<span v-else v-on:click="changeL2ID(item.id)" :key="i">{{item.name}}</span>
-							</template>
-						</section>
-					</section>
-					<section class="fl" style="width: 100%;height: auto;margin-bottom: 10px;">
-						<a href="javascript:void(0)" class="allsome">全部</a>
-					</section>
-				</section>
-				<section class="comList" v-if="selectgoods.length>0">
-					<mul-select @selOn="listChange" :styles="{backgroundColor: '#F1F1F1'}" :list="selectgoods" :name="'goodsName'"
-					 :isradio="true" :selects="goodsIndex" :keys="'id'"></mul-select>
-				</section>
-				<section class="place fl">
-					<span class="on">固定套餐</span>
-				</section>
-				<section class="fl" style="width: 100%;height: auto;margin-bottom: 10px;">
-					<a href="javascript:void(0)" class="allsome">全部</a>
-				</section>
-				<section class="comList" v-if="fixed.length>0">
-					<mul-select @selOn="packChange" :styles="{backgroundColor: '#F1F1F1'}" :list="fixed" :name="'packageName'"
-					 :isradio="true" :selects="fixedIndex" :keys="'id'"></mul-select>
-				</section>
-			</section>
+	<el-dialog title="关联商品" :visible.sync="dialogVisible" width="70%" :before-close="close">
+		<div class="content">
+			<div class="teb">
+				<el-radio-group v-model="tabactive" fill="#e1bb4a" size="medium">
+					<el-radio-button v-for="(item,index) in tebData" :key="index" plain :label="index">{{item}}</el-radio-button>
+				</el-radio-group>
+			</div>
+			<div class="sleType" v-if="tabactive==0">
+				<el-cascader :options="cataList" :props="{value:'id',label:'name',children:'child'}" expand-trigger="hover"
+				 :placeholder="'请选择分类'" v-model="sleCate" @change="getDrop" change-on-select></el-cascader>
+			</div>
+			<div class="searchBtn">
+				<el-input placeholder="请输入名称/简码" @change="keyUp" v-model="search" class="input-with-select">
+					<el-button slot="append" icon="el-icon-search" @click="keyUp"></el-button>
+				</el-input>
+			</div>
 		</div>
-	</win>
+		<ul class="aUl">
+			<template v-if="allGood||tabactive==1">
+				<div v-if="tabactive!=1">
+					<el-radio v-for="(item,i) in goodsCom" style="margin-top:10px" :class="{'setStyle':i==0}" v-model="selected" :key="i"
+					 :label="item.id" border>{{item.goodsName}}</el-radio>
+				</div>
+				<div v-else>
+					<el-radio v-for="(item,i) in packCom" style="margin-top:10px" :class="{'setStyle':i==0}" v-model="selected" :key="i+'a'" :label="item.id"
+					 border>{{item.packageName}}</el-radio>
+				</div>
+				<div class="showText" v-if="(tabactive!=1&&goodsCom.length==0)||(tabactive!=0&&packCom.length==0)">
+					<span>------------未搜索到该商品------------</span>
+				</div>
+			</template>
+			<template v-if="!allGood&&tabactive!=1">
+				<div class="onecate" v-if="item.list&&item.list.length > 0" v-for="(item,i) in cateListData" :key="i"
+				 style="">
+					<div class="oneTitle">
+						<i :class="{'onebuke':item.cateOne}"></i>
+						<span>{{item.catename}}</span>
+					</div>
+					<div class="oneContent">
+						<el-radio v-for="(cates,index) in item.list" :class="{'setStyle':i==0}" style="margin-top:10px" v-model="selected" :key="index+'a'" :label="cates.id"
+						 border>{{cates.goodsName}}</el-radio>
+					</div>
+				</div>
+				<div class="showText" v-if="cateListData.length==0">
+					<span>------------未搜索到商品------------</span>
+				</div>
+			</template>
+		</ul>
+		<div slot="footer" class="dialog-footer">
+			<span style="float: left;color: #E1BB4A;">已选择：{{getGoodsName}}</span>
+			<el-button @click="close">取 消</el-button>
+			<el-button type="primary" @click="winEvent">确 定</el-button>
+		</div>
+	</el-dialog>
 </template>
 <script>
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
+	import http from 'src/manager/http';
 	export default {
 		data() {
 			return {
-				L1ID: 0,
-				L2ID: 0,
-				category: [],
-				child: [],
-				selectgoods: [], //显示的菜品
-				goodsCom: [], //所有菜品
-				goodsIndex: [], //选中的菜品id
-				search: '', //商品搜索名
-				goodsArr: [], //保存选中分类下的商品
-				fixed: [], //固定套餐
-				ispack: false, //判断是不是套餐
-				fixedIndex: [],
-				newfixed: ''
+				dialogVisible: false,
+				tebData: ['商品', '套餐'],
+				tabactive: 0,
+				cataList: [],
+				sleCate: [], //选择的分类
+				search: '',
+				allGood: true, //是否显示所有商品，默认显示
+				goodsCom: [], //需要显示的商品
+				packCom: [], //需要显示的套餐
+				selected: '',
+				oneGoodList: {},
+				cateListData: [],
+				keepCateList:''
 			};
 		},
-		props: ['width', 'height', 'title'],
-		mounted() {
-			this.init();
-			let goodList = storage.session('goodList');
-			if (goodList) {
-				for (let i = 0; i < goodList.length; i++) {
-					//过滤掉称重商品下架商品
-					if (
-						goodList[i].type == 1 ||
-						goodList[i].type == 2 ||
-						goodList[i].status == 2 ||
-						goodList[i].isGroup == 1
-					) {
-						goodList.splice(i, 1);
-						i--;
-					}
-				}
-			}
-			this.goodsCom = goodList;
-			this.goodReady();
-			let packageGoods = storage.session('packageList');
-			for (let i = 0; i < packageGoods.length; i++) {
-				if (packageGoods[i].type == 0 && packageGoods[i].status != 2) {
-					this.fixed.push(packageGoods[i]);
-				}
-			}
-			this.newfixed = utils.deepCopy(this.fixed);
-		},
+		props: ['showWin','goodList', 'packlist','selgoods'],
 		methods: {
-			async init() {
-				let data = await http.getCategoryList({
-					data: {}
+			//获取分类列表名称
+			async getOneAreaList() {
+				let data = await http.getCategoryList();
+				console.log(data);
+				data.map(v=>{
+					if(v.child&&v.child.length>0){
+						v.child.map(s=>{
+							if(s.child){
+								delete s.child;
+							}
+						});
+					}
 				});
-				this.category = data;
-				this.category.unshift({
-					name: '全部',
-					id: 0
-				});
+				this.cataList = [{
+					id: -1,
+					name: '全部'
+				}, ...data];
 			},
-			listChange(id) {
-				this.ispack = false;
-				this.goodsIndex = id;
-			},
-			packChange(id) {
-				this.ispack = true;
-				this.fixedIndex = id;
-			},
-			keyUp: function () {
-				this.search = this.search.toUpperCase();
-				this.searchGoods();
-			},
-			//选中的分类
-			changeL1ID: function (id, i) {
-				this.L1ID = id;
-				this.L2ID = 0;
-				this.child = this.category[i].child ? this.category[i].child : [];
-				this.goodReady(id);
-			},
-			//选中的菜品
-			changeL2ID: function (id) {
-				this.L2ID = id;
-				this.goodReady(id);
-			},
-			incategory: function (cids) {
-				if (this.L1ID == 0) return true;
-				if (cids.indexOf(this.L1ID) >= 0 && this.L2ID == 0) {
-					return true;
-				} else if (cids.indexOf(this.L2ID) >= 0) {
-					return true;
+			getDrop(e) {
+				if (e[0] == -1) {
+					this.allGood = true;
+				} else {
+					this.allGood = false;
+					let sleCate = '';
+					for (let item of this.cataList) {
+						if (item.id == e[0]) {
+							sleCate = item;
+							break;
+						}
+					}
+					this.oneGoodList.list = [];
+					this.cateListData = [];
+					if (e.length <= 1) { //只选一级分类
+						this.oneGoodList.list = this.getgoodsBycid(sleCate.id);
+						this.oneGoodList.catename = sleCate.name;
+						this.oneGoodList.cateOne = true;
+						if (sleCate.child && sleCate.child.length > 0) {
+							sleCate.child.forEach(v => {
+								let obj = {};
+								obj.catename = v.name;
+								obj.list = this.getgoodsBycid(v.id);
+								if(obj.list.length>0){
+									this.cateListData.push(obj);
+								}
+							});
+						}
+						if(this.oneGoodList.list.length>0){
+							this.cateListData.unshift(this.oneGoodList);
+						}
+
+					}else{//选二级分类
+						sleCate.child.forEach(v => {
+							let obj = {};
+							if(e[1]==v.id){
+								obj.catename = v.name;
+								obj.list = this.getgoodsBycid(v.id);
+								if(obj.list.length>0){
+									this.cateListData.push(obj);
+								}
+							}
+						});
+					}
+					this.keepCateList = utils.deepCopy(this.cateListData);
 				}
-				return false;
 			},
-			//判断是否为套餐
-			changefix: function (boolean, e) {
-				if (e.target.className == 'sign') {
-					this.ispack = boolean;
-					if (boolean) {
-						this.goodsIndex = [];
-						// this.openTo.splice(this.openTo.indexOf(index), 1);
-					} else {
-						this.fixedIndex = [];
+			getgoodsBycid(cid) {
+				let arr = [];
+				for (let list of this.goodList) {
+					if (cid == list.cids[list.cids.length-1]) {
+						arr.push(list);
 					}
 				}
+				return arr;
 			},
-			//根据选中的分类显示商品
-			goodReady: function (id) {
+			keyUp() {
+				this.search = this.search.toUpperCase();
 				let arr = [];
-				for (let i = 0; i < this.goodsCom.length; i++) {
-					if (id === undefined || id === 0) {
-						let item = utils.deepCopy(this.goodsCom[i]);
-						if (!(item.cids instanceof Array)) {
-							console.log(item.id + ' cids不是数组');
-						} else {
-							if (this.incategory(item.cids)) {
+				if (this.allGood) {
+					let list = this.tabactive == 0 ? this.goodList : this.packlist;
+					arr = this.getgoodsArrbyName(list);
+					this.tabactive == 1 ? this.packCom = arr : this.goodsCom = arr;
+					if (this.search == '') {
+						this.tabactive == 1 ? this.packCom = this.packlist : this.goodsCom = this.goodList;
+					}
+				}else{
+					this.cateListData = utils.deepCopy(this.keepCateList);
+
+					for(let item of this.cateListData){
+						if(item.list&&item.list.length>0){
+							item.list = this.getgoodsArrbyName(item.list);
+							if(item.list.length>0){
 								arr.push(item);
 							}
 						}
-					} else {
-						for (let j = 0; j < this.goodsCom[i].cids.length; j++) {
-							if (this.goodsCom[i].cids[j] == id) {
-								arr.push(this.goodsCom[i]);
-							}
-						}
+					}
+					this.cateListData = arr;
+					if (this.search == '') {
+						this.cateListData = this.keepCateList;
 					}
 				}
-				this.selectgoods = arr;
-				//保存当前分类下的商品，商品搜索需要用到
-				this.goodsArr = arr;
 			},
-
-			//商品搜索
-			searchGoods: function () {
+			getgoodsArrbyName(list){
 				let arr = [];
-				let res = [];
-				for (let i = 0; i < this.goodsCom.length; i++) {
+				for (let i = 0; i < list.length; i++) {
+					let name = this.tabactive == 1 ?
+						list[i].packageName :
+						list[i].goodsName;
 					if (
-						this.goodsCom[i].goodsName.toUpperCase().indexOf(this.search) != -1
+						name.toUpperCase().indexOf(this.search) != -1 ||
+						list[i].BC.indexOf(this.search) != -1
 					) {
-						arr.push(this.goodsCom[i]);
+						arr.push(list[i]);
 					}
 				}
-				for (let i = 0; i < this.newfixed.length; i++) {
-					if (
-						this.newfixed[i].packageName.toUpperCase().indexOf(this.search) != -1
-					) {
-						res.push(this.newfixed[i]);
-					}
-				}
-				if (!this.search) {
-					this.selectgoods = this.goodsArr;
-					this.fixed = utils.deepCopy(this.newfixed);
-				} else {
-					this.selectgoods = arr;
-					this.fixed = res;
-				}
+				return arr;	
 			},
-			winEvent(str) {
-				this.$emit('relationEvent', str);
+			winEvent() {
+				// this.dialogVisible = false;
+				this.$emit('relationEvent', {selected:this.selected,isPackage:this.tabactive});
+			},
+			close(){
+				this.$emit('relationEvent', false);
 			}
 		},
-		components: {
-			win: () =>
-				import( /*webpackChunkName: "win"*/ 'src/components/win'),
-			mulSelect: () =>
-				import( /*webpackChunkName: "mul_select"*/ 'src/components/mul_select')
+		created() {
+			setTimeout(()=>{
+				this.goodsCom = utils.deepCopy(this.goodList);
+			});
+		},
+		mounted() {
+			this.selected = this.selgoods;
+			this.dialogVisible = this.showWin;
+			this.packCom = utils.deepCopy(this.packlist);
+			this.getOneAreaList();
+		},
+		components: {},
+		computed: {
+			getGoodsName() {
+				return this.$parent.getGoodsName(this.selected, this.tabactive);
+			}
 		}
 	};
 </script>
-<style scoped>
-	.comList {
+<style lang='less' scoped>
+	.content {
+		.teb {
+			display: inline-block;
+			margin-right: 20px;
+		}
+
+		.sleType {
+			width: 170px;
+			display: inline-block;
+		}
+
+		.searchBtn {
+			width: 200px;
+			float: right;
+		}
+	}
+
+	.aUl {
+		height: 4.5rem;
+		overflow: auto;
 		width: 100%;
 	}
 
-	#getGoods .comList .selectbtns {
-		width: 100%;
+	.showText {
+		text-align: center;
+		color: #ff8c01;
+		margin-top: 10px;
 	}
+
+	.onecate {
+		width: 100%;
+		border-bottom: 1px solid #e3e3e3;
+		overflow: hidden;
+		.oneTitle {
+			float: left;
+			width: 20%;
+
+			i {
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				background-color: #9f9f9f;
+				margin: 20px 10px;
+			}
+			.onebuke{
+				background-color: #ff8c01;
+			}
+			span {
+				display: inline-block;
+				width: 60%;
+				margin-top: 20px;
+				vertical-align: top;
+				word-break: break-all;
+			}
+		}
+		.oneContent {
+			float: left;
+			width: 80%;
+			margin-bottom: 20px;
+		}
+		
+	}
+	.setStyle{
+			margin-left: 10px;
+		}
 </style>
