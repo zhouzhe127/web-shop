@@ -13,7 +13,7 @@
 			<span>创建时间</span>
 
 			<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-			 value-format="timestamp" :clearable="false">
+			 value-format="timestamp">
 			</el-date-picker>
 			<!-- <el-date-picker
 			v-model="valueTime"
@@ -43,17 +43,14 @@
 			</el-radio-group>
 		</div>
 
-		<!-- 列表(当前商品) -->
-		 <!-- v-if="typeId = 0" -->
+		<!-- 列表(当前商品) --> 
 		<com-table :listHeight='80' :listName="'疯抢商品列表'" :showHand="false" :key="index" :listWidth="1436" :introData="goodslist"
-		 :titleData="titleList" :widthType='true'>
-			<div slot="con-0" slot-scope="props" class="btnLink">
+		 :titleData="titleList" :widthType='true' v-if="typeId == 0">
+			<div slot="con-0" slot-scope="props" class="btnLink" >
 				<a href="javascript:;" @click="addNewGoods(props.data,'edi')">编辑</a>
 				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a>
 			</div>
-            <!-- <div slot="con-0" slot-scope="props" class="btnLink" v-if= "typeId == 1">
-				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a> 
-            </div> -->
+			 
 			<div slot="con-1" slot-scope="props" :class="props.data.status == '1' ? '' : props.data.status == '0' ? 'start':'end' ">{{statusType[props.data.status]}}</div>
 			<div slot="con-3" slot-scope="props">
 				<img style="height:80px;" v-bind:src="uploadUrl  + props.data.listImage" />
@@ -64,6 +61,19 @@
 			<div slot="con-8" slot-scope="props">{{transFormDates(props.data.createTime)}}</div>
 		</com-table>
 
+
+		<!-- 列表(历史商品) -->  
+		<com-table :listHeight='80' :listName="'疯抢商品列表'" :showHand="false" :key="index" :listWidth="1436" :introData="goodslist"
+		 :titleData="resetList" :widthType='true' v-else>
+			<div slot="con-0" slot-scope="props" class="btnLink" > 
+				<span @click="addNewGoods(props.data,'edi')">重新上架</span>
+			</div> 
+			<div slot="con-2" slot-scope="props">
+				<img style="height:80px;" v-bind:src="uploadUrl  + props.data.listImage" />
+			</div>
+			<div slot="con-4" slot-scope="props">￥{{props.data.price}}</div> 
+			<div slot="con-3" slot-scope="props">{{transFormDates(props.data.createTime)}}</div>
+		</com-table>
 
 		<!-- 翻页 -->
 		<section class="turn-page">
@@ -179,7 +189,46 @@
 						}
 					},
 				],
-				valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+				// reset:'重新上架',
+				resetList: [
+					{
+						titleName: '操作',
+						titleStyle: {
+							fontSize: 16 + 'px',
+							width: 244 + 'px',
+							flex: 'none'
+						}
+					}, 
+					{
+						titleName: '名称',
+						dataName: 'name',
+						titleStyle: {
+							fontSize: 16 + 'px',
+							width: 129 + 'px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '列表图',
+						titleStyle: {
+							fontSize: 16 + 'px',
+							width: 129 + 'px',
+							flex: 'none'
+						}
+					}, 
+					{
+						titleName: '创建时间',
+						dataName: 'createTime',
+						titleStyle: {
+							fontSize: 16 + 'px',
+							width: 287 + 'px',
+							flex: 'none'
+						}
+					},
+				],
+				createTime:'',
+				// valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+				valueTime:'',
 				startTime: '',
 				endTime: '',
 				searchList: [
@@ -430,6 +479,11 @@
 	#spikingCommodity .btnLink a:nth-child(2) {
 		color: #28a8e0;
 	}
+
+	#spikingCommodity .btnLink span{
+		color: #28a8e0;
+	}
+
 
 	#spikingCommodity .turn-page {
 		margin: 10px 0 30px 0;
