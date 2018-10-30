@@ -241,7 +241,7 @@ export default {
 				return this.multiple;
 			},
 			set(newValue) {
-				this.multiple = newValue.replace(/[^\d]/g, '');
+				this.multiple = newValue.replace(/[^\d.]/g, '');
 			}
 		}
 	},
