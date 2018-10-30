@@ -11,7 +11,7 @@
 			<!--日期选择和搜索框-->
 			<div class="date">
 				<!--日期选择和搜索框-->
-				<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false" @change="chooseTime">
+				<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
 				</el-date-picker>
 			</div>
 			<!-- 第二行 -->

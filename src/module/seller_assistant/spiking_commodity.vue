@@ -11,10 +11,18 @@
 
 		<div class="search">
 			<span>创建时间</span>
-			
-			<el-date-picker v-model="searchTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+
+			<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
 			 value-format="timestamp" :clearable="false">
 			</el-date-picker>
+			<!-- <el-date-picker
+			v-model="valueTime"
+			type="datetimerange"
+			range-separator="至"
+			start-placeholder="开始日期"
+			end-placeholder="结束日期" 
+			>
+			</el-date-picker> -->
 
 			<span>关键字</span>
 			<el-input v-model="goodsName" type="" name="" placeholder="请输入商品名称" style="width:200px"></el-input>
@@ -31,19 +39,21 @@
 		<!-- 当前商品、历史商品 -->
 		<div class="searchList">
 			<el-radio-group v-model="searchName">
-				<el-radio v-for="(item,index) in searchList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
-				<!-- <el-radio border >当前商品</el-radio>
-                <el-radio border >历史商品</el-radio> -->
+				<el-radio-button v-for="(item,index) in searchList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio-button>
 			</el-radio-group>
 		</div>
 
-		<!-- 列表 -->
+		<!-- 列表(当前商品) -->
+		 <!-- v-if="typeId = 0" -->
 		<com-table :listHeight='80' :listName="'疯抢商品列表'" :showHand="false" :key="index" :listWidth="1436" :introData="goodslist"
 		 :titleData="titleList" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="btnLink">
 				<a href="javascript:;" @click="addNewGoods(props.data,'edi')">编辑</a>
 				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a>
 			</div>
+            <!-- <div slot="con-0" slot-scope="props" class="btnLink" v-if= "typeId == 1">
+				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a> 
+            </div> -->
 			<div slot="con-1" slot-scope="props" :class="props.data.status == '1' ? '' : props.data.status == '0' ? 'start':'end' ">{{statusType[props.data.status]}}</div>
 			<div slot="con-3" slot-scope="props">
 				<img style="height:80px;" v-bind:src="uploadUrl  + props.data.listImage" />
@@ -53,6 +63,8 @@
 			<div slot="con-7" slot-scope="props">{{props.data.stock - props.data.spareStock}}</div>
 			<div slot="con-8" slot-scope="props">{{transFormDates(props.data.createTime)}}</div>
 		</com-table>
+
+
 		<!-- 翻页 -->
 		<section class="turn-page">
 			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]"
@@ -62,7 +74,8 @@
 </template>
 <script>
 	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
+	import storage from 'src/verdor/storage'; 
+
 
 	export default {
 		data() {
@@ -166,7 +179,7 @@
 						}
 					},
 				],
-				searchTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+				valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 				startTime: '',
 				endTime: '',
 				searchList: [
@@ -178,6 +191,7 @@
 						'name': '历史商品'
 					}
 				],
+				typeId:0,
 				searchName: '当前商品',
 			};
 		},
@@ -191,7 +205,8 @@
 				this.endTime = (new Date(receiveTime)).getTime(); //毫秒
 			},
 			clicktheRadio: function (item) {
-				this.type.index = item.type;
+				this.typeId = item.type;
+				this.getcommodity();
 			},
 			async addNewGoods(item, type) {
 				if (type == 'edi') {
@@ -201,8 +216,7 @@
 						if (item.id == this.shopstock[i].goodsId) {
 							allshopstock.push(this.shopstock[i]);
 						}
-					}
-
+					} 
 					storage.session('shopstock', allshopstock);
 					await this.getGoodsImages(item.id);
 					let shufflingimg = []; //轮播图
@@ -234,30 +248,22 @@
 			async getcommodity() { //获取商品列表
 				let data = await http.getcommodities({
 					data: {
-						page: this.page,
-						num: this.num,
-						goodsName: this.goodsName
+						startTime: parseInt(this.valueTime[0] / 1000), //开始时间
+						endTime: parseInt(this.valueTime[1] / 1000), //结束时间 
+						goodsName:this.goodsName,//关键字
+						type:this.typeId, //0当期商品 1配置商品
+						page: this.page, //请求的页数
+						num: this.num, //请求的数据的条数
 					}
 				});
 
 				this.goodslist = data.goodsList; //获取列表
+				this.goodslist = data.list; //获取列表
+
 				this.pageNum = data.total;
 				this.count = data.count;
-				this.getList();
 
-			},
-
-			async getList() {
-				await http.getList({
-					data: {
-						startTime: parseInt(this.valueTime[0] / 1000), //开始时间
-						endTime: parseInt(this.valueTime[1] / 1000), //结束时间 
-						goodsName:this.goodsName,
-						type:this.type,
-					}
-				});
-			},
-
+			}, 
 
 			changeFormat: function (t) {
 				t -= 0;
