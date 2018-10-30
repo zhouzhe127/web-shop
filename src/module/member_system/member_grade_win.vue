@@ -53,13 +53,12 @@
 						</div>
 					</div>
 					<!-- 升级规则 -->
-					<div class="win-box">
-						<span class="fl required">升级规则</span>
-						<span style="width: 200px;">
+					<div class="win-box" v-if="memberInfo && memberInfo.status != '2'">
+						<span class="fl required">升级规则</span> 
+						<span style="width: 200px;" >
 							升至下一级所需活跃值 
-							<input type="text" maxlength="5" v-model="totalCharges" @blur="formatValue('1')">
+							<input type="text" maxlength="5" v-model="activeValues" @blur="formatValue('1')">
 						</span>
-						
 					</div>
 
 					<!-- <div class="win-box" v-if="memberInfo && memberInfo.status != '2'">
@@ -68,7 +67,7 @@
 							<on-off @statusChange="(val)=> isNext = val" :status="isNext"></on-off>
 						</div>
 						<span class="fl" v-if="isNext == true">升级金额</span>
-						<input type="text" @blur="formatValue('1')" placeholder="请输入充值累计金额" v-model="totalCharges" v-if="isNext == true" maxlength="8" class="fl" />
+						<input type="text" @blur="formatValue('1')" placeholder="请输入充值累计金额" v-model="activeValues" v-if="isNext == true" maxlength="8" class="fl" />
 					</div> -->
                        
 					<div class="win-box">
@@ -94,10 +93,10 @@
 					</div>
                     
                      <!-- v-if="isNext == true" -->
-					<div class="win-box" v-if="memberInfo && memberInfo.status == '2'">
+					<div class="win-box" v-if="memberInfo && memberInfo.status == '2'"  >
 						<span class="fl">享有会员价</span>
 						<div class="win-toggle fl">
-							<on-off @statusChange="(val)=> memberPrice = val" :status="memberPrice"></on-off>
+							<on-off @statusChange="(val)=> memberPrice = val" :status="memberPrice"> </on-off>
 						</div>
 					</div> 
 
@@ -138,7 +137,7 @@ export default {
 		return {
 			gradeName: '', // 会员等级名称
 			discount: '', // 折扣
-			totalCharge: '', // 升级金额
+			activeValue: '', // 升级金额
 			isDiscount: false, // 是否开启折扣
 			isService: false, //是否开启免服务费
 			isNext: false, //下个等级
@@ -205,12 +204,12 @@ export default {
 				};
 			}
 		},
-		totalCharges: {
+		activeValues: {
 			get() {
-				return this.totalCharge;
+				return this.activeValue;
 			},
 			set(newValue) {
-				this.totalCharge = newValue.replace(/[^\d]/g, '');
+				this.activeValue = newValue.replace(/[^\d]/g, '');
 			}
 		},
 		discounts: {
@@ -250,7 +249,7 @@ export default {
 		formatValue(type) {
 			switch (type) {
 				case '1':
-					this.totalCharge = utils.toFloatStr(this.totalCharge, 2);
+					this.activeValue = utils.toFloatStr(this.activeValue, 2);
 					break;
 				case '4':
 					this.multiple = utils.toFloatStr(this.multiple, 2);
@@ -332,7 +331,7 @@ export default {
 						return false;
 					}
 				}
-				if (this.isNext == true && this.totalCharge.length <= 0) {
+				if (this.isNext == true && this.activeValue.length <= 0) {
 					this.validata('请输入升级金额！');
 					return false;
 				}
@@ -421,7 +420,7 @@ export default {
 					discount: Number(this.isDiscount) == 0 ? '100' : this.discount,
 					isService: Number(this.isService),
 					isNext: Number(this.isNext),
-					totalCharge: this.totalCharge,
+					activeValue: this.activeValue,
 					nextLevel: this.gradeId,
 					isDefault: Number(this.isDefault),
 					imgName: this.fileName,
@@ -449,7 +448,7 @@ export default {
 		async editLevel() {
 			// 编辑会员等级
 			if (this.ischain == '0' || this.ischain == '3') {
-				if (Number(this.isDefaultVip) == '1' && this.totalCharge != '0.00') {
+				if (Number(this.isDefaultVip) == '1' && this.activeValue != '0.00') {
 					this.validata('默认等级升级金额必须为0');
 					return false;
 				}
@@ -462,7 +461,7 @@ export default {
 						isService: Number(this.isService),
 						isNext: Number(this.isNext),
 						isVipPrice: Number(this.memberPrice), //粉丝享有会员价
-						totalCharge: this.totalCharge,
+						activeValue: this.activeValue,
 						nextLevel: this.gradeId,
 						isDefault: Number(this.isDefault),
 						imgName: this.fileName,
@@ -486,7 +485,7 @@ export default {
 			});
 			this.gradeName = res.name;
 			this.discount = res.discount;
-			this.totalCharge = res.totalCharge;
+			this.activeValue = res.activeValue;
 			this.isDiscount = Boolean(Number(res.isDiscount));
 			this.isService = Boolean(Number(res.isService));
 			this.levelStatus = res.status; //0 粉丝 1 基础卡
