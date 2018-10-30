@@ -17,36 +17,27 @@ export default {
 };
 </script>
 <style lang= "less" scoped>
+#warrant{
+	height: 100%;
+}
 #jumpShop {
 	background: #ededed;
 	/* position: absolute;
 	top: 0;
 	left: 0; */
-	padding-top: 1px;
+	padding: 5%;
+	padding-top: 0;
 	width: 100%;
 	height: 100%;
 	z-index: 100;
 	overflow: auto;
 }
 #warrant #jumpShop .shopBox {
-	width: 1441px;
-	/*height: 796px;*/
+	/* width: 1441px; */
+	height: 90%;
 	margin: 0 auto;
-	margin-top: 60px;
+	margin-top: 3%;
 	z-index: 1000;
-}
-#warrant #jumpShop .shopBox .shopList {
-	width: 100%;
-	height: 700px;
-	background: #ffffff;
-}
-#warrant #jumpShop .shopBox .shopList p {
-	width: 100%;
-	height: 60px;
-	line-height: 60px;
-	font-size: 22px;
-	color: #43414a;
-	text-align: center;
 }
 #warrant .shopBox a {
 	margin-top: 30px;
