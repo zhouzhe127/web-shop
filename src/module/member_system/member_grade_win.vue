@@ -335,6 +335,10 @@ export default {
 					this.validata('请输入升级金额！');
 					return false;
 				}
+				if(this.activeValue > '0' && this.activeValue < '10001'){
+					this.validata('请输入数在1~10000之间！');
+					return false;
+				}
 				if (!this.fileName) {
 					this.validata('请上传图片');
 					return false;
