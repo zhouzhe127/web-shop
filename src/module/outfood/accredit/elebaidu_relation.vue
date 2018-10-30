@@ -94,7 +94,6 @@
 					});
 					this.category = data;
 					//请求分类下的商品
-					console.log(data);
 					this.reqList(this.category.length - 1);
 				} else if (bandtype == 3) {
 					let data = await http.getBaiduGoods({
@@ -105,7 +104,6 @@
 						}
 					});
 					this.mainData = data;
-					console.log(data);
 					this.getSle(0);
 				}
 				//判断是否有关联菜品
@@ -130,7 +128,6 @@
 						}
 					});
 					let goods = data;
-					console.log(data);
 					//给商品列表增加分类名
 					if (goods[0].list.length > 0) {
 						for (let k = 0; k < this.category.length; k++) {
@@ -153,7 +150,6 @@
 						}
 						this.mainData.unshift(goods[0]);
 					}
-					console.log(this.mainData);
 					this.reqList(i - 1);
 				}else{
 					this.getSle(0);
@@ -182,7 +178,7 @@
 				this.showWin = true;
 				this.selected = '';
 				if (item.goodsId) {
-					this.selected = item.goodsId;
+					this.selected =item.isPackage==1?`0${item.goodsId}`:item.goodsId;
 				}
 				this.editItem = item;
 			},
@@ -275,7 +271,6 @@
 			relation: () =>
 				import( /*webpackChunkName: "relation_win"*/ 'src/module/outfood/accredit/elerelation_win')
 		},
-		computed: {}
 	};
 </script>
 <style lang='less' scoped>

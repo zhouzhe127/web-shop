@@ -163,7 +163,6 @@
 					}
 				}else{
 					this.cateListData = utils.deepCopy(this.keepCateList);
-
 					for(let item of this.cateListData){
 						if(item.list&&item.list.length>0){
 							item.list = this.getgoodsArrbyName(item.list);
@@ -194,8 +193,13 @@
 				return arr;	
 			},
 			winEvent() {
-				// this.dialogVisible = false;
-				this.$emit('relationEvent', {selected:this.selected,isPackage:this.tabactive});
+				let isPackage = 0;
+				let sendSle = this.selected;
+				if(this.selected.charAt(0)==0){
+					isPackage = 1;
+					sendSle = this.selected.substr(1,this.selected.length-1);
+				}
+				this.$emit('relationEvent', {selected:sendSle,isPackage:isPackage});
 			},
 			close(){
 				this.$emit('relationEvent', false);
@@ -210,12 +214,20 @@
 			this.selected = this.selgoods;
 			this.dialogVisible = this.showWin;
 			this.packCom = utils.deepCopy(this.packlist);
+			this.packCom.map(v=>{
+				v.id = `0${v.id}`;
+			});
 			this.getOneAreaList();
 		},
-		components: {},
 		computed: {
 			getGoodsName() {
-				return this.$parent.getGoodsName(this.selected, this.tabactive);
+				let isPackage = 0;
+				let sendSle = this.selected;
+				if(this.selected.charAt(0)==0){
+					isPackage = 1;
+					sendSle = this.selected.substr(1,this.selected.length-1);
+				}
+				return this.$parent.getGoodsName(sendSle, isPackage);
 			}
 		}
 	};
