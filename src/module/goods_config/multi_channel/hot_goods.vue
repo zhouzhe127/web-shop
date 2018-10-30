@@ -35,7 +35,7 @@
 			</section>
 			<section style="margin-top: 10px;">
 				<div style="float: left">
-					<section class="boxWrap" :style="{backgroundImage:imageH==''?'url(src/res/images/busis.png)':'url('+ imgHost+imageH +')' }">
+					<section class="boxWrap" :style="{backgroundImage:imageH==''?'url(https://cdn.ishandian.com.cn/web/shop/static/images/busis.bf3c2a77.png)':'url('+ imgHost+imageH +')' }">
 						<div v-for="(v,i) in areaList" :key="i" :style="{
 							width: v.width+'px',
 							height: v.height+'px',
@@ -133,7 +133,7 @@ let className = '';
 // 用于document的事件绑定
 let moveHandle = null;
 let mouseupHandle = null;
-let keyupHandle = null;
+//let keyupHandle = null;
 
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
@@ -196,8 +196,8 @@ export default {
 
 		moveHandle = this.moveHandle.bind(this);
 		mouseupHandle = this.mouseupHandle.bind(this);
-		keyupHandle = this.keyupHandle.bind(this);
-		document.addEventListener('keyup', keyupHandle);
+		//		keyupHandle = this.keyupHandle.bind(this);
+		//		document.addEventListener('keyup', keyupHandle);
 	},
 	methods: {
 		//获取热区商品列表
@@ -727,24 +727,24 @@ export default {
 				isBoundary = box.height != h ? true : isBoundary;
 			}
 			return !isBoundary; // 只要碰到边界就会返回false
-		},
-		keyupHandle(e) {
-			if (e.code == 'Backspace' || e.code == 'Delete') {
-				if (this.selectIndex >= 0) {
-					let box = this.areaList[this.selectIndex];
-					if (!box.isScale && !box.isMove) {
-						this.areaList.splice(this.selectIndex, 1);
-						this.selectIndex = -1;
-					}
-				}
-			}
 		}
+		//		keyupHandle(e) {
+		//			if (e.code == 'Backspace' || e.code == 'Delete') {
+		//				if (this.selectIndex >= 0) {
+		//					let box = this.areaList[this.selectIndex];
+		//					if (!box.isScale && !box.isMove) {
+		//						this.areaList.splice(this.selectIndex, 1);
+		//						this.selectIndex = -1;
+		//					}
+		//				}
+		//			}
+		//		}
 	},
 	destroyed() {
 		// 确保 document 事件一定删除了
 		document.removeEventListener('mousemove', moveHandle);
 		document.removeEventListener('mouseup', mouseupHandle);
-		document.removeEventListener('keyup', keyupHandle);
+		//		document.removeEventListener('keyup', keyupHandle);
 
 		this.$store.commit('setPageTools', []);
 	},
