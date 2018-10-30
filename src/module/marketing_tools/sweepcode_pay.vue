@@ -21,7 +21,11 @@
 			<!-- 门店折扣-->
 			<div class="online-box clearfix">
 				<span class="online-sub fl">门店折扣</span>
-				<onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff>
+				<!-- <onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff> -->
+				<div class="fl" style="height: 40px;line-height: 40px;">
+					<el-switch v-model="payDiscount" active-color="#E1BB4A" inactive-color="#dcdfe6">
+					</el-switch>
+				</div>
 				<div class="fl handle-tips" style="margin-left: 20px;">
 					<i></i> 门店折扣与会员折扣不共享
 				</div>
@@ -30,7 +34,8 @@
 			<div class="online-box clearfix" v-if='payDiscount'>
 				<span class="online-sub fl"></span>
 				<span class="discount">折扣率</span>
-				<input class="discountinp" type="text" v-model="discounts" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')">
+				<!-- <input class="discountinp" type="text" v-model="discounts" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')"> -->
+				<el-input maxlength="3" v-model="discounts" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input>
 				<span class="discount">%</span>
 			</div>
 			<!-- 门店折扣 -->
@@ -45,7 +50,7 @@
 			<!-- 支付方式 -->
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">支付方式</span>
-				<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{width:'100px',backgroundColor:'#fff',marginRight:'8px'}" :name='"name"' :key='"id"'></mulSelect>
+				<mulSelect class='fl' :list.sync="goodsType" :selects.sync="goodsSelect" :styles="{backgroundColor:'#fff',marginRight:'8px','border-radius':'4px'}" :name='"name"' :key='"id"'></mulSelect>
 				<div class="fl handle-tips">
 					<i></i> 使用时需在支付门店支付方式内开启微信或支付宝
 				</div>
@@ -81,7 +86,8 @@
 			<div class="online-box clearfix" v-if='payMeals' style="padding-left: 330px;">
 				<span class="online-sub required fl"></span>
 				<span class="discount">用餐</span>
-				<input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')">
+				<!-- <input class="discountinp" type="text" v-model="diningnums" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'')"> -->
+				<el-input maxlength="2" v-model="diningnums" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input>
 				<span class="discount">人</span>
 			</div>
 			<!-- 开启用餐人数-->
@@ -96,11 +102,12 @@
 				<section class="fl therules">
 					<section class="clearfix" v-if="configure.length <= 9">
 						<div class="rulebox">
-							<el-input type="text" placeholder="请输入规则" class="fl el_input" v-model="content" maxlength="30"></el-input>
+							<!-- <el-input type="text" placeholder="请输入规则" class="fl el_input" v-model="content" maxlength="30"></el-input> -->
+							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="20" />
 							<!-- <el-input placeholder="请输入内容" v-model="shopName" class="input-with-select">
                         <el-button slot="append" icon="el-icon-search" @click="searchShop"></el-button>
                     </el-input> -->
-							<div class='bg' @click="saveConcont"></div>
+							<div class='bg fl' @click="saveConcont"></div>
 						</div>
 						<div class="fl handle-tips">
 							<i></i> 最多输入10条,每条限制30字符
@@ -656,7 +663,6 @@
 	#sweepCode .online-box .therules {
 		width: auto;
 		height: auto;
-		width: 234px;
 	}
 
 	#sweepCode .online-box .therules .rulebox {
@@ -666,25 +672,27 @@
 		cursor: pointer;
 	}
 
-	#sweepCode .online-box .therules .rulebox input {
-		width: 320px;
+	#sweepCode .online-box .therules .rulebox .define-inp {
+		width: 255px;
 		height: 36px;
 		padding: 0;
-		border-color: #999;
+		border-radius: 4px 0 0 4px;
+		border: 1px solid #dcdfe6;
+	}
+
+	#sweepCode .online-box .therules .rulebox input {
+		outline: none;
 		text-indent: 12px;
 	}
 
 	#sweepCode .online-box .therules .rulebox .bg {
-
-		background: url(../../res/icon/iconright.png) #fff center no-repeat;
-		width: 77px;
-		float: left;
-		height: 40px;
-		border-left: none;
-		position: absolute;
-		right: -60px;
 		border: 1px solid #dcdfe6;
-		border-radius: 4px;
+		width: 36px;
+		float: left;
+		height: 36px;
+		border-left: none;
+		border-radius: 0 4px 4px 0;
+		background: url(../../res/icon/iconright.png) #fff center no-repeat;
 	}
 
 	#sweepCode .online-box .online-sub {

@@ -519,7 +519,7 @@
 					fn: () => {
 						this.openStore();
 					},
-					className: 'userLabel'
+					className: 'el-btn-blue'
 				}]);
 			}
 			this.getShopList();

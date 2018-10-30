@@ -430,8 +430,9 @@
 					this.userList.unshift(obj);
 					if (this.isOwer) {
 						for (let user of this.userList) {
-							if (user.id == global.groupFansList.groupId) {
+							if (user.id == global.groupFansList.groupId) {//查看详情的情况下
 								this.defaultName = user.name;
+								this.selectsgroupId = user.id;
 							}
 						}
 						this.selectUser(1);
