@@ -51,6 +51,9 @@
 				<a href="javascript:;" @click="addNewGoods(props.data,'edi')">编辑</a>
 				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a>
 			</div>
+            <!-- <div slot="con-0" slot-scope="props" class="btnLink" v-if= "typeId == 1">
+				<a href="javascript:;" @click="updateStatus(props.data)">{{type[props.data.status]}}</a> 
+            </div> -->
 			<div slot="con-1" slot-scope="props" :class="props.data.status == '1' ? '' : props.data.status == '0' ? 'start':'end' ">{{statusType[props.data.status]}}</div>
 			<div slot="con-3" slot-scope="props">
 				<img style="height:80px;" v-bind:src="uploadUrl  + props.data.listImage" />
@@ -61,23 +64,6 @@
 			<div slot="con-8" slot-scope="props">{{transFormDates(props.data.createTime)}}</div>
 		</com-table>
 
-
-		<!-- 列表(历史商品) --> 
-		<!-- v-if="typeId = 1" -->
-		<!-- <com-table :listHeight='80' :listName="'疯抢商品列表'" :showHand="false" :key="index" :listWidth="1436" :introData="goodslist"
-		 :titleData="titleList" :widthType='true'>
-			<div slot="con-0" slot-scope="props" class="btnLink">
-				<a href="javascript:;" @click="updateStatus(props.data)">重新上架</a>
-			</div>
-			<div slot="con-1" slot-scope="props" :class="props.data.status == '1' ? '' : props.data.status == '0' ? 'start':'end' ">{{statusType[props.data.status]}}</div>
-			<div slot="con-3" slot-scope="props">
-				<img style="height:80px;" v-bind:src="uploadUrl  + props.data.listImage" />
-			</div>
-			<div slot="con-4" slot-scope="props">￥{{props.data.price}}</div>
-			<div slot="con-5" slot-scope="props">￥{{props.data.originalPrice}}</div>
-			<div slot="con-7" slot-scope="props">{{props.data.stock - props.data.spareStock}}</div>
-			<div slot="con-8" slot-scope="props">{{transFormDates(props.data.createTime)}}</div>
-		</com-table> -->
 
 		<!-- 翻页 -->
 		<section class="turn-page">
@@ -272,6 +258,8 @@
 				});
 
 				this.goodslist = data.goodsList; //获取列表
+				this.goodslist = data.list; //获取列表
+
 				this.pageNum = data.total;
 				this.count = data.count;
 
