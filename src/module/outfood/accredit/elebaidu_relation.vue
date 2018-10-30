@@ -40,7 +40,7 @@
 				<el-button type="primary" @click="success">完成</el-button>
 			</el-row>
 		</div>
-		<relation v-if="showWin" :showWin="showWin" :selgoods="selected" :goodList="goodList" :packlist="fixed"
+		<relation v-if="showWin" :showWin="showWin" :selgoods="selected" :goodList="goodList" :sendpacklist="fixed"
 		 @relationEvent='winEvent'></relation>
 	</div>
 </template>
@@ -161,15 +161,15 @@
 			//通过菜品id获取菜品名字
 			getGoodsName: function (id, isPackage) {
 				if (isPackage == 0) {
-					for (let i = 0; i < goodList.length; i++) {
-						if (id == goodList[i].id) {
-							return goodList[i].goodsName;
+					for (let item of goodList) {
+						if (id == item.id) {
+							return item.goodsName;
 						}
 					}
 				} else {
-					for (let i = 0; i < this.fixed.length; i++) {
-						if (id == this.fixed[i].id) {
-							return this.fixed[i].packageName;
+					for (let item of this.fixed) {
+						if (id == item.id) {
+							return item.packageName;
 						}
 					}
 				}

@@ -75,7 +75,7 @@
 				keepCateList:''
 			};
 		},
-		props: ['showWin','goodList', 'packlist','selgoods'],
+		props: ['showWin','goodList', 'sendpacklist','selgoods'],
 		methods: {
 			//获取分类列表名称
 			async getOneAreaList() {
@@ -199,6 +199,7 @@
 					isPackage = 1;
 					sendSle = this.selected.substr(1,this.selected.length-1);
 				}
+				console.log(sendSle);
 				this.$emit('relationEvent', {selected:sendSle,isPackage:isPackage});
 			},
 			close(){
@@ -213,10 +214,11 @@
 		mounted() {
 			this.selected = this.selgoods;
 			this.dialogVisible = this.showWin;
-			this.packCom = utils.deepCopy(this.packlist);
-			this.packCom.map(v=>{
+			this.packlist = utils.deepCopy(this.sendpacklist);
+			this.packlist.map(v=>{
 				v.id = `0${v.id}`;
 			});
+			this.packCom = utils.deepCopy(this.packlist);
 			this.getOneAreaList();
 		},
 		computed: {
