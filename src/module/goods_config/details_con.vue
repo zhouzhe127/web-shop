@@ -155,8 +155,12 @@
 							<span v-if="ischain=='0'||ischain=='3'" @click="openAddWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.goodsName}}</span>
 						</template>
 					</el-table-column>
+					<el-table-column fixed min-width="100" show-overflow-tooltip align="center" prop="goodsCode" label="编码">
+						<template slot-scope="scope">
+							<span>{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
+						</template>
+					</el-table-column>
 					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
-					<el-table-column min-width="100" sortable show-overflow-tooltip align="center" prop="goodCode" label="编码"></el-table-column>
 					<el-table-column min-width="100" sortable sort-by="price" show-overflow-tooltip align="center" prop="price" label="价格">
 						<!-- <template slot-scope="scope">
 							<span>{{parseFloat(scope.row.price).toFixed(2)}}</span>
@@ -878,12 +882,7 @@ export default {
 		//初始化按钮
 		initSyncBtn() {
 			let obj = {};
-			//同步商品
-			if (this.ischain == 1 || this.ischain == 2) {
-				obj.sync = () => {
-					this.showCom = 'asyncWin';
-				};
-			}
+			
 			//添加商品，如果是表格模式，显示添加按钮
 			if (this.selectTab == 1) {
 				obj.addGood = () => {
@@ -891,7 +890,8 @@ export default {
 				};
 			}
 			//导入
-			obj.leadIn = () => {
+			obj.leadIn = function(){
+				// className:'',
 				this.importGoods().then(res => {
 					if (!res) {
 						this.$store.commit('setWin', {
@@ -933,7 +933,12 @@ export default {
 			obj.leadOut = () => {
 				this.exportGoodsList();
 			};
-			this.$store.commit('setPageTools', obj);
+			//同步商品
+			if (this.ischain == 1 || this.ischain == 2) {
+				obj.sync = () => {
+					this.showCom = 'asyncWin';
+				};
+			}this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据
 		initData() {

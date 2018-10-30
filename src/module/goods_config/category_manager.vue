@@ -4,10 +4,11 @@
 -->
 <div id="cate-gories">
 	<section class="brand">
-		<div v-on:click="openOneCategoryWin()" class="openOneCategoryWin">
+		<el-button @click="openOneCategoryWin" type="primary" style="width:150px;" icon="el-icon-plus">添加一级分类</el-button>
+		<!-- <div v-on:click="openOneCategoryWin()" class="openOneCategoryWin">
 			<img src="../../res/images/add.png" alt="添加" />
 			<h3>添加一级分类</h3>
-		</div>
+		</div> -->
 		<template v-if="ischain == 1 || ischain == 2">
 			<span style="background-color: #fcaa30;margin-left: 10px;"></span>
 			<span style="margin-left: 5px;">品牌同步</span>
@@ -40,14 +41,16 @@
 		<ul class="oUl">
 			<template v-for = "(itemChild,index) in item.child">
 				<li class="oLi" :key="index"> 
-					<span  v-if="ischain == 1 || ischain == 2">
-						<span style="word-wrap:break-word; color: #fcaa30;" v-bind:title = "itemChild.name" v-if="itemChild.id < 100000">{{itemChild.name | sliceStr}}</span>
-						<span style="word-wrap:break-word; color: #6cc2e6;;" v-bind:title = "itemChild.name"  v-else>{{itemChild.name | sliceStr}}</span>
-					</span>
-					<span v-else>
-						<span style="word-wrap:break-word" v-bind:title = "itemChild.name" >{{itemChild.name | sliceStr}}</span>
-					</span>
-					<div class="openoperation" style="margin-top:-35px ;">
+					<div v-if="ischain == 1 || ischain == 2" style="margin-top:25px;">
+						<span style="color: #fcaa30;" v-bind:title = "itemChild.name" v-if="itemChild.id < 100000">{{itemChild.name | sliceStr}}</span>
+						<span style="color: #6cc2e6;;" v-bind:title = "itemChild.name"  v-else>{{itemChild.name | sliceStr}}</span>
+						<br><span style="color: #fcaa30;" v-bind:title = "itemChild.code" v-if="itemChild.id < 100000 && itemChild.code">({{itemChild.code}})</span>
+					</div>
+					<div v-else  style="margin-top:25px;">
+						<span v-bind:title = "itemChild.name" >{{itemChild.name | sliceStr}}</span>
+						<br><span v-if="itemChild.code" v-bind:title = "itemChild.code" >({{itemChild.code}})</span>
+					</div>
+					<div class="openoperation" style="margin-top:3px;">
 					   <img v-on:click = "editTwo(index,itemChild)" src="../../res/icon/change.png"/>
 					   <img v-on:click = "delateTwo(itemChild)" style="margin-left:5px;" src="../../res/icon/delete.png"/>
 				   </div>
@@ -167,7 +170,7 @@ export default{
 				title:'修改一级分类',
 				sort:item.sort,
 				categoryName:item.name,
-				code:item.code?item.code:'',
+				code:item.code?item.code.toUpperCase():'',
 
 			};
 			this.flag={
@@ -176,7 +179,7 @@ export default{
 				name:item.name,
 				marker:2,
 				sort:item.sort,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 		},
 		//删除一级分类
@@ -211,7 +214,7 @@ export default{
 			let obj={
 				pid:item.pid,
 				id:item.id,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 
 			this.$store.commit('setWin',{
@@ -236,17 +239,17 @@ export default{
 				name:item.name,
 				marker:3,
 				sort:item.sort,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 			this.obj={
 				title:'修改二级分类',
 				categoryName:item.name,
 				sort:item.sort,
-				code:item.code?item.code:''
+				code:item.code?item.code.toUpperCase():''
 			};
 		},
 		//添加二级分类
-		addChild(event,item){                                        
+		addChild(event,item){  
 			this.twoName=this.twoName.trim();
 			if(!global.checkData({
 				twoName:{
@@ -254,12 +257,11 @@ export default{
 					pro:'请输入分类名！并且分类名中不能含有&和引号!'
 				}
 			},this)) return;
-
 			let obj={
 				name:this.twoName,
 				sort:255,
 				pid:item.id,
-				code:item.code?item.code:''                   
+				code:item.code?item.code.toUpperCase():''                   
 			};
 
 			this.addSecondCategory(obj).then(()=>{
@@ -287,13 +289,23 @@ export default{
 				this.showCom='';
 				return;
 			}
+			console.log(code);
+			let rrr = /^[0-9A-Za-z]{1,8}$/;
+			if(code !=''&&!rrr.test(code)){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '简码由英文,数字组成!',
+					
+				});
+				return false;
+			}
 			let obj = {};
 			switch(''+this.flag.marker){
 				case '1':
 					obj={
 						name:categoryName,
 						sort:sort,
-						code:code,
+						code:code.toUpperCase(),
 					};
 					this.addCategory(obj).then(()=>{
 						this.flushList();
@@ -304,7 +316,7 @@ export default{
 						obj={
 							name:categoryName,
 							sort:sort,
-							code:code,
+							code:code.toUpperCase(),
 							id:this.flag.id
 						};
 						this.editCategory(obj).then(()=>{
@@ -317,7 +329,7 @@ export default{
 						obj={
 							name:categoryName,
 							sort:sort,
-							code:code,
+							code:code.toUpperCase(),
 							id:this.flag.id
 						};
 						this.editSecondCategory(obj).then(()=>{
@@ -400,12 +412,13 @@ export default{
 
 		//编辑二级分类
 		async editSecondCategory(obj){
+			
 			let res=await http.editCategory({
 				data:{
 					shopId:this.shopId,
 					name:obj.name,
 					sort:obj.sort,
-					code:obj.code,
+					code:obj.code.toUpperCase(),
 					cid:obj.id
 				}
 			});
@@ -418,7 +431,7 @@ export default{
 					shopId:this.shopId,
 					name:obj.name,
 					sort:obj.sort,
-					code:obj.code,
+					code:'',
 					pid:obj.pid
 				}
 			});
@@ -448,7 +461,7 @@ export default{
 			let res=await http.addCategory({data:{
 				shopId:this.shopId,
 				name:obj.name,
-				code:obj.code,
+				code:obj.code.toUpperCase(),
 				sort:obj.sort
 			}});
 			return res;
@@ -459,7 +472,7 @@ export default{
 				data:{
 					shopId:this.shopId,
 					name:obj.name,
-					code:obj.code,
+					code:obj.code.toUpperCase(),
 					sort:obj.sort,
 					cid:obj.id 
 				}
@@ -552,7 +565,7 @@ export default{
 			.oLi{
 				height:65px;
 				min-width:80px;
-				line-height: 65px;
+				// line-height: 65px;
 				float: left;
 				text-align: center;
 				padding:0 10px;
@@ -650,39 +663,4 @@ export default{
 			vertical-align: middle;
 		}
 	}
-/*
-	#cate-gories {width:97%;margin-left:40px;min-width: 1017px;}
-	#cate-gories .cList{width:100%;border:1px solid #cdcdcd;border-left: 120px solid #F8F8F8;position: relative;margin-top:20px;}
-	#cate-gories .cList .title{width:120px;color:#323232;text-align:center;
-		position: absolute;top: 50%;left: -120px;line-height: 100%;font-size: 18px;transform: translateY(-50%);-ms-transform: translateY(-50%);
-		-moz-transform: translateY(-50%);-webkit-transform: translateY(-50%);-o-transform: translateY(-50%);padding: 5px 10px;z-index: 5;
-		
-	}
-	#cate-gories .cList .oneTitle{width:100%;height:60px;margin-top:40px;cursor: pointer;}
-	#cate-gories .cList .oneTitle .oSpan{}
-	#cate-gories .cList .oUl{width:100%;min-height: 120px;padding:26px 20px;overflow: hidden;border-left: 1px solid #cdcdcd;}
-	#cate-gories .cList .oLi{
-		height:65px;min-width:80px;line-height: 65px;float: left;text-align: center;
-		padding:0 10px;color:#555555;cursor: pointer;
-	}
-	#cate-gories .oLi .addinput{width:165px;height:34px;float: left;border:1px solid #cdcdcd;margin-top:15px;display: none;}
-	#cate-gories .oLi .oDiv{width:34px;height:32px;border-left: 1px solid #cdcdcd;float: right;}
-	#cate-gories .oLi .img_mask{
-		position:absolute;
-		width:34px;
-		height:32px;
-		background-color:#ff0000;
-		opacity:0;
-		filter:alpha(opacity=0);
-	}
-	#cate-gories .openoperation{display: none;}
-	#cate-gories .title:hover .openoperation{display: block;}
-	#cate-gories .oLi:hover .openoperation{display: block;}
-	#cate-gories .openOneCategoryWin{width:210px;height:45px;background-color: #29A7E1;cursor: pointer;display: inline-block;vertical-align: middle;}
-	#cate-gories .openOneCategoryWin img{width:22px;height:22px;margin-top:9px;margin-left: 34px;float: left;}
-	#cate-gories .openOneCategoryWin h3{width:120px;height: 45px;line-height:45px;color:#fff;text-align: center;float: left;}
-	#cate-gories .borderTop{width:122px;height:100%;border-left: 1px solid #cdcdcd;position: absolute;top:-1px;left:-120px;border-top:1px solid #cdcdcd;}
-	#cate-gories .borderBottom{width:122px;height:100%;border-left: 1px solid #cdcdcd;position: absolute;bottom:-1px;left:-120px;border-bottom:1px solid #cdcdcd;}
-	#cate-gories .cList .oneName{word-wrap:break-word;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
-	*/
 </style>

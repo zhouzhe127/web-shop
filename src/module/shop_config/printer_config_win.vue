@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-26 13:22:57
+ * @Last Modified time: 2018-10-29 17:28:25
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
@@ -116,15 +116,15 @@
 						</el-form-item>
 						<el-form-item label="二维码" v-if="orderTypeIndex ==0||orderTypeIndex ==1" >
 							<el-switch
-								v-model="isCustomQrcode"
+								v-model="iscustomQrCode"
 								active-color="#E1BB4A"
 								inactive-color="#e6e6e6">
 							</el-switch>
-							<template v-if="isCustomQrcode">
+							<template v-if="iscustomQrCode">
 								<span style="margin-left:20px;">URL地址:</span>
-								<el-input v-model="customQrcode[0].qrcode"  placeholder="请输入URL地址" style="width:300px;"></el-input><br>
+								<el-input v-model="customQrCode[0].qrcode"  placeholder="请输入URL地址(必填)" style="width:300px;"></el-input><br>
 								<span style="margin-left:90px;margin-top: 20px;">寄语:</span>
-								<el-input type="textarea" maxlength="50" v-model="customQrcode[0].explain"  placeholder="请输入寄语(50字以内)" style="width:300px;margin-top: 20px;" ></el-input>
+								<el-input type="textarea" maxlength="50" v-model="customQrCode[0].explain"  placeholder="请输入寄语(50字以内)" style="width:300px;margin-top: 20px;" ></el-input>
 							</template>
 						</el-form-item>
 					</el-form>
@@ -177,8 +177,8 @@ export default {
 			localArr:[{type:'1',name:'顶部'},{type:'2',name:'底部'}],
 			isLocal:'1',//logo的显示位置
 			isQrcode:false,//是否显示支付二维码
-			isCustomQrcode:false,//显示二维码
-			customQrcode:[{qrcode:'',explain:''}],//二维码URL和寄语
+			iscustomQrCode:false,//显示二维码
+			customQrCode:[{qrcode:'',explain:''}],//二维码URL和寄语
 		};
 	},
 	components: {
@@ -246,7 +246,6 @@ export default {
 		printConfigWin: function(res) {
 			let item = {}; //传到页面的数据，请求接口传参用
 			if (res == 'ok') {
-				console.log(this.orderType);
 				if (this.SubmitJudgment(res)) {
 					item.printsetId = this.printerConId;
 					item.createUid = this.createUid;
@@ -285,7 +284,13 @@ export default {
 						this.status == 3 || this.status == 4 || this.status == 5
 							? this.blankLine
 							: 0; //只有部分单据数据有头部留白2:厨打分单 ，3:出品总单, 6:传菜总单 7:厨打总单 9:退菜单 11:催菜单
-					item.customQrcode = JSON.stringify(this.customQrcode);
+					let customQrCode = [];
+					if(this.iscustomQrCode){
+						customQrCode = this.customQrCode;
+					}else{
+						customQrCode = [];
+					}
+					item.customQrCode = JSON.stringify(customQrCode);
 				} else {
 					return false;
 				}
@@ -417,13 +422,15 @@ export default {
 				//扫码支付对账单
 				this.orderTypeIndex = 22;
 			}
-			// console.log(typeof this.printDetial.customQrcode);
-			// this.customQrcode = JSON.parse(this.printDetial.customQrcode);
-			this.customQrcode = this.printDetial.customQrcode;
-			if(this.customQrcode.length==0 || this.customQrcode == ''){
-				this.isCustomQrcode = false;
-			}else if(this.customQrcode.length>0){
-				this.isCustomQrcode = true;
+			// this.customQrCode = JSON.parse(this.printDetial.customQrCode);
+			this.customQrCode = this.printDetial.customQrCode;
+			if(this.customQrCode.length==0 || this.customQrCode == ''){
+				this.iscustomQrCode = false;
+			}else if(this.customQrCode.length>0){
+				this.iscustomQrCode = true;
+			}
+			if(this.printDetial.customQrCode.length == 0){
+				this.customQrCode = [{qrcode:'',explain:''}];//二维码URL和寄语
 			}
 			// console.log(this.orderTypeIndex);
 			this.isWait = this.printDetial.isPrintWait == 1 ? true : false; //是否开启等叫打印单
@@ -583,6 +590,15 @@ export default {
 							title: '温馨提示',
 							winType: 'alert',
 							content: '头部留白最大为10行'
+						});
+						return false;
+					}
+				}
+				if(this.status == '1'){
+					if(this.iscustomQrCode&&this.customQrCode[0].qrcode.trim().length==0){
+						this.$store.commit('setWin', {
+							winType: 'alert',
+							content: '请输入URL地址'
 						});
 						return false;
 					}

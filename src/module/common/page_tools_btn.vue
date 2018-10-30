@@ -76,13 +76,13 @@ export default {
 	data() {
 		return {
 			oldBtn: {
-				leadIn: new Btn('导入', 'import-form', '', 1, {}, 'goods'),
-				leadOut: new Btn('导出', 'export-btn'),
-				addGood: new Btn('添加', 'pick'),
+				leadIn: new Btn('导入', 'import-form', '', 6, {}, 'goods'),
+				leadOut: new Btn('导出', 'export-btn', '', 5),
+				addGood: new Btn('添加', 'pick', '', 4),
 				filter: new Btn('筛选'),
 				createScheme: new Btn('创建方案'),
 				back: new Btn('返回'),
-				sync: new Btn('同步', 'sync-btn'),
+				sync: new Btn('同步', 'sync-btn', '', 4),
 				allWearhouse: new Btn('查看全部', ['wearhouse all']),
 				outWearhouse: new Btn('快速出库', ['wearhouse out']),
 				createWearhouse: new Btn('新建仓库', ['wearhouse create']),

@@ -141,9 +141,9 @@
 
 					<section v-if="good.type!=2" style="width:100%;">
 						<el-form :model="good" ref="good" label-width="80px">
-							<el-form-item v-if="good.goodCodeOne!=''" label="编码">
-								<span>{{good.goodCodeOne}}</span>
-								<el-input v-model="good.goodCodeTwo" maxlength="6" placeholder="输入编码" style="width:90px;"></el-input>
+							<el-form-item v-if="good.categoryCode!='' && (ischain=='0'||ischain=='3')" label="编码">
+								<span>{{good.categoryCode}}</span>
+								<el-input v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
 							</el-form-item>
 							<el-form-item required label="分类">
 								<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
@@ -258,10 +258,10 @@
 					</section>
 				</section>
 				<section v-if="good.type==2">
-					<el-form :model="good" ref="good" :inline="true" label-width="100px">
-						<el-form-item v-if="good.goodCodeOne!=''" label="编码">
-							<span>{{good.goodCodeOne}}</span>
-							<el-input v-model="good.goodCodeTwo" maxlength="6" placeholder="输入编码" style="width:90px;"></el-input>
+					<el-form :model="good" ref="good" label-width="100px">
+						<el-form-item v-if="good.categoryCode!=''" label="编码">
+							<span>{{good.categoryCode}}</span>
+							<el-input v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="分类">
 							<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
@@ -379,9 +379,8 @@ export default {
 
 				identifyCode: '', //(实际不存在的字段)生成的称重商品的识别码(5位)
 				code: '', //(实际不存在的字段)称重商品类别识别码 称重商品的barCode=good.code+good.identifyCode
-				goodCode:'', //编码
-				goodCodeOne:'', //编码前段部分
-				goodCodeTwo:'', //编码后段部分
+				categoryCode: '', //编码前段部分
+				goodsCode: '' //编码后段部分
 			},
 			identifyCodeMax: null, //比较所有商品识别之后生成的最大商品识别码
 			identifyName: '选择类别识别码', //称重商品类别识别码展示的文字
@@ -749,7 +748,7 @@ export default {
 				case 'category':
 					this.selectCategory = data;
 					console.log(data[0]);
-					this.good.goodCodeOne = data[0].code;
+					this.good.categoryCode = data[0].code;
 					break;
 				case 'brand':
 					if (data[0]) {
@@ -1063,13 +1062,15 @@ export default {
 				'specifications',
 				'barCode',
 				'secBarCode',
-				'goodCode'
+				'goodsCode',
+				'categoryCode'
 			];
 			for (let key of keys) {
 				obj[key] = this.good[key];
 			}
-			// obj.goodCode = this.good.goodCodeOne+'-'+this.good.goodCodeTwo;
-			obj.goodCode = this.good.goodCodeTwo;
+			// obj.goodsCode = this.good.categoryCode+'-'+this.good.goodsCode;
+			obj.categoryCode = this.good.categoryCode;
+			obj.goodsCode = this.good.categoryCode==''?'':this.good.goodsCode;
 			obj.cids = cids.join(',');
 			obj.validityType = this.good.validityType;
 			obj.attrs = attrId.join(',');
@@ -1110,7 +1111,20 @@ export default {
 				)
 					return false;
 			}
-
+			if (this.good.goodsCode.trim().length > 0) {
+				if (
+					!global.checkData(
+						{
+							goodsCode: {
+								reg: /^[0-9]{3,5}$/,
+								pro: '编码只能为数字，且3-5个字!'
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+			}
 			//----------		称重菜,普通菜:售价,单位(普通菜),成本,会员	-----------
 			if (
 				(this.good.type == 0 && !Number(this.good.isGroup)) ||
@@ -1689,13 +1703,13 @@ export default {
 			//通过选择号的分类，获取对应的编码
 			// for(let i=0;i<this.category.length;i++){
 			// 	if(res.cate[0].id == this.category[i].id){
-			// 		this.good.goodCodeOne = this.category[i].code;
+			// 		this.good.categoryCode = this.category[i].code;
 			// 		break;
 			// 	}
 			// 	if(this.category[i].child){
 			// 		for(let j=0;j<this.category[i].child.length;j++){
 			// 			if(res.cate[0].id == this.category[i].child[j].id){
-			// 				this.good.goodCodeOne = this.category[i].child[j].code;
+			// 				this.good.categoryCode = this.category[i].child[j].code;
 			// 				break;
 			// 			}
 			// 		}
@@ -1727,9 +1741,10 @@ export default {
 			}
 			if (res) {
 				this.good = res;
-				this.good.goodCodeOne = res.goodCode?res.goodCode.split('-')[0]:'';
-				this.good.goodCodeTwo = res.goodCode?res.goodCode.split('-')[1]:'';
-				console.log(res);
+				this.good.categoryCode = res.categoryCode
+					? res.categoryCode
+					: '';
+				this.good.goodsCode = res.goodsCode ? res.goodsCode : '';
 				this.initGoods(res);
 			}
 		},

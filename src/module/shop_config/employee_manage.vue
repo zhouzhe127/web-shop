@@ -175,13 +175,14 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '新建员工',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'plain',
 				fn: this.add,
-				type: 2
 			},
 			{
 				name: '批量操作',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'primary',
 				fn: this.changeBatchBtn
 			}
 		]);
@@ -331,13 +332,14 @@ export default {
 				this.$store.commit('setPageTools', [
 					{
 						name: '新建员工',
-						className: ['addStaff', 'export-btn'],
+						type:5,
+						className: 'plain',
 						fn: this.add,
-						type: 2
 					},
 					{
 						name: '批量操作',
-						className: ['addStaff', 'export-btn'],
+						type:4,
+						className: 'primary',
 						fn: this.changeBatchBtn
 					}
 				]);
@@ -348,7 +350,8 @@ export default {
 				this.$store.commit('setPageTools', [
 					{
 						name: '完成操作',
-						className: ['addStaff', 'export-btn'],
+						type:4,
+						className: 'primary',
 						fn: this.changeBatchBtn
 					}
 				]);
