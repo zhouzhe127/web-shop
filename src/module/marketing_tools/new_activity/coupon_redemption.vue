@@ -205,14 +205,14 @@ export default {
 		setTitle: function() { //设置标题
 			this.$store.commit('setPageTools', [{
 				name: '返回',
-				className: ['fd-white'],
+				className: 'el-btn-blue',
 				fn: () => {
 					this.returnActivity();
 				}
 			},
 			{
 				name: '新建',
-				className: ['fd-blue'],
+				className: 'el-btn-yellow',
 				fn: () => {
 					this.addActivity();
 				}

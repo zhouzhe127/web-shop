@@ -586,8 +586,8 @@ export default {
 	mounted() {
 		this.shopList = storage.session('shopList'); //获取品牌下面的店铺列表
 		this.$store.commit('setPageTools', [{
-			name: '<返回活动列表',
-			className: ['activity'],
+			name: '返回活动列表',
+			className: 'el-btn-blue',
 			fn: () => {
 				this.closePage();
 			}
