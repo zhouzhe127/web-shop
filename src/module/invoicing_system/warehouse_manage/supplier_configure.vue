@@ -731,7 +731,7 @@ p{
 
 	.label{
 		float:left;
-		width:110px;
+		min-width:110px;
 		text-align: right;
 		line-height: 40px;
 		margin-right:20px;
