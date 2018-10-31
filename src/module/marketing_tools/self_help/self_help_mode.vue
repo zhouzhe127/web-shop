@@ -191,7 +191,7 @@
 		<pay v-else @winEvent='winEvent' :opentheFunction='opentheFunction' :upPayInfo='upPayInfo' :isUpdata='isUpdata' :modifyindex='modifyindex' :checkoutMenu='checkoutMenu' :coordinateInfo='coordinateInfo'></pay>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
@@ -208,32 +208,32 @@
 				payment: false, // 其他支付方式的输入框 false 代表不显示 true代表显示
 				checkoutMenu: [], //结账功能的菜单
 				contentLsit: [{ //商品显示的功能被关闭 默认全部选中
-						name: '普通商品',
-						id: '1'
-					},
-					{
-						name: '称重商品',
-						id: '2'
-					},
-					{
-						name: '套餐',
-						id: '3'
-					}
+					name: '普通商品',
+					id: '1'
+				},
+				{
+					name: '称重商品',
+					id: '2'
+				},
+				{
+					name: '套餐',
+					id: '3'
+				}
 				], //内容配置数据
 				contenSelect: ['1', '2', '3'], //内容配置选中数组
 				goodsSelect: [], //固定支付方式选中
 				goodsType: [{
-						name: '微信支付',
-						id: '3'
-					},
-					{
-						name: '支付宝支付',
-						id: '4'
-					},
-					{
-						name: '会员支付',
-						id: '5'
-					}
+					name: '微信支付',
+					id: '3'
+				},
+				{
+					name: '支付宝支付',
+					id: '4'
+				},
+				{
+					name: '会员支付',
+					id: '5'
+				}
 				], //固定支付方式
 				exportUrl: 'javascript:void(0);', //导出二维码链接
 				payList: [], //弹窗里面选中的镜像数组
@@ -248,13 +248,13 @@
 				isattention: false, //是否开启关注公众号
 				headings: false, // 标题提示
 				integralList: [{
-						name: '固定标题',
-						id: 0
-					},
-					{
-						name: '自动标题',
-						id: 1
-					}
+					name: '固定标题',
+					id: 0
+				},
+				{
+					name: '自动标题',
+					id: 1
+				}
 				],
 				integralOn: 0, //标题选中的
 				integralName: '固定标题',

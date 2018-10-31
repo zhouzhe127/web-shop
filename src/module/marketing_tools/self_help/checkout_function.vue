@@ -128,10 +128,13 @@
 		<div class="pay-window-box clearfix" v-if="type == '1' && mealStatus">
 			<span class="fl pay-window-sub required">配餐时间</span>
 			<div class="rightHalf">
-				<section class="fl">
+				<!-- <section class="fl">
 					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="2" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" />
 					<span>分钟</span>
-				</section>
+				</section> -->
+				<el-input class="fl" placeholder="请输入正整数" maxlength="2" v-model="equipment" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
+					<template slot="suffix">分钟</template>
+				</el-input>				
 				<div class="prompting fl" @click="isPublicNumber('0')">
 					<div class="detDiv" v-if="isPublic['0']">
 						<i class="detI triright"></i>
@@ -1676,7 +1679,7 @@
 			await global.getBaiduMapApi();
 			this.$store.commit('setPageTools', [{
 				name: '返回',
-				className: ['fd-white'],
+				className: 'el-btn-blue',
 				fn: () => {
 					this.returnPay();
 				}
