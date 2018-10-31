@@ -269,7 +269,7 @@
 		},
 		components: {
 			relation: () =>
-				import( /*webpackChunkName: "relation_win"*/ 'src/module/outfood/accredit/elerelation_win')
+				import( /*webpackChunkName: "elerelation_win"*/ 'src/module/outfood/accredit/elerelation_win')
 		},
 	};
 </script>
