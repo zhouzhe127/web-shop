@@ -38,7 +38,7 @@
 				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
 				</el-input>
-				<el-input v-if="industry != 1" placeholder="请输入名称/简码" clearable v-model="search" @change="funSearchkeyUp(null)" style="width:210px;">
+				<el-input v-if="industry != 1" placeholder="请输入名称/简码/编码" clearable v-model="search" @change="funSearchkeyUp(null)" style="width:240px;">
 					<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp(null)"></el-button>
 				</el-input>
 			</section>
@@ -685,10 +685,16 @@ export default {
 			tempGoods = goodsList.filter(ele => {
 				let BC = '' + ele.BC;
 				BC = BC.toLowerCase();
+				let categoryCode = ele.categoryCode.toLowerCase();
+				let goodsCode = ele.goodsCode.toLowerCase();
+				let goodcode = categoryCode + '-' +goodsCode;
 				let name = ele.goodsName.toLowerCase();
 				let search = this.search.toLowerCase();
 				if (BC && BC.indexOf(search) > -1) return true;
 				if (name && name.indexOf(search) > -1) return true;
+				if (categoryCode && categoryCode.indexOf(search) > -1) return true;
+				if (goodsCode && goodsCode.indexOf(search) > -1) return true;
+				if (goodcode && goodcode.indexOf(search) > -1) return true;
 			});
 			return tempGoods;
 		},
