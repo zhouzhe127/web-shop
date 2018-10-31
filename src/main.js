@@ -1,5 +1,5 @@
 /* eslint-disable */
-import babelPolyfill from 'babel-polyfill';
+import babelPolyfill from '@babel/polyfill';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import routerConfig from './config/routes'
@@ -19,6 +19,7 @@ import storgae from 'src/verdor/storage'
 import utils from 'src/verdor/utils'
 import elementCss from 'src/components/index.css';
 import ElementUI from 'src/components/element-ui.common';
+import http from 'src/manager/http';
 
 
 if(process.env.NODE_ENV === 'development'){
@@ -128,6 +129,13 @@ class Main {
             console.log = function () {};
         }
 
+		if (process.env.NODE_ENV === 'development') {
+
+			http.getTxt().then(function(txt){
+				console.log(`%c${txt}`,`font-size: 32px;color: #fff;margin-top: 30px;text-align: center;text-shadow:2px 2px 4px #000;background:linear-gradient(#84fab0,#8fd3f4);font-family: 'Microsoft YaHei',arial,tahoma,sans-serif;padding:10px 15px;border-radius:8px`)
+			})
+
+		}
     }
 
 
