@@ -147,7 +147,7 @@
 						activityId: this.activityId
 					}
 				});
-				this.detailist = data.goodsList; //获取详情列表数据
+				this.detailist = data.list; //获取详情列表数据
 				this.pageNum = data.total;
 				this.count = data.count;
 			},

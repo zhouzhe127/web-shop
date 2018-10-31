@@ -258,6 +258,7 @@
 			},
 			clicktheRadio: function (item) {
 				this.typeId = item.type;
+				this.page = 1;
 				this.getcommodity();
 			},
 			async addNewGoods(item, type) {
@@ -311,7 +312,8 @@
 
 				this.goodslist = data.goodsList; //获取列表
 				this.goodslist = data.list; //获取列表
-				if(this.page ==1){
+
+				if(this.page == 1){
 					this.pageNum = data.total;
 					this.count = data.count;
 				}
