@@ -301,6 +301,11 @@ export default {
 					this.alert('保存成功!');					
 					return;
 				}
+				if(distribution.length == 0){
+					this.alert('请先填写分销价名称!');
+					return;
+				}
+				
 				retData = await this.getHttp('invoicingUpdateDistributionConfig',{distribution});
 				if(Array.isArray(retData.distribution)){
 					this.alert('保存成功!');

@@ -22,17 +22,17 @@
 					</div>
 					<div v-if="!isPackage" style="float: left;margin-left: 10px;">
 						<!--一级分类选择框-->
-						<elCategory @selectCategory = "newselectOneArea" :categoryArr="oneArea.oneAreaList" :itemIndex="oneArea.oneAreaIndex" :itemArea = "oneArea"></elCategory>
+						<elCategory @selectCategory="newselectOneArea" :categoryArr="oneArea.oneAreaList" :itemIndex="oneArea.oneAreaIndex" :itemArea="oneArea"></elCategory>
 						<!--二级级分类选择框-->
-						<elCategory @selectCategory = "newselectTwoArea" :categoryArr="twoArea.twoAreaList" :itemIndex="twoArea.twoAreaIndex" :itemArea = "twoArea"></elCategory>	
-						
+						<elCategory @selectCategory="newselectTwoArea" :categoryArr="twoArea.twoAreaList" :itemIndex="twoArea.twoAreaIndex" :itemArea="twoArea"></elCategory>
+
 						<!--搜索-->
 						<el-input placeholder="请输入名称" clearable v-model="search" @change="searchGoods" style="width:200px;">
 							<el-button slot="append" icon="el-icon-search" @click="searchGoods"></el-button>
 						</el-input>
 					</div>
 					<div v-if="isPackage" style="width:100%;height: 50px;overflow: hidden;padding-top:10px">
-						<el-radio-group v-model="packBtn" @change = "selectPack">
+						<el-radio-group v-model="packBtn" @change="selectPack">
 							<el-radio-button label="-1">全部</el-radio-button>
 							<el-radio-button v-if="!isPackType || isPackType.indexOf('0')>-1" label="0">固定套餐</el-radio-button>
 							<el-radio-button v-if="!isPackType || isPackType.indexOf('1')>-1" label="1">可选套餐</el-radio-button>
@@ -42,7 +42,7 @@
 				</section>
 				<ul class="aUl" style="">
 					<section v-if="allGood">
-						
+
 						<template v-if="goInName=='goodsChoice' || goInName=='packsChoice'">
 							<li v-if="!isPackage" v-for="(item,index) in goodsCom" :key='index' v-on:click="!item.isSynOk?choseGood(item):''" class="aLi" :class="[{'shoName-select':item.selected&&!item.isSynOk},{'dis-type':item.isSynOk}]">{{item.goodsName}}</li>
 							<li v-if="isPackage" v-for="(item,index) in packCom" :key='index' v-on:click="!item.isSynOk?choseGood(item):''" class="aLi" :class="[{'shoName-select':item.selected&&!item.isSynOk},{'dis-type':item.isSynOk}]">{{item.packageName}}</li>
@@ -98,7 +98,6 @@
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
@@ -140,7 +139,7 @@ export default {
 			allGood: true, //是否显示所有商品，默认显示
 			packBtn: -1, //套餐选择按钮，-1：全部，0：固定，1：可选。默认全部
 			selectNum: 0, //选中的商品数量
-			selectPackNum:0,//选中套餐的数量
+			selectPackNum: 0, //选中套餐的数量
 			reportName: '', //菜单配置名称
 			version: {}, //版本号
 			// getCategoryList:[], //商品分类
@@ -157,7 +156,8 @@ export default {
 		this.getOneAreaList(); //获取分类列表
 		this.getpackagelist(); //获取套餐列表
 		this.getGoodsList(); //获取商品列表
-		if(this.goInName=="packsChoice"){//如果从套餐同步来的则直接进入套餐界面面
+		if (this.goInName == 'packsChoice') {
+			//如果从套餐同步来的则直接进入套餐界面面
 			this.title = '关联套餐配置';
 			this.getGoodList(1);
 			// this.packCom = this.packlist;
@@ -180,11 +180,12 @@ export default {
 		asyncGoods: Array, //用于展示同步的品牌商品，可不传
 		isAllOrOther: Boolean, //是同步品牌商品的所有信息还是部分信息，可不传
 		categoryList: Array, //是分类列表，为了同步品牌商品，可不传
-		isPackType:String,//0:固定，1：可选，2：自定义，如果有这方面的需求筛选，传要求显示的如'1,2'：就是要求固定和可选
+		isPackType: String //0:固定，1：可选，2：自定义，如果有这方面的需求筛选，传要求显示的如'1,2'：就是要求固定和可选
 	},
 	components: {
 		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		elCategory: () =>import(/*webpackChunkName:'el_category'*/ 'src/components/el_category'),
+		elCategory: () =>
+			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
 	},
 	methods: {
 		// myClick() {
@@ -359,7 +360,10 @@ export default {
 				// console.log('后厨配置用到');
 				let goods = [];
 				for (let i = 0; i < goodList.length; i++) {
-					if (goodList[i].status != '2'&&goodList[i].isGroup != '1') {
+					if (
+						goodList[i].status != '2' &&
+						goodList[i].isGroup != '1'
+					) {
 						goods.push(goodList[i]);
 					}
 				}
@@ -433,13 +437,21 @@ export default {
 					}
 				}
 				goodList = goods;
-			} else {
+			} else if (this.goInName == 'hotGoods') {
+				let goods = [];
+				for (let i = 0; i < goodList.length; i++) {
+					//过滤下架及自定义商品
+					if (goodList[i].status != '2' && goodList[i].type != '2') {
+						goods.push(goodList[i]);
+					}
+				}
+				goodList = goods;
 			}
 			for (let i = 0; i < goodList.length; i++) {
 				this.$set(goodList[i], 'selected', false); //往列表里塞selected，单选全选点击用
 				// goodList[i].selected = false;
 				if (obj[goodList[i].id]) {
-					console.error('有重复id');
+					console.log('有重复id');
 				} else {
 					obj[goodList[i].id] = i;
 				}
@@ -482,7 +494,12 @@ export default {
 			// console.log(this.isPackType);
 			for (let i = 0; i < packlist.length; i++) {
 				packlist[i].selected = false;
-				if (packlist[i].status == '2'||(this.isPackType && this.isPackType.indexOf(packlist[i].type)==-1)) {//下架的或者有需求要求显示的套餐
+				if (
+					packlist[i].status == '2' ||
+					(this.isPackType &&
+						this.isPackType.indexOf(packlist[i].type) == -1)
+				) {
+					//下架的或者有需求要求显示的套餐
 					packlist.splice(i, 1);
 					i--;
 				}
@@ -494,7 +511,7 @@ export default {
 			// console.log(packlist);
 			for (let i = 0; i < packlist.length; i++) {
 				if (obj[packlist[i].id]) {
-					console.error('有重复id');
+					console.log('有重复id');
 				} else {
 					obj[packlist[i].id] = i;
 				}
@@ -507,8 +524,10 @@ export default {
 					}
 				}
 			}
-			if (this.goInName == 'packsChoice') {//如果从套餐同步进入
-				if (!this.isAllOrOther) {//且不是套餐整个信息同步
+			if (this.goInName == 'packsChoice') {
+				//如果从套餐同步进入
+				if (!this.isAllOrOther) {
+					//且不是套餐整个信息同步
 					for (let i = 0; i < this.asyncGoods.length; i++) {
 						//单个选项没有同步过的禁止点击
 						let bb = false;
@@ -538,11 +557,11 @@ export default {
 		getGoodList: function(index) {
 			this.allGood = true;
 			//切换商品-套餐，分类选择置空
-			this.oneArea.oneAreaIndex= -1;
-			this.oneArea.name= '请选择一级分类';
-			this.twoArea.twoAreaIndex= -1;
-			this.twoArea.name= '请选择二级分类';
-			this.twoArea.twoAreaList= [{ id: '0', name: '全部二级分类' }];
+			this.oneArea.oneAreaIndex = -1;
+			this.oneArea.name = '请选择一级分类';
+			this.twoArea.twoAreaIndex = -1;
+			this.twoArea.name = '请选择二级分类';
+			this.twoArea.twoAreaList = [{ id: '0', name: '全部二级分类' }];
 
 			if (index == 0) {
 				this.isPackage = false;
@@ -560,11 +579,12 @@ export default {
 				for (let i = 0; i < this.goodsCom.length; i++) {
 					this.goodsCom[i].selected = false;
 				}
-				if(this.isPackage){//单选的话，如果切换的是套餐，则将所选择的商品清空
+				if (this.isPackage) {
+					//单选的话，如果切换的是套餐，则将所选择的商品清空
 					for (let i = 0; i < this.goodList.length; i++) {
 						this.goodList[i].selected = false;
 					}
-				}else{
+				} else {
 					for (let i = 0; i < this.packlist.length; i++) {
 						this.packlist[i].selected = false;
 					}
@@ -747,13 +767,13 @@ export default {
 			this.oneArea.oneAreaIndex = index;
 			this.twoArea.twoAreaIndex = -1;
 			let item = this.oneArea.oneAreaList[index];
-			this.selectOneArea(index,item);
+			this.selectOneArea(index, item);
 		},
 		//二级分类框返回
 		newselectTwoArea(index) {
 			this.twoArea.twoAreaIndex = index;
 			let item = this.twoArea.twoAreaList[index];
-			this.selectTwoArea(index,item);
+			this.selectTwoArea(index, item);
 		},
 		//选择一级分类
 		selectOneArea: function(index, item) {
@@ -836,7 +856,7 @@ export default {
 		async getOneAreaList() {
 			this.oneArea.oneAreaList = [{ id: '0', name: '全部' }]; //分类列表
 			let oneAreaList = [{ id: '0', name: '全部' }];
-			let twoAreaList = [{ id: '0', name: '全部二级分类' }];
+			//			let twoAreaList = [{ id: '0', name: '全部二级分类' }];
 			let list;
 			let areaList = storage.session('areaList');
 			//如果存在保存的分类信息
@@ -862,10 +882,9 @@ export default {
 	watch: {
 		goodList: {
 			deep: true,
-			handler: function(val, oldVal) {
+			handler: function(val) {
 				let goodsCom = val;
 				let arr = [];
-				let newArr = [];
 				for (let i = 0; i < goodsCom.length; i++) {
 					if (goodsCom[i].selected == true) {
 						arr.push(goodsCom[i]);
@@ -876,9 +895,9 @@ export default {
 		},
 		packlist: {
 			deep: true,
-			handler: function(val, oldVal) {
-				let goodsCom = val;
-				let arr = [];
+			handler: function() {
+				//				let goodsCom = val;
+				//				let arr = [];
 				let newArr = [];
 				let packlist = this.packlist;
 				for (let i = 0; i < packlist.length; i++) {

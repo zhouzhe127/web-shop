@@ -15,12 +15,14 @@
 				<div class="jobWin" id="jobWin">
 					<h2 class="required tag">文字桌牌号名称</h2>
 					<div class="mes">
-						<input type="text" class="input" maxlength="7" style="width: 100%; " v-model="info.name" placeholder="请输入文字桌牌号名称">
+						<el-input v-model="info.name" placeholder="请输入文字桌牌号名称" style="width:180px" maxlength="7"></el-input>
+						<!--<input type="text" class="input" maxlength="7" style="width: 100%; " v-model="info.name" placeholder="请输入文字桌牌号名称">-->
 					</div>
 					<div class="clear"></div>
 					<h2 class="required tag">排序</h2>
 					<div class="mes">
-						<subadd :bindnum="info.sort" :maxnum="255" :minnum="1" :sign='false' @toClick="change"></subadd>
+						<el-input-number v-model="info.sort" :min="1" :max="255" label="描述文字"></el-input-number>
+						<!--<subadd :bindnum="info.sort" :maxnum="255" :minnum="1" :sign='false' @toClick="change"></subadd>-->
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -57,9 +59,9 @@ export default {
 	},
 	methods: {
 		//排序组件返回
-		change(res) {
-			this.info.sort = res;
-		},
+		//		change(res) {
+		//			this.info.sort = res;
+		//		},
 		//添加
 		async add(backRes) {
 			let res = await http.addTablecard({
@@ -102,9 +104,9 @@ export default {
 		}
 	},
 	components: {
-		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
-		subadd: () =>
-			import(/*webpackChunkName: "subadd"*/ 'src/components/subadd')
+		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
+		//		subadd: () =>
+		//			import(/*webpackChunkName: "subadd"*/ 'src/components/subadd')
 	}
 };
 </script>
@@ -113,7 +115,7 @@ export default {
 .jobWin {
 	width: 480px;
 	height: auto;
-	min-height: 480px;
+	min-height: 250px;
 	padding-top: 20px;
 	background-color: #f2f2f2;
 	.tag {
