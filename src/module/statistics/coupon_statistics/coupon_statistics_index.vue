@@ -285,7 +285,7 @@
 					'8': '随机减免券'
 				}, // 默认优惠券
 				shopListBtn: false, // 是否展示优惠券列表
-				fiterCards: [1, 2, 3, 4, 5, 6], //  优惠券多选
+				//fiterCards: [1, 2, 3, 4, 5, 6], //  优惠券多选
 				fiterId: [],
 				changePage: true,
 				couponType: 0,
@@ -367,15 +367,15 @@
 					}
 				}
 			},
-			selectCouponType(val) {
-				this.card = val;
-				this.fiterCards = [];
-				for (let i of this.card) {
-					if (i.selected) {
-						this.fiterCards.push(i.id);
-					}
-				}
-			},
+			// selectCouponType(val) {
+			// 	this.card = val;
+			// 	this.fiterCards = [];
+			// 	for (let i of this.card) {
+			// 		if (i.selected) {
+			// 			this.fiterCards.push(i.id);
+			// 		}
+			// 	}
+			// },
 			// pageNum(obj) {
 			// 	if (this.fiterCards.length == 0) {
 			// 		this.$store.commit('setWin', {
@@ -648,7 +648,7 @@
 				this.page = 1;
 				this.shopListBtn = false;
 				this.selectName = ['请选择优惠券类型'];
-				this.fiterCards = [];
+				//this.fiterCards = [];
 				this.listLen = 0;
 				this.pageTotal = 0;
 				this.isShow0 = false; // 判断优惠券状态添加class
