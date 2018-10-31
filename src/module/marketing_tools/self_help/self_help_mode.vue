@@ -721,6 +721,7 @@
 		position: relative;
 		border: 1px solid #E1BB4A;
 		color: #E1BB4A;
+		border-radius: 4px;
 	}
 
 	.add-config>span:hover i {
@@ -855,6 +856,7 @@
 		padding: 0;
 		text-align: center;
 		line-height: 36px;
+		border-radius: 4px 0 0 4px;
 	}
 
 	.num_input {
@@ -866,6 +868,7 @@
 		text-align: center;
 		line-height: 36px;
 		text-indent: 0;
+		border-radius: 0px 4px 4px 0px;
 	}
 
 	.alink_wap {
