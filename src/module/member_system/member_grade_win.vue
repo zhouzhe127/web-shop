@@ -452,10 +452,10 @@ export default {
 		async editLevel() {
 			// 编辑会员等级
 			if (this.ischain == '0' || this.ischain == '3') {
-				if (Number(this.isDefaultVip) == '1' && this.activeValue != '0.00') {
-					this.validata('默认等级升级金额必须为0');
-					return false;
-				}
+				// if (Number(this.isDefaultVip) == '1' && this.activeValue != '0.00') {
+				// 	this.validata('默认等级升级金额必须为0');
+				// 	return false;
+				// }
 				await http.editMemberlevel({
 					data: {
 						id: this.gid,
