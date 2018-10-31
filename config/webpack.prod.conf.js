@@ -27,7 +27,7 @@ var webpackConfig = merge(baseWebpackConfig, {
 		umdNamedDefine: true
 	},
 	externals:{
-		"babel-polyfill":{
+		"@babel/polyfill":{
 			root: 'BabelPolyfill',
 			commonjs: 'babel-polyfill',
 			commonjs2: 'babel-polyfill',
