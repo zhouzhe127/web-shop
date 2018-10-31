@@ -141,9 +141,10 @@
 
 					<section v-if="good.type!=2" style="width:100%;">
 						<el-form :model="good" ref="good" label-width="80px">
-							<el-form-item v-if="good.categoryCode!='' && (ischain=='0'||ischain=='3')" label="编码">
-								<span>{{good.categoryCode}}</span>
-								<el-input v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
+							<el-form-item v-if="good.categoryCode!=''" label="编码">
+								<span>{{good.categoryCode}}-</span>
+								<el-input v-if="ischain=='0'||ischain=='3'" v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
+								<span v-if="ischain=='1'||ischain=='2'">{{good.goodsCode}}</span>
 							</el-form-item>
 							<el-form-item required label="分类">
 								<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
@@ -260,7 +261,7 @@
 				<section v-if="good.type==2">
 					<el-form :model="good" ref="good" label-width="100px">
 						<el-form-item v-if="good.categoryCode!=''" label="编码">
-							<span>{{good.categoryCode}}</span>
+							<span>{{good.categoryCode}}-</span>
 							<el-input v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
 						</el-form-item>
 						<el-form-item required label="分类">

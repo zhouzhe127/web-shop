@@ -157,7 +157,8 @@
 					</el-table-column>
 					<el-table-column fixed min-width="100" show-overflow-tooltip align="center" prop="goodsCode" label="编码">
 						<template slot-scope="scope">
-							<span>{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
+							<span v-if="scope.row.id<10000">{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
