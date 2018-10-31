@@ -61,13 +61,13 @@
 				integralName: '横版风格',
 				integraloffName: '横版风格',
 				integralList: [{
-						name: '横版风格',
-						id: 1
-					},
-					{
-						name: '竖版风格',
-						id: 2
-					}
+					name: '横版风格',
+					id: 1
+				},
+				{
+					name: '竖版风格',
+					id: 2
+				}
 				],
 				integralOn: 1, //横版风格
 				integralOff: 1, //竖版风格

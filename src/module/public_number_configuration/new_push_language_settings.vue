@@ -35,7 +35,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
 			<div class="rightHalf">
-				<a href="javascript:void(0);" class="yellow fl" style='width:200px;' @click="addConfig">保存</a>
+				<!-- <a href="javascript:void(0);" class="yellow fl" style='width:200px;' @click="addConfig">保存</a> -->
+				<el-button type="primary" class="blue" style="width:200px;" @click="addConfig">保存</el-button>
 			</div>
 		</div>
 	</div>
@@ -248,7 +249,7 @@ export default {
 	width: 100%;
 	height: 28px;
 	line-height: 28px;
-	border-left: 4px solid #28a8e0;
+	border-left: 4px solid #E1BB4A;
 	margin: 15px 0 15px;
 	position: relative;
 }
