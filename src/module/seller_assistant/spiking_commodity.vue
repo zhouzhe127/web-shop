@@ -78,8 +78,11 @@
 		<!-- 翻页 -->
 		<section class="turn-page">
 			<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]"
-			 :isNoJump="true"></pageElement>
+			 :isNoJump="true">
+            </pageElement>
 		</section>
+
+
 	</div>
 </template>
 <script>
@@ -308,9 +311,11 @@
 
 				this.goodslist = data.goodsList; //获取列表
 				this.goodslist = data.list; //获取列表
-
-				this.pageNum = data.total;
-				this.count = data.count;
+				if(this.page ==1){
+					this.pageNum = data.total;
+					this.count = data.count;
+				}
+				
 
 			}, 
 
