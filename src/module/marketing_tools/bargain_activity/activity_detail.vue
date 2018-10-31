@@ -3,12 +3,8 @@
 		<div class="navigation clearFix">
 			<div class="startText">统计范围</div>
 			<div>
-				<el-date-picker
-						v-model="qureyTime"
-						type="daterange"
-						start-placeholder="开始日期"
-						end-placeholder="结束日期">
-					</el-date-picker> 
+				<el-date-picker v-model="qureyTime" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期">
+				</el-date-picker>
 			</div>
 			<div>
 				<el-button type="primary" @click="filterData">筛选</el-button>
@@ -18,124 +14,157 @@
 			</div>
 		</div>
 		<div class="tableWrap">
-			<el-table border
-					:data="goodsList"
-					style="width: 100%">
-					<el-table-column
-						prop="name"
-						label="商品名称"
-						width="100">
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="发起砍价人数"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="帮砍人数"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="发券量"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="核销量"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="新增会员"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="优惠金额"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="percentage"
-						label="优惠占比"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="num"
-						label="拉动消费"
-						>
-					</el-table-column>
-					<el-table-column
-						prop="date"
-						label="操作"
-						width="100">
-						<template slot-scope="scope">
-							<el-button @click="activation(scope.$index)" type="text" size="small" v-if="0">上架</el-button>
-							<el-button @click="abolish(scope.$index)" type="text" size="small" v-else>下架</el-button>
+			<el-table border :data="goodsList" style="width: 100%">
+				<el-table-column prop="name" label="商品名称" width="100">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="发起砍价人数">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="帮砍人数">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="发券量">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="核销量">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="新增会员">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="优惠金额">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="优惠占比">
+				</el-table-column>
+				<el-table-column prop="needPeople" label="拉动消费">
+				</el-table-column>
+				<el-table-column v-if="isBrand" prop="date" label="操作" width="100">
+					<template slot-scope="scope">
+						<template v-if="scope.row.status == 1">
+							<el-button @click="activation(scope.row)" type="text" size="small">上架</el-button>
 							<el-button type="text" size="small" @click="editActivity(scope.$index)">编辑</el-button>
 						</template>
-					</el-table-column>
+						<template v-else>
+							<el-button @click="abolish(scope.row)" type="text" size="small">下架</el-button>
+						</template>
+					</template>
+				</el-table-column>
 			</el-table>
 		</div>
+		<template v-if="showEditGoods">
+			<edit-activity-goods @close="goodsClose">
+			</edit-activity-goods>
+		</template>
 	</div>
 </template>
 
 <script>
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+
+let isBrand =
+	storage.session('userShop').currentShop.ischain == 3 ? true : false;
+// let isUpdate = false;
 export default {
-	data: ()=>{
+	data: () => {
 		return {
 			qureyTime: '',
-			goodsList: []
+			goodsList: [],
+			showEditGoods: false,
+			selectGoods: null,
+			isBrand
 		};
 	},
 	props: {
-		selectActivity: {type:Object,required: true},
-		activityDetail: {type:Object,required: true}
+		// selectActivity: {type:Object,required: true},
+		// activityDetail: {type:Object,required: true}
 	},
 	methods: {
-		// 上架
-		activation(){
+		goodsClose() {
+			this.showEditGoods = false;
+		},
+		goodsSave() {
 			console.log('no-empty-function');
 		},
-		// 架
-		abolish(){
+		goodsEdit() {
 			console.log('no-empty-function');
+		},
+		// 上架
+		async activation(goods) {
+			let data = await http.activityPushGoods({
+				data: {
+					actId: goods.actId,
+					id: goods.id
+				}
+			});
+			if (data) {
+				// this.getDetail()
+				goods.status = '0';
+			}
+		},
+		// 下架
+		async abolish(goods) {
+			console.log(goods);
+			let data = await http.activityRevokePushGoods({
+				data: {
+					actId: goods.actId,
+					id: goods.id
+				}
+			});
+			if (data) {
+				// this.getDetail()
+				goods.status = '1';
+			}
 		},
 		// 编辑
-		editActivity(){
-			console.log('no-empty-function');
+		editActivity(goods) {
+			this.$store.commit('selectGoods', goods);
+			this.showEditGoods = true;
 		},
 		// 按照时间过滤
-		async filterData(){
+		async filterData() {
 			// this.goodsList = await http.getActivityDetail()
-			this.goodsList = this.goodsList.splice(0,this.goodsList.length-1);
+			this.goodsList = this.goodsList.splice(
+				0,
+				this.goodsList.length - 1
+			);
 		},
-		back(){
+		back() {
 			this.$emit('back');
+		},
+		async getDetail() {
+			let data = await http.activityGetActivityDetail({
+				data: {
+					actId: this.selectedActivity.id
+				}
+			});
+			this.goodsList = data.goods;
 		}
 	},
-	computed:{},
-	created(){
-		this.goodsList = this.activityDetail.goodsList;
+	computed: {
+		selectedActivity() {
+			return this.$store.getters.getActivity;
+		}
+	},
+	created() {
+		this.getDetail();
+		// this.goodsList = this.selectedGoods //this.activityDetail.goodsList;
+	},
+	components: {
+		EditActivityGoods: () =>
+			import(/*webpackChunkName: 'edit_activity_goods'*/ './edit_activity_goods.vue')
 	}
 };
 </script>
 
 <style lang="less" scoped>
-	.navigation{
-		margin-bottom: 20px;
-		>div{
-			float: left;
-			margin: 0 5px;
-		}
-		.startText {
-			height: 40px;
-			line-height: 40px;
-		}
-		.rightBtn{
-			float: right;
-		}
+.navigation {
+	margin-bottom: 20px;
+	> div {
+		float: left;
+		margin: 0 5px;
 	}
-
+	.startText {
+		height: 40px;
+		line-height: 40px;
+	}
+	.rightBtn {
+		float: right;
+	}
+}
 </style>

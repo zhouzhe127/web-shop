@@ -1,7 +1,8 @@
 import {
 	s,
 	w,
-	b
+	b,
+	f
 } from 'src/config/host_var';
 
 export default {
@@ -352,5 +353,41 @@ export default {
 	'getSubscribeFansCount': {
 		url: w + 'Activityfans/getSubscribeFansCount', //获取活动粉丝
 		method: 'get'
-	}
+	},
+	/* ↓ 砍价活动(粮票集) ↓
+	-------------------*/
+	'activityCreateActivity': {
+		url: f + 'api/activity/createActivity', //新建砍价活动
+		method: 'post'
+	},
+	'activityEditActivity': {
+		url: f + 'api/activity/editActivity', // 修改砍价活动
+		method: 'post'
+	},
+	'activityAddGoods': {
+		url: f + 'api/Activity/addGoods', //添加活动商品
+		method: 'post'
+	},
+	'activityEditGoods': {
+		url: f + 'api/Activity/editGoods', // 编辑活动商品
+		method: 'post'
+	},
+	'activityPushGoods': {
+		url: f + 'api/Activity/pushGoods', // 上架活动商品
+		method: 'post'
+	},
+	'activityRevokePushGoods': {
+		url: f + 'api/Activity/revokePushGoods', // 下架活动商品
+		method: 'post'
+	},
+	'activityGetActivity': {
+		url: f + 'api/activity/getActivity', // 获取砍价活动列表
+		method: 'get'
+	},
+	'activityGetActivityDetail': {
+		url: f + 'api/Activity/getActivityDetail', // 获取砍价活动明细
+		method: 'get'
+	},
+	/* ↑ 砍价活动(粮票集) ↑
+	-------------------*/
 };

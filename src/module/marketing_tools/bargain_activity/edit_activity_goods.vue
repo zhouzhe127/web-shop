@@ -4,38 +4,24 @@
 			<el-form-item label="商品名称" prop="name">
 				<el-input v-model="form.name" class="w217"></el-input> <span class="textTip">限20字</span>
 			</el-form-item>
-			<el-form-item label="商品类型">
-				<el-radio-group v-model="form.type">
-					<el-radio-button label="1" type="primary">兑换券</el-radio-button>
-					<el-radio-button label="2" type="primary">抵用券</el-radio-button>
-				</el-radio-group>
+			<el-form-item label="商品券">
+				<el-button type="primary" @click="showCouponListWin">关联券</el-button>
+				<span class="textTip" v-if="selectedCouponTemp">已关联{{selectedCouponTemp.name}}</span>
 			</el-form-item>
-			<el-form-item label="" v-show="form.type == 1">
-				<el-button type="primary" @click="showGoodsList = true">关联商品</el-button>
-				<span class="textTip" v-if="form.goodsIds.length">已经选择{{form.goodsIds.length}}个商品</span>
-			</el-form-item>
-			<el-form-item label="实际抵扣金额" v-show="form.type == 2" prop="originalPrice">
-				<el-input v-model.number="form.originalPrice" class="w217"></el-input>
-				<span class="textTip">强制减免金额</span>
-			</el-form-item>
-			<el-form-item label="商品图片" required>
-				<div style="width:300px;height: 200px;background: #cfcfcf;"> 编辑图片</div>
-			</el-form-item>
-
 			<el-form-item required label="商品图片">
-				<section style="width:100%;overflow:auto;">
-					<div class="good-image">
-						<div class="good-image-div" id="image">
-							<img v-if="form.imgUrl" :src="form.imgUrl" width="225" height="150">
-							<img v-else src="../../../res/images/busis.png" width="225" height="150" alt="商品" />
-							<a class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
-							<a class="good-image-edit">编辑图片</a>
-							<form enctype="multipart/form-data" id="img_upload">
-								<input type="file" @change="uploadGoodsImg" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" class="good-image-file" />
-							</form>
-						</div>
+				<div class="good-image">
+					<div class="good-image-div" id="image">
+						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="225" height="150">
+						<img v-else src="../../../res/images/busis.png" width="225" height="150" alt="商品" />
+						<a class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
+						<a class="good-image-edit">编辑图片</a>
+						<form enctype="multipart/form-data" id="img_upload">
+							<input type="file" @change="uploadGoodsImg" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" class="good-image-file" />
+						</form>
 					</div>
-				</section>
+				</div>
+				<!-- <section style="width:100%;overflow:auto;">
+				</section> -->
 			</el-form-item>
 			<el-form-item label="商品描述" prop="remark">
 				<el-input v-model="form.remark" class="w217" maxlength="20"></el-input>
@@ -77,10 +63,10 @@
 					<el-option :label="v+2+'小时'" :value="v+2" v-for="(v,i) in 22" :key="i"></el-option>
 				</el-select>
 			</el-form-item>
-			<el-form-item label="适用门店" required>
+			<!-- <el-form-item label="适用门店" required>
 				<el-shop-list :shopIds="form.shopIds" @chooseShop="backShopId"></el-shop-list>
-			</el-form-item>
-			<el-form-item label="券有效期" required>
+			</el-form-item> -->
+			<!-- <el-form-item label="券有效期" required>
 				<el-radio-group v-model="form.validityType">
 					<el-radio-button label="0">相对时间</el-radio-button>
 					<el-radio-button label="1">指定时间</el-radio-button>
@@ -88,8 +74,8 @@
 			</el-form-item>
 			<el-form-item v-if="form.validityType=='0'" required>
 				领取后<el-input v-model.number="form.relativeTime" class="relativeTimeInput"></el-input>日内有效
-			</el-form-item>
-			<el-form-item label="指定生效时间" v-else required>
+			</el-form-item> -->
+			<!-- <el-form-item label="指定生效时间" v-else required>
 				<el-date-picker v-model="form.validityTime" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期">
 				</el-date-picker>
 			</el-form-item>
@@ -102,22 +88,46 @@
 					<el-option label="与其它优惠共享" value="1"></el-option>
 					<el-option label="不与其它优惠共享" value="0"></el-option>
 				</el-select>
-			</el-form-item>
+			</el-form-item> -->
 			<el-form-item>
 				<el-button @click="cancel">取消</el-button>
-				<el-button type="primary" @click="submit">保存</el-button>
-				<el-button type="primary" @click="submitAndNewGoods">保存并新建商品</el-button>
+				<el-button type="primary" @click="submit(false)">保存</el-button>
+				<el-button type="primary" @click="submit(true)">保存并新建商品</el-button>
 			</el-form-item>
 		</el-form>
-		<template v-if="showGoodsList">
-			<goods-list-win :goodsIds="form.goodsIds" :isGoods="true" :isOnlyGoods="true" @goodListWin="goodsListHandle"></goods-list-win>
+		<el-dialog title="添加关联优惠券" :visible.sync="showCouponList" width="600px">
+			<div class="dialogContent">
+				<div class="tab">
+					<el-button type="primary" @click="gotoAddCoupon" class="fr">新增优惠券</el-button>
+					<el-radio-group v-model="couponType">
+						<el-radio-button label="0">全部</el-radio-button>
+						<el-radio-button label="1">减免</el-radio-button>
+						<el-radio-button label="2">赠菜</el-radio-button>
+					</el-radio-group>
+				</div>
+				<div class="listWrap">
+					<ul class="listContent">
+						<li v-for="(v,i) in couponList" :key="i" @click="selectedCouponTemp = v" :class="{sign: selectedCouponTemp && selectedCouponTemp.id==v.id}">{{v.name}}</li>
+					</ul>
+				</div>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="showCouponList = false">取 消</el-button>
+				<el-button type="primary" @click="confirmSelectCoupon">确 定</el-button>
+			</span>
+		</el-dialog>
+
+		<template v-if="showAddCoupon">
+			<add-coupon @cb="addCouponCb"></add-coupon>
 		</template>
 	</div>
 </template>
 
 <script>
 import http from 'src/manager/http';
-
+import storage from 'src/verdor/storage';
+let userShop = storage.session('userShop');
+const shopId = userShop.currentShop.id;
 function validateOriginalPrice(rule, value, cb) {
 	if (/\D+/g.test(value + '')) {
 		cb(new Error('必须输入正整数,请按照正确格式填写'));
@@ -135,7 +145,10 @@ function validateOriginalPrice(rule, value, cb) {
 const validateRules = {
 	name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
 	remark: [{ required: true, message: '请输入活动描述', trigger: 'blur' }],
-	originalPrice: [{ validator: validateOriginalPrice, trigger: 'blur' }],
+	originalPrice: [
+		{ required: true, message: '请输入原价(起砍价)', trigger: 'blur' },
+		{ validator: validateOriginalPrice, trigger: 'blur' }
+	],
 	needPeople: [{ required: true, message: '请选择砍价人数' }],
 	floorPrice: [
 		{ required: true, message: '请填写底价', trigger: 'blur' },
@@ -148,12 +161,12 @@ const validateRules = {
 export default {
 	data: () => {
 		return {
+			uploadUrl: userShop.uploadUrl,
 			form: {
 				id: '', // id
 				actId: '', // 活动id
 				name: '', // 活动券名称
-				type: 1, // 活动券名称1代金券；2商品券
-				goodsIds: [], // 商品id
+				// type: 1, // 活动券名称1代金券；2商品券
 				imgUrl: '', // 券图片地址
 				remark: '', // 券描述
 				originalPrice: '', // 原价
@@ -161,20 +174,24 @@ export default {
 				needPeople: '', // 砍价人数
 				planType: 1, // 返利方案类型 1：固定金额；2按比例
 				planValue: '', // 返利值。如果planType=1，则表示返利金额；如果planType=2，则表示返利百分比；
-				lifeCycle: '', // 砍价生存时间 （按小时计）
-				shopIds: '', // 使用门店
-				delayHours: '', // 延迟生效时间，按小时计算
-				isDiscount: '1', // 是与其他优惠共享 0否，1是
-				validityType: '0', // 有效期类型:0相对时间,1绝对时间
-				relativeTime: '', // 有效期相对时间（领券后按天计算）
-				validityTime: '',
-				beginTime: '', // 优惠券生效时间
-				endTime: '', // 优惠券失效时间
-				useTime: '', // 使用时段,空代表不限制
-				status: '' // 状态 0.初始；1上架；3下架
+				lifeCycle: '' // 砍价生存时间 （按小时计）
+				// delayHours: '', // 延迟生效时间，按小时计算
+				// isDiscount: '1', // 是与其他优惠共享 0否，1是
+				// validityType: '0', // 有效期类型:0相对时间,1绝对时间
+				// relativeTime: '', // 有效期相对时间（领券后按天计算）
+				// validityTime: '',
+				// beginTime: '', // 优惠券生效时间
+				// endTime: '', // 优惠券失效时间
+				// useTime: '', // 使用时段,空代表不限制
+				// status: '' // 状态 0.初始；1上架；3下架
 			},
+			couponType: '0',
 			validateRules: validateRules,
-			showGoodsList: false
+			showCouponList: false,
+			showAddCoupon: false, // 显示新建的优惠券
+			couponList: [], // 优惠券列表
+			selectedCoupon: '', // 选中的优惠券
+			selectedCouponTemp: '' // 选中的优惠券 临时存
 		};
 	},
 	props: {
@@ -183,71 +200,190 @@ export default {
 	methods: {
 		//编辑图片
 		async uploadGoodsImg() {
-			console.log('我要提交图片了');
 			this.form.imgUrl = await http.uploadImg({
 				data: {
 					type: 5,
-					shopId: this.shopId
+					shopId: shopId
 				},
 				formId: 'img_upload'
 			});
-			console.log('this.form.imgUrl');
-			console.log(this.form.imgUrl);
 		},
 		deleteGoodImg() {
-			console.log('no emty fun');
-		},
-		cancel() {
-			this.$emit('closeEditGoods');
-		},
-		validateDate() {
-			this.$refs.formDm.validate(valid => {
-				if (valid) {
-					if (!this.qualifiedFloorPrice) {
-						this.$message.error('请填写合适的底价');
-					}
-					if (!this.qualifiedPlanValue) {
-						this.$message.error('请填写正确的返利金额');
+			this.$message({
+				message: '此商品无图片!',
+				type: 'warning'
+			});
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				winType: 'confirm',
+				content: '确认删除图片?',
+				callback: res => {
+					if (res == 'ok') {
+						this.form.imgUrl = '';
 					}
 				}
 			});
 		},
-		submit() {
-			if (this.validateDate()) {
-				this.addCoupon(() => {
-					this.$emit('updataGoods', this.form);
-				});
+		cancel() {
+			this.$emit('close');
+		},
+		validateDate() {
+			let isOk = true;
+
+			this.$refs.formDm.validate(valid => {
+				if (valid) {
+					if (!this.qualifiedFloorPrice) {
+						this.$message.error('请填写合适的底价');
+						isOk = false;
+					}
+					if (!this.qualifiedPlanValue) {
+						this.$message.error('请填写正确的返利金额');
+						isOk = false;
+					}
+				} else {
+					this.$message.error('请填写将信息补充完整');
+					isOk = false;
+				}
+			});
+			return isOk;
+		},
+		submit(createAgain) {
+			if (!this.validateDate()) {
+				return;
+			}
+			let prarm = JSON.parse(JSON.stringify(this.form));
+			prarm.actId = this.selectedActivity.id;
+			prarm.startPrice = prarm.originalPrice;
+			prarm.couponId = this.selectedCoupon.id || 7;
+			if (this.selectedGoods) {
+				prarm.id = this.selectedGoods.id;
+				this.editGoods(prarm);
+			} else {
+				this.addGoods(prarm);
+			}
+			if (createAgain) {
+				this.resetGoods();
+			} else {
+				this.cancel();
 			}
 		},
-		async addCoupon(cb) {
-			let prarm = this.from;
-			let data = http.activityAddCoupon({
+		async addGoods(prarm) {
+			let data = await http.activityAddGoods({
 				data: prarm
 			});
 			if (data) {
-				cb();
+				prarm.id = data;
+				this.$store.commit('createGoods', prarm);
 			}
 		},
-		submitAndNewGoods() {
-			this.$emit('updataGoods', this.form);
-			this.initGoods();
-			console.log('no-empty');
-		},
-		backShopId(ids) {
-			this.form.shopIds = ids;
-		},
-		goodsListHandle(res, item) {
-			// console.log(item);
-			let goodArr = item.goodArr;
-			if (goodArr.length <= 5) {
-				this.form.goodsIds = goodArr;
-				this.showGoodsList = false;
-			} else {
-				this.$message.error('最多只能选择5个商品~~');
+		async editGoods(prarm) {
+			let data = await http.activityEditGoods({
+				data: prarm
+			});
+			if(data){
+				this.$store.commit('updateGoods', prarm);
 			}
+		},
+		resetGoods() {
+			this.$refs.formDm.resetFields();
 		},
 		initGoods() {
-			this.$refs.formDm.resetFields();
+			let selectedGoods = JSON.parse(JSON.stringify(this.selectedGoods));
+			// selectedGoods.validityTime = [
+			// 	new Date(selectedGoods.beginTime),
+			// 	new Date(selectedGoods.endTime)
+			// ];
+			selectedGoods.planType -= 0;
+
+			selectedGoods.floorPrice -= 0;
+			selectedGoods.originalPrice = selectedGoods.startPrice;
+
+			this.form = selectedGoods;
+		},
+		async getCouponList() {
+			// let list = await http.getGetCouponCondition({
+			// 	data: {}
+			// })
+			// this.couponList = list
+			this.couponList = [
+				{
+					id: '386',
+					type: '5',
+					name:
+						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u4e0d\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4efb\u4f55\u4f18\u60e0'
+				},
+				{
+					id: '387',
+					type: '5',
+					name:
+						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4efb\u4f55\u4f18\u60e0'
+				},
+				{
+					id: '388',
+					type: '5',
+					name:
+						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u4e0d\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
+				},
+				{
+					id: '389',
+					type: '5',
+					name:
+						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
+				},
+				{
+					id: '390',
+					type: '5',
+					name:
+						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u4e0d\u542b\u53e3\u5473-\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
+				},
+				{
+					id: '391',
+					type: '5',
+					name:
+						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u542b\u53e3\u5473-\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
+				},
+				{
+					id: '392',
+					type: '5',
+					name:
+						'\u8d60\u5957\u9910-\u542b\u53e3\u5473-\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
+				},
+				{
+					id: '393',
+					type: '5',
+					name:
+						'\u8d60\u5957\u9910-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
+				},
+				{
+					id: '394',
+					type: '5',
+					name:
+						'\u8d60\u5957\u9910-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4efb\u4f55\u4f18\u60e0'
+				},
+				{
+					id: '395',
+					type: '6',
+					name:
+						'\u5f3a\u5236-\u4ee3200-\u4e0d\u4e0e\u4efb\u4f55\u4f18\u60e0'
+				}
+			];
+		},
+		addCouponCb(success) {
+			if (success) {
+				//  跟新优惠券列表
+			}
+		},
+		showCouponListWin() {
+			this.getCouponList();
+			this.showCouponList = true;
+		},
+		confirmSelectCoupon() {
+			this.selectedCouponId = this.selectedCouponTemp;
+			this.showCouponList = false;
+		},
+		gotoAddCoupon() {
+			this.showCouponList = false;
+			this.showAddCoupon = true;
 		}
 	},
 	computed: {
@@ -301,17 +437,28 @@ export default {
 				// 百分比
 				return planValue >= this.minPlanValue && planValue <= 100;
 			}
+		},
+		selectedGoods() {
+			return this.$store.getters.getGoods;
+		},
+		selectedActivity() {
+			return this.$store.getters.getActivity;
 		}
 	},
 	created() {
-		console.log('no-empty-function');
+		// 编辑
+		if (this.selectedGoods) {
+			this.initGoods();
+		}
 	},
 	components: {
-		ElShopList: () => {
-			return import(/*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList');
-		},
-		GoodsListWin: () =>
-			import(/*webpackChunkName: 'good_list_win'*/ 'src/components/good_list_win.vue')
+		// ElShopList: () => {
+		// 	return import(/*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList');
+		// },
+		// GoodsListWin: () =>
+		// 	import(/*webpackChunkName: 'good_list_win'*/ 'src/components/good_list_win.vue')
+		AddCoupon: () =>
+			import(/*webpackChunkName: 'breaks_give_food'*/ './../new_coupons/breaks_give_food.vue')
 	}
 };
 </script>
@@ -321,6 +468,7 @@ export default {
 	position: absolute;
 	top: 0px;
 	left: 0;
+	right: 0;
 	background-color: #fff;
 }
 .textTip {
@@ -389,6 +537,48 @@ export default {
 		width: 50%;
 		opacity: 0;
 		cursor: pointer;
+	}
+}
+.tab {
+	margin-bottom: 20px;
+}
+
+.listWrap {
+	max-height: 350px;
+	overflow: auto;
+	.listContent {
+		overflow: hidden;
+		li {
+			position: relative;
+			display: inline-block;
+			height: 40px;
+			line-height: 40px;
+			padding: 0 18px;
+			background-color: #f1f1f1;
+			cursor: pointer;
+			margin: 10px;
+			width: 150px;
+			text-align: center;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+		li::after,
+		li::before {
+			content: '';
+			width: 0;
+			height: 0;
+			border: 8px solid #fff;
+			border-radius: 8px;
+			position: absolute;
+			bottom: 12px;
+		}
+		li::after {
+			right: -9px;
+		}
+		li::before {
+			left: -9px;
+		}
 	}
 }
 </style>
