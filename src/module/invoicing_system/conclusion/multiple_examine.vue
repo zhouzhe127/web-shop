@@ -17,6 +17,8 @@
 					start-placeholder="开始日期"
 					end-placeholder="结束日期"
 					@change="timeChange"
+					:clearable="false"
+					unlink-panels
 					>
 				</el-date-picker>
 			</div>
@@ -180,8 +182,10 @@
 				this.$store.commit('setPageTools', arr);
 			},
 			timeChange(res){
-				this.startTime = new Date(res[0]).setHours(0,0,0,0);
-				this.endTime = new Date(res[1]).setHours(23,59,59,0);
+				if(res){
+					this.startTime = new Date(res[0]).setHours(0,0,0,0);
+					this.endTime = new Date(res[1]).setHours(23,59,59,0);
+				}
 			},
 			formatTime(time) {
 				return utils.format(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss');

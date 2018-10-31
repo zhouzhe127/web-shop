@@ -1,4 +1,3 @@
-
 <!--
 	**中信银行对账单
 	*
@@ -150,7 +149,7 @@ export default {
 			this.zxOrderList = utils.deepCopy(list);
 		},
 		searchBtn: function() {
-			this.page = 0;
+			this.page = 1;
 			this.payChannel = '-1';
 			this.inte();
 		},
@@ -176,7 +175,7 @@ export default {
 			this.inte();
 		},
 		payBtn: function(index) {
-			this.page = 0;
+			this.page = 1;
 			this.payChannel = this.payList[index].id;
 			this.inte();
 		}

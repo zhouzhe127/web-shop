@@ -3,60 +3,64 @@ import {
     w,
     b,
     p
-} from "src/config/host_var";
+} from 'src/config/host_var';
 
 
-import goodsConfig from "./http_goods_config";
-import invoicingSystem from "./http_invoicing_system";
-import shopConfig from "./http_shop_config";
-import marketingTools from "./http_marketing_tools";
-import outFood from "./http_outfood";
-import brand from "./http_brand";
-import publicConfig from "./http_public_configuration";
-import statistics from "./http_statistics";
-import member from "./http_member";
-import cashier from "./http_cashier";
+import goodsConfig from './http_goods_config';
+import invoicingSystem from './http_invoicing_system';
+import shopConfig from './http_shop_config';
+import marketingTools from './http_marketing_tools';
+import outFood from './http_outfood';
+import brand from './http_brand';
+import publicConfig from './http_public_configuration';
+import statistics from './http_statistics';
+import member from './http_member';
+import cashier from './http_cashier';
 import sellerAssents from './http_seller_assents'
 import ticket from './http_ticket'
 
 
 
 let httpConfig = {
-    "Login": {
-        url: s + "entrance/login", //登录
-        method: "post"
+    'Login': {
+        url: s + 'entrance/login', //登录
+        method: 'post'
     },
-    "newLogin": {
-        url: s + "entry/login", //登录  新版本
-        method: "post"
+    'newLogin': {
+        url: s + 'entry/login', //登录  新版本
+        method: 'post'
     },
-    "exportMoreDayOrder": {
-        url: s + "Orderstatistics/exportMoreDayOrder", //堂吃多天数据导出
-        type: "file"
+    'exportMoreDayOrder': {
+        url: s + 'Orderstatistics/exportMoreDayOrder', //堂吃多天数据导出
+        type: 'file'
     },
-    "exportOneDayOrder": {
-        url: s + "Orderstatistics/exportOneDayOrder", //堂吃单天数据导出
-        type: "file"
+    'exportOneDayOrder': {
+        url: s + 'Orderstatistics/exportOneDayOrder', //堂吃单天数据导出
+        type: 'file'
     },
-    "bannerImgUpload": {
+    'bannerImgUpload': {
         // url: s + 'bannerImgs_upload',
         // type: 'upload'
         url: s + 'image/uploadImage',
         // url:s+'image/uploadImg',
-        type: "upload"
+        type: 'upload'
     },
-    "bigImgUpload": {
+    'bigImgUpload': {
         // url: s + 'bigImg_upload',
         // type: 'upload'
         url: s + 'image/uploadImage',
         // url:s+'image/uploadImg',
-        type: "upload"
+        type: 'upload'
     },
-    "uploadImg": {
+    'uploadImg': {
         url: s + 'image/uploadImage',
         // url:s+'image/uploadImg',
-        type: "upload"
-    }
+        type: 'upload'
+	},
+	'getTxt':{
+		url:'http://www.mcrspace.com:3000/log/getTxt',
+		type:'text'
+	}
 
 }
 
@@ -80,7 +84,7 @@ let objConfig = [goodsConfig, invoicingSystem, shopConfig, marketingTools, outFo
 for (let item of objConfig) {
     for (let str in item) {
 
-        if (httpConfig[str]) throw new Error("已经有存在的key: " + str);
+        if (httpConfig[str]) throw new Error('已经有存在的key: ' + str);
         httpConfig[str] = item[str];
     }
 }

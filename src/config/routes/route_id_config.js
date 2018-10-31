@@ -119,7 +119,6 @@ const invoicing_system = {
 	"0839": "invoicing_system/purchase_audit", //采购单审核
 	"0840": "invoicing_system/material_statistics", //物料统计	
 	"0841": "invoicing_system/process_bom",
-	"0842":"invoicing_system/process_material"		//加工物料
 }
 const statistics = {
 	'091': 'statistics/order_brand',

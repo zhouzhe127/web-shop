@@ -9,7 +9,7 @@
 			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
 		</el-radio-group>
 		<!--列表数据-->
-		<section v-if="tabactive==0">
+		<section v-show="tabactive==0">
 			<section class="statisticsList" style="vertical-align: middle;margin-bottom: 20px;">
 				<!-- <section class="filter">
 					<input v-model="searchName" type="text" placeholder="请输入商品名" />
@@ -60,7 +60,7 @@
 				<span slot="con-9" slot-scope="props" v-if="props.data.goodsNum" :title="Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus)">{{addCount(Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus))}}{{props.data.unit}}</span>
 			</com-table>
 		</section>
-		<invent-supplies v-if="tabactive==1" :page2="page2" @page="suppage" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
+		<invent-supplies v-show="tabactive==1" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
 		<div class="somePage" v-if="tabactive==0">
 			<!-- <page-turn :total="total" :isNoJump="false" :isNoPaging='true' :page="page" @pageNum="changePage" ref="pageTurn"></page-turn> -->
 			<el-pagination background @current-change="changePage" :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(count)"></el-pagination>
@@ -72,10 +72,9 @@
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
-	let tabactive = 0;
-	let page = 1;
-	let page2 = 1;
-	let shopId = storage.session('shopId');
+	// let tabactive = 0;
+	// let page = 1;
+	// let shopId = storage.session('shopId');
 	export default {
 		data() {
 			return {
@@ -152,31 +151,30 @@
 				{
 					titleName: '总量'
 				}],
-				page2: 1,
 				inventConfigs: {} //进销存配置
 			};
 		},
-		beforeRouteLeave(to, from, next) {
-			let check = true;
-			let arr = ['detail', 'suppliesDetail', 'materialsPutinStorage', 'putStroage', 'picking', 'warehouseCount',
-				'materialCreate'
-			];
-			arr.map(v => {
-				let str = `/admin/inventoryManagement/${v}`;
-				if (to.path == str || v == 'picking') check = false;
-			});
-			if (check||shopId!=storage.session('shopId')) {
-				page = 1;
-				tabactive = 0;
-				page2 = 1;
-			}
-			next();
-		},
+		// beforeRouteLeave(to, from, next) {
+		// 	let check = true;
+		// 	let arr = ['detail', 'suppliesDetail', 'materialsPutinStorage', 'putStroage', 'picking', 'warehouseCount',
+		// 		'materialCreate'
+		// 	];
+		// 	arr.map(v => {
+		// 		let str = `/admin/inventoryManagement/${v}`;
+		// 		if (to.path == str || v == 'picking') check = false;
+		// 	});
+		// 	if (check||shopId!=storage.session('shopId')) {
+		// 		page = 1;
+		// 		tabactive = 0;
+		// 		page2 = 1;
+		// 	}
+		// 	next();
+		// },
 		methods: {
 			async init() {
 				let data = await http.inventoryGoodsList({
 					data: {
-						page: page,
+						page: this.page,
 						num: this.num,
 						type: this.listType,
 						goodsName: this.searchName,
@@ -207,10 +205,10 @@
 					this.goodsdetail = utils.deepCopy(this.goodsdetail);
 				}
 			},
-			suppage(pages) {
-				page2 = pages;
-				console.log(page);
-			},
+			// suppage(pages) {
+			// 	page2 = pages;
+			// 	console.log(page);
+			// },
 			addCount: function (num) {
 				num += '';
 				//清除字符串开头的0
@@ -328,7 +326,6 @@
 			},
 			changePage: function (currentPage) {
 				this.page = currentPage;
-				page = this.page;
 				this.init();
 			},
 			// selectList: function (select) {
@@ -336,8 +333,6 @@
 			// },
 			tebClick(index) {
 				this.tabactive = index;
-				tabactive = index;
-				storage.session('tabactive', index);
 			},
 			alert(con, title) {
 				this.$store.commit('setWin', {
@@ -385,22 +380,18 @@
 			settype(){
 				this.inventConfigure = storage.session('inventConfigure') || 0;
 				this.inventConfigs = storage.session('inventConfigs');
-				this.tabactive = this.inventConfigure == 0 ? 0 : this.inventConfigure - 1;
-				if (storage.session('tabactive') && this.inventConfigure == 0)
-					this.tabactive = storage.session('tabactive');
-				if(this.inventConfigure == 0) this.tabactive = tabactive;
+				this.tabactive = this.inventConfigure == 0 ? this.tabactive : this.inventConfigure - 1;
 			}
 		},
-		beforeMount() {
-			this.page2 = page2;
-		},
-		async mounted () {
+		async activated () {
 			this.shopId = storage.session('itemId');
-			console.log(this.page);
 			this.settype();
-			//			this.addEduce();
+			if (!this.tabactive) {
+				this.addEduce();
+			} else {
+				this.suppliesBtn();
+			}
 			await this.init();	
-			this.page = page;
 		},
 		destroyed() {
 			storage.session('tabactive', null);
