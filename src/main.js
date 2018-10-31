@@ -17,8 +17,7 @@ import directive from 'src/manager/directive';
 // import DataBase from 'src/verdor/database';
 import storgae from 'src/verdor/storage'
 import utils from 'src/verdor/utils'
-import 'src/components/index.css';
-// import ElementUI from 'src/components/main';
+import elementCss from 'src/components/index.css';
 import ElementUI from 'src/components/element-ui.common';
 
 

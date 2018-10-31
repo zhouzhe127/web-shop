@@ -36,7 +36,8 @@ var webpackConfig = merge(baseWebpackConfig, {
 		'vue' : 'Vue',
         'vuex' : 'Vuex',
         'vue-router' : 'VueRouter',
-        'src/components/element-ui.common' : 'Element',
+		'src/components/element-ui.common' : 'Element',
+		"src/components/index.css": 'ElementCss'
 	},
 	
     module: {
