@@ -1,8 +1,4 @@
-import {
-	s,
-	w,
-	b
-} from 'src/config/host_var';
+import { s, w, b } from 'src/config/host_var';
 
 export default {
 	//---------------------统计管理------------------
@@ -297,7 +293,7 @@ export default {
 	},
 	scanPayQuery: {
 		url: w + 'Reportstatistics/scanPayQuery', //查询
-		method: 'get'
+		method: 'post'
 	},
 	getScanTaskStatus: {
 		url: w + 'Reportstatistics/getTaskStatus', //查询
@@ -329,7 +325,7 @@ export default {
 	},
 	takeoutOrderQuery: {
 		url: w + 'Reportstatistics/takeoutOrderQuery', //自营外卖查询
-		method: 'get'
+		method: 'post'
 	},
 	getTakeoutData: {
 		url: w + 'Reportstatistics/getTakeoutData', //自营外卖获取数据
@@ -345,7 +341,7 @@ export default {
 	},
 	rechargeQuery: {
 		url: w + 'Reportstatistics/rechargeQuery', //会员充值统计
-		method: 'get'
+		method: 'post'
 	},
 	getRechargeData: {
 		url: w + 'Reportstatistics/getRechargeData', //会员充值统计获取数据
@@ -409,6 +405,18 @@ export default {
 		url: w + 'MemberConsume/adjustRecord', //积分调整记录
 		type: 'file'
 	},
+	getDepositPlanList: {
+		url: w + 'Depositplan/getDepositPlanList' //获取方案列表
+	},
+	getScanPayOrderByCodes: {
+		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
+		method: 'post'
+	},
+	exportgetScanPayOrderByCodes: {
+		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
+		type: 'file',
+		method: 'post'
+	},
 	customPackageStatistics: {
 		url: s + 'Customstatistics/customPackageStatistics', //自定义套餐统计
 		method: 'post'
@@ -417,5 +425,9 @@ export default {
 		url: s + 'Customstatistics/exportCustomPackageStatistics', //自定义套餐统计导出
 		type: 'file',
 		method: 'post'
+	},
+	BusinessGetStatByShopIds: {
+		url: b + 'Business/getStatByShopIds', //品牌按店查询店铺统计数据
+		method: 'get'
 	}
 };

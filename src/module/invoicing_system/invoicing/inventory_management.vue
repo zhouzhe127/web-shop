@@ -386,6 +386,11 @@
 		async activated () {
 			this.shopId = storage.session('itemId');
 			this.settype();
+			if (!this.tabactive) {
+				this.addEduce();
+			} else {
+				this.suppliesBtn();
+			}
 			await this.init();	
 		},
 		destroyed() {

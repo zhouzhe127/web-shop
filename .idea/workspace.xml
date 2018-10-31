@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cccba1fc-1815-4fe2-9288-7509f9d141ec" name="Default" comment="热区">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/web-shop.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    <list default="true" id="cccba1fc-1815-4fe2-9288-7509f9d141ec" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.babelrc" afterPath="$PROJECT_DIR$/.babelrc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/webpack.prod.conf.js" afterPath="$PROJECT_DIR$/config/webpack.prod.conf.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package-lock.json" afterPath="$PROJECT_DIR$/package-lock.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config/aside_config.js" afterPath="$PROJECT_DIR$/src/config/aside_config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config/http/http_config.js" afterPath="$PROJECT_DIR$/src/config/http/http_config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config/http/http_statistics.js" afterPath="$PROJECT_DIR$/src/config/http/http_statistics.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config/routes/route_id_config.js" afterPath="$PROJECT_DIR$/src/config/routes/route_id_config.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.js" afterPath="$PROJECT_DIR$/src/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/brand/brand_build.vue" afterPath="$PROJECT_DIR$/src/module/brand/brand_build.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/invoicing_system/invoicing/invent_supplies.vue" afterPath="$PROJECT_DIR$/src/module/invoicing_system/invoicing/invent_supplies.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/invoicing_system/invoicing/inventory_management.vue" afterPath="$PROJECT_DIR$/src/module/invoicing_system/invoicing/inventory_management.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/invoicing_system/purchase/purchase_create.vue" afterPath="$PROJECT_DIR$/src/module/invoicing_system/purchase/purchase_create.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/invoicing_system/warehouse_manage/output_shipper.vue" afterPath="$PROJECT_DIR$/src/module/invoicing_system/warehouse_manage/output_shipper.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/marketing_tools/new_activity/activity_encourage.vue" afterPath="$PROJECT_DIR$/src/module/marketing_tools/new_activity/activity_encourage.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/marketing_tools/self_help/checkout_function.vue" afterPath="$PROJECT_DIR$/src/module/marketing_tools/self_help/checkout_function.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/marketing_tools/self_help/self_help_mode.vue" afterPath="$PROJECT_DIR$/src/module/marketing_tools/self_help/self_help_mode.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/outfood/takeawayprint/printaddedit_win.vue" afterPath="$PROJECT_DIR$/src/module/outfood/takeawayprint/printaddedit_win.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/outfood/takeawayprint/printrelation_win.vue" afterPath="$PROJECT_DIR$/src/module/outfood/takeawayprint/printrelation_win.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/shop_config/base.vue" afterPath="$PROJECT_DIR$/src/module/shop_config/base.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/shop_config/printer_manager_win.vue" afterPath="$PROJECT_DIR$/src/module/shop_config/printer_manager_win.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/module/statistics/citic_statements.vue" afterPath="$PROJECT_DIR$/src/module/statistics/citic_statements.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -21,11 +39,53 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="more_menu.vue" pinned="false" current-in-tab="true">
+      <file leaf-file-name="more_menu.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/module/goods_config/more_menu.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="71" column="39" lean-forward="false" selection-start-line="71" selection-start-column="39" selection-end-line="71" selection-end-column="39" />
+            <state relative-caret-position="808">
+              <caret line="115" column="20" lean-forward="false" selection-start-line="115" selection-start-column="20" selection-end-line="115" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="http_config.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/config/http/http_config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="brand_build.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/module/brand/brand_build.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="22" column="54" lean-forward="true" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/module/shop_config/base.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-897">
+              <caret line="90" column="162" lean-forward="false" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="162" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="http_brand.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/http/http_brand.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -34,13 +94,35 @@
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/config/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1242">
+            <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <marker date="1540973114426" expanded="true" signature="6427:6439" ph="{&quot;path&quot;: ''...}" />
-                <marker date="1540973114426" expanded="true" signature="6427:6481" ph="[...]" />
-                <marker date="1540973114426" expanded="true" signature="6427:6487" ph="{&quot;path&quot;: '/admin'...}" />
-                <marker date="1540973114426" expanded="true" signature="6427:6489" ph="[...]" />
+                <marker date="1540975943264" expanded="true" signature="3820:4065" ph="..." />
+                <marker date="1540975943264" expanded="true" signature="3845:3962" ph="..." />
+                <marker date="1540975943264" expanded="false" signature="3914:3934" ph="..." />
+                <marker date="1540975943264" expanded="false" signature="4028:4048" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="aside_config.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/aside_config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="host_var.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/host_var.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="20" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -50,9 +132,16 @@
         <entry file="file://$PROJECT_DIR$/src/config/routes/route_id_config.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="6">
-              <caret line="193" column="22" lean-forward="false" selection-start-line="193" selection-start-column="19" selection-end-line="193" selection-end-column="22" />
+              <caret line="192" column="22" lean-forward="false" selection-start-line="192" selection-start-column="19" selection-end-line="192" selection-end-column="22" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
+                <marker date="1540975540318" expanded="true" signature="4774:5752" ph="{&quot;091&quot;: 'statistics/order_brand'...}" />
+                <marker date="1540975540318" expanded="true" signature="5770:5878" ph="{&quot;101&quot;: &quot;cashier/cashier_config&quot;...}" />
+                <marker date="1540975540318" expanded="true" signature="5902:6491" ph="{&quot;111&quot;: 'member_system/membership_configuration'...}" />
+                <marker date="1540975540318" expanded="true" signature="6518:7120" ph="{&quot;121&quot;: 'seller_assistant/gold_config'...}" />
+                <marker date="1540975540318" expanded="true" signature="7144:7228" ph="{&quot;131&quot;: &quot;ticket_config/ticketed_point_list&quot;...}" />
+                <marker date="1540975540318" expanded="true" signature="7243:7324" ph="{...}" />
+                <marker date="1540975540318" expanded="true" signature="7635:8009" ph="/*...*/" />
               </folding>
             </state>
           </provider>
@@ -128,7 +217,6 @@
         <option value="$PROJECT_DIR$/src/module/register.html" />
         <option value="$PROJECT_DIR$/src/module/login.vue" />
         <option value="$PROJECT_DIR$/src/module/brand/brand_build.vue" />
-        <option value="$PROJECT_DIR$/src/config/http/http_config.js" />
         <option value="$PROJECT_DIR$/src/manager/http.js" />
         <option value="$PROJECT_DIR$/src/module/register.vue" />
         <option value="$PROJECT_DIR$/src/config/routes/route_id_config.js" />
@@ -136,6 +224,7 @@
         <option value="$PROJECT_DIR$/src/manager/global.js" />
         <option value="$PROJECT_DIR$/src/module/cashier/category_form_retail.vue" />
         <option value="$PROJECT_DIR$/src/module/goods_config/more_menu.vue" />
+        <option value="$PROJECT_DIR$/src/config/http/http_config.js" />
       </list>
     </option>
   </component>
@@ -247,7 +336,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="goods_config" />
+              <option name="myItemId" value="shop_config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="web-shop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="brand" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -287,7 +398,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
+              <option name="myItemId" value="http" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -432,7 +543,7 @@
       <workItem from="1540620017972" duration="3485000" />
       <workItem from="1540625923306" duration="4399000" />
       <workItem from="1540776208005" duration="13484000" />
-      <workItem from="1540950188235" duration="6527000" />
+      <workItem from="1540950188235" duration="7499000" />
     </task>
     <task id="LOCAL-00001" summary="分类报表">
       <created>1539767907561</created>
@@ -518,23 +629,31 @@
       <option name="project" value="LOCAL" />
       <updated>1540975443923</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="热区">
+      <created>1540975526652</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1540975526652</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135914000" />
+    <option name="totallyTimeSpent" value="136886000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="0" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="1" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17870723" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15589353" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3301887" sideWeight="0.50253487" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.83827496" sideWeight="0.71229404" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2857143" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7304582" sideWeight="0.49746513" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7304582" sideWeight="0.4949303" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20889488" sideWeight="0.49746513" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22911051" sideWeight="0.28770596" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -603,7 +722,8 @@
     <MESSAGE value="品牌创建" />
     <MESSAGE value="编码" />
     <MESSAGE value="热区" />
-    <option name="LAST_COMMIT_MESSAGE" value="热区" />
+    <MESSAGE value="Merge branch 'master' of gitlab.shandian.tech:tom/web-shop into fb-2.5-sw&#10;&#10;# Conflicts:&#10;#&#9;src/config/http/http_config.js&#10;#&#9;src/module/brand/brand_build.vue&#10;#&#9;src/module/shop_config/printer_manager_win.vue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of gitlab.shandian.tech:tom/web-shop into fb-2.5-sw&#10;&#10;# Conflicts:&#10;#&#9;src/config/http/http_config.js&#10;#&#9;src/module/brand/brand_build.vue&#10;#&#9;src/module/shop_config/printer_manager_win.vue" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -624,13 +744,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-551">
           <caret line="470" column="0" lean-forward="false" selection-start-line="470" selection-start-column="0" selection-end-line="470" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/host_var.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="20" lean-forward="false" selection-start-line="0" selection-start-column="20" selection-end-line="0" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -719,13 +832,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/http/http_brand.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/config/routes/public_number_configuration/new_push_language_settings.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -810,14 +916,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/module/shop_config/base.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="90" column="162" lean-forward="false" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="162" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/module/statistics/handover_brand.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4439">
@@ -864,13 +962,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/http/http_config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="58" column="22" lean-forward="true" selection-start-line="58" selection-start-column="8" selection-end-line="58" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/module/shop_config/table_manage.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-72">
@@ -882,13 +973,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="679">
           <caret line="56" column="0" lean-forward="true" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/module/brand/brand_build.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4646">
-          <caret line="2" column="34" lean-forward="true" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -937,14 +1021,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
           <caret line="198" column="10" lean-forward="false" selection-start-line="198" selection-start-column="10" selection-end-line="198" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/aside_config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -999,34 +1075,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1242">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1540973114426" expanded="true" signature="6427:6439" ph="{&quot;path&quot;: ''...}" />
-            <marker date="1540973114426" expanded="true" signature="6427:6481" ph="[...]" />
-            <marker date="1540973114426" expanded="true" signature="6427:6487" ph="{&quot;path&quot;: '/admin'...}" />
-            <marker date="1540973114426" expanded="true" signature="6427:6489" ph="[...]" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/config/routes/route_id_config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6">
-          <caret line="193" column="22" lean-forward="false" selection-start-line="193" selection-start-column="19" selection-end-line="193" selection-end-column="22" />
+          <caret line="192" column="22" lean-forward="false" selection-start-line="192" selection-start-column="19" selection-end-line="192" selection-end-column="22" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
+            <marker date="1540975540318" expanded="true" signature="4774:5752" ph="{&quot;091&quot;: 'statistics/order_brand'...}" />
+            <marker date="1540975540318" expanded="true" signature="5770:5878" ph="{&quot;101&quot;: &quot;cashier/cashier_config&quot;...}" />
+            <marker date="1540975540318" expanded="true" signature="5902:6491" ph="{&quot;111&quot;: 'member_system/membership_configuration'...}" />
+            <marker date="1540975540318" expanded="true" signature="6518:7120" ph="{&quot;121&quot;: 'seller_assistant/gold_config'...}" />
+            <marker date="1540975540318" expanded="true" signature="7144:7228" ph="{&quot;131&quot;: &quot;ticket_config/ticketed_point_list&quot;...}" />
+            <marker date="1540975540318" expanded="true" signature="7243:7324" ph="{...}" />
+            <marker date="1540975540318" expanded="true" signature="7635:8009" ph="/*...*/" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/module/goods_config/more_menu.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="71" column="39" lean-forward="false" selection-start-line="71" selection-start-column="39" selection-end-line="71" selection-end-column="39" />
+        <state relative-caret-position="808">
+          <caret line="115" column="20" lean-forward="false" selection-start-line="115" selection-start-column="20" selection-end-line="115" selection-end-column="20" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/http/http_brand.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/module/shop_config/base.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-897">
+          <caret line="90" column="162" lean-forward="false" selection-start-line="90" selection-start-column="16" selection-end-line="90" selection-end-column="162" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/module/brand/brand_build.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="22" column="54" lean-forward="true" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1540975943264" expanded="true" signature="3820:4065" ph="..." />
+            <marker date="1540975943264" expanded="true" signature="3845:3962" ph="..." />
+            <marker date="1540975943264" expanded="false" signature="3914:3934" ph="..." />
+            <marker date="1540975943264" expanded="false" signature="4028:4048" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/aside_config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/host_var.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="20" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/http/http_config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
