@@ -309,7 +309,7 @@
     			if (this.isReduceId == 1 && (this.days == '' || this.reduceActive == '') || (this.days == '0' || this.reduceActive == '0')) { 
     				this.valiData('天数或者活跃值不能为空或者0');
     				return false;
-    			}
+			} 
 
     			if (this.isStoredId == 1 && (this.storedAmount == '' || this.storeActive == '') || (this.storedAmount == '0' || this.storeActive == '0')) {
     				this.valiData('储值比例值不能为空或者0');
@@ -486,8 +486,6 @@
 
 	.picName {
 		display: inline-block;
-		background: pink;
-
 		input {
 			width: 110px;
 			height: 42px;
