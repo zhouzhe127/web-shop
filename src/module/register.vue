@@ -4,12 +4,12 @@
 		<section class="all">
 			<section class="text">
 				<span>手机号码:</span>
-				<input type='text' autocomplete="off" @change="changeIsHave()" maxlength='11' v-model="telephone" name="telephone" />
+				<input type='text' autocomplete="off" @keyup="changeIsHave()" maxlength='11' v-model="telephone" name="telephone" />
 				<span style="color: red" v-show="isHave!=''">{{isHave}}</span>
 			</section>
 			<section class="text">
 				<span>验证码:</span>
-				<input type="text" autocomplete="off" @change="changeIsHave()" maxlength='6' size="6" v-model="code" id="code" />
+				<input type="text" autocomplete="off" @keyup="changeIsHave()" maxlength='6' size="6" v-model="code" id="code" />
 				<div class="prompt" @click="prompt">
 					<span class="fr code" v-if="requestCode" style="background-color:#F39800;border-radius: 50px;cursor: pointer;">发送验证码</span>
 				</div>
