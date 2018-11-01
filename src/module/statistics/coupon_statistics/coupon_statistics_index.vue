@@ -38,47 +38,8 @@
 				</div>
 			</div>
 			<div class="cupon-type-list">
-				<!-- <ul>
-					<li>
-						<button @click="getSelect(0)" :class="{'cupon-list-btn': isShow0}" class="cupon-scret">全部</button>
-					</li>
-					<li>
-						<button @click="getSelect(2)" :class="{'cupon-list-btn': isShow2}" class="cupon-scret">未关联</button>
-					</li>
-					<li>
-						<button @click="getSelect(1)" :class="{'cupon-list-btn': isShow1}" class="cupon-scret">已关联</button>
-					</li>
-					<li>
-						<button @click="getSelect(3)" :class="{'cupon-list-btn': isShow3}" class="cupon-scret">已过期</button>
-					</li>
-				</ul> -->
 				<span class="all" v-for="(item,index) in storeList" :key='index' v-bind:class="{'active':indexOn == index }" @click="chooseStore(index)">{{item.name}}</span>
 			</div>
-			<!-- <section>
-				<com-table @tableEvent="tableEvent" :listHeight='80' :listName="'优惠券统计'" :showTitle='1' :listWidth="1400" :introData="list" :titleData="titleList" :allTotal="listLen">
-					<div slot="con-1" slot-scope="props">
-						{{scope.row.status | filterStatus}}
-					</div>
-					<div slot="con-2" slot-scope="props">
-						{{scope.row.type | filterType}}
-					</div>
-					<div slot="con-6" @click="handleToCount(scope.row.id,scope.row.name,scope.row.use)" slot-scope="props">
-						{{scope.row.use}}
-					</div>
-					<div slot="con-8" slot-scope="props">
-						<span v-if="scope.row.type == '6'">{{(scope.row.couponPrice * scope.row.use).toFixed(2)}}</span>
-						<span v-else>--</span>
-					</div>
-					<div slot="con-9" slot-scope="props">
-						<span v-if="scope.row.type == '6'">{{(scope.row.billPrice * scope.row.use).toFixed(2)}}</span>
-						<span v-else>--</span>
-					</div>
-					<div slot="con-10" slot-scope="props">
-						<span v-if="scope.row.type == '6'">{{(scope.row.reckoningPrice * scope.row.use).toFixed(2)}}</span>
-						<span v-else>{{scope.row.reckoningPrice}}</span>
-					</div>
-				</com-table>
-			</section> -->
 			<!-- 下面的表格 -->
 			<div class="list_box" style="width:100%;">
 				<div class="list_title">
@@ -147,75 +108,12 @@
 					</el-table-column>
 				</el-table>
 			</div>
-			<!-- 翻页 -->
-			<!-- <page style="float: left;margin: 20px 10px 0 50px;" @pageNum="pageNum" :page="page" :total="pageTotal" :len="10" v-if="pageTotal>1"></page> -->
 			<!-- 分页 -->
 			<div class="pageWrap">
 				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="pageTotal" :page-sizes="[10, 20, 30]"></el-pagination>
 			</div>
 		</section>
 		<verification v-else :startTime="startTime" :endTime="endTime" :couponId="couponId" :couponName="couponName" @throwWinResult="getDetailShow"></verification>
-		<!-- <section v-else>
-			<section class="cupon-time-select clearfix">
-				<span class="fl cupon-type">时间筛选</span>
-				<section class="statisticsList fl">
-					<section class="tableListInp">
-						<calendar class="fl" :pObj="currstartTime" ref="triggerStartTime" :only="false" :format="'yyyy年MM月dd日'" @throwTime="getCurrStartTime" style="width: 187px;height: 39px;"></calendar>
-					</section>
-				</section>
-				<span style="margin: 0 4px 0 13px;" class="fl">--</span>
-				<section class="statisticsList fl">
-					<section style="width: 282px;" class="tableListInp">
-						<calendar class="fl" :pObj="currendTime" ref="triggerEndTime" :only="false" :format="'yyyy年MM月dd日'" @throwTime="getCurrEndTime" style="width: 187px;height: 39px;"></calendar>
-						<span class="order-order-searchA" style="margin-left: 53px;" v-on:click="searchCurrentDate">
-							<span class="order-order-search"></span>
-						</span>
-					</section>
-				</section>
-				<div style="height:42px;" class="fl">
-					<span class="fl cupon-type">选择门店</span>
-					<section class="staList fl detLi">
-						<section v-if="ischain != 3" class="tableList">
-							<span class="oSpan">{{currentName.join(' ')}}</span>
-							<div class="fl">
-								<i></i>
-							</div>
-						</section>
-						<select-store ref="selectStore1" v-if="ischain==3" :sorts="FilterName" @emit="selectShopType" :tipName="'请选择门店'"></select-store>
-					</section>
-				</div>
-				<div class="fl">
-					<button @click="onSelectNuclearSales" class="fl cupon-scret">筛选</button>
-					<button @click="handleToResert" class="fl cupon-reset cupon-reset-btn">重置</button>
-				</div>
-			</section>
-			<section class="current-name">
-				<div class="current-list-name">
-					<span>优惠券名称</span>：
-					<span>{{couponName}}</span>
-				</div>
-				<div class="current-list-store">
-					<span>选择门店</span>:
-					<span>{{currentName | filterCurrentName}}</span>
-				</div>
-			</section>
-			<section>
-				<com-table :listHeight='80' :listName="couponName" :showTitle='1' :listWidth="1400" :introData="currentList" :titleData="coupontitleList" :allTotal="currentTotal">
-					<div slot="con-2" slot-scope="props">
-						<span v-if="scope.row.reckoningPrice != '-' && scope.row.reckoningPrice != '-'">{{(scope.row.couponPrice * scope.row.useCoupon).toFixed(2)}}</span>
-						<span v-else>-</span>
-					</div>
-					<div slot="con-3" slot-scope="props">
-						<span v-if="scope.row.billPrice != '-'">{{(scope.row.billPrice * scope.row.useCoupon).toFixed(2)}}</span>
-						<span v-else>{{scope.row.billPrice}}</span>
-					</div>
-					<div slot="con-4" slot-scope="props">
-						<span v-if="scope.row.reckoningPrice != '-'">{{(scope.row.reckoningPrice * scope.row.useCoupon).toFixed(2)}}</span>
-						<span v-else>{{scope.row.reckoningPrice}}</span>
-					</div>
-				</com-table>
-			</section>
-		</section> -->
 	</div>
 </template>
 <script type="text/javascript">
@@ -273,7 +171,7 @@
 					{
 						name: '随机减免券',
 						id: 8
-					}					
+					}
 				],
 				selectName: {
 					'1': '单品减免',
@@ -353,9 +251,6 @@
 					this.selectedCoupon = '请选择优惠券类型';
 				}
 			},
-			// tableEvent(currentPage) {
-			// 	console.log(currentPage, '');
-			// },
 			selectShopType(val) {
 				this.FilterName = val;
 				this.currentName = [];
@@ -367,54 +262,6 @@
 					}
 				}
 			},
-			// selectCouponType(val) {
-			// 	this.card = val;
-			// 	this.fiterCards = [];
-			// 	for (let i of this.card) {
-			// 		if (i.selected) {
-			// 			this.fiterCards.push(i.id);
-			// 		}
-			// 	}
-			// },
-			// pageNum(obj) {
-			// 	if (this.fiterCards.length == 0) {
-			// 		this.$store.commit('setWin', {
-			// 			title: '提示信息',
-			// 			content: '请选择优惠券类型',
-			// 			winType: 'alert'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	this.page = obj.page;
-			// 	let res = {
-			// 		start: this.startTime,
-			// 		end: this.endTime,
-			// 		type: this.fiterCards.join(),
-			// 		status: this.couponStatus,
-			// 		page: this.page
-			// 	};
-			// 	this.getCouponData(res);
-			// },
-			// getStartTime(receiveTime) {
-			// 	this.startTime = {
-			// 		time: receiveTime
-			// 	};
-			// },
-			// getEndTime(receiveTime) {
-			// 	this.endTime = {
-			// 		time: receiveTime
-			// 	};
-			// },
-			// getCurrStartTime(receiveTime) {
-			// 	this.currstartTime = {
-			// 		time: receiveTime
-			// 	};
-			// },
-			// getCurrEndTime(receiveTime) {
-			// 	this.currendTime = {
-			// 		time: receiveTime
-			// 	};
-			// },
 			checkForm: function() { //验证表单
 				if (this.endTime - this.startTime < 0) {
 					this.$store.commit('setWin', {
@@ -609,15 +456,15 @@
 				// 	this.getOneCoupon(start, end, this.fiterId.join());
 				// }
 			},
-			handleToBack() {
-				this.$store.commit('setPageTools', {
-					getToOut: () => {
-						this.getToOut();
-					}
-				});
-				this.changePage = !this.changePage;
-				this.FilterName = [];
-			},
+			// handleToBack() {
+			// 	this.$store.commit('setPageTools', {
+			// 		getToOut: () => {
+			// 			this.getToOut();
+			// 		}
+			// 	});
+			// 	this.changePage = !this.changePage;
+			// 	this.FilterName = [];
+			// },
 			handleSearchInDate() {
 				//  筛选优惠券类型
 				// this.isClick = true;
@@ -744,19 +591,23 @@
 			},
 			getDetailShow(res) { //子组件评价列表返给父组件的
 				this.changePage = res;
-				this.$store.commit('setPageTools', {
-					getToOut: () => {
+				this.$store.commit('setPageTools', [{
+					name: '导出',
+					fn: () => {
 						this.getToOut();
-					}
-				});
+					},
+					className: 'el-btn-blue'
+				}]);
 			},
 		},
 		mounted() {
-			this.$store.commit('setPageTools', {
-				getToOut: () => {
+			this.$store.commit('setPageTools', [{
+				name: '导出',
+				fn: () => {
 					this.getToOut();
-				}
-			});
+				},
+				className: 'el-btn-blue'
+			}]);
 			this.userData = storage.session('userShop');
 			this.ischain = this.userData.currentShop.ischain;
 			if (this.userData.currentShop && this.ischain == 3) {

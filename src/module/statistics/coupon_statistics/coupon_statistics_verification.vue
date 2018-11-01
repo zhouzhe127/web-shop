@@ -231,10 +231,10 @@
 		mounted() {
 			this.$store.commit('setPageTools', [{
 				name: '返回',
-				className: ['fd-blue'],
 				fn: () => {
 					this.returnStore();
-				}
+				},
+				className: 'el-btn-blue'
 			}]);
 			this.userData = storage.session('userShop');
 			this.ischain = this.userData.currentShop.ischain;
