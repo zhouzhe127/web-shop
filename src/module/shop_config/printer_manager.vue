@@ -29,7 +29,7 @@
 			</el-input>
 			<el-button @click="reseat" type="info">重置</el-button>
 		</div>
-		<div style="padding:10px 0;color:#606266;" v-if="oldId!==''">
+		<div style="padding:10px 0;color:#606266;" v-if="oldId!==''&&terminalList.length>0">
 			<span>打印服务总端口配置</span>
 			<el-button @click="selectTerminal" size="small" type="primary" style="margin:0 10px;">终端配置</el-button>
 			<span style="color:#ccc;">当前配置：</span>
@@ -78,7 +78,7 @@
 					<template slot-scope="scope">
 						<span @click="openWin({pid:scope.row.id,types:'edit',index:scope.$index,bel:true})" style="color: #FE8D2C;cursor:pointer">编辑</span>
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
-						<span @click="delPrin(scope.row,true)" style="color: #FD3F1F;cursor:pointer">删除</span>
+						<span @click="delPrin(scope.row,true,scope.$index)" style="color: #FD3F1F;cursor:pointer">删除</span>
 					</template>
 				</el-table-column>
 				<el-table-column align="center" label="序号">
@@ -319,7 +319,7 @@ export default {
 			this.newTerminalList.unshift(item);		
 			// this.terminalList.unshift({id:'-1',name:'全部'});
 		},
-		delPrin(item,ble){
+		delPrin(item,ble,index){
 			let name = ble?item.name:item.printerName;
 			let conName =  '确定删除'+(ble?'终端 "':'打印机 "')+name+ '" '+'?';
 			this.$store.commit('setWin', {
@@ -327,7 +327,7 @@ export default {
 				content: conName,
 				callback: delRes => {
 					if (delRes == 'ok') {
-						this.deletePrinter(item,ble);
+						this.deletePrinter(item,ble,index);
 						this.showWin = false;
 					}
 				}
@@ -448,7 +448,7 @@ export default {
 			}
 		},
 		//删除打印机请求
-		async deletePrinter(item,ble) {
+		async deletePrinter(item,ble,index) {
 			if(!ble){
 				await http.deletePrinter({
 					data: {
@@ -462,7 +462,7 @@ export default {
 						id: item.id,
 					}
 				});
-				this.terminalList.splice(this.printIndex,1);
+				this.terminalList.splice(index,1);
 			}
 			
 		},
