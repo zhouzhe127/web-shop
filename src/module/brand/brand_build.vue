@@ -45,7 +45,7 @@
 							<div v-if="logoimg !==''" style="display: inline-block;">
 								<!--<span>已上传</span>-->
 								<span>( 已上传：</span>
-								<label for="uploadFile">{{spliceFileName(logoimg)}} </label>
+								<label>{{spliceFileName(logoimg)}} </label>
 								<span>)</span>
 							</div>
 							<!--<div style="width:324px;height:140px;border: 1px solid #bbbbbb;float: left;margin-top:10px;">
@@ -195,26 +195,31 @@ export default {
 			}
 		},
 		async imgUpload1(e) {
-			let data = await http.bigImgUpload({
-				data: {
-					type: 4,
-					shopId: 1
-				},
-				formId: 'imageUpForm1'
-			});
-			this.logoimg = e.target.value;
-			this.imglogo1 = data;
+			if(e.target.value!=''){
+				let data = await http.bigImgUpload({
+					data: {
+						type: 4,
+						shopId: 1
+					},
+					formId: 'imageUpForm1'
+				});
+				this.logoimg = e.target.value;
+				this.imglogo1 = data;
+			}
+
 		},
 		async imgUpload2(e) {
-			let data = await http.bigImgUpload({
-				data: {
-					type: 4,
-					shopId: 1
-				},
-				formId: 'imageUpForm2'
-			});
-			this.trademarkimg = e.target.value;
-			this.imglogo2 = data;
+			if(e.target.value!=''){
+				let data = await http.bigImgUpload({
+					data: {
+						type: 4,
+						shopId: 1
+					},
+					formId: 'imageUpForm2'
+				});
+				this.trademarkimg = e.target.value;
+				this.imglogo2 = data;
+			}
 		},
 		//返回品牌列表
 		returnList: function() {
