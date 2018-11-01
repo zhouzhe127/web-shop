@@ -13,8 +13,8 @@
 				<el-button type="primary" @click="back">返回</el-button>
 			</div>
 		</div>
-		<div class="tableWrap">
-			<el-table border :data="goodsList" style="width: 100%">
+		<div class="tableWrap" v-show="!showEditGoods">
+			<el-table border :data="goodsList" style="width: 100%;text-align: center;" :header-cell-style="{'text-align': 'center'}">
 				<el-table-column prop="name" label="商品名称" width="100">
 				</el-table-column>
 				<el-table-column prop="needPeople" label="发起砍价人数">
@@ -35,19 +35,19 @@
 				</el-table-column>
 				<el-table-column v-if="isBrand" prop="date" label="操作" width="100">
 					<template slot-scope="scope">
-						<template v-if="scope.row.status == 1">
+						<template v-if="scope.row.status == 0">
 							<el-button @click="activation(scope.row)" type="text" size="small">上架</el-button>
-							<el-button type="text" size="small" @click="editActivity(scope.$index)">编辑</el-button>
 						</template>
 						<template v-else>
 							<el-button @click="abolish(scope.row)" type="text" size="small">下架</el-button>
 						</template>
+						<el-button type="text" size="small" v-if="!isBegin" @click="editActivity(scope.row)">编辑</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 		</div>
 		<template v-if="showEditGoods">
-			<edit-activity-goods @close="goodsClose">
+			<edit-activity-goods @close="goodsClose" :goodsNum="goodsList && goodsList.length || 0">
 			</edit-activity-goods>
 		</template>
 	</div>
@@ -67,6 +67,7 @@ export default {
 			goodsList: [],
 			showEditGoods: false,
 			selectGoods: null,
+			isBegin: false,
 			isBrand
 		};
 	},
@@ -75,14 +76,12 @@ export default {
 		// activityDetail: {type:Object,required: true}
 	},
 	methods: {
-		goodsClose() {
+		goodsClose(needRefresh) {
+			if(needRefresh ||  this.$store.state.selectedActivityChange){
+				this.getDetail();
+				this.$store.commit('changeActivity',false);
+			}
 			this.showEditGoods = false;
-		},
-		goodsSave() {
-			console.log('no-empty-function');
-		},
-		goodsEdit() {
-			console.log('no-empty-function');
 		},
 		// 上架
 		async activation(goods) {
@@ -93,13 +92,12 @@ export default {
 				}
 			});
 			if (data) {
-				// this.getDetail()
-				goods.status = '0';
+				this.$message({type:'success',message: '上架成功'});
+				goods.status = '1';
 			}
 		},
 		// 下架
 		async abolish(goods) {
-			console.log(goods);
 			let data = await http.activityRevokePushGoods({
 				data: {
 					actId: goods.actId,
@@ -107,8 +105,9 @@ export default {
 				}
 			});
 			if (data) {
+				this.$message({type:'success',message: '下架成功'});
 				// this.getDetail()
-				goods.status = '1';
+				goods.status = '0';
 			}
 		},
 		// 编辑
@@ -134,6 +133,8 @@ export default {
 				}
 			});
 			this.goodsList = data.goods;
+			this.isBegin = this.selectedActivity.isBegin;
+			console.log(this.isBegin);
 		}
 	},
 	computed: {

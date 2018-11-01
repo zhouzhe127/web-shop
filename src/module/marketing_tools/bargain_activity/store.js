@@ -4,6 +4,7 @@ let store = {
 	state: {
 		activityListChange: false,
 		selectedActivity: null,
+		selectedActivityChange: false,
 		selectedGoods: null,
 	},
 	getters: {
@@ -25,6 +26,12 @@ let store = {
 		createdActivity(state, virtualActivity) {
 			state.selectedActivity = virtualActivity;
 			state.activityListChange = true;
+		},
+		changeActivityList(state,bool){
+			state.activityListChange = !!bool;
+		},
+		changeActivity(state,bool){
+			state.selectedActivityChange = !!bool;
 		}
 	},
 	// 其实可以不要，因为并用不到全局的store

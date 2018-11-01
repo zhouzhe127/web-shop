@@ -1,6 +1,6 @@
 <template>
 	<div id="editActivity">
-		<el-form ref="activifyForm" :model="form" label-width="80px" class="editActivityForm" :rules="rules">
+		<el-form ref="activifyForm" :model="form" label-width="80px" class="editActivityForm" :rules="rules" v-show="!showEditGoods">
 			<el-form-item label="活动标题" prop="name">
 				<el-col :span="16">
 					<el-input v-model="form.name" maxlength="20" placeholder="请输入活动标题"></el-input>
@@ -24,7 +24,7 @@
 			</el-form-item>
 		</el-form>
 		<template v-if="showEditGoods">
-			<edit-activity-goods @close="goodsClose">
+			<edit-activity-goods @close="goodsClose" :goodsNum="form.goodsList && form.goodsList.length || 0">
 			</edit-activity-goods>
 		</template>
 	</div>
@@ -37,6 +37,7 @@ export default {
 	data: () => {
 		return {
 			form: {
+				id: '',
 				name: '',
 				goodsList: [],
 				activityTime: ''
@@ -69,7 +70,11 @@ export default {
 		back(isRefresh) {
 			this.$emit('back', isRefresh === 'Refresh');
 		},
-		goodsClose() {
+		goodsClose(needRefresh) {
+			if(needRefresh ||  this.$store.state.selectedActivityChange){
+				this.getDetail();
+				this.$store.commit('changeActivity',false);
+			}
 			this.showEditGoods = false;
 		},
 		validateAndGeneratorParam() {
@@ -79,7 +84,7 @@ export default {
 					paramData = {
 						name: this.form.name,
 						beginTime: this.form.activityTime[0] / 1000,
-						endTime: this.form.activityTime[1] / 1000
+						endTime: this.form.activityTime[1].setHours(23,59,59) / 1000
 					};
 					if (this.selectedActivity) {
 						paramData.id = this.selectedActivity.id;
@@ -94,10 +99,17 @@ export default {
 			return paramData;
 		},
 		async createActivity(paramData) {
-			return await http.activityCreateActivity({ data: paramData });
+			let res =  await http.activityCreateActivity({ data: paramData });
+			if(res){
+				this.$message({type:'success',message: '新建活动成功'});
+				this.form.id = res;
+			}
 		},
 		async editActivity(paramData) {
-			return await http.activityEditActivity({ data: paramData });
+			let res =  await http.activityEditActivity({ data: paramData });
+			if(res){
+				this.$message({type:'success',message: '编辑活动成功'});
+			}
 		},
 		editGoods(goods) {
 			// 编辑商品
@@ -115,18 +127,19 @@ export default {
 			}
 			this.back('Refresh');
 		},
-		submitAndCreateGoods() {
+		async submitAndCreateGoods() {
 			let paramData = this.validateAndGeneratorParam();
 			if (!paramData) return;
-			let res;
 			if (paramData.id) {
-				res = this.editActivity(paramData);
+				this.editActivity(paramData);
 				this.$store.commit('selectActivity', paramData);
 				// get detail ：商品1 商品2 商品3
 			} else {
-				res = this.createActivity(paramData);
-				paramData.id = res.id;
-				this.$store.commit('createdActivity', true, paramData);
+				await this.createActivity(paramData);
+				paramData.id = this.form.id;
+				paramData.goods = [];
+				this.$store.commit('createdActivity', paramData);
+				console.log(JSON.parse(JSON.stringify(paramData)));
 			}
 			this.$store.commit('selectGoods', null);
 			this.showEditGoods = true;

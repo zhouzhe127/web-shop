@@ -5,10 +5,11 @@
 				<el-input v-model="form.name" class="w217"></el-input> <span class="textTip">限20字</span>
 			</el-form-item>
 			<el-form-item label="商品券">
-				<el-button type="primary" @click="showCouponListWin">关联券</el-button>
-				<span class="textTip" v-if="selectedCouponTemp">已关联{{selectedCouponTemp.name}}</span>
+				<el-button type="primary" @click="showCouponListHandle">关联券</el-button>
+				<span class="textTip" v-if="selectedCoupon">已关联{{selectedCoupon.name? selectedCoupon.name : '一张优惠券'}}</span>
 			</el-form-item>
-			<el-form-item required label="商品图片">
+			<!-- prop="imgUrl" -->
+			<el-form-item  label="商品图片" >
 				<div class="good-image">
 					<div class="good-image-div" id="image">
 						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="225" height="150">
@@ -32,7 +33,7 @@
 				<span class="unit">元</span>
 				<span class="textTip">商品起始砍价金额</span>
 			</el-form-item>
-			<el-form-item label="砍价人数" required>
+			<el-form-item label="砍价人数" prop="needPeople">
 				<el-select v-model="form.needPeople" placeholder="请选择砍价人数">
 					<el-option :label="k+2 +'个人'" :value="k+2" v-for="k in 18" :key="k"></el-option>
 				</el-select>
@@ -45,12 +46,12 @@
 					</el-alert>
 				</div>
 			</el-form-item>
-			<el-form-item label="返利方案">
+			<el-form-item label="返利方案" prop="planValue">
 				<el-radio-group v-model="form.planType">
 					<el-radio-button label="1" type="primary">固定金额</el-radio-button>
 					<el-radio-button label="2" type="primary">按比例</el-radio-button>
 				</el-radio-group>
-				<div class="planValueWrap" required>
+				<div class="planValueWrap" >
 					<el-input v-model="form.planValue" class="w217" :disabled="!qualifiedFloorPrice.isOk"></el-input>
 					<span class="unit">{{form.planType==1?'元':'%'}}</span>
 					<span class="textTip">{{form.planType==1?'请输入数字，只保留小数点后两位。输入金额不能低于1元，也不能超过底价':`请输入比例，区间${minPlanValue}%~100%`}}</span>
@@ -60,42 +61,16 @@
 			</el-form-item>
 			<el-form-item label="砍价时间" prop="lifeCycle">
 				<el-select v-model="form.lifeCycle" placeholder="请选择时间间隔">
-					<el-option :label="v+2+'小时'" :value="v+2" v-for="(v,i) in 22" :key="i"></el-option>
+					<el-option :label="v+1+'小时'" :value="v+1" v-for="(v,i) in 22" :key="i"></el-option>
 				</el-select>
 			</el-form-item>
-			<!-- <el-form-item label="适用门店" required>
-				<el-shop-list :shopIds="form.shopIds" @chooseShop="backShopId"></el-shop-list>
-			</el-form-item> -->
-			<!-- <el-form-item label="券有效期" required>
-				<el-radio-group v-model="form.validityType">
-					<el-radio-button label="0">相对时间</el-radio-button>
-					<el-radio-button label="1">指定时间</el-radio-button>
-				</el-radio-group>
-			</el-form-item>
-			<el-form-item v-if="form.validityType=='0'" required>
-				领取后<el-input v-model.number="form.relativeTime" class="relativeTimeInput"></el-input>日内有效
-			</el-form-item> -->
-			<!-- <el-form-item label="指定生效时间" v-else required>
-				<el-date-picker v-model="form.validityTime" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期">
-				</el-date-picker>
-			</el-form-item>
-			<el-form-item label="使用时段">
-				<el-time-picker is-range v-model="form.useTime" start-placeholder="开始时间" end-placeholder="结束时间" placeholder="选择时间范围">
-				</el-time-picker>
-			</el-form-item>
-			<el-form-item label="优惠共享" required>
-				<el-select v-model="form.isDiscount" placeholder="不与其它优惠共享">
-					<el-option label="与其它优惠共享" value="1"></el-option>
-					<el-option label="不与其它优惠共享" value="0"></el-option>
-				</el-select>
-			</el-form-item> -->
 			<el-form-item>
-				<el-button @click="cancel">取消</el-button>
+				<el-button @click="cancel(0)">取消</el-button>
 				<el-button type="primary" @click="submit(false)">保存</el-button>
-				<el-button type="primary" @click="submit(true)">保存并新建商品</el-button>
+				<el-button type="primary" @click="submit(true)" v-if="hasGoodsNum<4">保存并新建商品</el-button>
 			</el-form-item>
 		</el-form>
-		<el-dialog title="添加关联优惠券" :visible.sync="showCouponList" width="600px">
+		<el-dialog title="添加关联优惠券" :visible.sync="showCouponList" width="720px">
 			<div class="dialogContent">
 				<div class="tab">
 					<el-button type="primary" @click="gotoAddCoupon" class="fr">新增优惠券</el-button>
@@ -106,9 +81,10 @@
 					</el-radio-group>
 				</div>
 				<div class="listWrap">
-					<ul class="listContent">
+					<ul class="listContent" v-if="couponList.length">
 						<li v-for="(v,i) in couponList" :key="i" @click="selectedCouponTemp = v" :class="{sign: selectedCouponTemp && selectedCouponTemp.id==v.id}">{{v.name}}</li>
 					</ul>
+					<div v-else class="emtyList">~~暂无数据~~</div>
 				</div>
 			</div>
 			<span slot="footer" class="dialog-footer">
@@ -118,7 +94,7 @@
 		</el-dialog>
 
 		<template v-if="showAddCoupon">
-			<add-coupon @cb="addCouponCb"></add-coupon>
+			<add-coupon @couponCallBack="couponCb" class="addCouponPage" :isBargain="true"></add-coupon>
 		</template>
 	</div>
 </template>
@@ -149,19 +125,21 @@ const validateRules = {
 		{ required: true, message: '请输入原价(起砍价)', trigger: 'blur' },
 		{ validator: validateOriginalPrice, trigger: 'blur' }
 	],
-	needPeople: [{ required: true, message: '请选择砍价人数' }],
+	needPeople: [{ required: true, message: '请选择砍价人数' ,trigger: 'change'}],
 	floorPrice: [
 		{ required: true, message: '请填写底价', trigger: 'blur' },
-		{ type: 'number', message: '底价必须为数字值' }
+		{ type: 'number', message: '底价必须为数字值' },
+		// { min: 1, message: '底价不能少于一元' , trigger: 'blur'}
 	],
-	lifeCycle: [
-		{ required: true, message: '请选择砍价单次有效时间', trigger: 'change' }
-	]
+	lifeCycle: [ { required: true, message: '请选择砍价单次有效时间', trigger: 'change' } ],
+	imgUrl: [ { required: true, message: '请提交一张有效图片', trigger: 'change' } ],
+	planValue: [ { required: true, message: '请填写完整返利方案', trigger: 'blur' } ]
 };
 export default {
 	data: () => {
 		return {
 			uploadUrl: userShop.uploadUrl,
+			hasGoodsNum: 0,
 			form: {
 				id: '', // id
 				actId: '', // 活动id
@@ -195,7 +173,8 @@ export default {
 		};
 	},
 	props: {
-		selectGoods: Object
+		selectGoods: Object,
+		goodsNum: {type:Number,required: true}
 	},
 	methods: {
 		//编辑图片
@@ -209,31 +188,29 @@ export default {
 			});
 		},
 		deleteGoodImg() {
-			this.$message({
-				message: '此商品无图片!',
-				type: 'warning'
-			});
-			this.$store.commit('setWin', {
-				title: '温馨提示',
-				winType: 'confirm',
-				content: '确认删除图片?',
-				callback: res => {
-					if (res == 'ok') {
-						this.form.imgUrl = '';
-					}
-				}
-			});
+			if(this.form.imgUrl == ''){
+				this.$message({
+					message: '此商品无图片!',
+					type: 'warning'
+				});
+			}else{
+				this.form.imgUrl = '';
+			}
 		},
-		cancel() {
-			this.$emit('close');
+		cancel(isRefrech) {
+			this.$emit('close',isRefrech);
 		},
-		validateDate() {
+		validate() {
 			let isOk = true;
 
 			this.$refs.formDm.validate(valid => {
 				if (valid) {
 					if (!this.qualifiedFloorPrice) {
 						this.$message.error('请填写合适的底价');
+						isOk = false;
+					}
+					if(!this.selectedCoupon || !this.selectedCoupon.id ){
+						this.$message.error('必须选择关联一张优惠券');
 						isOk = false;
 					}
 					if (!this.qualifiedPlanValue) {
@@ -248,13 +225,13 @@ export default {
 			return isOk;
 		},
 		submit(createAgain) {
-			if (!this.validateDate()) {
+			if (!this.validate()) {
 				return;
 			}
 			let prarm = JSON.parse(JSON.stringify(this.form));
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
-			prarm.couponId = this.selectedCoupon.id || 7;
+			prarm.couponId = this.selectedCoupon.id;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
 				this.editGoods(prarm);
@@ -264,7 +241,7 @@ export default {
 			if (createAgain) {
 				this.resetGoods();
 			} else {
-				this.cancel();
+				this.cancel(1);
 			}
 		},
 		async addGoods(prarm) {
@@ -272,8 +249,10 @@ export default {
 				data: prarm
 			});
 			if (data) {
+				this.$message({type: 'success',message: '保存成功'});
 				prarm.id = data;
-				this.$store.commit('createGoods', prarm);
+				this.$store.commit('changeActivity', true,);
+				this.hasGoodsNum++ ;
 			}
 		},
 		async editGoods(prarm) {
@@ -281,11 +260,15 @@ export default {
 				data: prarm
 			});
 			if(data){
-				this.$store.commit('updateGoods', prarm);
+				this.$message({type: 'success',message: '保存成功'});
+				this.$store.commit('changeActivity', true);
 			}
 		},
 		resetGoods() {
 			this.$refs.formDm.resetFields();
+			this.form.planValue = '';
+			this.form.needPeople = '';
+			this.selectedCoupon = '';
 		},
 		initGoods() {
 			let selectedGoods = JSON.parse(JSON.stringify(this.selectedGoods));
@@ -294,15 +277,18 @@ export default {
 			// 	new Date(selectedGoods.endTime)
 			// ];
 			selectedGoods.planType -= 0;
-
+			selectedGoods.planValue -= 0;
 			selectedGoods.floorPrice -= 0;
 			selectedGoods.originalPrice = selectedGoods.startPrice;
 
 			this.form = selectedGoods;
+			this.selectedCoupon = {id: selectedGoods.couponId};
 		},
 		async getCouponList() {
-			// let list = await http.getGetCouponCondition({
-			// 	data: {}
+			// let list = await http.getCouponList({
+			// 	data: {
+			// 		fromType: 2
+			// 	}
 			// })
 			// this.couponList = list
 			this.couponList = [
@@ -367,23 +353,28 @@ export default {
 						'\u5f3a\u5236-\u4ee3200-\u4e0d\u4e0e\u4efb\u4f55\u4f18\u60e0'
 				}
 			];
+			
 		},
 		addCouponCb(success) {
 			if (success) {
 				//  跟新优惠券列表
 			}
 		},
-		showCouponListWin() {
+		showCouponListHandle() {
 			this.getCouponList();
+			this.selectedCouponTemp =JSON.parse(JSON.stringify(this.selectedCoupon));
 			this.showCouponList = true;
 		},
 		confirmSelectCoupon() {
-			this.selectedCouponId = this.selectedCouponTemp;
+			this.selectedCoupon = this.selectedCouponTemp;
 			this.showCouponList = false;
 		},
 		gotoAddCoupon() {
 			this.showCouponList = false;
 			this.showAddCoupon = true;
+		},
+		couponCb() {
+			this.showAddCoupon = false;
 		}
 	},
 	computed: {
@@ -397,6 +388,7 @@ export default {
 			let isQualified = // 是合格的
 				originalPrice !== '' &&
 				floorPrice !== '' &&
+				floorPrice >= 1 &&
 				originalPrice - floorPrice >= 1;
 			if (isQualified) {
 				if (needPeople) {
@@ -413,7 +405,7 @@ export default {
 			}
 			return isQualified
 				? { isOk: true, message: qualifiedMsg }
-				: { isOk: false, message: floorPrice === '' ? '' : '底价至少低于原价1元~~' };
+				: { isOk: false, message: floorPrice === '' ? '' : (floorPrice >= 1? '底价至少低于原价1元~~' : '底价不能低于1元')};
 		},
 		minPlanValue: function() {
 			let floorPrice = this.form.floorPrice,
@@ -448,8 +440,11 @@ export default {
 	created() {
 		// 编辑
 		if (this.selectedGoods) {
-			this.initGoods();
+			this.$nextTick(()=>{ // 不放到 nextTick resetFieIds 将会无效
+				this.initGoods();
+			});
 		}
+		this.hasGoodsNum = this.goodsNum;
 	},
 	components: {
 		// ElShopList: () => {
@@ -580,5 +575,17 @@ export default {
 			left: -9px;
 		}
 	}
+}
+.emtyList{
+	height: 90px;
+	line-height: 90px;
+	text-align: center;
+	color: #ccc;
+}
+.addCouponPage{
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: #fff;
 }
 </style>

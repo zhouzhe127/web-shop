@@ -19,10 +19,10 @@
 				</div>
 			</div>
 			<div class="list">
-				<el-table :data="activityList" border style="width: 100%">
-					<el-table-column prop="name" label="活动标题" width="100">
+				<el-table :data="activityList" border style="width: 100%;text-align: center" :header-cell-style="{'text-align': 'center'}">
+					<el-table-column prop="name" label="活动标题" width="150">
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width="180">
+					<el-table-column prop="formatCreateTime" label="创建时间" width="180">
 					</el-table-column>
 					<el-table-column prop="goodsNum" label="商品数量">
 					</el-table-column>
@@ -36,7 +36,10 @@
 					</el-table-column>
 					<el-table-column prop="goodsNum" label="拉动消费">
 					</el-table-column>
-					<el-table-column prop="beginTime" label="活动时间" width="280">
+					<el-table-column label="活动时间" width="280">
+						<template slot-scope="scope">
+							<span>{{scope.row.formatBeginTime}}--{{scope.row.formatEndTime}}</span>
+						</template>
 					</el-table-column>
 					<el-table-column prop="goodsNum" label="活动状态">
 					</el-table-column>
@@ -47,7 +50,7 @@
 					<el-table-column label="操作" fixed="right" width="150">
 						<template slot-scope="scope">
 							<el-button @click="intoDetail(scope.$index)" type="text" size="small">查看详情</el-button>
-							<el-button type="text" v-if="isBrand" size="small" @click="editActivity(scope.$index)">编辑</el-button>
+							<el-button type="text" v-if="isBrand && !scope.row.isBegin" size="small" @click="editActivity(scope.$index)">编辑</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -70,9 +73,9 @@ import ActivityDetail from './activity_detail';
 import store from './store';
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
 
-let isBrand =
-	storage.session('userShop').currentShop.ischain == 3 ? true : false;
+let isBrand = storage.session('userShop').currentShop.ischain == 3 ? true : false;
 let qureyTemp = {
 	qureyTime: '',
 	keyword: ''
@@ -87,7 +90,7 @@ export default {
 			qureyTime: '',
 			keyword: '', // 检索用的关键字
 			pageIndex: 1,
-			pageSize: 15,
+			pageSize: 10,
 			pageTotal: 165,
 			activityDetail: null
 			// selectGoods: null,
@@ -109,6 +112,7 @@ export default {
 			} else if (event) {
 				let keyword = this.keyword,
 					qureyTime = this.qureyTime;
+				this.pageIndex = 1;
 				if (keyword !== '') {
 					qureyTemp = { keyword };
 					param = {
@@ -118,14 +122,21 @@ export default {
 					qureyTemp = { qureyTime: [qureyTime[0], qureyTime[1]]};
 					param = {
 						beginTime: qureyTime[0]/1000,
-						endTime: qureyTime[1].setHours(23,99,99)/1000
+						endTime: qureyTime[1].setHours(23,59,59)/1000
 					};
 				}
 			}
 			param.page = this.pageIndex;
 			param.num = this.pageSize;
 			let data = await http.activityGetActivity({ data: param });
-			this.activityList = data.list;
+			let now = new Date();
+			this.activityList = data.list.map((v => {
+				v.isBegin = now / 1000 > +v.beginTime;
+				v.formatCreateTime = utils.format(v.createTime,'yyyy-MM-dd hh:mm:ss')  ;
+				v.formatBeginTime =utils.format(v.beginTime,'yyyy年MM月dd') ;
+				v.formatEndTime = utils.format(v.endTime,'yyyy年MM月dd') ;
+				return v;
+			}));
 			this.pageTotal = +data.count;
 		},
 		editActivity(index) {
@@ -134,27 +145,8 @@ export default {
 		},
 		intoDetail(index) {
 			this.$store.commit('selectActivity', this.activityList[index]);
-			// this.selectActivity = this.activityList[index];
-			// this.getActivityDetail();
 			this.scene = 'ActivityDetail';
 		},
-		// async getActivityDetail() {
-		// 	// this.activityDetail = await http.getActivityDetail({})
-		// 	this.activityDetail = {
-		// 		id: 20,
-		// 		shopId: 10086,
-		// 		name: '双十一活动',
-		// 		beginTime: new Date(1540779984 * 1000),
-		// 		endTime: new Date(1541879984 * 1000),
-		// 		goodsList: [
-		// 			{ name: '上平邑', num: 9999, percentage: '50%' },
-		// 			{ name: '上平2', num: 9999, percentage: '50%' },
-		// 			{ name: '上平3', num: 9999, percentage: '50%' },
-		// 			// {name: '上平4',num: 9999,percentage: '50%'},
-		// 			{ name: '上平5', num: 9999, percentage: '50%' }
-		// 		]
-		// 	};
-		// },
 		pageChange(page) {
 			this.pageIndex = page;
 			this.getActivityList('', page);
@@ -170,9 +162,9 @@ export default {
 		},
 		comeBack(isRefresh) {
 			this.scene = '';
-			if (isRefresh) {
+			if (isRefresh || this.$store.state.activityListChange) {
 				this.getActivityList();
-				console.log('刷新');
+				this.$store.commit('changeActivityList',false);
 			}
 		},
 		editGoods(type, data) {
