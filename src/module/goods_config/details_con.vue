@@ -157,7 +157,8 @@
 					</el-table-column>
 					<el-table-column fixed min-width="100" show-overflow-tooltip align="center" prop="goodsCode" label="编码">
 						<template slot-scope="scope">
-							<span>{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
+							<span v-if="scope.row.categoryCode!==''&&scope.row.goodsCode!==''&&scope.row.id*1<10000">{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
@@ -1011,7 +1012,7 @@ export default {
 			storage.session('goodList', goods);
 			return goods;
 		},
-		async getGoodsList(flag, goodVer) {
+		async getGoodsList(flag, goodVer,otherVer) {
 			let goods = null;
 			if (flag) {
 				goods = await this.getGoods();
@@ -1020,7 +1021,7 @@ export default {
 				if (!httpGoodVersion) {
 					goods = await this.getGoods();
 				} else {
-					if (httpGoodVersion.goodsConfigVer == goodVer) {
+					if (httpGoodVersion.goodsConfigVer == goodVer && httpGoodVersion.otherConfigVer == otherVer) {
 						goods = storage.session('goodList');
 						if (!goods) goods = await this.getGoods();
 					} else {
@@ -1051,7 +1052,7 @@ export default {
 		async syncRequest() {
 			let res = await this.getHttp('ShopGetExtra'); //获取版本号
 			let cate = await this.getCategoryList(false, res.otherConfigVer); //获取分类
-			let goods = await this.getGoodsList(false, res.goodsConfigVer); //获取商品列表
+			let goods = await this.getGoodsList(false, res.goodsConfigVer,res.otherConfigVer); //获取商品列表
 			let { list } = await this.getHttp('InventoryGetlist'); //获取库存数量
 
 			if (cate[0] && cate[0].id != -1) {

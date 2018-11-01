@@ -190,7 +190,7 @@ const ticket_config = {
 	"132": "ticket_config/sales_party"
 };
 let config = {
-	useId: ['011','026','101','102','103'], //需要用到的路由id
+	useId: ['011','026','101','102','103','021'], //需要用到的路由id
 	configs: {} //需要插入的路由模块
 };
 Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
