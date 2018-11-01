@@ -241,5 +241,9 @@ export default {
 	"getUserLists": { //获取库存
 		url: w + 'Assistantbuyhistory/getUserList',
 		method: 'get'
+	},
+	"bindPosition": { //关联职位
+		url: w + 'Assistantusergroup/bindPosition',
+		method: 'get'
 	}
 }

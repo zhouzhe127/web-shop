@@ -20,6 +20,7 @@
 							<div v-if="detials.type =='5'" class="shopAfter">赠菜</div>
 							<div v-if="detials.type =='6'" class="shopAfter">代金券</div>
 							<div v-if="detials.type =='7'" class="shopAfter">积分卡券</div>
+							<div v-if="detials.type =='8'" class="shopAfter">随机立减</div>
 						</div>
 						<div style="width:100%;height:40px;">
 							<h3 class="showBefore">优惠券名称:</h3>
@@ -39,13 +40,11 @@
 							<h3 class="showBefore">关联店铺:</h3>
 							<div class="shopAfter" style="height:auto;">关联了{{getNum('shopIds')}}家店铺</div>
 						</div>
-						<div v-if="detials.type !=='7' && detials.type !=='6' && detials.type !=='4' && detials.type !=='2' && detials.gids && detials.gids.length > 0"
-						    style="width:100%;height:40px;">
+						<div v-if="detials.type !=='7' && detials.type !=='6' && detials.type !=='4' && detials.type !=='2' && detials.gids && detials.gids.length > 0" style="width:100%;height:40px;">
 							<h3 class="showBefore">关联菜品:</h3>
 							<div class="shopAfter" style="height:auto;">关联了{{getNum('gids')}}道菜</div>
 						</div>
-						<div v-if="detials.type !=='7' && detials.type !=='4' && detials.type !=='2' && detials.pids && detials.pids.length > 0"
-						    style="width:100%;height:40px;">
+						<div v-if="detials.type !=='7' && detials.type !=='4' && detials.type !=='2' && detials.pids && detials.pids.length > 0" style="width:100%;height:40px;">
 							<h3 class="showBefore">关联套餐:</h3>
 							<div class="shopAfter" style="height:auto;">关联了{{getNum('pids')}}套餐</div>
 						</div>
@@ -70,6 +69,10 @@
 							<h3 class="showBefore">券有效期:</h3>
 							<div class="shopAfter">{{getEndTime()}}</div>
 						</div>
+						<div style="width:100%;height:40px;" v-if="detials.type == 8">
+							<h3 class="showBefore">随机立减金额:</h3>
+							<div class="shopAfter">{{detials.billPrice}}至{{detials.reckoningPrice}}</div>
+						</div>
 						<div v-if="detials.type != 7">
 							<h3 class="showBefore">优惠券共享:</h3>
 							<div class="shopAfter">{{sharing[detials.sharingStatus]}}</div>
@@ -92,11 +95,9 @@
 							<template v-else>
 								<template v-if="detials.useTime && detials.useTime.type && detials.useTime.type == 'week'">
 									<div class="shopAfter" v-for="(item,index) in detials.useTime.list" :key="index">
-										
 										<span>{{item.startslot}} - </span>
 										<span v-if="item.isNextDay">至隔日</span>
 										<span>{{item.endslot}}</span>
-
 									</div>
 								</template>
 								<template v-if="detials.useTime && detials.useTime.type && detials.useTime.type == 'month'">
@@ -144,7 +145,6 @@
 		</win>
 	</transition>
 </template>
-
 <script>
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';

@@ -18,16 +18,18 @@
 			<div class="text">
 				开启积分抵扣
 			</div>
-			<on-off :status="open" @statusChange="getIsDiscountToggle"></on-off>
+			<!-- <on-off :status="open" @statusChange="getIsDiscountToggle"></on-off> -->
+			<el-switch v-model="open" active-color="#E1BB4A" inactive-color="#dcdfe6">
+			</el-switch>
 		</div>
 		<div class="ic-line">
 			<div class="text required" style="margin-left: 158px;">
 				抵扣渠道
 			</div>
 			<div class="fl selectbtns">
-				<!-- <span v-for="(item,index) in canalList" :key='index' :class="{sign:selectCanal.indexOf(item.index)!=-1}" @click="doMore(item.index)">{{item.name}}</span> --> 
-                <mulSelect :list.sync="canalList" :selects.sync="selectCanal" :styles="{'marginRight':'8px'}" :name='"name"' :key='"id"'></mulSelect>
-            </div>
+				<!-- <span v-for="(item,index) in canalList" :key='index' :class="{sign:selectCanal.indexOf(item.index)!=-1}" @click="doMore(item.index)">{{item.name}}</span> -->
+				<mulSelect :list.sync="canalList" :selects.sync="selectCanal" :styles="{'marginRight':'8px'}" :name='"name"' :key='"id"'></mulSelect>
+			</div>
 		</div>
 		<div class="ic-line">
 			<div class="text required" style="margin-left:130px;">
@@ -44,23 +46,21 @@
 				元
 			</div>
 			<input type="text" class="input fl inputTwo" v-model="pointCash" maxlength="8"> -->
-
-            <el-input v-model="point" class="fl inputOne" maxlength="8">
-                <template slot="suffix">积分</template>
-            </el-input>
-            <div class="text fl" style="margin: 0 10px;">
+			<el-input v-model="point" class="fl inputOne" maxlength="8">
+				<template slot="suffix">积分</template>
+			</el-input>
+			<div class="text fl" style="margin: 0 10px;">
 				:
 			</div>
-            <el-input v-model="pointCash" class="fl inputOne" maxlength="8">
-                <template slot="suffix">元</template>
-            </el-input> 
+			<el-input v-model="pointCash" class="fl inputOne" maxlength="8">
+				<template slot="suffix">元</template>
+			</el-input>
 		</div>
 		<div class="ic-title">
 			<div class="text">
 				设置规则
 			</div>
 			<div class="dashed">
-
 			</div>
 		</div>
 		<div class="ic-line">
@@ -72,8 +72,8 @@
 					{{item}}
 				</div>  
 			</template> -->
-            <el-radio-group v-model="maxSelectName" class="fl">
-					<el-radio v-for="(item,index) in maxList" :key="index" :label="item" border @change.native="clicktheRadio(item,index)"></el-radio>
+			<el-radio-group v-model="maxSelectName" class="fl">
+				<el-radio v-for="(item,index) in maxList" :key="index" :label="item" border @change.native="clicktheRadio(item,index)"></el-radio>
 			</el-radio-group>
 		</div>
 		<template v-if="maxSelect == 1">
@@ -87,9 +87,9 @@
 						{{item}}
 					</div>
 				</template> -->
-                <el-radio-group v-model="computerWayName" class="fl">
+				<el-radio-group v-model="computerWayName" class="fl">
 					<el-radio v-for="(item,index) in computerWay" :key="index" :label="item" border @change.native="selectComputer(item,index)"></el-radio>
-			    </el-radio-group>
+				</el-radio-group>
 			</div>
 			<div class="ic-line">
 				<div class="text" style="margin-left:154px;">
@@ -99,13 +99,11 @@
 					%
 				</div>
 				<input type="text" class="input orderInput" v-model="maxDate.percentage" maxlength="3" placeholder="请输入百分比"> -->
-
-                <el-input v-model="maxDate.percentage" class="fl totalInput" type="text" maxlength="3" placeholder="请输入百分比">
-                    <template slot="suffix">%</template>
-                </el-input>
-            </div>
+				<el-input v-model="maxDate.percentage" class="fl totalInput" type="text" maxlength="3" placeholder="请输入百分比">
+					<template slot="suffix">%</template>
+				</el-input>
+			</div>
 		</template>
-
 		<div class="ic-line" v-if="maxSelect == 2">
 			<div class="text" style="margin-left: 154px;">
 				最多金额为
@@ -114,16 +112,15 @@
 				元
 			</div>
 			<input type="text" class="input numInput" v-model="maxDate.money" maxlength="10" placeholder="请输入金额"> -->
-            <el-input v-model="maxDate.money" class="input numInput" type="text" maxlength="10" placeholder="请输入金额">
-                <template slot="suffix">元</template>
-            </el-input>
-        </div>
+			<el-input v-model="maxDate.money" class="input numInput" type="text" maxlength="10" placeholder="请输入金额">
+				<template slot="suffix">元</template>
+			</el-input>
+		</div>
 		<div class="ic-title">
 			<div class="text">
 				积分使用上限
 			</div>
 			<div class="dashed">
-
 			</div>
 		</div>
 		<div class="ic-line">
@@ -134,16 +131,15 @@
 				%
 			</div>
 			<input type="text" class="input useInput" v-model="maxPointRate" maxlength="3" placeholder="请输入百分比"> -->
-            <el-input v-model="maxPointRate" class="useInput" type="text" maxlength="3" placeholder="请输入百分比">
-                <template slot="suffix">%</template>
-            </el-input>
+			<el-input v-model="maxPointRate" class="useInput" type="text" maxlength="3" placeholder="请输入百分比">
+				<template slot="suffix">%</template>
+			</el-input>
 		</div>
 		<div class="ic-title" style="margin-top: 10px;">
 			<div class="text">
 				积分抵扣条件
 			</div>
 			<div class="dashed">
-
 			</div>
 		</div>
 		<div class="ic-line">
@@ -157,9 +153,8 @@
 				</div>
                 <el-radio v-model="radio3" class="fl numStyleOne" :label="item" @click="changeSelect('selectConditionList',index)" border></el-radio>
 			</template> -->
-
-            <el-radio-group v-model="conditionListName" class="fl">
-					<el-radio v-for="(item,index) in conditionList" :key="index" :label="item" border @change.native="conditionSelect(item,index)"></el-radio>
+			<el-radio-group v-model="conditionListName" class="fl">
+				<el-radio v-for="(item,index) in conditionList" :key="index" :label="item" border @change.native="conditionSelect(item,index)"></el-radio>
 			</el-radio-group>
 		</div>
 		<div class="ic-line" v-if="selectConditionList != 0">
@@ -174,10 +169,9 @@
 			</div>
 			<input type="text" class="input fl totalInput" v-model="minCash" maxlength="10" placeholder="请输入金额"> -->
 			<el-input v-model="minCash" class="fl totalInput" type="text" maxlength="10" placeholder="请输入金额">
-                <template slot="suffix">元</template>
-            </el-input>
-            
-            <div class="fl" style="margin-left: 10px;">
+				<template slot="suffix">元</template>
+			</el-input>
+			<div class="fl" style="margin-left: 10px;">
 				允许使用
 			</div>
 		</div>
@@ -198,18 +192,16 @@
 				</div>
                 <el-radio v-model="radio4" class="fl useStyleOne" :label="item" @click="changeSelect('selectUserWay',index)" :key="index" border></el-radio>
 			</template> -->
-
-            <el-radio-group v-model="userWayName" class="fl">
+			<el-radio-group v-model="userWayName" class="fl">
 				<el-radio v-for="(item,index) in userWay" :key="index" :label="item" border @change.native="userWaySelect(item,index)"></el-radio>
 			</el-radio-group>
-
 			<img src="../../res/images/prompt.png" class="useImg" />
 			<div class="text" style="margin-left: 4px;">
 				最大限度使用
 			</div>
 		</div>
 		<!-- <a href="javascript:void(0);" class="yellow useA" @click="updatePointConfig" v-if="update">保存</a> -->
-        <el-button type="primary" class="yellow useA" @click="updatePointConfig" v-if="update">保存</el-button>
+		<el-button type="primary" class="yellow useA" @click="updatePointConfig" v-if="update">保存</el-button>
 	</div>
 </template>
 <script>
@@ -271,9 +263,9 @@
 			this.getPointConfig();
 		},
 		methods: {
-			getIsDiscountToggle(res) {
-				this.open = res;
-			},
+			// getIsDiscountToggle(res) {
+			// 	this.open = res;
+			// },
 			doMore(res) {
 				if (this.selectCanal.indexOf(res) != -1) {
 					this.selectCanal = this.selectCanal.replace(res, '');
@@ -283,7 +275,7 @@
 					} else {
 						this.selectCanal = this.selectCanal.concat(res);
 					}
-				} 
+				}
 			},
 			//初始化
 			async getPointConfig() {
@@ -305,7 +297,7 @@
 				if (info.channel == '0') {
 					info.channel = '';
 				}
-				info.channel += ''; 
+				info.channel += '';
 
 				this.selectCanal = [];
 				for (let i = 0; i < info.channel.length; i++) {
@@ -343,10 +335,10 @@
 			async updatePointConfig() {
 				if (this.testInfo()) {
 					let obj = {};
-                    let channel = '';
-                    for(let item of this.selectCanal){
-                        channel += item;
-                    }
+					let channel = '';
+					for (let item of this.selectCanal) {
+						channel += item;
+					}
 					obj.channel = channel;
 					obj.maxPointRate = this.maxPointRate;
 					obj.point = this.point;
@@ -517,13 +509,12 @@
 		},
 		components: {
 			onOff: () =>
-				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
+				import( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
 			mulSelect: () =>
-				import ( /*webpackChunkName: 'mul_select'*/ 'src/components/mul_select'),
+				import( /*webpackChunkName: 'mul_select'*/ 'src/components/mul_select'),
 		}
 	};
 </script>
-
 <style type="text/css" scoped>
 	#integral-consume .ic-title {
 		/*width: 1400px;*/
@@ -609,8 +600,9 @@
 	}
 
 	.ic-line .inputOne {
-		width: 100px; 
-	} 
+		width: 100px;
+	}
+
 	.ic-line .integralTop {
 		width: 100px;
 		height: 40px;

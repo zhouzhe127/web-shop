@@ -15,7 +15,8 @@
 						标签名称
 					</div>
 					<div class="rightHalf">
-						<input type="text" class="txt" placeholder="请输入名称" v-model="name" maxlength="20" />
+						<!-- <input type="text" class="txt" placeholder="请输入名称" v-model="name" maxlength="20" /> -->
+						<el-input v-model="name" maxlength="20" placeholder="请输入名称"></el-input>
 					</div>
 				</div>
 				<div class="phoneBox">
@@ -23,9 +24,12 @@
 						类型
 					</div>
 					<div class="rightHalf">
-						<div class="pagWay">
+						<el-radio-group v-model="validName" class="fl">
+							<el-radio v-for="(item,index) in payWays" :key="index" :label="item.name" border @change.native="changeRadio(item)"></el-radio>
+						</el-radio-group>
+						<!-- <div class="pagWay">
 							<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'sign':payType==item.id}">{{item.name}}</span>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -33,7 +37,6 @@
 	</Win>
 </template>
 <script>
-
 	import http from 'src/manager/http';
 
 	export default {
@@ -49,6 +52,7 @@
 					id: 1,
 					name: '工作人员'
 				}], //类型
+				validName:'用户',
 				payType: 0,
 				name: '' //标签名称
 			};
@@ -78,11 +82,11 @@
 				this.$emit('getAppliedWin', res);
 			},
 			//开关
-			changeRadio: function (item) {
+			changeRadio: function(item) {
 				let id = item.id;
 				this.payType = id;
 			},
-			jtrim: function (s) {
+			jtrim: function(s) {
 				return s.replace(/(^\s*)|(\s*$)/g, ''); //            /(^\s*)|(\s*$)/g    ，其中开头为任意多个空，或者最后为多个空
 			},
 			async addOrEdits(tagId, tagName, tagType) {
@@ -96,9 +100,6 @@
 				return data;
 			}
 		},
-		computed: {
-
-		},
 		components: {
 			Win: () =>
 				import ( /* webpackChunkName:'win' */ 'src/components/win')
@@ -107,6 +108,7 @@
 			if (this.type == 'edi') {
 				this.name = this.labeldetail.name;
 				this.payType = Number(this.labeldetail.type);
+				this.validName = this.payWays[this.labeldetail.type].name;
 				this.title = '编辑用户标签';
 				this.okStyle = {
 					content: '保存',

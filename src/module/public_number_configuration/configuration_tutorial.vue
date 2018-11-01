@@ -160,7 +160,7 @@
 		width: 1000px;
 		height: 28px;
 		line-height: 28px;
-		border-left: 4px solid #28a8e0;
+		border-left: 4px solid #E1BB4A;
 		margin: 15px 0 35px;
 		position: relative;
 	}
@@ -216,10 +216,10 @@
 		box-sizing: border-box;
 		width: 121px;
 		height: 32px;
-		border: 1px solid #2EA8DC;
+		border: 1px solid #E1BB4A;
 		text-align: center;
 		line-height: 32px;
-		color: #2EA8DC;
+		color: #E1BB4A;
 		border-radius: 4px;
 		cursor: pointer;
 	}
@@ -227,7 +227,7 @@
 	#configuration-tutorial .verticalBar {
 		width: 1px;
 		height: 50px;
-		background: #28A8E0;
+		background: #E1BB4A;
 		margin-left: 16px;
 	}
 
@@ -237,7 +237,7 @@
 		width: 32px;
 		height: 32px;
 		border-radius: 16px;
-		background: #28A8E0;
+		background: #E1BB4A;
 		text-align: center;
 		line-height: 32px;
 		font-size: 16px;

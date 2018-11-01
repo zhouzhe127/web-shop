@@ -8,20 +8,52 @@
 <template>
 	<div id="userLabel">
 		<!-- 列表 -->
-		<com-table :listHeight='80' :listName="'用户标签'" :key="index" :showTitle='1' :introData="labelist" :titleData="titleList" :allTotal="labelist.length"
-		    :listWidth="1436" :widthType='true'>
+		<!-- <com-table :listHeight='80' :listName="'用户标签'" :key="index" :showTitle='1' :introData="labelist" :titleData="titleList" :allTotal="labelist.length" :listWidth="1436" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="btnLink">
-				<a href="javascript:;" @click="openStore(props.data,'edi')">编辑</a>
-				<a href="javascript:;" @click="deletLabel(props.data)">删除</a>
+				<a href="javascript:;" @click="openStore(scope.row,'edi')">编辑</a>
+				<a href="javascript:;" @click="deletLabel(scope.row)">删除</a>
 			</div>
 			<div slot="con-1" slot-scope="props">{{labelist.length - props.index}}</div>
-			<div slot="con-2" slot-scope="props">{{userType[props.data.type]}}</div>
-		</com-table>
+			<div slot="con-2" slot-scope="props">{{userType[scope.row.type]}}</div>
+		</com-table> -->
+		<div class="list_box">
+			<div class="list_title">
+				<div class="list_title_l fl">
+					<span>用户标签</span>
+					<span></span>
+					<span>共
+								<a href="javascript:;">{{labelist.length}}</a>条记录</span>
+				</div>
+				<div class="list_title_r fr">
+				</div>
+			</div>
+			<el-table :data="labelist" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+				<el-table-column fixed prop="id" label="操作" align="center" width="280">
+					<template slot-scope="scope">
+						<el-button size="mini" type="text" @click="openStore(scope.row,'edi')" style="color: #ff8d00;">编辑</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="mini" type="text" @click="deletLabel(scope.row)" style="color: #fd3f1f;">删除</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="序号" align="center" width="200">
+					<template slot-scope="scope">
+						<span>{{labelist.length - scope.$index}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="类型" align="center" width="200">
+					<template slot-scope="scope">
+						<span>{{userType[scope.row.type]}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="name" label="标签名称" align="center">
+				</el-table-column>
+			</el-table>
+		</div>
 		<!-- 弹窗 -->
 		<component v-if="showWin" :is="isPopupwindow" :type='type' :labeldetail='labeldetail' @getAppliedWin='getResult'></component>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import getAppliedWin from './user_label_win.vue';
 
@@ -29,61 +61,26 @@
 		data() {
 			return {
 				index: null,
-				titleList: [
-					{
-						titleName: '操作',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 287 + 'px',
-							flex: 'none'
-						}
-					},
-					{
-						titleName: '序号',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 215 + 'px',
-							flex: 'none'
-						}
-					},
-					{
-						titleName: '类型',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 215 + 'px',
-							flex: 'none'
-						}
-					},
-					{
-						titleName: '标签名称',
-						dataName: 'name',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 718 + 'px',
-							flex: 'none'
-						}
-					}
-				],
 				allTotal: 0,
 				showWin: false, //弹窗默认关闭状态
 				isPopupwindow: '',
 				type: '', //编辑标签和新增标签
 				labelist: [], //标签列表
 				labeldetail: '',
-				userType:{
-					0:'用户',
-					1:'工作人员'
+				userType: {
+					0: '用户',
+					1: '工作人员'
 				}
 			};
 		},
 		methods: {
-			openStore: function (item, type) { //打开新增用户标签的弹窗
+			openStore: function(item, type) { //打开新增用户标签的弹窗
 				this.showWin = true; //打开弹窗
 				this.type = type; //编辑或者新增
 				this.labeldetail = item; //编辑的详情
 				this.isPopupwindow = 'getAppliedWin';
 			},
-			getResult: function (res) {
+			getResult: function(res) {
 				if (res == 'ok') {
 					this.getLabel();
 				}
@@ -97,7 +94,7 @@
 				});
 				this.labelist = data; //将数据赋值
 			},
-			deletLabel: function (item) {
+			deletLabel: function(item) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'confirm',
@@ -120,20 +117,19 @@
 				}
 			}
 		},
-		watch: {
-
-		},
 		components: {
 			comTable: () =>
 				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 			getAppliedWin
 		},
 		mounted() {
-			this.$store.commit('setPageTools', {
-				adduserLabel: () => {
+			this.$store.commit('setPageTools', [{
+				name: '新增用户标签',
+				fn: () => {
 					this.openStore({}, 'view');
-				}
-			});
+				},
+				className: 'el-btn-yellow'
+			}]);
 			this.getLabel();
 		}
 

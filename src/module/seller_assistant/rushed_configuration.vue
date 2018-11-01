@@ -234,7 +234,7 @@ export default {
 	},
 	methods: {
 		openflipSwitch: function (res) {
-			this.flipSwitch = res; //是否开启疯抢
+			this.flipSwitch = res; //是否开启疯抢 
 		},
 		getStartTime: function (receiveTime) { //选择开始时间
 			this.startObj.time = (new Date(receiveTime)).getTime(); //毫秒
@@ -298,7 +298,12 @@ export default {
 				data: {}
 			});
 			if (data && data != '') {
-				this.flipSwitch = Boolean(Number(data.status)); //疯抢开关
+				//this.flipSwitch = Boolean(Number(data.status)); //疯抢开关
+				if(data.status == '1' &&  data.endTime * 1000 > new Date().getTime() && data.activityId > 0){
+					this.flipSwitch = true;
+				}else{
+					this.flipSwitch = false;
+				}
 				this.startObj.time = data.startTime * 1000; //开始时间
 				this.endObj.time = data.endTime * 1000; //结束时间
 				this.expirationTime = data.expireTime; //过期时间
@@ -313,6 +318,8 @@ export default {
 				this.endingImage = data.endImage; //结束时的图片
 				this.endingImageName = this.endingImage.substring(this.endingImage.lastIndexOf('/') + 1, this.endingImage.length);
 			}
+            
+             
 		},
 		async bgNameChange(imgJson, type, id) {
 			// 上传图片 背景图片回调

@@ -116,51 +116,6 @@
 			</el-table>
 		</div>
 		<!-- 活动列表 -->
-		<!-- <com-table :listHeight='80' :showHand='false' :key="index" :showTitle='2' :listWidth="1440" :introData="activityList" :titleData="titleList">
-			<div slot="con-0" slot-scope="props">
-				{{setType(scope.row.type)}}
-			</div>
-			<div slot="con-2" slot-scope="props">
-				{{transFormData(scope.row.createTime)}}
-			</div>
-			<div slot="con-3" slot-scope="props">
-				<div v-if="scope.row.type == '0'">{{timeLimit[scope.row.limit].name}}</div>
-				<div v-else>{{setEndTime(scope.row.startTime,scope.row.endTime)}}</div>
-			</div>
-			<div slot="con-4" slot-scope="props">
-				<div v-if="scope.row.giveNum == '0'">无限制</div>
-				<div v-else>{{scope.row.giveNum}}</div>
-			</div>
-			<div slot="con-5" slot-scope="props">
-				<div v-if="scope.row.dayGiveNum == '0'">无限制</div>
-				<div v-else>{{scope.row.giveNum}}</div>
-			</div>
-			<div slot="con-6" slot-scope="props">
-				<div v-if="scope.row.type == '1' && scope.row.objectType == '0'">
-					店内
-				</div>
-				<div v-else>会员</div>
-			</div>
-			<div slot="con-7" slot-scope="props">
-				<div v-if="ischain == 1 || ischain == 2" style="text-align: center;">
-					不可操作
-				</div>
-				<div v-else style="text-align: center;">
-					<a v-if="flag==1" href="javascript:void(0);" class="yellow" v-on:click="close(scope.row)" style="width: 33.3%;">关闭</a>
-					<a v-if="flag==0" href="javascript:void(0);" class="yellow" v-on:click="publish(scope.row)" style="width: 33.3%;">发布</a>
-					<a v-if="flag==2" href="javascript:void(0);" class="blue" v-on:click="modfycoupons(scope.row,'2')" style="width: 50%;">查看详情</a>
-					<a v-if="flag==2" href="javascript:void(0);" class="yellow" v-on:click="off(scope.row)" style="width: 50%;">下架</a>
-					<a v-if="flag==3" href="javascript:void(0);" class="yellow" v-on:click="on(scope.row)" style="width: 33.3%;">上架</a>
-					<a v-if="flag==0 || flag==1 || flag==3" href="javascript:void(0);" class="gray" v-on:click="modfycoupons(scope.row,'1')" style="width: 33.3%;background: #858585;">编辑</a>
-					<a v-if="!(flag==2)" href="javascript:void(0);" class="gray" v-on:click="deletecoupons(scope.row)" v-bind:style="{'width':(flag==4) ? '100%' : '33.3%'}" style="background: #a7a7a7;">删除</a>
-				</div>
-			</div>
-		</com-table> -->
-		<!-- <page v-if="pageTotal > 1" :isNoPaging='true' @pageNum="funGetPageNum" :len="pageNum" :page="page" :total='pageTotal' style="float: left;margin-top: 30px;"></page> -->
-		<!-- 翻页 -->
-		<!-- <section class="turn-page">
-			<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(pageTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-		</section> -->
 		<div class="pageWrap">
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="pageTotal" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
@@ -520,14 +475,14 @@
 			setTitle: function() { //设置标题
 				this.$store.commit('setPageTools', [{
 					name: '返回',
-					className: ['fd-white'],
+					className: 'el-btn-blue',
 					fn: () => {
 						this.returnActivity();
 					}
 				},
 				{
 					name: '新建活动',
-					className: ['fd-yellow'],
+					className: 'el-btn-yellow',
 					fn: () => {
 						this.addActivity();
 					}

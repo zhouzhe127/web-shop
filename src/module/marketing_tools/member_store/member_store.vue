@@ -26,11 +26,15 @@
 						</el-option>
 					</el-select>
 				</div>
+
+                
 				<!-- 门店 -->
 				<div class="orderNum fl" v-if="ischain == '3'">
 					<span class="title fl">门店</span>
 					<elShopList @chooseShop="getSelectShopList" :shopIds="selectShopId"></elShopList>
 				</div>
+
+
 				<!-- 筛选重置 -->
 				<div class="search-box fl">
 					<!-- <span class="search-btn blue" @click="getStoreList">筛选</span>
@@ -42,114 +46,33 @@
 		</div>
 		<p class="btn">
 			<span class="all" v-for="(item,index) in storeList" :key='index' v-bind:class="{'active':indexOn == index }" @click="chooseStore(index)">{{item.name}}</span>
-		</p>
-		<p class="btn" v-if="ischain == '3'">
-			选择门店:{{selectName}}
-		</p>
-		<!-- <com-table :listHeight='80' :showHand='true' :key="index" :showTitle='2' :listWidth="1300" :introData="packageList" :titleData="titleList" :allTotal="count" :listName="'储值方案'">
-			<div class="doBtn" slot="con-0" slot-scope="props">
-				<span @click="clickDetail(scope.row)">查看详情</span>
-				<span @click="editDetail(scope.row)" v-show="isFlag">编辑</span>
-				<span @click="delList(scope.row,props.index)" v-show="isFlag">删除</span>
-			</div>
-			<div slot="con-1" slot-scope="props">{{translateTime(scope.row.createTime)}}</div>
-			<div slot="con-3" slot-scope="props">{{scope.row.type == 2 ? "-" :scope.row.deposit}}</div>
-			<div slot="con-4" slot-scope="props">{{scope.row.type == 2 ? "-" :scope.row.payment}}</div>
-			<div slot="con-5" slot-scope="props">
-				<template v-if="scope.row.channel == 12 || scope.row.channel == 21">
-					微信、POS收银
-				</template>
-				<template v-if="scope.row.channel == 1">
-					微信
-				</template>
-				<template v-if="scope.row.channel == 2">
-					POS收银
-				</template>
-			</div>
-			<div slot="con-6" slot-scope="props">
-				<template v-if="scope.row.type == 1">-</template>
-				<template v-if="scope.row.type == 2">
-					<template v-if="scope.row.depositRule == 2">
-						{{scope.row.deposit}} &lt;=支付金额 &lt;= {{scope.row.payment}}
-					</template>
-					<template v-if="scope.row.depositRule == 1">
-						支付金额 = {{scope.row.deposit}}
-					</template>
-					<template v-if="scope.row.depositRule == 3">
-						支付金额 &gt;= {{scope.row.deposit}}
-					</template>
-					<template v-if="scope.row.depositRule == 4">
-						支付金额 &lt;= {{scope.row.deposit}}
-					</template>
-				</template>
-			</div>
-			<div slot="con-7" slot-scope="props" class="giftcontent">
-				<template v-if="scope.row.type == 1">
-					<template v-if="scope.row.giftAmount == 0 && scope.row.giftPoint == 0 && scope.row.couponIds == ''">
-						-
-					</template>
-					<template v-if="scope.row.giftAmount == 0 && scope.row.giftPoint != 0">
-						赠送{{scope.row.giftPoint}}积分
-					</template>
-					<template v-if="scope.row.giftAmount != 0 && scope.row.giftPoint == 0">
-						赠送金额{{scope.row.giftAmount}}元
-					</template>
-					<template v-if="scope.row.giftAmount != 0 && scope.row.giftPoint != 0">
-						赠送金额{{scope.row.giftAmount}}元，赠送{{scope.row.giftPoint}}积分
-					</template>
-					<template v-if="scope.row.couponIds">
-						<template v-for="item in scope.row.couponIds">
-							赠送{{item.name}}优惠券{{item.num}}张
-						</template>
-					</template>
-				</template>
-				<template v-if="scope.row.type == 2">
-					<template v-if="scope.row.giftAmountRule == 0 && scope.row.giftPointRule == 0">
-						-
-					</template>
-					<template v-if='scope.row.giftAmountRule == 1'>
-						<template v-if="scope.row.giftAmount == 0">
-							-
-						</template>
-						<template v-else>
-							赠送固定储值金额{{scope.row.giftAmount}}元 ,
-						</template>
-					</template>
-					<template v-if="scope.row.giftAmountRule == 2">
-						<template v-if="scope.row.giftAmount == 0">
-						</template>
-						<template v-else>
-							按比例赠送储值金额{{scope.row.giftAmount}}%,
-						</template>
-					</template>
-					<template v-if="scope.row.giftPointRule == 1">
-						<template v-if="scope.row.giftPoint == 0">
-							-
-						</template>
-						<template v-else>
-							赠送固定积分{{scope.row.giftPoint}}分
-						</template>
-					</template>
-					<template v-if="scope.row.giftPointRule == 2">
-						<template v-if="scope.row.giftPoint == 0">
-							-
-						</template>
-						<template v-else>
-							按比例赠送积分{{scope.row.giftPoint}}%
-						</template>
-					</template>
-				</template>
-			</div>
-			<div slot="con-8" slot-scope="props">{{scope.row.type == 1 ? "固定方案" : "自定义方案"}}</div>
-		</com-table> -->
+		</p> 
+
+        <!-- 已经选择的店铺 -->
+        <!-- <div class="btn" v-if="ischain == '3'"> 
+            <div class="choiceshop_l">
+                选择店铺:    
+                    <span @click="stretch" v-html="hide?'收起':'展开'"></span> 
+            </div>  
+            <div class="choiceshop_r" v-if="hide" ref="reference">
+                {{selectName}}           
+            </div>  
+        </div> -->
+        <div class="store-show" :style="{'height':storeShowH}">
+            <i>已选择店铺：</i>
+            <div class="store-block">
+                <em @click='openStores' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
+                <div>{{selectName}}</div>
+            </div>
+        </div>
+
 		<!-- 下面的表格 -->
 		<div class="list_box" style="width:100%;">
 			<div class="list_title">
 				<div class="list_title_l fl">
 					<span>储值方案</span>
 					<span></span>
-					<span>共
-								<a href="javascript:;">{{count}}</a>条记录</span>
+					<span>共<a href="javascript:;">{{count}}</a>条记录</span>
 				</div>
 				<div class="list_title_r fr">
 				</div>
@@ -285,32 +208,34 @@
 			return {
 				startTime: (new Date()).setHours(0, 0, 0, 0) - (global.timeConst.THREEMONTHS), //.getZero(), //日期组件的开始时间
 				endTime: (new Date()).setHours(23, 59, 59, 999),
-				expirationTimeList: [{ //过期时间
-					name: '全部渠道',
-					id: 0
-				},
-				{
-					name: '微信',
-					id: 1
-				},
-				{
-					name: 'POS收银',
-					id: 2
-				}
+				expirationTimeList: [
+					{ //过期时间
+						name: '全部渠道',
+						id: 0
+					},
+					{
+						name: '微信',
+						id: 1
+					},
+					{
+						name: 'POS收银',
+						id: 2
+					}
 				],
 				expirationTimeId: 0,
 				expirationTime: '全部渠道', //状态
 				shopsList: [], // 卡属门店  
 				shopsName: '选择适用门店',
-				storeList: [{
-					name: '全部'
-				},
-				{
-					name: '固定方案'
-				},
-				{
-					name: '自定义方案'
-				}
+				storeList: [
+					{
+						name: '全部'
+					},
+					{
+						name: '固定方案'
+					},
+					{
+						name: '自定义方案'
+					}
 				],
 				indexOn: 0,
 				packageList: [], //筛选时方案列表显示
@@ -321,6 +246,64 @@
 				show: false,
 				index: null,
 				item: null,
+				titleList: [
+					{
+						titleName: '操作',
+						titleStyle: {
+							width: '220px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '创建时间',
+						titleStyle: {
+							width: '160px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '方案名称',
+						dataName: 'name'
+					},
+					{
+						titleName: '储值金额'
+					},
+					{
+						titleName: '支付金额'
+					},
+					{
+						titleName: '渠道',
+						titleStyle: {
+							width: '120px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '赠送条件',
+						titleStyle: {
+							width: '180px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '赠送内容',
+						titleStyle: {
+							width: '220px',
+							flex: 'none'
+						}
+					},
+					{
+						titleName: '方案类型'
+					},
+					{
+						titleName: '排序',
+						dataName: 'sort'
+					},
+					{
+						titleName: '操作人',
+						dataName: 'createUid'
+					}
+				],
 				userShop: '',
 				ischain: '',
 				selectName: '请选择店铺', //选择的店铺名
@@ -329,27 +312,32 @@
 				page: 1,
 				num: 10,
 				endTotal: 1,
-				count: '0'
+				count: '0', 
+				isShowStore:false,//已选中店铺列表 是否展开
+				storeShowH:'20px',
 			};
 		},
 		methods: {
-			// pageChange(obj) { //翻页
-			// 	this.page = obj.page;
-			// 	this.num = obj.num;
-			// 	this.getStoreList();
-			// },
-			startTimeChange: function(data) {
+			openStores(){//展开收起-已选中店铺列表
+				if(this.isShowStore == true){//展开时点击
+					this.storeShowH = '20px';
+				}else{
+					this.storeShowH = 'auto'; 
+				}
+				this.isShowStore = !this.isShowStore;	
+			},
+			startTimeChange: function (data) {
 				this.startTime = new Date(data).setHours(0, 0, 0, 0);
 			},
-			endTimeChange: function(data) {
+			endTimeChange: function (data) {
 				this.endTime = new Date(data).setHours(23, 59, 59, 999);
 			},
-			selexpirationTime: function(i) {
+			selexpirationTime: function (i) {
 				//this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
 				this.expirationTimeId = i; //点击卡类型对应的id
 			},
 			//时间显示
-			translateTime: function(time) {
+			translateTime: function (time) {
 				return utils.format(time, 'yyyy-MM-dd/hh:mm');
 			},
 			async getStoreList() {
@@ -405,8 +393,7 @@
 						setTimeout(() => {
 							this.editDetail(this.item);
 						}, 500);
-					}
-
+					} 
 				}
 			},
 			clickDetail(item) {
@@ -425,17 +412,17 @@
 				this.$router.push('/admin/memberStoredValueScheme/solution');
 			},
 			//打开创建方案页面
-			openStore: function() {
+			openStore: function () {
 				this.$router.push('/admin/memberStoredValueScheme/solution');
 			},
 
 			//方案列表点击选择方案
-			chooseStore: function(index) {
+			chooseStore: function (index) {
 				this.page = 1;
 				this.indexOn = index;
 				this.getStoreList();
 			},
-			getShopList: function() {
+			getShopList: function () {
 				// 获取卡属门店店铺列表
 				this.selectShopId = [];
 				if (this.ischain == '3') { // 处理品牌逻辑
@@ -473,7 +460,7 @@
 			// 	}
 			// 	this.selectShopId = idArr.join(',');
 			// },
-			resetFun: function() {
+			resetFun: function () {
 				this.startTime = new Date().setHours(0, 0, 0, 0) - (global.timeConst.THREEMONTHS);
 				this.endTime = new Date().setHours(23, 59, 59, 999);
 				this.expirationTimeId = 0;
@@ -481,7 +468,7 @@
 				this.getShopList();
 				this.getStoreList();
 			},
-			getSelectShopList: function(res) {
+			getSelectShopList: function (res) {
 				this.selectShopId = res;
 				let selectNameStr = '';
 				for (let i = 0; i < this.shopsList.length; i++) {
@@ -494,7 +481,7 @@
 				}
 				this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
 			},
-			getchannelName: function(id) { //获取渠道名称
+			getchannelName: function (id) { //获取渠道名称
 				let channelName = '--';
 				let channelArr = [];
 				for (let item of this.expirationTimeList) {
@@ -514,7 +501,7 @@
 				this.getStoreList();
 			},
 			//页码跳转
-			pageChange(p) {
+			pageChange(p){
 				this.page = p;
 				this.getStoreList();
 			},
@@ -532,28 +519,27 @@
 					fn: () => {
 						this.openStore();
 					},
-					className: 'userLabel'
+					className: 'el-btn-blue'
 				}]);
 			}
 			this.getShopList();
 			this.getStoreList();
-
 		},
 		components: {
 			detail: () =>
-				import ( /* webpackChunkName:'member_store_detail' */ './member_store_detail'),
+				import( /* webpackChunkName:'member_store_detail' */ './member_store_detail'),
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 			Calendar: () =>
-				import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
+				import( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+				import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 			elShopList: () =>
 				import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
 			selectStore: () =>
-				import ( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
+				import( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
 			pageElement: () =>
-				import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 		}
 	};
 </script>
@@ -629,11 +615,30 @@
 	#member-store .search-box .search-btn {
 		margin-right: 20px;
 	}
+    #member-store .btn{
+       width: 100%;
+		overflow: hidden;
+		margin-bottom: 20px;  
+    }
 
-	#member-store .btn {
+	#member-store .btn .choiceshop_l {
+		float: left;
 		font-size: 16px;
-		margin-bottom: 10px;
+		line-height: 24px;
 	}
+    #member-store .btn .choiceshop_l span{
+        color:#29abe2; 
+        padding:0 5px;
+        display: inline-block;
+    }
+    #member-store .btn .choiceshop_r {
+		float: left;
+		width: 900px;
+		font-size: 16px;
+		line-height: 24px;
+        height: auto;
+	}
+     
 
 	#member-store .btn .all {
 		width: 121px;
@@ -818,4 +823,35 @@
 			right: 3%;
 		}
 	}
+	#member-store .store-show {
+		width: 100%;
+		margin-bottom: 10px;
+		display: block;
+		overflow: hidden;
+		line-height: 20px;
+		position: relative; 
+	}
+	#member-store .store-show i {
+		float: left;
+		position: absolute;
+		left: 0;
+		top: 0;
+	
+	}
+	#member-store .store-show .store-block{
+		overflow: hidden;
+		width: 100%;
+		padding-left: 84px;
+	}
+	#member-store .store-show .store-block em{
+		float: left;
+		color: #09f;
+		margin-right: 5px;
+		cursor: pointer;
+		text-decoration: underline;
+	}
+	#member-store .store-show .store-block 	span {
+		float: left;
+		color: #333;
+	}		
 </style>

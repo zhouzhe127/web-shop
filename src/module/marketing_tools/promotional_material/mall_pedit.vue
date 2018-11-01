@@ -43,7 +43,6 @@
 				<label for="file_upload" style="position:absolute;width:100%;height:100%;left:0;top:0;cursor: pointer;"></label>
 				<i class="el-icon-plus el-icon--left"></i>上传图片
 			</el-button>
-
 		</div>
 		<div class="alertTips">
 			<i class="el-icon-info" style="color:rgb(216,219,227)"></i>
@@ -61,15 +60,13 @@
 			</div>
 			<img :src='imgHost + fileName' v-if='fileName != null' v-bind:style="imgStyle" class="centerImg" />
 		</div>
-
-		<div class="submitBut">
-			<el-button type="info" @click="openPro">关闭</el-button>
-			<el-button type="primary" @click="onPro">保存</el-button>
+			<div class="submitBut">
+				<el-button type="info" @click="openPro">关闭</el-button>
+				<el-button type="primary" @click="onPro">保存</el-button>
+			</div>
 		</div>
-	</div>
 </template>
-
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
@@ -257,8 +254,8 @@
 			},
 			countSize(pos, size, type) {
 				if (pos) {
-					pos.push(parseInt( (parseFloat(this.editConfig[type].x) - parseFloat(imgRang.left))* this.imgScale ));
-					pos.push(parseInt( (parseFloat(this.editConfig[type].y) - parseFloat(imgRang.top) ) * this.imgScale ));
+					pos.push(parseInt((parseFloat(this.editConfig[type].x) - parseFloat(imgRang.left)) * this.imgScale));
+					pos.push(parseInt((parseFloat(this.editConfig[type].y) - parseFloat(imgRang.top)) * this.imgScale));
 				}
 				if (size) {
 					size.push(parseInt(parseFloat(this.editConfig[type].w) * this.imgScale));
@@ -267,25 +264,21 @@
 
 			},
 			async onPro() {
-
 				let names = [];
 				let namesSize = [];
 				let heads = [];
 				let headsSize = [];
 				let wxs = [];
 				let wxsSize = [];
-
-				if (!global.checkData(
-					{
-						name: {
-							cond: `$$.toString().trim() != '' && $$.toString().trim() != 0`,
-							pro: '请输入正确格式的素材名称!'
-						}
-					}, 
-					this)) {
+				if (!global.checkData({
+					name: {
+						cond: `$$.toString().trim() != '' && $$.toString().trim() != 0`,
+						pro: '请输入正确格式的素材名称!'
+					}
+				},
+				this)) {
 					return false;
 				}
-
 				if (this.isname) {
 					this.countSize(names, null, 'name');
 					let obj = utils.getDOMPosition(this.$refs.names);
@@ -304,7 +297,7 @@
 					positionName: names.toString(),
 					positionNameSize: namesSize.toString(),
 					positionNameFontSize: this.fontSize,
-					positionNameColor: this.color.replace(/rgb\(|\)/g,''),
+					positionNameColor: this.color.replace(/rgb\(|\)/g, ''),
 					positionHead: heads.toString(),
 					positionHeadSize: headsSize.toString(),
 					positionQR: wxs.toString(),
@@ -312,7 +305,7 @@
 					uid: this.uid
 				};
 				console.log(sourceObj);
-				
+
 				if (this.position) {
 					await http.ActivityEdit({
 						data: Object.assign(sourceObj, {
@@ -405,7 +398,7 @@
 					w = parseInt(s[0] / this.imgScale);
 					h = parseInt(s[1] / this.imgScale);
 				}
-				
+
 				if ((x + w) > parseFloat(imgRang.left) + parseFloat(this.imgStyle.width) || (y + h) > parseFloat(imgRang.top) + parseFloat(this.imgStyle.height) || x < parseFloat(imgRang.left) || y < parseFloat(imgRang.top)) {
 					this.editConfig[type].x = imgRang.left;
 					this.editConfig[type].y = imgRang.top;
@@ -417,7 +410,7 @@
 					item.x = x + 'px';
 					item.y = y + 'px';
 					item.w = (w < 20 ? 20 : w) + 'px';
-					item.h = (h < 20 ? 20 : h)+ 'px';
+					item.h = (h < 20 ? 20 : h) + 'px';
 				}
 
 			}
@@ -511,7 +504,6 @@
 		}
 	};
 </script>
-
 <style lang='less' scoped>
 	.mall-box {
 		width: 100%;
@@ -543,9 +535,10 @@
 		margin-top: 6px;
 	}
 
-	.title span{
+	.title span {
 		padding-left: 10px;
 	}
+
 	.name {
 		margin-top: 20px;
 

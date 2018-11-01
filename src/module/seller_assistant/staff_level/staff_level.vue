@@ -7,7 +7,7 @@
 -->
 <template>
 	<div id="staffLevel">
-		<com-table :listHeight='80' :listWidth="1436" :listName="'人员级别'" :key="index" :showTitle='1' :introData="levelist" :titleData="titleList"
+		<!-- <com-table :listHeight='80' :listWidth="1436" :listName="'人员级别'" :key="index" :showTitle='1' :introData="levelist" :titleData="titleList"
 		    :allTotal="levelist.length" :widthType='true'>
 			<div slot="con-0" slot-scope="props" class="btnLink">
 				<a href="javascript:;" @click="openStore(props.data,'edi')">编辑</a>
@@ -21,12 +21,49 @@
 					</li>
 				</ul>
 			</div>
-		</com-table>
+		</com-table> -->
+		<div class="list_box">
+			<div class="list_title">
+				<div class="list_title_l fl">
+					<span>人员级别</span>
+					<span></span>
+					<span>共
+								<a href="javascript:;">{{levelist.length}}</a>条记录</span>
+				</div>
+				<div class="list_title_r fr">
+				</div>
+			</div>
+			<el-table :data="levelist" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+				<el-table-column fixed prop="id" label="操作" align="center" width="280">
+					<template slot-scope="scope">
+						<el-button size="mini" type="text" @click="openStore(scope.row,'edi')" style="color: #ff8d00;">编辑</el-button>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button size="mini" type="text" @click="deletLevel(scope.row)" style="color: #fd3f1f;">删除</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="等级显示" align="center" width="400">
+					<template slot-scope="scope">
+						<div class="btnLink_g">
+							<ul>
+								<li v-for="(item,index) in scope.row.star" class="on" :key="index">
+								</li>
+								<li v-for="(item,index) in scope.row.unstar" :key="index+'_0'">
+								</li>
+							</ul>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column prop="name" label="名称" align="center" width="500">
+				</el-table-column>
+				<el-table-column prop="totalGold" label="条件" align="center">
+				</el-table-column>
+			</el-table>
+		</div>
 		<!-- 弹窗 -->
 		<component v-if="showWin" :is="isPopupwindow" :type='type' :leveldetail='leveldetail' @getAppliedWin='getResult'></component>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import getAppliedWin from './staff_level_win.vue';
@@ -35,42 +72,6 @@
 		data() {
 			return {
 				index: null,
-				titleList: [
-					{
-						titleName: '操作',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 287 + 'px',
-							flex: 'none'
-						},
-					},
-					{
-						titleName: '等级显示',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 574 + 'px',
-							flex: 'none'
-						},
-					},
-					{
-						titleName: '名称',
-						dataName: 'name',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 287 + 'px',
-							flex: 'none'
-						},
-					},
-					{
-						titleName: '条件',
-						dataName: 'totalGold',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							width: 287 + 'px',
-							flex: 'none'
-						},
-					}
-				],
 				allTotal: 0,
 				showWin: false, //弹窗默认关闭状态
 				isPopupwindow: '',
@@ -80,13 +81,13 @@
 			};
 		},
 		methods: {
-			openStore: function (item, type) { //打开新增用户标签的弹窗
+			openStore: function(item, type) { //打开新增用户标签的弹窗
 				this.showWin = true; //打开弹窗
 				this.type = type;
 				this.leveldetail = item;
 				this.isPopupwindow = 'getAppliedWin';
 			},
-			getResult: function (res) {
+			getResult: function(res) {
 				if (res == 'ok') {
 					this.getLevel();
 				}
@@ -109,7 +110,7 @@
 					}
 				}
 			},
-			deletLevel: function (item) {
+			deletLevel: function(item) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
 					winType: 'confirm',
@@ -138,11 +139,13 @@
 			getAppliedWin
 		},
 		mounted() {
-			this.$store.commit('setPageTools', {
-				adduserLevel: () => {
+			this.$store.commit('setPageTools', [{
+				name: '新增人员等级',
+				fn: () => {
 					this.openStore({}, 'view');
-				}
-			});
+				},
+				className: 'el-btn-yellow'
+			}]);
 			this.getLevel(); //获取等级列表
 		}
 
@@ -253,8 +256,8 @@
 	#staffLevel .btnLink_g ul {
 		float: left;
 		display: inline;
-		height: 80px;
-		line-height: 80px;
+		height: 60px;
+		line-height: 60px;
 		overflow: hidden;
 		display: flex;
 		align-items: center;
@@ -265,7 +268,7 @@
 		width: 24px;
 		cursor: pointer;
 		text-indent: -9999px;
-		background: url(../../../src/res/icon/star.png) no-repeat;
+		background: url(../../../../src/res/icon/star.png) no-repeat;
 		height: 20px;
 		display: inline;
 		flex: 1;

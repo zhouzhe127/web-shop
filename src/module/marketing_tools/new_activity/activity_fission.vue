@@ -128,7 +128,7 @@ export default {
 				}).start
 			},
 			endObj: {
-				time: new Date().getTime()
+				time: new Date().setHours(23, 59, 59, 999)
 			},
 			dates: new Date().getTime(), //当前时间
 			returnInt: 1, //相差天数
@@ -330,8 +330,8 @@ export default {
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
-			name: '<返回活动列表',
-			className: ['activity'],
+			name: '返回活动列表',
+			className: 'el-btn-blue',
 			fn: () => {
 				this.closePage();
 			}

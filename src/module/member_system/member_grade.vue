@@ -156,10 +156,10 @@ export default {
 				return false;
 			};
 			while (findNext()) {
-				console.log('111');
+				// console.log('111');
 			}
-			console.log(JSON.stringify(arr));
-			console.log(JSON.stringify(list));
+			// console.log(JSON.stringify(arr));
+			// console.log(JSON.stringify(list));
 			if (list.length > 0) {
 				//自己新建的等级
 				for (let i = 0; i < list.length; i++) {

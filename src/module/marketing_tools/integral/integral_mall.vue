@@ -7,26 +7,6 @@
 			</el-radio-group>
 		</div>
 		<div v-if="commodityId == 0" class="gooodsTable" style="margin-bottom: 20px;">
-			<!-- <com-table :listHeight='80' :listName="'商品列表'" :showTitle='2' :listWidth="1400" :introData="goodLists" :titleData="titleList" :allTotal="count">
-				<div slot="con-1" slot-scope="props">
-					{{statusType[props.data.type]}}
-				</div>
-				<div class="imgshow" slot="con-3" slot-scope="props">
-					<img :src=" imgHost + props.data.imageName" />
-				</div>
-				<div slot="con-11" slot-scope="props" class="operateParent">
-					<div v-if="ischain == '0' || ischain == '3'" class="operate">
-						<a href="javascript:void(0);" class="jun shelves" v-if="props.data.status == 0" @click="shelves(props.index,props.data.id,props.data.status)">下架</a>
-						<a href="javascript:void(0);" class="jun shelves" v-if="props.data.status == 1" @click="shelves(props.index,props.data.id,props.data.status)">上架</a>
-						<a href="javascript:void(0);" class="jun eit" @click="edit(props.index,props.data.id)">编辑</a>
-						<a href="javascript:void(0);" class="jun del" @click="del(props.index,props.data.id)">删除</a>
-					</div>
-					<div v-if="ischain == '1' || ischain == '2'">
-						<a href="javascript:void(0);" style="width:100%;height:100%;color:#333;line-height: 80px;">当前无权限</a>
-					</div>
-				</div>
-			</com-table>
-			<page v-if="total > 1 " @pageNum="pageChange" :page="pages" :total='total' :isNoJump='true' :isNoPaging='true' style="float: left;margin-bottom: 100px;"></page> -->
 			<!-- 下面的表格 -->
 			<div class="list_box">
 				<div class="list_title">
@@ -151,21 +131,28 @@
 			}
 		},
 		methods: {
+			setTemplateType: function() {
+				//模板设置
+				this.isTemplate = true;
+			},
+			addIntegral: function() {
+				this.editInfos = '';
+				this.$router.push('/admin/integralMall/addIntegralMall');
+			},
 			initBtn() {
-				let obj = {
-					setTemplateType: () => {
-						//模板设置
-						this.isTemplate = true;
+				this.$store.commit('setPageTools', [{
+					name: '模版设置',
+					fn: () => {
+						this.setTemplateType();
 					},
-					addIntegral: () => {
-						//console.log('1111');
-						//添加积分商品
-						this.editInfos = '';
-						// this.isWin = true;
-						this.$router.push('/admin/integralMall/addIntegralMall');
-					}
-				};
-				this.$store.commit('setPageTools', obj);
+					className: 'el-btn-yellow'
+				}, {
+					name: '添加积分商品',
+					fn: () => {
+						this.addIntegral();
+					},
+					className: 'el-btn-blue'
+				}]);
 			},
 			//获取列表
 			async getActivityGoodsList() {
@@ -252,9 +239,6 @@
 			// 	}
 			// },
 			//模板选择
-			setTemplateType() {
-				this.isTemplate = true;
-			},
 			//添加积分商品
 			openWin() {
 				this.editInfos = '';

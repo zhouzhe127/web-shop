@@ -167,7 +167,8 @@ const member_system = {
 	'1111': 'member_system/card_type',
 	'1112': 'member_system/getapplied_entitycardlist',
 	'1113': 'member_system/membercard_import',
-	'1114': 'member_system/member_analysis'
+    '1114': 'member_system/member_analysis',
+    '1115': 'member_system/member_activity_value'
 };
 const seller_assistant = {
 	'121': 'seller_assistant/gold_config',
@@ -190,7 +191,7 @@ const ticket_config = {
 	"132": "ticket_config/sales_party"
 };
 let config = {
-	useId: [], //需要用到的路由id
+	useId: ['1210'], //需要用到的路由id
 	configs: {} //需要插入的路由模块
 };
 Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);

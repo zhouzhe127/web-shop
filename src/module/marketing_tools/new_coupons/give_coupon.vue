@@ -68,9 +68,6 @@
 				</div>
 			</div>
 			<div class="right">
-				<!-- <section class="fl reduce" v-for="(item,index) in compulsoryCreditsList" :key="index">
-					<span :class="{'sign' : compulsoryCredits == index}" v-on:click="changecompulsoryCredits(item,index)">{{item.name}}</span>
-				</section> -->
 				<el-radio-group v-model="compulsoryName" class="fl">
 					<el-radio style="width:112px;" v-for="(item,index) in compulsoryCreditsList" :key="index" :label="item.name" border @change.native="changecompulsoryCredits(item)"></el-radio>
 				</el-radio-group>
@@ -95,7 +92,7 @@
 			<div class="right" v-if="validType.index == 0">
 				<div class="line" style="text-align:left;">
 					领券后
-					<input class="input couponinp" maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" /> 日内有效
+					<!-- <input class="input couponinp" maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" /> --> <el-input maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input> 日内有效
 				</div>
 			</div>
 			<div class="right" v-if="validType.index == 1" style="padding-left: 10px;">
@@ -184,7 +181,6 @@
 				</el-select>
 				<div class="and" v-if="isSharingId == 1">
 					<span> 且</span>
-					<!-- <select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn> -->
 					<el-select v-model="concessionSharing" @change="getconcession" style="color:#c0c4cc">
 						<el-option v-for="item in concessionSharingList" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
@@ -196,14 +192,6 @@
 						<br/>“不可与其他优惠共享”则也包含“不与会员卡优惠共用”</div>
 					<i class="el-icon-question" style="font-size:24px;"></i>
 				</el-tooltip>
-				<!-- <div class="icon" @click="showText()">
-					<div class="detDiv" v-if="hiddenText">
-						<i class="detI triright"></i>
-						<h3 class="detH3">
-                            “与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用 “不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受 “不可与其他优惠共享”则也包含“不与会员卡优惠共用”。
-                        </h3>
-					</div>
-				</div> -->
 			</div>
 			<!-- 其他设置 -->
 			<div class="set-line" style="float: left;">

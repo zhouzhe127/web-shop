@@ -18,10 +18,11 @@
 					<span class="order-order-search" href="javascript:void(0)"></span>
 					</span>
 				</div>
+
 				<!--品牌店铺选择-->
 				<div class="filbox fl">
 					<span style="font-size:16px;" v-if="ischain == '3'">选择店铺</span>
-					<section class="top-box" style="display:inline-block;" v-if="ischain == '3'">
+					<section class="top-box" style="display:inline-block;" v-if="ischain == '3'"> 
 						<selectstore @returnShop="getShop" :reset="hide"></selectstore>
 					</section>
 				</div>
@@ -34,8 +35,26 @@
 				<div class="search-box fl">
 					<span class="search-btn blue" @click="getStatistics">筛选</span>
 					<span class="reset-btn gray" @click="resetFun">重置</span>
-				</div>
+				</div> 
 			</div>
+            <!-- 已经选择的店铺 -->
+            <!-- <div class="choiceshop"  v-if="ischain == '3'">
+                <div class="choiceshop_l" >
+                    选择店铺:   
+                        <span @click="stretch" v-if="show">收起</span>
+                        <span @click="stretch" v-if="!show">展开</span>  
+                </div> 
+                <div class="choiceshop_r" v-if="show"> 
+                    {{selShopid}}
+                </div> 
+            </div> -->
+            <div class="store-show" :style="{'height':storeShowH}">
+				<i>已选择店铺：</i>
+				<div class="store-block">
+					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
+					<div>{{shopName}}</div>  
+				</div>
+			</div> 
 			<!-- 环比 同比 -->
 			<div class="compared">
 				<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span>
@@ -339,10 +358,20 @@ export default {
 				dataName: 'num'
 			}
 			],
-			timerqueue: []
+			timerqueue: [],
+			isShowStore:false,//已选中店铺列表 是否展开
+			storeShowH:'20px', 
 		};
 	},
-	methods: {
+	methods:{
+		openStore(){//展开收起-已选中店铺列表
+			if(this.isShowStore==true){//展开时点击
+				this.storeShowH = '20px';
+			}else{
+				this.storeShowH = 'auto';
+			}
+			this.isShowStore = !this.isShowStore;
+		},
 		startTimeChange(time) {
 			//开始时间
 			this.startTime = time;
@@ -378,16 +407,15 @@ export default {
 					arr.push(obj);
 				}
 				this.ChartShopName = arr;
-				// this.ChartSelShop = arr.slice(0,3);
 			} else {
 				this.shopName = '请选择店铺';
-			}
+			}  
 		},
 		getShop(id, name) {
 			if (id || name) {
 				this.selShopid = id;
 				this.shopName = name;
-			}
+			} 
 			this.getShopname();
 		},
 		fadeAway() {
@@ -724,6 +752,7 @@ export default {
 		this.uploadUrl = userData.uploadUrl;
 		for (let item of this.shopList) {
 			this.selShopid.push(item.id);
+			this.shopName += item.shopName + ', ';
 		}
 		this.getStatistics();
 	},
@@ -737,6 +766,60 @@ export default {
 #evaluation {
 	padding-bottom: 40px;
 	min-width: 1245px;
+}
+
+/* #evaluation .choiceshop {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#evaluation .choiceshop .choiceshop_l {
+    float: left;
+    font-size: 16px;
+    line-height: 24px;
+}
+#evaluation .choiceshop .choiceshop_l span{
+    color:#29abe2; 
+    padding:0 5px;
+    display: inline-block;
+}
+#evaluation .choiceshop .choiceshop_r {
+    float: left;
+    width: 900px;
+    font-size: 16px;
+    line-height: 24px;
+} */
+#evaluation .store-show {
+	width: 100%;
+	margin-bottom: 10px;
+	display: block;
+	overflow: hidden;
+	line-height: 20px;
+	position: relative; 
+}
+#evaluation .store-show i {
+	float: left;
+	position: absolute;
+	left: 0;
+	top: 0;
+
+}
+#evaluation .store-show .store-block{
+	overflow: hidden;
+	width: 100%;
+	padding-left: 84px;
+}
+#evaluation .store-show .store-block em{
+	float: left;
+	color: #09f;
+	margin-right: 5px;
+	cursor: pointer;
+	text-decoration: underline;
+}
+#evaluation .store-show .store-block 	span {
+	float: left;
+	color: #333;
 }
 
 #evaluation .filter {
