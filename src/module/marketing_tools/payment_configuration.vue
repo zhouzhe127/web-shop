@@ -98,25 +98,25 @@
 			return {
 				paySwitch: false, //支付评价功能
 				score: [{
-						name: '环境评分',
-						environmentSwitch: true //环境评分
-					},
-					{
-						name: '口味评分',
-						environmentSwitch: true //口味评分
-					},
-					{
-						name: '服务评分',
-						environmentSwitch: true //服务评分
-					},
-					{
-						name: '商品评分',
-						environmentSwitch: true //文字评分
-					},
-					{
-						name: '文字评分',
-						environmentSwitch: true, //商品评分
-					}
+					name: '环境评分',
+					environmentSwitch: true //环境评分
+				},
+				{
+					name: '口味评分',
+					environmentSwitch: true //口味评分
+				},
+				{
+					name: '服务评分',
+					environmentSwitch: true //服务评分
+				},
+				{
+					name: '商品评分',
+					environmentSwitch: true //文字评分
+				},
+				{
+					name: '文字评分',
+					environmentSwitch: true, //商品评分
+				}
 				],
 				evaluationList: [{
 					id: 0,
@@ -129,17 +129,17 @@
 				resultName: '支付后跳转',
 				givingSwitch: false, //赠送积分
 				payWays: [{
-						id: 1,
-						name: '在线点单'
-					},
-					{
-						id: 2,
-						name: '自助点单'
-					},
-					{
-						id: 3,
-						name: '扫码支付'
-					}
+					id: 1,
+					name: '在线点单'
+				},
+				{
+					id: 2,
+					name: '自助点单'
+				},
+				{
+					id: 3,
+					name: '扫码支付'
+				}
 				], //类型
 				payType: [],
 				point: '', //积分

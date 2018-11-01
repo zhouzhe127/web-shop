@@ -224,20 +224,20 @@
 				value8: '',
 				taList: [],
 				titleList: [{
-						titleName: '姓名',
-						dataName: 'staffName',
-						titleStyle: {
-							width: '400px',
-							flex: 'none'
-						}
-					},
-					{
-						titleName: '操作',
-						titleStyle: {
-							width: '400px',
-							flex: 'none'
-						}
-					},
+					titleName: '姓名',
+					dataName: 'staffName',
+					titleStyle: {
+						width: '400px',
+						flex: 'none'
+					}
+				},
+				{
+					titleName: '操作',
+					titleStyle: {
+						width: '400px',
+						flex: 'none'
+					}
+				},
 				],
 				allTotal: 0,
 				page: 1,
