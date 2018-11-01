@@ -7,14 +7,20 @@
 			<div class='topR'>
 				<section class='fl' style='clear: both;'>
 					<label class='commodity-name fl'>参与积分</label>
-					<on-off @statusChange='(val)=> on = val' :status='on'></on-off>
-				</section>
+					<!-- <on-off @statusChange='(val)=> on = val' :status='on'></on-off> -->
+                    <div class="rightHalf">
+                        <el-switch v-model="on" active-color="#E1BB4A" inactive-color="#dcdfe6">
+                        </el-switch>
+                    </div>
+				</section> 
 			</div>
 			<div class='picName'>
 				<span class='required' style='display: block;float:left;width:100px;line-height: 40px;'>积分比例 </span>
-				<input type='text' maxlength='4' :disabled='disabled' v-model='cash' placeholder='请输入现金' />
+				<!-- <input type='text' maxlength='4' :disabled='disabled' v-model='cash' placeholder='请输入现金' /> -->
+				<el-input type='text' maxlength='4' :disabled='disabled' v-model='cash' placeholder='请输入现金' style="width:80px;"></el-input>
 				<i>&nbsp;&nbsp;：</i>
-				<input type='text' maxlength='4' :disabled='disabled' v-model='integral' placeholder='请输入积分' />
+				<!-- <input type='text' maxlength='4' :disabled='disabled' v-model='integral' placeholder='请输入积分' /> -->
+				<el-input type='text' maxlength='4' :disabled='disabled' v-model='integral' placeholder='请输入积分' style="width:80px;"></el-input>
 			</div>
 			<div class='topR'>
 				<section class='fl' style='clear: both;position: relative;'>
@@ -22,16 +28,26 @@
 					<div class='mesking' v-if='!on'>
 
 					</div>
-					<on-off @statusChange='(val)=> expiration = val' :status='expiration'></on-off>
+					<!-- <on-off @statusChange='(val)=> expiration = val' :status='expiration'></on-off> -->
+					<div class="rightHalf">
+                        <el-switch v-model="on" active-color="#E1BB4A" inactive-color="#dcdfe6">
+                        </el-switch>
+                    </div>
 				</section>
 			</div>
 			<div class='expiration-time'>
 				<div class='required time-exp'>积分清零时间</div>
-				<input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入月' v-model='month' />&nbsp;&nbsp;月&nbsp;
-				<input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入日' v-model='day' />&nbsp;&nbsp;日&nbsp;&nbsp;
+				<!-- <input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入月' v-model='month' />&nbsp;&nbsp;月&nbsp; -->
+				<el-input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入月' v-model='month' style="width:80px;"></el-input>&nbsp;&nbsp;月&nbsp;
+
+				<!-- <input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入日' v-model='day' />&nbsp;&nbsp;日&nbsp;&nbsp; -->
+				<el-input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入日' v-model='day' style="width:80px;"></el-input>&nbsp;&nbsp;日&nbsp;
+
 			</div>
 		</div>
-		<a v-if='isBrand' href='javascript:void(0);' v-on:click='keepOn' class='yellow' style='margin:20px 0 0 100px;width:250px;'>保存</a>
+		<!-- <a v-if='isBrand' href='javascript:void(0);' v-on:click='keepOn' class='yellow' style='margin:20px 0 0 100px;width:250px;'>保存</a> -->
+			<el-button type="primary" v-if='isBrand' href='javascript:void(0);' v-on:click='keepOn' class='yellow' style='margin:20px 0 0 100px;width:250px;'>保存</el-button>
+
 	</section>
 </template>
 
@@ -389,6 +405,12 @@
 		top: 0;
 		cursor: pointer;
 	}
+    .topR .rightHalf{
+        width: 600px;
+		height: auto;
+		float: left;
+		line-height: 40px;
+    }
 
 	.check-span {
 		float: left;

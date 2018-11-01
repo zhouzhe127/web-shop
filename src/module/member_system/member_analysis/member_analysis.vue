@@ -239,7 +239,7 @@ export default {
 
 #member_analysis .compared .effect,
 #member_analysis .filter .effect {
-	background-color: #28a8e0;
+	background-color: #E1BB4A;
 	color: #ffffff;
 }
 
@@ -247,7 +247,7 @@ export default {
 	display: inline-block;
 	width: 40px;
 	height: 40px;
-	background: url(../../../src/res/icon/orderdetial18.png) no-repeat center;
+	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
 	position: relative;
 	vertical-align: middle;
 	cursor: pointer;

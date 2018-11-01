@@ -8,13 +8,13 @@
 					</div>
 					<div class="inp-box inp-start fl">
 						<!-- <calendar :time="startTime" :type="0" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar> -->
-						<el-date-picker v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+						<el-date-picker v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" :editable="false">
 						</el-date-picker>
 					</div>
 					<span class="line"> - </span>
 					<div class="inp-box inp-start fl">
 						<!-- <calendar :time="endTime" :type="0" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar> -->
-						<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+						<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" :editable="false">
 						</el-date-picker>
 					</div>
 					<el-button type="primary" icon="el-icon-search" @click="rechargeQuery"></el-button>

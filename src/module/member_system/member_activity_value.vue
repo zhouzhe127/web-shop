@@ -55,9 +55,11 @@
 		</div>
 		<div class="storageBtn" v-if="isStoredId == 1">
 			<div class="box" style='width:70px;margin-left:140px;'>比例设置</div>
-			<el-input data-min="0" v-model='storedAmount' placeholder='请输入实付金额' style="width:130px"  onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+			<el-input data-min="0" v-model='storedAmount' placeholder='请输入实付金额' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"
+			 maxlength="5"></el-input>
 			<i>&nbsp;：</i>
-			<el-input data-min="0" v-model='storeActive' placeholder='请输入活跃值' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+			<el-input data-min="0" v-model='storeActive' placeholder='请输入活跃值' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"
+			 maxlength="5"></el-input>
 		</div>
 		<!-- 用户消费 -->
 		<div class="useBtn">
@@ -70,9 +72,11 @@
 		</div>
 		<div class="useBtn" v-if="isConsumptionId == 1">
 			<div class="box" style='width:70px;margin-left:140px;'>比例设置</div>
-			<el-input data-min="0" v-model='consumptionAmount' placeholder='请输入实付金额' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+			<el-input data-min="0" v-model='consumptionAmount' placeholder='请输入实付金额' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"
+			 maxlength="5"></el-input>
 			<i>&nbsp;：</i>
-			<el-input data-min="0" v-model='consumptionActive' placeholder='请输入活跃值' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+			<el-input data-min="0" v-model='consumptionActive' placeholder='请输入活跃值' style="width:130px" onkeyup="value=value.replace(/[^\d]/g,'')"
+			 maxlength="5"></el-input>
 		</div>
 		<!-- 积分商城 -->
 		<div class="integralBtn">
@@ -86,7 +90,8 @@
 
 		<div class="integralBtn" v-if="integralMallActiveId == 1">
 			<div class="box" style='width:150px;margin-left:140px;'>兑换一次积分商品获得</div>
-			<el-input data-min="0" v-model='integralMallActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+			<el-input data-min="0" v-model='integralMallActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"
+			 maxlength="5"></el-input>
 		</div>
 		<!-- 任务系统 -->
 		<div class="taskBtn">
@@ -99,7 +104,8 @@
 		</div>
 		<div class="taskBtn" v-if="taskActiveId == 1">
 			<div class="box" style='width:120px;margin-left:140px;'>完成一次任务获得</div>
-			<el-input data-min="0" v-model='taskActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+			<el-input data-min="0" v-model='taskActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"
+			 maxlength="5"></el-input>
 		</div>
 		<!-- 购买指定商品 -->
 		<div class="specifyBtn">
@@ -118,8 +124,9 @@
 				共关联商品{{getArrLength('selectGoods')}}份，套餐{{getArrLength('selectPackages')}}份
 			</div>
 			<div class="specifyBtn">
-				<div class="box" style='width:100px;margin-left:140px;'>购买商品获得</div>
-				<el-input data-min="0" v-model='goodsActive' placeholder='请输入活跃值' style="width:120px" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+				<div class="box" style='width:100px;'>购买商品获得</div>
+				<el-input data-min="0" v-model='goodsActive' placeholder='请输入活跃值' style="width:120px;margin-left:140px;" onkeyup="value=value.replace(/[^\d]/g,'')"
+				 maxlength="5"></el-input>
 			</div>
 		</div>
 
@@ -306,48 +313,78 @@
     			}
     		},
     		checkData() {
-    			if (this.isReduceId == 1 && (this.days == '' || this.reduceActive == '') || (this.days == '0' || this.reduceActive == '0')) { 
+    			if (this.isReduceId == 1 && (this.days == '' || this.reduceActive == '' || this.days == '0' || this.reduceActive == '0')) {
     				this.valiData('天数或者活跃值不能为空或者0');
     				return false;
-			} 
-
-    			if (this.isStoredId == 1 && (this.storedAmount == '' || this.storeActive == '') || (this.storedAmount == '0' || this.storeActive == '0')) {
-    				this.valiData('储值比例值不能为空或者0');
-    				return false;
+    			}
+    			if (this.isStoredId == 1) {
+    				if (this.storedAmount == '' || this.storeActive == '') {
+    					this.valiData('储值比例值不能为空或者0');
+    					return false;
+    				}
+    				if (this.storedAmount < 1 || this.storedAmount > 10000 || this.storeActive < 1 || this.storeActive > 10000) {
+    					this.valiData('储值比例取值区间1~10000');
+    					return false;
+    				}
     			}
 
-    			if (this.isConsumptionId == 1 && (this.storedAmount == '' || this.consumptionActive == '')||(this.storedAmount == '0' || this.consumptionActive == '0')) {
-    				this.valiData('消费比例值不能为空或者0');
-    				return false;
-    			}
-    			// 积分商城兑换
-    			if (this.integralMallActiveId == 1 && (this.integralMallActive == ''||this.integralMallActive == '0')) {
-    				this.valiData('积分商城兑换获得活跃值不能为空或者0');
-    				return false;
+    			if (this.isConsumptionId == 1) {
+    				if (this.consumptionAmount == '' || this.consumptionActive == '') {
+    					this.valiData('消费比例值不能为空或者0');
+    					return false;
+    				}
+    				if (this.consumptionAmount < 1 || this.consumptionAmount > 10000 || this.consumptionActive < 1 || this.consumptionActive > 10000) {
+    					this.valiData('消费比例取值区间1~10000');
+    					return false;
+    				}
     			}
 
-    			if (this.taskActiveId == 1 && (this.taskActive == '' ||this.taskActive == '0') ) {
-    				this.valiData('任务系统获得活跃值不能为空或者0');
-    				return false;
+    			if (this.integralMallActiveId == 1) {
+    				if (this.integralMallActive == '' || this.integralMallActive == '0') {
+    					this.valiData('积分商城兑换获得活跃值不能为空或者0');
+    					return false;
+    				}
+    				if (this.integralMallActive < 1 || this.integralMallActive > 10000) {
+    					this.valiData('积分商城获得活跃值区间1~10000');
+    					return false;
+    				}
     			}
+
+
+    			//任务系统
+    			if (this.taskActiveId == 1) {
+    				if (this.taskActive == '' || this.taskActive == '0') {
+    					this.valiData('任务系统获得活跃值不能为空或者0');
+    					return false;
+    				}
+    				if (this.taskActive < 1 || this.taskActive > 10000) {
+    					this.valiData('任务系统获得活跃区间1~10000');
+    					return false;
+    				}
+    			}
+
 
     			if (this.goodsBtnId == 1 && this.selectGoods.length == 0 && this.selectPackages.length == 0) {
     				this.valiData('请选择指定商品或套餐');
     				return false;
     			}
 
-			if (this.goodsBtnId == 1 && (this.goodsActive == '' || this.goodsActive == '0')) {
-				this.valiData('指定商品获得活跃值不能为空或者0');
-				return false;
-			}
-                
 
-			if (this.activeDesc.length > 200) {
-				this.valiData('文字说明字数不能大于200');
-				return false;
-			}
-                
+    			if (this.goodsBtnId == 1) {
+    				if (this.goodsActive == '' || this.goodsActive == '0') {
+    					this.valiData('指定商品获得活跃值不能为空或者0');
+    					return false;
+    				}
+    				if (this.goodsActive < 1 || this.goodsActive > 10000) {
+    					this.valiData('指定商品获得活跃值区间1~10000');
+    					return false;
+    				}
+    			}
 
+    			if (this.activeDesc.length > 200) {
+    				this.valiData('文字说明字数不能大于200');
+    				return false;
+    			}
     			return true;
     		},
     		async getConfig() {
@@ -377,11 +414,12 @@
     				this.storedAmount = res.storedAmount;
     				this.storeActive = res.storeActive;
 
-				// 用户消费
-				this.isConsumptionId = res.isConsumption;
+    				// 用户消费
+    				this.isConsumptionId = res.isConsumption;
     				this.isConsumptionName = this.isConsumptionList[this.isConsumptionId].name;
     				this.consumptionAmount = res.consumptionAmount;
     				this.consumptionActive = res.consumptionActive;
+
 
     				// 积分商城
     				if (res.integralMallActive && res.integralMallActive != '') {
@@ -390,13 +428,13 @@
     					this.integralMallActiveName = this.integralMallActiveList[this.integralMallActiveId].name;
     				}
 
-				// 系统任务
-				if (res.taskActive && res.taskActive != '') {
-					this.taskActive = res.taskActive;
-					this.taskActiveId = 1;
-					this.taskActiveName = this.taskActiveList[this.taskActiveId].name;
-				} 
-					
+    				// 系统任务
+    				if (res.taskActive && res.taskActive != '') {
+    					this.taskActive = res.taskActive;
+    					this.taskActiveId = 1;
+    					this.taskActiveName = this.taskActiveList[this.taskActiveId].name;
+    				}
+
     				if (res.gids != '' || res.pids != '') {
     					this.goodsActive = res.goodsActive;
     					this.goodsBtnId = 1;

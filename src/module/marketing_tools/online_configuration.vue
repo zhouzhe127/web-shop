@@ -193,13 +193,13 @@
 				publicNumber: false, //公众号标题提醒
 				headings: false, // 标题提示
 				integralList: [{
-						name: '固定标题',
-						id: 0
-					},
-					{
-						name: '自动标题',
-						id: 1
-					}
+					name: '固定标题',
+					id: 0
+				},
+				{
+					name: '自动标题',
+					id: 1
+				}
 				],
 				integralOn: 0,
 				integralName: '固定标题',

@@ -132,132 +132,132 @@
 		</div>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
-import storage from 'src/verdor/storage';
-export default {
-	data() {
-		return {
-			shopId: storage.session('userShop').currentShop.id, //shopID
-			uploadUrl: storage.session('userShop').uploadUrl, //上传图片
-			expirationTimeList: [{
-				name: '文字推送',
-				id: 0
+	import storage from 'src/verdor/storage';
+	export default {
+		data() {
+			return {
+				shopId: storage.session('userShop').currentShop.id, //shopID
+				uploadUrl: storage.session('userShop').uploadUrl, //上传图片
+				expirationTimeList: [{
+					name: '文字推送',
+					id: 0
+				},
+				{
+					name: '图文推送',
+					id: 1
+				}
+				],
+				followerMessage: [], //首次关注推送语
+				message: [], //二次关注推送语
+				spreaderMessage: [], //通过分享后关注推送语
+				imageMessage: [], // 图片加载推送语
+				ruleIndex: 0, //点中的第几个					
+			};
+		},
+		props: {
+			msg: String, //示例提示
+			resultArr: Array, //结果
+			logo: String //标识
+		},
+		watch: {
+			resultArr: 'initValue'
+		},
+		mounted() {
+			this.initValue();
+		},
+		methods: {
+			initValue: function() {
+				this.followerMessage = this.resultArr;
 			},
-			{
-				name: '图文推送',
-				id: 1
-			}
-			],
-			followerMessage: [], //首次关注推送语
-			message: [], //二次关注推送语
-			spreaderMessage: [], //通过分享后关注推送语
-			imageMessage: [], // 图片加载推送语
-			ruleIndex: 0, //点中的第几个					
-		};
-	},
-	props: {
-		msg: String, //示例提示
-		resultArr: Array, //结果
-		logo: String //标识
-	},
-	watch:{
-		resultArr:'initValue'
-	},
-	mounted() {
-		this.initValue();
-	},
-	methods: {
-		initValue:function(){
-			this.followerMessage = this.resultArr;
+			valiData(content, title, winType) {
+				this.$store.commit('setWin', {
+					content: content,
+					title: title,
+					winType: winType
+				});
+			},
+			selexpirationTime: function(i, showIndex) { //首次关注语推送
+				this.followerMessage[showIndex].type =
+					this.expirationTimeList[i].name; //点击对应的名字
+				this.followerMessage[showIndex].typeId = this.expirationTimeList[i].id; //点击对应的id
+			},
+			addPushlanguage: function() { //增加推送语
+				let obj = {
+					type: '文字推送', //类型
+					typeId: 0, //类型的id
+					content: '', //文本推送的文本信息
+					img: '', //图文推送的图片
+					title: '', //图文推送的标题
+					url: '', //图文推送的地址
+					secondary: [] //二级图文的关联
+				};
+				if (this.followerMessage.length >= 5) {
+					this.valiData('关注推送语最多添加5条!');
+					return false;
+				}
+				this.followerMessage.push(obj);
+			},
+			addsencPushlanguage: function(index) { //增加二级图文推送关联
+				let obj = {
+					imgUrl: '', //二级图片
+					title: '', //标题
+					url: '' //链接
+				};
+				if (this.followerMessage[index].secondary.length >= 5) {
+					this.valiData('关注推送语二级图文关联最多添加5条!');
+					return false;
+				}
+				this.followerMessage[index].secondary.push(obj);
+			},
+			deletePush: function(index) { //删除推送
+				this.followerMessage.splice(index, 1);
+			},
+			deletesecPush: function(index, ind) { //删除二级图文推送
+				if (this.ruleIndex >= ind) {
+					this.ruleIndex = 0;
+				}
+				this.followerMessage[index].secondary.splice(ind, 1);
+			},
+			async bgNameChange(index) {
+				// 上传图片 背景图片回调
+				let res = await http.uploadImg({
+					data: {
+						type: 8,
+						shopId: this.shopId
+					},
+					formId: `endImage${this.logo}${index}`,
+				});
+				this.followerMessage[index].img = this.uploadUrl + res; //图片
+				// this.endingImage = res;//图片传给后台
+				// let bgName = this.endingImage.lastIndexOf('/');
+				// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
+			},
+			async upNameChange(index, ind) {
+				// 上传图片 背景图片回调
+				let res = await http.uploadImg({
+					data: {
+						type: 8,
+						shopId: this.shopId
+					},
+					formId: `startImage${this.logo}${index}${ind}`,
+				});
+				this.followerMessage[index].secondary[ind].imgUrl = this.uploadUrl + res; //图片
+				// this.endingImage = res;//图片传给后台
+				// let bgName = this.endingImage.lastIndexOf('/');
+				// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
+			},
+			getDetails: function(index) { //二级图文点击
+				// 获取规则详情
+				this.ruleIndex = index;
+			},
 		},
-		valiData(content, title, winType) {
-			this.$store.commit('setWin', {
-				content: content,
-				title: title,
-				winType: winType
-			});
-		},
-		selexpirationTime: function(i, showIndex) { //首次关注语推送
-			this.followerMessage[showIndex].type =
-				this.expirationTimeList[i].name; //点击对应的名字
-			this.followerMessage[showIndex].typeId = this.expirationTimeList[i].id; //点击对应的id
-		},
-		addPushlanguage: function() { //增加推送语
-			let obj = {
-				type: '文字推送', //类型
-				typeId: 0, //类型的id
-				content: '', //文本推送的文本信息
-				img: '', //图文推送的图片
-				title: '', //图文推送的标题
-				url: '', //图文推送的地址
-				secondary: [] //二级图文的关联
-			};
-			if (this.followerMessage.length >= 5) {
-				this.valiData('关注推送语最多添加5条!');
-				return false;
-			}
-			this.followerMessage.push(obj);
-		},
-		addsencPushlanguage: function(index) { //增加二级图文推送关联
-			let obj = {
-				imgUrl: '', //二级图片
-				title: '', //标题
-				url: '' //链接
-			};
-			if (this.followerMessage[index].secondary.length >= 5) {
-				this.valiData('关注推送语二级图文关联最多添加5条!');
-				return false;
-			}
-			this.followerMessage[index].secondary.push(obj);
-		},
-		deletePush: function(index) { //删除推送
-			this.followerMessage.splice(index, 1);
-		},
-		deletesecPush: function(index, ind) { //删除二级图文推送
-			if (this.ruleIndex >= ind) {
-				this.ruleIndex = 0;
-			}
-			this.followerMessage[index].secondary.splice(ind, 1);
-		},
-		async bgNameChange(index) {
-			// 上传图片 背景图片回调
-			let res = await http.uploadImg({
-				data: {
-					type: 8,
-					shopId: this.shopId
-				},
-				formId: `endImage${this.logo}${index}`,
-			});
-			this.followerMessage[index].img = this.uploadUrl + res; //图片
-			// this.endingImage = res;//图片传给后台
-			// let bgName = this.endingImage.lastIndexOf('/');
-			// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
-		},
-		async upNameChange(index, ind) {
-			// 上传图片 背景图片回调
-			let res = await http.uploadImg({
-				data: {
-					type: 8,
-					shopId: this.shopId
-				},
-				formId: `startImage${this.logo}${index}${ind}`,
-			});
-			this.followerMessage[index].secondary[ind].imgUrl = this.uploadUrl + res; //图片
-			// this.endingImage = res;//图片传给后台
-			// let bgName = this.endingImage.lastIndexOf('/');
-			// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
-		},
-		getDetails: function(index) { //二级图文点击
-			// 获取规则详情
-			this.ruleIndex = index;
-		},
-	},
-	components: {
-		selectBtn: () =>
-			import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
-	}
-};
+		components: {
+			selectBtn: () =>
+				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+		}
+	};
 </script>
 <style type="text/css" scoped>
 	#msnmodel {
