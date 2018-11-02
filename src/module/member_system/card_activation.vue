@@ -13,9 +13,6 @@
 				<template v-for="(item,index) in goodlist">
 					<span class="way" :key="index" :class="{'signa' :type == index}" v-on:click="tabTypes(index,1)" v-if="item.type">{{item.name}}</span>
 				</template>
-				<!-- <el-radio-group >
-                    <el-radio v-for="(item,index) in goodlist" :key = "index" border v-if="item.type">{{item.name}}</el-radio> 
-                </el-radio-group> -->
 			</div>
 			<section v-show="type == '0'">
 				<div class="set-line">
