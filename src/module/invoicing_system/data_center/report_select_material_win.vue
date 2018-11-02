@@ -1,6 +1,21 @@
+/*
+ * @Author: weifu.zeng 
+ * @Date: 2018-11-02 11:20:08 
+ * @Last Modified by:   weifu.zeng 
+ * @Last Modified time: 2018-11-02 11:20:08 
+ */
+
 <template>  
-    <el-dialog :title="title" center :width="width" left :visible.sync="openWin">
-        <div class="dialog-content" >
+    <el-dialog 
+            :title="title" 
+            center 
+            :width="width" 
+            :visible.sync="openWin"             
+        >
+        <div class="dialog-content" 
+            v-loading="loading" 
+            element-loading-text="正在选择中,请稍后..."
+        >
             <div>
                 <el-cascader
                     expand-trigger="click"
@@ -10,13 +25,19 @@
                     :filterable="true"
                     :change-on-select="true"
                     clearable
+                    @change="changeCategory"
                     >
                 </el-cascader>
 
-                <el-input clearable v-model="condition.name" placeholder="输入名称" style="width:224px"></el-input>
-
-                <el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
-                <el-button type="info" @click="filterReset('reset',null)">重置</el-button>
+                <el-input maxlength="50"  v-model="condition.name" placeholder="输入名称" style="width:224px">
+                    <i
+                        class="el-icon-search el-input__icon"
+                        slot="suffix"
+                        style="cursor:pointer;"
+                        @click="filterReset('filter')"
+                    >
+                    </i>
+                </el-input>
             </div>
 
             <div class="btn-type">
@@ -44,7 +65,7 @@
                     >
                     </el-pagination>
                     <span class="select-num">
-                        已选:{{selectNum}}个
+                        已选:{{selectShop ? shopNum : selectList.length}}个
                     </span>
                 </div>
 
@@ -88,40 +109,65 @@
     }
 </style>
 <script>
+/*
+    问题:
+        1.选择全部之后不可以取消某个选中的物料
+        2.切换分类不清空选中,根据条件重新筛选一次
+        3.无论是点击哪个按钮都是叠加选中,去除重复选中的
+        4.是否需要做到当全部物料都选中的时候是否需要将当前条件下的选择全部按钮点亮
+
+
+    需求:
+        品牌进入以品牌的物料内容，单店进入以单店的物料内容，无品牌门店
+
+
+    组件信息:
+        抛出事件:    select
+        抛出结果:    1.点击取消时抛出'cancel'字符    
+                    2.点击确定是抛出对象
+                    3.其他情况不抛出任何值,弹窗关闭
+        
+        
+        注:为了更好的测试组件,目前一页选择显示2个
+                
+*/
 //按钮
 let btns = {
     none:0,         //未选择
-    page:1,         //本页
-    category:2,     //本类
-    shop:3,          //本店
+    selectPage:1,   //选择本页
+    selectAll:2,    //选择全部
 };
-import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
-import global from 'src/manager/global';
+//全部分类
+let allCategory = {
+    label:'全部分类',
+    value:-1,
+    id:-1,
+};
 import http from 'src/manager/http';
-import Timer from 'src/verdor/timer';
 export default {
     data () {
         return {
             openWin:true,
             
             btns:[
-                {id:btns.page,label:'选择本页'},
-                {id:btns.category,label:'选择本类'},
-                {id:btns.shop,label:'选择本店'},
+                {id:btns.selectAll,label:'选择全部'},
+                {id:btns.selectPage,label:'选择本页'},
             ],
             selectBtn: btns.none,                //当前选中的按钮id
 
             //未公开属性
             radio:true,             //多选
 
-            condition:{},
-            categoryList:[],
-            pageObj:{},
+            categoryList:[],            
             list:[],                    //当前页的物料列表
             selectList:[],              //选中的物料列表
-            selectNum:0,
+            shopNum:0,                  //本店所有的物料数量
+
+            condition:{},
+            pageObj:{},
             preSubObj:{},               //上一次请求时携带的条件
+            selectShop:false,               //是否选择本店
+            loading:false,                  //加载动画
         };
     },
     props:{
@@ -136,165 +182,138 @@ export default {
     },
     methods: {
         clickBtn(sym){
+            let subObj = this.formatData();
+
             if(sym == 'ok'){
-                this.$emit('select',[]);
-            }else{
-                this.$emit('select',false);  
-                this.openWin = false;
+                this.$emit('select',subObj);
+                console.log(subObj);
+            }else{ 
+                this.$emit('select','cancel');                
             }
+            // this.openWin = false;
         },
         async filterReset(sym,page){
             if(sym == 'reset'){
+                //重置
                 this.initPageObj();
                 this.initCondition();
             }else{
+                //筛选
                 this.pageObj.currentPage = page | 1;
             }
-            this.selectBtn = btns.none;
-            this.clearSelectList();
-            this.getMaterialList();
 
+            if(!this.selectShop){
+                this.selectBtn = btns.none;
+            }
+            this.getMaterialList();
         },
+
 		async funGetPage(flag,res){
             let tableData = [];
+            let subObj = {...this.preSubObj};
 			//获取页码值
 			if(flag == 'size-change'){
 				this.pageObj.pageSize = res;				
 			}else{
 				this.pageObj.currentPage = res;
             }
-
-            await this.getMaterialList();
-            
-            if(this.selectBtn == btns.category || this.selectBtn == btns.shop){
-                this.addDelSelectList(this.list,false);
-                this.addDelSelectList(this.list,true);
-                this.changeListAttrVal(this.list,'checked',true);
-            }else{
-                if(this.selectBtn == btns.page) this.selectBtn = btns.none;
-                this.matchSelectList(this.list,this.selectList);
-                let sym = this.list.every(ele => ele['checked']);
-                if(sym){
-                    this.selectBtn = btns.page;
-                }
-            }
+            //根据上一次搜索条件,进行搜索
+            subObj.page = this.pageObj.currentPage;
+            await this.getMaterialList(subObj);        
         },
         //按钮切换
         async changeBtn(item){
-            let condition = this.condition;
+            let con = this.getCondition();
+            let count = 1;
+            let subObj = {};
+            let arr = [];
+            
+            //已选择本店所有物料
+            if(this.selectShop){
+                this.selectBtn = item.id;
+                return;
+            }
+
+            //点击的是选择全部,并且本次筛选的结果是一个店铺的物料
+            if(item.id == btns.selectAll && this.isSelectShop()){
+                //选择本店所有物料
+                this.selectShop = true;
+                this.selectBtn = item.id;
+                this.shopNum = this.pageObj.total;
+                this.changeListAttrVal(this.list,'checked',true);
+                return;
+            }
+            this.selectBtn = item.id;
             switch(item.id){
-                case btns.page://选择本页
-                    if(item.id == this.selectBtn){
-                        this.selectBtn = btns.none;
-                        this.changeListAttrVal(this.list,'checked',false);
-                        this.addDelSelectList(this.list,false);
-                    }else{
-                        this.selectBtn = item.id;
-                        this.changeListAttrVal(this.list,'checked',true);
-                        this.addDelSelectList(this.list,true);
-                    }
-                    this.selectNum = this.selectList.length;                      
-
+                case btns.selectPage://选择本页
+                    this.changeListAttrVal(this.list,'checked',true);
+                    this.addDelSelectList(this.list,true);
                     break;
-                case btns.category://选择本类
-                    if(condition.category.length == 0){
-                        this.$message('请先选择分类');
-                        return;
-                    }
-                    if(item.id == this.selectBtn){
-                        this.selectBtn = btns.none;
-
-                        this.clearSelectList();
-                        this.changeListAttrVal(this.list,'checked',false); 
-
-                        this.selectNum = 0;
-                    }else{
-                        this.selectBtn = item.id;
-
-                        condition.name = '';
-                        this.clearSelectList();
-
-                        await this.getMaterialList();
+                case btns.selectAll://选择全部
+                    if(!this.condition.cids.includes(con.cid)){
+                        //添加选中的分类id
+                        this.condition.cids.push(con.cid);
+    
+                        //递归获取物料
+    
+                        subObj = {...this.preSubObj};
+                        subObj.page = 1 
+                        this.loading = true;
+                        arr = await this.recursiveGetMaterialList(subObj);               
+                        this.addDelSelectList(arr,true);
                         this.changeListAttrVal(this.list,'checked',true);
-                        this.addDelSelectList(this.list,true);
-
-                        this.selectNum = this.pageObj.total;
-                    }
-
-                    break;                
-                case btns.shop://选择本店
-                    if(item.id == this.selectBtn){
-                        this.selectBtn = btns.none;
-                        this.clearSelectList();  
-                        this.changeListAttrVal(this.list,'checked',false);                                               
-                    }else{
-                        this.selectBtn = item.id;
-
-                        this.initPageObj();
-                        this.initCondition();
-
-                        this.clearSelectList();                        
-                        await this.getMaterialList();
-                        this.changeListAttrVal(this.list,'checked',true);
-                        this.selectNum = this.pageObj.total;
+                        this.loading = false;
                     }
                     break;
             }
-
-
+            
         },
         //复选框的点击
         changeChecked(item,bool){
             let condition = this.condition;
             
             if(bool){
-                //选中
-                let type = this.getRequestType();
-                let pageObj = this.pageObj;
-                this.addDelSelectList([item],false);
+                let sym = false;
+
                 this.addDelSelectList([item],true);
-                this.selectNum = this.selectList.length;
 
-                if(this.selectList.length == this.list.length){
-                    this.selectBtn = btns.page;                 //选中本页
+                //点亮选中本页
+                sym = this.isAllSelect(this.list);
+                if(sym){
+                    this.selectBtn = btns.selectPage;                 
                 }
+                //点亮选中全部
 
-                /*是否需要添加该功能???
-                if(type.category){
-                    if(this.selectList.length == pageObj.total){
-                        this.selectBtn = btns.category;                 //选中本类                        
-                    }
-                }
-                if(type.shop){
-                    if(this.selectList.length == pageObj.total){
-                        this.selectBtn = btns.shop;                 //选中本店                       
-                    }
-                }
-                */
 
             }else{
-                //取消
-                if(this.selectBtn == btns.category){
-                    item['checked'] = !bool;
-                    this.$message('已选择本类,不可以取消!');
-                    return;
-                }else if(this.selectBtn == btns.shop){
+                if(this.selectShop){
                     item['checked'] = !bool;                
-                    this.$message('已选择本店,不可以取消!');
+                    this.$message('已选择本店所有物料!');
                     return;
-                }else if(this.selectBtn == btns.page){
-                    this.selectBtn = btns.none;
-                    this.addDelSelectList([item],false);
-                    this.selectNum = this.selectList.length;
+                }
+                //取消
+                if(this.selectBtn == btns.selectAll){
+                    item['checked'] = !bool;                
+                    this.$message('已选择全部!');
+                    return;
                 }else{
+                    //选择本页或未选中任何按钮
+                    this.selectBtn = btns.none;                    
                     this.addDelSelectList([item],false);
-                    this.selectNum = this.selectList.length;
                 }
                 
             }
-
-
         },
+        //分类的切换
+        changeCategory(){
+            this.pageObj.currentPage = 1;
+            this.selectBtn = btns.none;
+            this.getMaterialList();
+        },
+
+
+
+
         //批量添加删除选中的
         addDelSelectList(list,sym){
             let selectList = this.selectList;
@@ -311,24 +330,53 @@ export default {
                 selectList.push(...list);
             }
         },
-        //清除所有选中
-        clearSelectList(){
-            this.selectList = [];
-            this.selectNum = 0;
+        //获取选中的分类id
+        getCondition(){
+            let cate = this.condition.category;
+            let condition = this.condition;
+            let cid = '';
+            if(cate.length != 0 ){
+                cid = cate[cate.length - 1 ];
+            }
+            return {
+                cid,
+                cids:condition.cids,
+                name:condition.name
+            };
         },
-        //判断当前请求的是本类还是本店
-        getRequestType(){
+        //获取提交的数据
+        getSubmitData(){
+            let condition = this.getCondition();
+            let subObj = {
+                page: this.pageObj.currentPage,
+                num: this.pageObj.pageSize,
+                name: condition.name,
+                cid: condition.cid == allCategory.id ? '' : condition.cid,
+                type:-1,
+            };
+            return subObj;
+        },
+        //是否请求的是本店所有物料
+        isSelectShop(){
             let preSubObj = this.preSubObj;
-            let pageObj = this.pageObj;
-            let obj = {category:false,shop:false};
-            if(preSubObj.cid && !preSubObj.name && pageObj.currentPage == 1){
-                obj.category = true;
+            if(!preSubObj.cid && !preSubObj.name){
+                return true;        
             }
-            if(!preSubObj.cid && !preSubObj.name && pageObj.currentPage == 1){
-                obj.shop = true;
+        },
+        //格式化数据
+        formatData(){
+            let obj = {
+                isShop:false,
+                selNum:0,
+                selectList:[],
+            };
+            if(this.selectShop){
+                obj.isShop = true;
+                obj.selNum = this.shopNum;
+            }else{
+                obj.selectList = this.selectList;
+                obj.selNum = this.selectList.selectList;
             }
-            return obj;
-
         },
 
 
@@ -336,25 +384,25 @@ export default {
 
 
         //获取物料列表
-        async getMaterialList(){
-            let condition = this.condition;
-            let subObj = {
-                page:this.pageObj.currentPage,
-                num:this.pageObj.pageSize,
-                name:condition.name,
-                cid:this.getCondition(),
-                type:-1,
-            };
+        async getMaterialList(subObj){
+            if(!subObj) subObj = this.getSubmitData();
             let retObj = await this.getHttp('getMaterialList',subObj);
+
             if(Array.isArray(retObj.list)){
                 this.preSubObj = subObj;
-                this.list = retObj.list.map((ele)=>{
-                    ele.checked = false;
-                    return ele;
-                });
                 this.changeListAttrVal(retObj.list,'checked',false);
                 this.list = retObj.list;
-                this.pageObj.total = retObj.count | 0;
+                this.pageObj.total = Number(retObj.count) | 0;
+            }
+
+            //点亮选中的物料
+            if(this.selectShop){
+                this.changeListAttrVal(retObj.list,'checked',true);                
+            }else{
+                this.matchSelectList(this.list,this.selectList);                
+                if(this.isAllSelect(this.list)){
+                    this.selectBtn = btns.page;
+                }
             }
         },
         //获取分类
@@ -379,23 +427,63 @@ export default {
                     }
                 }
             }
+            arr.unshift(allCategory);
             this.categoryList = arr;
         },
-        //获取选中的分类id
-        getCondition(){
-            let cate = this.condition.category;
-            let cid = '';
-            if(cate.length != 0 ){
-                cid = cate[cate.length - 1 ];
-            }
-            return cid;
+        //递归获取某个条件的所有物料
+        async recursiveGetMaterialList(subObj){
+            let page = 1;
+            let arr = [];
+            
+
+            subObj.num = 50;
+            
+            for(let i = 0;i < page; i += 1){
+                subObj.page = i + 1;
+                let retObj = await this.getHttp('getMaterialList',subObj);
+                page = Number(retObj.total);
+                arr.push(...retObj.list);
+            }   
+            return arr;
         },
 
+
+        //初始化分页组件
+		initPageObj(){
+			this.pageObj = {
+				total:0,				//总记录数
+				pageSize:2,			    //每页显示的记录数
+				pagerCount:7,			//每页显示的按钮数
+				currentPage:1,          //当前页
+			};
+        },
+        initCondition(){
+            this.condition = {
+                name:'',
+                category:[allCategory.id],            //当前选中的分类id,默认选中全部分类的id
+                cids:[],                              //选中的所有分类id
+            };
+        },
+
+
+
+        //是否全部选中
+        isAllSelect(list){
+            let val = true;
+            let attr = 'checked';
+            let sym = false;
+            sym = list.every((ele)=>{
+                return ele[attr] == val;
+            });
+            return sym;
+        },
         matchSelectList(list,selectList){
+            let attr = 'checked';
+            let val = true;
             for(let ele of list){
                 for(let e of selectList){
                     if(ele.id == e.id){
-                        ele['checked'] = true;
+                        ele[attr] = val;
                         break;
                     }
                 }
@@ -406,21 +494,6 @@ export default {
             for(let ele of list){
                 ele[attr] = val;
             }
-        },
-        //初始化分页组件
-		initPageObj(){
-			this.pageObj = {
-				total:0,				//总记录数
-				pageSize:50,			//每页显示的记录数
-				pagerCount:7,			//每页显示的按钮数
-				currentPage:1,          //当前页
-			};
-        },
-        initCondition(){
-            this.condition = {
-                name:'',
-                category:[],
-            };
         },
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
