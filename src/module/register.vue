@@ -9,7 +9,7 @@
 			</section>
 			<section class="text">
 				<span>验证码:</span>
-				<input type="text" autocomplete="off" @keyup="changeIsHave()" maxlength='6' size="6" v-model="code" id="code" />
+				<input type="text" autocomplete="off" @keyup="changeIsHave()" maxlength='4' v-model="code" id="code" />
 				<div class="prompt" @click="prompt">
 					<span class="fr code" v-if="requestCode" style="background-color:#F39800;border-radius: 50px;cursor: pointer;">发送验证码</span>
 				</div>
@@ -124,6 +124,13 @@ export default {
 					title: '提示信息',
 					winType: 'alter',
 					content: '密码长度不能小于6位'
+				});
+				return;
+			}else if(this.token==''){
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					winType: 'alter',
+					content: '请先获取二维码'
 				});
 				return;
 			}
