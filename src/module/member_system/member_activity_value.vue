@@ -124,8 +124,8 @@
 				共关联商品{{getArrLength('selectGoods')}}份，套餐{{getArrLength('selectPackages')}}份
 			</div>
 			<div class="specifyBtn">
-				<div class="box" style='width:100px;'>购买商品获得</div>
-				<el-input data-min="0" v-model='goodsActive' placeholder='请输入活跃值' style="width:120px;margin-left:140px;" onkeyup="value=value.replace(/[^\d]/g,'')"
+				<div class="box" style='width:100px;margin-left:140px;'>购买商品获得</div>
+				<el-input data-min="0" v-model='goodsActive' placeholder='请输入活跃值' style="width:120px;" onkeyup="value=value.replace(/[^\d]/g,'')"
 				 maxlength="5"></el-input>
 			</div>
 		</div>

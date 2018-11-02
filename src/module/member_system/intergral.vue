@@ -17,10 +17,10 @@
 			<div class='picName'>
 				<span class='required' style='display: block;float:left;width:100px;line-height: 40px;'>积分比例 </span>
 				<!-- <input type='text' maxlength='4' :disabled='disabled' v-model='cash' placeholder='请输入现金' /> -->
-				<el-input type='text' maxlength='4' :disabled='disabled' v-model='cash' placeholder='请输入现金' style="width:80px;"></el-input>
+				<el-input type='text' maxlength='4' :disabled='disabled' v-model='cash' placeholder='请输入现金' style="width:100px;"></el-input>
 				<i>&nbsp;&nbsp;：</i>
 				<!-- <input type='text' maxlength='4' :disabled='disabled' v-model='integral' placeholder='请输入积分' /> -->
-				<el-input type='text' maxlength='4' :disabled='disabled' v-model='integral' placeholder='请输入积分' style="width:80px;"></el-input>
+				<el-input type='text' maxlength='4' :disabled='disabled' v-model='integral' placeholder='请输入积分' style="width:100px;"></el-input>
 			</div>
 			<div class='topR'>
 				<section class='fl' style='clear: both;position: relative;'>
@@ -30,7 +30,7 @@
 					</div>
 					<!-- <on-off @statusChange='(val)=> expiration = val' :status='expiration'></on-off> -->
 					<div class="rightHalf">
-                        <el-switch v-model="on" active-color="#E1BB4A" inactive-color="#dcdfe6">
+                        <el-switch v-model="expiration" active-color="#E1BB4A" inactive-color="#dcdfe6">
                         </el-switch>
                     </div>
 				</section>
@@ -38,10 +38,10 @@
 			<div class='expiration-time'>
 				<div class='required time-exp'>积分清零时间</div>
 				<!-- <input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入月' v-model='month' />&nbsp;&nbsp;月&nbsp; -->
-				<el-input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入月' v-model='month' style="width:80px;"></el-input>&nbsp;&nbsp;月&nbsp;
+				<el-input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入月' v-model='month' style="width:100px;"></el-input>&nbsp;&nbsp;月&nbsp;
 
 				<!-- <input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入日' v-model='day' />&nbsp;&nbsp;日&nbsp;&nbsp; -->
-				<el-input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入日' v-model='day' style="width:80px;"></el-input>&nbsp;&nbsp;日&nbsp;
+				<el-input type='text' maxlength='2' :disabled='disabledExp' placeholder='请输入日' v-model='day' style="width:100px;"></el-input>&nbsp;&nbsp;日&nbsp;
 
 			</div>
 		</div>

@@ -6,7 +6,7 @@
     *
 -->
 <template>
-	<Win :width='591' :height='326' @winEvent='getAppliedWin' :align="'center'" :ok="okStyle" :cancel="cancelStyle">
+	<Win :width='591' :height='226' @winEvent='getAppliedWin' :align="'center'" :ok="okStyle" :cancel="cancelStyle">
 		<span slot="title">{{title}}</span>
 		<div id="tan" slot="content" v-cloak>
 			<div class="mobilePhone">
@@ -19,7 +19,7 @@
 						<el-input v-model="name" maxlength="20" placeholder="请输入名称"></el-input>
 					</div>
 				</div>
-				<div class="phoneBox">
+				<!-- <div class="phoneBox">
 					<div class="leftHalf required">
 						类型
 					</div>
@@ -27,11 +27,8 @@
 						<el-radio-group v-model="validName" class="fl">
 							<el-radio v-for="(item,index) in payWays" :key="index" :label="item.name" border @change.native="changeRadio(item)"></el-radio>
 						</el-radio-group>
-						<!-- <div class="pagWay">
-							<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'sign':payType==item.id}">{{item.name}}</span>
-						</div> -->
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</Win>
