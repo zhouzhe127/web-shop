@@ -3,14 +3,18 @@
 		<template v-if="!showPic">
 			<div class="title">
 				<h3 class="titleName">创建品牌</h3>
-				<h3 class="titleDashed"></h3>
 			</div>
 			<div class="aTitle">
 				<i></i>
 				<h3>基本分类</h3>
+				<h3 class="titleDashed"></h3>
 			</div>
 			<section class="oTop">
 				<section style="width:50%;float: left;">
+					<section class="obox">
+						<h2 class="required">品牌名称</h2>
+						<input v-model="brandName" maxlength="40" type="text" class="input" placeholder="请输入品牌名称">
+					</section>
 					<section class="obox">
 						<h2 class="required">行业分类</h2>
 						<section class="typeS">
@@ -18,10 +22,6 @@
 							<div v-on:click="changeType(true)" :class="{'pickIt':typeShop}">零售</div>
 							<span style="color: red">行业类型一经填写,无法修改!</span>
 						</section>
-					</section>
-					<section class="obox">
-						<h2 class="required">品牌名称</h2>
-						<input v-model="brandName" maxlength="40" type="text" class="input" placeholder="输入名称">
 					</section>
 					<section class="obox">
 						<h2 class="required">负责人姓名</h2>
@@ -76,6 +76,7 @@
 			<div class="aTitle" style="width:100%;height:20px;line-height: 20px;margin-left: 61px;margin-top:20px;">
 				<i style="width:3px;height:20px;background-color:#EE931E;float: left;display: block;"></i>
 				<h3>绑定微信</h3>
+				<h3 class="titleDashed"></h3>
 			</div>
 			<section class="oTop" style="height:100px;">
 				<section class="obox" style="float: left;">
@@ -262,15 +263,13 @@ export default {
 	font-size: 16px;
 }
 
-.creatStores .title .titleDashed {
-	width: 760px;
+.creatStores .titleDashed {
+	width: 340px;
 	border-bottom: 1px dashed #ccc;
 	float: left;
-	margin-top: 24px;
+	margin-top: -10px;
 	font-size: 16px;
-	margin-left: -30px;
 }
-
 .creatStores .oTop {
 	width: 100%;
 	height: 250px;
@@ -334,7 +333,7 @@ export default {
 }
 
 .aTitle h3 {
-	width: 60%;
+	/*width: 60%;*/
 	height: 20px;
 	line-height: 20px;
 	float: left;
