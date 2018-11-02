@@ -533,13 +533,12 @@
 					return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
 				};
 			},
-
-			handleSelect(item) {
-				console.log(item);
-			},
-			handleIconClick(ev) {
-				console.log(ev);
-			}
+			// handleSelect(item) {
+			// 	console.log(item);
+			// },
+			// handleIconClick(ev) {
+			// 	console.log(ev);
+			// }
 		},
 		computed: {
 			discounts: {
