@@ -355,6 +355,7 @@
 						});
 						return false;
 					}
+					console.log(infoItem.backmin,infoItem.usemin)
 					if (infoItem.backmin > infoItem.usemin) {
 						this.$message({
 							message: `物料: ${infoItem.materialName} 回库数量不足`,

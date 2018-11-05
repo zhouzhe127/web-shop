@@ -30,7 +30,7 @@
 				<div class="form-input">
 					<el-switch
 						v-model="isMinus"
-						active-color="#34A9AA"
+						active-color="#E1BB4A"
 						inactive-color="#909399"
 						style="width:80px;height:40px;"
 						@change="getOnoff">
@@ -160,8 +160,10 @@ export default {
 			import ( /*webpackChunkName: 'drop_down'*/ 'src/components/drop_down'),
 		onOff: () =>
 			import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
+		// selectMat: () =>
+		// 	import ( /*webpackChunkName: 'select_material'*/ './select_material'),
 		selectMat: () =>
-			import ( /*webpackChunkName: 'select_material'*/ './select_material'),
+			import ( /*webpackChunkName: 'select_material'*/ '../data_center/add_column'),
 		comTable: () =>
 			import ( /*webpackChunkName: 'table'*/ 'src/components/com_table'),
 		warehouseSort: () =>
@@ -172,7 +174,7 @@ export default {
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确认',className: 'success',type:4,
+				{name: '确认',className: 'primary',type:4,
 					fn: () => {
 						if(this.bomId){
 							this.editBom();
