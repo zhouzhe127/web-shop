@@ -177,7 +177,8 @@ export default {
 #register .all {
 	position: absolute;
 	top: 25%;
-	left: 30%;
+	left: 50%;    
+	transform: translateX(-50%);
 }
 
 #register .all .text {
