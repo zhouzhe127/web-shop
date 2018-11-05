@@ -1069,6 +1069,14 @@ export default {
 	},
 	"templateDeleteReportTemplate":{
 		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
-		method:'get'
+		method:'post'
+	},
+	"getStatisticScopeCategoryList":{
+		url:b+"materialreport/getStatisticScopeCategoryList",		//获取统计范围（分类集合列表）
+		method:'get'		
+	},
+	"setStatisticScopeCategory":{
+		url:b+"materialreport/setStatisticScopeCategory",			//添加或更新分类统计范围		
+		method:'post'
 	}
 }

@@ -1,8 +1,8 @@
 /*
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
- * @Last Modified by:   weifu.zeng 
- * @Last Modified time: 2018-11-02 11:20:08 
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-11-05 15:33:30
  */
 
 <template>  
@@ -10,7 +10,8 @@
             :title="title" 
             center 
             :width="width" 
-            :visible.sync="openWin"             
+            :visible.sync="openWin"    
+            @close="()=>{closeWin('cancel')}"         
         >
         <div class="dialog-content" 
             v-loading="loading" 
@@ -70,44 +71,14 @@
                 </div>
 
                 <div class="footer-btn">
-                    <el-button @click="clickBtn('cancel')">取 消</el-button>
-                    <el-button @click="clickBtn('ok')" type="primary">确 定</el-button>
+                    <el-button @click="closeWin('cancel')">取 消</el-button>
+                    <el-button @click="closeWin('ok')" type="primary">确 定</el-button>
                 </div>
             </div>
         </template>
     </el-dialog>
 </template>
-<style lang='less' scoped>
-    .footer{
-        display:flex;
-        justify-content: space-between;
-        // margin-top:-20px;
-        .footer-page{
-            display: flex;
-            align-items: center;
-            .select-num{
-                color:#E1BB4A;
-            }
-        }
-    }
-    .dialog-content{
-        border-top:1px solid #EAEEF5;
-        border-bottom:2px solid #EAEEF5;
-        padding-top:20px;
-    }
-    .btn-type{
-        padding-top:20px;
-        padding-bottom:20px;
-    }
-    .list-content{
-        height: 280px;
-        overflow-y: scroll;
-    }
-    .checkbox{
-        margin-bottom:10px;
-        margin-right:10px;
-    }
-</style>
+
 <script>
 /*
     问题:
@@ -181,16 +152,16 @@ export default {
         }
     },
     methods: {
-        clickBtn(sym){
+        closeWin(sym){
             let subObj = this.formatData();
-
             if(sym == 'ok'){
-                this.$emit('select',subObj);
-                console.log(subObj);
+                this.throwData(subObj);
             }else{ 
-                this.$emit('select','cancel');                
+                this.throwData(false);                
             }
-            // this.openWin = false;
+        },
+        throwData(data){
+            this.$emit('change',data);            
         },
         async filterReset(sym,page){
             if(sym == 'reset'){
@@ -377,6 +348,7 @@ export default {
                 obj.selectList = this.selectList;
                 obj.selNum = this.selectList.selectList;
             }
+            return obj;
         },
 
 
@@ -517,3 +489,34 @@ export default {
     },
 };
 </script>
+<style lang='less' scoped>
+    .footer{
+        display:flex;
+        justify-content: space-between;
+        // margin-top:-20px;
+        .footer-page{
+            display: flex;
+            align-items: center;
+            .select-num{
+                color:#E1BB4A;
+            }
+        }
+    }
+    .dialog-content{
+        border-top:1px solid #EAEEF5;
+        border-bottom:2px solid #EAEEF5;
+        padding-top:20px;
+    }
+    .btn-type{
+        padding-top:20px;
+        padding-bottom:20px;
+    }
+    .list-content{
+        height: 280px;
+        overflow-y: scroll;
+    }
+    .checkbox{
+        margin-bottom:10px;
+        margin-right:10px;
+    }
+</style>

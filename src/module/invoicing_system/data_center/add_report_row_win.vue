@@ -2,43 +2,183 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-02 16:52:56
+ * @Last Modified time: 2018-11-05 17:34:48
  */
 <template>  
-    <el-dialog :title="title" center :width="width" :visible.sync="openWin">
-        <div class="dialog-content">
-            <div class="pad-bottom">
-                <span style="padding-right:20px;">排序</span>
-                <el-input-number v-model="sortObj.num" :min="sortObj.min" :max="sortObj.max" label="描述文字"></el-input-number>
-                <i class="el-icon-warning collection-tips-icon"></i>
-                <span class="collection-tips-word">范围({{sortObj.min}}-{{sortObj.max}})</span>
-            </div>
+    <div>
+        <el-dialog :title="title" center :width="width" :visible.sync="winShow">
+            <div class="dialog-content">
 
-            <div class="pad-bottom">
-                <div class="add-matrial">
-                    <span>选择物料</span>
-                    <i class="el-icon-plus plus"></i>
+                <div class="pad-bottom">
+                    <span style="padding-right:20px;">排序</span>
+                    <el-input-number v-model="sortObj.num" :min="sortObj.min" :max="sortObj.max" label="描述文字"></el-input-number>
+                    <i class="el-icon-warning collection-tips-icon"></i>
+                    <span class="collection-tips-word">范围({{sortObj.min}}-{{sortObj.max}})</span>
                 </div>
-                /
-                <select-collection></select-collection>
-            </div>
 
-            <div class="textarea">
-                adsssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
-            </div>
+                <div class="pad-bottom">
+                
+                    <div class="add-matrial" @click="openWin(winType.selectMaterial)">
+                        <span>选择物料</span>
+                        <i class="el-icon-plus plus"></i>
+                    </div>
+                    /
 
+                    <select-collection-com  @change="getSelectCollection" :list="collectionList"></select-collection-com>
 
-        </div>
-        <template slot="footer">
-            <div class="footer">
-                <div class="footer-btn">
-                    <el-button @click="clickBtn('cancel')">取 消</el-button>
-                    <el-button @click="clickBtn('ok')" type="primary">确 定</el-button>
+                    <div class="add-matrial add-collection" @click="openWin(winType.createCollection)">
+                        <i class="el-icon-plus plus" style="margin-right:10px;"></i>
+                        <span>新建集合</span>
+                    </div>
                 </div>
+
+                <div class="textarea">
+                    物料范围
+                    <div></div>
+                    集合:
+                </div>
+
+
             </div>
-        </template>
-    </el-dialog>
+            <template slot="footer">
+                <div class="footer">
+                    <div class="footer-btn">
+                        <el-button @click="clickBtn('cancel')">取 消</el-button>
+                        <el-button @click="clickBtn('ok')" type="primary">确 定</el-button>
+                    </div>
+                </div>
+            </template>
+        </el-dialog>
+        
+        <component
+            :is="showCom"
+            :show="true"
+            @change="closeWin"
+        >
+        </component>
+    </div>
 </template>
+
+<script>
+/*
+    接口:
+        获取集合列表:getStatisticScopeCategoryList
+        添加或更新分类统计范围:setStatisticScopeCategory
+*/
+
+let winType = {
+    selectMaterial : 'selectMaterialCom',                    //选择物料
+    createCollection : 'createCollectionCom'               //新建集合
+};
+
+import http from 'src/manager/http';
+export default {
+    data () {
+        return {     
+            winShow:    true,                   
+            winType: winType,                   //弹窗名
+
+            showCom:'',                         //当前展示的弹窗
+            comObj:{},                          
+
+            collectionList:[],                  //集合列表       
+            sortObj:{},                         //排序值
+            
+        };
+    },
+    props:{
+        //弹窗标题
+        title:{
+            type:[String],
+            default:'添加行',
+        },
+        //弹窗的宽
+        width:{
+            type:[String],
+            default:'570px'
+        },
+    },
+    methods: {
+        clickBtn(sym){
+            
+        },
+
+        //打开弹窗
+        openWin(sym){
+            this.showCom = sym;
+        },
+        closeWin(obj){
+            if(!obj){
+                this.showCom = '';
+                return;
+            }
+            
+            switch(this.showCom){
+                case winType.selectMaterial:    //选择物料
+                    break;
+                case winType.createCollection:  //新建集合
+                    this.createCollection(obj);
+
+            }
+            this.showCom = '';
+        },
+        //新建集合
+        async createCollection(obj){
+            let subObj = {
+                name : obj.collName,
+                unitId : obj.unitId,
+                mid : obj.selectList.map(ele => ele.id).join(',')
+            };
+            let retData = {};
+            retData = await this.getHttp('setStatisticScopeCategory',subObj);
+            
+        },
+        
+        //获取选择的集合
+        getSelectCollection(row){
+            
+        },
+
+
+        formatData(){
+
+        },
+
+
+        initSortObj(){
+            this.sortObj = {
+                min:1,
+                max:1,
+                num:1
+            };
+        },
+
+
+        async getCollectionList(){
+            let retData = await this.getHttp('getStatisticScopeCategoryList');
+            if(Array.isArray(retData.list)){
+                this.collectionList = retData.list;
+            }
+        },
+
+
+		async getHttp(url,obj={},err=false){
+			let res = await http[url]({data:obj},err);
+			return res;
+        },
+    },
+    mounted(){
+        this.initSortObj();
+        this.getCollectionList();
+    },
+    components:{
+        selectCollectionCom:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
+        selectMaterialCom:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
+        createCollectionCom:() => import(/* webpackChunkName:"report_add_collection_win"*/'./report_add_collection_win'),
+    }
+};
+</script>
+
 <style lang='less' scoped>
     @bc:#EAEEF5;
     .wh(@w:140px,@h:40px){
@@ -84,15 +224,22 @@
         .wh;
         border:1px solid @bc;
         border-radius: 5px;
+        padding:10px;
+        vertical-align: bottom;
+        cursor: pointer;
 
         display: inline-flex;
         justify-content: space-between;
         align-items: center;
-        padding:10px;
-        cursor: pointer;
         .plus{
             font-size:22px;
         }
+    }
+
+    .add-collection{
+        background-color: #E1BB4A;
+        color:#fff;
+        justify-content: center;
     }
 
     
@@ -103,98 +250,3 @@
     }
 
 </style>
-<script>
-
-
-import http from 'src/manager/http';
-export default {
-    data () {
-        return {     
-            openWin:true,
-            sortObj:{},            
-        };
-    },
-    props:{
-        //弹窗标题
-        title:{
-            type:[String],
-            default:'添加行',
-        },
-        //弹窗的宽
-        width:{
-            type:[String],
-            default:'570px'
-        },
-    },
-    methods: {
-        clickBtn(sym){
-            
-        },
-
-
-
-        initSortObj(){
-            this.sortObj = {
-                min:1,
-                max:1,
-                num:1
-            };
-        },
-
-
-        //列表去重
-        removeDuplicate(list){
-            let set = new Set();
-            let arr = [];
-            let attr = 'muId';         
-            for(let ele of list){
-                let id = ele[attr]+'';
-                if(!set.has(id)){
-                    set.add(id);
-                    arr.push(ele);
-                }
-            }
-            return arr;
-        },
-        //检查列表中的元素某一个属性的值是否相同
-        hasSameAttrVal(list,attr='unitId'){
-            let set = new Set();;
-
-            for(let ele of list){
-                if(ele[attr]){
-                    set.add(ele[attr]);
-                }
-            }
-            return [...set];
-        },
-        matchSelectList(list,selectList){
-            let attr = 'checked';
-            let val = true;
-            for(let ele of list){
-                for(let e of selectList){
-                    if(ele.id == e.id){
-                        ele[attr] = val;
-                        break;
-                    }
-                }
-            }
-        },
-        //改变列表的某个属性值
-        changeListAttrVal(list,attr,val){
-            for(let ele of list){
-                ele[attr] = val;
-            }
-        },
-		async getHttp(url,obj={},err=false){
-			let res = await http[url]({data:obj},err);
-			return res;
-        },
-    },
-    mounted(){
-        this.initSortObj();
-    },
-    components:{
-        selectCollection:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
-    }
-};
-</script>
