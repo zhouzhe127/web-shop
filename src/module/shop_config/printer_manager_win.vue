@@ -15,11 +15,11 @@
 							<el-radio class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item required label="打印服务终端">
+					<!-- <el-form-item required label="打印服务终端">
 						<el-radio-group v-model="terminaIndex">
 							<el-radio class="labItem" size="small" v-for="(item,i) in newTerminalList" :key="i" :label="item.id" border>{{item.name}}</el-radio>
 						</el-radio-group>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item required label="打印机名称">
 						<el-input v-model="printerName" placeholder = "请输入名称" maxlength="30" style = "width:300px;"></el-input>
 					</el-form-item>
@@ -227,14 +227,14 @@ export default {
 					});
 				}
 			}else{
-				if (this.terminaIndex == '-1') {
-					this.$store.commit('setWin', {
-						title: '错误提示',
-						winType: 'alert',
-						content: '选择打印服务终端'
-					});
-					return false;
-				}
+				// if (this.terminaIndex == '-1') {
+				// 	this.$store.commit('setWin', {
+				// 		title: '错误提示',
+				// 		winType: 'alert',
+				// 		content: '选择打印服务终端'
+				// 	});
+				// 	return false;
+				// }
 				if (this.printerName == '') {
 					this.$store.commit('setWin', {
 						title: '错误提示',
