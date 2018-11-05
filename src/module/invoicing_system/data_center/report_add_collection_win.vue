@@ -2,12 +2,13 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-02 16:04:41
+ * @Last Modified time: 2018-11-05 17:43:49
+ * @file 新建集合
  */
 
 <template>  
-    <div>
-        <el-dialog :title="title" center :width="width" :visible.sync="openWin">
+    <div id="report_add_collection_win">
+        <el-dialog :title="title" center :width="width" :visible.sync="showWin" @close="()=>{closeWin('cancel')}">
             <div class="dialog-content" >
                 <div class="collection-name">
                     集合名称
@@ -81,61 +82,18 @@
                     </div>
 
                     <div class="footer-btn">
-                        <el-button @click="clickBtn('cancel')">取 消</el-button>
-                        <el-button @click="clickBtn('ok')" type="primary">确 定</el-button>
+                        <el-button @click="closeWin('cancel')">取 消</el-button>
+                        <el-button @click="closeWin('ok')" type="primary">确 定</el-button>
                     </div>
                 </div>
             </template>
         </el-dialog>
         
-        <collect-material v-if="mCollect.show" :mList="mCollect.list"></collect-material>
+        <collect-material @change="closeCollectMaterialWin"  v-if="mCollect.show" :collName="mCollect.collName" :mList="mCollect.list"></collect-material>
     </div>
 
 </template>
-<style lang='less' scoped>
-    .footer{
-        display:flex;
-        justify-content: space-between;
-        .footer-page{
-            display: flex;
-            align-items: center;
-            .select-num{
-                color:#E1BB4A;
-            }
-        }
-    }
-    .collection-tips-icon{
-        color: #ccc;
-        font-size:14px;
-        margin-left:5px;
-    }
-    .collection-tips-word{
-        color: #ccc;
-        font-size:14px;
-        color:#909399;
-    }
-    .collection-name{
-        padding-bottom:20px;
-    }
 
-    .dialog-content{
-        border-top:1px solid #EAEEF5;
-        border-bottom:2px solid #EAEEF5;
-        padding-top:20px;
-    }
-    .btn-type{
-        padding-top:20px;
-        padding-bottom:20px;
-    }
-    .list-content{
-        height: 280px;
-        overflow-y: scroll;
-    }
-    .checkbox{
-        margin-bottom:10px;
-        margin-right:10px;
-    }
-</style>
 <script>
 /*
     需求:
@@ -143,7 +101,7 @@
 
 
     组件信息:
-        抛出事件:    select
+        抛出事件:    change
         抛出结果:    1.点击取消时抛出'cancel'字符    
                     2.点击确定是抛出对象
                         {
@@ -164,12 +122,14 @@ let allCategory = {
 //每个集合可选的最大数量
 let MAX_NUM = 50;
 import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
+
 export default {
     data () {
         return {
-            openWin:true,
-            
-            radio:true,             //多选
+            showWin:true,              //是否展示弹窗
+
+            radio:true,                 //多选
             selectBtn:false,            //是否选择本页
             collName:'',                //集合名称
 
@@ -189,6 +149,11 @@ export default {
         };
     },
     props:{
+        //是否展示弹窗
+        show:{
+            type:[Boolean],
+            default:true
+        },
         //弹窗标题
         title:{
             type:[String],
@@ -211,28 +176,48 @@ export default {
         }
     },
     methods: {
-        clickBtn(sym){
+        closeWin(sym){
             if(sym == 'ok'){
-                let subObj = {};            
-                subObj = this.formatData();
+                let subObj = {
+                    collName: this.collName.trim(),
+                    selectList: this.selectList,
+                }; 
+                let unitList = this.hasSameAttrVal(this.selectList,'cus_unitId');
 
                 if(!this.checkData(subObj)){
                     return;
                 }
-
-                if(subObj.isSameUnit){
-                    //所选物料含单位相同时
-                    this.$emit('select',subObj); 
+                if(unitList.length == 1){
+                    //单位相同时
+                    subObj.unitId = unitList[0];
+                    subObj = utils.deepCopy(subObj);
+                    this.throwData(subObj);
                 }else{
-                    //所选物料含不同单位时
-                    this.mCollect.list = subObj.selectList;  
-                    console.log(this.mCollect.list);             
+                    this.mCollect.list = utils.deepCopy(subObj.selectList);              
                     this.mCollect.show = true;
                 }
             }else{
-                this.$emit('select','cancel');  
+                this.throwData(false);
             }         
         },
+        //关闭集合物料弹窗
+        closeCollectMaterialWin(obj){
+            this.mCollect.show = false;
+            console.log(this.list);
+            if(obj){
+                obj.collName = this.collName.trim();
+                this.throwData(obj);
+            }
+        },
+
+        throwData(data){
+            this.$emit('change',data);
+        },
+
+
+
+
+
         //筛选,重置
         filterReset(sym,page){
             if(sym == 'reset'){
@@ -341,20 +326,6 @@ export default {
                 unitId:condition.unitId
             };
             return subObj;
-        },
-        //格式化抛出的数据
-        formatData(){
-            let unitList = this.hasSameAttrVal(this.selectList,'cus_unitId');
-            let isSameUnit = false;
-            if(unitList.length == 1){
-                isSameUnit = true;
-            }
-            let obj = {
-                collName: this.collName.trim(),
-                selectList: this.selectList,
-                isSameUnit:isSameUnit
-            };
-            return obj;
         },
         //校验抛出数据
         checkData(subObj){
@@ -511,7 +482,52 @@ export default {
     },
     components:{
         collectMaterial:() => import(/* webpackChunkName:"collect_material_win"*/'./collect_material_win'),
-
     }
 };
 </script>
+
+
+<style lang='less' scoped>
+    .footer{
+        display:flex;
+        justify-content: space-between;
+        .footer-page{
+            display: flex;
+            align-items: center;
+            .select-num{
+                color:#E1BB4A;
+            }
+        }
+    }
+    .collection-tips-icon{
+        color: #ccc;
+        font-size:14px;
+        margin-left:5px;
+    }
+    .collection-tips-word{
+        color: #ccc;
+        font-size:14px;
+        color:#909399;
+    }
+    .collection-name{
+        padding-bottom:20px;
+    }
+
+    .dialog-content{
+        border-top:1px solid #EAEEF5;
+        border-bottom:2px solid #EAEEF5;
+        padding-top:20px;
+    }
+    .btn-type{
+        padding-top:20px;
+        padding-bottom:20px;
+    }
+    .list-content{
+        height: 280px;
+        overflow-y: scroll;
+    }
+    .checkbox{
+        margin-bottom:10px;
+        margin-right:10px;
+    }
+</style>
