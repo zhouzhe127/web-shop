@@ -130,7 +130,7 @@ export default {
 				this.$store.commit('setWin', {
 					title: '提示信息',
 					winType: 'alter',
-					content: '请先获取二维码'
+					content: '请先获取验证码!'
 				});
 				return;
 			}
