@@ -141,6 +141,11 @@
 
 					<section v-if="good.type!=2" style="width:100%;">
 						<el-form :model="good" ref="good" label-width="80px">
+							<el-form-item v-if="good.categoryCode!='' && (good.goodsCode !=='' || ischain=='0'||ischain=='3') && good.id*1 < 100000 || good.id*1 >1000000" label="编码">
+								<span>{{good.categoryCode}}-</span>
+								<el-input v-if="ischain=='0'||ischain=='3'" v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
+								<span v-if="ischain=='1'||ischain=='2'">{{good.goodsCode}}</span>
+							</el-form-item>
 							<el-form-item required label="分类">
 								<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
 								<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
@@ -254,7 +259,11 @@
 					</section>
 				</section>
 				<section v-if="good.type==2">
-					<el-form :model="good" ref="good" :inline="true" label-width="100px">
+					<el-form :model="good" ref="good" label-width="100px">
+						<el-form-item v-if="good.categoryCode!=''" label="编码">
+							<span>{{good.categoryCode}}-</span>
+							<el-input v-model="good.goodsCode" maxlength="5" placeholder="输入编码" style="width:90px;"></el-input>
+						</el-form-item>
 						<el-form-item required label="分类">
 							<span class="sign" v-for="(cat,index) in selectCategory" :key="index" v-on:click="deleteSelectCategory(cat,index)">{{cat.name}}</span>
 							<el-button @click="openCommonWin('category')" type="primary" style="width:100px;">添加分类</el-button>
@@ -370,7 +379,9 @@ export default {
 				vipDiscount: '', //会员折扣
 
 				identifyCode: '', //(实际不存在的字段)生成的称重商品的识别码(5位)
-				code: '' //(实际不存在的字段)称重商品类别识别码 称重商品的barCode=good.code+good.identifyCode
+				code: '', //(实际不存在的字段)称重商品类别识别码 称重商品的barCode=good.code+good.identifyCode
+				categoryCode: '', //编码前段部分
+				goodsCode: '' //编码后段部分
 			},
 			identifyCodeMax: null, //比较所有商品识别之后生成的最大商品识别码
 			identifyName: '选择类别识别码', //称重商品类别识别码展示的文字
@@ -711,7 +722,8 @@ export default {
 					this.comObj = {
 						category: this.category,
 						selectCategory: this.selectCategory,
-						radio: this.good.type == 2 ? false : true
+						// radio: this.good.type == 2 ? false : true
+						radio: false
 					};
 					break;
 				case 'brand':
@@ -736,6 +748,8 @@ export default {
 					break;
 				case 'category':
 					this.selectCategory = data;
+					console.log(data[0]);
+					this.good.categoryCode = data[0].code;
 					break;
 				case 'brand':
 					if (data[0]) {
@@ -937,7 +951,6 @@ export default {
 			// 		submitValidityType = ele.id;return true;
 			// 	}
 			// });
-			console.log(this.good.validityType);
 
 			//分类的id
 			for (let ele of this.selectCategory) {
@@ -1049,11 +1062,16 @@ export default {
 				'description',
 				'specifications',
 				'barCode',
-				'secBarCode'
+				'secBarCode',
+				'goodsCode',
+				'categoryCode'
 			];
 			for (let key of keys) {
 				obj[key] = this.good[key];
 			}
+			// obj.goodsCode = this.good.categoryCode+'-'+this.good.goodsCode;
+			obj.categoryCode = this.good.categoryCode;
+			obj.goodsCode = this.good.categoryCode==''?'':this.good.goodsCode;
 			obj.cids = cids.join(',');
 			obj.validityType = this.good.validityType;
 			obj.attrs = attrId.join(',');
@@ -1094,7 +1112,20 @@ export default {
 				)
 					return false;
 			}
-
+			if (this.good.goodsCode.trim().length > 0) {
+				if (
+					!global.checkData(
+						{
+							goodsCode: {
+								reg: /^[0-9]{3,5}$/,
+								pro: '编码只能为数字，且3-5个字!'
+							}
+						},
+						this.good
+					)
+				)
+					return false;
+			}
 			//----------		称重菜,普通菜:售价,单位(普通菜),成本,会员	-----------
 			if (
 				(this.good.type == 0 && !Number(this.good.isGroup)) ||
@@ -1670,6 +1701,21 @@ export default {
 			res.attr || (res.attr = []);
 			this.selectAttr = res.attr; //       Array
 			res.cate || (res.cate = []);
+			//通过选择号的分类，获取对应的编码
+			// for(let i=0;i<this.category.length;i++){
+			// 	if(res.cate[0].id == this.category[i].id){
+			// 		this.good.categoryCode = this.category[i].code;
+			// 		break;
+			// 	}
+			// 	if(this.category[i].child){
+			// 		for(let j=0;j<this.category[i].child.length;j++){
+			// 			if(res.cate[0].id == this.category[i].child[j].id){
+			// 				this.good.categoryCode = this.category[i].child[j].code;
+			// 				break;
+			// 			}
+			// 		}
+			// 	}
+			// }
 			this.selectCategory = res.cate; //       Array
 		},
 		//同步请求商品识别码,品牌列表,商品详情
@@ -1696,6 +1742,10 @@ export default {
 			}
 			if (res) {
 				this.good = res;
+				this.good.categoryCode = res.categoryCode
+					? res.categoryCode
+					: '';
+				this.good.goodsCode = res.goodsCode ? res.goodsCode : '';
 				this.initGoods(res);
 			}
 		},

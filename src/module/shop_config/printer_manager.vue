@@ -2,20 +2,19 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:57:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-22 18:25:49
  * @Module:店铺配置——打印机管理
 **/
 <template>
 	<section class="fl" id="printer" style="width:100%;">
 		<div>
-			<!-- <el-select v-model="terType" @change="showList" placeholder="请选择服务终端" style="width:170px;">
+			<el-select v-model="terType" @change="showList" placeholder="请选择服务终端" style="width:170px;">
 				<el-option
 					v-for="(item,i) in newTerminalList" 
 					:key="i"
 					:label="item.name"
 					:value="item.id">
 				</el-option>
-			</el-select> -->
+			</el-select>
 			<!-- <span>打印机类型</span> -->
 			<el-select v-model="selectType" @change="showList" placeholder="请选择打印机类型" style="width:170px;">
 				<el-option
@@ -30,16 +29,16 @@
 			</el-input>
 			<el-button @click="reseat" type="info">重置</el-button>
 		</div>
-		<!-- <div style="padding:10px 0;color:#606266;" v-if="oldId!==''">
+		<div style="padding:10px 0;color:#606266;" v-if="oldId!==''&&terminalList.length>0">
 			<span>打印服务总端口配置</span>
 			<el-button @click="selectTerminal" size="small" type="primary" style="margin:0 10px;">终端配置</el-button>
 			<span style="color:#ccc;">当前配置：</span>
 			<span style="color:#ccc;">{{terminalName}}</span>
-		</div> -->
-		<!-- <el-radio-group v-model="selectTab" style="margin:10px 0;">
+		</div>
+		<el-radio-group v-model="selectTab" style="margin:10px 0;">
 			<el-radio-button label="0">打印机列表</el-radio-button>
 			<el-radio-button label="1">打印服务终端</el-radio-button>
-		</el-radio-group> -->
+		</el-radio-group>
 		<div v-if="selectTab==0" style="margin:10px 0;">
 			<el-table
 				stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
@@ -79,7 +78,7 @@
 					<template slot-scope="scope">
 						<span @click="openWin({pid:scope.row.id,types:'edit',index:scope.$index,bel:true})" style="color: #FE8D2C;cursor:pointer">编辑</span>
 						<span style="padding:0 5px;color: #D2D2D2">|</span>
-						<span @click="delPrin(scope.row,true)" style="color: #FD3F1F;cursor:pointer">删除</span>
+						<span @click="delPrin(scope.row,true,scope.$index)" style="color: #FD3F1F;cursor:pointer">删除</span>
 					</template>
 				</el-table-column>
 				<el-table-column align="center" label="序号">
@@ -144,18 +143,20 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '添加打印机',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'plain',
 				fn: ()=>{
 					this.openWin({pid:null,types:'addPrint',index:null,bel:false});
 				},
 			},
-			// {
-			// 	name: '添加打印服务终端',
-			// 	className: ['addStaff', 'export-btn'],
-			// 	fn:()=>{
-			// 		this.openWin({pid:null,types:'addPrint',index:null,bel:true});
-			// 	}
-			// }
+			{
+				name: '添加打印服务终端',
+				type:4,
+				className: 'plain',
+				fn:()=>{
+					this.openWin({pid:null,types:'addPrint',index:null,bel:true});
+				}
+			}
 		]);
 		this.getPrinterList();
 	},
@@ -318,7 +319,7 @@ export default {
 			this.newTerminalList.unshift(item);		
 			// this.terminalList.unshift({id:'-1',name:'全部'});
 		},
-		delPrin(item,ble){
+		delPrin(item,ble,index){
 			let name = ble?item.name:item.printerName;
 			let conName =  '确定删除'+(ble?'终端 "':'打印机 "')+name+ '" '+'?';
 			this.$store.commit('setWin', {
@@ -326,7 +327,7 @@ export default {
 				content: conName,
 				callback: delRes => {
 					if (delRes == 'ok') {
-						this.deletePrinter(item,ble);
+						this.deletePrinter(item,ble,index);
 						this.showWin = false;
 					}
 				}
@@ -447,7 +448,7 @@ export default {
 			}
 		},
 		//删除打印机请求
-		async deletePrinter(item,ble) {
+		async deletePrinter(item,ble,index) {
 			if(!ble){
 				await http.deletePrinter({
 					data: {
@@ -461,7 +462,7 @@ export default {
 						id: item.id,
 					}
 				});
-				this.terminalList.splice(this.printIndex,1);
+				this.terminalList.splice(index,1);
 			}
 			
 		},

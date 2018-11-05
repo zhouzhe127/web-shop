@@ -1,8 +1,4 @@
-import {
-	s,
-	w,
-	b
-} from 'src/config/host_var';
+import { s, w, b } from 'src/config/host_var';
 
 export default {
 	//---------------------统计管理------------------
@@ -410,7 +406,7 @@ export default {
 		type: 'file'
 	},
 	getDepositPlanList: {
-		url: w + 'Depositplan/getDepositPlanList', //获取方案列表
+		url: w + 'Depositplan/getDepositPlanList' //获取方案列表
 	},
 	getScanPayOrderByCodes: {
 		url: w + 'Reportstatistics/getScanPayOrderByCodes', //扫码支付按码选择
@@ -431,7 +427,7 @@ export default {
 		method: 'post'
 	},
 	BusinessGetStatByShopIds: {
-		url: b + "Business/getStatByShopIds", //品牌按店查询店铺统计数据
-		method: "get"
-	},
+		url: b + 'Business/getStatByShopIds', //品牌按店查询店铺统计数据
+		method: 'get'
+	}
 };

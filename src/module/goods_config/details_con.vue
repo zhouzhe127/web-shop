@@ -38,7 +38,7 @@
 				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
 				</el-input>
-				<el-input v-if="industry != 1" placeholder="请输入名称/简码" clearable v-model="search" @change="funSearchkeyUp(null)" style="width:210px;">
+				<el-input v-if="industry != 1" placeholder="请输入名称/简码/编码" clearable v-model="search" @change="funSearchkeyUp(null)" style="width:240px;">
 					<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp(null)"></el-button>
 				</el-input>
 			</section>
@@ -153,6 +153,12 @@
 						<template slot-scope="scope">
 							<span v-if="ischain=='1'||ischain=='2'" @click="openAddWin(scope.row)" :style="{color:scope.row.id<10000?'#fe9200':'#2ea7e0',cursor:'pointer'}">{{scope.row.goodsName}}</span>
 							<span v-if="ischain=='0'||ischain=='3'" @click="openAddWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.goodsName}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column fixed min-width="100" show-overflow-tooltip align="center" prop="goodsCode" label="编码">
+						<template slot-scope="scope">
+							<span v-if="scope.row.categoryCode!==''&&scope.row.goodsCode!==''&&scope.row.id*1<10000">{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
+							<span v-else>-</span>
 						</template>
 					</el-table-column>
 					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
@@ -680,10 +686,16 @@ export default {
 			tempGoods = goodsList.filter(ele => {
 				let BC = '' + ele.BC;
 				BC = BC.toLowerCase();
+				let categoryCode = ele.categoryCode.toLowerCase();
+				let goodsCode = ele.goodsCode.toLowerCase();
+				let goodcode = categoryCode + '-' +goodsCode;
 				let name = ele.goodsName.toLowerCase();
 				let search = this.search.toLowerCase();
 				if (BC && BC.indexOf(search) > -1) return true;
 				if (name && name.indexOf(search) > -1) return true;
+				if (categoryCode && categoryCode.indexOf(search) > -1) return true;
+				if (goodsCode && goodsCode.indexOf(search) > -1) return true;
+				if (goodcode && goodcode.indexOf(search) > -1) return true;
 			});
 			return tempGoods;
 		},
@@ -877,12 +889,7 @@ export default {
 		//初始化按钮
 		initSyncBtn() {
 			let obj = {};
-			//同步商品
-			if (this.ischain == 1 || this.ischain == 2) {
-				obj.sync = () => {
-					this.showCom = 'asyncWin';
-				};
-			}
+			
 			//添加商品，如果是表格模式，显示添加按钮
 			if (this.selectTab == 1) {
 				obj.addGood = () => {
@@ -890,7 +897,8 @@ export default {
 				};
 			}
 			//导入
-			obj.leadIn = () => {
+			obj.leadIn = function(){
+				// className:'',
 				this.importGoods().then(res => {
 					if (!res) {
 						this.$store.commit('setWin', {
@@ -932,7 +940,12 @@ export default {
 			obj.leadOut = () => {
 				this.exportGoodsList();
 			};
-			this.$store.commit('setPageTools', obj);
+			//同步商品
+			if (this.ischain == 1 || this.ischain == 2) {
+				obj.sync = () => {
+					this.showCom = 'asyncWin';
+				};
+			}this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据
 		initData() {
@@ -999,7 +1012,7 @@ export default {
 			storage.session('goodList', goods);
 			return goods;
 		},
-		async getGoodsList(flag, goodVer) {
+		async getGoodsList(flag, goodVer,otherVer) {
 			let goods = null;
 			if (flag) {
 				goods = await this.getGoods();
@@ -1008,7 +1021,7 @@ export default {
 				if (!httpGoodVersion) {
 					goods = await this.getGoods();
 				} else {
-					if (httpGoodVersion.goodsConfigVer == goodVer) {
+					if (httpGoodVersion.goodsConfigVer == goodVer && httpGoodVersion.otherConfigVer == otherVer) {
 						goods = storage.session('goodList');
 						if (!goods) goods = await this.getGoods();
 					} else {
@@ -1039,7 +1052,7 @@ export default {
 		async syncRequest() {
 			let res = await this.getHttp('ShopGetExtra'); //获取版本号
 			let cate = await this.getCategoryList(false, res.otherConfigVer); //获取分类
-			let goods = await this.getGoodsList(false, res.goodsConfigVer); //获取商品列表
+			let goods = await this.getGoodsList(false, res.goodsConfigVer,res.otherConfigVer); //获取商品列表
 			let { list } = await this.getHttp('InventoryGetlist'); //获取库存数量
 
 			if (cate[0] && cate[0].id != -1) {

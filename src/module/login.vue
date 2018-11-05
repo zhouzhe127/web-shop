@@ -1,7 +1,7 @@
 <template>
-	<section id="login">
+	<section id="login" :class="isShow?'noShow':'show'">
 		<!-- <canvas id="cas"></canvas> -->
-		<section class="container">
+		<section class="container" v-if="!isShow">
 			<!-- <div class="zhezhao"></div> -->
 			<section class="content">
 				<section class="forms" style="padding: 0;">
@@ -18,13 +18,16 @@
 						<input style="width:375px;color: #333;" placeholder='请输入密码' id='pass' type="password" maxlength="20" @blur="changeType(false)" autocomplete="off" v-model="password" />
 					</label>
 					<label class="mbottom"><input type="button" value="登录" class="btn" style="width:375px;cursor:pointer;background-color: #E0BB49;" v-on:click="login" /></label>
+					<section class="fl zhuCe" @click="toZhuCe()">注册账号</section>
 					<section class="tip" ref='tip' v-if='tipsShow' style="color: #ea3b44;font-size: 16px;">{{tips}}</section>
 					<section class="fr form-footer" style="padding-top:5px;text-align: right;font-size: 14px;color: #999;"> 当前版本{{version}}</section>
 				</section>
 			</section>
 
 		</section>
+		<openMenu v-if="isShow" @backLogin="backLogin"></openMenu>
 	</section>
+
 </template>
 
 <script>
@@ -46,6 +49,8 @@ export default {
 			identity: 1, // 身份，0 员工         1 老板
 			tips: '账号或密码错误',
 			tipsShow: false,
+
+			isShow: false //显示注册页面
 		};
 	},
 
@@ -58,17 +63,24 @@ export default {
 					ret += '•';
 				}
 				return ret;
-			},
+			}
 			// set: function(value) {}
 		},
 		sphone: {
 			get: function() {
 				return this.phone ? this.phone : '请输入手机号';
-			},
+			}
 			// set: function(value) {}
 		}
 	},
 	methods: {
+		//去注册账号
+		toZhuCe() {
+			this.isShow = true;
+		},
+		backLogin(item) {
+			this.isShow = item;
+		},
 		//判断是老板或者员工
 		// setIdentity: function(i) {
 		// 	this.identity = i;
@@ -145,8 +157,6 @@ export default {
 		// }());
 		// console.log(os);
 
-
-		
 		// let canvas = document.getElementById('cas');
 		// let ctx = canvas.getContext('2d');
 
@@ -284,20 +294,35 @@ export default {
 		// 		ndots.splice(ndots.indexOf(dot), 1);
 		// 	});
 		// }
+	},
+	components: {
+		openMenu: () => import(/* webpackChunkName:'register' */ './register')
 	}
 };
 </script>
 
 
 <style lang="less" scoped>
-#login {
+.show {
 	background-color: #262626;
-	// position: relative;
+	background-image: url(../res/images/bg.png);
+	background-size: 100%;
+}
+.noShow {
+	background: url('./../res/images/brandResP.png') no-repeat;
+}
+#login {
 	width: 100%;
 	color: red;
 	height: 100%;
-	background-image: url(../res/images/bg.png);
-	background-size: 100%;
+
+	.zhuCe {
+		padding-top: 5px;
+		text-align: right;
+		font-size: 14px;
+		color: #e0bb49;
+		cursor: pointer;
+	}
 	.mbottom {
 		margin-bottom: 0 !important;
 	}
@@ -368,6 +393,7 @@ export default {
 		}
 	}
 }
+
 #login .zhezhao {
 	width: 825px;
 	height: 100%;

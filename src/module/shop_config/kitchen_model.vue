@@ -75,7 +75,7 @@ export default {
 		let arr = [
 			{
 				name: '添加操作台',
-				className: 'userLabel',
+				type: 4,className: 'primary',
 				fn: () => {
 					this.addKitchen();
 				}

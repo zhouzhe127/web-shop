@@ -251,11 +251,11 @@ export default {
 		isTatle() {
 			let rools = [];
 			if (this.isClearing) {
-				rools = [{ name: '返回', className: ['gray'], fn: this.back }];
+				rools = [{ name: '返回', type: 4,className: 'info', fn: this.back }];
 			} else {
 				rools = [
-					{ name: '返回', className: ['gray'], fn: this.back },
-					{ name: '结算', className: ['blue'], fn: this.clearBtn }
+					{ name: '返回',  type: 4,className: 'info', fn: this.back },
+					{ name: '结算', type: 4,className: 'primary', fn: this.clearBtn }
 				];
 			}
 			this.$store.commit('setPageTools', rools);
