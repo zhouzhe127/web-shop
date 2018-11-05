@@ -1057,5 +1057,18 @@ export default {
 		url:b+"Materialstatistic/exportStatisticData",
 		method: "get",
 		type:'file'
+	},
+	//---------获取报表模板列表---------------------
+	"templateGetReportTemplates":{
+		url:b+"template/getReportTemplates",					//获取报表模板列表
+		method:'get'
+	},
+	"materialreportGetList":{
+		url:b+"materialreport/getList",							//获取物料报表列表
+		method:'get'
+	},
+	"templateDeleteReportTemplate":{
+		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
+		method:'get'
 	}
 }

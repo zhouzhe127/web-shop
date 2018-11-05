@@ -65,88 +65,96 @@
 			</div>
 		</div>
 
-		<div class="head" >
-			<span>编码配置</span>
-			<div></div>
-		</div>
-		<div class="content" >
-			<div>
-				<el-button @click="openDialog">变更</el-button>
+		<!-- 编码配置 -->
+		<template v-if="ischain == 3 || ischain == 0">
+			<div class="head" >
+				<span>编码配置</span>
+				<div></div>
 			</div>
-			<p>
-				<span>
-					分类 : {{condition.multiCategory ? '物料可以存在多个分类' : '物料不能存在多个分类'}}
-				</span>
-			</p>
-			<p>
-				<span>
-					物料编码排序 : {{condition.sortByBarCode ? '开启' : '关闭'}}
-				</span>
-			</p>
-			<p>
-				物料编码 : 
-				<span v-for="(item,index) in mCode" :key="index" v-if="item.id == condition.wholeBarCode">
-					{{item.name}}
-				</span>
-			</p>
-		</div>
+			<div class="content" >
+				<div>
+					<el-button @click="openDialog">变更</el-button>
+				</div>
+				<p>
+					<span>
+						分类 : {{condition.multiCategory ? '物料可以存在多个分类' : '物料不能存在多个分类'}}
+					</span>
+				</p>
+				<p>
+					<span>
+						物料编码排序 : {{condition.sortByBarCode ? '开启' : '关闭'}}
+					</span>
+				</p>
+				<p>
+					物料编码 : 
+					<span v-for="(item,index) in mCode" :key="index" v-if="item.id == condition.wholeBarCode">
+						{{item.name}}
+					</span>
+				</p>
+			</div>
+		</template>
 
-		<!-- 品牌开关 -->
-		<div class="head" v-if="isBrand">
-			<span>采购单配置</span>
-			<div></div>
-		</div>
-		<div class="content" v-if="isBrand">
-			<p>
-				采购审核 : 
-				<el-switch
-					v-model="condition.purchaseAudit"
-					active-color="#34A9AA"
-					inactive-color="#909399"
-					active-text="开"
-					inactive-text="关"
-					class="switch-left"
-					@change="(res)=>{changeSwitch('purchaseAudit',res)}"
-				>
-				</el-switch>
-			</p>
-		</div>
+		<!-- 采购单配置 -->
+		<template v-if="ischain == 3 || ischain == 0">
+			<div class="head" >
+				<span>采购单配置</span>
+				<div></div>
+			</div>
+			<div class="content">
+				<p>
+					采购审核 : 
+					<el-switch
+						v-model="condition.purchaseAudit"
+						active-color="#34A9AA"
+						inactive-color="#909399"
+						active-text="开"
+						inactive-text="关"
+						class="switch-left"
+						@change="(res)=>{changeSwitch('purchaseAudit',res)}"
+					>
+					</el-switch>
+				</p>
+			</div>
+		</template>
+		
+		<!-- 入库配置 -->
+		<template v-if="ischain == 3 || ischain == 0">
+			<div class="head" >
+				<span>入库配置</span>
+				<div></div>
+			</div>
+			<div class="content" >
+				<p>
+					是否允许直接入库 : 
+					<el-switch
+						v-model="condition.commonStock"
+						active-color="#34A9AA"
+						inactive-color="#909399"
+						active-text="开"
+						inactive-text="关"
+						class="switch-left"
+						@change="(res)=>{changeSwitch('commonStock',res)}"
+					>
+					</el-switch>
+				</p>
+				<p>
+					是否允许导入入库 : 
+					<el-switch
+						v-model="condition.importStock"
+						active-color="#34A9AA"
+						inactive-color="#909399"
+						active-text="开"
+						inactive-text="关"
+						class="switch-left"
+						@change="(res)=>{changeSwitch('importStock',res)}"
+					>
+					</el-switch>
+				</p>
+			</div>
+		</template>
 
-		<div class="head" >
-			<span>入库配置</span>
-			<div></div>
-		</div>
-		<div class="content" >
-			<p>
-				是否允许直接入库 : 
-				<el-switch
-					v-model="condition.commonStock"
-					active-color="#34A9AA"
-					inactive-color="#909399"
-					active-text="开"
-					inactive-text="关"
-					class="switch-left"
-					@change="(res)=>{changeSwitch('commonStock',res)}"
-				>
-				</el-switch>
-			</p>
-			<p>
-				是否允许导入入库 : 
-				<el-switch
-					v-model="condition.importStock"
-					active-color="#34A9AA"
-					inactive-color="#909399"
-					active-text="开"
-					inactive-text="关"
-					class="switch-left"
-					@change="(res)=>{changeSwitch('importStock',res)}"
-				>
-				</el-switch>
-			</p>
-		</div>
-
-
-		<template v-if="isBrand">
+		<!-- 分销价格名称 -->
+		<template v-if="ischain == 3">
 			<div class="head" >
 				<span>分销价格名称</span>
 				<div></div>
@@ -274,7 +282,7 @@ export default {
 			},
 			distribution:[],		
 			copyDistribution:[],												//备份
-			isBrand:false,			
+			ischain:0,															//店铺类型
 
 		};
 	},
@@ -429,31 +437,6 @@ export default {
 		},
 
 
-
-		//格式化数据
-		formatData(){
-			let condition = this.condition;
-			let attrs = 'commonStock,importStock,purchaseAudit,multiCategory,sortByBarCode'.split(',');
-			let temp = {};
-			let distribution = [];
-
-			//商品,物料应用
-			temp = this.getSelectConfig(this.config);
-
-			//是否可以售卖
-			temp.isShelveMinus = Number(condition.isShelveMinus);
-
-			//品牌配置
-			if(this.isBrand){
-				for(let attr of attrs){
-					temp[attr] = Number(condition[attr]);
-				}
-				temp.wholeBarCode = condition.wholeBarCode;
-			}else{
-				temp.distribution = [];
-			}
-			return temp;
-		},
 		//获取商品与物料的选中状态
 		getSelectConfig(list){
 			let temp = {};
@@ -505,7 +488,7 @@ export default {
 
 		initData(){
 			let currentShop = storage.session('userShop').currentShop;
-			this.isBrand = currentShop.ischain == 3;
+			this.ischain = currentShop.ischain;
 		},
 		async initConfig(obj){
 			if(!obj) obj = await this.getHttp('invociGetSupplier');
@@ -534,7 +517,7 @@ export default {
 			this.dialog.wholeBarCode = this.condition.wholeBarCode;
 		},
 		async initDistribute(distribution){
-			if(!this.isBrand) return;
+			if(this.ischain != 3) return;
 
 			if(!distribution) distribution = await this.getHttp('invoicingGetDistributionConfig');
 
@@ -748,7 +731,7 @@ p{
 
 	.label{
 		float:left;
-		width:110px;
+		min-width:110px;
 		text-align: right;
 		line-height: 40px;
 		margin-right:20px;
