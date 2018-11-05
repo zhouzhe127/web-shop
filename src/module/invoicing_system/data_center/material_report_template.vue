@@ -1,7 +1,16 @@
+/*
+ * @Author: weifu.zeng 
+ * @Date: 2018-11-02 11:20:29 
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-11-02 15:44:41
+ */
+
 <template>
     <div class="box">
-        <select-material></select-material>
-        
+        <add-report-row></add-report-row>
+        <!-- <select-material></select-material> -->
+        <!-- <create-collection></create-collection> -->
+        <!-- <collect-material></collect-material> -->
         <el-table :data="tableData"  
             v-loading="bool" 
             element-loading-text="加载中,请稍后..."
@@ -86,7 +95,7 @@ export default {
                 case 'generator':
                     break;                
                 case 'view':
-                    this.$router.push({path:'/admin/dataCenter/finishedReport',query:{tempName:name,tempId:id}});
+                    this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:name,tempId:id}});
                     break;                
 
             }
@@ -187,11 +196,13 @@ export default {
     },
     mounted(){
         this.initBtn();
-        this.getTemplateList();
-
+        // this.getTemplateList();
     },
     components:{
         selectMaterial:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
+        createCollection:() => import(/* webpackChunkName:"report_add_collection_win"*/'./report_add_collection_win'),
+        collectMaterial:() => import(/* webpackChunkName:"collect_material_win"*/'./collect_material_win'),
+        addReportRow:() => import(/* webpackChunkName:"add_report_row_win"*/'./add_report_row_win'),
     }
 };
 </script>
