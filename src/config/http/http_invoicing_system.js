@@ -1070,5 +1070,17 @@ export default {
 	"templateDeleteReportTemplate":{
 		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
 		method:'get'
-	}
+	},
+	"materialreportGetReportItemList":{//自定义模板 获取基础项
+		url:b+"materialreport/getReportItemList",
+		method:'get'
+	},
+	"materialreportGetStatisticItemList":{//自定义模板 获取公式项
+		url:b+"materialreport/getStatisticItemList",
+		method:'get'
+	},
+	"materialreportSetStatisticItem":{//自定义模板 新建公式项
+		url:b+"materialreport/setStatisticItem",
+		method:'post'
+	},
 }

@@ -160,10 +160,10 @@ export default {
 			import ( /*webpackChunkName: 'drop_down'*/ 'src/components/drop_down'),
 		onOff: () =>
 			import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
-		// selectMat: () =>
-		// 	import ( /*webpackChunkName: 'select_material'*/ './select_material'),
 		selectMat: () =>
-			import ( /*webpackChunkName: 'select_material'*/ '../data_center/add_column'),
+			import ( /*webpackChunkName: 'select_material'*/ './select_material'),
+		// selectMat: () =>
+		// 	import ( /*webpackChunkName: 'select_material'*/ '../data_center/add_column'),
 		comTable: () =>
 			import ( /*webpackChunkName: 'table'*/ 'src/components/com_table'),
 		warehouseSort: () =>

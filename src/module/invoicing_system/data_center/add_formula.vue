@@ -12,7 +12,7 @@
 			<div class="inp-block">
 				<span class="inp-name">名称</span>
 				<div class="right">
-					<el-input placeholder="输入名称" class="inp-class"></el-input>
+					<el-input placeholder="输入名称" class="inp-class" v-model="name"></el-input>
 				</div>
 				<div class="right">
 					<el-popover
@@ -21,21 +21,26 @@
 						trigger="click"
 						v-model="visible">
 						<div class="column-container">
-							<el-radio-group v-model="columnTabIndex">
-								<el-radio-button label="0">标准项</el-radio-button>
-								<el-radio-button label="1">公式项</el-radio-button>
-								<el-radio-button label="2">表列项</el-radio-button>
-							</el-radio-group>
-							<div class="radio-container" v-show="columnTabIndex==0">
-								<div class="radio-box" v-for="item in baseList" :key="item.id">
-									<el-button border @click="addItem(item.name)">{{item.name}}</el-button>
-								</div>
-							</div>
-							<div class="radio-container" v-show="columnTabIndex==1">
-								<div class="radio-box" v-for="i in 20" :key="i">
-									<el-button border @click="addItem('标准项'+i)">标准项</el-button>
-								</div>
-							</div>
+							<el-tabs v-model="columnTabIndex" type="card">
+								<el-tab-pane label="基础项" name="0">
+									<div class="radio-container">
+										<div class="radio-box" v-for="item in baseList" :key="item.id">
+											<el-button border @click="addItem(item.name)" :disabled="!item.isStat">{{item.name}}</el-button>
+										</div>
+									</div>
+								</el-tab-pane>
+								<el-tab-pane label="公式项" name="1">
+									<el-table :data="formulaList" highlight-current-row @current-change="insertFormula"
+										border height="249" style="width: 100%" ref="singleTable">
+										<el-table-column property="name" label="名称" width="150">
+										</el-table-column>
+										<el-table-column property="formulaStr" label="计算公式" width="250">
+										</el-table-column>
+										<el-table-column property="formatStr" label="格式" width="200">
+										</el-table-column>
+									</el-table>
+								</el-tab-pane>
+							</el-tabs>
 						</div>
 						<el-button slot="reference" class="btn-class">
 							选择统计项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -101,7 +106,7 @@ export default {
 			},
 			btnCancel: {},
 			sort:0,//排序
-			columnTabIndex:0,
+			columnTabIndex:'0',
 			columnItem:'',//选择项
 			visible:false,//选择列表项是否显示
 
@@ -114,8 +119,8 @@ export default {
 			wareName:'',
 			storeName:'',
 			formulaPercent:[//是否半分比
-				{label:'数字',value:false},
-				{label:'百分百',value:true},
+				{label:'数字',value:0},
+				{label:'百分百',value:1},
 			],
 			formulaReserve:[//保留几位小数
 				{label:'0',value:0},
@@ -128,14 +133,10 @@ export default {
 				{label:'向上取值',value:1},
 				{label:'向下取值',value:2},
 			],
-			percent:'',//是否百分百 true百分百 false数字
-			reserve:'',//保留几位小数
-			rounding:'',//舍入规则
-			baseList:[
-				{id:1,name:'入库量'},
-				{id:2,name:'总量'},
-				{id:3,name:'消耗量'},
-			],
+			percent:0,//是否百分百 true百分百 false数字
+			reserve:0,//保留几位小数
+			rounding:0,//舍入规则
+			baseList:[],
 			formulaList:[],
 			formulaObj:{},
 
@@ -150,8 +151,13 @@ export default {
 	},
 	props: {
 		pObj: null,
-		//base:[],			//基础项列表
-		//formula:[],		//公式项列表
+		//抛出方法  @emit
+		/*
+			{
+				base:[],			//基础项列表
+				formula:[],		//公式项列表
+			}
+		*/
 	},
 	watch:{
 
@@ -175,8 +181,12 @@ export default {
 		},
 		//初始化数据
 		initData(){
-			//this.baseList = this.pObj.base?this.pObj.base:[];
-			//this.formulaList = this.pObj.formula?this.pObj.formula:[];
+			if(this.pObj.base){
+				this.baseList = this.pObj.base;
+			}
+			if(this.pObj.formula){
+				this.formulaList = this.pObj.formula;
+			}
 		},
 		//新建公式项
 		async addFormula(send){
@@ -185,10 +195,11 @@ export default {
 				name:this.name,
 			};
 			obj = Object.assign(obj,send);
-			console.log(obj);
-			let data = await http.getShopList();
+			let data = await http.materialreportSetStatisticItem({
+				data:obj
+			});
 			if(data){
-				//
+				this.$emit('emit',this.formulaObj);
 			}
 		},
 		computeFormula(){
@@ -226,9 +237,7 @@ export default {
 				carryRule:this.rounding,//舍入规则
 				baseParam:baseArr.join(','),//基础项
 			};
-			this.addFormula(this.formulaObj).then(()=>{
-				this.$emit('emit',this.formulaObj);
-			});
+			this.addFormula(this.formulaObj);
 		},
 		//验证公式的正确性
 		veriFormula(formulaStr){
@@ -287,14 +296,14 @@ export default {
 			}
 			return true;
 		},
-		//添加标准项
-		addItem(res){
+		//插入标准项
+		addItem(res,isFormula){
 			this.visible = false;
 			
 			let sel = window.getSelection();
 			let range = sel.rangeCount>0?sel.getRangeAt(0):'';
 			let sCon = range?range.startContainer:'';
-			let field = `【${res}】`;
+			let field = isFormula ? res : `【${res}】`;
 			if(sCon && sCon.parentElement.className=='edit-container'){//焦点必须在编辑框内
 				sel.removeAllRanges();
 				//获得Range中的第一个html结点 
@@ -323,6 +332,19 @@ export default {
 				appendRange.selectAllChildren(this.$refs.itemEdit);
 				appendRange.collapseToEnd();
 			}
+		},
+		//插入公式项
+		insertFormula(res){
+			//res.formula;
+			let str = res.formula.replace(/id_(\d+)/g,(match,p1)=>{
+				for(let base of this.baseList){
+					if(p1==base.id){
+						return `【${base.name}】`;
+					}
+				}
+			});
+			str = `(${str})`
+			this.addItem(str,true);
 		},
 	},
 };
