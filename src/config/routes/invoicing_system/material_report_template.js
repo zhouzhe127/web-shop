@@ -19,7 +19,10 @@ module.exports = {
         {
             path: 'creatTempMain',
             url: 'src/module/invoicing_system/data_center/creat_templatelist/temp_main' //新建报表模板
-        }
-
+        },
+        {
+            path: 'createReport',
+            url: 'src/module/invoicing_system/data_center/creat_templatelist/create_report' //生成报表
+        },
     ]
 }
