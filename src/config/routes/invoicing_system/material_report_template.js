@@ -1,8 +1,7 @@
 /* eslint-disable */
 module.exports = {
     "path": "materialReport",
-    "children": [
-        {
+    "children": [{
             "path": "",
             "meta": {
                 // "keepAlive": true
@@ -10,12 +9,16 @@ module.exports = {
             "url": "src/module/invoicing_system/data_center/material_report_template"
         },
         {
-            path:'finishedReport',
-            url:'src/module/invoicing_system/data_center/material_finished_report'          //已生成报表
+            path: 'finishedReport',
+            url: 'src/module/invoicing_system/data_center/material_finished_report' //已生成报表
         },
         {
-            path:'viewReport',
-            url:'src/module/invoicing_system/data_center/material_view_report'          //已生成报表
+            path: 'viewReport',
+            url: 'src/module/invoicing_system/data_center/material_view_report' //已生成报表
+        },
+        {
+            path: 'creatTempMain',
+            url: 'src/module/invoicing_system/data_center/creat_templatelist/temp_main' //新建报表模板
         }
 
     ]

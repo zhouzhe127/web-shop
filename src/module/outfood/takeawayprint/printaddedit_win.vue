@@ -86,7 +86,7 @@ export default {
 			elemeUserId: '',
 			goods: {}, //传给后台的选中商品
 			isAreaid: '', //是否为当前店铺id
-			packageIds: null, //套餐id
+			packageIds: '', //套餐id
 			// showThreeBounced: false, //三级弹框
 			postFirstPid: null,
 			postFirstTypes: null,
@@ -484,7 +484,7 @@ export default {
 			}
 			this.showCom = 'printerRelation';
 			this.comObj = {
-				areaIndex: this.areaIndex,
+				areaIndex: utils.deepCopy(this.areaIndex),
 				goodsIds: utils.deepCopy(this.goodsIds),
 				eleShopid: this.eleShopid
 			};

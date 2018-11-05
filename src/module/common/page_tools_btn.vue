@@ -26,10 +26,10 @@
 					</div>
 				</template>
 				<template v-if="v.type == 4">
-					<el-button @click="v.fn" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
+					<el-button @click="v.fn" :icon="v.icon" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
 				</template>
 				<template v-if="v.type == 5">
-					<el-button @click="v.fn" :type="v.className" :key="i+keyRan" plain>{{v.name}}</el-button>
+					<el-button @click="v.fn" :icon="v.icon" :type="v.className" :key="i+keyRan" plain>{{v.name}}</el-button>
 				</template>
 				<template v-if="v.type == 6">
 					<form id="form_import_good" :key="i+keyRan" class = 'elfire' enctype="multipart/form-data">
@@ -54,19 +54,21 @@ class Btn {
 	 * @param {Function} fn // 回调函数
 	 * @param {Number} type // 用于特殊dom,需要自己加结构
 	 * @param {Number} style // 样式
+	 *  @param {String} icon // icon样式
 	 */
 	constructor(...args) {
 		/* eslint-disable */
 		if (args.length === 1 && typeof args[0] == 'object') {
-			var { name, className, fn, type, style, inputName } = Object.assign({ style: {}, name: '', className: ['blue', 'btn'], fn: () => {}, type: 0 }, args[0])
+			var { name, className, fn, type, style, inputName,icon } = Object.assign({ style: {}, name: '', className: ['blue', 'btn'], fn: () => {}, type: 0,icon:''}, args[0])
 		} else {
-			var [name = "", className = "blue", fn = () => {}, type = 0, style = {}, inputName] = [...args];
+			var [name = "", className = "blue", fn = () => {}, type = 0, style = {}, inputName,icon=''] = [...args];
 		}
 		this.name = name;
 		this.className = className;
 		this.fn = fn;
 		this.type = type;
 		this.styles = style;
+		this.icon = icon;
 		this.inputName = inputName || "file";
 		/* eslint-enable */
 	}
