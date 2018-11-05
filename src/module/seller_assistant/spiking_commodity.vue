@@ -13,7 +13,7 @@
 			<span>创建时间</span>
 
 			<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-			 value-format="timestamp">
+			 value-format="timestamp" @change="chooseTime" :clearable="false" :editable="false">
 			</el-date-picker>
 			<!-- <el-date-picker
 			v-model="valueTime"
@@ -230,8 +230,7 @@
 					},
 				],
 				createTime:'',
-				// valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
-				valueTime:'',
+				valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 				startTime: '',
 				endTime: '',
 				searchList: [
@@ -248,14 +247,19 @@
 			};
 		},
 		methods: {
-			//选择开始时间
-			getStartTime(receiveTime) {
-				this.startTime = (new Date(receiveTime)).getTime(); //毫秒
-			},
-			//选择结束时间
-			getEndTime(receiveTime) {
-				this.endTime = (new Date(receiveTime)).getTime(); //毫秒
-			},
+			// //选择开始时间
+			// getStartTime(receiveTime) {
+			// 	this.startTime = (new Date(receiveTime)).getTime(); //毫秒
+			// },
+			// //选择结束时间
+			// getEndTime(receiveTime) {
+			// 	this.endTime = (new Date(receiveTime)).getTime(); //毫秒
+			// },
+			chooseTime: function(time) { //获取时间
+				//console.log(new Date(time[1]).setHours(23, 59, 59, 999));
+				//console.log(new Date())
+				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
+			},			
 			clicktheRadio: function (item) {
 				this.typeId = item.type;
 				this.page = 1;
@@ -389,12 +393,10 @@
 
 			},
 			reset: function () {
+				this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 				this.goodsName = '';
 				this.getcommodity();
 			}
-		},
-		watch: {
-
 		},
 		components: {
 			selectBtn: () =>

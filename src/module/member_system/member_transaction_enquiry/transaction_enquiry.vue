@@ -11,7 +11,7 @@
 			<!--日期选择和搜索框-->
 			<div class="date">
 				<!--日期选择和搜索框-->
-				<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
+				<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false" @change="chooseTime">
 				</el-date-picker>
 			</div>
 			<!-- 第二行 -->
@@ -267,7 +267,6 @@
 				//console.log(new Date(time[1]).setHours(23, 59, 59, 999));
 				//console.log(new Date())
 				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
-				//console.log(this.valueTime)
 			},
 			//选择开始时间
 			// getStartTime(receiveTime) {
