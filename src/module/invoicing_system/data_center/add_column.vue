@@ -115,6 +115,7 @@ export default {
 			itemName:'',//已选统计项
 			wareName:'',
 			storeName:'',
+			itemList:[],//所有列表项集合
 			formulaPercent:[//是否半分比
 				{label:'数字',value:0},
 				{label:'百分百',value:1},
@@ -181,7 +182,9 @@ export default {
 		//编辑列表项
 		editColumn(){
 			this.getBase().then(()=>{
-				//
+				this.name = this.pObj.name;
+				this.sort = this.pObj.sort;
+				this.itemList = this.pObj.itemList;
 			});
 		},
 		//获取基础项数据，公式项数据
