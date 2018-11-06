@@ -1090,8 +1090,7 @@ export default {
 	},
 	"materialreportGetStatisticItemList": {
 		url: b + "materialreport/getStatisticItemList", //获取公式列表
-		method: 'get',
-		fake: true
+		method: 'get'
 	},
 	"materialreportGetStatisticScopeCategoryList": {
 		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
