@@ -56,12 +56,7 @@
 		},
 		methods: {
 			async init() {
-				let data = await http.materialreportGetStatisticItemList({
-					data: {
-						page: this.page,
-						size: this.num
-					}
-				});
+				let data = await http.materialreportGetStatisticItemList();
 				this.allTotal = data.list.length;
 				this.tableData = data.list;
 				console.log(data);

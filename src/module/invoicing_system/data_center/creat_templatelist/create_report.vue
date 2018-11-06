@@ -8,7 +8,7 @@
             报表模板名称
         </div>
         <div class="inpStyle">
-            <span class="required label">模板名称</span>
+            <span class="required label">报表名称</span>
             <div class="inpbox">
                 <el-input clearable v-model="moldeName" maxlength="20" class="el-in" placeholder="输入表名称"></el-input>
             </div>
@@ -144,6 +144,12 @@
                     });
                     arr[0] = arr[1] - global.timeConst.ONEDAY * 365;
                 }
+            },
+            cerate(){
+                global.checkData({moldeName:{reg:/^[A-Za-z0-9_\u4e00-\u9fa5]+$/,pro:"报表名称输入错误！"}},this)
+            },
+            searchReset(){
+
             }
         },
         mounted() {
@@ -223,7 +229,7 @@
         p {
             display: flex;
             align-items: center;
-
+            margin-bottom: 5px;
             span {
                 display: inline-block;
                 word-break: break-all;
@@ -235,6 +241,7 @@
 
                 &:nth-child(2) {
                     width: 75%;
+                    margin-left: 5px;
                 }
             }
 
