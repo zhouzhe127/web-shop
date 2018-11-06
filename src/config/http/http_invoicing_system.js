@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
 	s,
 	w,
@@ -991,39 +992,39 @@ export default {
 		url: b + "template/deleteTemplate",
 		method: "post"
 	},
-	"MaterialstatisticGetStatisticData":{//获取物料统计任务结果
-		url:b+"Materialstatistic/getStatisticData",
-		method:"get"
+	"MaterialstatisticGetStatisticData": { //获取物料统计任务结果
+		url: b + "Materialstatistic/getStatisticData",
+		method: "get"
 	},
-	"MaterialstatisticStatisticStart":{//创建物料统计任务
-		url:b+"Materialstatistic/statisticStart",
-		method:'get'
+	"MaterialstatisticStatisticStart": { //创建物料统计任务
+		url: b + "Materialstatistic/statisticStart",
+		method: 'get'
 	},
 	//进销存配置
 
-	"invoicingUpdateTopConfig":{
-		url:b+"invoicing/updateTopConfig",					//更新是否开启物料、商品
-		method:'post'
+	"invoicingUpdateTopConfig": {
+		url: b + "invoicing/updateTopConfig", //更新是否开启物料、商品
+		method: 'post'
 	},
-	"invoicingUpdateSaleConfig":{
-		url:b+"invoicing/updateSaleConfig",					//更新是否超卖
-		method:'post'
+	"invoicingUpdateSaleConfig": {
+		url: b + "invoicing/updateSaleConfig", //更新是否超卖
+		method: 'post'
 	},
-	"invoicingUpdateMaterialConfig":{						//物料编码配置
-		url:b+"invoicing/updateMaterialConfig",
-		method:'post'
+	"invoicingUpdateMaterialConfig": { //物料编码配置
+		url: b + "invoicing/updateMaterialConfig",
+		method: 'post'
 	},
-	"updatePurchaseAuditConfig":{							//采购审核
-		url:b+'invoicing/updatePurchaseAuditConfig',
-		method:'post'
+	"updatePurchaseAuditConfig": { //采购审核
+		url: b + 'invoicing/updatePurchaseAuditConfig',
+		method: 'post'
 	},
-	"invoicingUpdateStockConfig":{							//入库配置
-		url:b+"invoicing/updateStockConfig",
-		method:'post'
+	"invoicingUpdateStockConfig": { //入库配置
+		url: b + "invoicing/updateStockConfig",
+		method: 'post'
 	},
-	"invoicingUpdateDistributionConfig":{
-		url:b+"invoicing/updateDistributionConfig",			//分销价配置		
-		method:'post'
+	"invoicingUpdateDistributionConfig": {
+		url: b + "invoicing/updateDistributionConfig", //分销价配置		
+		method: 'post'
 	},
 	"purchaseorderAdd": { //新增采购单
 		url: b + "purchaseorder/add",
@@ -1053,42 +1054,48 @@ export default {
 		url: b + "purchaseorder/putPurchaseOrderStorage",
 		method: "get"
 	},
-	"MaterialstatisticExportStatisticData":{				//统计导出
-		url:b+"Materialstatistic/exportStatisticData",
+	"MaterialstatisticExportStatisticData": { //统计导出
+		url: b + "Materialstatistic/exportStatisticData",
 		method: "get",
-		type:'file'
+		type: 'file'
 	},
 	//---------获取报表模板列表---------------------
-	"templateGetReportTemplates":{
-		url:b+"template/getReportTemplates",					//获取报表模板列表
-		method:'get'
+	"templateGetReportTemplates": {
+		url: b + "template/getReportTemplates", //获取报表模板列表
+		method: 'get'
 	},
-	"materialreportGetList":{
-		url:b+"materialreport/getList",							//获取物料报表列表
-		method:'get'
+	"materialreportGetList": {
+		url: b + "materialreport/getList", //获取物料报表列表
+		method: 'get'
 	},
-	"templateDeleteReportTemplate":{
-		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
-		method:'post'
+	"getStatisticScopeCategoryList": {
+		url: b + "materialreport/getStatisticScopeCategoryList", //获取统计范围（分类集合列表）
+		method: 'get'
 	},
-	"getStatisticScopeCategoryList":{
-		url:b+"materialreport/getStatisticScopeCategoryList",		//获取统计范围（分类集合列表）
-		method:'get'		
+	"setStatisticScopeCategory": {
+		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
+		method: 'post'
 	},
-	"setStatisticScopeCategory":{
-		url:b+"materialreport/setStatisticScopeCategory",			//添加或更新分类统计范围		
-		method:'post'
+	"materialreportGetReportItemList": { //自定义模板 获取基础项
+		url: b + "materialreport/getReportItemList",
+		method: 'get'
 	},
-	"materialreportGetReportItemList":{//自定义模板 获取基础项
-		url:b+"materialreport/getReportItemList",
-		method:'get'
+	"materialreportGetStatisticItemList": { //自定义模板 获取公式项
+		url: b + "materialreport/getStatisticItemList",
+		method: 'get'
 	},
-	"materialreportGetStatisticItemList":{//自定义模板 获取公式项
-		url:b+"materialreport/getStatisticItemList",
-		method:'get'
+	"materialreportSetStatisticItem": { //自定义模板 新建公式项
+		url: b + "materialreport/setStatisticItem",
+		method: 'post'
 	},
-	"materialreportSetStatisticItem":{//自定义模板 新建公式项
-		url:b+"materialreport/setStatisticItem",
-		method:'post'
+	"materialreportGetStatisticItemList": {
+		url: b + "materialreport/getStatisticItemList", //获取公式列表
+		method: 'get',
+		fake: true
+	},
+	"materialreportGetStatisticScopeCategoryList": {
+		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
+		method: 'get',
+		fake: true
 	},
 }
