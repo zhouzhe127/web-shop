@@ -9,84 +9,86 @@
 	<win :align="'center'" :width="600" :height="360" :ok="btnOk" @winEvent="closeSelfWin">
 		<span slot="title">{{title}}</span>
 		<div class="add-column" slot="content">
-			<div class="inp-block">
-				<span class="inp-name">名称</span>
-				<div class="right">
-					<el-input placeholder="输入名称" class="inp-class" v-model="name"></el-input>
-				</div>
-				<div class="right">
-					<el-popover
-						placement="bottom"
-						width="550"
-						trigger="click"
-						v-model="visible">
-						<div class="column-container">
-							<el-tabs v-model="columnTabIndex" type="card">
-								<el-tab-pane label="基础项" name="0">
-									<div class="radio-container">
-										<div class="radio-box" v-for="item in baseList" :key="item.id">
-											<el-button border @click="addItem(item.name)" :disabled="!item.isStat">{{item.name}}</el-button>
+			<div class="loding-container" v-loading="loading">
+				<div class="inp-block">
+					<span class="inp-name">名称</span>
+					<div class="right">
+						<el-input placeholder="输入名称" class="inp-class" v-model="name" max-length="20"></el-input>
+					</div>
+					<div class="right">
+						<el-popover
+							placement="bottom"
+							width="550"
+							trigger="click"
+							v-model="visible">
+							<div class="column-container">
+								<el-tabs v-model="columnTabIndex" type="card">
+									<el-tab-pane label="基础项" name="0">
+										<div class="radio-container">
+											<div class="radio-box" v-for="item in baseList" :key="item.id">
+												<el-button border @click="addItem(item.name)" :disabled="!item.isStat">{{item.name}}</el-button>
+											</div>
 										</div>
-									</div>
-								</el-tab-pane>
-								<el-tab-pane label="公式项" name="1">
-									<el-table :data="formulaList" highlight-current-row @current-change="insertFormula"
-										border height="249" style="width: 100%" ref="singleTable">
-										<el-table-column property="name" label="名称" width="150">
-										</el-table-column>
-										<el-table-column property="formulaStr" label="计算公式" width="250">
-										</el-table-column>
-										<el-table-column property="formatStr" label="格式" width="200">
-										</el-table-column>
-									</el-table>
-								</el-tab-pane>
-							</el-tabs>
-						</div>
-						<el-button slot="reference" class="btn-class">
-							选择统计项<i class="el-icon-arrow-down el-icon--right"></i>
-						</el-button>
-					</el-popover>
+									</el-tab-pane>
+									<el-tab-pane label="公式项" name="1">
+										<el-table :data="formulaList" @row-click="insertFormula"
+											border height="249" style="width: 100%" ref="singleTable">
+											<el-table-column property="name" label="名称" width="150">
+											</el-table-column>
+											<el-table-column property="formulaStr" label="计算公式" width="250">
+											</el-table-column>
+											<el-table-column property="formatStr" label="格式" width="200">
+											</el-table-column>
+										</el-table>
+									</el-tab-pane>
+								</el-tabs>
+							</div>
+							<el-button slot="reference" class="btn-class">
+								选择统计项<i class="el-icon-arrow-down el-icon--right"></i>
+							</el-button>
+						</el-popover>
+					</div>
 				</div>
-			</div>
-			<div class="tips">
-				<i class="el-icon-warning"></i>
-				计算公式中可对字段和数字，使用 + - * / ( ) 进行计算
-			</div>
-			<!-- 编辑框 -->
-			<div class="edit-container" contenteditable="true" ref="itemEdit"></div>
-			<!-- 规则选项 -->
-			<div class="other">
-				<div class="other-item">
-					<el-select v-model="percent" placeholder="计算结果" class="btn-class">
-					    <el-option
-							v-for="item in formulaPercent"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
-					    </el-option>
-					</el-select>
+				<div class="tips">
+					<i class="el-icon-warning"></i>
+					计算公式中可对字段和数字，使用 + - * / ( ) 进行计算
 				</div>
-				<div class="other-item">
-					保留
-					<el-select v-model="reserve" placeholder="请选择" style="width:100px;">
-					    <el-option
-							v-for="item in formulaReserve"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
-					    </el-option>
-					</el-select>
-					位小数
-				</div>
-				<div class="other-item">
-					<el-select v-model="rounding" placeholder="舍入规则" class="btn-class">
-					    <el-option
-							v-for="item in formulaRounding"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
-					    </el-option>
-					</el-select>
+				<!-- 编辑框 -->
+				<div class="edit-container" contenteditable="true" ref="itemEdit"></div>
+				<!-- 规则选项 -->
+				<div class="other">
+					<div class="other-item">
+						<el-select v-model="percent" placeholder="计算结果" class="btn-class">
+							<el-option
+								v-for="item in formulaPercent"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+							</el-option>
+						</el-select>
+					</div>
+					<div class="other-item">
+						保留
+						<el-select v-model="reserve" placeholder="请选择" style="width:100px;">
+							<el-option
+								v-for="item in formulaReserve"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+							</el-option>
+						</el-select>
+						位小数
+					</div>
+					<div class="other-item">
+						<el-select v-model="rounding" placeholder="舍入规则" class="btn-class">
+							<el-option
+								v-for="item in formulaRounding"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+							</el-option>
+						</el-select>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -109,6 +111,7 @@ export default {
 			columnTabIndex:'0',
 			columnItem:'',//选择项
 			visible:false,//选择列表项是否显示
+			loading:false,//加载显示
 
 			showCom:false,//显示选择仓库弹窗
 			comObj:{//仓库弹窗传入数据
@@ -150,17 +153,34 @@ export default {
 		};
 	},
 	props: {
-		pObj: null,
-		//抛出方法  @emit
-		/*
+		list: Object,
+		/*	list 新建公式，修改公式所需要的列表数据
 			{
-				base:[],			//基础项列表
+				base:[],		//基础项列表
 				formula:[],		//公式项列表
 			}
 		*/
+		pObj: Object,
+		/*
+			pObj 修改公式所需要的数据
+			{
+				id:'',				//公式id
+				name:'',			//公式名称
+				formula:'',			//计算公式
+				isPercent:'',		//是否百分百 true百分百 false数字
+				reserveRule:'',		//保留几位小数
+				carryRule:'',		//舍入规则
+				baseParam:'',		//基础项
+			}
+		*/
+		//抛出方法 @emit
 	},
 	watch:{
 
+	},
+	created(){
+		if(this.list.base) this.baseList = this.list.base;
+		if(this.list.formula) this.formulaList = this.list.formula;
 	},
 	mounted() {
 		this.initData();
@@ -181,25 +201,43 @@ export default {
 		},
 		//初始化数据
 		initData(){
-			if(this.pObj.base){
-				this.baseList = this.pObj.base;
+			if(this.pObj){
+				this.editFormula();
 			}
-			if(this.pObj.formula){
-				this.formulaList = this.pObj.formula;
+		},
+		//修改公式项
+		editFormula(){
+			for(let key in this.pObj){
+				this[key] = this.pObj[key];
 			}
+			let str = this.replaceId(this.formula);
+			this.addItem(str,true);
 		},
 		//新建公式项
 		async addFormula(send){
+			if(this.loading) {
+				this.$message({message: `请勿重复提交`,type: 'error'});
+				return;
+			}
+			this.loading = true;
 			let obj={
 				id:this.id,
 				name:this.name,
 			};
 			obj = Object.assign(obj,send);
-			let data = await http.materialreportSetStatisticItem({
-				data:obj
-			});
+			//try catch防止重复提交
+			let data;
+			try{
+				data = await http.materialreportSetStatisticItem({
+					data:obj
+				},true);
+			}catch(e){
+				this.$message({message: e.error.message,type: 'error'});
+				this.loading = false;//接口报错，还能继续点击
+			}
 			if(data){
-				this.$emit('emit',this.formulaObj);
+				obj.id = data;
+				this.$emit('emit',obj);
 			}
 		},
 		computeFormula(){
@@ -333,17 +371,21 @@ export default {
 				appendRange.collapseToEnd();
 			}
 		},
-		//插入公式项
-		insertFormula(res){
-			//res.formula;
-			let str = res.formula.replace(/id_(\d+)/g,(match,p1)=>{
+		//替换公式id为名称
+		replaceId(formula){
+			let formula = formula.replace(/id_(\d+)/g,(match,p1)=>{
 				for(let base of this.baseList){
 					if(p1==base.id){
 						return `【${base.name}】`;
 					}
 				}
 			});
-			str = `(${str})`
+			return formula;
+		},
+		//插入公式项
+		insertFormula(res){
+			let str = this.replaceId(res.formula);
+			str = `(${str})`;
 			this.addItem(str,true);
 		},
 	},

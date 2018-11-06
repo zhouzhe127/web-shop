@@ -12,7 +12,7 @@
 			<div class="inp-block">
 				<span class="inp-name">名称</span>
 				<div class="right">
-					<el-input placeholder="输入名称" class="inp-class" v-model="columnName"></el-input>
+					<el-input placeholder="输入名称" class="inp-class" v-model="columnName" max-length="20"></el-input>
 				</div>
 			</div>
 			<div class="inp-block">
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 			<sel-warehouse v-if="showCom" :pObj="comObj" @throwWin="winWarehouse"></sel-warehouse>
-			<add-formula v-if="showFormula" :pObj="formulaObj" @emit="getFormula"></add-formula>
+			<add-formula v-if="showFormula" :list="formulaData" :pObj="formulaInsert" @emit="getFormula"></add-formula>
 		</div>
 	</win>
 </template>
@@ -126,16 +126,21 @@ export default {
 			],
 
 			showFormula:false,
-			formulaObj:{},
+			formulaData:{},//公式列表数据
+			formulaInsert:{},//公式数据
 			baseList:[],//基础项列表
 			baseRadio:'',
 			formulaList:[],
 			emitObj:{},//抛出对象
+			promiseObj:{
+				base:null,
+				formula:null,
+			}
 		};
 	},
 	props: {
 		pObj: null,
-		//抛出方法  @emit
+		//抛出方法 @emit 传入数据跟抛出时相同
 		/*
 			{
 		  		name:'',			//名称
@@ -168,34 +173,43 @@ export default {
 		initData(){
 			this.getBase();
 		},
+		//编辑列表项
+		editColumn(){
+			this.promiseObj.formula.then(()=>{
+				//
+			});
+		},
 		//获取基础项数据，公式项数据
 		getBase(){
 			//基础项集合
 			http.materialreportGetReportItemList().then((data)=>{
 				this.baseList = data;
-				this.formulaObj.base = this.baseList;
+				this.formulaData.base = this.baseList;
 				//公式项集合
 				http.materialreportGetStatisticItemList().then((data)=>{
-					for(let item of data.list){
-						item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
-							for(let base of this.baseList){
-								if(p1==base.id){
-									return base.name;
+					this.promiseObj.formula = new Promise((resolve,reject)=>{
+						for(let item of data.list){
+							item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
+								for(let base of this.baseList){
+									if(p1==base.id){
+										return base.name;
+									}
 								}
-							}
-						});
-						//匹配 是否百分百
-						let isPercent = this.formulaPercent.filter((obj)=>{
-							return obj.value==item.isPercent;
-						})[0].label;
-						//匹配 保留几位小数
-						let carryRule = this.formulaRounding.filter((obj)=>{
-							return obj.value==item.carryRule;
-						})[0].label;
-						item.formatStr = `${isPercent}, ${item.reserveRule}位小数, ${carryRule}`;
-					}
-					this.formulaList = data.list;
-					this.formulaObj.formula = this.formulaList;
+							});
+							//匹配 是否百分百
+							let isPercent = this.formulaPercent.filter((obj)=>{
+								return obj.value==item.isPercent;
+							})[0].label;
+							//匹配 保留几位小数
+							let carryRule = this.formulaRounding.filter((obj)=>{
+								return obj.value==item.carryRule;
+							})[0].label;
+							item.formatStr = `${isPercent}, ${item.reserveRule}位小数, ${carryRule}`;
+						}
+						this.formulaList = data.list;
+						this.formulaData.formula = this.formulaList;
+						resolve();
+					});
 				});
 			});
 		},
@@ -226,6 +240,13 @@ export default {
 		getFormula(res){
 			this.showFormula = false;
 			this.getBase();
+			this.promiseObj.formula.then(()=>{
+				for(let item of this.formulaList){
+					if(item.id==add.id){
+						this.$refs.singleTable.setCurrentRow(item);
+					}
+				}
+			});
 		},
 		//选择统计项
 		radioChange(type,res){
