@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-02 15:44:41
+ * @Last Modified time: 2018-11-05 17:11:23
  */
 
 <template>
@@ -11,7 +11,8 @@
         <!-- <select-material></select-material> -->
         <!-- <create-collection></create-collection> -->
         <!-- <collect-material></collect-material> -->
-        <el-table :data="tableData"  
+        <el-table 
+            :data="tableData"  
             v-loading="bool" 
             element-loading-text="加载中,请稍后..."
             stripe border :header-cell-style="{'background-color':'#F5F7FA'}">
@@ -38,6 +39,20 @@
                 </span>
             </el-table-column>
         </el-table>
+        
+        <div class="footer">
+            <el-pagination
+                :pager-count="pageObj.pagerCount"
+                :page-size="pageObj.pageSize"
+                layout="prev, pager, next"
+                :background="true"
+                :total="pageObj.total"
+                :current-page.sync="pageObj.currentPage"
+                @size-change="(res)=>{funGetPage('size-change',res)}"
+                @current-change="(res)=>{funGetPage('current-change',res)}"
+            >
+            </el-pagination>
+        </div>
     </div>
 </template>
 <style lang='less' scoped>
@@ -52,6 +67,9 @@
         display: inline-flex;
         align-items: center;
         cursor: pointer;
+    }
+    .footer{
+        padding-top:30px;
     }
 </style>
 <script>
@@ -70,17 +88,8 @@ export default {
     data () {
         return {
             bool:false,
-            tableData:[
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-            ],
+            pageObj:{},
+            tableData:[],
         };
     },
     methods: {
@@ -109,26 +118,55 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.getHttp('templateDeleteReportTemplate',{id}).then((res)=>{
-                    this.tableData.splice(index,1);
+                    if(res){
+                        this.tableData.splice(index,1);
+
+                        if(this.tableData.length == 0){
+                            this.pageObj.currentPage -= 1;
+                            if(this.pageObj.currentPage <= 0){
+                                this.pageObj.currentPage = 1;
+                            }
+                            this.funGetPage();
+                        }
+                    }
                 });
             }).catch(() => {
                 console.log('cancel');
             });
         },
+		async funGetPage(flag,res){
+            let tableData = [];
+			//获取页码值
+			if(flag == 'size-change'){
+				this.pageObj.pageSize = res;				
+			}else{
+				this.pageObj.currentPage = res;
+            }
+            this.getTemplateList();
+        },
 
+
+        //初始化分页组件
+		initPageObj(){
+			this.pageObj = {
+				total:0,				//总记录数
+				pageSize:10,			//每页显示的记录数
+				pagerCount:11,			//每页显示的按钮数
+				currentPage:1,          //当前页
+			};
+        },
 
         //获取模板列表
         async getTemplateList(){
-            let tableData = [];
-            tableData = await this.getHttp('templateGetReportTemplates');
-            if(Array.isArray(tableData)){
-                this.tableData = this.changeTableAttr(this.tableData);
-                this.initTableData(this.tableData);
-            }
-        },
-        initTableData(table){
-            for(let ele of table){
-                ele.createTime = this.generatorDate(ele.createTime * 1000).str;
+            let retData = [];
+            let pageObj = this.pageObj;
+
+            retData = await this.getHttp('templateGetReportTemplates',{page:pageObj.currentPage,num:pageObj.pageSize});
+            
+            //总记录数
+            pageObj.total = Number(retData.count) | 0;
+            if(Array.isArray(retData.templates)){
+                this.tableData = this.changeTableAttr(retData.templates);
             }
         },
         //前后台字段转换
@@ -137,15 +175,17 @@ export default {
             let count = 1;
             for(let ele of table){
                 let temp = {
-                    id:count++,
-                    name:'模板名',
-                    createUser:'创建人',
-                    createTime: parseInt(Date.now() / 1000)
+                    id : ele.id,
+                    name : ele.name,
+                    createUser: ele.createUName,
+                    createTime: this.generatorDate(ele.createTime * 1000).str
                 };
                 arr.push(temp);
             }
             return arr;
         },
+        
+        
         initBtn(){
             this.$store.commit('setPageTools',[
                 {
@@ -196,7 +236,8 @@ export default {
     },
     mounted(){
         this.initBtn();
-        // this.getTemplateList();
+        this.initPageObj();
+        this.getTemplateList();
     },
     components:{
         selectMaterial:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),

@@ -1068,9 +1068,25 @@ export default {
 		url: b + "materialreport/getList", //获取物料报表列表
 		method: 'get'
 	},
-	"templateDeleteReportTemplate": {
-		url: b + "template/deleteReportTemplate", //删除自定义报表模板
+	"getStatisticScopeCategoryList": {
+		url: b + "materialreport/getStatisticScopeCategoryList", //获取统计范围（分类集合列表）
 		method: 'get'
+	},
+	"setStatisticScopeCategory": {
+		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
+		method: 'post'
+	},
+	"materialreportGetReportItemList": { //自定义模板 获取基础项
+		url: b + "materialreport/getReportItemList",
+		method: 'get'
+	},
+	"materialreportGetStatisticItemList": { //自定义模板 获取公式项
+		url: b + "materialreport/getStatisticItemList",
+		method: 'get'
+	},
+	"materialreportSetStatisticItem": { //自定义模板 新建公式项
+		url: b + "materialreport/setStatisticItem",
+		method: 'post'
 	},
 	"materialreportGetStatisticItemList": {
 		url: b + "materialreport/getStatisticItemList", //获取公式列表
