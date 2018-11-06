@@ -373,14 +373,14 @@ export default {
 		},
 		//替换公式id为名称
 		replaceId(formula){
-			let formula = formula.replace(/id_(\d+)/g,(match,p1)=>{
+			let str = formula.replace(/id_(\d+)/g,(match,p1)=>{
 				for(let base of this.baseList){
 					if(p1==base.id){
 						return `【${base.name}】`;
 					}
 				}
 			});
-			return formula;
+			return str;
 		},
 		//插入公式项
 		insertFormula(res){
