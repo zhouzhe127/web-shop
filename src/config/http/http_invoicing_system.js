@@ -1088,14 +1088,8 @@ export default {
 		url: b + "materialreport/setStatisticItem",
 		method: 'post'
 	},
-	"materialreportGetStatisticItemList": {
-		url: b + "materialreport/getStatisticItemList", //获取公式列表
-		method: 'get',
-		fake: true
-	},
 	"materialreportGetStatisticScopeCategoryList": {
 		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
-		method: 'get',
-		fake: true
+		method: 'get'
 	},
 }
