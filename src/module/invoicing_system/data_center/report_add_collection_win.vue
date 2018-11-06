@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-05 17:43:49
+ * @Last Modified time: 2018-11-06 10:18:12
  * @file 新建集合
  */
 
@@ -167,7 +167,7 @@ export default {
         //集合名字
         collectName:{
             type:[String],
-            default:'集合一'
+            default:''
         },
         //集合名字是否可以修改
         disabled:{
@@ -179,8 +179,9 @@ export default {
         closeWin(sym){
             if(sym == 'ok'){
                 let subObj = {
-                    collName: this.collName.trim(),
+                    name: this.collName.trim(),
                     selectList: this.selectList,
+                    unitId:'',
                 }; 
                 let unitList = this.hasSameAttrVal(this.selectList,'cus_unitId');
 
@@ -191,7 +192,8 @@ export default {
                     //单位相同时
                     subObj.unitId = unitList[0];
                     subObj = utils.deepCopy(subObj);
-                    this.throwData(subObj);
+                    this.createCollection(subObj);
+                    
                 }else{
                     this.mCollect.list = utils.deepCopy(subObj.selectList);              
                     this.mCollect.show = true;
@@ -200,19 +202,56 @@ export default {
                 this.throwData(false);
             }         
         },
+
         //关闭集合物料弹窗
         closeCollectMaterialWin(obj){
-            this.mCollect.show = false;
-            console.log(this.list);
-            if(obj){
-                obj.collName = this.collName.trim();
-                this.throwData(obj);
+            if(!obj){
+                this.mCollect.show = false;
+            }else{
+                let subObj = {
+                    name : this.collName.trim(),
+                    unitId : obj.unitId,
+                    selectList : obj.selectList
+                };
+                this.createCollection(subObj);
             }
         },
+        //新建集合
+        async createCollection(obj){
+            let retData = {};
+            let fail = [];
+            let subObj = {
+                name : obj.name,
+                unitId : obj.unitId,
+                mid : obj.selectList.map( ele => ele.id).join(',')
+            };
 
+            retData = await this.getHttp('setStatisticScopeCategory',subObj);
+            if(retData.res){
+                //新建成功
+                this.$message('新建成功!');                    
+                this.throwData(utils.deepCopy(retData.new));
+                this.mCollect.show = false;
+            }else{
+                //新建失败
+                for(let e of retData.invalid){
+                    for(let ele of obj.selectList){
+                        if(e == ele.id){
+                            fail.push(ele.name);
+                            break;
+                        }
+                    }
+                }
+                this.alert(`所选择物料${fail.join(',')}与所选单位不匹配!`);
+            }
+        },
         throwData(data){
             this.$emit('change',data);
         },
+
+
+
+
 
 
 
@@ -338,11 +377,11 @@ export default {
                 this.$message('一个集合最大选择物料数量为50种');
                 return;
             }
-            if(!subObj.collName){
+            if(!subObj.name){
                 this.$message('请输入集合名称!');
                 return;
             }
-            if(!regCollName.test(subObj.collName)){
+            if(!regCollName.test(subObj.name)){
                 this.$message('集合名称由1-20个中文,英文,数字组成!');
                 return;
             }
@@ -427,7 +466,22 @@ export default {
             this.collName = this.collectName;
         },
 
-
+		alert(content,fn,title='提示信息',){
+			this.$alert(content, title, {
+				confirmButtonText: '确定',
+				callback: action => {
+					action = action == 'confirm' ? 'ok' :'cancel';
+					if(typeof fn == 'function') fn(action);
+				}
+			});
+		},
+        getEle(list,attr,val){
+            for(let ele of list){
+                if(ele[attr] == val){
+                    return ele;
+                }
+            }
+        },
         //检查列表中的元素某一个属性的值是否相同
         hasSameAttrVal(list,attr='unitId'){
             let set = new Set();;

@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-05 15:33:30
+ * @Last Modified time: 2018-11-06 11:01:42
  */
 
 <template>  
@@ -152,10 +152,14 @@ export default {
         }
     },
     methods: {
-        closeWin(sym){
-            let subObj = this.formatData();
+        async closeWin(sym){
             if(sym == 'ok'){
-                this.throwData(subObj);
+                let arr = await this.formatData();
+                if(arr.length == 0){
+                    this.$message('请选择物料!');
+                    return;
+                }
+                this.throwData(arr);
             }else{ 
                 this.throwData(false);                
             }
@@ -335,20 +339,21 @@ export default {
             }
         },
         //格式化数据
-        formatData(){
-            let obj = {
-                isShop:false,
-                selNum:0,
-                selectList:[],
+        async formatData(){
+            let selectList = [],
+                subObj = {};
+
+            subObj = {
+                name: '',
+                cid: '',
+                type:-1,
             };
             if(this.selectShop){
-                obj.isShop = true;
-                obj.selNum = this.shopNum;
+                selectList = await this.recursiveGetMaterialList(subObj);
             }else{
-                obj.selectList = this.selectList;
-                obj.selNum = this.selectList.selectList;
+                selectList = this.selectList;
             }
-            return obj;
+            return selectList;
         },
 
 

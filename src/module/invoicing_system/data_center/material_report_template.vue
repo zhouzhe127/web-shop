@@ -2,15 +2,12 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-05 17:11:23
+ * @Last Modified time: 2018-11-06 15:02:16
  */
 
 <template>
     <div class="box">
-        <add-report-row></add-report-row>
-        <!-- <select-material></select-material> -->
-        <!-- <create-collection></create-collection> -->
-        <!-- <collect-material></collect-material> -->
+        <!-- <add-report-row></add-report-row> -->
         <el-table 
             :data="tableData"  
             v-loading="bool" 
@@ -240,9 +237,6 @@ export default {
         this.getTemplateList();
     },
     components:{
-        selectMaterial:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
-        createCollection:() => import(/* webpackChunkName:"report_add_collection_win"*/'./report_add_collection_win'),
-        collectMaterial:() => import(/* webpackChunkName:"collect_material_win"*/'./collect_material_win'),
         addReportRow:() => import(/* webpackChunkName:"add_report_row_win"*/'./add_report_row_win'),
     }
 };

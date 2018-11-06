@@ -2,20 +2,21 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 16:33:33 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-05 17:35:40
+ * @Last Modified time: 2018-11-06 14:11:25
  * @file:选择集合下拉框
  */
 <template>
     <el-popover placement="bottom" width="570" v-model="show"  trigger="click" ref="popover">
         <el-table 
+            ref="singleTable"
             :data="tableData"  
-            stripe 
             border 
+            highlight-current-row
             :header-cell-style="{'background-color':'#F5F7FA'}"
             :row-style="{'cursor':'pointer'}"
             width="518px"
-            max-height="240px"
-            @row-click="rowClick"
+            height="240px"
+            @current-change="handleCurrentChange"
         >
             <el-table-column  min-width="200px"  label="集合名称" prop="name">
             </el-table-column>
@@ -52,21 +53,36 @@ export default {
         return {
             tableData:[],                       //表格数据
             show:false,                         //是否显示弹出层
+            currentRow:{},
         };
     },
     props:{
+        //展示的列表
         list:{
             type:[Array],
             default:function(){return []}
         },
+        //选中的列表id
+        selectId:{
+            type:[String,Number],
+            default:'',
+        },
     },
     methods: {
-        rowClick(row){
-            this.show = false;
+        handleCurrentChange(row) {
+            this.currentRow = row;
             this.$emit('change',row);
+            this.show = false;
         },
         initProps(){
             this.tableData = this.list;
+
+            for(let ele of this.tableData){
+                if(ele.id == this.selectId){
+                    this.$refs.singleTable.setCurrentRow(ele);
+                    break;
+                }
+            }
         }
     },
     mounted(){
@@ -74,7 +90,7 @@ export default {
     },
     watch:{
         list:function(){
-           this.tableData = this.list;            
+            this.initProps();
         }
     }
 };

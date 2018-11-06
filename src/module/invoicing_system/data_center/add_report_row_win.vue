@@ -2,11 +2,11 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-05 17:34:48
+ * @Last Modified time: 2018-11-06 14:10:26
  */
 <template>  
     <div>
-        <el-dialog :title="title" center :width="width" :visible.sync="winShow">
+        <el-dialog :title="title" center :width="width" :visible.sync="winShow" @close="clickBtn('cancel')">
             <div class="dialog-content">
 
                 <div class="pad-bottom">
@@ -33,9 +33,12 @@
                 </div>
 
                 <div class="textarea">
-                    物料范围
-                    <div></div>
-                    集合:
+                    <div v-if="scope.length > 0">
+                        物料范围( {{scope.length}} )                    
+                    </div>
+                    <div v-if="collection.id">
+                        {{collection.name}} ( {{collection.mid.length}} 种 , 单位 : {{collection.unit.name}} )
+                    </div>
                 </div>
 
 
@@ -82,11 +85,42 @@ export default {
             comObj:{},                          
 
             collectionList:[],                  //集合列表       
-            sortObj:{},                         //排序值
+
+
+            sortObj:{},                         //排序值,
+            scope:[],                           //物料范围
+            collection:[],                            //选择的集合
+
+
             
         };
     },
     props:{
+        //排序值对象
+        pSortObj:{
+            type:[Object],
+            default:function(){
+                return {
+                    min:1,
+                    max:1,
+                    num:1
+                };
+            }
+        },
+        //物料范围
+        pScope:{
+            type:[Array],
+            default:function(){
+                return [];
+            }
+        },
+        //选择的集合
+        pCollection:{
+            type:[Object],
+            default:function(){
+                return {};
+            }
+        },
         //弹窗标题
         title:{
             type:[String],
@@ -100,7 +134,20 @@ export default {
     },
     methods: {
         clickBtn(sym){
-            
+            let obj = {};
+            if(sym == 'cancel'){
+                this.throwData(false);
+            }else{
+                obj = {
+                    pSortObj : this.sortObj,
+                    pScope : this.scope,
+                    pCollection : this.collection
+                };
+                this.throwData(obj);                
+            }
+        },
+        throwData(data){
+            this.$emit('change',data);
         },
 
         //打开弹窗
@@ -115,42 +162,37 @@ export default {
             
             switch(this.showCom){
                 case winType.selectMaterial:    //选择物料
+                    this.scope = obj;
+                    this.collection = {};
                     break;
-                case winType.createCollection:  //新建集合
-                    this.createCollection(obj);
-
+                case winType.createCollection:  //新建集合,抛出新建的集合
+                    this.collectionList.unshift(obj);
+                    this.getSelectCollection(obj);
+                    break;
             }
             this.showCom = '';
         },
-        //新建集合
-        async createCollection(obj){
-            let subObj = {
-                name : obj.collName,
-                unitId : obj.unitId,
-                mid : obj.selectList.map(ele => ele.id).join(',')
-            };
-            let retData = {};
-            retData = await this.getHttp('setStatisticScopeCategory',subObj);
-            
-        },
-        
         //获取选择的集合
         getSelectCollection(row){
-            
+            this.collection = row;
+            this.scope = [];
         },
 
 
-        formatData(){
-
-        },
 
 
-        initSortObj(){
-            this.sortObj = {
+        initDataByProps(){
+            let def = {
                 min:1,
                 max:1,
                 num:1
             };
+            //排序值
+            this.sortObj =  Object.assign(def,this.pSortObj);      
+            //选择的集合
+            this.collection = this.pCollection;
+            //选择的物料范围
+            this.scope = this.pScope;
         },
 
 
@@ -160,15 +202,13 @@ export default {
                 this.collectionList = retData.list;
             }
         },
-
-
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
 			return res;
         },
     },
     mounted(){
-        this.initSortObj();
+        this.initDataByProps();
         this.getCollectionList();
     },
     components:{
