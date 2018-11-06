@@ -179,7 +179,6 @@
 						this.addCustomer();
 					}
 				}]);
-
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
