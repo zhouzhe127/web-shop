@@ -154,6 +154,7 @@ export default {
 		*/
 	},
 	mounted() {
+		console.log(this.pObj);
 		this.initData();
 	},
 	components: {

@@ -66,7 +66,7 @@
                                 </el-popover>
 
                                 <div class="editbtn">
-                                    <el-button type="text" icon="el-icon-edit"></el-button>
+                                    <el-button type="text" @click="editColumn(item)" icon="el-icon-edit"></el-button>
                                     <el-button type="text" @click="delColumn(index)" icon="el-icon-delete"></el-button>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
         </div>
         <add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin"
             @positionEvent="positionEvent"></add-position>
-        <add-column v-if="columnShow" @emit="columnEmit"></add-column>    
+        <add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>    
     </div>
 </template>
 <script>
@@ -107,7 +107,8 @@
                 roleList: [], //门店职位列表
                 sleRoleArr: [], //选中的职位
                 columnShow:false,//选择列
-                reset:true
+                reset:true,
+                columnListData:{}//需要编辑列
             }
         },
         methods: {
@@ -177,6 +178,10 @@
                     // this.columnData = utils.deepCopy(this.sortList(this.columnData,data,'sort'));
                     console.log(this.columnData);
                 }
+            },
+            editColumn(item){
+                this.columnShow=true;
+                Object.assign(this.columnListData,item,{itemList:this.columnData});
             },
             getStr(arr,key){
                 let strArr = [];

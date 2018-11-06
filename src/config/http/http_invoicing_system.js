@@ -1080,16 +1080,16 @@ export default {
 		url: b + "materialreport/getReportItemList",
 		method: 'get'
 	},
-	"materialreportGetStatisticItemList": { //自定义模板 获取公式项
-		url: b + "materialreport/getStatisticItemList",
-		method: 'get'
-	},
 	"materialreportSetStatisticItem": { //自定义模板 新建公式项
 		url: b + "materialreport/setStatisticItem",
 		method: 'post'
 	},
+	"materialreportGetStatisticItemList": {
+		url: b + "materialreport/getStatisticItemList", //获取公式列表
+		method: 'get'
+	},
 	"materialreportGetStatisticScopeCategoryList": {
 		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
-		method: 'get'
+		fake: true
 	},
 }
