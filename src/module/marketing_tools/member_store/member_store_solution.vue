@@ -548,7 +548,7 @@
 			coupon: () =>
 				import ( /* webpackChunkName:'member_store_coupon' */ './../member_store_coupon'),
 			'select-work-shop-win': () =>
-				import ( /* webpackChunkName: 'select_work_shop_win' */ './../../seller_assistant/select_work_shop_win'),
+				import ( /* webpackChunkName: 'select_work_shop_win' */ './../../seller_assistant/staff/select_work_shop_win'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
