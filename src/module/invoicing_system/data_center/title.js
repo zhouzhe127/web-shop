@@ -15,6 +15,9 @@
         toFixed-2:该字段需要保留两位小数的字段
 */
 
+/* eslint-disable */
+
+
 module.exports = [
 // {
 //     "id": 0,

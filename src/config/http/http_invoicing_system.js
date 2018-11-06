@@ -1078,5 +1078,9 @@ export default {
 	"setStatisticScopeCategory":{
 		url:b+"materialreport/setStatisticScopeCategory",			//添加或更新分类统计范围		
 		method:'post'
+	},
+	"materialreportDeleteMaterialByIds":{
+		url:b+"materialreport/deleteMaterialByIds",					//删除/批量删除报表
+		method:'get'		
 	}
 }
