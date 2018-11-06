@@ -16,6 +16,7 @@
         toFixed-2:该字段需要保留两位小数的字段
 */
 
+
 module.exports = [
 // {
 //     "id": 0,
