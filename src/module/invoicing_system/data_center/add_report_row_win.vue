@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 15:16:15
+ * @Last Modified time: 2018-11-07 16:01:41
  */
 <template>  
 	<div>
@@ -68,6 +68,8 @@
 	接口:
 		获取集合列表:getStatisticScopeCategoryList
 		添加或更新分类统计范围:setStatisticScopeCategory
+
+
 
 
 	组件:
