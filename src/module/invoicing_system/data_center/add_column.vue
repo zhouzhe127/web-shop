@@ -208,7 +208,7 @@ export default {
 			this.baseList = data;
 			this.formulaData.base = this.baseList;
 			//公式项集合
-			let formulaData = await http.materialreportGetStatisticItemList();
+			let formulaData = await http.materialreportGetStatisticItemFormulaList();
 			for(let item of formulaData.list){
 				item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
 					for(let base of this.baseList){

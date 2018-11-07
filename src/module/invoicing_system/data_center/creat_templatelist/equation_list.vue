@@ -51,6 +51,7 @@ export default {
 			allTotal: 0,
 			num: 10, //每页显示多少条
 			showFormula:false,//是否显示公式弹框
+			isAdd:false,//是否新建公式项
 			baseList:[],//基础项列表
 			formulaData:{},//公式列表数据
 			formulaInsert:{},//公式数据
@@ -73,7 +74,7 @@ export default {
 			this.baseList = base;
 			this.formulaData.base = this.baseList;
 			//获取公式项数据
-			let data = await http.materialreportGetStatisticItemList();
+			let data = await http.materialreportGetStatisticItemFormulaList();
 			for(let item of data.list){
 				item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
 					for(let base of this.baseList){
@@ -117,42 +118,37 @@ export default {
 		//编辑公式
 		editFormula(res){
 			this.formulaInsert = res;
+			this.isAdd = false;
 			this.showFormula = true;
 		},
 		//编辑公式项-完成
 		getFormula(res){
 			if(res){
+				if(this.isAdd) this.page=1;
 				this.init();
 			}
 			this.showFormula = false;
 		},
 		crageBtn() {
 			this.$store.commit('setPageTools', [
-				//     {
-				//     name: '批量删除',
-				//     className: 'danger',
-				//     type: 5,
-				//     icon:'el-icon-delete',
-				//     fn: () => {
-
-				//     }
-				// },
 				{
 					name: '新建公式项',
 					className: 'primary',
 					type: 4,
 					icon: 'el-icon-plus',
 					fn: () => {
-						//
+						this.isAdd = true;
+						this.showFormula = true;
 					}
 				}
 			]);
 		},
 		dleSelection(data) {
 			let str = '';
-			let name = '';
+			let name = '',idArr=[];
 			if (data) {
 				name = data.name;
+				idArr = [data.id];
 				str = `是否删除"${name}"`;
 			} else {
 				let num = 0;
@@ -171,6 +167,9 @@ export default {
 						if (this.allSelection[key]) {
 							num += this.allSelection[key].length;
 						}
+						for(let item of this.allSelection[key]){
+							idArr.push(item.id);
+						}
 					}
 					str = `是否删除"${name}"等${num}项`;
 				}else{
@@ -182,8 +181,12 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-
-				this.$message({type: 'success',message: '删除成功!'});
+				http.materialreportDeleteStatisticItemFormula({data:{
+					ids:idArr.join(',')
+				}}).then(()=>{
+					this.$message({type: 'success',message: '删除成功!'});
+					this.init();
+				});
 			}).catch();
 		},
 		pageChange(page) {

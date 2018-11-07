@@ -1080,15 +1080,15 @@ export default {
 		url: b + "materialreport/getReportItemList",
 		method: 'get'
 	},
-	"materialreportSetStatisticItem": { //自定义模板 新建公式项
+	"materialreportSetStatisticItemFormula": { //自定义模板 新建公式项
 		url: b + "materialreport/setStatisticItemFormula",
 		method: 'post'
 	},
-	"materialreportDeleteStatisticItemFormula": { //自定义模板 删除统计项
+	"materialreportDeleteStatisticItemFormula": { //自定义模板 批量删除公式项
 		url: b + "materialreport/deleteStatisticItemFormula",
 		method: 'post'
 	},
-	"materialreportGetStatisticItemList": {
+	"materialreportGetStatisticItemFormulaList": {
 		url: b + "materialreport/getStatisticItemFormulaList", //获取公式列表
 		method: 'get'
 	},

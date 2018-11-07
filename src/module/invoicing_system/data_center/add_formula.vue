@@ -234,7 +234,7 @@ export default {
 			//try catch防止重复提交
 			let data;
 			try{
-				data = await http.materialreportSetStatisticItem({
+				data = await http.materialreportSetStatisticItemFormula({
 					data:obj
 				},true);
 			}catch(e){
