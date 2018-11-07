@@ -1081,11 +1081,15 @@ export default {
 		method: 'get'
 	},
 	"materialreportSetStatisticItem": { //自定义模板 新建公式项
-		url: b + "materialreport/setStatisticItem",
+		url: b + "materialreport/setStatisticItemFormula",
+		method: 'post'
+	},
+	"materialreportDeleteStatisticItemFormula": { //自定义模板 删除统计项
+		url: b + "materialreport/deleteStatisticItemFormula",
 		method: 'post'
 	},
 	"materialreportGetStatisticItemList": {
-		url: b + "materialreport/getStatisticItemList", //获取公式列表
+		url: b + "materialreport/getStatisticItemFormulaList", //获取公式列表
 		method: 'get'
 	},
 	"materialreportGetStatisticScopeCategoryList": {
