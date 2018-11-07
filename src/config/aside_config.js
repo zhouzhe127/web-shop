@@ -462,9 +462,12 @@ let need = {
 		materialWorking:{			//加工物料
 			name:'processMaterial'
 		},
+		bargaining:{			// 砍价功能
+			name: 'bargainActivity'
+		},
 		ActiveConf:{			//活跃值配置
 			name:'ActiveConf'
-		}
+		},
 	}
 };
 export default need;
