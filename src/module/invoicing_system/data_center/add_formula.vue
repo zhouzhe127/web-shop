@@ -201,7 +201,7 @@ export default {
 		},
 		//初始化数据
 		initData(){
-			if(this.pObj){
+			if(this.pObj && this.pObj.id){
 				this.editFormula();
 			}
 		},
@@ -252,6 +252,7 @@ export default {
 			if(!this.veriFormula(formulaStr)) return;
 
 			let baseArr = [];
+			//字段名称替换为id_xx
 			formulaStr = formulaStr.replace( /【(.*?)】/g,(match,p1)=>{
 				let baseItem = this.baseList.filter((item)=>{
 					return item.name==p1;
@@ -263,13 +264,23 @@ export default {
 					return `【${p1}】`;
 				}
 			});
+			//验证替换后的字符串是否还存在【xx】 存在则说明有字段没匹配到
 			if(/【(.*?)】/.test(formulaStr)){
 				let noMarch = formulaStr.match(/【(.*?)】/g).join(',');
 				this.$message({message: `公式中基础项名称不匹配: ${noMarch}`,type: 'error'});
 				return false;
 			}
+			//讲替换完的字符串 拆分成数组 并剔除多余的空数组
+			let formulaArray = formulaStr.split(/([-+*/()])/);
+			for(let i=0;i<formulaArray.length;i++){
+				if(!formulaArray[i]){
+					formulaArray.splice(i,1);
+					i++;
+				}
+			}
 			this.formulaObj={
 				formula:formulaStr,//计算公式
+				formulaArray:formulaArray,//公式项拆分数组
 				isPercent:this.percent,//是否百分百 true百分百 false数字
 				reserveRule:this.reserve,//保留几位小数
 				carryRule:this.rounding,//舍入规则

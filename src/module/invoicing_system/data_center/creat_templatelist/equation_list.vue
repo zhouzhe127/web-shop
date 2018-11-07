@@ -29,7 +29,7 @@
 				<el-table-column label="操作" width="200">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="dleSelection(scope.row)">删除</el-button>
-						<el-button type="text" size="small">编辑</el-button>
+						<el-button type="text" size="small" @click="editFormula(scope.row)">编辑</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -37,156 +37,182 @@
 				<el-pagination @current-change="pageChange" @size-change="sizeChange" background :current-page="page" :page-sizes="[10, 20, 50]"
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
+			<add-formula v-if="showFormula" :list="formulaData" :pObj="formulaInsert" @emit="getFormula"></add-formula>
 		</div>
 	</div>
 </template>
 <script>
-	import http from "src/manager/http";
-	export default {
-		data() {
-			return {
-				tableData: [],
-				viewData: [],
-				multipleSelection: [],
-				allSelection: {},
-				page: 1,
-				allTotal: 0,
-				num: 10 //每页显示多少条
-			};
+import http from 'src/manager/http';
+export default {
+	data() {
+		return {
+			tableData: [],
+			viewData: [],
+			multipleSelection: [],
+			allSelection: {},
+			page: 1,
+			allTotal: 0,
+			num: 10, //每页显示多少条
+			showFormula:false,//是否显示公式弹框
+			baseList:[],//基础项列表
+			formulaData:{},//公式列表数据
+			formulaInsert:{},//公式数据
+		};
+	},
+	methods: {
+		async init() {
+			//获取基础项数据
+			let base = await http.materialreportGetReportItemList();
+			this.baseList = base;
+			this.formulaData.base = this.baseList;
+			//获取公式项数据
+			let data = await http.materialreportGetStatisticItemList();
+			this.allTotal = data.list.length;
+			this.tableData = data.list;
+			this.formulaData.formula = data.list;
+			this.pagination();
 		},
-		methods: {
-			async init() {
-				let data = await http.materialreportGetStatisticItemList();
-				this.allTotal = data.list.length;
-				this.tableData = data.list;
-				console.log(data);
-				this.pagination();
-			},
-			toggleSelection(rows) {
-				if (rows) {
-					rows.forEach(row => {
-						this.$refs.multipleTable.toggleRowSelection(row);
-					});
-				}
-			},
-			pagination() {
-				this.viewData = this.tableData.slice(
-					(this.page - 1) * this.num,
-					this.page * this.num
-				);
-			},
-			handleSelectionChange(val) {
-				this.multipleSelection = val;
-				
-			},
+		toggleSelection(rows) {
+			if (rows) {
+				rows.forEach(row => {
+					this.$refs.multipleTable.toggleRowSelection(row);
+				});
+			}
+		},
+		pagination() {
+			this.viewData = this.tableData.slice(
+				(this.page - 1) * this.num,
+				this.page * this.num
+			);
+		},
+		handleSelectionChange(val) {
+			this.multipleSelection = val;
+			
+		},
+		//编辑公式
+		editFormula(res){
+			this.formulaInsert = res;
+			this.showFormula = true;
+		},
+		//编辑公式项-完成
+		getFormula(res){
+			if(res){
+				this.init();
+			}
+			this.showFormula = false;
+		},
+		crageBtn() {
+			this.$store.commit('setPageTools', [
+				//     {
+				//     name: '批量删除',
+				//     className: 'danger',
+				//     type: 5,
+				//     icon:'el-icon-delete',
+				//     fn: () => {
 
-			crageBtn() {
-				this.$store.commit("setPageTools", [
-					//     {
-					//     name: '批量删除',
-					//     className: 'danger',
-					//     type: 5,
-					//     icon:'el-icon-delete',
-					//     fn: () => {
-
-					//     }
-					// },
-					{
-						name: "新建公式项",
-						className: "primary",
-						type: 4,
-						icon: "el-icon-plus",
-						fn: () => {}
+				//     }
+				// },
+				{
+					name: '新建公式项',
+					className: 'primary',
+					type: 4,
+					icon: 'el-icon-plus',
+					fn: () => {
+						//
 					}
-				]);
-			},
-			dleSelection(data) {
-				let str = '';
-				let name = ''
-				if (data) {
-					name = data.name;
-					str = `是否删除"${name}"`
-				} else {
-					console.log(Object.values(this.allSelection));
-					let num = 0;
-					if(this.multipleSelection.length>0)this.allSelection[this.page] = this.multipleSelection; //保存每页选中
-					if (Object.values(this.allSelection).length>0) {
-						for (let item of Object.values(this.allSelection)) {
-                            if (item.length > 0) {
-                                for (let v of item) {
-                                    name = v.name;
-                                    break;
-                                }
-                                break;
-                            }
-                        }
-						for (let key in this.allSelection) {
-							if (this.allSelection[key]) {
-								num += this.allSelection[key].length;
+				}
+			]);
+		},
+		dleSelection(data) {
+			let str = '';
+			let name = '';
+			if (data) {
+				name = data.name;
+				str = `是否删除"${name}"`;
+			} else {
+				console.log(Object.values(this.allSelection));
+				let num = 0;
+				if(this.multipleSelection.length>0)this.allSelection[this.page] = this.multipleSelection; //保存每页选中
+				if (Object.values(this.allSelection).length>0) {
+					for (let item of Object.values(this.allSelection)) {
+						if (item.length > 0) {
+							for (let v of item) {
+								name = v.name;
+								break;
 							}
+							break;
 						}
-						str = `是否删除"${name}"等${num}项`;
-					}else{
-						return;
 					}
+					for (let key in this.allSelection) {
+						if (this.allSelection[key]) {
+							num += this.allSelection[key].length;
+						}
+					}
+					str = `是否删除"${name}"等${num}项`;
+				}else{
+					return;
 				}
-				this.$confirm(str, '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.$message({
-						type: 'success',
-						message: '删除成功!'
-					});
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消删除'
-					});
-				});
-			},
-			pageChange(page) {
-				this.allSelection[this.page] = this.multipleSelection; //保存每页选中
-				this.page = page;
-				this.pagination();
-				this.$nextTick(() => { //显示本页选中
-					this.toggleSelection(this.allSelection[page]);
-				});
-			},
-			sizeChange(num) {
-				this.num = num;
-				this.pagination();
-			},
-			carryRule(data) {
-				let strSet = {
-					0: '四舍五入',
-					1: '向上取值',
-					2: '向下取值'
-				}
-				let str1 = data.isPercent ? '百分比,' : '数字,';
-				let str2 = `保留${data.reserveRule}位小数,`;
-				let str3 = strSet[data.carryRule];
-				return str1 + str2 + str3;
 			}
+			this.$confirm(str, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.$message({
+					type: 'success',
+					message: '删除成功!'
+				});
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消删除'
+				});
+			});
 		},
-		activated() {
-			this.crageBtn();
-			this.init();
+		pageChange(page) {
+			this.allSelection[this.page] = this.multipleSelection; //保存每页选中
+			this.page = page;
+			this.pagination();
+			this.$nextTick(() => { //显示本页选中
+				this.toggleSelection(this.allSelection[page]);
+			});
 		},
-		deactivated() {
-			this.$store.commit("setPageTools", []);
+		sizeChange(num) {
+			this.num = num;
+			this.pagination();
 		},
-		watch: {
-			viewData() {
-				console.log(this.allSelection);
-			}
-		},
-		components: {},
-		computed: {
-
+		carryRule(data) {
+			let strSet = {
+				0: '四舍五入',
+				1: '向上取值',
+				2: '向下取值'
+			};
+			let str1 = data.isPercent ? '百分比,' : '数字,';
+			let str2 = `保留${data.reserveRule}位小数,`;
+			let str3 = strSet[data.carryRule];
+			return str1 + str2 + str3;
 		}
-	};
+	},
+	activated() {
+		this.crageBtn();
+		this.init();
+	},
+	deactivated() {
+		this.$store.commit('setPageTools', []);
+	},
+	watch: {
+		viewData() {
+			console.log(this.allSelection);
+		}
+	},
+	components: {
+		addFormula: () =>
+			import( /*webpackChunkName:'add_formula'*/ '../add_formula'),
+	},
+	computed: {
+
+	}
+};
 </script>
 <style lang='less' scoped>
 	#equationList {

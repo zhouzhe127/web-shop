@@ -12,13 +12,13 @@
 			<div class="inp-block">
 				<span class="inp-name">名称</span>
 				<div class="right">
-					<el-input placeholder="输入名称" class="inp-class" v-model="columnName" max-length="20"></el-input>
+					<el-input placeholder="输入名称" class="inp-class" v-model="name" max-length="20"></el-input>
 				</div>
 			</div>
 			<div class="inp-block">
 				<span class="inp-name">排序</span>
 				<div class="right">
-					<el-input-number v-model="sort" :min="0" class="inp-class"></el-input-number>
+					<el-input-number v-model="sortObj.num" :min="0" :max="sortObj.max" class="inp-class"></el-input-number>
 				</div>
 			</div>
 			<div class="inp-block">
@@ -52,9 +52,6 @@
 										</el-table>
 									</div>
 								</el-tab-pane>
-								<el-tab-pane label="表列项" name="2">
-									<div class="radio-container"></div>
-								</el-tab-pane>
 							</el-tabs>
 						</div>
 						<el-button slot="reference" class="btn-class">
@@ -84,7 +81,7 @@
 				</div>
 			</div>
 			<sel-warehouse v-if="showCom" :pObj="comObj" @throwWin="winWarehouse"></sel-warehouse>
-			<add-formula v-if="showFormula" :list="formulaData" :pObj="formulaInsert" @emit="getFormula"></add-formula>
+			<add-formula v-if="showFormula" :list="formulaData" @emit="getFormula"></add-formula>
 		</div>
 	</win>
 </template>
@@ -100,8 +97,11 @@ export default {
 				content: '确定'
 			},
 			btnCancel: {},
-			columnName:'',//列表项名称
-			sort:0,//排序
+			name:'',//列表项名称
+			sortObj:{//排序
+				num:0,
+				max:10,
+			},
 			columnTabIndex:'0',
 			columnItem:'',//选择项
 			visible:false,//选择列表项是否显示
@@ -110,12 +110,11 @@ export default {
 			comObj:{//仓库弹窗传入数据
 				isMultiple:true,
 			},
-			wareList:[],//选中的仓库列表
 			storeList:[],//已选中的店铺列表
+			wareList:[],//选中的仓库列表
 			itemName:'',//已选统计项
 			wareName:'',
 			storeName:'',
-			itemList:[],//所有列表项集合
 			formulaPercent:[//是否半分比
 				{label:'数字',value:0},
 				{label:'百分百',value:1},
@@ -128,11 +127,12 @@ export default {
 
 			showFormula:false,
 			formulaData:{},//公式列表数据
-			formulaInsert:{},//公式数据
 			baseList:[],//基础项列表
-			baseRadio:'',
+			baseRadio:'',//基础项radio绑定
 			formulaList:[],
 			emitObj:{},//抛出对象
+			itemObj:{},//统计项
+			itemType:'',//统计项类型 1基础 2公式
 			promiseObj:{
 				base:null,
 				formula:null,
@@ -144,17 +144,17 @@ export default {
 		//抛出方法 @emit 传入数据跟抛出时相同
 		/*
 			{
-		  		name:'',			//名称
-		 		sort:'',			//排序
-		  		item:{},			//统计项
-		  		store:[],			//店铺
-				warehouse:[],		//仓库
-				itemList:[],		//所有列表项集合
+		  		name:'',				//名称
+		 		sortObj:{num:0,max:0},	//排序
+		  		item:{},				//统计项
+		  		store:[],				//店铺
+				warehouse:[],			//仓库
+				type:'',				//统计项类型 1基础 2公式
+				
 			}
 		*/
 	},
 	mounted() {
-		console.log(this.pObj);
 		this.initData();
 	},
 	components: {
@@ -183,9 +183,22 @@ export default {
 		//编辑列表项
 		editColumn(){
 			this.getBase().then(()=>{
-				this.name = this.pObj.name;
-				this.sort = this.pObj.sort;
-				this.itemList = this.pObj.itemList;
+				let arr = ['name','sort'];
+				for(let item of arr){
+					this[item] = this.pObj[item];
+				}
+				this.storeList = this.pObj.store;
+				this.wareList = this.pObj.warehouse;
+				if(this.pObj.type==1){
+					this.baseRadio = this.pObj.item.id;
+				}else{
+					for(let item of this.formulaList){
+						if(item.id==this.pObj.item.id){
+							this.$refs.singleTable.setCurrentRow(item);
+						}
+					}
+				}
+				this.selContent();
 			});
 		},
 		//获取基础项数据，公式项数据
@@ -227,16 +240,17 @@ export default {
 				this.$message({message: '请选择仓库',type: 'error'});
 				return;
 			}
-			if(!this.columnName){
+			if(!this.name){
 				this.$message({message: '请输入列表项名称',type: 'error'});
 				return;
 			}
 			this.emitObj={
-				name:this.columnName,//名称
-				sort:this.sort,//排序
+				name:this.name,//名称
+				sortObj:this.sortObj,//排序
 				item:this.itemObj,//统计项
 				store:this.storeList,//店铺
 				warehouse:this.wareList,//仓库
+				type:this.itemType,//统计项类型 1基础项 2公式项
 			};
 			this.$emit('emit',this.emitObj);
 		},
@@ -253,32 +267,32 @@ export default {
 		},
 		//选择统计项
 		radioChange(type,res){
-			console.log(type,res);
+			console.log(res);
 			if(res===null) return;
 			this.visible = false;
-			let itemType='',itemName='',itemId='';
+			let itemType='',itemName='';
 			switch (type){
 				case 1://标准项
 					let obj = this.baseList.filter((item)=>{
 						return item.id==res;
 					})[0];
 					itemName = obj.name;
-					itemId = obj.id;
 					itemType = '标准项';
+					
+					this.itemType = 1;
+					this.itemObj = {id:obj.id,name:itemName};
 					this.$refs.singleTable.setCurrentRow(null);
 					break;
 				case 2://公式项
-					itemId = res.id;
 					itemName = res.name;
 					itemType = '公式项';
+
+					this.itemType = 2;
+					this.itemObj = {id:res.id,name:itemName,formula:res.formula};
 					this.baseRadio = '';
 					break;
-				case 3://表列项
-					
-					itemType = '表列项';
-					break;
 			}
-			this.itemObj = {id:itemId,name:itemName};
+			//设置选中以后的显示-已选统计项
 			this.itemName = `${itemName}（${itemType}）`;
 		},
 		//选择仓库
