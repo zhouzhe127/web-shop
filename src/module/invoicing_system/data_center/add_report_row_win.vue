@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 16:56:40
+ * @Last Modified time: 2018-11-06 17:51:17
  */
 <template>  
 	<div>
@@ -24,7 +24,7 @@
 					</div>
 					/
 
-					<select-collection-com  @change="getSelectCollection" :list="collectionList"></select-collection-com>
+					<select-collection-com :selectId="collection.id"  @change="getSelectCollection" :list="collectionList"></select-collection-com>
 
 					<div class="add-matrial add-collection" @click="openWin(winType.createCollection)">
 						<i class="el-icon-plus plus" style="margin-right:10px;"></i>
@@ -56,6 +56,7 @@
 		<component
 			:is="showCom"
 			:show="true"
+			:selects="scope"
 			@change="closeWin"
 		>
 		</component>
@@ -67,6 +68,18 @@
 	接口:
 		获取集合列表:getStatisticScopeCategoryList
 		添加或更新分类统计范围:setStatisticScopeCategory
+
+
+	组件:
+		抛出值:
+			pSortObj : 		Object				排序值
+			pScope : 		Array				物料范围:选择的物料id	
+			pCollection : 	Object				选择的集合对象
+
+		接受值:
+			pSortObj : 		Object				排序值
+			pScope : 		Array				物料范围:选择的物料id	
+			pCollection : 	Object				选择的集合id
 */
 
 let winType = {
@@ -116,10 +129,8 @@ export default {
 		},
 		//选择的集合
 		pCollection:{
-			type:[Object],
-			default:function(){
-				return {};
-			}
+			type:[Number],
+			default:''
 		},
 		//弹窗标题
 		title:{
@@ -140,8 +151,8 @@ export default {
 			}else{
 				obj = {
 					pSortObj : this.sortObj,
-					pScope : this.scope,
-					pCollection : this.collection
+					pCollection : this.collection,
+					pScope : this.scope.map( ele => ele.id)
 				};
 				this.throwData(obj);                
 			}
@@ -189,10 +200,14 @@ export default {
 			};
 			//排序值
 			this.sortObj =  Object.assign(def,this.pSortObj);      
-			//选择的集合
-			this.collection = this.pCollection;
+			//集合
+			this.collection = {id:this.pCollection};
 			//选择的物料范围
 			this.scope = this.pScope;
+
+			if(this.collection.id && this.scope.length > 0 ){
+				this.scope = [];
+			}
 		},
 
 
@@ -200,11 +215,19 @@ export default {
 			let retData = await this.getHttp('getStatisticScopeCategoryList');
 			if(Array.isArray(retData.list)){
 				this.collectionList = retData.list;
+				this.collection = this.getEle(this.collectionList,'id',this.collection.id);
 			}
 		},
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
 			return res;
+		},
+		getEle(list,attr,val){
+			for(let ele of list){
+				if(ele[attr] == val){
+					return ele;
+				}
+			}
 		},
 	},
 	mounted(){

@@ -2,12 +2,11 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 17:05:28
+ * @Last Modified time: 2018-11-06 18:27:06
  */
 
 <template>
 	<div class="box">
-		<!-- <add-report-row></add-report-row> -->
 		<el-table 
 			:data="tableData"  
 			v-loading="bool" 
@@ -60,11 +59,7 @@
 	删除自定义报表模板:templateDeleteReportTemplate
 
 */
-// import storage from 'src/verdor/storage';
-// import utils from 'src/verdor/utils';
-// import global from 'src/manager/global';
 import http from 'src/manager/http';
-// import Timer from 'src/verdor/timer';
 export default {
 	data () {
 		return {
@@ -163,7 +158,8 @@ export default {
 			}
 			return arr;
 		},
-		
+
+
 		
 		initBtn(){
 			this.$store.commit('setPageTools',[

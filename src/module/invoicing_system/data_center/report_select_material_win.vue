@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 16:59:46
+ * @Last Modified time: 2018-11-06 17:54:43
  */
 
 <template>  
@@ -130,18 +130,25 @@ export default {
 			radio:true,             //多选
 
 			categoryList:[],            
-			list:[],                    //当前页的物料列表
-			selectList:[],              //选中的物料列表
-			shopNum:0,                  //本店所有的物料数量
+			list:[],                    		//当前页的物料列表
+			selectList:[],              		//选中的物料列表
+			shopNum:0,                  		//本店所有的物料数量
 
 			condition:{},
 			pageObj:{},
-			preSubObj:{},               //上一次请求时携带的条件
-			selectShop:false,               //是否选择本店
-			loading:false,                  //加载动画
+			preSubObj:{},               		//上一次请求时携带的条件
+			selectShop:false,               	//是否选择本店
+			loading:false,                  	//加载动画
 		};
 	},
 	props:{
+		//选中的列表,元素为id
+		selects:{
+			type:[Array],
+			default:function(){
+				return [];
+			}
+		},
 		title:{
 			type:[String],
 			default:'选择物料',
@@ -197,7 +204,7 @@ export default {
 		},
 		//按钮切换
 		async changeBtn(item){
-			let con = this.getCondition();
+			// let con = this.getCondition();
 			let subObj = {};
 			let arr = [];
 			
@@ -223,20 +230,13 @@ export default {
 					this.addDelSelectList(this.list,true);
 					break;
 				case btns.selectAll://选择全部
-					if(!this.condition.cids.includes(con.cid)){
-						//添加选中的分类id
-						this.condition.cids.push(con.cid);
-	
-						//递归获取物料
-	
-						subObj = {...this.preSubObj};
-						subObj.page = 1;
-						this.loading = true;
-						arr = await this.recursiveGetMaterialList(subObj);               
-						this.addDelSelectList(arr,true);
-						this.changeListAttrVal(this.list,'checked',true);
-						this.loading = false;
-					}
+					subObj = {...this.preSubObj};
+					subObj.page = 1;
+					this.loading = true;
+					arr = await this.recursiveGetMaterialList(subObj);               
+					this.addDelSelectList(arr,true);
+					this.changeListAttrVal(this.list,'checked',true);
+					this.loading = false;
 					break;
 			}
 			

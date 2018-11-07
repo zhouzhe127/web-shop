@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 17:02:45
+ * @Last Modified time: 2018-11-06 18:19:55
  * @file 新建集合
  */
 
@@ -149,10 +149,15 @@ export default {
 		};
 	},
 	props:{
-		//是否展示弹窗
-		show:{
+		//集合名字
+		collectName:{
+			type:[String],
+			default:''
+		},
+		//集合名字是否可以修改
+		disabled:{
 			type:[Boolean],
-			default:true
+			default:false,
 		},
 		//弹窗标题
 		title:{
@@ -163,16 +168,6 @@ export default {
 		width:{
 			type:[String],
 			default:'920px'
-		},
-		//集合名字
-		collectName:{
-			type:[String],
-			default:''
-		},
-		//集合名字是否可以修改
-		disabled:{
-			type:[Boolean],
-			default:false,
 		}
 	},
 	methods: {
@@ -466,6 +461,8 @@ export default {
 			this.collName = this.collectName;
 		},
 
+
+
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
 				confirmButtonText: '确定',
@@ -488,7 +485,7 @@ export default {
 
 			for(let ele of list){
 				if(ele[attr]){
-					set.add(ele[attr]);
+					set.add(Number(ele[attr]));
 				}
 			}
 			return [...set];
@@ -498,6 +495,7 @@ export default {
 			let val = true;
 			let attr = 'checked';
 			let sym = false;
+			
 			sym = list.every((ele)=>{
 				return ele[attr] == val;
 			});
@@ -506,9 +504,11 @@ export default {
 		matchSelectList(list,selectList){
 			let attr = 'checked';
 			let val = true;
+			let matchAttr = 'id';
+
 			for(let ele of list){
 				for(let e of selectList){
-					if(ele.id == e.id){
+					if(ele[matchAttr] == e[matchAttr]){
 						ele[attr] = val;
 						break;
 					}
