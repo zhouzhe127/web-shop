@@ -1092,4 +1092,17 @@ export default {
 		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
 		fake: true
 	},
+	"materialreportDeleteMaterialByIds":{
+		url:b+"materialreport/deleteMaterialByIds",					//删除/批量删除报表
+		method:'get'		
+	},
+	"setStatisticScopeCategory":{
+		url:b+"materialreport/setStatisticScopeCategory",			//添加或更新分类统计范围		
+		method:'post'
+	},
+	"templateDeleteReportTemplate":{
+		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
+		method:'post'
+	},
 }
+
