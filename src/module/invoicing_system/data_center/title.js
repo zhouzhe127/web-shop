@@ -288,7 +288,7 @@ module.exports = [
     
 }, {
     "id": 30,
-    "name": "领料消耗",
+    "name": "领料消耗数量",
     "title": "t-30",
     "changeNum": true,
     "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_NUM",
@@ -296,7 +296,7 @@ module.exports = [
     
 }, {
     "id": 31,
-    "name": "领料消耗总金额",
+    "name": "领料消耗金额",
     "title": "t-31",
     "changeNum": false,
     "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_COST",
