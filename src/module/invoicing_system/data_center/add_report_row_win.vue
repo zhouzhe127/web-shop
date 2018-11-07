@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 11:16:50
+ * @Last Modified time: 2018-11-07 15:16:15
  */
 <template>  
 	<div>
@@ -89,7 +89,7 @@ let winType = {
 	selectMaterial : 'selectMaterialCom',                    //选择物料
 	createCollection : 'createCollectionCom'               //新建集合
 };
-
+import utils from 'src/verdor/utils';
 import http from 'src/manager/http';
 export default {
 	data () {
@@ -151,6 +151,7 @@ export default {
 		},
 	},
 	methods: {
+
 		clickBtn(sym){
 			let obj = {};
 			if(sym == 'cancel'){
@@ -161,7 +162,11 @@ export default {
 					pCollection : this.collection,
 					pScope : this.scope.map( ele => ele.id)
 				};
-				this.throwData(obj);                
+				if(obj.pScope.length == 0 && !obj.pCollection.id){
+					this.$message('请从物料范围或集合中选择一个!');
+					return;
+				}
+				this.throwData( utils.deepCopy(obj));  
 			}
 		},
 		throwData(data){
@@ -201,8 +206,8 @@ export default {
 
 		initDataByProps(){
 			let def = {
-				min:0,
-				max:1,
+				min:1,
+				max:10,
 				num:1
 			};
 			//排序值
@@ -215,6 +220,7 @@ export default {
 			if(this.collection.id && this.scope.length > 0 ){
 				this.scope = [];
 			}
+			console.log(this.sortObj);
 		},
 
 

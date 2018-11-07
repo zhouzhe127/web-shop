@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 11:42:47
+ * @Last Modified time: 2018-11-07 14:37:03
  */
 
 <template>
@@ -178,6 +178,7 @@ export default {
 					className:'primary',
 					fn:()=>{
 						/* eslint-disabled-line */
+						this.$router.push({path:'/admin/materialReport/creatTempMain'});
 					}
 				},
 			]);
