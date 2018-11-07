@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 10:56:49
+ * @Last Modified time: 2018-11-07 11:42:47
  */
 
 <template>
@@ -73,14 +73,16 @@ export default {
 		clickOperation(sym,row,index){
 			let {id,name} = row;
 			switch(sym){
-				case 'edit':
+				case 'edit'://编辑报表
+					this.$router.push({path:'/admin/data_center/creat_templatelist/temp_main',query:{id:id}});								
 					break;
-				case 'delete':
+				case 'delete'://删除报表
 					this.delTemplate(id,index);
 					break;                
-				case 'generator':
+				case 'generator'://生成报表
+					this.$router.push({path:'/admin/data_center/creat_templatelist/temp_main'});				
 					break;                
-				case 'view':
+				case 'view'://查看报表
 					this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:name,tempId:id}});
 					break;                
 
@@ -94,19 +96,22 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.getHttp('templateDeleteReportTemplate',{id}).then((res)=>{
-					if(res){
-						this.tableData.splice(index,1);
+				this.getHttp('templateDeleteReportTemplate',{id})
+					.then((res)=>{
+						if(res){
+							this.tableData.splice(index,1);
 
-						if(this.tableData.length == 0){
-							this.pageObj.currentPage -= 1;
-							if(this.pageObj.currentPage <= 0){
-								this.pageObj.currentPage = 1;
+							if(this.tableData.length == 0){
+								this.pageObj.currentPage -= 1;
+								if(this.pageObj.currentPage <= 0){
+									this.pageObj.currentPage = 1;
+								}
+								this.getTemplateList();
 							}
-							this.funGetPage();
+						}else{
+							this.$message('删除失败!');
 						}
-					}
-				});
+					});
 			}).catch(() => {
 				console.log('cancel');
 			});
@@ -122,15 +127,6 @@ export default {
 		},
 
 
-		//初始化分页组件
-		initPageObj(){
-			this.pageObj = {
-				total:0,				//总记录数
-				pageSize:10,			//每页显示的记录数
-				pagerCount:11,			//每页显示的按钮数
-				currentPage:1,          //当前页
-			};
-		},
 
 		//获取模板列表
 		async getTemplateList(){
@@ -150,10 +146,10 @@ export default {
 			let arr = [];
 			for(let ele of table){
 				let temp = {
-					id : ele.id,
-					name : ele.name,
-					createUser: ele.createUName,
-					createTime: this.generatorDate(ele.createTime * 1000).str
+					id : ele.id,												//模板id
+					name : ele.name,											//模板名
+					createUser: ele.createUName,								//创建人
+					createTime: this.generatorDate(ele.createTime * 1000).str	//创建时间
 				};
 				arr.push(temp);
 			}
@@ -162,6 +158,18 @@ export default {
 
 
 		
+
+
+
+		//初始化分页组件
+		initPageObj(){
+			this.pageObj = {
+				total:0,				//总记录数
+				pageSize:10,			//每页显示的记录数
+				pagerCount:11,			//每页显示的按钮数
+				currentPage:1,          //当前页
+			};
+		},
 		initBtn(){
 			this.$store.commit('setPageTools',[
 				{
@@ -174,6 +182,9 @@ export default {
 				},
 			]);
 		},
+
+
+
 		//生成时间对象
 		generatorDate(time){
 			//生成日期对象

@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 17:03:37
+ * @Last Modified time: 2018-11-07 11:35:49
  */
 
 <template>
@@ -152,19 +152,23 @@ export default {
 			
 		},
 		//删除报表
-		async delTemplate(tips,ids){
-			try{
-				await this.$confirm(tips, '操作提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				});
-				await this.getHttp('materialreportDeleteMaterialByIds',ids);
-				this.$message('删除成功!');                
-				
-			}catch(e){
-				this.$message('删除失败!');                                        
-			}
+		delTemplate(tips,ids){
+			this.$confirm(tips, '操作提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(()=>{
+				this.getHttp('materialreportDeleteMaterialByIds',ids)
+					.then((res)=>{
+						if(res){
+							this.$message('删除成功!');  
+						}else{
+							this.$message('删除失败!');  
+						}
+					});
+			}).catch(()=>{
+				console.log('取消');
+			});
 		},
 
 		async funGetPage(flag,res){
