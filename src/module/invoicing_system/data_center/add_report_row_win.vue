@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 17:51:17
+ * @Last Modified time: 2018-11-07 10:12:10
  */
 <template>  
 	<div>
@@ -79,7 +79,7 @@
 		接受值:
 			pSortObj : 		Object				排序值
 			pScope : 		Array				物料范围:选择的物料id	
-			pCollection : 	Object				选择的集合id
+			pCollection : 	Number				选择的集合id
 */
 
 let winType = {
@@ -114,7 +114,7 @@ export default {
 			type:[Object],
 			default:function(){
 				return {
-					min:1,
+					min:0,
 					max:1,
 					num:1
 				};
@@ -194,7 +194,7 @@ export default {
 
 		initDataByProps(){
 			let def = {
-				min:1,
+				min:0,
 				max:1,
 				num:1
 			};
@@ -209,6 +209,8 @@ export default {
 				this.scope = [];
 			}
 		},
+
+
 
 
 		async getCollectionList(){

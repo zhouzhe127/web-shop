@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 18:19:55
+ * @Last Modified time: 2018-11-07 10:09:16
  * @file 新建集合
  */
 
@@ -158,6 +158,13 @@ export default {
 		disabled:{
 			type:[Boolean],
 			default:false,
+		},
+		//选中的物料id
+		selects:{
+			type:[Array],
+			default:function(){
+				return [];
+			}
 		},
 		//弹窗标题
 		title:{
@@ -459,10 +466,19 @@ export default {
 		//初始化props
 		initProps(){
 			this.collName = this.collectName;
+			this.selectList = this.toObject(this.selects);
 		},
 
 
-
+		toObject(list){
+			let arr = [];
+			for(let ele of list){
+				let obj = {
+					id : ele
+				};
+				arr.push(obj);
+			}
+		},
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
 				confirmButtonText: '确定',

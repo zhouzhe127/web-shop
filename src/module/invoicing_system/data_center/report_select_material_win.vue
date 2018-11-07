@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 17:54:43
+ * @Last Modified time: 2018-11-07 10:28:46
  */
 
 <template>  
@@ -440,7 +440,15 @@ export default {
 		},
 
 
-
+		toObject(list){
+			let arr = [];
+			for(let ele of list){
+				let obj = {
+					id : ele
+				};
+				arr.push(obj);
+			}
+		},
 		//是否全部选中
 		isAllSelect(list){
 			let val = true;
