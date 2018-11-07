@@ -2,7 +2,6 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-09 09:51:41 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-29 17:28:25
  * @Module: 打印机配置 -——一级弹框
 **/
 <template>
@@ -423,6 +422,7 @@ export default {
 				this.orderTypeIndex = 22;
 			}
 			// this.customQrCode = JSON.parse(this.printDetial.customQrCode);
+			this.printDetial.customQrCode = this.printDetial.customQrCode?this.printDetial.customQrCode:[];
 			this.customQrCode = this.printDetial.customQrCode;
 			if(this.customQrCode.length==0 || this.customQrCode == ''){
 				this.iscustomQrCode = false;
