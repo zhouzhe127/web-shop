@@ -12,3 +12,4 @@ export let w = host.wx;
 export let b = host.bc;
 export let p = host.pos;
 export let f = host.fs;
+export let r = host.store;

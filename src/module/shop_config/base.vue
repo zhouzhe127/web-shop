@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @Author: 孔伟研 
  * @Date: 2018-03-28 15:43:31 
  * @Last Modified by: zhigang.li
@@ -9,7 +9,7 @@
 	<section style="text-align:left;width:900px;min-height:1280px;" id="bstime">
 		<el-form :model="baseDetial" ref="baseDetial" label-width="120px">
 			<el-form-item required label="店铺名称">
-				<el-input v-model="baseDetial.shopName" maxlength="20" placeholder="请输入店铺名称" style="width:250px;"></el-input>
+				<el-input v-model="baseDetial.shopName" maxlength="40" placeholder="请输入店铺名称" style="width:250px;"></el-input>
 			</el-form-item>
 			<el-form-item label="店铺编号">
 				<span v-if="baseDetial.shopNumber !== '' && baseDetial.shopNumber">{{shopNumber}}</span>

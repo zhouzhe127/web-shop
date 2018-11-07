@@ -35,8 +35,8 @@
 				</el-popover>
 			</div>
 			<div class="selectDate fl">
-				<el-button type="primary" style="width:100px;">筛选</el-button>
-				<el-button type="info" style="width:100px;">重置</el-button>
+				<el-button type="primary" style="width:100px;" @click="getOneCoupon">筛选</el-button>
+				<el-button type="info" style="width:100px;" @click="resetFun">重置</el-button>
 			</div>
 		</div>
 		<div class="couponName">
@@ -66,14 +66,14 @@
 				</el-table-column>
 				<el-table-column label="核销量" prop="useCoupon" align="center">
 				</el-table-column>
-				<el-table-column label="优惠金额" prop="orderPrice" align="center">
-					<template slot-scope="scope">
-						<span>¥{{scope.row.orderPrice}}</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="拉动消费" prop="couponCash" align="center">
+				<el-table-column label="优惠金额" prop="couponCash" align="center">
 					<template slot-scope="scope">
 						<span>¥{{scope.row.couponCash}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="拉动消费" prop="orderPrice" align="center">
+					<template slot-scope="scope">
+						<span>¥{{scope.row.orderPrice}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="券总额" prop="type" align="center">
@@ -210,14 +210,31 @@
 				this.page = p;
 				this.setPage();
 			},
+			resetFun: function() {
+				let arr = [];
+				let selbrr = [];
+				if (this.isBrand) {
+					this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
+				} else {
+					this.shopList = [];
+					this.shopList.push(this.userData.currentShop);
+				}
+				for (let item of this.shopList) {
+					arr.push(item.id);
+					selbrr.push(item.shopName || item.name);
+				}
+				this.showCard = arr;
+				this.selectedCoupon = selbrr.join(',');
+				this.getOneCoupon();
+			},
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
 				name: '返回',
-				className: ['fd-blue'],
 				fn: () => {
 					this.returnStore();
-				}
+				},
+				className: 'el-btn-blue'
 			}]);
 			this.userData = storage.session('userShop');
 			this.ischain = this.userData.currentShop.ischain;
@@ -227,21 +244,7 @@
 			} else {
 				this.isBrand = false;
 			}
-			let arr = [];
-			let selbrr = [];
-			if (this.isBrand) {
-				this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
-			}else{
-				this.shopList = [];
-				this.shopList.push(this.userData.currentShop);
-			}
-			for (let item of this.shopList) {
-				arr.push(item.id);
-				selbrr.push(item.shopName || item.name);
-			}
-			this.showCard = arr;
-			this.selectedCoupon = selbrr.join(',');
-			this.getOneCoupon();
+			this.resetFun();
 		},
 	};
 </script>

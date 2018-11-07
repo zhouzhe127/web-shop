@@ -162,9 +162,9 @@ export default {
 			let rools = [
 				{
 					name: '添加挂账账户',
-					className: ['addStaff', 'export-btn'],
 					fn: this.add,
-					type: 2
+					type: 4,
+					className: 'primary',
 				}
 			];
 			this.$store.commit('setPageTools', rools);
@@ -400,9 +400,9 @@ export default {
 			let rools = [
 				{
 					name: '添加挂账账户',
-					className: ['addStaff', 'export-btn'],
 					fn: this.add,
-					type: 2
+					type: 4,
+					className: 'primary',
 				}
 			];
 			this.$store.commit('setPageTools', rools);

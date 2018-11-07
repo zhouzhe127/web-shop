@@ -1048,8 +1048,8 @@ export default {
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
-			name: '<返回活动列表',
-			className: ['activity'],
+			name: '返回活动列表',
+			className: 'el-btn-blue',
 			fn: () => {
 				this.closePage();
 			}

@@ -4,3 +4,4 @@ node_modules
 /src/config/routes.js
 static/
 static
+.idea

@@ -157,7 +157,9 @@
 			<div class="right" v-if="validType.index == 0">
 				<div class="line" style="text-align:left;">
 					领券后
-					<input class="input couponinp" maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" /> 日内有效
+					<!-- <input class="input couponinp" maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" /> -->
+					<el-input maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input>
+					日内有效
 				</div>
 			</div>
 			<div class="right" v-if="validType.index == 1" style="padding-left: 10px;">
@@ -580,10 +582,10 @@
 					this.isSharing = '可与其他优惠共享';
 					this.concessionSharing = '可与会员卡优惠共用';
 				}
-				this.billPrice = couponDetail.billPrice;//随机立减最低
-				this.reckoningPrice = couponDetail.reckoningPrice;//随机立减最高
-				this.randomId = couponDetail.priceRule;//取整规则
-				this.randomName = this.randomAmountList[this.randomId].name;//取整规则
+				this.billPrice = couponDetail.billPrice; //随机立减最低
+				this.reckoningPrice = couponDetail.reckoningPrice; //随机立减最高
+				this.randomId = couponDetail.priceRule; //取整规则
+				this.randomName = this.randomAmountList[this.randomId].name; //取整规则
 
 				this.annotation = couponDetail.annotation; //备注
 				this.useKnow = couponDetail.useKnow; //使用须知
@@ -786,9 +788,9 @@
 					}
 				}
 				if (this.typeId == 1) {
-					if(this.maxCeiling > 999 || this.maxCeiling < 1){
+					if (this.maxCeiling > 999 || this.maxCeiling < 1) {
 						this.valiData('最大使用上限1-999');
-						return false;						
+						return false;
 					}
 				}
 				if (this.typeId == 2) {
@@ -796,7 +798,7 @@
 						this.valiData('随机金额区间为0.01至9999.99，请按照规则填写');
 						return false;
 					}
-					if(this.billPrice > this.reckoningPrice){
+					if (this.billPrice > this.reckoningPrice) {
 						this.valiData('最高金额不能小于最低金额');
 						return false;
 					}

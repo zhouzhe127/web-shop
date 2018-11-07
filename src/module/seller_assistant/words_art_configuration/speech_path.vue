@@ -3,12 +3,12 @@
 	<Win :width='740' :height='700' @winEvent='getAppliedWin' :align="'center'">
 		<span slot="title">选择功能</span>
 		<div id="tan" slot="content" v-cloak>
-			<mul-select :styles="{backgroundColor: 'rgb(236,236,236)',marginRight:'8px',marginBottom:'8px'}" :list="menuList" :selects="menuType"
+			<mul-select :styles="{'border-radius':'4px',marginRight:'8px',marginBottom:'8px'}" :list="menuList" :selects="menuType"
 			    :name="'name'" :keys="'type'" :isradio="true"></mul-select>
 		</div>
 	</Win>
 </template>
-<script>
+<script type="text/javascript">
 
 	export default {
 		data() {

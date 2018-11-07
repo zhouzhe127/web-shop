@@ -4,68 +4,57 @@
 -->
 <template>
 	<div id="moreMenu">
-		<div class="all">
-			<a v-for="(item,index) in menu" :key="index" v-on:click="selectPack(item.id)" class="raduobtn" :class="{'selectbtn' : item.id == packMenuId}" href="javascript:void(0);">{{item.name}}</a>
-		</div>
-		<ul class="neckTab" v-show="packMenuId==3">
-			<li v-for="(item,index) in weiXin" :class="{'seleced':weiXinType==item.id}" @click="queryTo(item.id)" :key="index">{{item.name}}</li>
-		</ul>
-		<div style="height: 40px;line-height: 40px">
-			<span style="margin-right:150px">当前渠道：{{name}}</span>
-			<span>渠道状态：{{statsName}}</span>
-		</div>
-		<el-table :data="currentList" stripe>
-			<el-table-column label="操作" width="250">
-				<template slot-scope="scope">
-					<span v-if="status!=-1" style="cursor: pointer">
-						<span style="color: #28A8E0;" @click="see()">查看详情</span>
-						<span style="padding:0 10px;color: #D2D2D2;">|</span>
-						<span style="color: #FE8D2C;" @click="edit()">编辑</span>
-						<span style="padding:0 10px;color: #D2D2D2;">|</span>
-						<span @click="toOn()">
-							<el-switch v-model="on" active-color="#13ce66" inactive-color="#ff4949">
-							</el-switch>
-						</span>
-					</span>
-					<span v-else style="cursor: pointer">
-						<span style="color:#E5E5E0;font-size: 16px">查看详情</span>
-						<span style="padding:0 10px;color: #D2D2D2;">|</span>
-						<span style="color:#E5E5E0;font-size: 16px">编辑</span>
-						<span style="padding:0 10px;color: #D2D2D2;">|</span>
-						<span style="color: #FD3F1F;font-size: 16px" @click="open()">开通</span>
-					</span>
+		<template v-if="!isAddHot">
+			<div class="all">
+				<a v-for="(item,index) in menu" :key="index" v-on:click="selectPack(item.id)" class="raduobtn" :class="{'selectbtn' : item.id == packMenuId}" href="javascript:void(0);">{{item.name}}</a>
+			</div>
+			<ul class="neckTab" v-show="packMenuId==3">
+				<li v-for="(item,index) in weiXin" :class="{'seleced':weiXinType==item.id}" @click="queryTo(item.id)" :key="index">{{item.name}}</li>
+			</ul>
+			<div class="show">
+				<span style="margin-right:150px">当前渠道：{{name}}</span>
+				<span>渠道状态：{{statsName}}</span>
+				<template v-if="packMenuId==2">
+					<span class="leftH">热区商品</span>
+					<span class="hotGood" @click="addHotGood">编辑热区商品</span>
+					<!--<span class="rightH">已配置{{hotList.length}}个热区商品</span>-->
 				</template>
-			</el-table-column>
-			<el-table-column label="市别名称" prop="name"></el-table-column>
-			<el-table-column label="时间段" prop="time"></el-table-column>
-			<el-table-column label="市别商品" prop="cityGoods"></el-table-column>
-			<el-table-column label="人均商品" prop="peopleGoods"></el-table-column>
-			<el-table-column label="必点商品" prop="mustGoods"></el-table-column>
-			<el-table-column label="必点商品关联子菜" prop="mustSonGoods"></el-table-column>
-			<el-table-column label="必点商品起售数量" prop="mustNum"></el-table-column>
-		</el-table>
-
-		<!--<comTable style="margin-top: -10px" :showHand="false" :titleData="titleData" :introData="currentList" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :titleHeight="50" :listHeight="70">-->
-		<!--<span style="cursor: pointer;display: inline-block" slot="con-0" slot-scope="props">-->
-		<!--<span v-if="status!=-1">-->
-		<!--<span style="color: #28A8E0;font-size: 16px" @click="see()">查看详情</span>-->
-		<!--<span style="padding:0 10px;color: #D2D2D2;">|</span>-->
-		<!--<span style="color: #FE8D2C;font-size: 16px" @click="edit()">编辑</span>-->
-		<!--<span style="padding:0 10px;color: #D2D2D2;">|</span>-->
-		<!--<onOff :status="Boolean(Number(status))" @statusChange="getIsDiscountToggle" style="display: inline-block;top:16px;position:relative;"></onOff>-->
-		<!--</span>-->
-		<!--<span v-else>-->
-		<!--<span style="color:#E5E5E0;font-size: 16px" >查看详情</span>-->
-		<!--<span style="padding:0 20px;color: #D2D2D2;">|</span>-->
-		<!--<span style="color:#E5E5E0;font-size: 16px" >编辑</span>-->
-		<!--<span style="padding:0 20px;color: #D2D2D2;">|</span>-->
-		<!--<span style="color: #FD3F1F;font-size: 16px" @click="open()">开通</span>-->
-		<!--</span>-->
-		<!--</span>-->
-		<!--</comTable>-->
+			</div>
+			<el-table :data="currentList" stripe>
+				<el-table-column label="操作" width="250">
+					<template slot-scope="scope">
+						<span v-if="status!=-1" style="cursor: pointer">
+							<span style="color: #28A8E0;" @click="see()">查看详情</span>
+							<span style="padding:0 10px;color: #D2D2D2;">|</span>
+							<span style="color: #FE8D2C;" @click="edit()">编辑</span>
+							<span style="padding:0 10px;color: #D2D2D2;">|</span>
+							<span @click="toOn()">
+								<el-switch v-model="on" active-color="#13ce66" inactive-color="#ff4949">
+								</el-switch>
+							</span>
+						</span>
+						<span v-else style="cursor: pointer">
+							<span style="color:#E5E5E0;">查看详情</span>
+							<span style="padding:0 10px;color: #D2D2D2;">|</span>
+							<span style="color:#E5E5E0;">编辑</span>
+							<span style="padding:0 10px;color: #D2D2D2;">|</span>
+							<span style="color: #FD3F1F;" @click="open()">开通</span>
+						</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="市别名称" prop="name"></el-table-column>
+				<el-table-column label="时间段" prop="time"></el-table-column>
+				<el-table-column label="市别商品" prop="cityGoods"></el-table-column>
+				<el-table-column label="人均商品" prop="peopleGoods"></el-table-column>
+				<el-table-column label="必点商品" prop="mustGoods"></el-table-column>
+				<el-table-column label="必点商品关联子菜" prop="mustSonGoods"></el-table-column>
+				<el-table-column label="必点商品起售数量" prop="mustNum"></el-table-column>
+			</el-table>
+		</template>
 		<openMenu v-if="isOpenShow" :pObj="openItem" @throwChannelWin="closeChannelGoods"></openMenu>
 		<seeMenu v-if="isSee" :getGoods="getGoods" :getPacks="getPacks" :goodCom="goodCom" :item="currentList[0]" @throwMenuWin="seeMenuBack"></seeMenu>
 		<editMenu v-if="isEdit" :getGoods="getGoods" :getPacks="getPacks" :goodCom="goodCom" @goodListWin="editMenuBack"></editMenu>
+		<hotGoods v-if="isAddHot" @hotGoodsBack="hotGoodsBack" :copyGoods="copyGoods" :copyPacks="copyPacks"></hotGoods>
 	</div>
 </template>
 
@@ -86,7 +75,7 @@ export default {
 				{ id: 7, name: '在线点单' },
 				{ id: 8, name: '自助点单' },
 				{ id: 9, name: '外卖' },
-				//				{ id: 10, name: '自提' },
+				{ id: 10, name: '自提' },
 				{ id: 11, name: '快递' }
 			],
 			packMenuId: 1, //选中渠道类型，默认桌台模式
@@ -117,34 +106,27 @@ export default {
 			on: false, //开关
 
 			allGoodX: [], //所有下架商品
-			allPackX: [] //所有下架套餐
+			allPackX: [], //所有下架套餐
+
+			isShowHot: false, //是否展示热区商品
+			isAddHot: false //是否添加热区商品
 		};
 	},
 	created() {
 		this.getpackagelist(); //获取套餐列表
 		this.getGoodsList(); //获取商品列表
-		//		this.titleData = [
-		//			{ titleName: '操作', titleStyle: { width: '300px' } },
-		//			{ titleName: '市别名称', dataName: 'name' },
-		//			{ titleName: '时间段', dataName: 'time' },
-		//			{ titleName: '市别商品', dataName: 'cityGoods' },
-		//			{ titleName: '人均商品', dataName: 'peopleGoods' },
-		//			{ titleName: '必点商品', dataName: 'mustGoods' },
-		//			{ titleName: '必点商品关联子菜', dataName: 'mustSonGoods' },
-		//			{ titleName: '必点商品起售数量', dataName: 'mustNum' }
-		//		];
-		//		this.bannerStyle = {
-		//			backgroundColor: '#F2F2F2',
-		//			color: '#434149',
-		//			fontSize: '16px'
-		//		};
-		//		this.contentStyle = {
-		//			color: '#666666',
-		//			fontSize: '14px'
-		//		};
 		this.getList();
 	},
 	methods: {
+		//添加热区商品
+		addHotGood() {
+			this.isAddHot = true;
+		},
+		//热区商品返回
+		hotGoodsBack() {
+			this.isAddHot = false;
+		},
+
 		//获取渠道列表
 		async getList() {
 			let res = await http.ChannelGetList({
@@ -164,16 +146,8 @@ export default {
 			this.weiXinType = id;
 			this.difference();
 		},
-		//开关组件返回
-		//        getIsDiscountToggle(res) {
-		//		    console.log(res);
-		//            this.status=Number(res);
-		//            this.statsName=this.status == 0 ? '关闭' : '开启';
-		//            this.ChannelEdit();
-		//        },
 		//开关组件改变
 		toOn() {
-			console.log(this.on);
 			this.status = Number(this.on);
 			this.statsName = this.on ? '开启' : '关闭';
 			this.ChannelEdit();
@@ -264,10 +238,11 @@ export default {
 			}
 			this.addXia();
 		},
-		//添加选择过的下架商品
+		//添加选择过的下架商品  不同渠道的原始数据过滤
 		addXia() {
 			this.getGoods = utils.deepCopy(this.copyGoods);
 			this.getPacks = utils.deepCopy(this.copyPacks);
+
 			for (let i = 0; i < this.goodCom.mustGids.length; i++) {
 				//添加必点选择过的下架商品
 				for (let j = 0; j < this.allGoodX.length; j++) {
@@ -281,7 +256,6 @@ export default {
 					}
 				}
 			}
-
 			for (let i = 0; i < this.goodCom.mustPids.length; i++) {
 				//添加必点选择过的下架套餐
 				for (let j = 0; j < this.allPackX.length; j++) {
@@ -297,12 +271,22 @@ export default {
 					}
 				}
 			}
+
 			//电子菜单和微店过滤自定义商品
 			if (this.packMenuId == 2 || this.packMenuId == 3) {
 				console.log('电子菜单和微店');
 				for (let i = 0; i < this.getGoods.length; i++) {
 					if (this.getGoods[i].type == '2') {
 						this.getGoods.splice(i, 1);
+						i--;
+					}
+				}
+			}
+			//微店过滤自定义套餐
+			if (this.packMenuId == 3) {
+				for (let i = 0; i < this.getPacks.length; i++) {
+					if (this.getPacks[i].type == '2') {
+						this.getPacks.splice(i, 1);
 						i--;
 					}
 				}
@@ -453,16 +437,14 @@ export default {
 		}
 	},
 	components: {
-		//		comTable: () =>
-		//			import(/*webpackChunkName:'com_table'*/ 'src/components/com_table'),
 		openMenu: () =>
 			import(/* webpackChunkName:'open_menu_win' */ './multi_channel/open_menu_win'),
 		seeMenu: () =>
 			import(/* webpackChunkName:'see_menu_win' */ './multi_channel/see_menu_win'),
 		editMenu: () =>
-			import(/*webpackChunkName:'edit_menu_win'*/ './multi_channel/edit_menu_win')
-		//        onOff: () =>
-		//            import(/* webpackChunkName:"on_off" */ 'src/components/on_off'),
+			import(/*webpackChunkName:'edit_menu_win'*/ './multi_channel/edit_menu_win'),
+		hotGoods: () =>
+			import(/*webpackChunkName:'hot_goods'*/ './multi_channel/hot_goods')
 	}
 };
 </script>
@@ -506,6 +488,28 @@ export default {
 		li.seleced {
 			color: #00a1ea;
 			border-bottom: 2px solid #00a1ea;
+		}
+	}
+	.show {
+		height: 40px;
+		line-height: 40px;
+		.leftH {
+			margin-left: 100px;
+			color: #ababab;
+		}
+		.hotGood {
+			display: inline-block;
+			width: 100px;
+			height: 35px;
+			line-height: 35px;
+			background-color: #2fa8dd;
+			color: white;
+			text-align: center;
+			cursor: pointer;
+			margin: 0 10px;
+		}
+		.rightH {
+			color: #ababab;
 		}
 	}
 }

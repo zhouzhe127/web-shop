@@ -10,7 +10,9 @@
 			<!-- 下单成功提醒 -->
 			<div class="online-box clearfix" style="margin-bottom: 0px;">
 				<span class="online-sub fl">下单成功提醒</span>
-				<textarea class="txt fl" v-model="remind" placeholder="请输入下单成功提醒" maxlength="30"></textarea>
+				<!-- <textarea class="txt fl" v-model="remind" placeholder="请输入下单成功提醒" maxlength="30"></textarea> -->
+				<el-input type="textarea" :rows="4" placeholder="请输入下单成功提醒" v-model="remind" maxlength="30" style="width:400px;">
+				</el-input>
 			</div>
 			<div class="online-box clearfix" style="margin-bottom: 0px;">
 				<span class="online-sub fl"></span>
@@ -22,12 +24,20 @@
 			<!-- 自动确认订单 -->
 			<div class="online-box clearfix">
 				<span class="fl online-sub">自动确认订单</span>
-				<onOff :key='1' :status="isconfirmOrder" @statusChange="openConfirmOrder"></onOff>
+				<div class="rightHalf">
+					<el-switch v-model="isconfirmOrder" active-color="#E1BB4A" inactive-color="#dcdfe6">
+					</el-switch>
+				</div>
+				<!-- <onOff :key='1' :status="isconfirmOrder" @statusChange="openConfirmOrder"></onOff> -->
 			</div>
 			<!-- 自助买单 -->
 			<div class="online-box clearfix">
 				<span class="fl online-sub">自助买单</span>
-				<onOff :key='1' :status="iselfhelPay" @statusChange="openSelfhelPay"></onOff>
+				<!-- <onOff :key='1' :status="iselfhelPay" @statusChange="openSelfhelPay"></onOff> -->
+				<div class="rightHalf">
+					<el-switch v-model="iselfhelPay" active-color="#E1BB4A" inactive-color="#dcdfe6">
+					</el-switch>
+				</div>
 			</div>
 			<div class="online-box clearfix" v-if="iselfhelPay">
 				<span class="fl online-sub"></span>
@@ -36,19 +46,31 @@
 						<!-- 优惠券使用 -->
 						<div class="min-boxl fl">
 							<span class="fl min-sub">优惠券使用</span>
-							<onOff :key='1' :status="iscoupons" @statusChange="openCoupons"></onOff>
+							<!-- <onOff :key='1' :status="iscoupons" @statusChange="openCoupons"></onOff> -->
+							<div class="rightHalf">
+								<el-switch v-model="iscoupons" active-color="#E1BB4A" inactive-color="#dcdfe6">
+								</el-switch>
+							</div>
 						</div>
 						<!-- 储值支付 -->
 						<div class="min-boxl fr">
 							<span class="fl min-sub">储值支付</span>
-							<onOff :key='1' :status="istoredPay" @statusChange="opentoredPay"></onOff>
+							<!-- <onOff :key='1' :status="istoredPay" @statusChange="opentoredPay"></onOff> -->
+							<div class="rightHalf">
+								<el-switch v-model="istoredPay" active-color="#E1BB4A" inactive-color="#dcdfe6">
+								</el-switch>
+							</div>
 						</div>
 					</div>
 					<!-- 积分抵扣 -->
 					<div class="min-box" clearfix>
 						<div class="min-boxl fl">
 							<span class="fl min-sub">积分抵扣</span>
-							<onOff :key='1' :status="isPoints" @statusChange="openPoints"></onOff>
+							<!-- <onOff :key='1' :status="isPoints" @statusChange="openPoints"></onOff> -->
+							<div class="rightHalf">
+								<el-switch v-model="isPoints" active-color="#E1BB4A" inactive-color="#dcdfe6">
+								</el-switch>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -61,7 +83,11 @@
 			<!-- 关注公众号并点餐 -->
 			<div class="online-box clearfix">
 				<span class="online-sub fl">关注公众号并点餐</span>
-				<onOff :key='1' :status="isattention" @statusChange="openSattention"></onOff>
+				<!-- <onOff :key='1' :status="isattention" @statusChange="openSattention"></onOff> -->
+				<div class="rightHalf">
+					<el-switch v-model="isattention" active-color="#E1BB4A" inactive-color="#dcdfe6">
+					</el-switch>
+				</div>
 				<div class="prompting fl" @click="isPublicNumber">
 					<div class="detDiv" style="top: 0px;left: 45px;" v-if="publicNumber">
 						<i class="detI triright" style="top: 10px;left: -20px;"></i>
@@ -76,8 +102,11 @@
 				<!-- 自动确认订单 -->
 				<div class="online-box clearfix">
 					<span class="fl online-sub">标题设置</span>
-					<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }"
-					     @click="chooseIntegral(index)">{{item.name}}</span>
+					<!-- <span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }"
+					     @click="chooseIntegral(index)">{{item.name}}</span> -->
+					<el-radio-group v-model="integralName" class="fl">
+						<el-radio v-for="(item,index) in integralList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
+					</el-radio-group>
 					<div class="prompting fl" @click="isHeadings">
 						<div class="detDiv" style="top: 0px;left: 45px;" v-if="headings">
 							<i class="detI triright" style="top: 10px;left: -20px;"></i>
@@ -91,7 +120,8 @@
 				<!-- 请输入固定标题 -->
 				<div class="online-box clearfix" style="margin-bottom: 0px;" v-show="integralOn == '0'">
 					<span class="fl online-sub"></span>
-					<input type="text" class="inp" name="" v-model="title" placeholder="请输入固定标题" maxlength="15" />
+					<!-- <input type="text" class="inp" name="" v-model="title" placeholder="请输入固定标题" maxlength="15" /> -->
+					<el-input v-model="title" maxlength="15" placeholder="请输入固定标题" style="width:235px;"></el-input>
 				</div>
 				<div class="online-box clearfix" style="margin-bottom: 0px;" v-show="integralOn == '0'">
 					<span class="online-sub fl"></span>
@@ -106,39 +136,46 @@
 					<div class="uploadImg fl">
 						<img alt="logo" v-bind:src="uploadUrl  + image" />
 					</div>
-					<div class="fl updateName">(已上传：{{imageName}})</div>
-				</div>
-				<!-- 上传图片-->
-				<div class="online-box clearfix">
-					<span class="fl online-sub">显示图片</span>
-					<div class="uploadImgs fl">
-						<a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a>
-						<form enctype="multipart/form-data" id="bgImage">
-							<input type="file" id="bg_upload" @change='bgNameChange' accept="image/jpeg,image/png,image/gif,image/tiff" name="image"
-							     onclick="this.value = ''" />
-						</form>
+						<div class="fl updateName">(已上传：{{imageName}})</div>
 					</div>
-					<div class="fl handle-tips">
-						<i></i>
-						尺寸 640*480
+					<!-- 上传图片-->
+					<div class="online-box clearfix">
+						<span class="fl online-sub">显示图片</span>
+						<div class="uploadImgs fl">
+							<!-- <a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a> -->
+							<el-button type="primary" icon="el-icon-plus" class="buttons">
+								上传图片
+							</el-button>
+							<form enctype="multipart/form-data" id="bgImage">
+								<input type="file" id="bg_upload" @change='bgNameChange' accept="image/jpeg,image/png,image/gif,image/tiff" name="image" onclick="this.value = ''" />
+							</form>
+						</div>
+						<div class="fl handle-tips">
+							<i></i>
+							尺寸 640*480
+						</div>
 					</div>
-				</div>
-				<!-- 批量下载二维码-->
-				<div class="online-box clearfix">
-					<span class="fl online-sub">批量下载二维码</span>
-					<a v-on:click='downloadCode()' href="javascript:void(0);" class="download">下载二维码</a>
-				</div>
+					<!-- 批量下载二维码-->
+					<div class="online-box clearfix">
+						<span class="fl online-sub">批量下载二维码</span>
+						<!-- <a v-on:click='downloadCode()' href="javascript:void(0);" class="download">下载二维码</a> -->
+						<el-button type="primary" icon="el-icon-download" class="buttons" @click="downloadCode()">
+							下载二维码
+						</el-button>
+					</div>
 			</section>
 			<!-- 批量下载二维码-->
 			<div class="online-box clearfix">
 				<span class="fl online-sub"></span>
-				<a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right: 2px;" @click="getConfiguration">取消</a>
-				<a href="javascript:void(0);" class="blue fl" style="width: 200px;" @click="saveConfiguration">保存</a>
+				<!-- <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right: 2px;" @click="getConfiguration">取消</a>
+				<a href="javascript:void(0);" class="blue fl" style="width: 200px;" @click="saveConfiguration">保存</a> -->
+				<el-button type="info" style="margin-right: 15px;width:190px;" @click="getConfiguration">取消</el-button>
+				<el-button type="primary" style="margin-right: 15px;width:190px;" @click="saveConfiguration">保存</el-button>
 			</div>
 		</div>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 
@@ -155,15 +192,17 @@
 				isattention: true, //是否开启关注公众号
 				publicNumber: false, //公众号标题提醒
 				headings: false, // 标题提示
-				integralList: [
-					{
-						name: '固定标题'
-					},
-					{
-						name: '自动标题'
-					}
+				integralList: [{
+					name: '固定标题',
+					id: 0
+				},
+				{
+					name: '自动标题',
+					id: 1
+				}
 				],
-				integralOn: '-1',
+				integralOn: 0,
+				integralName: '固定标题',
 				title: '', //固定标题
 				uploadUrl: '',
 				image: '', //图片路径
@@ -183,37 +222,40 @@
 				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
 		},
 		methods: {
-			isPublicNumber: function () { //关注公众号标题提示
+			isPublicNumber: function() { //关注公众号标题提示
 				this.publicNumber = !this.publicNumber;
 			},
-			isHeadings: function () { //标题设置提示
+			isHeadings: function() { //标题设置提示
 				this.headings = !this.headings;
 			},
-			openConfirmOrder: function (res) { //开启自助确认订单
+			openConfirmOrder: function(res) { //开启自助确认订单
 				this.isconfirmOrder = res;
 			},
-			openSelfhelPay: function (res) { //开启自助买单
+			openSelfhelPay: function(res) { //开启自助买单
 				this.iselfhelPay = res;
 			},
-			openCoupons: function (res) { //开启自助买单
+			openCoupons: function(res) { //开启自助买单
 				this.iscoupons = res;
 			},
-			opentoredPay: function (res) { //开启自助买单
+			opentoredPay: function(res) { //开启自助买单
 				this.istoredPay = res;
 			},
-			openPoints: function (res) { //开启自助买单
+			openPoints: function(res) { //开启自助买单
 				this.isPoints = res;
 			},
-			openSattention: function (res) { //开启关注公众号
+			openSattention: function(res) { //开启关注公众号
 				this.isattention = res;
 			},
 			//赠送何种积分
-			chooseIntegral: function (index) {
-				if (this.integralOn == index) {
-					this.integralOn = '-1';
-				} else {
-					this.integralOn = index;
-				}
+			// chooseIntegral: function(index) {
+			// 	if (this.integralOn == index) {
+			// 		this.integralOn = '-1';
+			// 	} else {
+			// 		this.integralOn = index;
+			// 	}
+			// },
+			clicktheRadio: function(item) { //标题设置
+				this.integralOn = item.id;
 			},
 			async getConfiguration() { //获取配置
 				let res = await http.getOrderconfig({
@@ -231,6 +273,7 @@
 					this.isPoints = Boolean(Number(res.pointSwitch)); //是否开启积分抵扣
 					this.isattention = Boolean(Number(res.followSwitch)); //是否开启关注公众号并点餐
 					this.integralOn = res.titleType; //固定标题和自动标题
+					this.integralName = this.integralList[this.integralOn].name;
 					if (res.titleType == 0) {
 						this.title = res.title;
 					}
@@ -298,7 +341,10 @@
 			async downloadCode() {
 				//下载所有的桌台二维码
 				await http.downloadPack({
-
+					data: {
+						type: 1,
+						shopId: this.shopId
+					}
 				});
 			}
 		}
@@ -346,6 +392,13 @@
 		margin-bottom: 14px;
 	}
 
+	#online-configuration .containter .online-box .rightHalf {
+		/*width: 600px;*/
+		height: auto;
+		float: left;
+		line-height: 40px;
+	}
+
 	#online-configuration .containter .online-box .online-sub {
 		display: block;
 		width: 120px;
@@ -377,10 +430,11 @@
 	}
 
 	#online-configuration .containter .online-box .self-help {
-		width: 450px;
+		width: 350px;
 		height: 147px;
 		border: 1px solid #D2D2D2;
 		padding: 17px;
+		border-radius: 4px;
 	}
 
 	#online-configuration .containter .online-box .self-help .min-box {
@@ -510,6 +564,7 @@
 
 	#online-configuration .containter .online-box .uploadImgs {
 		position: relative;
+		margin-right: 15px;
 	}
 
 	#online-configuration .containter .online-box .uploadImgs input {
@@ -526,10 +581,12 @@
 			width: 100%;
 
 		}
+
 		#online-configuration .containter .set-line {
 			width: 100%;
 
 		}
+
 		#online-configuration .containter .set-line .line {
 			width: 80%;
 		}

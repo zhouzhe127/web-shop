@@ -2,7 +2,6 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-04 14:04:23 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-20 17:30:03
  * @Module:商品管理-----零售
 **/
 
@@ -20,7 +19,7 @@
 				<elCategory @selectCategory="newselectOneArea" :categoryArr="category" :itemIndex="oneIndex" :itemArea="oneArea"></elCategory>
 				<elCategory @selectCategory="newselectTwoArea" :categoryArr="child" :itemIndex="twoIndex" :itemArea="twoArea"></elCategory>
 				<!-- 搜索 -->
-				<el-input v-if="industry == 1" placeholder="请输入名称" v-model="search" style="width:200px;">
+				<el-input placeholder="请输入名称" v-model="search" style="width:200px;">
 					<el-button slot="append" icon="el-icon-search" @click="searchNewGood(true)"></el-button>
 				</el-input>
 			</section>
@@ -47,72 +46,27 @@
 					</div>
 				</div>
 			</div>
-			<!--	商品展示  -->
 			<div v-if="load" class="commodity-box">
-				<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" border style="width: 100%">
+				<el-table ref="multipleTable" @selection-change="handleSelectionChange"  stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" border style="width: 100%">
+					<el-table-column type="selection" reserve-selection  width="55"> </el-table-column>
 					<el-table-column fixed min-width="160" show-overflow-tooltip align="center" prop="goodsName" label="名称">
 						<template slot-scope="scope">
-							<span v-if="ischain=='1'||ischain=='2'" @click="openAddWin(scope.row)" :style="{color:scope.row.id<10000?'#fe9200':'#2ea7e0',cursor:'pointer'}">{{scope.row.goodsName}}</span>
-							<span v-if="ischain=='0'||ischain=='3'" @click="openAddWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.goodsName}}</span>
+							<span v-if="ischain=='1'||ischain=='2'" @click="openAddWin(scope.row)" :style="{color:scope.row.id<10000?'#fe9200':'#2ea7e0',cursor:'pointer'}">{{scope.row.name}}</span>
+							<span v-if="ischain=='0'||ischain=='3'" @click="openAddWin(scope.row)" style="color:#2ea7e0;cursor:pointer">{{scope.row.name}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序"></el-table-column>
-					<el-table-column min-width="100" sortable sort-by="price" show-overflow-tooltip align="center" prop="price" label="价格">
-						<!-- <template slot-scope="scope">
-							<span>{{parseFloat(scope.row.price).toFixed(2)}}</span>
-						</template> -->
-					</el-table-column>
-					<el-table-column min-width="100" sortable show-overflow-tooltip align="center" prop="cost" label="成本">
-						<!-- <template slot-scope="scope">
-							<span>{{parseFloat(scope.row.cost).toFixed(2)}}</span>
-						</template> -->
-					</el-table-column>
-					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="unit" label="单位"></el-table-column>
-					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="type" label="类型">
+					<el-table-column min-width="80" sortable show-overflow-tooltip align="center" prop="sort" label="排序">
 						<template slot-scope="scope">
-							<span v-if="scope.row.type=='0'">普通商品</span>
-							<span v-if="scope.row.type=='1'">称重商品</span>
-							<span v-if="scope.row.type=='2'">自定义商品</span>
+							<span>{{scope.$index+1}}</span>
 						</template>
 					</el-table-column>
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="shopName" label="店铺名称"></el-table-column>
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="brandName" label="品牌名称"></el-table-column>
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="categoryName" label="分类"></el-table-column>
+					<el-table-column min-width="100" show-overflow-tooltip align="center" prop="unit" label="单位"></el-table-column>
 					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isDiscount" label="参与优惠">
 						<template slot-scope="scope">
 							<span :class="scope.row.isDiscount=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="serviceCharge" label="服务费">
-						<template slot-scope="scope">
-							<span :class="scope.row.serviceCharge=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isRecommend" label="推荐菜">
-						<template slot-scope="scope">
-							<span :class="scope.row.isRecommend=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isInvoicing" label="进销存">
-						<template slot-scope="scope">
-							<span :class="scope.row.isInvoicing=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isSelf" label="自取">
-						<template slot-scope="scope">
-							<span :class="scope.row.isSelf=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isStock" label="开启库存">
-						<template slot-scope="scope">
-							<span :class="scope.row.isStock=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="cids" label="时价菜">
-						<template slot-scope="scope">
-							<span :class="scope.row.cids=='0'?'el-icon-close':'el-icon-check'"></span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="isVip" label="参与会员">
-						<template slot-scope="scope">
-							<span :class="scope.row.isVip=='0'?'el-icon-close':'el-icon-check'"></span>
 						</template>
 					</el-table-column>
 					<el-table-column min-width="80" show-overflow-tooltip align="center" prop="vipPrice" label="会员优惠">
@@ -126,14 +80,14 @@
 						<template slot-scope="scope">
 							<span style="color: #FE8D2C;cursor:pointer" @click="openAddWin(scope.row)">编辑</span>
 							<span style="padding:0 5px;color: #D2D2D2">|</span>
-							<span v-if="scope.row.status=='2'" style="color:rgb(108, 194, 230);cursor:pointer" @click="updownWin(scope.row)">上架</span>
+							<span v-if="scope.row.status=='1'" style="color:rgb(108, 194, 230);cursor:pointer" @click="updownWin(scope.row)">上架</span>
 							<span v-else style="color: #FD3F1F;cursor:pointer" @click="updownWin(scope.row)">下架</span>
 						</template>
 					</el-table-column>
 				</el-table>
 			</div>
-			<div v-show="goodsList.length>0">
-				<el-pagination background @size-change="sizeChange" @current-change="pageClick" :current-page="Number(currentPage)" :page-count="Number(totalNum)" :page-size="Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50, 100]"></el-pagination>
+			<div style="margin-top:20px;">
+				<el-pagination background @size-change="sizeChange" @current-change="pageClick" :current-page="currentPage" :page-count="Number(totalNum)" :page-size="Number(num)" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50, 100]"></el-pagination>
 			</div>
 		</section>
 
@@ -156,23 +110,19 @@
 		InventoryGetlist://获取库存数量
 */
 
-import global from 'src/manager/global';
+// import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
-import utils from 'src/verdor/utils';
+// import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
-			isAddEditGood:false,
+			isAddEditGood: false,
 			goodsNav: [
-				{ id: -1, name: '全部' },
-				{ id: 0, name: '已开启库存商品' },
-				{ id: 1, name: '未开启库存商品' },
-				{ id: 2, name: '多规格商品' },
-				{ id: 3, name: '下架商品' }
+				{ id: 0, name: '上架商品' },
+				{ id: 1, name: '下架商品' }
 			], // 商品分类导航
-			selectNavId: -1, //所点中的商品导航编号
-			cdn: global.cdnUrl,
+			selectNavId: 0, //所点中的商品导航编号
 
 			oneArea: {
 				name: '请选择一级分类',
@@ -189,14 +139,14 @@ export default {
 			load: false, //是否在请求数据
 			category: [], //所有一级分类
 			child: [], //所有二级分类
-
-			allGoods: [], //所有的商品
-			goodsList: [], // 去除子菜后的商品
-			pageGoods: [], // 用于分页的商品
-			tempGoods: [], //分类筛选后的商品
+			categoryId: '', //所选分类的id
+			// goodsList: [], // 去除子菜后的商品
+			// tempGoods: [], //分类筛选后的商品
 			nowGoods: [], //当前展示的商品
 
-			brandList: null, //品牌列表
+			brandList: [], //品牌列表
+			suppierList: [], //供应商列表
+			specList:[],//零售规格列表
 
 			ischain: null,
 			brandId: null,
@@ -213,10 +163,6 @@ export default {
 
 			comObj: {}, //用于传递数据的对象
 			showCom: '', //需要展示的组件
-			requestNum: 1000, //一次请求数量
-			requestPage: 1, //请求的第几页
-			requestTotal: 1, //请求的总页数
-
 			listHeight: 200,
 			industry: 0, //店铺的行业分类
 			goodSec: [
@@ -228,20 +174,20 @@ export default {
 			typeName: '请选择商品类型',
 			selectTab: 1, //默认表格模式
 			showArea: false, //显示一级分类
-			showTArea: false //显示二级分类
+			showTArea: false, //显示二级分类
+			selectList:[],//选中的商品
 		};
+	},
+	created() {
+		this.getCate(); //获取分类、品牌、店铺、商品列表
 	},
 	mounted() {
 		this.initData();
 		this.initSyncBtn();
-		this.syncRequest();
-		// document.addEventListener('click', this.domClick, false);
-		// this.windowResize();
-		// window.addEventListener('resize', this.windowResize, false);
 	},
 	components: {
 		openAddGoodsWin: () =>
-			import(/*webpackChunkName:'add_goods_win'*/ './goods_manager_coms/add_retail_goods_win'),
+			import(/*webpackChunkName:'add_retail_goods_win'*/ './goods_manager_coms/add_retail_goods_win'),
 		errorGoods: () =>
 			import(/*webpackChunkName:'import_goods_error_win'*/ './goods_manager_coms/import_goods_error_win'),
 		asyncWin: () =>
@@ -250,13 +196,36 @@ export default {
 			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
 	},
 	methods: {
+		handleSelectionChange(val){
+			for(let i=0;i<val.length;i++){
+				val[i].selected = true;
+			}
+			this.selectList = val;
+			console.log(val);
+		},
+		selectGoods(item){
+			console.log(item);
+		},
+		toggleSelection(rows){
+			console.log(rows);
+			if (rows) {
+				rows.forEach(row => {
+					if(row.selected){
+						this.$refs.multipleTable.toggleRowExpansion(row,row.selected);
+					}
+				});
+			} 
+			else {
+				this.$refs.multipleTable.clearSelection();
+			}
+		},
 		//上下架
 		updownWin(item) {
 			let atr = item.status == '0' ? '下架' : '上架';
 			this.$store.commit('setWin', {
 				title: '温馨提示',
 				winType: 'confirm',
-				content: '确定' + atr + '“ ' + item.goodsName + ' ”?',
+				content: '确定' + atr + '“ ' + item.name + ' ”?',
 				callback: delRes => {
 					if (delRes == 'ok') {
 						this.goodUpOrDownShelf(item, atr);
@@ -265,10 +234,10 @@ export default {
 			});
 		},
 		async goodUpOrDownShelf(item, atr) {
-			let res = await http.goodUpOrDownShelf({
+			let res = await http.retailGoodUpOrDownShelf({
 				data: {
-					goodsId: item.id,
-					status: item.status == '0' ? '2' : '0'
+					id: item.id,
+					status: item.status == '0' ? '1' : '0'
 				}
 			});
 			if (res) {
@@ -277,61 +246,22 @@ export default {
 					winType: 'alert',
 					content: atr + '成功'
 				});
-				this.closeAddGoodsWin('updown');
+				this.getGoods();
 			}
 		},
 		//品牌同步-门店自建筛选
 		selectType(goodType) {
 			this.goodType = goodType;
 			this.typeName = this.goodSec[goodType].name;
-			this.filterGoodsByNav(this.selectNavId);
+			this.getGoods();
+			// this.filterGoodsByNav(this.selectNavId);
 		},
 		//零售搜索
-		async searchNewGood(type) {
-			if (type) {
-				this.currentPage = 1;
-				this.pageGoods = this.goodsList;
-				this.tempGoods = this.goodsList;
-				this.initPage(this.pageGoods);
-			}
-			this.oneArea = {
-				id: -1,
-				name: '请选择一级分类',
-				show: false
-			};
-			this.twoArea = {
-				name: '请选择二级分类',
-				index: -2, //二级分类id
-				show: false
-			};
-			this.selectNavId = -1;
-			if (this.search == '') return;
-			let detial = await http.getListByCid({
-				data: {
-					goodsName: this.search
-					// page:this.currentPage,
-					// num:this.num
-				}
-			});
-			this.pageGoods = detial.list;
-			this.searchGoods = detial.list;
-			for (let i = 0; i < this.pageGoods.length; i++) {
-				if (
-					this.pageGoods[i].groupId * 1 > 0 ||
-					this.pageGoods[i].status == 2
-				) {
-					this.pageGoods.splice(i, 1);
-					i--;
-				}
-			}
-			this.initPage(this.pageGoods);
+		async searchNewGood() {
+			this.currentPage = 1;
+			this.getGoods();
 		},
 		//----------分类筛选---------
-		// showOneArea(e) {
-		// 	e.stopPropagation();
-		// 	this.oneArea.show = !this.oneArea.show;
-		// 	this.twoArea.show = false;
-		// },
 		newselectOneArea(index) {
 			this.oneIndex = index;
 			this.twoIndex = -1;
@@ -350,11 +280,9 @@ export default {
 			this.showTArea = false;
 			this.selectTwoArea(item, index);
 		},
-		selectOneArea(item, index, type) {
-			if (!type) {
-				//如果是从分类点击进入，则页码为1，反之为原来的页数
-				this.currentPage = 1;
-			}
+		selectOneArea(item, index) {
+			this.categoryId = item.id;
+			this.currentPage = 1;
 			this.oneIndex = index;
 			this.twoArea = {
 				id: -2,
@@ -368,286 +296,49 @@ export default {
 			};
 			this.child = item.child;
 			this.child || (this.child = []);
-
-			this.tempGoods = this.pageGoods = this.filterGoodsByCategoryByPid(
-				this.goodsList,
-				this.oneArea.id
-			);
-			if (typeof index == 'number') {
-				this.selectNavId = -1;
-			}
-
-			if (this.search.trim().length != 0) {
-				this.searchGoods = this.funSearchGoods(this.tempGoods);
-				this.pageGoods = this.changeNav(
-					this.selectNavId,
-					this.searchGoods
-				);
-			} else {
-				this.pageGoods = this.changeNav(
-					this.selectNavId,
-					this.tempGoods
-				);
-			}
-			this.initPage(this.pageGoods);
+			this.getGoods();
 		},
-		// showTwoArea() {
-		// 	// e.stopPropagation();
-		// 	if (this.oneArea.id == -1) {
-		// 		this.$store.commit('setWin', {
-		// 			title: '温馨提示',
-		// 			content: '请先选择一级分类!'
-		// 		});
-		// 		this.showTArea = false;
-		// 		return false;
-		// 	}
-		// 	if (this.child.length == 0) {
-		// 		this.$store.commit('setWin', {
-		// 			title: '温馨提示',
-		// 			content: '该分类下没有二级分类!'
-		// 		});
-		// 		this.showTArea = false;
-		// 		return false;
-		// 	}
-		// 	this.twoArea.show = !this.twoArea.show;
-		// 	this.oneArea.show = false;
-		// },
-		selectTwoArea(item, index, type) {
-			if (!type) {
-				//如果是从分类点击进入，则页码为1，反之为原来的页数
-				this.currentPage = 1;
-			}
+		selectTwoArea(item, index) {
+			this.categoryId = item.id;
+			this.currentPage = 1;
 			this.twoIndex = index;
 			this.twoArea = {
 				id: item.id,
 				name: item.name,
 				show: false
 			};
-			this.selectNavId = -1;
-
-			this.tempGoods = this.pageGoods = this.filterGoodsByCategoryByPid(
-				this.goodsList,
-				this.twoArea.id
-			);
-
-			if (this.search.trim().length != 0) {
-				this.searchGoods = this.funSearchGoods(this.tempGoods);
-				this.pageGoods = this.changeNav(
-					this.selectNavId,
-					this.searchGoods
-				);
-			} else {
-				this.pageGoods = this.changeNav(
-					this.selectNavId,
-					this.tempGoods
-				);
-			}
-			if (typeof index == 'number') {
-				this.selectNavId = -1;
-			}
-			this.initPage(this.pageGoods);
-		},
-		//根据所提供的商品和分类,将商品分类
-		filterGoodsByCategoryByPid(goods, id) {
-			if (id == -1) return goods;
-			let arr = [];
-			goods.forEach(ele => {
-				ele.cids || (ele.cids = []);
-				ele.cids.some(e => {
-					if (e == id) {
-						arr.push(ele);
-						return true;
-					}
-				});
-			});
-			return arr;
+			this.getGoods();
+			// this.selectNavId = -1;
 		},
 		//根据商品导航筛选商品
 		filterGoodsByNav(id) {
 			this.selectNavId = id;
-			this.search = this.search.trim();
-			if (this.search.length == 0) {
-				this.pageGoods = this.changeNav(
-					this.selectNavId,
-					this.tempGoods
-				);
-			} else {
-				this.pageGoods = this.changeNav(
-					this.selectNavId,
-					this.searchGoods
-				);
-			}
 			this.currentPage = 1;
-			this.initPage(this.pageGoods);
+			this.num = 10;
+			this.getGoods();
 		},
-		//返回类型商品
-		changeNav(id, goodsList) {
-			let tempGoods = [];
-			if (id != 3) {
-				goodsList = goodsList.filter(ele => {
-					return ele.status != 2;
-				});
-				switch (id + '') {
-					case '-1':
-						tempGoods = goodsList;
-						break;
-					case '0':
-						tempGoods = goodsList.filter(ele => {
-							return ele.isStock == 1;
-						});
-						break;
-					case '1':
-						tempGoods = goodsList.filter(ele => {
-							return ele.isStock == 0;
-						});
-						break;
-					case '2':
-						tempGoods = goodsList.filter(ele => {
-							return ele.isGroup == 1;
-						});
-						break;
-				}
-			} else if (id == 3) {
-				tempGoods = goodsList.filter(ele => {
-					return ele.status == 2;
-				});
-			}
-			let goods = []; //全部
-			let goodsOne = []; //品牌
-			let goodsTwo = []; //门店自建
-			let newGoods = utils.deepCopy(tempGoods);
-			if (this.goodType == 0) {
-				goods = newGoods;
-			} else {
-				for (let i = 0; i < newGoods.length; i++) {
-					let good = newGoods[i];
-					if (good.id * 1 < 100000) {
-						goodsOne.push(good);
-					} else {
-						goodsTwo.push(good);
-					}
-				}
-				if (this.goodType == 1) {
-					goods = goodsOne;
-				} else if (this.goodType == 2) {
-					goods = goodsTwo;
-				}
-			}
-			tempGoods = goods;
-			return tempGoods;
-		},
-		//商品搜索
-		funSearchkeyUp() {
-			this.searchGoods = this.pageGoods = this.funSearchGoods(
-				this.tempGoods
-			);
-			this.pageGoods = this.changeNav(this.selectNavId, this.searchGoods);
-			this.currentPage = 1;
-			this.initPage(this.pageGoods);
-		},
-		//返回搜索的结果
-		funSearchGoods(goodsList) {
-			let tempGoods = [];
-			if (!this.search || this.search.trim().length == 0) {
-				return goodsList;
-			}
-			this.search = this.search.trim();
-			tempGoods = goodsList.filter(ele => {
-				let BC = '' + ele.BC;
-				BC = BC.toLowerCase();
-				let name = ele.goodsName.toLowerCase();
-				let search = this.search.toLowerCase();
-				if (BC && BC.indexOf(search) > -1) return true;
-				if (name && name.indexOf(search) > -1) return true;
-			});
-			return tempGoods;
-		},
-
-		//-----------分页---------
-		initPage(arr) {
-			this.totalNum = Math.ceil(arr.length / this.num);
-			if (this.totalNum == 0) {
-				//如果数组为空，总页数为0，则将总数置为1，
-				this.totalNum == 1;
-			}
-			if (this.totalNum < this.currentPage) {
-				//如果总页数小于当前页码数，
-				this.currentPage = this.totalNum;
-			}
-			let startIndex = (this.currentPage - 1) * this.num;
-			let endIndex = this.currentPage * this.num;
-			this.nowGoods = arr.slice(startIndex, endIndex);
-		},
-		//获取分页跳转的页码
-		async funGetPageNum(p) {
-			this.currentPage = p.page;
-			this.num = p.num;
-			this.initPage(this.pageGoods);
-
-			if (this.currentPage > this.totalNum - 2) {
-				//如果分页组件上的页数翻到一定值，
-				if (
-					this.requestPage < this.requestTotal &&
-					this.oneIndex <= 0
-				) {
-					//且后台请求的页数小于后台总页数，进行下一页的接口请求
-					this.requestPage++;
-					let goods = await this.getGoods();
-
-					this.pageGoods = this.pageGoods.concat(goods);
-					this.initPage(this.pageGoods);
-					storage.session('goodList', this.pageGoods);
-				}
-			}
-		},
+		//分页--每页显示
 		sizeChange(e) {
 			this.num = e;
 			this.currentPage = 1;
-			this.initPage(this.pageGoods);
+			this.getGoods();
 		},
-
 		//分页点击
-		async pageClick(p) {
+		pageClick(p) {
 			this.currentPage = p;
-			this.initPage(this.pageGoods);
-
-			if (this.currentPage > this.totalNum - 2) {
-				//如果分页组件上的页数翻到一定值，
-				if (
-					this.requestPage < this.requestTotal &&
-					this.oneIndex <= 0
-				) {
-					//且后台请求的页数小于后台总页数，进行下一页的接口请求
-					this.requestPage++;
-					let goods = await this.getGoods();
-
-					this.pageGoods = this.pageGoods.concat(goods);
-					this.initPage(this.pageGoods);
-					storage.session('goodList', this.pageGoods);
-				}
-			}
+			this.getGoods();
 		},
 		//-------------win----------
 		//获取添加商品弹窗的结果
 		closeAddGoodsWin(res) {
+			this.initSyncBtn();
 			this.isAddEditGood = false;
-			console.log(this.isAddEditGood);
-			if (res != 'releaserelation') {
+			console.log(res);
+			if (res != 'back') {
 				//解除关联的时候不关闭弹框
-				this.showCom = '';
+				this.getGoods();
 			}
-			if (res != 'close' && res !== 'cancel') {
-				this.requestPage = 1;
-				this.getGoodsList(true).then(goods => {
-					this.allGoods = goods;
-					this.goodsList = this.initGoodsStock(goods, this.numList);
-					this.goodsList = this.deleteChildGoods(this.goodsList);
-					this.goodsList = this.funSortGood(this.goodsList);
-					this.twoArea.id == -2
-						? this.selectOneArea(this.oneArea, this.oneIndex, true)
-						: this.selectTwoArea(this.twoArea, this.twoIndex, true);
-				});
-			}
+			this.showCom = '';
 		},
 		//添加商品
 		openAddWin(item) {
@@ -658,93 +349,14 @@ export default {
 				shopId: this.shopId,
 				category: this.category,
 				imgHost: this.imgHost,
-				goodsList: this.allGoods,
 				brandId: this.brandId,
+				brandList: this.brandList,
+				suppierList: this.suppierList, //供应商列表
+				specList:this.specList,//零售规格列表
 				title: item.id ? '修改商品' : '添加商品'
 			};
 			this.showCom = 'openAddGoodsWin';
 			this.isAddEditGood = true;
-			console.log(this.isAddEditGood);
-		},
-		//-----------util------
-		//初始化商品,主要是为了显示库存数量,和原价
-		initGoodsStock(goodsList, list = []) {
-			for (let ele of goodsList) {
-				if (ele.isStock == 1) {
-					for (let e of list) {
-						if (ele.id == e.gid) {
-							ele.goodsNum = e.goodsNum;
-							break;
-						}
-					}
-				}
-			}
-			for (let ele of goodsList) {
-				ele.groupStock = [];
-				// if(ele.isStock == 1){//必须进销存开启多规格价格、库存才显示 =======不适合价格
-				for (let e of goodsList) {
-					if (ele.id == e.groupId && ele.id != e.id) {
-						let obj = {
-							goodsNum: e.goodsNum,
-							price: e.price,
-							vipPrice: e.vipPrice
-						};
-						ele.groupStock.push(obj);
-					}
-					if (ele.groupStock.length >= 3) break;
-				}
-				// }
-			}
-			return goodsList;
-		},
-		//获取开启进销存的商品,并给商品添加relative字段,获取库存数量
-		filterGoodsByStock(goods = [], numArr = []) {
-			let temp = [];
-			let arr = [];
-			temp = goods.filter(ele => {
-				return ele.isStock == 1;
-			});
-			for (let ele of temp) {
-				for (let item of numArr) {
-					if (ele.id == item.gid) {
-						ele.goodsThreshold = item.goodsThreshold;
-						ele.goodsNum = item.goodsNum;
-						break;
-					}
-				}
-			}
-			for (let ele of temp) {
-				ele.relative = [];
-				for (let item of temp) {
-					if (item.groupId == ele.id && item.id != ele.id) {
-						ele.relative.push(item);
-					}
-				}
-				arr.push(ele);
-			}
-			return arr;
-		},
-		//去除子菜
-		deleteChildGoods(goods) {
-			let temp = [];
-			temp = goods.filter(ele => {
-				if (!Number(ele.groupId)) {
-					return true;
-				}
-			});
-			return temp;
-		},
-		//排序商品
-		funSortGood(good) {
-			let temp = [];
-			temp = good.sort((x, y) => {
-				if (x.sort == y.sort) {
-					return x.id - y.id;
-				} else {
-					return x.sort - y.sort;
-				}
-			});
-			return temp;
 		},
 		//初始化按钮
 		initSyncBtn() {
@@ -774,26 +386,12 @@ export default {
 							errorInfo: res
 						};
 					}
-					this.getGoodsList(true).then(goods => {
-						this.allGoods = goods;
-						this.goodsList = this.initGoodsStock(
-							goods,
-							this.numList
-						);
-						this.goodsList = this.deleteChildGoods(this.goodsList);
-						this.goodsList = this.funSortGood(this.goodsList);
-						if(this.twoArea.id == -2){
-							this.selectOneArea(this.oneArea,this.oneIndex,true);
-						}else{
-							this.selectTwoArea(this.twoArea,this.twoIndex,true);
-						}
-					});
 				});
 			};
 			//导出
 			obj.leadOut = () => {
 				this.exportGoodsList();
-			},
+			};
 			this.$store.commit('setPageTools', obj);
 		},
 		//初始化数据
@@ -807,70 +405,76 @@ export default {
 		},
 		//获取分类
 		async getCate() {
-			let category = await http.getCategoryList({
-				data: { shopId: this.shopId }
-			});
-			storage.session('areaList', category);
-			return category;
-		},
-		async getCategoryList(flag, ver) {
-			let category = null;
-			if (flag) {
-				category = await this.getCate();
-			} else {
-				let httpGoodVersion = storage.session('httpGoodVersion');
-				if (!httpGoodVersion) {
-					category = await this.getCate();
-				} else {
-					if (httpGoodVersion.otherConfigVer == ver) {
-						category = storage.session('areaList');
-						if (!category) category = await this.getCate();
-					} else {
-						category = await this.getCate();
-					}
-				}
+			let category = await http.getRetailCategoryList({ data: {} }); //获取分类列表
+			this.brandList = await http.brandList({ data: {} }); //获取品牌列表
+			this.suppierList = await http.suppierList({ data: {} }); //获取供应商列表
+			let list = await http.specGetList({ data: {} }); //获取零售规格列表
+			for (let i = 0; i < list.length; i++) {
+				list[i].value = list[i].name;
 			}
-			return category;
+			this.specList = list;
+			this.category = category;
+			if (category[0] && category[0].id != -1) {
+				category.unshift({ id: -1, name: '全部一级分类' });
+			}
+			this.category = category;
+			storage.session('areaList', category);
+			this.getGoods();
 		},
-		//获取商品
+		//获取商品和品牌
 		async getGoods() {
 			let goods = [];
-			let temp = await http.getGoodsList({
+			let temp = await http.getRetailGoodsList({
 				data: {
-					shopId: this.shopId,
-					page: this.requestPage,
-					num: this.requestNum,
-					specification: 1
+					name: this.search,
+					status: this.selectNavId,
+					categoryId: this.categoryId,
+					page: this.currentPage,
+					num: this.num
 				}
 			});
-			this.requestTotal = temp.total;
-			goods = temp.list;
+			this.totalNum = Math.ceil(temp.paginator.totalNum / this.num);
+			this.currentPage = temp.paginator.page;
+			goods = temp.item;
+			// let arr = utils.deepCopy(this.selectList);
+			// let arr = this.selectList;
 			for (let i = 0; i < goods.length; i++) {
-				goods[i].price = +goods[i].price;
-				goods[i].cost = +goods[i].cost;
-				goods[i].sort = +goods[i].sort;
+				// this.$set(goods[i], 'brandName', '');
+				goods[i].brandName = this.getName(this.brandList,goods[i].brandId);
+				goods[i].categoryName = this.getName(this.category,goods[i].categoryId);
+				// goods[i].price = +goods[i].price;
+				// goods[i].cost = +goods[i].cost;
+				// goods[i].sort = +goods[i].sort;
+				// for(let j=0;j<arr.length;j++){
+				// 	if(goods[i].id = arr[j].id){
+				// 		goods[i].selected = true;
+				// 		break;
+				// 	}else{
+				// 		goods[i].selected = false;
+				// 	}
+				// }
 			}
-			storage.session('goodList', goods);
-			return goods;
+			if (temp) {
+				this.load = true;
+			}
+			this.nowGoods = goods;
 		},
-		async getGoodsList(flag, goodVer) {
-			let goods = null;
-			if (flag) {
-				goods = await this.getGoods();
-			} else {
-				let httpGoodVersion = storage.session('httpGoodVersion');
-				if (!httpGoodVersion) {
-					goods = await this.getGoods();
-				} else {
-					if (httpGoodVersion.goodsConfigVer == goodVer) {
-						goods = storage.session('goodList');
-						if (!goods) goods = await this.getGoods();
-					} else {
-						goods = await this.getGoods();
+		getName(list,id) {
+			// console.log(this.brandList);
+			let name = '';
+			for (let i = 0; i < list.length; i++) {
+				if (id == list[i].id) {
+					name = list[i].name;
+					return name;
+				}
+				if(list[i].child){
+					for(let j=0;j<list[i].child.length;j++){
+						name = list[i].child[j].name;
 					}
 				}
+				
 			}
-			return goods;
+			return name;
 		},
 		//导入商品
 		async importGoods() {
@@ -884,48 +488,7 @@ export default {
 		//导出商品
 		exportGoodsList() {
 			http.exportGoodsList();
-		},
-		async getHttp(url, data = {}) {
-			let res = await http[url]({ data });
-			return res;
-		},
-		//同步请求
-		async syncRequest() {
-			let res = await this.getHttp('ShopGetExtra'); //获取版本号
-			let cate = await this.getCategoryList(false, res.otherConfigVer); //获取分类
-			let goods = await this.getGoodsList(false, res.goodsConfigVer); //获取商品列表
-			let { list } = await this.getHttp('InventoryGetlist'); //获取库存数量
-
-			if (cate[0] && cate[0].id != -1) {
-				cate.unshift({ id: -1, name: '全部一级分类' });
-			}
-			this.numList = list;
-			this.category = cate;
-			this.load = true;
-			this.allGoods = goods;
-			this.goodsList = this.initGoodsStock(goods, this.numList); //初始化库存数量,价格,会员价格
-			this.goodsList = this.deleteChildGoods(this.goodsList); //删除子菜
-			this.goodsList = this.funSortGood(this.goodsList); //排序商品
-
-			this.selectOneArea(this.oneArea, this.oneIndex);
-			storage.session('httpGoodVersion', res);
-		},
-		//监听浏览器窗口变化
-		windowResize() {
-			let width = this.$refs.addGoods.offsetWidth - 10;
-			this.listHeight = width * 2 / 3;
 		}
-		//dom点击隐藏事件
-		// domClick() {
-		// 	if (this.twoArea.show || this.oneArea.show) {
-		// 		this.showCom = '';
-		// 	}
-		// 	this.twoArea.show = this.oneArea.show = false;
-		// }
-	},
-	beforeDestroy() {
-		// document.removeEventListener('click', this.domClick);
-		// window.removeEventListener('resize', this.windowResize);
 	}
 };
 </script>
@@ -960,100 +523,6 @@ export default {
 			clear: both;
 		}
 	}
-	//分类
-	// .select-down {
-	// 	width: 210px;
-	// 	// float: left;
-	// 	display: inline-block;
-	// 	.staList {
-	// 		position: relative;
-	// 		line-height: 41px;
-	// 		width: 210px;
-	// 		cursor: pointer;
-	// 		float: left;
-
-	// 		.tableList {
-	// 			height: 40px;
-	// 			color: #666666;
-	// 			border: #b3b3b3 solid 1px;
-	// 			cursor: pointer;
-	// 			div {
-	// 				.whb(40px,40px);
-	// 				position: relative;
-	// 				z-index: 5;
-	// 				i {
-	// 					.whb(10px,10px);
-	// 					position: absolute;
-	// 					top: 50%;
-	// 					left: 50%;
-	// 					margin-top: -5px;
-	// 					margin-left: -5px;
-	// 					border-top: 10px solid #b3b3b3;
-	// 					border-left: 5px solid transparent;
-	// 					border-right: 5px solid transparent;
-	// 					box-sizing: border-box;
-	// 				}
-	// 			}
-	// 			.oSpan {
-	// 				height: 39px;
-	// 				line-height: 39px;
-	// 				width: 165px;
-	// 				float: left;
-	// 				text-align: center;
-	// 				border-right: 1px solid #b3b3b3;
-	// 				overflow: hidden;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	.detDiv {
-	// 		.whb(450px,250px);
-	// 		position: absolute;
-	// 		top: 45px;
-	// 		left: 0;
-	// 		padding: 10px;
-	// 		box-shadow: 3px 2px 10px #ccc;
-	// 		z-index: 15;
-	// 		background-color: #45404b;
-
-	// 		.detI {
-	// 			.whb(0,0);
-	// 			line-height: 0;
-	// 			position: absolute;
-	// 			top: -10px;
-	// 			left: 80px;
-	// 			border-width: 10px;
-	// 			border-top: 0px;
-	// 			border-style: solid;
-	// 			border-color: #fff #fff #45404b #fff;
-	// 		}
-	// 		.detCategory {
-	// 			.whb(100%,100%);
-	// 			overflow-y: auto;
-	// 			z-index: 16;
-	// 		}
-	// 		.detChild {
-	// 			width: 100%;
-	// 			height: 100%;
-	// 			overflow-y: auto;
-	// 			z-index: 16;
-	// 		}
-	// 	}
-
-	// 	.showName {
-	// 		height: 40px;
-	// 		line-height: 40px;
-	// 		border: 1px solid #f2f2f2;
-	// 		float: left;
-	// 		margin: 5px;
-	// 		color: #fff;
-	// 		padding: 0 10px;
-	// 	}
-	// 	.showname-select {
-	// 		border-color: #ff9800;
-	// 		background: url(../../res/images/sign.png) right bottom no-repeat;
-	// 	}
-	// }
 	.commodity-box {
 		&:after {
 			content: '';

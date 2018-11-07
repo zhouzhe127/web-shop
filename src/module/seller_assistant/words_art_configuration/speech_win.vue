@@ -5,21 +5,29 @@
 		<div class="speech_content" slot="content">
 			<header class="content_header">
 				<span>话术组名称</span>
-				<input type="text" maxlength="4" v-model.trim="speechNames" placeholder="输入名称">
+				<!-- <input type="text" maxlength="4" v-model.trim="speechNames" placeholder="输入名称"> -->
+				<el-input v-model="speechNames" maxlength="10" placeholder="输入名称" style="width:179px;"></el-input>
 			</header>
 			<section class="content_body">
 				<ul>
 					<li v-for="(item,index) in speechList" :key="index">
 						<span>{{index + 1}}</span>
-						<input maxlength="100" type="text" v-model.trim="item.value" placeholder="请输入话术内容" v-if="type == 'new' || type == 'oldnew'">
+						<!-- <input maxlength="100" type="text" v-model.trim="item.value" placeholder="请输入话术内容" v-if="type == 'new' || type == 'oldnew'"> -->
+						<el-input v-model="item.value" v-if="type == 'new' || type == 'oldnew'" placeholder="请输入话术内容" style="width:179px;"></el-input>
 						<div class="pathname" v-if="type == 'path'|| type == 'oldpath'" @click="chooseFun(item)">{{item.name}}</div>
-						<img @click="delSpeech(index)" src="../../res/icon/icondelete.png">
+						<img @click="delSpeech(index)" src="../../../res/icon/icondelete.png">
 					</li>
 				</ul>
-				<div @click="createSpeech" class="add_win" v-if="type == 'new' || type == 'oldnew'">
-					<img src="../../res/images/add.png" />新建话术内容</div>
-				<div @click="chooseFun('')" class="add_win" v-if="type == 'path' || type == 'oldpath'">
-					<img src="../../res/images/add.png" />选择功能</div>
+				<!-- <div @click="createSpeech" class="add_win" v-if="type == 'new' || type == 'oldnew'">
+					<img src="../../../res/images/add.png" />新建话术内容</div> -->
+				<div class="add_win" v-if="type == 'new' || type == 'oldnew'">
+					<el-button type="primary" icon="el-icon-plus" @click="createSpeech" style="width:179px;">新建话术内容</el-button>
+				</div>
+				<div class="add_win" v-if="type == 'path' || type == 'oldpath'">
+					<el-button type="primary" icon="el-icon-plus" @click="chooseFun('')" style="width:179px;">选择功能</el-button>
+				</div>
+				<!-- <div @click="chooseFun('')" class="add_win" v-if="type == 'path' || type == 'oldpath'">
+					<img src="../../../res/images/add.png" />选择功能</div> -->
 			</section>
 			<!-- 选择路径的弹窗 -->
 			<transition name="fade">
@@ -28,7 +36,7 @@
 		</div>
 	</win>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	export default {
@@ -193,7 +201,7 @@
 				this.oldSpeech.splice(i, 1);
 				this.oldSpeech.length - 1;
 			},
-			chooseFun: function (item) { //选择功能
+			chooseFun: function(item) { //选择功能
 				if (this.speechList.length > 19) {
 					this.$store.commit('setWin', {
 						content: '话术不能多于20条',
@@ -205,7 +213,7 @@
 				this.showPath = true;
 				this.chooseMenu = item;
 			},
-			getResult: function (res, item) {
+			getResult: function(res, item) {
 				if (res == 'ok') {
 					this.speechList = item;
 				}
@@ -248,18 +256,21 @@
 <style lang="less" scoped>
 	.speech_content {
 		margin-top: 27px;
+
 		.content_header {
 			span {
 				margin-left: 56px;
 				font-size: 14px;
 				margin-right: 14px;
 			}
+
 			input {
 				width: 183px;
 				height: 43px;
 				padding: 0 17px;
 			}
 		}
+
 		.content_body {
 			ul li {
 				padding-left: 144px;
@@ -267,8 +278,9 @@
 				display: flex;
 				flex-direction: row;
 				align-items: center;
+
 				span:nth-child(1) {
-					background: RGB(40, 168, 224);
+					background: #E1BB4A;
 					width: 27px;
 					height: 27px;
 					border-radius: 50%;
@@ -278,6 +290,7 @@
 					text-align: center;
 					line-height: 26px;
 				}
+
 				span:nth-child(2) {
 					font-size: 14px;
 					color: RGB(102, 102, 102);
@@ -286,16 +299,19 @@
 					text-overflow: ellipsis;
 					white-space: nowrap;
 				}
+
 				img {
 					margin-left: 18px;
 					margin-top: 1px;
 				}
+
 				input {
 					width: 183px;
 					height: 43px;
 					padding: 0 17px;
 					border: 1px solid RGB(179, 179, 179);
 				}
+
 				.pathname {
 					width: 130px;
 					height: 43px;
@@ -303,10 +319,10 @@
 					cursor: pointer;
 				}
 			}
+
 			.add_win {
 				width: 210px;
 				height: 40px;
-				background: RGB(41, 168, 224);
 				border: none;
 				display: flex;
 				flex-direction: row;
@@ -315,8 +331,8 @@
 				margin-left: 144px;
 				font-size: 14px;
 				color: #fff;
-				padding-left: 50px;
 				cursor: pointer;
+
 				img {
 					width: 19px;
 					height: 19px;

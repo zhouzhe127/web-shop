@@ -2,7 +2,6 @@
  * @Author: 孔伟研 
  * @Date: 2018-08-03 16:52:21 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-09-18 11:10:02
  * @Module:打印机配置
 **/
 <template>
@@ -59,7 +58,8 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '新建打印机配置',
-				className: ['addStaff', 'export-btn'],
+				type:4,
+				className: 'plain',
 				fn: ()=>{
 					this.openWin(null,'addPcon',null);
 				},

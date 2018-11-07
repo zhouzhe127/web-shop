@@ -3,7 +3,7 @@
     @百川      褚子龙
 -->
 <template>
-	<section>
+	<div>
 		<div class="titleBox">
 			<div></div>
 			<span>仓库操作详情</span>
@@ -45,7 +45,7 @@
 		<ul class="area" v-for="(item,index) in area" :key="index">
 			<li><span>{{index+1}}</span>仓库区域 ：{{item}}</li>
 		</ul>
-	</section>
+	</div>
 </template>
 
 <script>
@@ -238,7 +238,8 @@
 	.area {
 		width: 100%;
 		height: auto;
-		margin-top: 20px
+		margin-top: 20px;
+		float: left;
 	}
 	
 	.area li {

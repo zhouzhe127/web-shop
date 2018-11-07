@@ -4,13 +4,14 @@
 			<div class="online-box clearfix">
 				<span class="fl online-sub required">卡属门店</span>
 				<span class="fl belongshop" v-if="ischain == '0'">{{currentShop.name}}</span>
-				<a class="fl choicebtn" href="javascript:void(0)" @click="choseShop" v-if="ischain == '3'">选择门店</a>
+				<!-- <a class="fl choicebtn" href="javascript:void(0)" @click="choseShop" v-if="ischain == '3'">选择门店</a> -->
+				<el-button type="primary" @click="choseShop" v-if="ischain == '3'" class="fl choicebtn">选择门店</el-button>
 				<span class="fl choice" v-if="shopIndex != -1">已选择{{shopList[shopIndex].shopName}}</span>
 			</div>
 			<div class="online-box clearfix">
 				<span class="fl online-sub required">激活方式</span>
 				<template v-for="(item,index) in goodlist">
-					<span class="way" :key = "index" :class="{'signa' :type == index}" v-on:click="tabTypes(index,1)" v-if="item.type">{{item.name}}</span>
+					<span class="way" :key="index" :class="{'signa' :type == index}" v-on:click="tabTypes(index,1)" v-if="item.type">{{item.name}}</span>
 				</template>
 			</div>
 			<section v-show="type == '0'">
@@ -20,7 +21,8 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">选择卡类型</span>
-					<a class="fl choicebtn" href="javascript:void(0)" @click="choseCardType">选择卡类型</a>
+					<!-- <a class="fl choicebtn" href="javascript:void(0)" @click="choseCardType">选择卡类型</a> -->
+					<el-button type="primary" @click="choseCardType" class="fl choicebtn">选择卡类型</el-button>
 					<span class="fl choice" v-if="virtualCard.cradTypeIndex != -1">已选择{{cradTypeList[virtualCard.cradTypeIndex].name}}</span>
 				</div>
 				<div class="online-box clearfix" v-if="virtualCard.selectCardType != '' ">
@@ -54,7 +56,8 @@
 							<span class="fl">卡包内容</span>
 							<div class="fl show-r">
 								<p v-if="virtualCard.selectCardType.cardCoupon ==''">无</p>
-								<p v-else v-for="(v,i) in virtualCard.selectCardType.cardCoupon" :key="i">{{i + 1 + '.赠送优惠卷: ' + v.name +' ' + v.num+ '张'}}</p>
+								<p v-else v-for="(v,i) in virtualCard.selectCardType.cardCoupon" :key="i">{{i + 1 + '.赠送优惠卷: ' + v.name +' ' +
+									v.num+ '张'}}</p>
 							</div>
 						</div>
 						<div class="show-box" v-show="virtualCard.selectCardType.discount+'' !== '100'">
@@ -64,8 +67,10 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">填写卡编号</span>
-					<input type="text" class="fl" placeholder="请输入实体卡号" v-model="virtualCard.cardNo" maxlength="8" @change="validateNumber">
-					<a href="javascript:void(0)" class="operation fl" @click="getCardNo">自动补填</a>
+					<!-- <input type="text" class="fl" placeholder="请输入实体卡号" v-model="virtualCard.cardNo" maxlength="8" @change="validateNumber"> -->
+					<el-input type="text" style="width:210px;margin-left:-25px" placeholder="请输入实体卡号" v-model="virtualCard.cardNo"
+					 maxlength="8" @change="validateNumber"></el-input>
+					<a href="javascript:void(0)" class="operation" @click="getCardNo">自动补填</a>
 					<span class="Correct" :class="{complete: virtualCard.validateNoLog == 1,err:virtualCard.validateNoLog == 2}">
 					</span>
 				</div>
@@ -75,21 +80,26 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">手机</span>
-					<input type="text" class="fl" placeholder="请输入手机号码" v-model="virtualCard.consumerPhone">
+					<!-- <input type="text" class="fl" placeholder="请输入手机号码" v-model="virtualCard.consumerPhone"> -->
+					<el-input type="text" style="width:210px;" placeholder="请输入手机号码" v-model="virtualCard.consumerPhone"></el-input>
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">姓名</span>
-					<input type="text" class="fl" placeholder="请输入姓名" v-model="virtualCard.consumerName">
+					<!-- <input type="text" class="fl" placeholder="请输入姓名" v-model="virtualCard.consumerName"> -->
+					<el-input type="text" style="width:210px;" placeholder="请输入姓名" v-model="virtualCard.consumerName"></el-input>
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">性别</span>
 					<template v-for="(item,index) in genderList">
-						<span class="way" :key = "index" :class="{'signa' : virtualCard.genderType == index}" v-on:click="tabTypes(index,2)" v-if="item.type">{{item.name}}</span>
+						<span class="way" :key="index" :class="{'signa' : virtualCard.genderType == index}" v-on:click="tabTypes(index,2)"
+						 v-if="item.type">{{item.name}}</span>
 					</template>
 				</div>
 				<div class="online-box clearfix ">
 					<span class="fl online-sub required">生日</span>
-					<input type="text" class="fl" placeholder="如:19940412" v-model="virtualCard.consumerBirthday" maxlength="8">
+					<!-- <input type="text" class="fl" placeholder="如:19940412" v-model="virtualCard.consumerBirthday" maxlength="8"> -->
+					<el-input type="text" style="width:210px;" placeholder="如:19940412" v-model="virtualCard.consumerBirthday"
+					 maxlength="8"></el-input>
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub "></span>
@@ -101,8 +111,11 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub "></span>
-					<a href="javascript:void(0)" class="delete">删除</a>
-					<a href="javascript:void(0)" class="save" @click="activationCard">保存</a>
+					<!-- <a href="javascript:void(0)" class="delete">删除</a> -->
+					<el-button type="info" class="delete">删除</el-button>
+					<!-- <a href="javascript:void(0)" class="save" @click="activationCard">保存</a> -->
+					<el-button type="primary" class="save" @click="activationCard">保存</el-button>
+
 				</div>
 			</section>
 			<div class="readCard" v-show="entityCard.pageMode == 'readCard' && type == '1'">
@@ -120,7 +133,8 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub required">选择卡类型</span>
-					<a class="fl choicebtn" href="javascript:void(0)" @click="choseCardType">选择卡类型</a>
+					<!-- <a class="fl choicebtn" href="javascript:void(0)" @click="choseCardType">选择卡类型</a> -->
+					<el-button type="primary" @click="choseCardType" class="fl choicebtn">选择卡类型</el-button>
 					<span class="fl choice" v-if="entityCard.cradTypeIndex != -1">已选择{{cradTypeList[entityCard.cradTypeIndex].name}}</span>
 				</div>
 				<div class="online-box clearfix" v-if="entityCard.selectCardType != '' ">
@@ -154,7 +168,8 @@
 							<span class="fl">卡包内容</span>
 							<div class="fl show-r">
 								<p v-if="entityCard.selectCardType.cardCoupon ==''">无</p>
-								<p v-else v-for="(v,i) in entityCard.selectCardType.cardCoupon" :key="i">{{i + 1 + '.赠送优惠卷: ' + v.name +' ' + v.num+ '张'}}</p>
+								<p v-else v-for="(v,i) in entityCard.selectCardType.cardCoupon" :key="i">{{i + 1 + '.赠送优惠卷: ' + v.name +' ' +
+									v.num+ '张'}}</p>
 							</div>
 						</div>
 						<div class="show-box" v-show="entityCard.selectCardType.discount+'' !== '100'">
@@ -175,21 +190,26 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub">手机</span>
-					<input type="text" class="fl" placeholder="请输入手机号码" v-model="entityCard.consumerPhone">
+					<!-- <input type="text" class="fl" placeholder="请输入手机号码" v-model="entityCard.consumerPhone"> -->
+					<el-input type="text" style="width:210px;" placeholder="请输入手机号码" v-model="entityCard.consumerPhone"></el-input>
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub">姓名</span>
-					<input type="text" class="fl" placeholder="请输入姓名" v-model="entityCard.consumerName">
+					<!-- <input type="text" class="fl" placeholder="请输入姓名" v-model="entityCard.consumerName"> -->
+					<el-input type="text" style="width:210px;" placeholder="请输入姓名" v-model="entityCard.consumerName"></el-input>
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub">性别</span>
 					<template v-for="(item,index) in genderList">
-						<span class="way" :key = "index" :class="entityCard.genderType == index ? 'signa' : ''" v-on:click="tabTypes(index,2)" v-if="item.type">{{item.name}}</span>
+						<span class="way" :key="index" :class="entityCard.genderType == index ? 'signa' : ''" v-on:click="tabTypes(index,2)"
+						 v-if="item.type">{{item.name}}</span>
 					</template>
 				</div>
 				<div class="online-box clearfix ">
 					<span class="fl online-sub " :class="type == '0' ? 'required' : ''">生日</span>
-					<input type="text" class="fl" placeholder="如:19940412" v-model="entityCard.consumerBirthday" maxlength="8">
+					<!-- <input type="text" class="fl" placeholder="如:19940412" v-model="entityCard.consumerBirthday" maxlength="8"> -->
+					<el-input type="text" style="width:210px;" placeholder="如:19940412" v-model="entityCard.consumerBirthday"
+					 maxlength="8"></el-input>
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub "></span>
@@ -201,8 +221,10 @@
 				</div>
 				<div class="online-box clearfix">
 					<span class="fl online-sub "></span>
-					<a href="javascript:void(0)" class="delete">删除</a>
-					<a href="javascript:void(0)" class="save" @click="activationCard">保存</a>
+					<!-- <a href="javascript:void(0)" class="delete">删除</a> -->
+					<el-button type="info" class="delete">删除</el-button>
+					<!-- <a href="javascript:void(0)" class="save" @click="activationCard">保存</a> -->
+					<el-button type="primary" class="save" @click="activationCard">保存</el-button>
 				</div>
 			</section>
 		</div>
@@ -213,8 +235,7 @@
 </template>
 <script>
 	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-
+	import storage from 'src/verdor/storage'; 
 
 	export default {
 		data() {
@@ -311,7 +332,7 @@
 				}
 
 				let WS = await
-				import ( /* webpackChunkName:'entity_card_ws' */ 'src/module/member_system/entity_card_ws');
+				import( /* webpackChunkName:'entity_card_ws' */ 'src/module/member_system/entity_card_ws');
 
 				WS = WS.default;
 				let makeCardWebsocket = new WS('openCard', this.selectShop.id ? this.selectShop.id : this.currentShop.shopId, (oid,
@@ -778,9 +799,9 @@
 		},
 		components: {
 			chooseCardType: () =>
-				import ( /*webpackChunkName: 'choose_cardType_win'*/ 'src/module/member_system/choose_cardType_win'),
+				import( /*webpackChunkName: 'choose_cardType_win'*/ 'src/module/member_system/choose_cardType_win'),
 			chooseStores: () =>
-				import ( /*webpackChunkName: 'card_stores_win'*/ 'src/module/member_system/card_stores_win'),
+				import( /*webpackChunkName: 'card_stores_win'*/ 'src/module/member_system/card_stores_win'),
 		}
 	};
 </script>
@@ -833,11 +854,11 @@
 	#card-activation .containter .online-box .choicebtn {
 		display: block;
 		width: 211px;
-		height: 40px;
+		/* height: 40px; */
 		text-align: center;
-		line-height: 40px;
+		/* line-height: 40px; */
 		color: #fff;
-		background: #2FA8DC;
+		/* background: #2FA8DC; */
 		margin-right: 11px;
 	}
 
@@ -943,24 +964,15 @@
 	#card-activation .containter .online-box .delete,
 	#card-activation .containter .online-box .save {
 		float: left;
-		width: 200px;
-		height: 50px;
+		width: 210px;
+		/* height: 50px; */
 		margin-right: 10px;
 		text-align: center;
-		line-height: 50px;
+		/* line-height: 50px; */
 		color: #fff;
 	}
 
-	#card-activation .containter .online-box .delete {
-		background: #B3B3B3;
-	}
-
-	#card-activation .containter .online-box .save {
-		background: #009494;
-	}
-
 	/*验证成功或者失败的小圆点*/
-
 	#card-activation .containter .online-box .Correct {
 		display: inline-block;
 		float: left;
@@ -1056,6 +1068,7 @@
 			width: 100%;
 			height: auto;
 		}
+
 		#card-activation .containter .set-line {
 			width: 100%;
 			height: 28px;
@@ -1064,6 +1077,7 @@
 			margin: 15px 0 35px;
 			position: relative;
 		}
+
 		#card-activation .containter .set-line .line {
 			display: inline-block;
 			width: 88%;

@@ -21,6 +21,11 @@
 			</div>
 			<div slot="con-1" slot-scope="props">{{num*(page -1) + props.index + 1}}</div>
 		</com-table> -->
+		<div class="tips">
+			<div class="handle-tips">
+				<i></i> 关联职位后，当前职位工作人员会更新至当前分组，变动用户菜单。请知悉！
+			</div>
+		</div>
 		<div class="list_box">
 			<div class="list_title">
 				<div class="list_title_l fl">
@@ -82,7 +87,7 @@
 		</transition>
 		<!-- 关联职位 -->
 		<transition name="fade">
-			<win v-if="isShowPosition" :width="512" :height="169" @winEvent="winEventPosition">
+			<win v-if="isShowPosition" :width="550" :height="200" @winEvent="winEventPosition">
 				<span slot="title">关联职位</span>
 				<div class="new_user" slot="content">
 					<div class="group_name">
@@ -338,6 +343,8 @@
 			},
 			relatedPosition: function(id) { //关联职位
 				this.groupId = id;
+				this.validName = '店长';
+				this.validId = 1;
 				this.isShowPosition = true;
 			},
 			//每页显示多少条数据
@@ -381,6 +388,15 @@
 <style lang="less" scoped>
 	#user_group {
 		width: 1300px;
+
+		.tips {
+			width: 100%;
+			height: 40px;
+			line-height: 40px;
+			background: #ebeef5;
+			padding-left: 10px;
+			margin-bottom: 10px;
+		}
 
 		.operate_user {
 			span {
@@ -557,7 +573,7 @@
 	}
 
 	.new_user {
-		padding: 35px 10px 51px 20px;
+		padding: 25px 10px 51px 20px;
 
 		.group_name {
 			height: 41px;
@@ -582,5 +598,13 @@
 		.table_width {
 			width: 100%;
 		}
+	}
+
+	.handle-tips {
+		height: 40px;
+		line-height: 40px;
+		text-indent: 25px;
+		background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
+		color: #999999;
 	}
 </style>

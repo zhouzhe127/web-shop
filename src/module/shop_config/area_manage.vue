@@ -27,40 +27,6 @@
 		<section style="margin-top: 10px">
 			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 		</section>
-
-		<!--<ul class="tas-variety" v-cloak>-->
-		<!--<li v-on:click="add">-->
-		<!--<span>-->
-		<!--<img src="../../res/images/comadd.png" alt="添加" style="margin-top: 30px;opacity:0.5;" />-->
-		<!--</span>-->
-		<!--新建区域-->
-		<!--</li>-->
-		<!--<li v-for="(item,i) in dataList" class="taste-list" v-on:click="edit(item.id,i)" :key="i">-->
-		<!--<div class="divOne"></div>-->
-		<!--<div class="divThree">-->
-		<!--<span class="spanName">{{item.areaName}}</span>-->
-		<!--<span class="spanIndex">{{i+1}}</span>-->
-		<!--</div>-->
-		<!--<div class="divTwo">-->
-		<!--<div class="jobDiv">-->
-		<!--<div>-->
-		<!--总桌数(桌)-->
-		<!--</div>-->
-		<!--<div class="divAll">-->
-		<!--{{item.tableTotal}}-->
-		<!--</div>-->
-		<!--</div>-->
-		<!--<div class="telDiv">-->
-		<!--<div>-->
-		<!--总席位（个）-->
-		<!--</div>-->
-		<!--<div class="divAll">-->
-		<!--{{item.seatTotal}}-->
-		<!--</div>-->
-		<!--</div>-->
-		<!--</div>-->
-		<!--</li>-->
-		<!--</ul>-->
 		<area-win v-if='showWin' @throwWinResult='doThrowWinResult' :isAdd='isAdd' :areaId='areaId' :shopId='shopId'></area-win>
 	</div>
 </template>
@@ -94,7 +60,7 @@ export default {
 		let arr = [
 			{
 				name: '新建区域',
-				className: 'pick',
+				type: 4,className: 'primary',
 				fn: () => {
 					this.add();
 				}

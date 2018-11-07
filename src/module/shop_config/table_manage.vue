@@ -68,7 +68,7 @@ export default {
 		let arr = [
 			{
 				name: '新建桌台',
-				className: 'pick',
+				type: 4,className: 'primary',
 				fn: () => {
 					this.add();
 				}
