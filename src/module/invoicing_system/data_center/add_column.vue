@@ -191,6 +191,7 @@ export default {
 				this.wareList = this.pObj.warehouse;
 				if(this.pObj.type==1){
 					this.baseRadio = this.pObj.item.id;
+					this.itemName = `${this.pObj.item.name}（基础项）`;
 				}else{
 					for(let item of this.formulaList){
 						if(item.id==this.pObj.item.id){
