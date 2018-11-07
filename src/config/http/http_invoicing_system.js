@@ -1096,21 +1096,24 @@ export default {
 		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
 		fake: true
 	},
-	"materialreportDeleteMaterialByIds":{
-		url:b+"materialreport/deleteMaterialByIds",					//删除/批量删除报表
-		method:'get'		
+	"materialreportDeleteMaterialByIds": {
+		url: b + "materialreport/deleteMaterialByIds", //删除/批量删除报表
+		method: 'get'
 	},
-	"setStatisticScopeCategory":{
-		url:b+"materialreport/setStatisticScopeCategory",			//添加或更新分类统计范围		
-		method:'post'
+	"setStatisticScopeCategory": {
+		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
+		method: 'post'
 	},
-	"templateDeleteReportTemplate":{
-		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
-		method:'post'
+	"templateDeleteReportTemplate": {
+		url: b + "template/deleteReportTemplate", //删除自定义报表模板
+		method: 'post'
 	},
-	"materialreportGetDetail":{
-		url:b+"materialreport/getDetail",							//获取报表详情
-		method:'get'
-	}
+	"materialreportGetDetail": {
+		url: b + "materialreport/getDetail", //获取报表详情
+		method: 'get'
+	},
+	"templateAddReportTemplate": {
+		url: b + "template/addReportTemplate", //添加自定义报表模板		
+		method: 'post'
+	},
 }
-
