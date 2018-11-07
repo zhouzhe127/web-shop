@@ -1104,5 +1104,9 @@ export default {
 		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
 		method:'post'
 	},
+	"materialreportGetDetail":{
+		url:b+"materialreport/getDetail",							//获取报表详情
+		method:'get'
+	}
 }
 

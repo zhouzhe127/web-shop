@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 17:07:12
+ * @Last Modified time: 2018-11-07 14:04:47
  */
 
 <template>
@@ -112,6 +112,11 @@
 	}
 </style>
 <script>
+/*
+	接口:
+		获取报表详情:materialreportGetDetail
+
+*/
 // import storage from 'src/verdor/storage';
 // import utils from 'src/verdor/utils';
 // import global from 'src/manager/global';
@@ -134,6 +139,7 @@ export default {
 				{id:'5',},
 				{id:'6',},
 			],
+			reportId : '', 
 		};
 	},
 	methods: {
@@ -144,8 +150,6 @@ export default {
 			}else{
 				this.pageObj.currentPage = page | 1;
 			}
-			this.initRowExpand();            
-
 		},
 		async funGetPage(flag,res){
 			//获取页码值
@@ -176,7 +180,15 @@ export default {
 			return row.id;
 		},  
 
+		//获取查询参数
+		getQuery(){
+			let query = this.$route.query;
+			if(Number(query.id)){
+				this.reportId = Number(query.id); 
+			}
 
+			this.reportId = 2178;		
+		},
 		//初始化分页组件
 		initPageObj(){
 			this.pageObj = {
@@ -214,46 +226,13 @@ export default {
 
 
 
+		async getDetail(){
+			let res = await this.getHttp('materialreportGetDetail',{id:this.reportId});
+			console.log(res);
+		},
 
 
-		//生成时间对象
-		generatorDate(time){
-			//生成日期对象
-			let date = {};
-			if(!time){
-				time = new Date();
-			}else if(typeof time == 'number' || typeof time == 'string'){
-				time = Number(time);
-				time = new Date(time);
-			}
-			date = {
-				year: time.getFullYear(),
-				month: time.getMonth(),
-				day: time.getDate(),
-				hour: time.getHours(),
-				minute: time.getMinutes(),
-				second:time.getSeconds(),
-				week:0,
-				str:'',
-				time:'',
-				dateTime:'',          
-			};
-			let {year,month,day,hour,minute} = date;
-			month += 1;
-			hour = hour > 9 ? hour : '0'+hour;
-			minute = minute > 9 ? minute : '0'+minute;
-			date.time = `${hour}:${minute}`;
-			date.dateTime = `${year}-${month}-${day}`;
-			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
-			return date;
-		},
-		//获取每一项的某个属性
-		getAttr(list,attr='id'){
-			let temp = list.map((ele)=>{
-				return ele[attr];
-			});
-			return temp;
-		},
+
 		//获取表格任务
 		async createTask(param){
 			let {subDate,url,success,fail} = param;
@@ -289,6 +268,47 @@ export default {
 				if(typeof fail == 'function') fail(taskId);                                   
 			}
 		},
+
+
+
+		//获取每一项的某个属性
+		getAttr(list,attr='id'){
+			let temp = list.map((ele)=>{
+				return ele[attr];
+			});
+			return temp;
+		},
+		//生成时间对象
+		generatorDate(time){
+			//生成日期对象
+			let date = {};
+			if(!time){
+				time = new Date();
+			}else if(typeof time == 'number' || typeof time == 'string'){
+				time = Number(time);
+				time = new Date(time);
+			}
+			date = {
+				year: time.getFullYear(),
+				month: time.getMonth(),
+				day: time.getDate(),
+				hour: time.getHours(),
+				minute: time.getMinutes(),
+				second:time.getSeconds(),
+				week:0,
+				str:'',
+				time:'',
+				dateTime:'',          
+			};
+			let {year,month,day,hour,minute} = date;
+			month += 1;
+			hour = hour > 9 ? hour : '0'+hour;
+			minute = minute > 9 ? minute : '0'+minute;
+			date.time = `${hour}:${minute}`;
+			date.dateTime = `${year}-${month}-${day}`;
+			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
+			return date;
+		},
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
 			return res;
@@ -296,8 +316,13 @@ export default {
 
 	},
 	mounted(){
+		this.getQuery();
 		this.initBtn();
+
 		this.filterReset('reset');
+
+
+		this.getDetail();
 	},
 	components: {
 
