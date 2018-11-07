@@ -183,7 +183,7 @@ export default {
 		//编辑列表项
 		editColumn(){
 			this.getBase().then(()=>{
-				let arr = ['name','sort'];
+				let arr = ['name','sortObj'];
 				for(let item of arr){
 					this[item] = this.pObj[item];
 				}
