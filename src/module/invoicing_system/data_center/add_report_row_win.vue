@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 10:39:33
+ * @Last Modified time: 2018-11-07 11:16:50
  */
 <template>  
 	<div>
@@ -105,7 +105,11 @@ export default {
 
 			sortObj:{},                         //排序值,
 			scope:[],                           //物料范围
-			collection:[],                            //选择的集合
+			
+			collection:{
+				mid:[],
+				unit:{}
+			},                            //选择的集合
 
 
 			
@@ -203,11 +207,11 @@ export default {
 			};
 			//排序值
 			this.sortObj =  Object.assign(def,this.pSortObj);      
-			//集合
-			this.collection = {id:this.pCollection};
 			//选择的物料范围
 			this.scope = this.pScope;
-
+			//集合
+			this.collection = {id:this.pCollection,unit:{},mid:[]};
+			
 			if(this.collection.id && this.scope.length > 0 ){
 				this.scope = [];
 			}
@@ -220,7 +224,12 @@ export default {
 			let retData = await this.getHttp('getStatisticScopeCategoryList');
 			if(Array.isArray(retData.list)){
 				this.collectionList = retData.list;
+				
 				this.collection = this.getEle(this.collectionList,'id',this.collection.id);
+				
+				if(!this.collection){
+					this.collection = {mid:[],unit:{}};
+				}
 			}
 		},
 		async getHttp(url,obj={},err=false){

@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 10:09:16
+ * @Last Modified time: 2018-11-07 11:14:28
  * @file 新建集合
  */
 
@@ -478,6 +478,7 @@ export default {
 				};
 				arr.push(obj);
 			}
+			return arr;
 		},
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
