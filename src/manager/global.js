@@ -188,15 +188,21 @@ let global = {
 	win_num: 0,
 
 	// 本地时的请求接口地址
-	host: {
-		shop: 'http://v5.ishandian.com.cn/shop/',
-		bc: 'http://bc.api.ishandian.com.cn/Api/',
-		wx: 'http://zishi.ishandian.com.cn/api/',
-		pos: 'http://v5.ishandian.com.cn/pos/',
-		fs: 'http://fs.ishandian.com.cn/'
-	},
+	// host: {
+	// 	shop: 'http://v5.ishandian.com.cn/shop/',
+	// 	bc: 'http://bc.api.ishandian.com.cn/Api/',
+	// 	wx: 'http://zishi.ishandian.com.cn/api/',
+	// 	pos: 'http://v5.ishandian.com.cn/pos/',
+	// 	fs: 'http://fs.ishandian.com.cn/'
+	// },
 	// qa
-	//  "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/","fs": "http://fs.qa.ishandian.com.cn/" },
+	host: {
+		shop: 'http://v5.qa.ishandian.com.cn/shop/',
+		bc: 'http://bc.api.qa.ishandian.com.cn/api/',
+		wx: 'http://wx.qa.ishandian.com.cn/api/',
+		pos: 'http://v5.qa.ishandian.com.cn/pos/',
+		fs: 'http://fs.qa.ishandian.com.cn/'
+	},
 	// pre
 	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "http://fspre.liangpiaoji.com/"},
 	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "http://fs.liangpiaoji.com/"},
@@ -217,7 +223,7 @@ let global = {
 	},
 	//进销存单位换算
 	/* eslint-disable */
-	comUnit(number, value, showName, minName, type) { 
+	comUnit(number, value, showName, minName, type) {
 		//number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称
 		//不传type则返回拼接好的字符串，传type则返回纯数字对象
 		let showNum = ''; //展示的数据

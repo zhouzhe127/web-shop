@@ -93,6 +93,7 @@ export default {
 			});
 			if (data) {
 				this.$message({type:'success',message: '上架成功'});
+				this.$store.commit('changeActivityList',true);
 				goods.status = '1';
 			}
 		},
@@ -106,6 +107,7 @@ export default {
 			});
 			if (data) {
 				this.$message({type:'success',message: '下架成功'});
+				this.$store.commit('changeActivityList',true);
 				// this.getDetail()
 				goods.status = '0';
 			}

@@ -619,12 +619,16 @@ export default {
 			}
 			this.goodsWin = false;
 		},
-		valiData(content, title = '提示信息', winType = 'alert') {
-			this.$store.commit('setWin', {
-				winType: winType,
-				title: title,
-				content: content
+		valiData(content, winType = 'alert') {
+			this.$message({
+				type: winType == 'alert'?'warning':'info',
+				message: content
 			});
+			// this.$store.commit('setWin', {
+			// 	winType: winType,
+			// 	title: title,
+			// 	content: content
+			// });
 		},
 		arrToString(arr) {
 			let str = '';
@@ -861,10 +865,10 @@ export default {
 				obj.isDiscount = this.compulsoryCredits; // 是否强免
 
 				obj.useLimit = this.maxCeiling; //最大使用上限
-				obj.billPrice = this.billPrice; //入账金额
-				obj.reckoningPrice = this.reckoningPrice; //结算金额
+				this.billPrice == undefined ? '':obj.billPrice = this.billPrice; //入账金额
+				this.reckoningPrice == undefined ? '':obj.reckoningPrice = this.reckoningPrice; //结算金额
 				obj.tastePrice = '';
-				obj.priceRule = this.randomId; //随机立减取整规则
+				this.randomId == undefined ? '':obj.priceRule = this.randomId; //随机立减取整规则
 
 				// 优惠券共享
 				if (this.isSharingId === 0) {
@@ -909,6 +913,9 @@ export default {
 				obj.type = this.couponType[this.typeId]; //优惠券类型
 				if (!utils.isEmptyObject(this.couponDetail)) {
 					obj.id = this.couponDetail.id;
+				}
+				if(this.isBargain){
+					obj.fromType = 2;
 				}
 				this.operateCoupons(obj);
 			}

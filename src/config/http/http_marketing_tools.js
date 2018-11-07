@@ -182,6 +182,9 @@ export default {
 	'getGetCouponCondition': {
 		url: s + 'coupon/getCouponCondition', //获取所有优惠券
 	},
+	'getAllCouponLists': {
+		url: w + 'coupon/getCouponCondition', //获取所有的优惠券 可以传参数form=2 找砍价活动的优惠券
+	},
 	'getMemberNum': {
 		url: w + 'member/getMemberNum', //获取筛选会员数量
 		method: 'post'

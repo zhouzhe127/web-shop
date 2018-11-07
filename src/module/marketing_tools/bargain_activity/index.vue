@@ -162,6 +162,7 @@ export default {
 		},
 		comeBack(isRefresh) {
 			this.scene = '';
+			console.log(this.$store.state.activityListChange);
 			if (isRefresh || this.$store.state.activityListChange) {
 				this.getActivityList();
 				this.$store.commit('changeActivityList',false);

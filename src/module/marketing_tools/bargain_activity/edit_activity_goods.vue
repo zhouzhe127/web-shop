@@ -6,7 +6,7 @@
 			</el-form-item>
 			<el-form-item label="商品券">
 				<el-button type="primary" @click="showCouponListHandle">关联券</el-button>
-				<span class="textTip" v-if="selectedCoupon">已关联{{selectedCoupon.name? selectedCoupon.name : '一张优惠券'}}</span>
+				<span class="textTip" v-if="selectedCoupon">已关联一张优惠券{{selectedCoupon.name? '： '+selectedCoupon.name : ''}}</span>
 			</el-form-item>
 			<!-- prop="imgUrl" -->
 			<el-form-item  label="商品图片" >
@@ -209,10 +209,10 @@ export default {
 						this.$message.error('请填写合适的底价');
 						isOk = false;
 					}
-					if(!this.selectedCoupon || !this.selectedCoupon.id ){
-						this.$message.error('必须选择关联一张优惠券');
-						isOk = false;
-					}
+					// if(!this.selectedCoupon || !this.selectedCoupon.id ){
+					// 	this.$message.error('必须选择关联一张优惠券');
+					// 	isOk = false;
+					// }
 					if (!this.qualifiedPlanValue) {
 						this.$message.error('请填写正确的返利金额');
 						isOk = false;
@@ -231,7 +231,7 @@ export default {
 			let prarm = JSON.parse(JSON.stringify(this.form));
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
-			prarm.couponId = this.selectedCoupon.id;
+			prarm.couponId = 7 || this.selectedCoupon.id ;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
 				this.editGoods(prarm);
@@ -285,75 +285,12 @@ export default {
 			this.selectedCoupon = {id: selectedGoods.couponId};
 		},
 		async getCouponList() {
-			// let list = await http.getCouponList({
-			// 	data: {
-			// 		fromType: 2
-			// 	}
-			// })
-			// this.couponList = list
-			this.couponList = [
-				{
-					id: '386',
-					type: '5',
-					name:
-						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u4e0d\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4efb\u4f55\u4f18\u60e0'
-				},
-				{
-					id: '387',
-					type: '5',
-					name:
-						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4efb\u4f55\u4f18\u60e0'
-				},
-				{
-					id: '388',
-					type: '5',
-					name:
-						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u4e0d\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
-				},
-				{
-					id: '389',
-					type: '5',
-					name:
-						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
-				},
-				{
-					id: '390',
-					type: '5',
-					name:
-						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u4e0d\u542b\u53e3\u5473-\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
-				},
-				{
-					id: '391',
-					type: '5',
-					name:
-						'\u8d60\u7edd\u4ee3\u53cc\u9a84-\u542b\u53e3\u5473-\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
-				},
-				{
-					id: '392',
-					type: '5',
-					name:
-						'\u8d60\u5957\u9910-\u542b\u53e3\u5473-\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
-				},
-				{
-					id: '393',
-					type: '5',
-					name:
-						'\u8d60\u5957\u9910-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4f1a\u5458\u4f18\u60e0'
-				},
-				{
-					id: '394',
-					type: '5',
-					name:
-						'\u8d60\u5957\u9910-\u542b\u53e3\u5473-\u4e0d\u53c2\u4e0e\u4efb\u4f55\u4f18\u60e0'
-				},
-				{
-					id: '395',
-					type: '6',
-					name:
-						'\u5f3a\u5236-\u4ee3200-\u4e0d\u4e0e\u4efb\u4f55\u4f18\u60e0'
+			let list = await http.getAllCouponLists({
+				data: {
+					fromType: 2
 				}
-			];
-			
+			});
+			this.couponList = list;
 		},
 		addCouponCb(success) {
 			if (success) {

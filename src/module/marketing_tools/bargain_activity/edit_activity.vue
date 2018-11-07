@@ -1,5 +1,10 @@
 <template>
 	<div id="editActivity">
+		<el-alert v-if="selectedActivity" title="活动开始时间调整，不能低于当前时间哦~否则不与保存" type="info" show-icon></el-alert>
+		<template v-else>
+			<el-alert title="活动开始时间至少为第二日0点" type="info" show-icon></el-alert>
+			<el-alert title="活动开始后，无法编辑活动与商品，若商品有误请进入活动下架商品" type="info" show-icon></el-alert>
+		</template>
 		<el-form ref="activifyForm" :model="form" label-width="80px" class="editActivityForm" :rules="rules" v-show="!showEditGoods">
 			<el-form-item label="活动标题" prop="name">
 				<el-col :span="16">
@@ -11,7 +16,12 @@
 				</el-col>
 			</el-form-item>
 			<el-form-item label="活动时间" prop="activityTime">
-				<el-date-picker v-model="form.activityTime" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期">
+				<!-- <el-date-picker v-model="form.activityTime" 
+					type="datetimerange" align="right" 
+					:picker-option="pickerOption"
+					>
+				</el-date-picker> -->
+				<el-date-picker v-model="form.activityTime" align="right" type="datetimerange" :default-time="['08:00:00', '23:59:59']" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOption">
 				</el-date-picker>
 			</el-form-item>
 			<el-form-item label="编辑商品" v-show="form.goodsList && form.goodsList.length">
@@ -33,8 +43,17 @@
 <script>
 import http from 'src/manager/http';
 // let isUpdate = false;
+const NOW = new Date();
+// let isEdit= false;
 export default {
 	data: () => {
+		function validateActivityTime(rule, value, cb) {
+			if (value[0] < new Date()) {
+				cb(new Error('活动开始时间不能早于当前时间'));
+			} else {
+				cb();
+			}
+		}
 		return {
 			form: {
 				id: '',
@@ -55,11 +74,20 @@ export default {
 						required: true,
 						message: '请选择活动时间',
 						trigger: 'blur'
-					}
+					},
+					{ validator: validateActivityTime, trigger: 'blur' }
 				]
 			},
 			showEditGoods: false,
-			selectGoods: null
+			selectGoods: null,
+			pickerOption: {
+				disabledDate: function(time) {
+					return time < NOW.setHours(0, 0, 0, 0);
+					// return isEdit
+					// 	? time < NOW.setHours(0,0,0,0)
+					// 	: time  < NOW;
+				}
+			}
 		};
 	},
 	props: {
@@ -71,9 +99,9 @@ export default {
 			this.$emit('back', isRefresh === 'Refresh');
 		},
 		goodsClose(needRefresh) {
-			if(needRefresh ||  this.$store.state.selectedActivityChange){
+			if (needRefresh || this.$store.state.selectedActivityChange) {
 				this.getDetail();
-				this.$store.commit('changeActivity',false);
+				this.$store.commit('changeActivity', false);
 			}
 			this.showEditGoods = false;
 		},
@@ -84,7 +112,7 @@ export default {
 					paramData = {
 						name: this.form.name,
 						beginTime: this.form.activityTime[0] / 1000,
-						endTime: this.form.activityTime[1].setHours(23,59,59) / 1000
+						endTime: this.form.activityTime[1] / 1000
 					};
 					if (this.selectedActivity) {
 						paramData.id = this.selectedActivity.id;
@@ -99,16 +127,18 @@ export default {
 			return paramData;
 		},
 		async createActivity(paramData) {
-			let res =  await http.activityCreateActivity({ data: paramData });
-			if(res){
-				this.$message({type:'success',message: '新建活动成功'});
+			let res = await http.activityCreateActivity({ data: paramData });
+			if (res) {
+				this.$message({ type: 'success', message: '新建活动成功' });
 				this.form.id = res;
+				this.$store.commit('changeActivityList',true);
 			}
 		},
 		async editActivity(paramData) {
-			let res =  await http.activityEditActivity({ data: paramData });
-			if(res){
-				this.$message({type:'success',message: '编辑活动成功'});
+			let res = await http.activityEditActivity({ data: paramData });
+			if (res) {
+				this.$message({ type: 'success', message: '编辑活动成功' });
+				this.$store.commit('changeActivityList',true);
 			}
 		},
 		editGoods(goods) {
@@ -162,14 +192,13 @@ export default {
 	computed: {
 		selectedActivity() {
 			return this.$store.getters.getActivity;
-		},
-		isEdit() {
-			return this.selectActivity ? true : false;
 		}
 	},
 	created() {
+		// isEdit = false;
 		if (this.selectedActivity) {
 			this.getDetail();
+			// isEdit = true;
 		}
 	},
 	components: {
@@ -181,6 +210,7 @@ export default {
 
 <style scoped lang="less">
 .editActivityForm {
+	margin-top: 20px;
 	width: 500px;
 }
 .w240 {
