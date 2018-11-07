@@ -8,6 +8,10 @@
 		<div class="conHeaderRight">
 			<page-btn v-if='show.length'></page-btn>
 		</div>
+		<div class="topUp" style="width:100%;height:40px;line-height:40px;background-color:#E64E27;color:#FFE6C6;text-align: center;;min-width:600px;">
+			<span style="font-size:16px;">交钱啦交钱啦！交钱啦交钱啦！交钱啦交钱啦！交钱啦交钱啦！</span>
+			<el-button size="mini" round style="width:80px;">去充值</el-button>
+		</div>
 	</div>
 </template>
 <script type="text/javascript">
