@@ -163,6 +163,7 @@
 				});
 				this.isEdit = true;
 				this.position = res;
+				this.$store.commit('setPageTools',{});
 			},
 			dels(id) {
 				// debugger

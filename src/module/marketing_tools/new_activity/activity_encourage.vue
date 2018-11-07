@@ -180,7 +180,7 @@
 					<div class="online-box clearfix">
 						<span class="online-sub fl">消息推送渠道</span>
 						<div class="rightHalf">
-							<mulSelect class="fl" :styles="{backgroundColor:'rgb(240,240,240)'}" :list='list' @selOn='selOnSend' :selects="item.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
+							<mulSelect class="fl" :styles="{'border-radius':'4px'}" :list='list' @selOn='selOnSend' :selects="item.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
 							<div class="fl handle-tips">
 								<i></i> 活动发布后将通过该渠道触发会员
 							</div>
