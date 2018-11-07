@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 10:12:10
+ * @Last Modified time: 2018-11-07 10:39:33
  */
 <template>  
 	<div>
@@ -80,6 +80,9 @@
 			pSortObj : 		Object				排序值
 			pScope : 		Array				物料范围:选择的物料id	
 			pCollection : 	Number				选择的集合id
+		
+		抛出事件:change			
+
 */
 
 let winType = {
@@ -129,7 +132,7 @@ export default {
 		},
 		//选择的集合
 		pCollection:{
-			type:[Number],
+			type:[Number,String],
 			default:''
 		},
 		//弹窗标题

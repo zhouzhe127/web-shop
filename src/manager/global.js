@@ -190,9 +190,9 @@ let global = {
     // 本地时的请求接口地址
     "host": {
         "shop": 'http://v5.ishandian.com.cn/shop/',
-        "bc": 'http://bc.ishandian.com.cn/Api/',
+        "bc": 'http://bc.api.ishandian.com.cn/Api/',
         "wx": 'http://zishi.ishandian.com.cn/api/',
-        "pos": "http://v5.ishandian.com.cn/pos/"
+        "pos":"http://v5.ishandian.com.cn/pos/"
     },
     // qa
     //  "host": { "shop": "http://v5.qa.ishandian.com.cn/shop/", "bc": "http://bc.api.qa.ishandian.com.cn/api/", "wx": "http://wx.qa.ishandian.com.cn/api/", "pos": "http://v5.qa.ishandian.com.cn/pos/" },
