@@ -178,18 +178,18 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '导出',
+				type: 4,className: 'primary',
 				fn: () => {
 					this.exportData();
-				},
-				className: 'blue'
+				}
 			},
 			{
 				name: '打印',
+				type: 4,className: 'primary',
 				fn: () => {
 					this.printData();
 				},
-				className: 'blue'
-			}
+			},
 		]);
 		this.init();
 		document.onclick = () => {
