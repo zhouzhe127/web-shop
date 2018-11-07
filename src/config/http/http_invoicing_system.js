@@ -1064,8 +1064,8 @@ export default {
 		url: b + "template/getReportTemplates", //获取报表模板列表
 		method: 'get'
 	},
-	"materialreportGetList": {
-		url: b + "materialreport/getList", //获取物料报表列表
+	"materialreportGetMaterialReportList": {
+		url: b + "materialreport/getMaterialReportList", //获取物料报表列表
 		method: 'get'
 	},
 	"getStatisticScopeCategoryList": {
@@ -1104,9 +1104,14 @@ export default {
 		url:b+"template/deleteReportTemplate",					//删除自定义报表模板
 		method:'post'
 	},
-	"materialreportGetDetail":{
-		url:b+"materialreport/getDetail",							//获取报表详情
+	"materialreportGetMaterialReportDetail":{
+		url:b+"materialreport/getMaterialReportDetail",							//获取报表详情
 		method:'get'
+	},
+	"materialreportExportMaterialReportExcel":{
+		url:b+"materialreport/exportMaterialReportExcel",
+		method:'get',
+		type:'file'
 	}
 }
 

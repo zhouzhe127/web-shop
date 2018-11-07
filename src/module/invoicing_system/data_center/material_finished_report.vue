@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 11:35:49
+ * @Last Modified time: 2018-11-07 15:59:37
  */
 
 <template>
@@ -77,8 +77,9 @@
 <script>
 /*
 	接口:
-		获取物料报表列表:materialreportGetList
+		获取物料报表列表:materialreportGetMaterialReportList
 		删除物料报表:materialreportDeleteMaterialByIds
+		导出报表:materialreportExportMaterialReportExcel
 
 */
 // import utils from 'src/verdor/utils';
@@ -137,6 +138,7 @@ export default {
 					this.$router.push({path:'/admin/materialReport/viewReport',id:item.id});
 					break;
 				case 'export':
+					this.getHttp('materialreportExportMaterialReportExcel',{id:item.id});
 					break;
 				case 'error':
 					break;
@@ -196,7 +198,7 @@ export default {
 			
 			this.taskTimer.rList = Timer.add(
 				async ()=>{
-					let tableData = await this.getHttp('materialreportGetList',subObj);
+					let tableData = await this.getHttp('materialreportGetMaterialReportList',subObj);
 					
 					if(Array.isArray(tableData)){
 						this.tableData = this.mapListAttr(tableData);
@@ -234,34 +236,7 @@ export default {
 
 
 
-		initBtn(){
-			this.$store.commit('setPageTools',[
-				{
-					name: '批量删除',
-					type:'4',
-					className:'primary',
-					fn:()=>{
 
-						if(this.selectList.length == 0){
-							this.alert('请先选择需要删除的报表!');
-							return;
-						}
-						//未完成的不可以删除
-						
-						this.$confirm('确认删除当前选中报表?', '操作提示', {
-							confirmButtonText: '确定',
-							cancelButtonText: '取消',
-							type: 'warning'
-						}).then(() => {
-							console.log('success');
-
-						}).catch(() => {
-							console.log('cancel');
-						});
-					}
-				},
-			]);
-		},
 
 
 
@@ -292,7 +267,18 @@ export default {
 				currentPage:1,          //当前页
 			};
 		},
-
+		initBtn(){
+			this.$store.commit('setPageTools',[
+				{
+					name: '返回',
+					type:'4',
+					className:'plain',
+					fn:()=>{
+						this.$router.go(-1);
+					}
+				},
+			]);
+		},
 
 
 
@@ -336,6 +322,10 @@ export default {
 		
 
 
+
+
+
+
 		matchSelectList(list,selectList){
 			let matchAttr = 'id';
 			let attr = 'checked';
@@ -371,6 +361,7 @@ export default {
 		},
 	},
 	mounted(){
+		this.initBtn();
 		this.getQuery();
 		this.initPageObj();
 		this.getReportList();
