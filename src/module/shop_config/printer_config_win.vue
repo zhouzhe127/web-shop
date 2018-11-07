@@ -21,7 +21,6 @@
 						</el-form-item>
 						<el-form-item required label="页脚内容" v-if="status==1 || status == 6">
 							<el-input type="textarea" v-model="footerContent" maxlength="500" :autosize="{minRows: 3, maxRows: 5}" placeholder = "请输入页脚内容" style="width:450px;"></el-input>
-							<!-- <el-input v-model="footerContent" placeholder = "请输入页脚内容" style = "width:350px;"></el-input> -->
 						</el-form-item>
 						<el-form-item required label="打印机">
 							<el-radio-group v-model="printerIndex">
@@ -182,14 +181,6 @@ export default {
 	},
 	components: {
 		win,
-		// radioBtn: () =>
-		// 	import(/* webpackChunkName:"radio_btn" */ 'src/components/radio_btn'),
-		// selectBtns: () =>
-		// 	import(/* webpackChunkName:"mul_select" */ 'src/components/mul_select'),
-		// subaddBtn: () =>
-		// 	import(/* webpackChunkName:"radio_btn" */ 'src/components/subadd'),
-		// onOff: () =>
-		// 	import(/* webpackChunkName:"radio_btn" */ 'src/components/on_off')
 	},
 	watch: {
 		orderTypeIndex: 'orderTypeIndexChange',
