@@ -13,7 +13,7 @@
 				<div class="inp-block">
 					<span class="inp-name">名称</span>
 					<div class="right">
-						<el-input placeholder="输入名称" class="inp-class" v-model="name" max-length="20"></el-input>
+						<el-input placeholder="输入名称" class="inp-class" v-model="name" max-length="20" ref="nameDom"></el-input>
 					</div>
 					<div class="right">
 						<el-popover
@@ -54,7 +54,7 @@
 					计算公式中可对字段和数字，使用 + - * / ( ) 进行计算
 				</div>
 				<!-- 编辑框 -->
-				<div class="edit-container" contenteditable="true" ref="itemEdit"></div>
+				<div class="edit-container" contenteditable="true" ref="itemEdit">{{editHtml}}</div>
 				<!-- 规则选项 -->
 				<div class="other">
 					<div class="other-item">
@@ -150,6 +150,8 @@ export default {
 			reserveRule:'',//保留几位小数
 			baseParam:'',//基础字段id
 			formula:'',//计算公式
+
+			editHtml:'',//如果第一次加载取不到dom 则使用v-model渲染
 		};
 	},
 	props: {
@@ -174,9 +176,6 @@ export default {
 			}
 		*/
 		//抛出方法 @emit
-	},
-	watch:{
-
 	},
 	created(){
 		if(this.list.base) this.baseList = this.list.base;
@@ -211,7 +210,14 @@ export default {
 				this[key] = this.pObj[key];
 			}
 			let str = this.replaceId(this.formula);
-			this.addItem(str,true);
+			console.log(str);
+			this.$nextTick(()=>{
+				if(this.$refs.itemEdit){
+					this.addItem(str,true);
+				}else{
+					this.editHtml = str;
+				}
+			});
 		},
 		//新建公式项
 		async addFormula(send){

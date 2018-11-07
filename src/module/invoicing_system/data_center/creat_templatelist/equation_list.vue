@@ -19,17 +19,14 @@
 				</el-table-column>
 				<el-table-column label="名称" prop="name" width="200">
 				</el-table-column>
-				<el-table-column prop="formula" label="计算公式" show-overflow-tooltip>
+				<el-table-column prop="formulaStr" label="计算公式" min-width="300">
 				</el-table-column>
-				<el-table-column prop="address" label="格式" show-overflow-tooltip>
-					<template slot-scope="scope">
-						<span>{{carryRule(scope.row)}}</span>
-					</template>
+				<el-table-column prop="formatStr" label="格式" width="200">
 				</el-table-column>
-				<el-table-column label="操作" width="200">
+				<el-table-column label="操作" fixed="right" width="150">
 					<template slot-scope="scope">
-						<el-button type="text" size="small" @click="dleSelection(scope.row)">删除</el-button>
 						<el-button type="text" size="small" @click="editFormula(scope.row)">编辑</el-button>
+						<el-button type="text" size="small" @click="dleSelection(scope.row)" style='color:#D34A2B'>删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -57,6 +54,16 @@ export default {
 			baseList:[],//基础项列表
 			formulaData:{},//公式列表数据
 			formulaInsert:{},//公式数据
+
+			formulaPercent:[//是否半分比
+				{label:'数字',value:0},
+				{label:'百分百',value:1},
+			],
+			formulaRounding:[//舍入规则
+				{label:'四舍五入',value:0},
+				{label:'向上取值',value:1},
+				{label:'向下取值',value:2},
+			],
 		};
 	},
 	methods: {
@@ -67,6 +74,24 @@ export default {
 			this.formulaData.base = this.baseList;
 			//获取公式项数据
 			let data = await http.materialreportGetStatisticItemList();
+			for(let item of data.list){
+				item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
+					for(let base of this.baseList){
+						if(p1==base.id){
+							return base.name;
+						}
+					}
+				});
+				//匹配 是否百分百
+				let isPercent = this.formulaPercent.filter((obj)=>{
+					return obj.value==item.isPercent;
+				})[0].label;
+				//匹配 保留几位小数
+				let carryRule = this.formulaRounding.filter((obj)=>{
+					return obj.value==item.carryRule;
+				})[0].label;
+				item.formatStr = `${isPercent}, ${item.reserveRule}位小数, ${carryRule}`;
+			}
 			this.allTotal = data.list.length;
 			this.tableData = data.list;
 			this.formulaData.formula = data.list;
@@ -130,9 +155,8 @@ export default {
 				name = data.name;
 				str = `是否删除"${name}"`;
 			} else {
-				console.log(Object.values(this.allSelection));
 				let num = 0;
-				if(this.multipleSelection.length>0)this.allSelection[this.page] = this.multipleSelection; //保存每页选中
+				if(this.multipleSelection.length>0) this.allSelection[this.page] = this.multipleSelection; //保存每页选中
 				if (Object.values(this.allSelection).length>0) {
 					for (let item of Object.values(this.allSelection)) {
 						if (item.length > 0) {
@@ -158,16 +182,9 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(() => {
-				this.$message({
-					type: 'success',
-					message: '删除成功!'
-				});
-			}).catch(() => {
-				this.$message({
-					type: 'info',
-					message: '已取消删除'
-				});
-			});
+
+				this.$message({type: 'success',message: '删除成功!'});
+			}).catch();
 		},
 		pageChange(page) {
 			this.allSelection[this.page] = this.multipleSelection; //保存每页选中
@@ -181,17 +198,6 @@ export default {
 			this.num = num;
 			this.pagination();
 		},
-		carryRule(data) {
-			let strSet = {
-				0: '四舍五入',
-				1: '向上取值',
-				2: '向下取值'
-			};
-			let str1 = data.isPercent ? '百分比,' : '数字,';
-			let str2 = `保留${data.reserveRule}位小数,`;
-			let str3 = strSet[data.carryRule];
-			return str1 + str2 + str3;
-		}
 	},
 	activated() {
 		this.crageBtn();
