@@ -40,7 +40,7 @@
 								<span>{{scope.row.strTitle}}</span>
 								<div class="editbtn">
 									<el-button type="text" icon="el-icon-edit"></el-button>
-									<el-button type="text" icon="el-icon-delete"></el-button>
+									<el-button type="text" @click="delColumn(scope.$index,1)" icon="el-icon-delete"></el-button>
 								</div>
 							</div>
 						</template>
@@ -67,7 +67,7 @@
 
 								<div class="editbtn">
 									<el-button type="text" @click="editColumn(item)" icon="el-icon-edit"></el-button>
-									<el-button type="text" @click="delColumn(index)" icon="el-icon-delete"></el-button>
+									<el-button type="text" @click="delColumn(index,2)" icon="el-icon-delete"></el-button>
 								</div>
 							</div>
 						</template>
@@ -117,30 +117,80 @@
 					name: '取消',
 					className: 'info',
 					type: 1,
-					// fn: () => {
-
-					// }
+					fn: () => {
+						window.history.go(-1);
+					}
 				}, {
 					name: '确定',
 					className: 'primary',
 					type: 1,
-					// fn: () => {
-
-					// }
+					fn: () => {
+						this.sendallData();
+					}
 				}]);
+			},
+			setXdata(){//处理列数据
+				let arr = [];
+				for(let item of this.columnData){
+					let obj = {};
+					obj.id = item.item.id;
+					let wareArr = [];
+					item.warehouse.forEach(v=>{
+						wareArr.push(v.id);
+					});
+					obj.wid = wareArr;
+					arr.push(obj);
+				}
+				return arr;
+			},
+			setYdata(){//处理行数据
+				let arr = [];
+				for(let item of this.tableData){
+					let obj = {};
+					if(item.pScope.length>0){
+						obj.type = 2;
+						obj.mid = item.pScope;
+					}else{
+						obj.type = 1;
+						obj.id = item.pCollection.id;
+						obj.name = item.pCollection.name;
+					}
+					arr.push(obj);
+				}
+				return arr;
+			},
+			async sendallData(){
+				let statisticItem = this.setXdata();
+				let statisticScope = this.setYdata();
+				let arr = [];
+				this.sleRoleArr.forEach(v=>{
+					arr.push(v.id);
+				});
+				let data = await http.templateAddReportTemplate({data:{
+					name:this.listName,
+					position:arr.join(','),
+					statisticItem:statisticItem,
+					statisticScope:statisticScope
+				}});
+				if(data){
+					// window.history.go(-1);
+					this.$message({type: 'success',message: '添加成功!'});
+				}
 			},
 			async getRoleList() {
 				let data = await http.getUserRoleList();
 				this.roleList = data;
 				console.log(data);
 			},
-			delColumn(index) {
-				this.$confirm(`是否删除第${index+1}列`, '提示', {
+			delColumn(index,type) {//type:1是行，2是列
+				let str = type==1? '行':'列';
+				let data = type==1? this.tableData:this.columnData;
+				this.$confirm(`是否删除第${index+1}${str}`, '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
 					type: 'warning'
 				}).then(() => {
-					this.columnData.splice(index, 1);
+					data.splice(index, 1);
 					this.resetColumn();
 					this.$message({
 						type: 'success',
@@ -168,9 +218,10 @@
 			columnEmit(data) {
 				this.columnShow = false;
 				if (data) {
+					console.log(data);
 					data.allWareName = this.getStr(data.warehouse, 'name');
 					data.allShopName = this.getStr(data.store, 'name');
-					this.sortList(this.columnData, data, 'sort');
+					this.sortList(this.columnData, data, 'sortObj');
 					// this.columnData = utils.deepCopy(this.sortList(this.columnData,data,'sort'));
 					console.log(this.columnData);
 				}
@@ -187,11 +238,7 @@
 				return strArr.join(',');
 			},
 			sortList(list, obj, key) { //排序方法
-				if (obj[key].num > 1) {
-					list.splice(obj[key].num - 1, 0, obj);
-				} else {
-					list.push(obj);
-				}
+				list.splice(obj[key].num - 1, 0, obj);
 				for (let i = 0; i < list.length; i++) {
 					list[i][key].num = i + 1;
 				}
@@ -206,16 +253,15 @@
 			},
 			getRowData(data) { //接受行数据
 				this.rowShow = false;
+				console.log(data);
 				if (data) {
 					if (data.pScope.length > 0) {
 						data.strTitle = `物料范围（${data.pScope.length}）`;
 					} else {
-						data.strTitle =
-							`${data.pCollection.name}（${data.pCollection.mid.length}种，单位：${data.pCollection.unit.name}）`;
+						data.strTitle =`${data.pCollection.name}（${data.pCollection.mid.length}种，单位：${data.pCollection.unit.name}）`;
 					}
 					this.sortList(this.tableData, data, 'pSortObj');
 				}
-				console.log(data);
 			}
 		},
 		activated() {
