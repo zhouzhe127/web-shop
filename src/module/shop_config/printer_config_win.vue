@@ -423,7 +423,7 @@ export default {
 			}
 			// this.customQrCode = JSON.parse(this.printDetial.customQrCode);
 			this.printDetial.customQrCode = this.printDetial.customQrCode?this.printDetial.customQrCode:[];
-			this.customQrCode = this.printDetial.customQrCode?this.printDetial.customQrCode:[];
+			this.customQrCode = this.printDetial.customQrCode;
 			if(this.customQrCode.length==0 || this.customQrCode == ''){
 				this.iscustomQrCode = false;
 			}else if(this.customQrCode.length>0){
