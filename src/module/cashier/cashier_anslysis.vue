@@ -25,7 +25,7 @@
 			<!-- 时间段筛选 -->
 			<section @click="fadeAway" class="top-box fl">
 				<span class="wordSize">时间段筛选：</span>
-				<el-time-picker style="width: 200px;" is-range :clearable="false" v-model="hourMinute" value-format="HH-mm">
+				<el-time-picker style="width: 200px;" is-range :clearable="false" v-model="hourMinute" value-format="HH-mm-ss">
 				</el-time-picker>
 				<!--<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>-->
 			</section>
@@ -108,7 +108,7 @@ export default {
 			//					hour: '23',
 			//					minute: '59'
 			//				},
-			hourMinute: ['00-00', '23-59'], //时分
+			hourMinute: ['00-00-00', '23-59-59'], //时分
 			index: 0, //用于时间段筛选的重置
 
 			shopList: [], //所有店铺列表
@@ -279,7 +279,6 @@ export default {
 			http
 				.orderReportAnalysis({
 					data: {
-						shopId: this.shopId,
 						timeType: this.selectedType + 1,
 						startTime:
 							this.selectedType === 0
@@ -351,7 +350,6 @@ export default {
 					for (let i = 0; i < data.list.length; i++) {
 						data.list[i]['selected'] = false;
 					}
-					console.log(data);
 					this.orderList = utils.deepCopy(data);
 					this.list = utils.deepCopy(data);
 				});
@@ -364,8 +362,8 @@ export default {
 		//			},
 		//开始时间
 		startTimeChange(time, timer) {
-			console.log(time);
-			console.log(timer);
+			// console.log(time);
+			// console.log(timer);
 			this.startTime = time; //日报表时间
 			if (this.selectedType == 2) {
 				// 月报表时间
@@ -391,8 +389,8 @@ export default {
 		},
 		//结束时间
 		endTimeChange(time, timer) {
-			console.log(time);
-			console.log(timer);
+			// console.log(time);
+			// console.log(timer);
 			this.endTime = time; //日报表时间
 			if (this.selectedType == 2) {
 				// 月报表时间
@@ -534,10 +532,14 @@ export default {
 				this.hourMinute[0].substring(0, 2) +
 				':' +
 				this.hourMinute[0].substring(3, 5) +
+				':' +
+				this.hourMinute[0].substring(6, 8) +
 				'-' +
 				this.hourMinute[1].substring(0, 2) +
 				':' +
-				this.hourMinute[1].substring(3, 5);
+				this.hourMinute[1].substring(3, 5)+
+				':' +
+				this.hourMinute[1].substring(6, 8) ;
 			this.orderReportAnalysis(timeBetween);
 			this.typeFlag = this.selectedType;
 			//控制表格一页显示多少条数据 根据选择的店铺数控制
@@ -585,7 +587,7 @@ export default {
 			//					hour: '23',
 			//					minute: '59'
 			//				};
-			this.hourMinute = ['00-00', '23-59'];
+			this.hourMinute = ['00-00-00', '23-59-59'];
 			this.selShopid = [];
 		},
 		//展开表头设置
