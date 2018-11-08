@@ -232,6 +232,7 @@ export default {
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
 			prarm.couponId = this.selectedCoupon.id ;
+			prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
 				this.editGoods(prarm);
