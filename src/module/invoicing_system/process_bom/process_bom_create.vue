@@ -235,7 +235,7 @@ export default {
 					pid:this.bomId,
 					mid:res.id,
 					wids:res.wids.join(','),
-				}
+				};
 			});
 			let data = await http.ProcessbomEditProcessBom({data:{
 				id:this.bomId,
@@ -307,7 +307,9 @@ export default {
 				this.setDelId(this.matList[index].itemId);
 				this.matList.splice(index,1);
 				this.matObj.list = this.matList;//原料列表
-			}).catch();
+			}).catch(()=>{
+				//
+			});
 		},
 		wareSort(index){//打开弹框-仓库消耗排序
 			this.handleIndex = index;
@@ -317,7 +319,7 @@ export default {
 				widList:item.wids?item.wids:[],
 				isBrand:this.isBrand,
 				shopId:this.shopId,
-			}
+			};
 			this.showWin = 'warehouseSort';
 		},
 		getWareSort(res){//关闭弹窗-获得仓库排序结果
@@ -349,7 +351,7 @@ export default {
 					if(this.subMitObj.mid && !this.bomId){
 						let data = await http.ProcessbomCheckProcessBomExits({data:{
 							mid:this.subMitObj.mid
-						}})
+						}});
 						if(!data){
 							this.$message({message: '该物料已生成加工bom单，无法重复加工!'});
 							return;
@@ -431,7 +433,7 @@ export default {
 					return {
 						mid:res.id,
 						wids:res.wids.join(','),
-					}
+					};
 				});
 				data = await http.ProcessbomAddProcessBom({data:
 					this.subMitObj

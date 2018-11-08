@@ -4,7 +4,7 @@
 */
 <template>
 	<div id="equationList">
-		<div>
+		<div v-loading="loading">
 			<div class="tableHeard">
 				<span>公式管理&nbsp;·&nbsp;已选择<strong>{{allTotal}}</strong>个条目</span>
 			</div>
@@ -65,10 +65,12 @@ export default {
 				{label:'向上取值',value:1},
 				{label:'向下取值',value:2},
 			],
+			loading:false,//加载动画
 		};
 	},
 	methods: {
 		async init() {
+			this.loading = true;
 			//获取基础项数据
 			let base = await http.materialreportGetReportItemList();
 			this.baseList = base;
@@ -97,6 +99,8 @@ export default {
 			this.tableData = data.list;
 			this.formulaData.formula = data.list;
 			this.pagination();
+
+			this.loading = false;
 		},
 		toggleSelection(rows) {
 			if (rows) {
@@ -187,7 +191,9 @@ export default {
 					this.$message({type: 'success',message: '删除成功!'});
 					this.init();
 				});
-			}).catch();
+			}).catch(()=>{
+				//
+			});
 		},
 		pageChange(page) {
 			this.allSelection[this.page] = this.multipleSelection; //保存每页选中
@@ -209,18 +215,10 @@ export default {
 	deactivated() {
 		this.$store.commit('setPageTools', []);
 	},
-	watch: {
-		viewData() {
-			console.log(this.allSelection);
-		}
-	},
 	components: {
 		addFormula: () =>
 			import( /*webpackChunkName:'add_formula'*/ '../add_formula'),
 	},
-	computed: {
-
-	}
 };
 </script>
 <style lang='less' scoped>
