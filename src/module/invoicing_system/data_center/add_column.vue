@@ -91,6 +91,7 @@
 <script>
 //该组件直接在组件内容调用接口，请求仓库数据
 import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
 
 export default {
 	data() {
@@ -112,6 +113,8 @@ export default {
 			showCom:false,//显示选择仓库弹窗
 			comObj:{//仓库弹窗传入数据
 				isMultiple:true,
+				shopId:'',//店铺id
+				only:'',//是否只显示 品牌/门店
 			},
 			storeList:[],//已选中的店铺列表
 			wareList:[],//选中的仓库列表
@@ -140,7 +143,9 @@ export default {
 			promiseObj:{
 				base:null,
 				formula:null,
-			}
+			},
+			shopId:'',//店铺id
+			only:'',//是否只显示品牌
 		};
 	},
 	props: {
@@ -160,6 +165,11 @@ export default {
 	},
 	mounted() {
 		this.initData();
+		let userShop = storage.session('userShop');
+		if(userShop.currentShop.ischain != '3'){
+			this.comObj.shopId = userShop.currentShop.id;
+			this.comObj.only = 2;
+		}
 	},
 	components: {
 		win: () =>
