@@ -112,6 +112,7 @@ export default {
 			},
 			storeList:[],//已选中的店铺列表
 			wareList:[],//选中的仓库列表
+			storeWarehouse:[],//店铺-仓库列表
 			itemName:'',//已选统计项
 			wareName:'',
 			storeName:'',
@@ -176,7 +177,9 @@ export default {
 		initData(){
 			if(this.pObj && this.pObj.name){
 				this.editColumn();
-			}else{
+			}
+			if(this.pObj && this.pObj.sortObj){
+				this.sortObj = this.pObj.sortObj;
 				this.getBase();
 			}
 		},
@@ -315,20 +318,49 @@ export default {
 				this.wareList = list;
 				let storeList = [];
 				for(let item of this.wareList){
-					let obj={};
-					if(item.owner.split(',')[1]=='0'){
+					let obj={wid:[]};
+					if(item.owner.split(',')[1]=='0'){//品牌
 						obj.id = item.brandId;
 						obj.name = item.brandName;
-					}else{
+						obj.isBrand = 1;
+					}else{//单店
 						obj.id = item.shopId;
 						obj.name = item.shopName;
+						obj.isBrand = 0;
 					}
-					storeList.push(obj);
+					if(this.checkRepeat(storeList,obj.id)){
+						storeList.push(obj);
+					}
+				}
+				//每个店铺id对应旗下仓库
+				for(let item of storeList){
+					if(item.isBrand){//品牌
+						for(let ware of this.wareList){
+							if(ware.shopId=='0'){
+								item.wid.push(ware.id);
+							}
+						}
+					}else{//门店
+						for(let ware of this.wareList){
+							if(item.id==ware.shopId){
+								item.wid.push(ware.id);
+							}
+						}
+					}
 				}
 				this.storeList = storeList;
 				this.selContent();
 			}
 			this.showCom = false;
+		},
+		//删除重复id
+		checkRepeat(list,id){
+			for(let item of list){
+				if(item.id==id){
+					return false;
+				}
+			}
+			return true;
 		},
 		//新建公式项
 		addFormula(){
