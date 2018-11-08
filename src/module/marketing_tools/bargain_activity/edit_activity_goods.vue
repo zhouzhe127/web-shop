@@ -248,7 +248,7 @@ export default {
 			let data = await http.activityAddGoods({
 				data: prarm
 			});
-			if (data || data == 0) {
+			if (data || data === 0) {
 				this.$message({type: 'success',message: '保存成功'});
 				prarm.id = data;
 				this.$store.commit('changeActivity', true,);
