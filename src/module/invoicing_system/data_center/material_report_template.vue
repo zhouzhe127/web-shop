@@ -2,12 +2,11 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 14:37:03
+ * @Last Modified time: 2018-11-07 15:50:50
  */
 
 <template>
 	<div class="box">
-		<add-report-row></add-report-row>
 		<el-table 
 			:data="tableData"  
 			v-loading="bool" 
@@ -74,13 +73,13 @@ export default {
 			let {id,name} = row;
 			switch(sym){
 				case 'edit'://编辑报表
-					this.$router.push({path:'/admin/data_center/creat_templatelist/temp_main',query:{id:id}});								
+					this.$router.push({path:'/admin/materialReport/createReport',query:{id:id}});								
 					break;
 				case 'delete'://删除报表
 					this.delTemplate(id,index);
 					break;                
 				case 'generator'://生成报表
-					this.$router.push({path:'/admin/data_center/creat_templatelist/temp_main'});				
+					this.$router.push({path:'/admin/materialReport/createReport',query:{id,name}});				
 					break;                
 				case 'view'://查看报表
 					this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:name,tempId:id}});
@@ -177,7 +176,6 @@ export default {
 					type:'4',
 					className:'primary',
 					fn:()=>{
-						/* eslint-disabled-line */
 						this.$router.push({path:'/admin/materialReport/creatTempMain'});
 					}
 				},

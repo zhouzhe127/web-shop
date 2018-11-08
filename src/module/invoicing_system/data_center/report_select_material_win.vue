@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 10:33:46
+ * @Last Modified time: 2018-11-07 18:23:19
  */
 
 <template>  
@@ -204,7 +204,6 @@ export default {
 		},
 		//按钮切换
 		async changeBtn(item){
-			// let con = this.getCondition();
 			let subObj = {};
 			let arr = [];
 			
@@ -438,6 +437,9 @@ export default {
 				cids:[],                              //选中的所有分类id
 			};
 		},
+		initSelectList(){
+			this.selectList = this.toObject(this.selects);
+		},
 
 
 		toObject(list){
@@ -448,6 +450,7 @@ export default {
 				};
 				arr.push(obj);
 			}
+			return arr;
 		},
 		//是否全部选中
 		isAllSelect(list){
@@ -494,6 +497,7 @@ export default {
 	mounted(){
 		this.initCondition();
 		this.initPageObj();
+		this.initSelectList();
 		this.getCategoryList();
 		this.getMaterialList();
 	},
