@@ -18,7 +18,10 @@
 			<div class="inp-block">
 				<span class="inp-name">排序</span>
 				<div class="right">
-					<el-input-number v-model="sortObj.num" :min="0" :max="sortObj.max" class="inp-class"></el-input-number>
+					<el-input-number v-model="sortObj.num" :min="1" :max="sortObj.max" class="inp-class"></el-input-number>
+					<div class="info">
+						<i class="el-icon-warning collection-tips-icon"></i>范围（1-{{sortObj.max}}）
+					</div>
 				</div>
 			</div>
 			<div class="inp-block">
@@ -99,8 +102,8 @@ export default {
 			btnCancel: {},
 			name:'',//列表项名称
 			sortObj:{//排序
-				num:0,
-				max:10,
+				num:1,
+				max:1,
 			},
 			columnTabIndex:'0',
 			columnItem:'',//选择项
@@ -396,7 +399,12 @@ export default {
 					color: red;
 				}
 			}
-			.right{float: left;padding-left: 10px;}
+			.right{float: left;padding-left: 10px;
+				.info{
+					color: #999;display: inline;padding-left:10px;
+					i{color: #ccc;font-size: 14px;margin-right: 5px;}
+				}
+			}
 			.btn-box{float: left;padding-right: 20px;}
 		}
 		.item-block{
