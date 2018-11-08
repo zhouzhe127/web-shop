@@ -81,8 +81,8 @@
 					</el-radio-group>
 				</div>
 				<div class="listWrap">
-					<ul class="listContent" v-if="couponList.length">
-						<li v-for="(v,i) in couponList" :key="i" @click="selectedCouponTemp = v" :class="{sign: selectedCouponTemp && selectedCouponTemp.id==v.id}">{{v.name}}</li>
+					<ul class="listContent" v-if="couponFilter.length">
+						<li v-for="(v,i) in couponFilter" :key="i" @click="selectedCouponTemp = v" :class="{sign: selectedCouponTemp && selectedCouponTemp.id==v.id}">{{v.name}}</li>
 					</ul>
 					<div v-else class="emtyList">~~暂无数据~~</div>
 				</div>
@@ -231,7 +231,7 @@ export default {
 			let prarm = JSON.parse(JSON.stringify(this.form));
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
-			prarm.couponId = 7 || this.selectedCoupon.id ;
+			prarm.couponId = this.selectedCoupon.id ;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
 				this.editGoods(prarm);
@@ -248,7 +248,7 @@ export default {
 			let data = await http.activityAddGoods({
 				data: prarm
 			});
-			if (data) {
+			if (data || data == 0) {
 				this.$message({type: 'success',message: '保存成功'});
 				prarm.id = data;
 				this.$store.commit('changeActivity', true,);
@@ -268,6 +268,7 @@ export default {
 			this.$refs.formDm.resetFields();
 			this.form.planValue = '';
 			this.form.needPeople = '';
+			this.form.imgUrl = '';
 			this.selectedCoupon = '';
 		},
 		initGoods() {
@@ -291,11 +292,6 @@ export default {
 				}
 			});
 			this.couponList = list;
-		},
-		addCouponCb(success) {
-			if (success) {
-				//  跟新优惠券列表
-			}
 		},
 		showCouponListHandle() {
 			this.getCouponList();
@@ -372,6 +368,13 @@ export default {
 		},
 		selectedActivity() {
 			return this.$store.getters.getActivity;
+		},
+		couponFilter() {
+			return this.couponList && this.couponList.filter(v=>{
+				if(this.couponType == '0') return true;
+				if(this.couponType == '1') return v.type=='2';
+				if(this.couponType == '2') return v.type=='5';
+			});
 		}
 	},
 	created() {
