@@ -289,7 +289,7 @@ export default {
 					itemType = '公式项';
 
 					this.itemType = 2;
-					this.itemObj = {id:res.id,name:itemName,formula:res.formula};
+					this.itemObj = {id:res.id,name:itemName,formula:res.formula,formulaName:res.formulaStr};
 					this.baseRadio = '';
 					break;
 			}
