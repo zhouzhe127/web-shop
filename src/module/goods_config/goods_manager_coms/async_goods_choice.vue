@@ -264,7 +264,12 @@
 							winType:'alter',
 							content:'同步成功,请刷新页面获取最新商品数据！',
 						});
-						this.$emit('throwSyncWin','ok');   //商品页面重新请求接口
+						if(this.goIncom == 'goods'){
+							this.$emit('throwAddGoodsWin','ok');
+						}else if(this.goIncom == 'packs'){
+							this.$emit('throwSyncWin','ok');
+						}
+						// this.$emit('throwSyncWin','ok');   //商品页面重新请求接口
 						clearInterval(window.timer);
 					}
 					if(aTime>=60){
