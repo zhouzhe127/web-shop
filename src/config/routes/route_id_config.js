@@ -195,7 +195,7 @@ let config = {
 	configs: {} //需要插入的路由模块
 };
 Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
-//Object.assign(config.configs, invoicing_system);
+// Object.assign(config.configs, invoicing_system);
 module.exports = config;
 /*
  *现在路由主要由以下文件构成
