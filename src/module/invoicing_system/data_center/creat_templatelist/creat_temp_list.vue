@@ -39,7 +39,7 @@
 							<div class="detailsBtn">
 								<span>{{scope.row.strTitle}}</span>
 								<div class="editbtn">
-									<el-button type="text" icon="el-icon-edit"></el-button>
+									<el-button type="text" @click="editRow(scope.row,scope.$index)" icon="el-icon-edit"></el-button>
 									<el-button type="text" @click="delColumn(scope.$index,1)" icon="el-icon-delete"></el-button>
 								</div>
 							</div>
@@ -53,7 +53,13 @@
 								<el-popover trigger="hover" width="300">
 									<div class="popover">
 										<p>
-											<span>统计</span>:<span>{{item.item.name}}</span>
+											<span>统计</span>:<span>{{item.item.name}}({{item.type==2?"公式项":"标准项"}})</span>
+										</p>
+										<p v-if="item.type==2">
+											<span>公式</span>:<span>{{item.item.formulaName}}</span>
+										</p>
+										<p v-if="item.type==2">
+											<span>格式</span>:<span>{{item.allWareName}}</span>
 										</p>
 										<p>
 											<span>关联店铺</span>:<span>{{item.allShopName}}</span>
@@ -62,11 +68,12 @@
 											<span>关联仓库</span>:<span>{{item.allWareName}}</span>
 										</p>
 									</div>
+
 									<el-button type="text" slot="reference">{{item.name}}</el-button>
 								</el-popover>
 
 								<div class="editbtn">
-									<el-button type="text" @click="editColumn(item)" icon="el-icon-edit"></el-button>
+									<el-button type="text" @click="editColumn(item,index)" icon="el-icon-edit"></el-button>
 									<el-button type="text" @click="delColumn(index,2)" icon="el-icon-delete"></el-button>
 								</div>
 							</div>
@@ -77,7 +84,7 @@
 		</div>
 		<add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin" @positionEvent="positionEvent"></add-position>
 		<add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>
-		<addRow-win v-if="rowShow" :pSortObj="pSortObj" @change="getRowData"></addRow-win>
+		<addRow-win v-if="rowShow" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
 	</div>
 </template>
 <script>
@@ -97,6 +104,10 @@
 				columnListData: {}, //需要编辑列
 				rowShow: false, //显示行
 				pSortObj: {}, //行排序
+				pScope: [], //行物料范围
+				pCollection: '', //行选择的集合
+				isEdit: false, //是否为编辑
+				editIndex: 0 //编辑项
 			};
 		},
 		methods: {
@@ -129,13 +140,13 @@
 					}
 				}]);
 			},
-			setXdata(){//处理列数据
+			setXdata() { //处理列数据
 				let arr = [];
-				for(let item of this.columnData){
+				for (let item of this.columnData) {
 					let obj = {};
 					obj.id = item.item.id;
 					let wareArr = [];
-					item.warehouse.forEach(v=>{
+					item.warehouse.forEach(v => {
 						wareArr.push(v.id);
 					});
 					obj.wid = wareArr;
@@ -143,14 +154,14 @@
 				}
 				return arr;
 			},
-			setYdata(){//处理行数据
+			setYdata() { //处理行数据
 				let arr = [];
-				for(let item of this.tableData){
+				for (let item of this.tableData) {
 					let obj = {};
-					if(item.pScope.length>0){
+					if (item.pScope.length > 0) {
 						obj.type = 2;
 						obj.mid = item.pScope;
-					}else{
+					} else {
 						obj.type = 1;
 						obj.id = item.pCollection.id;
 						obj.name = item.pCollection.name;
@@ -159,32 +170,53 @@
 				}
 				return arr;
 			},
-			async sendallData(){
+			async sendallData() {
+				let rgx = /^[A-Za-z0-9_\u4e00-\u9fa5]+$/;
+				if(!rgx.test(this.listName)){
+					this.$message.error('模板名称输入错误');
+					return;
+				}
 				let statisticItem = this.setXdata();
 				let statisticScope = this.setYdata();
+				if(statisticScope.length<=0){
+					this.$message.error('请选择添加行！');
+					return;
+				}
+				if(statisticItem.length<=0){
+					this.$message.error('请选择添加列！');
+					return;
+				}
 				let arr = [];
-				this.sleRoleArr.forEach(v=>{
+				this.sleRoleArr.forEach(v => {
 					arr.push(v.id);
 				});
-				let data = await http.templateAddReportTemplate({data:{
-					name:this.listName,
-					position:arr.join(','),
-					statisticItem:statisticItem,
-					statisticScope:statisticScope
-				}});
-				if(data){
+				let data = await http.templateAddReportTemplate({
+					data: {
+						name: this.listName,
+						position: arr.join(','),
+						statisticItem: statisticItem,
+						statisticScope: statisticScope
+					}
+				});
+				if (data) {
 					// window.history.go(-1);
-					this.$message({type: 'success',message: '添加成功!'});
+					this.$message({
+						type: 'success',
+						message: '添加成功!'
+					});
 				}
+			},
+			sendErr(str){
+				this.$message.error(str);
 			},
 			async getRoleList() {
 				let data = await http.getUserRoleList();
 				this.roleList = data;
 				console.log(data);
 			},
-			delColumn(index,type) {//type:1是行，2是列
-				let str = type==1? '行':'列';
-				let data = type==1? this.tableData:this.columnData;
+			delColumn(index, type) { //type:1是行，2是列
+				let str = type == 1 ? '行' : '列';
+				let data = type == 1 ? this.tableData : this.columnData;
 				this.$confirm(`是否删除第${index+1}${str}`, '提示', {
 					confirmButtonText: '确定',
 					cancelButtonText: '取消',
@@ -218,17 +250,29 @@
 			columnEmit(data) {
 				this.columnShow = false;
 				if (data) {
+					this.columnListData = {};
 					console.log(data);
 					data.allWareName = this.getStr(data.warehouse, 'name');
 					data.allShopName = this.getStr(data.store, 'name');
 					this.sortList(this.columnData, data, 'sortObj');
+					this.resetColumn();
 					// this.columnData = utils.deepCopy(this.sortList(this.columnData,data,'sort'));
-					console.log(this.columnData);
 				}
 			},
-			editColumn(item) {
+			editColumn(item, index) {
+				this.editIndex = index;
 				this.columnShow = true;
+				this.isEdit = true;
 				Object.assign(this.columnListData, item);
+			},
+			editRow(item, index) {
+				this.editIndex = index;
+				this.isEdit = true;
+				this.rowShow = true;
+				console.log(item);
+				this.pSortObj = item.pSortObj;
+				this.pScope = item.pScope;
+				this.pCollection = item.pCollection.id;
 			},
 			getStr(arr, key) {
 				let strArr = [];
@@ -238,11 +282,15 @@
 				return strArr.join(',');
 			},
 			sortList(list, obj, key) { //排序方法
+				if (this.isEdit) {
+					list.splice(this.editIndex, 1);
+				}
 				list.splice(obj[key].num - 1, 0, obj);
 				for (let i = 0; i < list.length; i++) {
 					list[i][key].num = i + 1;
+					list[i][key].max = list.length;
 				}
-				this.resetColumn();
+				this.isEdit = false;
 				return list;
 			},
 			resetColumn() { //刷新列表方法
@@ -255,10 +303,12 @@
 				this.rowShow = false;
 				console.log(data);
 				if (data) {
+					this.pCollection = '';
+					this.pScope = [];
 					if (data.pScope.length > 0) {
 						data.strTitle = `物料范围（${data.pScope.length}）`;
 					} else {
-						data.strTitle =`${data.pCollection.name}（${data.pCollection.mid.length}种，单位：${data.pCollection.unit.name}）`;
+						data.strTitle = `${data.pCollection.name}（${data.pCollection.mid.length}种，单位：${data.pCollection.unit.name}）`;
 					}
 					this.sortList(this.tableData, data, 'pSortObj');
 				}
