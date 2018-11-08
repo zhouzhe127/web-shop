@@ -175,11 +175,10 @@ export default {
 			}
 		},
 		initData(){
-			if(this.pObj && this.pObj.name){
+			if(this.pObj.name){//编辑
 				this.editColumn();
-			}
-			if(this.pObj && this.pObj.sortObj){
-				this.sortObj = this.pObj.sortObj;
+			}else{//新建
+				if(this.pObj.sortObj) this.sortObj = this.pObj.sortObj;
 				this.getBase();
 			}
 		},
