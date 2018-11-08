@@ -75,7 +75,7 @@ import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import utils from 'src/verdor/utils';
 
-let isBrand = storage.session('userShop').currentShop.ischain == 3 ? true : false;
+
 let qureyTemp = {
 	qureyTime: '',
 	keyword: ''
@@ -83,6 +83,7 @@ let qureyTemp = {
 export default {
 	store, // 很可惜，没有找到 vue-devtools 调试的地方
 	data: () => {
+		let isBrand = storage.session('userShop').currentShop.ischain == 3 ? true : false;
 		return {
 			isBrand,
 			scene: '', // 情景
