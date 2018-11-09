@@ -111,6 +111,14 @@ function validateOriginalPrice(rule, value, cb) {
 		cb();
 	}
 }
+function validateRequired (r,v,cb){
+	if(v.trim() == ''){
+		cb(new Error('该信息为必填项不能为空'));
+	}else{
+		cb();
+	}
+}
+					
 // function validateFloorPrice(rule, value, cb) {
 // 	if (this.form.originalPrice - value < 1) {
 // 		cb(new Error('底价至少低于原价1元'));
@@ -119,8 +127,8 @@ function validateOriginalPrice(rule, value, cb) {
 // 	}
 // }
 const validateRules = {
-	name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
-	remark: [{ required: true, message: '请输入活动描述', trigger: 'blur' }],
+	name: [{ required: true, message: '请输入商品名称', trigger: 'blur' },{validator: validateRequired,trigger: 'blur' }],
+	remark: [{ required: true, message: '请输入活动描述', trigger: 'blur' },{validator: validateRequired,trigger: 'blur' }],
 	originalPrice: [
 		{ required: true, message: '请输入原价(起砍价)', trigger: 'blur' },
 		{ validator: validateOriginalPrice, trigger: 'blur' }

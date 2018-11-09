@@ -21,7 +21,7 @@
 					:picker-option="pickerOption"
 					>
 				</el-date-picker> -->
-				<el-date-picker v-model="form.activityTime" align="right" type="datetimerange" :default-time="['00:00:00', '23:59:59']" start-placeholder="开始日期" end-placeholder="结束日期" 
+				<el-date-picker :editable="false" v-model="form.activityTime" align="right" type="datetimerange" :default-time="['00:00:00', '23:59:59']" start-placeholder="开始日期" end-placeholder="结束日期" 
 				:picker-options="selectedActivity?pickerOption:isCreatePickerOption">
 				</el-date-picker>
 				<span class="textTip">选择{{activityTimeLength}}天</span>
@@ -68,6 +68,16 @@ export default {
 						required: true,
 						message: '请输入活动名称',
 						trigger: 'blur'
+					},
+					{
+						validator(r,v,cb){
+							if(v.trim() == ''){
+								cb(new Error('请输入活动名称'));
+							}else{
+								cb();
+							}
+						},
+						trigger: 'blur'
 					}
 				],
 				activityTime: [
@@ -108,6 +118,15 @@ export default {
 			let paramData;
 			this.$refs.activifyForm.validate(valid => {
 				if (valid) {
+					if(!this.selectedActivity){ // 新建
+						if(this.form.activityTime[0]<new Date().setHours(23,59,59)){ // 小于今天24点
+							this.$message({
+								message: '新建活动的开始时间至少为第二日0点',
+								type: 'warning'
+							});
+							return;
+						}
+					}
 					paramData = {
 						name: this.form.name,
 						beginTime: this.form.activityTime[0] / 1000,
