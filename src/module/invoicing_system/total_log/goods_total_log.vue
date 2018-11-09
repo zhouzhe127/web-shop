@@ -137,64 +137,46 @@
                 width="570px"
                 center
             >
-            <div class="dialog-content" >
-                <div class="column">
-                    <div>商品名:{{materialInfo.gName}}</div>
-                    <div>条形码:{{materialInfo.barCode}}</div>
-                    <div>品牌:{{materialInfo.brandName}}</div>
-                    <div class="column-container">
-                        <div class="label">分类:</div>
-                        <div class="">
-                            <template v-for="(a,ai) in materialInfo.cate">
-                                <p :key="ai">
-                                    {{a.name}}
-                                    <i v-if="ai != materialInfo.cate.length -1 ">&nbsp;;&nbsp;</i>
-                                </p>
-                            </template>                        
+                <div class="dialog-content" >
+                    <div class="column">
+                        <div>商品名:{{materialInfo.gName}}</div>
+                        <div>条形码:{{materialInfo.barCode}}</div>
+                        <div>品牌:{{materialInfo.brandName}}</div>
+                        <div class="column-container">
+                            <div class="label">分类:</div>
+                            <div class="">
+                                <template v-for="(a,ai) in materialInfo.cate">
+                                    <p :key="ai">
+                                        {{a.name}}
+                                        <i v-if="ai != materialInfo.cate.length -1 ">&nbsp;;&nbsp;</i>
+                                    </p>
+                                </template>                        
+                            </div>
                         </div>
+                        <div>单位:{{materialInfo.unit}}</div>
+                        <div>售价:{{materialInfo.price}}</div>
+                        <div>批次数:{{materialInfo.batchNum}}</div>
                     </div>
-                    <div>单位:{{materialInfo.unit}}</div>
-                    <div>售价:{{materialInfo.price}}</div>
-                    <div>批次数:{{materialInfo.batchNum}}</div>
-                </div>
-                <div class="column">
-                    <div>规格:{{materialInfo.specifications}}</div>
-                    <div>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</div>
-                    <div>耗损:{{materialInfo.lossNum}}</div>
-                    <div class="column-container">
-                        <div class="label">货架位置:</div>
-                        <div class="">
-                            <template v-for="(a,ai) in materialInfo.shelves">
-                                <p :key="ai">
-                                    {{a.shelfName}}/{{a.areaName}}
-                                    <i v-if="ai != materialInfo.shelves.length -1 ">&nbsp;;&nbsp;</i>
-                                </p>
-                            </template>                        
+                    <div class="column">
+                        <div>规格:{{materialInfo.specifications}}</div>
+                        <div>保质期:{{materialInfo.validity}}{{materialInfo.validityTypeName}}</div>
+                        <div>耗损:{{materialInfo.lossNum}}</div>
+                        <div class="column-container">
+                            <div class="label">货架位置:</div>
+                            <div class="">
+                                <template v-for="(a,ai) in materialInfo.shelves">
+                                    <p :key="ai">
+                                        {{a.shelfName}}/{{a.areaName}}
+                                        <i v-if="ai != materialInfo.shelves.length -1 ">&nbsp;;&nbsp;</i>
+                                    </p>
+                                </template>                        
+                            </div>
                         </div>
+                        <div>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</div>
+                        <div>上架数量:{{materialInfo.shelveNum}}{{materialInfo.unit}}</div>
+                        <div>总量:{{materialInfo.total}}{{materialInfo.unit}}</div>
                     </div>
-                    <div>仓库数量/重量:{{materialInfo.surplus}}{{materialInfo.unit}}</div>
-                    <div>上架数量:{{materialInfo.shelveNum}}{{materialInfo.unit}}</div>
-                    <div>总量:{{materialInfo.total}}{{materialInfo.unit}}</div>
                 </div>
-            </div>
-            <div class="dialog-content" v-if="false">
-                <div class="column">
-                    <div>物料名称:</div>
-                    <div>物料简码:</div>
-                    <div>品牌:</div>
-                    <div>批次数:</div>
-                    <div>物料类型:</div>
-                    <div>物料单位:</div>
-                    <div>默认单位:</div>
-                    <div>最小单位:</div>
-                </div>
-                <div class="column">
-                    <div>单位换算:</div>
-                    <div>分类:</div>
-                    <div>库存总量:</div>
-                    <div>保质期:</div>
-                </div>
-            </div>
             </el-dialog>
         </div>
     </div>
