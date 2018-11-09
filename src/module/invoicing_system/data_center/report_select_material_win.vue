@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 18:23:19
+ * @Last Modified time: 2018-11-09 16:55:06
  */
 
 <template>  
@@ -81,11 +81,6 @@
 
 <script>
 /*
-	问题:
-		1.选择全部之后不可以取消某个选中的物料
-		2.切换分类不清空选中,根据条件重新筛选一次
-		3.无论是点击哪个按钮都是叠加选中,去除重复选中的
-		4.是否需要做到当全部物料都选中的时候是否需要将当前条件下的选择全部按钮点亮
 
 
 	需求:
@@ -98,22 +93,24 @@
 					2.点击确定是抛出对象
 					3.其他情况不抛出任何值,弹窗关闭
 		
-		
-		注:为了更好的测试组件,目前一页选择显示2个
-				
+	接口:
+		根据物料id获取物料详情:materialGetMaterialDataByIds			
 */
+
+
 //按钮
 let btns = {
 	none:0,         //未选择
 	selectPage:1,   //选择本页
 	selectAll:2,    //选择全部
 };
+
 //全部分类
 let allCategory = {
 	label:'全部分类',
 	value:-1,
-	id:-1,
 };
+
 import http from 'src/manager/http';
 export default {
 	data () {
@@ -128,17 +125,17 @@ export default {
 
 			//未公开属性
 			radio:true,             //多选
+			loading:false,                  	//加载动画
 
 			categoryList:[],            
 			list:[],                    		//当前页的物料列表
 			selectList:[],              		//选中的物料列表
 			shopNum:0,                  		//本店所有的物料数量
+			selectShop:false,               	//是否选择本店
 
 			condition:{},
 			pageObj:{},
 			preSubObj:{},               		//上一次请求时携带的条件
-			selectShop:false,               	//是否选择本店
-			loading:false,                  	//加载动画
 		};
 	},
 	props:{
@@ -159,21 +156,6 @@ export default {
 		}
 	},
 	methods: {
-		async closeWin(sym){
-			if(sym == 'ok'){
-				let arr = await this.formatData();
-				if(arr.length == 0){
-					this.$message('请选择物料!');
-					return;
-				}
-				this.throwData(arr);
-			}else{ 
-				this.throwData(false);                
-			}
-		},
-		throwData(data){
-			this.$emit('change',data);            
-		},
 		async filterReset(sym,page){
 			if(sym == 'reset'){
 				//重置
@@ -189,7 +171,6 @@ export default {
 			}
 			this.getMaterialList();
 		},
-
 		async funGetPage(flag,res){
 			let subObj = {...this.preSubObj};
 			//获取页码值
@@ -202,11 +183,26 @@ export default {
 			subObj.page = this.pageObj.currentPage;
 			await this.getMaterialList(subObj);        
 		},
+
+		
+		async closeWin(sym){
+			if(sym == 'ok'){
+				let arr = await this.formatData();
+				if(arr.length == 0){
+					this.$message('请选择物料!');
+					return;
+				}
+				this.throwData(arr);
+			}else{ 
+				this.throwData(false);                
+			}
+		},
+
+
 		//按钮切换
 		async changeBtn(item){
 			let subObj = {};
 			let arr = [];
-			
 			//已选择本店所有物料
 			if(this.selectShop){
 				this.selectBtn = item.id;
@@ -312,7 +308,7 @@ export default {
 			return {
 				cid,
 				cids:condition.cids,
-				name:condition.name
+				name:condition.name.trim()
 			};
 		},
 		//获取提交的数据
@@ -322,7 +318,7 @@ export default {
 				page: this.pageObj.currentPage,
 				num: this.pageObj.pageSize,
 				name: condition.name,
-				cid: condition.cid == allCategory.id ? '' : condition.cid,
+				cid: condition.cid == allCategory.value ? '' : condition.cid,
 				type:-1,
 			};
 			return subObj;
@@ -351,7 +347,9 @@ export default {
 			}
 			return selectList;
 		},
-
+		throwData(data){
+			this.$emit('change',data);            
+		},
 
 
 
@@ -370,7 +368,8 @@ export default {
 
 			//点亮选中的物料
 			if(this.selectShop){
-				this.changeListAttrVal(retObj.list,'checked',true);                
+				this.changeListAttrVal(retObj.list,'checked',true);   
+				this.selectBtn = btns.selectAll;            
 			}else{
 				this.matchSelectList(this.list,this.selectList);                
 				if(this.isAllSelect(this.list)){
@@ -403,11 +402,10 @@ export default {
 			arr.unshift(allCategory);
 			this.categoryList = arr;
 		},
-		//递归获取某个条件的所有物料
+		//递归某个条件的所有物料
 		async recursiveGetMaterialList(subObj){
 			let page = 1;
 			let arr = [];
-			
 
 			subObj.num = 50;
 			
@@ -419,6 +417,7 @@ export default {
 			}   
 			return arr;
 		},
+
 
 
 		//初始化分页组件
@@ -433,25 +432,24 @@ export default {
 		initCondition(){
 			this.condition = {
 				name:'',
-				category:[allCategory.id],            //当前选中的分类id,默认选中全部分类的id
-				cids:[],                              //选中的所有分类id
+				category:[allCategory.value],            //当前选中的分类id,默认选中全部分类的id
+				cids:[],                              	//选中的所有分类id
 			};
 		},
-		initSelectList(){
-			this.selectList = this.toObject(this.selects);
-		},
-
-
-		toObject(list){
-			let arr = [];
-			for(let ele of list){
-				let obj = {
-					id : ele
-				};
-				arr.push(obj);
+		//初始化 selectList属性
+		async initSelectList(){
+			let list = [];
+			if(this.selects.length > 0 ){
+				list = await this.getHttp('materialGetMaterialDataByIds',{mids:this.selects.join(',')});
 			}
-			return arr;
+			if(Array.isArray(list)){
+				this.selectList = list;
+			}
 		},
+
+
+
+
 		//是否全部选中
 		isAllSelect(list){
 			let val = true;
@@ -484,21 +482,13 @@ export default {
 			let res = await http[url]({data:obj},err);
 			return res;
 		},
-		tempData(count=10){
-			let arr = [];
-			let cids = [1,2,3,4,5];
-			for(let i = 0;i < count; i++){
-				let obj = {id:i,name:'经销存商品'+i,checked:false,cid:cids[i % 6]};
-				arr.push(obj);
-			}
-			return arr;
-		}
 	},
-	mounted(){
+	async mounted(){
 		this.initCondition();
 		this.initPageObj();
-		this.initSelectList();
 		this.getCategoryList();
+		
+		await this.initSelectList();
 		this.getMaterialList();
 	},
 };

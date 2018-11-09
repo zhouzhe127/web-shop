@@ -1130,5 +1130,9 @@ export default {
 		url: b + "materialreport/exportMaterialReportExcel", //导出报表
 		method: 'get',
 		type: 'file'
+	},
+	"materialGetMaterialDataByIds":{
+		url:b+"material/getMaterialDataByIds",				//获取多个物料详情
+		method: 'get',
 	}
 }
