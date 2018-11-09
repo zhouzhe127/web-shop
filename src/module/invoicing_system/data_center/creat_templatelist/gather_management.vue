@@ -41,7 +41,7 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
+		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pUnitId="editData.unit.id" :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
 	</div>
 </template>
 <script>
