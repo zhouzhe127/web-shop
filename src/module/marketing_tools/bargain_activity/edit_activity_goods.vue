@@ -2,7 +2,7 @@
 	<div id="ActiityGoods">
 		<el-form ref="formDm" :model="form" :rules="validateRules" label-width="160px">
 			<el-form-item label="商品名称" prop="name">
-				<el-input v-model="form.name" class="w217"></el-input> <span class="textTip">限20字</span>
+				<el-input v-model="form.name" class="w217" maxlength="20"></el-input> <span class="textTip">限20字</span>
 			</el-form-item>
 			<el-form-item label="商品券">
 				<el-button type="primary" @click="showCouponListHandle">关联券</el-button>
@@ -35,7 +35,7 @@
 			</el-form-item>
 			<el-form-item label="砍价人数" prop="needPeople">
 				<el-select v-model="form.needPeople" placeholder="请选择砍价人数">
-					<el-option :label="k+2 +'个人'" :value="k+2" v-for="k in 18" :key="k"></el-option>
+					<el-option :label="k+1 +'个人'" :value="k+1" v-for="k in 9" :key="k"></el-option>
 				</el-select>
 				<span class="textTip">参与人数达到填写人数完成砍价，包含发起人</span>
 			</el-form-item>
@@ -61,7 +61,7 @@
 			</el-form-item>
 			<el-form-item label="砍价时间" prop="lifeCycle">
 				<el-select v-model="form.lifeCycle" placeholder="请选择时间间隔">
-					<el-option :label="v+1+'小时'" :value="v+1" v-for="(v,i) in 22" :key="i"></el-option>
+					<el-option :label="v+'小时'" :value="v" v-for="(v,i) in 24" :key="i"></el-option>
 				</el-select>
 			</el-form-item>
 			<el-form-item>
@@ -119,7 +119,7 @@ function validateOriginalPrice(rule, value, cb) {
 // 	}
 // }
 const validateRules = {
-	name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+	name: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
 	remark: [{ required: true, message: '请输入活动描述', trigger: 'blur' }],
 	originalPrice: [
 		{ required: true, message: '请输入原价(起砍价)', trigger: 'blur' },
@@ -209,10 +209,10 @@ export default {
 						this.$message.error('请填写合适的底价');
 						isOk = false;
 					}
-					// if(!this.selectedCoupon || !this.selectedCoupon.id ){
-					// 	this.$message.error('必须选择关联一张优惠券');
-					// 	isOk = false;
-					// }
+					if(!this.selectedCoupon || !this.selectedCoupon.id ){
+						this.$message.error('必须选择关联一张优惠券');
+						isOk = false;
+					}
 					if (!this.qualifiedPlanValue) {
 						this.$message.error('请填写正确的返利金额');
 						isOk = false;
