@@ -42,23 +42,52 @@
 					</div>
 				</div>
 			</section>
-			<com-table :listName="'商品列表'" :fixed="2" :titleData="titleList" :allTotal="count" :introData="goodsdetail"
-			 :listWidth="1500">
-				<div class="infoDetail" slot="con-0" slot-scope="props">
-					<a href="javascript:void(0);" @click="showDetail(props.data,props.index)" style="color:#5ebee8;">查看详情</a>
-					<span v-if="inventConfigs&&inventConfigs.commonStock==1">|</span>
-					<a href="javascript:void(0);" @click="addListhouse(props.data)" v-if="inventConfigs&&inventConfigs.commonStock==1" style="color:red;">入库</a>
-					<span v-if="ischain!=3">|</span>
-					<a href="javascript:void(0);" @click="openBar(props.data)" style="color:orange;" v-if="ischain!=3">打印条码</a>
-				</div>
-				<!-- <div slot="con-2" slot-scope="props"><test :sorts="['dsa','das','fds']" :parentNode="'.main'" :name="'dsadsadf'"  ref="select"></test></div> -->
-				<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
-				<span slot="con-5" slot-scope="props">{{props.data.type==1? '称重商品':'普通商品'}}</span>
-				<span slot="con-6" slot-scope="props" v-if="props.data.goodsNum" :title="props.data.goodsNum.surplus">{{addCount(props.data.goodsNum.surplus)}}{{props.data.unit}}</span>
-				<span slot="con-7" slot-scope="props" v-if="props.data.goodsNum" :title="props.data.goodsNum.batch">{{props.data.goodsNum.batch}}</span>
-				<span slot="con-8" slot-scope="props" v-if="props.data.goodsNum" :title="props.data.goodsNum.shelvesNum">{{addCount(props.data.goodsNum.shelvesNum)}}{{props.data.unit}}</span>
-				<span slot="con-9" slot-scope="props" v-if="props.data.goodsNum" :title="Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus)">{{addCount(Number(props.data.goodsNum.shelvesNum)+Number(props.data.goodsNum.surplus))}}{{props.data.unit}}</span>
-			</com-table>
+			<el-table :data="goodsdetail" stripe border style="width: 100%">
+				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+		   	 	</el-table-column>
+				<el-table-column prop="goodsName" label="商品名" min-width="200">
+				</el-table-column>
+				<el-table-column prop="barCode" label="条形码" width="150">
+				</el-table-column>
+				<el-table-column label="售价" width="150">
+					<template slot-scope="scope">
+						{{scope.row.price}}元/{{scope.row.unit}}
+					</template>
+				</el-table-column>
+				<el-table-column label="商品类型" width="150">
+					<template slot-scope="scope">
+						{{scope.row.type==1? '称重商品':'普通商品'}}
+					</template>
+				</el-table-column>
+				<el-table-column label="仓库数量/重量" width="200">
+					<template slot-scope="scope" v-if="scope.row.goodsNum">
+						{{addCount(scope.row.goodsNum.surplus)}}{{scope.row.unit}}
+					</template>
+				</el-table-column>
+				<el-table-column label="批次数量" width="100">
+					<template slot-scope="scope" v-if="scope.row.goodsNum">
+						{{scope.row.goodsNum.batch}}
+					</template>
+				</el-table-column>
+				<el-table-column label="货架数量/重量" width="200">
+					<template slot-scope="scope" v-if="scope.row.goodsNum">
+						{{addCount(scope.row.goodsNum.shelvesNum)}}{{scope.row.unit}}
+					</template>
+				</el-table-column>
+				<el-table-column label="总量" width="200" >
+					<template slot-scope="scope" v-if="scope.row.goodsNum">
+						{{addCount(Number(scope.row.goodsNum.shelvesNum)+Number(scope.row.goodsNum.surplus))}}{{scope.row.unit}}
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" fixed="right" width="200">
+					<template slot-scope="scope">
+						<el-button type="text" @click="showDetail(scope.row,scope.$index)">查看详情</el-button>
+						<el-button type="text" @click="addListhouse(scope.row)" v-if="inventConfigs&&inventConfigs.commonStock==1"
+						style="color:#D34A2B;">入库</el-button>
+						<el-button type="text" @click="openBar(scope.row)" style="color:#34A9AA;"  v-if="ischain!=3">打印条码</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
 		</section>
 		<invent-supplies v-show="tabactive==1" :inventConfigs="inventConfigs" :tabactive='tabactive'></invent-supplies>
 		<div class="somePage" v-if="tabactive==0">
@@ -78,7 +107,7 @@
 	export default {
 		data() {
 			return {
-				goodsdetail: '', //列表商品所有数据
+				goodsdetail: [], //列表商品所有数据
 				newgoodsdetail: '', //翻页列表数据
 				checkGoods: '', //查询列表数据
 				shopId: '',
@@ -103,54 +132,6 @@
 				count: 0,
 				ischain: storage.session('userShop').currentShop.ischain,
 				inventConfigure: 0,
-				titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: '200px'
-					}
-				},
-				{
-					titleName: '序号',
-					titleStyle: {
-						width: '75px'
-					}
-				},
-				{
-					titleName: '商品名',
-					dataName: 'goodsName',
-					titleStyle: {
-						width: '15%'
-					}
-				},
-				{
-					titleName: '条形码',
-					dataName: 'barCode',
-					titleStyle: {
-						width: '15%'
-					}
-				},
-				{
-					titleName: '售价',
-					dataName: 'price'
-				},
-				{
-					titleName: '商品类型'
-				},
-				{
-					titleName: '仓库数量/重量'
-				},
-				{
-					titleName: '批次数量',
-					titleStyle: {
-						width: '5%'
-					}
-				},
-				{
-					titleName: '货架数量/重量'
-				},
-				{
-					titleName: '总量'
-				}],
 				inventConfigs: {} //进销存配置
 			};
 		},
@@ -171,6 +152,9 @@
 		// 	next();
 		// },
 		methods: {
+			indexMethod(index){
+				return this.num*(this.page-1)+index+1;
+			},
 			async init() {
 				let data = await http.inventoryGoodsList({
 					data: {
@@ -205,10 +189,6 @@
 					this.goodsdetail = utils.deepCopy(this.goodsdetail);
 				}
 			},
-			// suppage(pages) {
-			// 	page2 = pages;
-			// 	console.log(page);
-			// },
 			addCount: function (num) {
 				num += '';
 				//清除字符串开头的0
@@ -237,6 +217,7 @@
 			},
 			//去详情页面
 			showDetail: function (list, index) {
+				console.log(index);
 				list.index = index;
 				storage.session('goodsDetail', list);
 				this.$router.push({
