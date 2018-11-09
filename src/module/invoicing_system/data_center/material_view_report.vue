@@ -2,11 +2,124 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 18:20:09
+ * @Last Modified time: 2018-11-09 14:23:48
  */
+
+<!--
+ <template>
+ <div>
+
+	<el-table :data="tableData" style="width: 100%" :filter-change="filterTag">
+		<el-table-column 
+			prop="date" 
+			label="日期" 
+			width="180" 
+			sortable
+			:filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
+			:filter-method="filterHandler"
+		>
+		</el-table-column>
+
+		<el-table-column prop="name" label="姓名" width="180">
+		</el-table-column>
+
+		<el-table-column prop="address" label="地址" :formatter="formatter">
+		</el-table-column>
+		
+		<el-table-column 
+			prop="tag" 
+			label="标签" 
+			width="100" 
+			:filter-multiple="true"
+			:filtered-value="filterVal"	
+			:filter-method="filterTag"	
+			:filter-change="filterTag"	
+			>
+			
+			
+
+			<template slot-scope="scope">
+				<el-tag :type="scope.row.tag === '家' ? 'primary' : 'success'" disable-transitions>{{scope.row.tag}}</el-tag>
+			</template>
+
+		</el-table-column>
+
+	</el-table>
+
+	<el-button @click="changeFilterVal">点击</el-button>
+
+ </div>
+	
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				filterVal:['1','2'],
+				tableData: [{
+					date: '1',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1518 弄',
+					tag: '家'
+				}, {
+					date: '2',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1517 弄',
+					tag: '公司'
+				}, {
+					date: '3',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1519 弄',
+					tag: '家'
+				}, {
+					date: '4',
+					name: '王小虎',
+					address: '上海市普陀区金沙江路 1516 弄',
+					tag: '公司'
+				}]
+			}
+		},
+		methods: {
+			formatter(row, column) {
+				return row.address;
+			},
+			filterHandler(value, row, column) {
+				const property = column['property'];
+				return row[property] === value;
+			},
+
+
+			filterTag(value,row) {
+				console.log(value);
+				console.log(row);
+				return !this.filterVal.includes(row.date);
+			},
+
+
+
+
+
+			changeFilterVal(){
+				let count = (Math.random()*10).toFixed() - 0;
+				let arr = ['1','2','3','4'];
+
+				this.filterVal.push(arr[count % 4]);
+				if(this.filterVal.length == 4){
+					this.filterVal = [];
+				}
+			}
+		}
+	}
+</script>
+
+
+-->
+
+ <!--
 <template>
   <div>
-	<el-table :data="tableData6" :span-method="arraySpanMethod" border style="width: 100%">
+	<el-table :data="tableData6" :span-method="arraySpanMethod" border style="width: 100%"  >
 		<el-table-column prop="id" label="ID" width="180">
 		</el-table-column>
 		<el-table-column prop="name" label="姓名">
@@ -19,7 +132,7 @@
 		</el-table-column>
 	</el-table>
 
-	<el-table :data="tableData6" :span-method="objectSpanMethod" border style="width: 100%; margin-top: 20px">
+	<el-table :data="tableData6" :span-method="objectSpanMethod" border style="width: 100%; margin-top: 20px" :filter-method="filterHandler" :cell-style="setColumnStyle">
 		<el-table-column prop="id" label="ID" width="180">
 		</el-table-column>
 
@@ -49,23 +162,27 @@
 					amount2: '3.2',
 					amount3: 10
 				}, {
-					id: '12987123',
+					id: '',					//12987123
 					name: '王小虎',
 					amount1: '165',
 					amount2: '4.43',
-					amount3: 12
+					amount3: 12,
+					pid:1,	
+					start:true,				
 				}, {
 					id: '12987124',
 					name: '王小虎',
 					amount1: '324',
 					amount2: '1.9',
-					amount3: 9
+					amount3: 9,
+					pid:1,
 				}, {
 					id: '12987125',
 					name: '王小虎',
 					amount1: '621',
 					amount2: '2.2',
-					amount3: 17
+					amount3: 17,
+					pid:1,					
 				}, {
 					id: '12987126',
 					name: '王小虎',
@@ -85,27 +202,65 @@
 					}
 				}
 			},
+
+
+			filterHandler(a,b,c){
+				console.log(a);
+				console.log(b);
+				console.log(c);
+			},
+			
+			setColumnStyle({row, column, rowIndex, columnIndex}){
+				if(row.start && columnIndex == 0){
+					return {'cursor':'pointer','background':'#fff'};
+				}
+
+			},
 			objectSpanMethod({row,column,rowIndex,columnIndex}) {
-				if (columnIndex === 0) {
-					//rowIndex 0 2 4
-					if (rowIndex % 2 === 0) {
-						return {
-							rowspan: 1,
-							colspan: 1
-						};
-					} else {
-						return {
-							rowspan: 0,
-							colspan: 0
-						};
+
+				if(columnIndex  == 0 || columnIndex  == 1){
+					if(row.pid == 1){
+						if(row.start && columnIndex  == 0){
+							return {
+								rowspan:3,
+								colspan:2
+							};
+						}else{
+							return{
+								rowspan:0,
+								colspan:0
+							}
+						}
 					}
 				}
+
+				//	官方案例
+				// if (columnIndex === 0) {
+				// 	if (rowIndex % 2 == 0) {
+				// 		return {
+				// 			rowspan: 2,//单元所占行数
+				// 			colspan: 1
+				// 		};
+				// 	} else {
+				// 		return {
+				// 			rowspan: 0,
+				// 			colspan: 0
+				// 		};
+				// 	}
+				// }
+				
 			}
 		}
 	}; 
 </script>
+-->
 
-<!--
+
+
+
+
+
+
 <template>
 	<div class="pad-bottom">
 		<div class="head">
@@ -114,7 +269,7 @@
 		</div>
 		<div class="search-header">
 			<div class="in-block" >
-				<el-input clearable v-model="condition.name" placeholder="物料名称" maxlength="80" style="width:224px"></el-input>
+				<el-input clearable v-model="condition.name" placeholder="物料名称" maxlength="100" style="width:224px"></el-input>
 			</div>
 			<div class="in-block">
 				<el-input clearable v-model="condition.code" placeholder="物料编码" maxlength="50" style="width:224px"></el-input>
@@ -125,68 +280,54 @@
 			</div>
 		</div>
 
+
 		<div class="table">
-			<el-table :data="tableData"  
+			<el-table 
+				:data="tableData"  
 				v-loading="false" 
 				element-loading-text="加载中,请稍后..."
 				stripe 
 				border 
 				:header-cell-style="{'background-color':'#F5F7FA'}"
-				@header-click="headerClick"
-				:row-key="getRowKeys"
-				:expand-row-keys="rowExpand.expands"
+				:cell-style="setColumnStyle"
+				:span-method="objectSpanMethod"
+				@cell-click="cellClick"
 			>
 
-				<el-table-column type="expand" :label="rowExpand.label" fixed="left" width="100px;">
-					<template slot-scope="{row,column,$index}">
-						<div class="search-header">
-							<div class="in-block" >
-								<el-input clearable v-model="condition.name" placeholder="物料名称" maxlength="80" style="width:224px"></el-input>
-							</div>
-							<div class="in-block">
-								<el-input clearable v-model="condition.code" placeholder="物料编码" maxlength="50" style="width:224px"></el-input>
-							</div>
-							<div class="in-block" style="padding-left:10px;">
-								<el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
-								<el-button type="info" @click="filterReset('reset',null)">重置</el-button>
-							</div>
-						</div>
-					</template>
+				<el-table-column  width="80px" fixed="left" align="center">
+					<span slot-scope="{row,column,$index}">
+						<i v-if="row.cus_cate"  :class="{'el-icon-arrow-down':row.cus_expand,'el-icon-arrow-right':!row.cus_expand,'y-font':true}"></i>
+						<!-- <i v-else  :class="['y-font','el-icon-minus']"></i> -->
+						<i v-else  :class="['y-font']">
+							{{row.pid == undefined ? '--' : ''}}
+						</i>
+					</span>
 				</el-table-column>
 
-				<el-table-column type="自定义分类" label="自定义分类" fixed="left">
-					<template slot-scope="{row,column,$index}">
-						分类一
-					</template>
+				<el-table-column fixed="left" min-width="200px" label="自定义分类" prop="cus_cate" :show-overflow-tooltip="true">
 				</el-table-column>
-				
-				<template v-for="i in 5">
-					<el-table-column v-if="i == 3" type="自定义分类" label="自定义分类" :key="i" min-width="150px">
-						<template slot-scope="{row,column,$index}">
-							分类二
-						</template>
-					</el-table-column>
-					<el-table-column v-else type="自定义分类" label="自定义分类" :key="i" min-width="150px">
-						<template slot-scope="{row,column,$index}">
-							分类一
-						</template>
+
+				<el-table-column fixed="left" min-width="200px"  label="物料名称" prop="name" :show-overflow-tooltip="true">
+				</el-table-column>
+
+				<el-table-column  min-width="150px"  label="物料编码" prop="barCode">
+				</el-table-column>
+
+
+
+				<template v-for="(t,ti) in tableTitle" >
+					<el-table-column  min-width="150px"  :label="t.name" :key="ti">
+						<span slot-scope="{row,column}">
+							{{row[t.attr]}}
+						</span>
 					</el-table-column>
 				</template>
 
-
-
-				<el-table-column  min-width="150px"  label="物料名称">
-					<span slot-scope="{row,column}">das</span>
-				</el-table-column>
-
-				<el-table-column  min-width="150px" label="物料编码" >
-					<span slot-scope="{row,column}">das</span>                    
-				</el-table-column>
 			</el-table>              
 		</div>
 
 
-		<div class="footer">
+		<div class="footer" v-if="false">
 			<el-pagination
 				:pager-count="pageObj.pagerCount"
 				:page-size="pageObj.pageSize"
@@ -209,10 +350,38 @@
 		导出报表:materialreportExportMaterialReportExcel
 		删除物料报表:materialreportDeleteMaterialByIds
 
+	表头:
+		[
+			{
+				attr: "t-0"				
+				name: "普通盘亏数量"				
+			}	
+		]
+
+	表格:
+		[
+			{
+				//物料范围属性
+				id:''							//物料id
+				name:							//物料名
+				barCode:''						//物料编码,
+
+				//集合属性
+				cus_cate:						//自定义分类			   集合才有的属性
+				cus_expand:false				//是否展开当前集合		 集合才有的属性
+				cus_collectionId:				//集合Id
+				children:[							//集合子列表			   集合才含有的属性
+					childs:							//子列表长度
+					start:							//是否为起始元素
+					pid:							//相应的集合Id cus_collectionId					
+					id:''							//物料id
+					name:							//物料名字
+					barCode:''						//物料编码,
+				]
+			}
+		]
+
 */
-// import storage from 'src/verdor/storage';
-// import utils from 'src/verdor/utils';
-// import global from 'src/manager/global';
 import http from 'src/manager/http';
 import Timer from 'src/verdor/timer';
 export default {
@@ -220,155 +389,108 @@ export default {
 		return {
 			pageObj:{},
 			condition:{},
-			rowExpand:{
-				label:'展开'
-			},                           //表格单元行的展开与收起
-			tableData:[
-				{id:'0',},
-				{id:'1',},
-				{id:'2',},
-				{id:'3',},
-				{id:'4',},
-				{id:'5',},
-				{id:'6',},
-			],
+
+			tableData:[],				//表数据
+			expandRow:[],				//需要展开的行
+			tableTitle:[],				//表头
+
 			reportId : '', 				//报表id
 			reportName : '--',			//报表名
-			columns:[],					//表头
 		};
 	},
 	methods: {
 		filterReset(sym,page){
 			if(sym == 'reset'){
 				this.initCondition();
-				this.initPageObj();
-			}else{
-				this.pageObj.currentPage = page | 1;
 			}
-		},
-		async funGetPage(flag,res){
-			//获取页码值
-			if(flag == 'size-change'){
-				this.pageObj.pageSize = res;				
-			}else{
-				this.pageObj.currentPage = res;
-			}
-		},
-
-		//点击表格头部
-		headerClick(column){
-			let rowExpand = this.rowExpand;
-			if(column.label == rowExpand.label){
-				rowExpand.toggle = !rowExpand.toggle;
-
-				rowExpand.label = rowExpand.toggle ? '收起' : '展开';
-				
-				if(rowExpand.toggle){
-					rowExpand.expands = this.getAttr(this.tableData,'id');
-				}else{
-					rowExpand.expands = [];
-				}
-			}
-		},
-		//给表格的行添加key
-		getRowKeys(row) {
-			return row.id;
-		},  
-
-
-
-
-
-
-		initRowExpand(){
-			this.rowExpand = {
-				toggle:false,
-				expands:[],
-				label:'展开',
-			};
+			this.getDetail();
 		},
 
 
 
+		//获取报表详情
 		async getDetail(){
-			let res = await this.getHttp('materialreportGetMaterialReportDetail',{id:this.reportId});
+			let condition = this.condition;
+			let subObj = {
+				id : this.reportId,
+				name : condition.name,
+				barCode : condition.code
+			};
+			let res = await this.getHttp('materialreportGetMaterialReportDetail',subObj);
+
 			if( this.toRaw(res,'object')){
-				let type = {
-					scope:2,			//物料范围
-					collection:1				//集合
-				};
-				let tableData = [];
 				//报表名称
 				this.reportName = res.objName;
 				//报表id
 				this.reportId = res.id;
 				//表头名称
 				let {customItem,data} = res;
-				this.columns = Object.preventExtensions(customItem);
-				//表数据
-				for(let ele of data){
-					if(ele['type'] == type.scope){
-						for(let index in ele['item']){
-							let a = ele['item'][index];
-							let item = Object.assign(a.itemInfo,a.reportInfo);
-							tableData.push(item);
+				//组合表头
+				this.tableTitle = this.organizeTableTitle(customItem);
+				//组合表数据
+				this.tableData = this.organizeTableData(data);
+				console.log(this.tableTitle);
+				console.log(this.tableData);
+			}
+		},
+
+
+
+
+
+
+		//设置列的样式
+		setColumnStyle({row, column, rowIndex, columnIndex}){
+			if(columnIndex == 0){
+				if(row.start){
+					return{'background':'#fff'};
+				}else{
+					return {'cursor':'pointer'};
+				}
+			}
+
+		},
+		//行列的合并
+		objectSpanMethod({row, column, rowIndex, columnIndex}){
+			if(columnIndex == 1 || columnIndex == 0){
+				if(row.pid != undefined){
+					if(row.start && columnIndex == 0){
+						return {
+							rowspan:row.childs,
+							colspan:2
 						}
 					}else{
-
+						return {
+							rowspan:1,
+							column:0,
+						};
 					}
-					
 				}
-				console.log(res);
-				console.log(tableData);
 			}
 		},
+		cellClick(row, column, cell, event){
+			if(!column['label']){
 
 
+				if(row['cus_cate'] && typeof row['cus_expand'] == 'boolean'){
+					row['cus_expand'] = !row['cus_expand'];
 
-
-
-
-
-
-
-		//获取表格任务
-		async createTask(param){
-			let {subDate,url,success,fail} = param;
-			let timer = '';
-			let taskId = await this.getHttp(url,subDate);
-
-			timer = Timer.add(
-				()=>{this.getTaskStatus(taskId,success,fail)},
-				3000,
-				0,
-				true,
-				()=>{
-					if(typeof fail == 'function') fail(taskId);                   
+					if(row['cus_expand']){
+						//展开行
+						let rowIndex = this.tableData.findIndex( ele => ele.cus_collectionId == row.cus_collectionId);
+						let children = row.children;
+						
+						this.tableData.splice(rowIndex + 1,0,...children);
+						this.expandRow.push(row.cus_collectionId);
+					}else{
+						//收起行
+						this.tableData = this.tableData.filter( ele => ele.pid != row.cus_collectionId);
+						this.expandRow = this.expandRow.filter( ele => ele != row.cus_collectionId);
+					}
 				}
-			);
-			return timer;
-		},
-		//获取任务状态
-		async getTaskStatus(...param){
-			let [taskId,success,fail] = param;
-			try{
-				let retData = await this.getHttp('invoicing_taskInfo',{taskId:taskId});
-				switch(retData.status+''){
-					case '1'://进行中
-						break;
-					case '2'://失败
-						if(typeof fail == 'function') fail(taskId);                   
-						break;
-					case '3'://成功
-						if(typeof success == 'function') success(taskId);   
-				}  
-			}catch(e){
-				if(typeof fail == 'function') fail(taskId);                                   
+
 			}
 		},
-
-
-
 
 
 		//删除报表
@@ -390,6 +512,80 @@ export default {
 				console.log('取消');
 			});
 		},
+		//组合表头
+		organizeTableTitle(list){
+			let arr = [];
+			for(let i = 0 ; i < list.length; i += 1){
+				let obj = {
+					attr:'t-'+i,
+					name:list[i]
+				};
+				arr[i] = obj;
+			}
+			return arr;
+		},
+		//组合聚合数据
+		organizeCollection(list){
+			let obj = {};
+			let tableTitle = this.tableTitle;
+			for(let i = 0 ;i < tableTitle.length ; i += 1){
+				let ele = tableTitle[i];
+				obj[ele.attr] = list[i];
+			}
+			return obj;
+		},
+		//组合表数据
+		organizeTableData(data){
+			let arr = [];
+			let type = {
+				scope:3,					//物料范围
+				collection:4				//集合
+			};
+			let index = 1;					//集合起始id
+			let _this = this;
+			
+			function organizeMaterial(ele,collectionId){
+				let temp = [];
+				for(let e of ele['item']){
+					let customItem = _this.organizeCollection(e.reportInfo);
+					let obj = Object.assign(e.itemInfo,customItem);
+					if(collectionId != undefined){
+						obj.pid = collectionId;
+					}
+					temp.push(obj);
+				}
+				return temp;
+			}
+
+			for(let ele of data){
+				if(ele['type'] == type.scope){
+					let mList = organizeMaterial(ele);
+					arr.push(...mList);
+				}else{
+					let customItem = this.organizeCollection(ele.count);	
+					let mList = organizeMaterial(ele,index);
+
+					if(mList[0]){
+						mList[0]['start'] = true;
+						mList[0]['childs'] = mList.length;
+					} 
+
+					let obj = {
+						cus_expand : false,								//自定义是否展开
+						cus_cate : ele.customName,						//自定义分类
+						cus_collectionId : index++, 					//自定义集合id
+						children : mList,								//子列表
+					}
+					Object.assign(obj,customItem);				
+					arr.push(obj);
+				}
+			}
+			return arr;
+		},
+
+
+
+
 
 
 		//获取查询参数
@@ -399,16 +595,7 @@ export default {
 				this.reportId = Number(query.id); 
 			}
 
-			this.reportId = 2178;		
-		},
-		//初始化分页组件
-		initPageObj(){
-			this.pageObj = {
-				total:0,				//总记录数
-				pageSize:10,			//每页显示的记录数
-				pagerCount:11,			//每页显示的按钮数
-				currentPage:1,          //当前页
-			};
+			this.reportId = 2193;		
 		},
 		initCondition(){
 			this.condition = {
@@ -446,57 +633,9 @@ export default {
 		},
 
 
-		objToArr(obj){
-			let arr = [];
-			for(let attr in obj){
-				let temp = {
-					id:attr,
-					name:obj[attr]
-				};
-				arr.push(temp);
-			}
-			return arr;
-		},
+
 		toRaw(data,type){
 			return Object.prototype.toString.call(data).slice(8,-1).toLowerCase() == type.toLowerCase();
-		},
-		//获取每一项的某个属性
-		getAttr(list,attr='id'){
-			let temp = list.map((ele)=>{
-				return ele[attr];
-			});
-			return temp;
-		},
-		//生成时间对象
-		generatorDate(time){
-			//生成日期对象
-			let date = {};
-			if(!time){
-				time = new Date();
-			}else if(typeof time == 'number' || typeof time == 'string'){
-				time = Number(time);
-				time = new Date(time);
-			}
-			date = {
-				year: time.getFullYear(),
-				month: time.getMonth(),
-				day: time.getDate(),
-				hour: time.getHours(),
-				minute: time.getMinutes(),
-				second:time.getSeconds(),
-				week:0,
-				str:'',
-				time:'',
-				dateTime:'',          
-			};
-			let {year,month,day,hour,minute} = date;
-			month += 1;
-			hour = hour > 9 ? hour : '0'+hour;
-			minute = minute > 9 ? minute : '0'+minute;
-			date.time = `${hour}:${minute}`;
-			date.dateTime = `${year}-${month}-${day}`;
-			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
-			return date;
 		},
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
@@ -521,7 +660,12 @@ export default {
 
 
 <style lang='less' scoped>
+
 	@ey:#E1BB4A;
+	.y-font{
+		color:@ey;
+	}
+	
 	.pad-bottom{
 		padding-bottom:20px;
 	}
@@ -549,6 +693,7 @@ export default {
 
 
 
+
 	.in-block{
 		margin-bottom:20px;
 		display: inline-block;             
@@ -563,4 +708,4 @@ export default {
 		margin-top:37px;
 	}
 </style>
--->
+
