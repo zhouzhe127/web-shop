@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 11:14:28
+ * @Last Modified time: 2018-11-09 16:14:32
  * @file 新建集合
  */
 
@@ -110,9 +110,9 @@
 						}
 					3.其他情况不抛出任何值,弹窗关闭
 		
-		
-		注:为了更好的测试组件,目前一页选择显示2个
-				
+	接口:
+		根据物料id获取物料详情:materialGetMaterialDataByIds
+	
 */
 //全部分类
 let allCategory = {
@@ -121,6 +121,7 @@ let allCategory = {
 };
 //每个集合可选的最大数量
 let MAX_NUM = 50;
+
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
 
@@ -154,10 +155,10 @@ export default {
 			type:[String],
 			default:''
 		},
-		//集合名字是否可以修改
-		disabled:{
-			type:[Boolean],
-			default:false,
+		//集合单位
+		pUnitId:{
+			type:[String,Number],
+			default:''
 		},
 		//选中的物料id
 		selects:{
@@ -165,6 +166,11 @@ export default {
 			default:function(){
 				return [];
 			}
+		},
+		//集合名字是否可以修改
+		disabled:{
+			type:[Boolean],
+			default:false,
 		},
 		//弹窗标题
 		title:{
@@ -195,7 +201,6 @@ export default {
 					subObj.unitId = unitList[0];
 					subObj = utils.deepCopy(subObj);
 					this.createCollection(subObj);
-					
 				}else{
 					this.mCollect.list = utils.deepCopy(subObj.selectList);              
 					this.mCollect.show = true;
@@ -215,48 +220,12 @@ export default {
 					unitId : obj.unitId,
 					selectList : obj.selectList
 				};
+				if(!this.checkData(subObj)){
+					return;
+				}
 				this.createCollection(subObj);
 			}
 		},
-		//新建集合
-		async createCollection(obj){
-			let retData = {};
-			let fail = [];
-			let subObj = {
-				name : obj.name,
-				unitId : obj.unitId,
-				mid : obj.selectList.map( ele => ele.id).join(',')
-			};
-
-			retData = await this.getHttp('setStatisticScopeCategory',subObj);
-			if(retData.res){
-				//新建成功
-				this.$message('新建成功!');                    
-				this.throwData(utils.deepCopy(retData.new));
-				this.mCollect.show = false;
-			}else{
-				//新建失败
-				for(let e of retData.invalid){
-					for(let ele of obj.selectList){
-						if(e == ele.id){
-							fail.push(ele.name);
-							break;
-						}
-					}
-				}
-				this.alert(`所选择物料${fail.join(',')}与所选单位不匹配!`);
-			}
-		},
-		throwData(data){
-			this.$emit('change',data);
-		},
-
-
-
-
-
-
-
 
 
 		//筛选,重置
@@ -267,10 +236,8 @@ export default {
 			}else{
 				this.pageObj.currentPage = page | 1;
 			}
-
 			this.getMaterialList();
 		},
-
 		funGetPage(flag,res){
 			if(flag == 'size-change'){
 				this.pageObj.pageSize = res;				
@@ -288,7 +255,7 @@ export default {
 		changeChecked(item,bool){
 			if(bool){
 				if(this.selectList.length >= MAX_NUM){
-					this.$message('一个集合最大选择物料数量为50种!');
+					this.collectionNumLimitaTips();
 					item['checked'] = !bool;
 					return;
 				}
@@ -303,8 +270,8 @@ export default {
 			this.selectBtn = !this.selectBtn;
 
 			if(this.selectBtn){
-				if(this.list.length + this.selectList.length >= MAX_NUM){
-					this.$message('一个集合最大选择物料数量为50种!');
+				if(this.list.length + this.selectList.length > MAX_NUM){
+					this.collectionNumLimitaTips();
 					this.selectBtn = false;            
 					return;
 				}
@@ -323,6 +290,9 @@ export default {
 		changeUnit(){
 			// eslint-disable-next-line
 		},
+
+
+
 
 
 		//批量添加删除选中的
@@ -351,7 +321,7 @@ export default {
 			}
 			return {
 				cid: allCategory.value == cid ? '' : cid,
-				name: condition.name,
+				name: condition.name.trim(),
 				unitId: condition.unitId
 			};
 		},
@@ -376,7 +346,7 @@ export default {
 				return;
 			}
 			if(subObj.selectList.length > MAX_NUM){
-				this.$message('一个集合最大选择物料数量为50种');
+				this.collectionNumLimitaTips();
 				return;
 			}
 			if(!subObj.name){
@@ -388,6 +358,42 @@ export default {
 				return;
 			}
 			return true;
+		},
+		//集合数量限制提示
+		collectionNumLimitaTips(){
+			this.$message(`一个集合最大选择物料数量为${MAX_NUM}种`);			
+		},
+		throwData(data){
+			this.$emit('change',data);
+		},
+		//新建集合
+		async createCollection(obj){
+			let retData = {};
+			let fail = [];
+			let subObj = {
+				name : obj.name,
+				unitId : obj.unitId,
+				mid : obj.selectList.map( ele => ele.id).join(',')
+			};
+
+			retData = await this.getHttp('setStatisticScopeCategory',subObj);
+			if(retData.res){
+				//新建成功
+				this.$message('保存成功!');                    
+				this.throwData(utils.deepCopy(retData.new));
+				this.mCollect.show = false;
+			}else{
+				//新建失败
+				for(let e of retData.invalid){
+					for(let ele of obj.selectList){
+						if(e == ele.id){
+							fail.push(ele.name);
+							break;
+						}
+					}
+				}
+				this.alert(`所选择物料${fail.join(',')}与所选单位不匹配!`);
+			}
 		},
 
 
@@ -464,22 +470,28 @@ export default {
 			};
 		},
 		//初始化props
-		initProps(){
-			this.collName = this.collectName;
-			this.selectList = this.toObject(this.selects);
-		},
+		async initProps(){
+			let list = [];
 
-
-		toObject(list){
-			let arr = [];
-			for(let ele of list){
-				let obj = {
-					id : ele
-				};
-				arr.push(obj);
+			if(this.selects.length > 0 ){
+				list = await this.getHttp('materialGetMaterialDataByIds',{mids:this.selects.join(',')});
 			}
-			return arr;
+
+			//初始化集合名
+			this.collName = this.collectName;
+
+			//初始化选中的列表
+			if(Array.isArray(list)){
+				this.changeListAttrVal(list,'cus_unitId',this.pUnitId);
+				this.selectList = list;
+			}
+
 		},
+
+
+
+
+
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
 				confirmButtonText: '确定',
@@ -488,13 +500,6 @@ export default {
 					if(typeof fn == 'function') fn(action);
 				}
 			});
-		},
-		getEle(list,attr,val){
-			for(let ele of list){
-				if(ele[attr] == val){
-					return ele;
-				}
-			}
 		},
 		//检查列表中的元素某一个属性的值是否相同
 		hasSameAttrVal(list,attr='unitId'){
@@ -543,13 +548,15 @@ export default {
 			return res;
 		},
 	},
-	mounted(){
+	async mounted(){
 		this.initCondition();
 		this.initPageObj();
-		this.initProps();
-		this.getCategoryList();
-		this.getMaterialList();
+
+		this.getCategoryList();		
 		this.MaterialGetUnitList();
+		
+		await this.initProps();		
+		this.getMaterialList();
 	},
 	components:{
 		collectMaterial:() => import(/* webpackChunkName:"collect_material_win"*/'./collect_material_win'),
