@@ -1106,11 +1106,14 @@ export default {
 	},
 	"templateGetReportTemplateDetail": {
 		url: b + "template/getReportTemplateDetail", //自定义报表模板详情		
-		method: 'get',
-		fake: true
+		method: 'get'
+	},
+	"materialreportAddReportTask": {
+		url: b + "materialreport/addReportTask", //创建自定义报表任务
+		method: 'post'
 	},
 	"materialreportDeleteStatisticScopeCategory": {
-		url: b + "materialreport/deleteStatisticScopeCategory", //删除自定义报表模板
+		url: b + "materialreport/deleteStatisticScopeCategory", //删除分类集合
 		method: 'post'
 	},
 	"templateDeleteReportTemplate": {
