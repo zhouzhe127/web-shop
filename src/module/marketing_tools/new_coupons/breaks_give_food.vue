@@ -283,14 +283,14 @@ export default {
 			goodlist: [
 				{
 					typeId: 1,
-					name: '整单减免'
+					name: '减免优惠券'
 				},
 				{
 					typeId: 2,
-					name: '赠菜券'
+					name: '赠菜优惠券'
 				}
 			],
-			commoditySlect: '整单减免',
+			commoditySlect: '减免优惠券',
 			typeId: 1, //默认单品减免
 			couponName: '', //优惠券名称
 			shopWin: false, // 店铺弹框

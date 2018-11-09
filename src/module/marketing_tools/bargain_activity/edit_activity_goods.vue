@@ -4,12 +4,12 @@
 			<el-form-item label="商品名称" prop="name">
 				<el-input v-model="form.name" class="w217" maxlength="20"></el-input> <span class="textTip">限20字</span>
 			</el-form-item>
-			<el-form-item label="商品券">
+			<el-form-item label="商品券" required>
 				<el-button type="primary" @click="showCouponListHandle">关联券</el-button>
 				<span class="textTip" v-if="selectedCoupon">已关联一张优惠券{{selectedCoupon.name? '： '+selectedCoupon.name : ''}}</span>
 			</el-form-item>
 			<!-- prop="imgUrl" -->
-			<el-form-item  label="商品图片" >
+			<el-form-item  label="商品图片" required>
 				<div class="good-image">
 					<div class="good-image-div" id="image">
 						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="225" height="150">
@@ -76,8 +76,8 @@
 					<el-button type="primary" @click="gotoAddCoupon" class="fr">新增优惠券</el-button>
 					<el-radio-group v-model="couponType">
 						<el-radio-button label="0">全部</el-radio-button>
-						<el-radio-button label="1">减免</el-radio-button>
-						<el-radio-button label="2">赠菜</el-radio-button>
+						<el-radio-button label="1">减免优惠券</el-radio-button>
+						<el-radio-button label="2">赠菜优惠券</el-radio-button>
 					</el-radio-group>
 				</div>
 				<div class="listWrap">
@@ -202,7 +202,6 @@ export default {
 		},
 		validate() {
 			let isOk = true;
-
 			this.$refs.formDm.validate(valid => {
 				if (valid) {
 					if (!this.qualifiedFloorPrice) {
@@ -232,6 +231,10 @@ export default {
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
 			prarm.couponId = this.selectedCoupon.id ;
+			// 新建商品 | 编辑商品有name说明改过了
+			if(!this.selectedGoods || this.selectedCoupon.name){
+				prarm.coupon = JSON.stringify(this.selectedCoupon);
+			}
 			prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;

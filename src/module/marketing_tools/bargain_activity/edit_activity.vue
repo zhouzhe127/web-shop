@@ -21,8 +21,10 @@
 					:picker-option="pickerOption"
 					>
 				</el-date-picker> -->
-				<el-date-picker v-model="form.activityTime" align="right" type="datetimerange" :default-time="['08:00:00', '23:59:59']" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOption">
+				<el-date-picker v-model="form.activityTime" align="right" type="datetimerange" :default-time="['00:00:00', '23:59:59']" start-placeholder="开始日期" end-placeholder="结束日期" 
+				:picker-options="selectedActivity?pickerOption:isCreatePickerOption">
 				</el-date-picker>
+				<span class="textTip">选择{{activityTimeLength}}天</span>
 			</el-form-item>
 			<el-form-item label="编辑商品" v-show="form.goodsList && form.goodsList.length">
 				<el-button type="primary" size="mini" v-for="(v,i) in form.goodsList" :key="i" @click="editGoods(v)">{{v.name}}</el-button>
@@ -42,9 +44,8 @@
 
 <script>
 import http from 'src/manager/http';
-// let isUpdate = false;
 const NOW = new Date();
-// let isEdit= false;
+const ONE_DAY = 86400000;
 export default {
 	data: () => {
 		function validateActivityTime(rule, value, cb) {
@@ -81,12 +82,10 @@ export default {
 			showEditGoods: false,
 			selectGoods: null,
 			pickerOption: {
-				disabledDate: function(time) {
-					return time < NOW.setHours(0, 0, 0, 0);
-					// return isEdit
-					// 	? time < NOW.setHours(0,0,0,0)
-					// 	: time  < NOW;
-				}
+				disabledDate: time =>  time < NOW.setHours(0, 0, 0, 0) 
+			},
+			isCreatePickerOption: {
+				disabledDate: time => time < NOW
 			}
 		};
 	},
@@ -169,7 +168,6 @@ export default {
 				paramData.id = this.form.id;
 				paramData.goods = [];
 				this.$store.commit('createdActivity', paramData);
-				console.log(JSON.parse(JSON.stringify(paramData)));
 			}
 			this.$store.commit('selectGoods', null);
 			this.showEditGoods = true;
@@ -192,13 +190,16 @@ export default {
 	computed: {
 		selectedActivity() {
 			return this.$store.getters.getActivity;
+		},
+		activityTimeLength() {
+			if(this.form.activityTime == '') return 0;
+			return Math.ceil((this.form.activityTime[1] -  this.form.activityTime[0])/ONE_DAY);
 		}
 	},
 	created() {
-		// isEdit = false;
+		NOW.setTime(+new Date());
 		if (this.selectedActivity) {
 			this.getDetail();
-			// isEdit = true;
 		}
 	},
 	components: {
@@ -211,7 +212,7 @@ export default {
 <style scoped lang="less">
 .editActivityForm {
 	margin-top: 20px;
-	width: 500px;
+	width: 650px;
 }
 .w240 {
 	width: 240px;
@@ -219,5 +220,9 @@ export default {
 .h40 {
 	height: 40px;
 	line-height: 40px;
+}
+.textTip {
+	padding: 0 5px;
+	color: #cecece;
 }
 </style>
