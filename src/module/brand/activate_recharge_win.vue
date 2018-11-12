@@ -169,6 +169,7 @@ export default {
 				this.reshowCont = this.reShowTime + 's后刷新';
 				if (this.reShowTime < 0) {
 					this.reshowClock && clearInterval(this.reshowClock);
+					this.charClock && clearInterval(this.charClock);
 					this.reshowCont = '60s后刷新';
 					this.reShowTime = 60;
 					this.refreshMaskShow = true;
@@ -250,6 +251,7 @@ export default {
 		reviewQr() {
 			this.refreshMaskShow = false;
 			this.reshowCountDown();
+			this.handleGetQuery()
 		}
 	},
 	created() {
