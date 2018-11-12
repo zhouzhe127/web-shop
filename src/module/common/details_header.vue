@@ -8,14 +8,26 @@
 		<div class="conHeaderRight">
 			<page-btn v-if='show.length'></page-btn>
 		</div>
-		<div class="topUp" style="width:100%;height:40px;line-height:40px;background-color:#E64E27;color:#FFE6C6;text-align: center;;min-width:600px;">
-			<span style="font-size:16px;">交钱啦交钱啦！交钱啦交钱啦！交钱啦交钱啦！交钱啦交钱啦！</span>
-			<el-button size="mini" round style="width:80px;">去充值</el-button>
+		<!--续费充值提示-->
+		<div class="renew-topUp" v-if="currentShop.availableState === 2">
+			<span style="font-size:16px;">当前门店使用权限已到期，可能会影响您正常使用系统，请咨询系统顾问进行续约</span>
+			<el-button size="mini" round style="width:80px;" @click="toRecharge">去充值</el-button>
 		</div>
+
+		<!--充值弹窗-->
+		<chargeWin @toWin="toWin" v-if="winShow" :currentDetail="currentShop" @changeDetail="changeDetail"></chargeWin>
+
 	</div>
 </template>
 <script type="text/javascript">
+	import storage from 'src/verdor/storage';
 	export default {
+		data(){
+			return{
+				currentShop:{},
+				winShow:false
+			}
+		},
 		methods: {
 			goRouter(name, i) {
 				// if(name!==''){
@@ -26,6 +38,17 @@
 				// 	});
 				// }
 				this.$store.commit('setRunheard', i + 1);
+			},
+			// 调起充值弹窗
+			toRecharge(){
+				this.winShow  = true
+			},
+			toWin(res){
+				console.log(res);
+				this.winShow =false
+			},
+			changeDetail(data){
+				this.currentShop = data.currentShop;
 			}
 		},
 		computed: {
@@ -36,7 +59,11 @@
 				return Object.keys(this.$store.state.pageTools);
 			}
 		},
+		mounted(){
+			this.currentShop = storage.session('userShop').currentShop;
+		},
 		components: {
+			chargeWin: () => import(/*webpackChunkName: "activate_recharge_win"*/ 'src/module/brand/activate_recharge_win'),
 			pageBtn: () =>
 				import ( /*webpackChunkName:'page_tools_btn'*/ 'src/module/common/page_tools_btn')
 		}
@@ -75,5 +102,15 @@
 			vertical-align: top;
 			text-align: right;
 		} // margin-bottom: 20px;
+	}
+	.renew-topUp{
+		width:100%;
+		height:40px;
+		line-height:40px;
+		background-color:#E64E27;
+		color:#FFE6C6;
+		text-align: center;
+		min-width:600px;
+		margin-bottom: 10px;
 	}
 </style>

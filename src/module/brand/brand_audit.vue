@@ -33,8 +33,8 @@
 				<!--品牌店和无品牌店信息页面-->
 				<template v-if="!isBranDeail">
 					<div style="width:100%;height:50px;margin-top:25px;margin-bottom:30px;" v-cloak>
-						<a v-on:click="creatStoresShop(false)" href="javascript:void(0);" class="blue" style="width: 190px;height:50px;line-height:50px;float: right;">创建无品牌门店</a>
-						<a v-on:click="createBrand" href="javascript:void(0);" class="blue" style="width: 190px;height:50px;line-height:50px;float: right;margin-right:40px;">创建品牌</a>
+						<!--<a v-on:click="creatStoresShop(false)" href="javascript:void(0);" class="blue" style="width: 190px;height:50px;line-height:50px;float: right;">创建无品牌门店</a>-->
+						<a v-on:click="createBrand" href="javascript:void(0);" class="blue" style="width: 190px;height:50px;line-height:50px;float: right;">创建品牌</a>
 					</div>
 					<div style="background-color: #fff;width:100%;height:100%;position: relative;top: 0;">
 						<section style="width:100%;height:100%;overflow: auto;" id="shopListBox">
@@ -177,7 +177,7 @@
 							</div>
 							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
 						</div>
-						
+
 						<section style="width:100%;height:100%;overflow: auto;background-color: #fff;" v-cloak>
 							<section class="shoplist" style="overflow: auto;margin-top:1px;">
 								<el-table
@@ -237,7 +237,7 @@
 							</div>
 							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
 						</div>
-						
+
 						<section style="width:100%;height:100%;overflow: auto;background-color: #fff;" v-cloak>
 							<section class="shoplist" style="overflow: auto;margin-top:1px;">
 								<ul style="background: #f2f2f2;font-weight: bold;height:50px;">
@@ -268,8 +268,14 @@
 										<li>{{items.telephone}}</li>
 										<li style="width:20%;cursor: pointer;">
 											<section class="oBox" v-if="franchiseesTotal[0] && franchiseesTotal[0].length>0&&index == 0">
-												<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
-												<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
+												<template v-if="items.availableState == 0 || items.availableState == 2">
+													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
+													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
+												</template>
+												<template v-else-if="items.availableState == 1">
+													<div style="width: 100%;text-align: center;" @click="chargeActivate(items,index,indexs)">充值激活</div>
+												</template>
+
 											</section>
 											<section class="oBox" v-if="franchiseesTotal[1] && franchiseesTotal[1].length>0&&index == 1">
 												<div v-on:click="closeShop(items,indexs)" style="width:50%;color: gray;">开启门店</div>
@@ -305,7 +311,7 @@
 							</div>
 							<span class="right icon el-icon-arrow-right" @click="slideRight"></span>
 						</div>
-						
+
 						<section style="width:100%;height:100%;overflow: auto;background-color: #fff;" v-cloak>
 							<section class="shoplist" style="overflow: auto;margin-top:1px;">
 								<ul style="background: #f2f2f2;font-weight: bold;height:50px;">
@@ -337,17 +343,23 @@
 										<li>{{items.telephone}}</li>
 										<li style="width:20%;cursor: pointer;">
 											<section class="oBox" v-if="directlyTotal[0] && directlyTotal[0].length>0&&index == 0">
-												<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
-												<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
+												<template v-if="items.availableState == 0 || items.availableState == 2">
+													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
+													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
+												</template>
+												 <!--充值激活-->
+												<template v-else-if="items.availableState == 1">
+													<div style="width: 100%;text-align: center;" @click="chargeActivate(items,index,indexs)">充值激活</div>
+												</template>
 											</section>
-											<section class="oBox" v-if="directlyTotal[1] && directlyTotal[1].length>0&&index == 1">
+											<section class="oBox" v-else-if="directlyTotal[1] && directlyTotal[1].length>0&&index == 1">
 												<div v-on:click="closeShop(items,indexs)" style="width:50%;color: gray;">开启门店</div>
 												<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 											</section>
-											<section class="oBox" v-if="directlyTotal[2] && directlyTotal[2].length>0&&index == 2">
+											<section class="oBox" v-else-if="directlyTotal[2] && directlyTotal[2].length>0&&index == 2">
 												<img style="margin-top:20px;" src="../../res/images/audit.png" />
 											</section>
-											<section class="oBox" v-if="directlyTotal[3] && directlyTotal[3].length>0&&index == 3">
+											<section class="oBox" v-else-if="directlyTotal[3] && directlyTotal[3].length>0&&index == 3">
 												<div style="width:50%;"><img style="margin-top:20px;" src="../../res/images/nopass.png" /></div>
 												<div v-on:click="openShopDetial(indexs,items)" style="width:50%;">查看详情</div>
 											</section>
@@ -367,6 +379,9 @@
 		<transition name="fade">
 			<component :is="winshow" @winEvent="winEvent" :title="win.title" :detial="win.detial"></component>
 		</transition>
+
+		<!--充值弹窗-->
+		<chargeWin @toWin="toWin"  @chargeResult="chargeResult" :currentDetail="currentDetail" v-if="chargeWinShow" @changeDetail="changeDetail"></chargeWin>
 	</section>
 
 </template>
@@ -446,8 +461,11 @@ export default {
 			nowShopId:'',//当前显示的品牌id
 			areaIndex2:0,
 			contentWidth:'',
-			contentBoxWidth:''
-			
+			contentBoxWidth:'',
+			queryBackStatus:{},
+			chargeWinShow:false,
+			currentDetail:{},
+			resReturn:null
 		};
 	},
 	methods: {
@@ -709,7 +727,7 @@ export default {
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
 					this.contentBoxWidth = this.$refs.contentBox.clientWidth;
-					
+
 				});
 			}
 		},
@@ -1077,22 +1095,44 @@ export default {
 					}
 				}
 			}
+		},
+		//充值激活点击
+		chargeActivate(item,index,indexs){
+			this.currentDetail = item;
+			console.log(item,'激活店铺ID参数');
+			storage.session('shopId',item.id); // 储存更新当前选中得店铺的id
+			this.chargeWinShow = true;
+			if(this.resReturn == true){
+				if(item.ischain == '1'){
+					this.$set(this.directlyTotal[index][indexs],'availableState',0)
+				}else if(item.ischain == '2'){
+					this.$set(this.franchiseesTotal[index][indexs],'availableState',0)
+				}
+			}
+		},
+		toWin(res){
+			this.chargeWinShow = false;
+		},
+		chargeResult(res){
+			this.resReturn = res
+		},
+		changeDetail(data){
+			this.userData = data;
 		}
-	},
+},
 	mounted: function() {
 		this.getInitData();
 		this.getIndustry();
 		// 初始化懒加载配置
 		this.getLogoImg();
 		document.body.style.backgroundColor = '#F8F8F8';
-		// this.storeareaGetAllArea(this.nowShopId);
 	},
 	components: {
-		brandAuditWin: () =>
-			import(/* webpackChunkName:'brand_audit_win' */ './brand_audit_win')
+		brandAuditWin: () => import(/* webpackChunkName:'brand_audit_win' */ './brand_audit_win'),
+		chargeWin: () => import(/*webpackChunkName: "activate_recharge_win"*/ 'src/module/brand/activate_recharge_win'),
 	},
 	watch: {
-		searchName: 'newSearchName'
+		searchName: 'newSearchName',
 	}
 };
 </script>
@@ -1528,7 +1568,7 @@ export default {
 }
 
 .labeldetial {
-	height: 40;
+	height: 40px;
 	line-height: 40px;
 	float: left;
 	position: relative;

@@ -29,7 +29,7 @@ let global = {
      *   pro:"*****",//不满足条件时给的提示
      * }
      * @param {Context} context 上下文环境
-     * 
+     *
      * 注意事项：
      * 1.如果没有给出条件和正则,则判断该变量的值是否不等于该变量类型的原始值
         1):var a = 10,条件:a!=0;
@@ -38,7 +38,7 @@ let global = {
         此时应使用value键,把真实的值附上去
         1)  export default{
                 data:function(){
-                    return {b:1} 
+                    return {b:1}
                 },
                 motheds:{
                     check(){
@@ -145,11 +145,11 @@ let global = {
     getBaiduMapApi() {
         if(this.hasBaiduMap) return Promise.resolve();
         return new Promise((resolve,reject)=>{
-            
+
             let s = document.createElement("script",true);
             let proto = window.location.protocol;//判断协议
-            
-            
+
+
             s.src = `${proto}//webapi.amap.com/maps?v=1.4.6&key=f4fd8c2aaa26c58a12eae5b301cf1c1c&plugin=AMap.PolyEditor,AMap.CircleEditor`;
 
             document.head.appendChild(s);
@@ -158,7 +158,7 @@ let global = {
             d.id = 'allmap';
             document.body.appendChild(d);
             window.HOST_TYPE = proto == 'https:' ? "1":"0";//开启https请求
-            
+
             this.str = Timer.add(()=>{
 
                 try{
@@ -168,13 +168,13 @@ let global = {
                     resolve();
                 }
                 catch(e){
-                    
+
                 }
-                
+
             },20,0,true)
 
             s.onload = ()=>{
-                
+
             }
             s.onerror = ()=>{
                 reject();

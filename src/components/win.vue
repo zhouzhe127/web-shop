@@ -1,28 +1,28 @@
 <template>
-    
+
     <div class= "winContainer" :style="{'z-index':1000+win_id}">
         <div class= 'win center' :style="{'width': width +'px','height': 'auto','z-index':1000+win_id,'transform':align=='center'?'translate(-50%,-50%)':null,'left':(align == 'left'?'0':(align == 'center'?'50%':null)),'right':align=='right'?'0':null}">
             <div class= 'win-head'>
                 <span class= 'win-head-logo noselect' ></span>
                 <span class= 'win-head-title noselect'>
-                    <slot name="title">提示信息</slot>    
+                    <slot name="title">提示信息</slot>
                 </span>
                 <span class= 'win-head-close noselect' @click="closeFun"></span>
             </div>
             <div class= 'win-body' ref='winBody' :style="{'width':'auto','min-height':'100px','height':typeof(height) == 'number' ? (height +'px') : 'auto'}">
                 <slot name="content"></slot>
             </div>
-            <div class= 'win-bottom'>
+            <div class= 'win-bottom' v-if="hasBtn">
                 <a class= 'win-cancel gray' @click="cancelFun" v-if="type === 'confirm'" :style="cancel?cancel.style:''">{{cancel?cancel.content:'取消'}}</a>
                 <a class= 'win-ok blue ' :class = "{'wid-ok':true,blue:true,'alert':type !== 'confirm'}" @click="okFun" :style="ok?ok.style:''">{{ok?ok.content:'确定'}}</a>
             </div>
         </div>
         <div ref = "mask" class="win-mask" v-show = "maskShow" @click="closeMask" :style="{'z-index':1000 + win_id - 1}"></div>
     </div>
-    
+
 </template>
 <script>
- 
+
     import global from "src/manager/global";
     import utils from 'src/verdor/utils';
 
@@ -70,8 +70,12 @@
             maskShow:{
                 type:Boolean,
                 default:true
+            },
+			hasBtn:{
+            	type:Boolean,
+                default:true
             }
-            
+
         },
         data(){
             return {
@@ -107,39 +111,39 @@
 
                 let dom =  document.querySelector('#maincon');
                if(dom) dom.style.borderRight = 'none';
-                document.body.style.overflow = document.documentElement.style.overflow = ''; 
-                
+                document.body.style.overflow = document.documentElement.style.overflow = '';
+
             }
-            
+
             window.removeEventListener('resize',this.changeView);
 
         },
         destroyed(){
 
             // if(this.isBody){
-                
+
                 document.body.appendChild(this.$el);
-                
+
                 if(global.win_num==0){
                     this.$el.className = 'winContainer hide';
-                
+
                     setTimeout(()=>{
                         this.$el&&this.$el.parentNode&&document.body.removeChild(this.$el);
                     },300)
                 }
                 else{
                     this.$el&&this.$el.parentNode&&document.body.removeChild(this.$el);
-                } 
-                
+                }
+
                 let d = [...document.querySelectorAll(".win-mask")].pop();
                 d&&(d.style.opacity = "1");
-            // }   
+            // }
 
         },
         mounted(){
-            
+
             if(!global.win_id){
-                document.body.style.overflow = document.documentElement.style.overflow = 'hidden'; 
+                document.body.style.overflow = document.documentElement.style.overflow = 'hidden';
                 let dom =  document.querySelector('#maincon');
                if(dom&&document.body.scrollHeight > utils.getWindowWH().h) dom.style.borderRight = '17px solid transparent';
             }
@@ -162,7 +166,7 @@
             //     if(this.sourceHeight+100 > utils.getWindowWH().h){
             //         this.$refs.winBody.style.height = utils.getWindowWH().h - 100 +'px';
             //     }
-                
+
             // })
             let num = 30;
             this.timer = setInterval(()=>{
@@ -185,8 +189,8 @@
                 this.sourceEle = this.$el.parentNode;
                 document.body.appendChild(this.$el);
                 if(global.win_num==1) this.$el.className = 'winContainer show';
-            // } 
-            
+            // }
+
         }
     }
 
@@ -222,7 +226,7 @@
             overflow: hidden;
             z-index: 4998;
         }
-        
+
         .win.center{
             top: 50%;
             transform: translate(0, -50%);
@@ -333,6 +337,6 @@
             width:100%;
         }
     }
-    
+
 </style>
 
