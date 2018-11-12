@@ -9,7 +9,7 @@
 				<span class="textTip" v-if="selectedCoupon">已关联一张优惠券{{selectedCoupon.name? '： '+selectedCoupon.name : ''}}</span>
 			</el-form-item>
 			<!-- prop="imgUrl" -->
-			<el-form-item  label="商品图片" required>
+			<el-form-item  label="商品图片" prop="imgUrl">
 				<div class="good-image">
 					<div class="good-image-div" id="image">
 						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="225" height="150">
@@ -243,7 +243,7 @@ export default {
 			if(!this.selectedGoods || this.selectedCoupon.name){
 				prarm.coupon = JSON.stringify(this.selectedCoupon);
 			}
-			prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
+			// prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
 				this.editGoods(prarm);
