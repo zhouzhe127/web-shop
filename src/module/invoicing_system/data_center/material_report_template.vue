@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-12 17:54:54
+ * @Last Modified time: 2018-11-12 18:01:39
  */
 
 <template>
@@ -174,10 +174,6 @@ export default {
 					name : ele.name,											//模板名
 					createUser: ele.createUName,								//创建人
 					createTime: this.generatorDate(ele.createTime * 1000).str,	//创建时间
-					editReportTemplate : this.checkPermission(permissionId.editReportTemplate),
-					deleteReportTemplate : this.checkPermission(permissionId.deleteReportTemplate),
-					addReportTemplate : this.checkPermission(permissionId.addReportTemplate),
-					addReportTask : this.checkPermission(permissionId.addReportTask)
 				};
 				arr.push(temp);
 			}
