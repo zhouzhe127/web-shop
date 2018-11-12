@@ -59,7 +59,6 @@
 				<!-- 享有会员折扣 -->
 				<div class="online-box clearfix">
 					<span class="online-sub fl">享有会员折扣</span>
-					<!-- <onOff :key='1' :status="item.isDiscount" @statusChange="openflipSwitch"></onOff> -->
 					<div class="rightHalf">
 						<el-switch v-model="item.isDiscount" active-color="#E1BB4A" inactive-color="#dcdfe6">
 						</el-switch>
@@ -69,10 +68,6 @@
 				<div class="online-box clearfix" v-if='item.isDiscount '>
 					<span class="online-sub fl">折扣率</span>
 					<div class="rightHalf">
-						<!-- <section>
-							<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="2" v-model="item.discountParam" onkeyup="value=value.replace(/[^\d]/g,'')" />
-							<span>%</span>
-						</section> -->
 						<el-input placeholder="请输入正整数" v-model="item.discountParam" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
 							<template slot="suffix">%</template>
 						</el-input>
@@ -81,7 +76,6 @@
 				<!-- 享有积分翻倍 -->
 				<div class="online-box clearfix">
 					<span class="online-sub fl">享有积分翻倍</span>
-					<!-- <onOff :key='1' :status="item.isDouble" @statusChange="doubleIntegral"></onOff> -->
 					<div class="rightHalf">
 						<el-switch v-model="item.isDouble" active-color="#E1BB4A" inactive-color="#dcdfe6">
 						</el-switch>

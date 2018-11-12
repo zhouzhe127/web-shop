@@ -100,8 +100,12 @@
 					}
 				});
 				if (data) {
-					this.count = data.count ? data.count : this.count;
-					this.endTotal = data.total ? data.total : this.endTotal;
+					// this.count = data.count ? data.count : this.count;
+					// this.endTotal = data.total ? data.total : this.endTotal;
+					if(this.page == 1){
+						this.count = data.count;
+						this.endTotal = data.total;
+					}
 					//判断哪些数据是之前选中过的 选中过的加上标识
 					for (let item of data.list) {
 						if (this.selectedList.length == 0) {

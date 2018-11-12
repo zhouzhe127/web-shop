@@ -19,11 +19,9 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
 					</el-date-picker>
 					<span class="fl" style="width: 40px;text-align: center;margin-right: 0;">-</span>
-					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
 					</el-date-picker>
 				</div>
@@ -46,7 +44,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">推广者获礼</span>
 			<div class="rightHalf">
-				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount('1')">选择关联优惠券</a> -->
 				<el-button type="primary" icon="el-icon-plus" @click="addCount('1')" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="promotersCoupon.length > 0">(已关联{{promotersCoupon.length}}张)</span>
 			</div>
@@ -55,10 +52,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">推广者获得积分</span>
 			<div class="rightHalf">
-				<!-- <section>
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="followersPoint" onkeyup="value=value.replace(/[^\d]/g,'')" />
-					<span>分</span>
-				</section> -->
 				<el-input placeholder="请输入正整数" v-model="followersPoint" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
 					<template slot="suffix">分</template>
 				</el-input>
@@ -193,11 +186,7 @@ export default {
 		},
 		//关联优惠券弹窗
 		async addCount(type) {
-			let data = await http.getGetCouponCondition({
-				data: {
-
-				}
-			});
+			let data = await http.getGetCouponCondition({});
 			let coupons = [];
 			for (let item of data) {
 				if (item.type != 7) { //type7是积分卡券

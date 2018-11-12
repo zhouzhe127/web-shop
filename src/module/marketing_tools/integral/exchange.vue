@@ -90,7 +90,7 @@
 				</el-table-column>
 				<el-table-column label="核销人" width="100" align="center">
 					<template slot-scope="scope">
-						<span v-if="scope.row.goodsType == '0'">{{scope.row.mname}}</span>
+						<span v-if="scope.row.goodsType == '1'">{{scope.row.mname}}</span>
 						<span v-else>{{getStaffname(scope.row.updateUid)}}</span>
 					</template>
 				</el-table-column>
@@ -225,7 +225,7 @@
 			async changeExport() {
 				await http.changeExport({
 					data: {
-						shopId: this.shopId
+						shopId: this.shopId						
 					}
 				});
 			},

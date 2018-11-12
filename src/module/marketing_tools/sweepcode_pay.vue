@@ -112,11 +112,7 @@
 				<section class="fl therules">
 					<section class="clearfix" v-if="configure.length <= 9">
 						<div class="rulebox">
-							<!-- <el-input type="text" placeholder="请输入规则" class="fl el_input" v-model="content" maxlength="30"></el-input> -->
 							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="20" />
-							<!-- <el-input placeholder="请输入内容" v-model="shopName" class="input-with-select">
-                        <el-button slot="append" icon="el-icon-search" @click="searchShop"></el-button>
-                    </el-input> -->
 							<div class='bg fl' @click="saveConcont"></div>
 						</div>
 						<div class="fl handle-tips">

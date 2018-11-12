@@ -1,6 +1,6 @@
 <template>
 	<transition name="fade">
-		<win :width="580" :height="800" :align="'right'" :type="'alert'" :ok="ok" @winEvent="winEvent">
+		<win :width="580" :height="800" :align="'right'" :type="'alert'" :ok="okStyle" @winEvent="winEvent">
 			<section slot="content" id="tanmanagement">
 				<section class="titleTop" style="width:100%;height:40px;">
 					<div style="width:100%;height:40px;margin:10px;line-height: 40px;position: relative;">
@@ -169,27 +169,29 @@
 					'0': '取整至元',
 					'1': '取整至角',
 					'2': '取整至分'
-				}
+				},
+				okStyle: null
 			};
 		},
 		props: ['index', 'item'],
 		computed: {
-			ok() {
-				if (this.ischain != 3 && this.ischain != 0) {
-					return {
-						content: '确定'
-					};
-				} else {
-					return {
-						content: '修改'
-					};
-				}
-			}
+			// ok() {
+			// 	console.log(this.details)
+			// 	if (this.ischain == 1 || this.ischain == 2 || this.details.fromType == 2) {
+			// 		return {
+			// 			content: '确定'
+			// 		};
+			// 	} else {
+			// 		return {
+			// 			content: '修改'
+			// 		};
+			// 	}
+			// }
 		},
 		methods: {
 			winEvent(str) {
 				if (str == 'ok') {
-					if (this.ischain != 3 && this.ischain != 0) {
+					if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
 						this.$emit('changeCoupon', 'nochange');
 					} else {
 						//storage.session('couponDetail',this.detials)
@@ -266,6 +268,23 @@
 					}
 				});
 				this.detials = res;
+				if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
+					this.okStyle = {
+						content: '确定',
+						style: {
+							backgroundColor: '#2a80b9',
+							color: '#fff'
+						}
+					};
+				} else {
+					this.okStyle = {
+						content: '修改',
+						style: {
+							backgroundColor: '#E1BB4A',
+							color: '#fff'
+						}
+					};
+				}
 				// this.couponDetail = res
 			}
 		},

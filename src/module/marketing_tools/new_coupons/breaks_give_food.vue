@@ -426,19 +426,24 @@ export default {
 				'0': 1,
 				'1': 2,
 				'2': 5
-			}
+			},
+			couponStatus:'' //优惠券入口标识 判断是直接添加还是砍价功能里面添加
 		};
 	},
 	props: {
 		// couponDetail: Object, //详情
 		isBargain: {
 			type: Boolean,
-			default: false
+			default: true
 		}
 	},
+	beforeDestroy() {
+			storage.session('couponStatus', null);
+		},	
 	mounted() {
 		this.ischain = storage.session('userShop').currentShop.ischain;
 		this.shopList = storage.session('shopList');
+		this.couponStatus = storage.session('couponStatus');
 		// if (!utils.isEmptyObject(this.couponDetail)) {
 		// 	let couponDetail = this.couponDetail;
 		// 	this.editCoupon = true;
@@ -926,8 +931,11 @@ export default {
 					data: sendInfo
 				});
 				this.valiData('添加成功');
-				// this.$router.push('/admin/addCoupon');
-				this.$emit('couponCallBack', 1);
+				if(this.couponStatus && this.couponStatus == 'addCoupon'){
+					this.$router.push('/admin/addCoupon');
+				}else{
+					this.$emit('couponCallBack', 1);
+				}
 			} else {
 				await http.editCoupon({
 					data: sendInfo
