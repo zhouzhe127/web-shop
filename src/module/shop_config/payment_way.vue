@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-19 11:39:01 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-10-10 14:19:47
+ * @Last Modified time: 2018-11-12 17:08:04
  * @Module:支付方式配置
 **/
 <template>
@@ -34,7 +34,7 @@
 							<span v-if="scope.row.id >= 10000" style="color:#F56C6C" class="line" @click="deletePayment(scope.row,scope.$index)">删除</span>
 						</div>
 						<section v-else>
-							<div v-if="scope.row.paymentName == '会员支付'">不可操作</div>
+							<div v-if="scope.row.paymentName == '会员支付' || scope.row.paymentName == '粮票支付'">不可操作</div>
 							<div v-else class="btn">
 								<template v-if="scope.row.paymentName == '微信' || scope.row.paymentName == '支付宝' || scope.row.paymentName == '收钱吧' || scope.row.paymentName == '中信银行'|| scope.row.paymentName == '中信银行(上海)'|| scope.row.paymentName == '点佰趣'|| scope.row.paymentName == '农行支付'|| scope.row.paymentName == '网易严选支付'|| scope.row.paymentName == '旺POS支付'" class="editInfo">
 									<span @click="modifyBtn(scope.$index,scope.row)" class="isBrandColor">编辑</span>
