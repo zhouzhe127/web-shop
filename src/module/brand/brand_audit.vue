@@ -159,7 +159,7 @@
 						<h3 class="top_h3">{{isJoinShop?'所有加盟店明细':'所有直营店明细'}}</h3>
 						<a v-on:click="returnList" href="javascript:void(0);">返回</a>
 						<section style="width:210px;float:right;margin-right:20px;">
-							<el-input placeholder="请输入店铺名称" v-model="searchName" clearable class="input-with-select" >
+							<el-input placeholder="请输入店铺名称" v-model="searchName" clearable class="input-with-select">
 								<el-button slot="append" icon="el-icon-search" @click="newSearchName"></el-button>
 							</el-input>
 						</section>
@@ -300,7 +300,7 @@
 					</section>
 					<!--直营店明细-->
 					<section v-if='!isJoinShop' style="width:100%;height:100%;">
-						<div class="area" ref="contentBox"  v-if="newAreaList.length > 0" style="position:relative;">
+						<div class="area" ref="contentBox" v-if="newAreaList.length > 0" style="position:relative;">
 							<span class="left icon el-icon-arrow-left" @click="slideLeft"></span>
 							<div class="areabox">
 								<div class="box" ref="content" :style="{left: leftWidth +'px'}">
@@ -347,7 +347,7 @@
 													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
 													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 												</template>
-												 <!--充值激活-->
+												<!--充值激活-->
 												<template v-else-if="items.availableState == 1">
 													<div style="width: 100%;text-align: center;" @click="chargeActivate(items,index,indexs)">充值激活</div>
 												</template>
@@ -381,7 +381,7 @@
 		</transition>
 
 		<!--充值弹窗-->
-		<chargeWin @toWin="toWin"  @chargeResult="chargeResult" :currentDetail="currentDetail" v-if="chargeWinShow" @changeDetail="changeDetail"></chargeWin>
+		<chargeWin @toWin="toWin" @chargeResult="chargeResult" :currentDetail="currentDetail" v-if="chargeWinShow" @changeDetail="changeDetail"></chargeWin>
 	</section>
 
 </template>
@@ -453,19 +453,19 @@ export default {
 			searchName: '', //搜索名称
 			copyFranchiseesTotal: [], //直营店用于店铺名称搜索
 			copyDirectlyTotal: [], //加盟店用于店铺名称搜索
-			newAreaList:[],//区域列表
+			newAreaList: [], //区域列表
 			leftWidth: 0,
-			areaIndex:0,//区域滑块下标
-			shopList:[],//所要显示的店铺
-			shopIds:'',//要显示的shopIs
-			nowShopId:'',//当前显示的品牌id
-			areaIndex2:0,
-			contentWidth:'',
-			contentBoxWidth:'',
-			queryBackStatus:{},
-			chargeWinShow:false,
-			currentDetail:{},
-			resReturn:null
+			areaIndex: 0, //区域滑块下标
+			shopList: [], //所要显示的店铺
+			shopIds: '', //要显示的shopIs
+			nowShopId: '', //当前显示的品牌id
+			areaIndex2: 0,
+			contentWidth: '',
+			contentBoxWidth: '',
+			queryBackStatus: {},
+			chargeWinShow: false,
+			currentDetail: {},
+			resReturn: null
 		};
 	},
 	methods: {
@@ -477,12 +477,19 @@ export default {
 				let franchiseesNewList = [];
 				for (let i = 0; i < this.copyFranchiseesTotal.length; i++) {
 					franchiseesNewList[i] = [];
-					for (let j = 0; j < this.copyFranchiseesTotal[i].length; j++) {
+					for (
+						let j = 0;
+						j < this.copyFranchiseesTotal[i].length;
+						j++
+					) {
 						if (
-							this.copyFranchiseesTotal[i][j].name.indexOf(this.searchName) !=
-							-1
+							this.copyFranchiseesTotal[i][j].name.indexOf(
+								this.searchName
+							) != -1
 						) {
-							franchiseesNewList[i].push(this.copyFranchiseesTotal[i][j]);
+							franchiseesNewList[i].push(
+								this.copyFranchiseesTotal[i][j]
+							);
 						}
 					}
 				}
@@ -495,9 +502,13 @@ export default {
 					directlyNewList[i] = [];
 					for (let j = 0; j < this.copyDirectlyTotal[i].length; j++) {
 						if (
-							this.copyDirectlyTotal[i][j].name.indexOf(this.searchName) != -1
+							this.copyDirectlyTotal[i][j].name.indexOf(
+								this.searchName
+							) != -1
 						) {
-							directlyNewList[i].push(this.copyDirectlyTotal[i][j]);
+							directlyNewList[i].push(
+								this.copyDirectlyTotal[i][j]
+							);
 						}
 					}
 				}
@@ -645,18 +656,25 @@ export default {
 			});
 		},
 		//左滑
-		slideLeft(){
+		slideLeft() {
 			if (this.contentWidth > this.contentBoxWidth) {
 				this.areaIndex2++;
 				this.leftWidth = this.areaIndex2 * -200;
-				if (this.leftWidth * -1 + this.contentBoxWidth >= this.contentWidth) {
-					this.leftWidth = -(this.contentWidth - this.contentBoxWidth+60);
+				if (
+					this.leftWidth * -1 + this.contentBoxWidth >=
+					this.contentWidth
+				) {
+					this.leftWidth = -(
+						this.contentWidth -
+						this.contentBoxWidth +
+						60
+					);
 					return false;
 				}
 			}
 		},
 		//右滑
-		slideRight(){
+		slideRight() {
 			if (this.leftWidth >= 0) {
 				this.leftWidth = 0;
 				return false;
@@ -669,65 +687,66 @@ export default {
 			}
 		},
 		//切换区域
-		changeArea(res){
-			this.shopIds = this.newAreaList[res]?this.newAreaList[res].areaShopIds:"";
-			this.screenShop(this.shopsIn,this.isJoinShop);
+		changeArea(res) {
+			this.shopIds = this.newAreaList[res]
+				? this.newAreaList[res].areaShopIds
+				: '';
+			this.screenShop(this.shopsIn, this.isJoinShop);
 		},
-		async storeareaGetAllArea(shopId){
+		async storeareaGetAllArea(shopId) {
 			let res = await http.getAllArea({
 				data: {
-						shopId: shopId,
-					}});
-			if(res.length > 0){
+					shopId: shopId
+				}
+			});
+			if (res.length > 0) {
 				let str = '';
-				for(let i=0;i<res.length;i++){
-					str +=res[i].areaShopIds+',';
+				for (let i = 0; i < res.length; i++) {
+					str += res[i].areaShopIds + ',';
 					//删除加盟或直营内存在为店铺空的区域
 					let isEmpty = false;
-					let shids =  res[i].areaShopIds;
-					for(let j=0;j<this.shopList.length;j++){
-						if(shids.indexOf(this.shopList[j].id) >=0){
+					let shids = res[i].areaShopIds;
+					for (let j = 0; j < this.shopList.length; j++) {
+						if (shids.indexOf(this.shopList[j].id) >= 0) {
 							isEmpty = true;
 							break;
 						}
 					}
-					if(!isEmpty){
-						res.splice(i,1);
+					if (!isEmpty) {
+						res.splice(i, 1);
 						i--;
 					}
-
 				}
-				let shopIds = '';//全部的ids
-				for(let j=0;j<this.shopsIn.direct.length;j++){
-					shopIds+=this.shopsIn.direct[j].id+",";
+				let shopIds = ''; //全部的ids
+				for (let j = 0; j < this.shopsIn.direct.length; j++) {
+					shopIds += this.shopsIn.direct[j].id + ',';
 				}
-				for(let j=0;j<this.shopsIn.franchise.length;j++){
-					shopIds+=this.shopsIn.franchise[j].id+",";
+				for (let j = 0; j < this.shopsIn.franchise.length; j++) {
+					shopIds += this.shopsIn.franchise[j].id + ',';
 				}
 				let newstr = str.split(',');
 				let newshopIds = shopIds.split(',');
 				//根据区域筛选
-				for(let i=0;i<newstr.length;i++){
-					for(let j=0;j<newshopIds.length;j++){
-						if(newstr[i]==newshopIds[j]){
-							newshopIds.splice(j,1);
+				for (let i = 0; i < newstr.length; i++) {
+					for (let j = 0; j < newshopIds.length; j++) {
+						if (newstr[i] == newshopIds[j]) {
+							newshopIds.splice(j, 1);
 							j--;
 						}
 					}
 				}
-				let noArea = '';//无区域的shopids
-				for(let i=0;i<newshopIds.length;i++){
-					noArea +=  newshopIds[i]+',';
+				let noArea = ''; //无区域的shopids
+				for (let i = 0; i < newshopIds.length; i++) {
+					noArea += newshopIds[i] + ',';
 				}
-				res.unshift({name: '全部', areaShopIds: shopIds});
-				res.push({id: 0,name: '无区域', areaShopIds: noArea});
+				res.unshift({ name: '全部', areaShopIds: shopIds });
+				res.push({ id: 0, name: '无区域', areaShopIds: noArea });
 			}
 			this.newAreaList = res;
-			if(this.newAreaList.length > 0){
+			if (this.newAreaList.length > 0) {
 				this.$nextTick(() => {
 					this.contentWidth = this.$refs.content.clientWidth;
 					this.contentBoxWidth = this.$refs.contentBox.clientWidth;
-
 				});
 			}
 		},
@@ -736,9 +755,9 @@ export default {
 			// this.shopIds = '';
 			// this.areaIndex = '0';
 			// console.log(item);
-			if(bool){
+			if (bool) {
 				this.shopList = item.franchise;
-			}else{
+			} else {
 				this.shopList = item.direct;
 			}
 			this.nowShopId = item.id;
@@ -749,7 +768,7 @@ export default {
 			this.screenShop(item, bool);
 		},
 		//筛选店铺
-		screenShop(item, bool){
+		screenShop(item, bool) {
 			this.brandListDirectly = [];
 			this.examineDirectlying = [];
 			this.examineDirectlyFail = [];
@@ -785,10 +804,10 @@ export default {
 							obj.areaTag.splice(0, 1);
 						}
 					}
-					if(this.areaIndex == 0){
-					// 	continue;
-					}else{
-						if(this.shopIds.indexOf(obj.id)==-1 ){
+					if (this.areaIndex == 0) {
+						// 	continue;
+					} else {
+						if (this.shopIds.indexOf(obj.id) == -1) {
 							continue;
 						}
 					}
@@ -827,10 +846,8 @@ export default {
 							obj.areaTag.splice(0, 1);
 						}
 					}
-					if(this.areaIndex == 0){
-
-					}else{
-						if(this.shopIds.indexOf(obj.id)==-1 ){
+					if (this.areaIndex != 0) {
+						if (this.shopIds.indexOf(obj.id) == -1) {
 							continue;
 						}
 					}
@@ -985,7 +1002,8 @@ export default {
 					? data[0].child[0].child[0].name
 					: data[0].child[0].name;
 			storage.session('shopList', shopList);
-			document.querySelector('body').style.backgroundColor = 'rgb(255,255,255)';
+			document.querySelector('body').style.backgroundColor =
+				'rgb(255,255,255)';
 			this.userData.currentShop = utils.deepCopy(item);
 			this.userData.currentShop.newName = this.shopsIn
 				? `${this.shopsIn.name}--${item.name}`
@@ -1000,7 +1018,10 @@ export default {
 			});
 
 			//将点击进入商铺时的id和类型记录
-			storage.session('takeaway_select_data', item.id + '_' + item.ischain);
+			storage.session(
+				'takeaway_select_data',
+				item.id + '_' + item.ischain
+			);
 			storage.session('takeaway_shop_cObj', null);
 			storage.session('takeaway_shop_id', null);
 			storage.session('takeaway_shop_index', null);
@@ -1097,29 +1118,105 @@ export default {
 			}
 		},
 		//充值激活点击
-		chargeActivate(item,index,indexs){
+		chargeActivate(item, index, indexs) {
 			this.currentDetail = item;
-			console.log(item,'激活店铺ID参数');
-			storage.session('shopId',item.id); // 储存更新当前选中得店铺的id
+			console.log(item, '激活店铺ID参数');
+			storage.session('shopId', item.id); // 储存更新当前选中得店铺的id
 			this.chargeWinShow = true;
-			if(this.resReturn == true){
-				if(item.ischain == '1'){
-					this.$set(this.directlyTotal[index][indexs],'availableState',0)
-				}else if(item.ischain == '2'){
-					this.$set(this.franchiseesTotal[index][indexs],'availableState',0)
+			if (this.resReturn == true) {
+				if (item.ischain == '1') {
+					this.$set(
+						this.directlyTotal[index][indexs],
+						'availableState',
+						0
+					);
+				} else if (item.ischain == '2') {
+					this.$set(
+						this.franchiseesTotal[index][indexs],
+						'availableState',
+						0
+					);
 				}
 			}
 		},
-		toWin(res){
+		toWin(res) {
+			console.log(res);
 			this.chargeWinShow = false;
 		},
-		chargeResult(res){
-			this.resReturn = res
+		chargeResult(res) {
+			if (res) {
+				console.log(this.currentDetail);
+				this.currentDetail.availableState = 0;
+				this.userData.currentShop = this.currentDetail;
+				this.changeShopInfo();
+			}
+			this.resReturn = res;
 		},
-		changeDetail(data){
+		changeDetail(data) {
 			this.userData = data;
+		},
+		//缓存数据
+		changeShopInfo() {
+			let shopList = this.userData.shopList;
+
+			let currentShop = this.currentDetail;
+
+			if (currentShop) {
+				if (currentShop.ischain == '0') {
+					for (let i = 0; i < shopList.noBrand.length; i++) {
+						if (currentShop.id == shopList.noBrand[i].id) {
+							shopList.noBrand[i] = currentShop;
+							shopList.noBrand[i].availableState = 0;
+						}
+					}
+				} else {
+					for (let i = 0; i < shopList.brand.length; i++) {
+						if (currentShop.brandId == shopList.brand[i].id) {
+							if (currentShop.ischain == '1') {
+								for (
+									let j = 0;
+									j < shopList.brand[i].direct.length;
+									j++
+								) {
+									if (
+										currentShop.id ==
+										shopList.brand[i].direct[j].id
+									) {
+										shopList.brand[i].direct[
+											j
+										] = currentShop;
+										shopList.brand[i].direct[
+											j
+										].availableState = 0;
+									}
+								}
+							}
+						} else if (currentShop.ischain == '2') {
+							for (
+								let j = 0;
+								j < shopList.brand[i].franchise.length;
+								j++
+							) {
+								if (
+									currentShop.id ==
+									shopList.brand[i].franchise[j].id
+								) {
+									shopList.brand[i].franchise[
+										j
+									] = currentShop;
+									shopList.brand[i].franchise[
+										j
+									].availableState = 0;
+								}
+							}
+						}
+					}
+				}
+				console.log(this.userData, '改变后的');
+				storage.session('userShop', this.userData);
+			}
 		}
-},
+	},
 	mounted: function() {
 		this.getInitData();
 		this.getIndustry();
@@ -1128,11 +1225,13 @@ export default {
 		document.body.style.backgroundColor = '#F8F8F8';
 	},
 	components: {
-		brandAuditWin: () => import(/* webpackChunkName:'brand_audit_win' */ './brand_audit_win'),
-		chargeWin: () => import(/*webpackChunkName: "activate_recharge_win"*/ 'src/module/brand/activate_recharge_win'),
+		brandAuditWin: () =>
+			import(/* webpackChunkName:'brand_audit_win' */ './brand_audit_win'),
+		chargeWin: () =>
+			import(/*webpackChunkName: "activate_recharge_win"*/ 'src/module/brand/activate_recharge_win')
 	},
 	watch: {
-		searchName: 'newSearchName',
+		searchName: 'newSearchName'
 	}
 };
 </script>
@@ -1617,11 +1716,11 @@ export default {
 	}
 }
 
-.area{
+.area {
 	height: 50px;
 	padding: 0 30px;
 }
-.area .icon{
+.area .icon {
 	display: inline-block;
 	width: 20px;
 	height: 40px;
@@ -1629,25 +1728,25 @@ export default {
 	cursor: pointer;
 	font-size: 20px;
 }
-.area .left{
+.area .left {
 	position: absolute;
 	left: 0;
 	top: 0px;
 }
-.area .right{
+.area .right {
 	position: absolute;
 	right: 0;
 	top: 0px;
 }
-.areabox{
+.areabox {
 	position: relative;
 	width: 100%;
 	height: 50px;
 	overflow: hidden;
 }
-.areabox .box{
+.areabox .box {
 	position: absolute;
 	transition: 0.5s;
-	white-space:nowrap;
+	white-space: nowrap;
 }
 </style>
