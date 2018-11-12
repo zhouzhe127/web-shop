@@ -139,7 +139,6 @@ export default {
 					if (res === true) {
 						this.sucCharging = true;
 						this.charClock && clearInterval(this.charClock);
-						// this.changeShopInfo()
 						this.$emit('chargeResult', res);
 					}
 				});
@@ -147,7 +146,6 @@ export default {
 		},
 		// 三秒关闭倒计时
 		countDown() {
-			// if (!this.sucCharging) return  //改动的是这两行代码
 			this.closeCont = this.totalTime + 's后自动关闭';
 			this.clock = setInterval(() => {
 				this.totalTime--;
@@ -176,77 +174,6 @@ export default {
 					this.handleGetCharge();
 				}
 			}, 1000);
-		},
-		async changeShopInfo() {
-			let shopList = this.userData.shopList;
-
-			let currentShop = this.currentDetail
-				? this.currentDetail
-				: this.userData.currentShop;
-
-			let currentId = currentShop.id;
-
-			this.baseDetial = await http.baseGet({
-				data: { shopId: currentId }
-			});
-
-			if (this.baseDetial) {
-				if (this.baseDetial.ischain == '0') {
-					for (let i = 0; i < shopList.noBrand.length; i++) {
-						if (this.baseDetial.id == shopList.noBrand[i].id) {
-							shopList.noBrand[i] = this.baseDetial;
-							shopList.noBrand[i].availableState = 0;
-						}
-					}
-				} else {
-					for (let i = 0; i < shopList.brand.length; i++) {
-						if (this.baseDetial.brandId == shopList.brand[i].id) {
-							if (this.baseDetial.ischain == '1') {
-								for (
-									let j = 0;
-									j < shopList.brand[i].direct.length;
-									j++
-								) {
-									if (
-										this.baseDetial.id ==
-										shopList.brand[i].direct[j].id
-									) {
-										shopList.brand[i].direct[
-											j
-										] = this.baseDetial;
-										shopList.brand[i].direct[
-											j
-										].availableState = 0;
-									}
-								}
-							}
-						} else if (this.baseDetial.ischain == '2') {
-							for (
-								let j = 0;
-								j < shopList.brand[i].franchise.length;
-								j++
-							) {
-								if (
-									this.baseDetial.id ==
-									shopList.brand[i].franchise[j].id
-								) {
-									shopList.brand[i].franchise[
-										j
-									] = this.baseDetial;
-									shopList.brand[i].franchise[
-										j
-									].availableState = 0;
-								}
-							}
-						}
-					}
-				}
-				this.baseDetial.availableState = 0;
-				this.userData.currentShop = this.baseDetial;
-				console.log(this.userData, '改变后的');
-				storage.session('userShop', this.userData);
-				this.$emit('changeDetail', this.userData);
-			}
 		},
 		reviewQr() {
 			this.refreshMaskShow = false;
