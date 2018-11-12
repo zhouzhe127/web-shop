@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 15:59:37
+ * @Last Modified time: 2018-11-12 17:19:19
  */
 
 <template>
@@ -110,29 +110,28 @@ export default {
 		};
 	},
 	methods: {
-		//全选
+		//全选,反选
 		selectAllchange(bool){
-			this.changeListAttrVal(this.tableData,'checked',bool);
-			this.selectList = bool ? this.tableData : [];
+			let {canChoose} = this.divideList(this.tableData);
+			this.changeListAttrVal(canChoose,'checked',bool);
+			this.addDelSelectList(canChoose,bool);
 		},
 		//行选中
 		changeRowSelect(row,bool){
-			//状态未完成
-
-
 			if(bool){
-				this.selectList.push(row);
+				let {canChoose,checkedList} = this.divideList(this.tableData);
+				this.selectAll = canChoose.length == checkedList.length;
 			}else{
-				this.selectList = this.selectList.filter(ele => ele.id != row.id);
+				this.selectAll = false;				
 			}
-			this.selectAll = this.selectList.length == this.tableData.length;
+			this.addDelSelectList([row],bool);
 		},
 
 		clickOperation(sym,item){
 			let ids = '';
 			switch(sym){
 				case 'delete':
-					this.delTemplate('确认删除该报表?',item.id);
+					this.delTemplate(`确认删除 ${item.name} 报表吗?`,item.id);
 					break;
 				case 'view':
 					this.$router.push({path:'/admin/materialReport/viewReport',id:item.id});
@@ -148,41 +147,14 @@ export default {
 						return;
 					}
 					ids = this.selectList.map( ele => ele.id).join(',');
-					this.delTemplate('确认删除所选择的报表?',ids);               
+					this.delTemplate('确定要删所选中的报表吗？?',ids);               
 					break;     
 			}
 			
 		},
-		//删除报表
-		delTemplate(tips,ids){
-			this.$confirm(tips, '操作提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning'
-			}).then(()=>{
-				this.getHttp('materialreportDeleteMaterialByIds',ids)
-					.then((res)=>{
-						if(res){
-							this.$message('删除成功!');  
-						}else{
-							this.$message('删除失败!');  
-						}
-					});
-			}).catch(()=>{
-				console.log('取消');
-			});
-		},
 
-		async funGetPage(flag,res){
-			//获取页码值
-			if(flag == 'size-change'){
-				this.pageObj.pageSize = res;				
-			}else{
-				this.pageObj.currentPage = res;
-			}
-			this.clearTaskTimer('rList');
-			this.getReportList();
-		},
+
+
 
 
 
@@ -213,6 +185,40 @@ export default {
 				}
 			);
 		},
+		async funGetPage(flag,res){
+			//获取页码值
+			if(flag == 'size-change'){
+				this.pageObj.pageSize = res;				
+			}else{
+				this.pageObj.currentPage = res;
+			}
+			this.clearTaskTimer('rList');
+			this.getReportList();
+		},
+
+
+
+
+
+		//删除报表
+		delTemplate(tips,ids){
+			this.$confirm(tips, '操作提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(()=>{
+				this.getHttp('materialreportDeleteMaterialByIds',ids)
+					.then((res)=>{
+						if(res){
+							this.$message('删除成功!');  
+						}else{
+							this.$message('删除失败!');  
+						}
+					});
+			}).catch(()=>{
+				console.log('取消');
+			});
+		},
 		//前后台字段转换
 		mapListAttr(list){
 			let arr = [];  
@@ -231,13 +237,36 @@ export default {
 			}
 			return arr;
 		},
-
-
-
-
-
-
-
+		//批量添加删除选中的
+		addDelSelectList(list,sym){
+			let selectList = this.selectList;
+			for(let i = 0;i < list.length;i += 1){
+				for(let j = 0; j < selectList.length ;j += 1){
+					if(selectList[j].id == list[i].id){
+						selectList.splice(j,1);
+						break;
+					}
+				}
+			}
+			//添加
+			if(sym){
+				selectList.push(...list);
+			}
+		},
+		//获取已选中的与可选的元素
+		divideList(list){
+			let canChoose = [];
+			let checkedList = [];
+			for(let ele of list){
+				if(!ele.disabled){
+					canChoose.push(ele);
+				}
+				if(ele.checked){
+					checkedList.push(ele);
+				}
+			}
+			return {canChoose,checkedList};
+		},
 
 
 
@@ -279,6 +308,7 @@ export default {
 				},
 			]);
 		},
+
 
 
 
