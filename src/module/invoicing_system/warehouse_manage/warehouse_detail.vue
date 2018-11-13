@@ -79,7 +79,8 @@
 							class="el-size"
 						    :options="oneSort"
 						    v-model="cidSel"
-						    @change="getSortSel">
+						    @change="getSortSel"
+							change-on-select>
 						</el-cascader>
 					</div>
 				</div>
@@ -499,7 +500,7 @@ export default {
 			this.getGoodsList();
 		},
 		reset(){//物料重置
-			this.cidSel = [-1]
+			this.cidSel = [-1];
 			this.matType = '-1';
 			this.mName = '';
 			this.mCid = '';

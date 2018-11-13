@@ -2,123 +2,8 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-09 14:46:47
+ * @Last Modified time: 2018-11-12 16:51:44
  */
-
-<!--
- <template>
- <div>
-
-	<el-table :data="tableData" style="width: 100%" :filter-change="filterTag">
-		<el-table-column 
-			prop="date" 
-			label="日期" 
-			width="180" 
-			sortable
-			:filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
-			:filter-method="filterHandler"
-		>
-		</el-table-column>
-
-		<el-table-column prop="name" label="姓名" width="180">
-		</el-table-column>
-
-		<el-table-column prop="address" label="地址" :formatter="formatter">
-		</el-table-column>
-		
-		<el-table-column 
-			prop="tag" 
-			label="标签" 
-			width="100" 
-			:filter-multiple="true"
-			:filtered-value="filterVal"	
-			:filter-method="filterTag"	
-			:filter-change="filterTag"	
-			>
-			
-			
-
-			<template slot-scope="scope">
-				<el-tag :type="scope.row.tag === '家' ? 'primary' : 'success'" disable-transitions>{{scope.row.tag}}</el-tag>
-			</template>
-
-		</el-table-column>
-
-	</el-table>
-
-	<el-button @click="changeFilterVal">点击</el-button>
-
- </div>
-	
-</template>
-
-<script>
-	export default {
-		data() {
-			return {
-				filterVal:['1','2'],
-				tableData: [{
-					date: '1',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄',
-					tag: '家'
-				}, {
-					date: '2',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1517 弄',
-					tag: '公司'
-				}, {
-					date: '3',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1519 弄',
-					tag: '家'
-				}, {
-					date: '4',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1516 弄',
-					tag: '公司'
-				}]
-			}
-		},
-		methods: {
-			formatter(row, column) {
-				return row.address;
-			},
-			filterHandler(value, row, column) {
-				const property = column['property'];
-				return row[property] === value;
-			},
-
-
-			filterTag(value,row) {
-				console.log(value);
-				console.log(row);
-				return !this.filterVal.includes(row.date);
-			},
-
-
-
-
-
-			changeFilterVal(){
-				let count = (Math.random()*10).toFixed() - 0;
-				let arr = ['1','2','3','4'];
-
-				this.filterVal.push(arr[count % 4]);
-				if(this.filterVal.length == 4){
-					this.filterVal = [];
-				}
-			}
-		}
-	}
-</script>
-
-
--->
-
-
-
-
 
 <template>
 	<div class="pad-bottom">
@@ -254,6 +139,8 @@ export default {
 		//获取报表详情
 		async getDetail(){
 			let condition = this.condition;
+			let tableData = [];
+			let expandData = [];
 			let subObj = {
 				id : this.reportId,
 				name : condition.name,
@@ -271,9 +158,13 @@ export default {
 				//组合表头
 				this.tableTitle = this.organizeTableTitle(customItem);
 				//组合表数据
-				this.tableData = this.organizeTableData(data);
-				console.log(this.tableTitle);
-				console.log(this.tableData);
+				tableData = this.organizeTableData(data);
+				//展开所有列表
+				expandData = this.expandList(tableData);
+				//拼接值与单位
+				this.joinValueUnit(expandData);
+
+				this.tableData = tableData;
 			}
 		},
 
@@ -347,6 +238,7 @@ export default {
 					.then((res)=>{
 						if(res){
 							this.$message('删除成功!');  
+							this.$router.go(-1);
 						}else{
 							this.$message('删除失败!');  
 						}
@@ -371,6 +263,7 @@ export default {
 		organizeCollection(list){
 			let obj = {};
 			let tableTitle = this.tableTitle;
+
 			for(let i = 0 ;i < tableTitle.length ; i += 1){
 				let ele = tableTitle[i];
 				obj[ele.attr] = list[i];
@@ -425,6 +318,37 @@ export default {
 			}
 			return arr;
 		},
+		//获取所有行列表,包括集合的子列表
+		expandList(list){
+			let arr = [];
+			for(let ele of list){
+				arr.push(ele);
+				if(Array.isArray(ele.children)){
+					arr.push(...ele.children);
+				}
+			}
+			return arr;
+		},	
+		//拼接值与单位
+		joinValueUnit(list){
+			// let type = {
+			// 	base : 1,
+			// 	formular : 2
+			// };
+			let tableTitle = this.tableTitle;
+
+			for(let item of list){
+				for(let i = 0 ;i < tableTitle.length ; i += 1){
+					let ele = tableTitle[i];
+					let customItem = item[ele.attr];
+
+					if(!customItem['value']) customItem['value'] = 0;
+					if(!customItem['unitName']) customItem['unitName'] = '';
+
+					item[ele.attr] = customItem['value'] + customItem['unitName'];
+				}
+			}
+		},
 
 
 
@@ -459,7 +383,7 @@ export default {
 					type:'4',
 					className:'danger',
 					fn:()=>{
-						this.delTemplate('确定删除该模板?',this.reportId);
+						this.delTemplate('确定要删除当前报表吗?',this.reportId);
 					}
 				},
 				{
