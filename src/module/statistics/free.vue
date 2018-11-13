@@ -10,25 +10,11 @@
 							<el-date-picker :clearable="false" v-model="timeObj.startTime" type="datetime" placeholder="选择日期"></el-date-picker>
 							<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
 							<el-date-picker :clearable="false" v-model="timeObj.endTime" type="datetime" placeholder="选择日期"></el-date-picker>
-							<!-- <div class="input-box">
-								<calendar :time="timeObj.startTime" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
-							</div>
-							<span class="input-word">至</span>
-							<div class="input-box mr-right">
-								<calendar :time="timeObj.endTime" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
-							</div> -->
 						</template>
 						<template v-if="!isBrand && showStep == 3 || !isBrand && showStep == 4">
 							<el-date-picker :clearable="false" v-model="timeObj.startTimeStore" type="datetime" placeholder="选择日期"></el-date-picker>
 							<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
 							<el-date-picker :clearable="false" v-model="timeObj.endTimeStore" type="datetime" placeholder="选择日期"></el-date-picker>
-							<!-- <div class="input-box">
-								<calendar :time="timeObj.startTimeStore" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
-							</div>
-							<span class="input-word">至</span>
-							<div class="input-box mr-right">
-								<calendar :time="timeObj.endTimeStore" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
-							</div> -->
 						</template>
 						<div class="input-check select-ban" v-if="showStep != 2">
 							<i @click="timeCheck" :class="{active:this.openTime == 1}"></i>
@@ -682,24 +668,6 @@ export default {
 			} else if (this.showStep == 4) {
 				this.orderStoreSend.store.isRequest = true;
 				this.orderStoreSend.store.tableId = this.tableId;
-			}
-		},
-		startTimeChange(time) {
-			//开始时间
-			if (this.showStep == 3) {
-				//单店模式
-				this.timeObj.startTimeStore = time;
-			} else {
-				this.timeObj.startTime = time;
-			}
-		},
-		endTimeChange(time) {
-			//结束时间
-			if (this.showStep == 3) {
-				//单店模式
-				this.timeObj.endTimeStore = time;
-			} else {
-				this.timeObj.endTime = time;
 			}
 		},
 		formatTime(time) {

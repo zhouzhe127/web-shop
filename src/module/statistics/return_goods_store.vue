@@ -507,20 +507,20 @@ export default {
 			this.page = 1;
 			this.initData();
 		},
-		pageChange(obj) {
-			//翻页
-			let prevPage = this.page;
-			this.page = obj.page;
-			this.pageShow = obj.num;
-			if (prevPage != obj.page) {
-				this.initData();
-			}
-		},
-		showPageChange(index) {
-			//每行显示多少页
-			this.page = 1;
-			this.pageShow = this.showPageList[index];
-		},
+		// pageChange(obj) {
+		// 	//翻页
+		// 	let prevPage = this.page;
+		// 	this.page = obj.page;
+		// 	this.pageShow = obj.num;
+		// 	if (prevPage != obj.page) {
+		// 		this.initData();
+		// 	}
+		// },
+		// showPageChange(index) {
+		// 	//每行显示多少页
+		// 	this.page = 1;
+		// 	this.pageShow = this.showPageList[index];
+		// },
 		initData() {
 			let shopId = storage.session('deleteShopId');
 			let stepObj;
