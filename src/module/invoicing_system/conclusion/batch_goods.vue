@@ -16,7 +16,8 @@
 				<div class="one" v-for="(item,index) in goodsList" :key="index">
 					<!--单个展开-->
 					<span>
-						<i class="fi" :class="{'fi-double-angle-up':item.showList,'up':item.showList,'fi-double-angle-down':!item.showList}" @click="openSingle(item)"></i>
+						<i class="fi" :class="{'fi-double-angle-up':item.showList,'up':item.showList,'fi-double-angle-down':!item.showList}"
+						 @click="openSingle(item)"></i>
 					</span>
 					<span>{{item.itemName}}</span>
 					<span>{{item.unit}}</span>
@@ -107,17 +108,19 @@
 				});
 			},
 			setList() {
+				/* eslint-disable */
 				this.goodsList.map(v => {
 					v = this.cargo(v.allot, v, 'num');
 				});
+				/* eslint-disable */
 				this.goodsList = utils.deepCopy(this.goodsList);
 			},
 			cargo(type, item, key) { //key为申请数键名
 				let redsend = Number(item.grossOutnum);
 				item.list.map(v => {
 					if (v.isSuccess == 1) {
-						v.applyScale = this.getcheckNum(item.type,(v[key] / item.applyAll) * item.surplus); //按比例
-						v.average = this.getcheckNum(item.type,item.surplus / item.cil); //平均分配量
+						v.applyScale = this.getcheckNum(item.type, (v[key] / item.applyAll) * item.surplus); //按比例
+						v.average = this.getcheckNum(item.type, item.surplus / item.cil); //平均分配量
 						switch (type) {
 							case 1:
 								v.outNum = v.applyScale;
@@ -140,6 +143,7 @@
 								v.outNum = item.applyAll <= item.surplus ? v[key] : v.average;
 								break;
 						}
+						v.outNum = v.outNum < 0 ? 0 : v.outNum;
 					}
 				});
 				if (type == 4) this.singleChang(item);
@@ -154,7 +158,7 @@
 					item.grossOutnum = 0;
 				}
 				this.checkoutNum(item);
-				item.grossOutnum = this.getcheckNum(item.type, item.grossOutnum)
+				item.grossOutnum = this.getcheckNum(item.type, item.grossOutnum);
 				this.cargo(item.allot, item, 'num');
 			},
 			getcheckNum(type, num) {
@@ -183,11 +187,10 @@
 					if (!this.checkNum(v.outNum)) {
 						v.outNum = 0;
 					} else {
-						console.log(this.getcheckNum(item.type, v.outNum))
 						v.outNum = this.getcheckNum(item.type, v.outNum);
 					}
 					allNum += Number(v.outNum);
-				})
+				});
 				item.grossOutnum = allNum;
 				this.checkoutNum(item) ? this.cargo(0, item, 'num') : this.cargo(item.allot, item, 'num');
 			},
@@ -200,7 +203,7 @@
 					});
 					return false;
 				}
-				return true
+				return true;
 			}
 		},
 		mounted() {
@@ -221,7 +224,7 @@
 				this.setList();
 			}
 		}
-	}
+	};
 </script>
 <style lang='less' scoped>
 	.list-box {
@@ -229,48 +232,60 @@
 		overflow: auto;
 		max-height: 6.3rem;
 		border: 1px solid #ccc;
+
 		.title {
 			overflow: hidden;
 			background: #f2f2f2;
 			min-width: 1300px;
+
 			span {
 				float: left;
 				height: 40px;
 				line-height: 40px;
 				text-align: center;
 				width: 10%;
+
 				&:first-child {
 					width: 7%;
 				}
+
 				&:last-child {
 					width: 20%;
 				}
 			}
+
 			.handle {
 				color: #E1BB4A;
 				cursor: pointer;
+
 				&:hover {
 					text-decoration: underline;
 				}
 			}
 		}
+
 		.list {
 			min-width: 1300px;
+
 			.one {
 				overflow: hidden;
 				border-bottom: 1px solid #ccc;
+
 				&>span {
 					float: left;
 					height: 70px;
 					text-align: center;
 					line-height: 70px;
 					width: 10%;
+
 					&:first-child {
 						width: 7%;
 					}
+
 					&:last-child {
 						width: 20%;
 					}
+
 					i.fi {
 						font-size: 30px;
 						color: #666;
@@ -281,15 +296,18 @@
 						cursor: pointer;
 						vertical-align: middle;
 					}
+
 					i.up {
 						color: #E1BB4A;
 					}
+
 					em {
 						height: 18px;
 						width: 18px;
 					}
 
 				}
+
 				span {
 					em {
 						display: inline-block;
@@ -299,52 +317,64 @@
 						background-size: cover;
 					}
 				}
+
 				.two {
 					border-top: 1px solid #ccc;
 					float: left;
 					width: 100%;
 					padding-bottom: 10px;
 					color: #777;
+
 					.full {
 						color: red;
 					}
+
 					span {
 						float: left;
 						width: 10%;
 						text-align: center;
 						height: 40px;
 						line-height: 40px;
+
 						&:first-child {
 							width: 7%;
 							height: 5px;
 						}
+
 						&:nth-child(2) {
 							width: 13%;
 						}
+
 						&:nth-child(8) {
 							width: 20%;
 						}
+
 						&:nth-child(9) {
 							width: 15%;
 						}
+
 						em {
 							width: 14px;
 							height: 14px;
 						}
 					}
+
 					.title-two {
 						overflow: hidden;
 						padding: 10px 0;
 					}
+
 					.list-two {
 						overflow: hidden;
 						padding: 5px 0;
 					}
 				}
 			}
+
 			&:last-child {
 				border-bottom: 0;
 			}
+
 			.empty {
 				height: 70px;
 				line-height: 70px;

@@ -59,7 +59,7 @@
 											<span>公式</span>:<span>{{item.item.formulaName}}</span>
 										</p>
 										<p v-if="item.type==2">
-											<span>格式</span>:<span>{{item.allWareName}}</span>
+											<span>格式</span>:<span>{{item.item.formatName}}</span>
 										</p>
 										<p>
 											<span>关联店铺</span>:<span>{{item.allShopName}}</span>
@@ -144,12 +144,21 @@
 				let arr = [];
 				for (let item of this.columnData) {
 					let obj = {};
-					obj.id = item.item.id;
-					let wareArr = [];
-					item.warehouse.forEach(v => {
-						wareArr.push(v.id);
+					Object.assign(obj,{
+						id:item.item.id,
+						type:item.type,
+						colName:item.name
 					});
-					obj.wid = wareArr;
+					let wareArr = [];
+					item.store.forEach(v=>{
+						let o = {};
+						Object.assign(o,{
+							shopId:v.id,
+							wid:v.wid
+						});
+						wareArr.push(o);
+					});
+					obj.relation = wareArr;
 					arr.push(obj);
 				}
 				return arr;
@@ -159,12 +168,12 @@
 				for (let item of this.tableData) {
 					let obj = {};
 					if (item.pScope.length > 0) {
-						obj.type = 2;
+						obj.type = 3;//物料范围
 						obj.mid = item.pScope;
 					} else {
-						obj.type = 1;
+						obj.type = 4;//统计范围
 						obj.id = item.pCollection.id;
-						obj.name = item.pCollection.name;
+						// obj.name = item.pCollection.name;
 					}
 					arr.push(obj);
 				}
@@ -190,6 +199,10 @@
 				this.sleRoleArr.forEach(v => {
 					arr.push(v.id);
 				});
+				if(arr.length<=0){
+					this.$message.error('请选择职位权限');
+					return;
+				}
 				let data = await http.templateAddReportTemplate({
 					data: {
 						name: this.listName,
@@ -199,7 +212,7 @@
 					}
 				});
 				if (data) {
-					// window.history.go(-1);
+					window.history.go(-1);
 					this.$message({
 						type: 'success',
 						message: '添加成功!'
@@ -212,7 +225,6 @@
 			async getRoleList() {
 				let data = await http.getUserRoleList();
 				this.roleList = data;
-				console.log(data);
 			},
 			delColumn(index, type) { //type:1是行，2是列
 				let str = type == 1 ? '行' : '列';
@@ -244,20 +256,33 @@
 						max: this.tableData.length + 1,
 					};
 				} else {
+					this.columnListData.sortObj={
+						num: this.columnData.length + 1,
+						max: this.columnData.length + 1,
+					};
 					this.columnShow = true;
 				}
 			},
 			columnEmit(data) {
-				this.columnShow = false;
+				
 				if (data) {
 					this.columnListData = {};
 					console.log(data);
+					let check = true;
+					this.columnData.forEach(v=>{
+						if(v.name == data.name){
+							this.$message.error('添加列名重复，请修改！');
+							check = false;
+						}
+					});
+					if(!check) return false;
 					data.allWareName = this.getStr(data.warehouse, 'name');
 					data.allShopName = this.getStr(data.store, 'name');
 					this.sortList(this.columnData, data, 'sortObj');
 					this.resetColumn();
 					// this.columnData = utils.deepCopy(this.sortList(this.columnData,data,'sort'));
 				}
+				this.columnShow = false;
 			},
 			editColumn(item, index) {
 				this.editIndex = index;

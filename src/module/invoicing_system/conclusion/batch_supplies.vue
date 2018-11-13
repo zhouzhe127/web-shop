@@ -17,7 +17,8 @@
 				<div class="one" v-for="(item,index) in materialList" :key="index">
 					<!--单个展开-->
 					<span>
-						<i class="fi" :class="{'fi-double-angle-up':item.showList,'up':item.showList,'fi-double-angle-down':!item.showList}" @click="openSingle(item)"></i>
+						<i class="fi" :class="{'fi-double-angle-up':item.showList,'up':item.showList,'fi-double-angle-down':!item.showList}"
+						 @click="openSingle(item)"></i>
 					</span>
 					<span>{{item.itemName}}</span>
 					<span>{{typeName[item.type]}}</span>
@@ -105,7 +106,7 @@
 				options: [],
 				value: '',
 				materialList: [],
-				isBrand:false,
+				isBrand: false,
 				typeName: ['成品', '半成品', '普通物料']
 			};
 		},
@@ -131,9 +132,11 @@
 				}
 			},
 			setList() {
+				/* eslint-disable */
 				this.materialList.map(v => {
 					v = this.cargo(v.allot, v, 'num');
 				});
+				/* eslint-disable */
 				this.goodsList = utils.deepCopy(this.goodsList);
 			},
 			allotChang(item) {
@@ -144,7 +147,7 @@
 				let redsend = Number(item.grossOutnum * item.unitValue);
 				item.list.map(v => {
 					if (v.isSuccess == 1) {
-						v.applyScale = this.calevalue((v[key] / item.applyAll) * item.surplus,v.unitValue); //按比例
+						v.applyScale = this.calevalue((v[key] / item.applyAll) * item.surplus, v.unitValue); //按比例
 						v.average = this.calevalue(item.surplus / item.cil, v.unitValue); //平均分配量
 						switch (type) {
 							case 1:
@@ -162,12 +165,13 @@
 								v.outNum = this.calevalue(v[key], v.unitValue);
 								break;
 							case 5:
-								v.outNum = item.applyAll <= item.surplus ? this.calevalue(v[key], v.unitValue):v.applyScale;
+								v.outNum = item.applyAll <= item.surplus ? this.calevalue(v[key], v.unitValue) : v.applyScale;
 								break;
 							case 6:
-								v.outNum = item.applyAll <= item.surplus ? this.calevalue(v[key], v.unitValue):v.average;
+								v.outNum = item.applyAll <= item.surplus ? this.calevalue(v[key], v.unitValue) : v.average;
 								break;
 						}
+						v.outNum = v.outNum < 0 ? 0 : v.outNum;
 					}
 				});
 				if (type == 4) this.singleChang(item);
@@ -206,7 +210,7 @@
 						v.outNum = this.getcheckNum(v.outNum);
 					}
 					allNum += Number(v.outNum * v.unitValue);
-				})
+				});
 				item.grossOutnum = this.calevalue(allNum, item.unitValue);
 				this.checkoutNum(item) ? this.cargo(0, item, 'num') : this.cargo(item.allot, item, 'num');
 			},
@@ -219,7 +223,7 @@
 					});
 					return false;
 				}
-				return true
+				return true;
 			},
 			openSingle(item) {
 				this.$set(item, 'showList', !item.showList);
@@ -240,7 +244,7 @@
 							data.piceValue = v.value;
 							data.piceUnitid = v.unitId;
 						}
-					})
+					});
 				}
 				this.materialList = utils.deepCopy(this.materialList);
 			},
@@ -252,7 +256,7 @@
 		},
 		mounted() {
 			this.options = this.$parent.options;
-			this.isBrand = storage.session('userShop').currentShop.ischain == '3'? true : false;
+			this.isBrand = storage.session('userShop').currentShop.ischain == '3' ? true : false;
 			this.materialList = this.proData;
 			this.setList();
 		},
@@ -269,7 +273,7 @@
 				this.setList();
 			}
 		}
-	}
+	};
 </script>
 <style lang='less' scoped>
 	.list-box {
@@ -277,48 +281,60 @@
 		overflow: auto;
 		max-height: 6.3rem;
 		border: 1px solid #ccc;
+
 		.title {
 			overflow: hidden;
 			background: #f2f2f2;
 			min-width: 1500px;
+
 			span {
 				float: left;
 				height: 40px;
 				line-height: 40px;
 				text-align: center;
 				width: 9%;
+
 				&:first-child {
 					width: 7%;
 				}
+
 				&:last-child {
 					width: 20%;
 				}
 			}
+
 			.handle {
 				color: #E1BB4A;
 				cursor: pointer;
+
 				&:hover {
 					text-decoration: underline;
 				}
 			}
 		}
+
 		.list {
 			min-width: 1500px;
+
 			.one {
 				overflow: hidden;
 				border-bottom: 1px solid #ccc;
+
 				&>span {
 					float: left;
 					height: 70px;
 					text-align: center;
 					line-height: 70px;
 					width: 9%;
+
 					&:first-child {
 						width: 7%;
 					}
+
 					&:last-child {
 						width: 20%;
 					}
+
 					i.fi {
 						font-size: 30px;
 						color: #666;
@@ -329,15 +345,18 @@
 						cursor: pointer;
 						vertical-align: middle;
 					}
+
 					i.up {
 						color: #E1BB4A;
 					}
+
 					em {
 						height: 18px;
 						width: 18px;
 					}
 
 				}
+
 				span {
 					em {
 						display: inline-block;
@@ -347,38 +366,47 @@
 						background-size: cover;
 					}
 				}
+
 				.two {
 					border-top: 1px solid #ccc;
 					float: left;
 					width: 100%;
 					padding-bottom: 10px;
 					color: #777;
+
 					.full {
 						color: red;
 					}
+
 					span {
 						float: left;
 						width: 10%;
 						text-align: center;
 						height: 40px;
 						line-height: 40px;
+
 						&:first-child {
 							width: 7%;
 							height: 5px;
 						}
+
 						&:nth-child(2) {
 							width: 13%;
 						}
+
 						&:nth-child(8) {
 							width: 17%;
 						}
+
 						&:nth-child(9) {
 							width: 7%;
 						}
+
 						em {
 							width: 14px;
 							height: 14px;
 						}
+
 						.dispice {
 							.input-num {
 								width: 60px;
@@ -389,25 +417,30 @@
 								position: relative;
 								right: -3px;
 							}
+
 							.slebox {
 								width: 120px;
 								display: inline-block;
 							}
 						}
 					}
+
 					.title-two {
 						overflow: hidden;
 						padding: 10px 0;
 					}
+
 					.list-two {
 						overflow: hidden;
 						padding: 5px 0;
 					}
 				}
 			}
+
 			&:last-child {
 				border-bottom: 0;
 			}
+
 			.empty {
 				height: 70px;
 				line-height: 70px;

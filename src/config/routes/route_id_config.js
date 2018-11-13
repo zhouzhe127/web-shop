@@ -119,7 +119,7 @@ const invoicing_system = {
 	"0839": "invoicing_system/purchase_audit", //采购单审核
 	"0840": "invoicing_system/material_statistics", //物料统计	
 	"0841": "invoicing_system/process_bom",
-	"0842": "invoicing_system/material_report_template",				//报表模板
+	"0842": "invoicing_system/material_report_template", //报表模板
 }
 const statistics = {
 	'091': 'statistics/order_brand',
@@ -190,18 +190,22 @@ const ticket_config = {
 	"131": "ticket_config/ticketed_point_list",
 	"132": "ticket_config/sales_party"
 };
+let modelArr = [invoicing_system, outfood]; //开发环境下需要打包的模块
 let config = {
 	useId: [], //需要用到的路由id
 	configs: {} //需要插入的路由模块
 };
-Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
-//Object.assign(config.configs, invoicing_system);
+if (process.argv[2] == '--dev' && modelArr.length > 0) {
+	Object.assign(config.configs, ...modelArr);
+} else {
+	Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
+}
 module.exports = config;
 /*
  *现在路由主要由以下文件构成
  *|routes|----->文件夹。包含所需要的路由json文件和route_id_config路由配置文件
  *       |route_id_config.js：中id-'0923'的命名规则09为模块的顺序23为路由内部的顺序
- *|route_template.js为路由的模板文件generate_routes.js以此为模板生成路径为src/config/route_template.js。
- *|generate_routes.js最后生成的路由文件路径为src/config/generate_routes.js       
- *|generate_route_config.js生成路由的入口文件路径为Attachment/generate_route_config.js
+ *|route_template.js为路由的模板文件generate_routes.js以此为模板生成路径为cmd/route_template.js。
+ *|generate_routes.js最后生成的路由文件路径为src/config/routes.js       
+ *|generate_route_config.js生成路由的入口文件路径为cmd/generate_route_config.js
  **/
