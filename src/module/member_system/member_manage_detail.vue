@@ -334,7 +334,7 @@ export default {
 			// 判断操作类型 是否加还是减
 			let operate;
 			if (item.type == '1' || item.type == '3' || item.type == '6' || item.type == '9' || item.type == '11' || item.type ==
-				'13') {
+				'13' || item.type == '25' || item.type == '28') {
 				operate = '-';
 			} else {
 				operate = '+';

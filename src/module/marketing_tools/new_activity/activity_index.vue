@@ -83,19 +83,19 @@
 						'name': '消费满次送券',
 						'description': '固定时间内消费达到指定次数送券优惠',
 						'type': 8,
-						'PlaceImgUrl': require('../../../res/images/coupon.png'), // eslint-disable-line
+						'PlaceImgUrl': require('../../../res/images/full_time.png'), // eslint-disable-line
 					},
 					{
 						'name': '消费券返券',
 						'description': '指定用户群体使用了指定优惠券继续赠送优惠券~',
 						'type': 9,
-						'PlaceImgUrl': require('../../../res/images/coupon.png'), // eslint-disable-line
+						'PlaceImgUrl': require('../../../res/images/return_ticket.png'), // eslint-disable-line
 					},
 					{
 						'name': '唤醒营销',
 						'description': '给予您多日未到店的会员发送优惠券鼓励到店~',
 						'type': 10,
-						'PlaceImgUrl': require('../../../res/images/coupon.png'), // eslint-disable-line
+						'PlaceImgUrl': require('../../../res/images/wake_up.png'), // eslint-disable-line
 					},
 				],
 			};

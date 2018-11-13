@@ -9,7 +9,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='titles' maxlength="10" /> -->
 				<el-input v-model="titles" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
@@ -18,11 +17,9 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
 					</el-date-picker>
 					<span class="fl lines">-</span>
-					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
 					</el-date-picker>
 				</div>
@@ -33,7 +30,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动范围</span>
 			<div class="rightHalf" v-if="ischain == '3'">
-				<!-- <a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a> -->
 				<el-button type="primary" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
 				<span v-if="selectsList.length >= 1">(已选择{{selectsList.length}}家店铺)</span>
 			</div>
@@ -45,8 +41,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动对象</span>
 			<div class="rightHalf">
-				<!-- <singleSelect class="fl" :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect>
-                	<span class="fl associated" v-if="integralOn == 1">(已关联{{member}}人)</span> -->
 				<el-checkbox v-model="checkedMember" label="会员" border @change="toSinglemember(checkedMember)"></el-checkbox>
 				<el-checkbox v-model="checkedFans" label="粉丝" border @change="toSinglefans(checkedFans)"></el-checkbox>
 				<el-tooltip class="item" effect="dark" content="用户在该活动内触发了发券规则，满足一个规则进行一次推送券。若用户同时为公众号粉丝并是会员，只触发一次发券。" placement="right">
@@ -115,31 +109,10 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="agift-content">
-						<span class="fl"></span>
-						<label class="fl">
-							<i @click="isLoopFun" :class="ruleObj.isLoop ? 'chckOn' : ''">✓</i>
-						</label>
-						<p class="fl" style="font-size: 16px;margin-right: 10px;">循环赠送</p>
-						<p class="fl" style="color: #999999;margin-top: 2px;">(满足交易额整数倍，发劵数同倍增加)</p>
-					</div> -->
-					<!-- <div class="agift-content" style="overflow: initial;height: 40px;">
-						<span class="fl">会员权益</span>
-						<div class="fl selectList" @click="openSelect">
-							{{onListName}}
-							<ul v-if="isList">
-								<li v-for="(item,index) in lists" :key='index' @click="getListDetail(item,index)">{{item.name}}</li>
-							</ul>
-						</div>
-						<span class="fl moreBtn" @click="openSelect" style="border: 1px solid #CCCCCC;border-left: none;cursor: pointer;">
-							<i></i>
-						</span>
-					</div> -->
 					<!-- 会员权益 -->
 					<div class="online-box clearfix">
 						<span class="online-sub fl">会员权益</span>
 						<div class="rightHalf">
-							<!--  <select-btn :name='item.interestName' :sorts="interestList.map(v=>v.name)" :width="189" @selOn="selinterest" :showIndex='ind'></select-btn> -->
 							<el-select v-model="item.interestName" placeholder="请选择" @change="selinterest" style="color:#c0c4cc;width: 179px;">
 								<el-option v-for="item in interestList" :key="item.id" :label="item.name" :value="item.id">
 								</el-option>
@@ -150,23 +123,10 @@
 					<div class="online-box clearfix" v-if="item.interestId == '1'">
 						<span class="online-sub fl">关联优惠券</span>
 						<div class="rightHalf">
-							<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin(item)">选择关联优惠券</a> -->
 							<el-button type="primary" icon="el-icon-plus" @click="addCoupon(item)" style="width:179px;">选择关联优惠券</el-button>
 							<span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
 						</div>
 					</div>
-					<!-- <div class="agift-content" v-if="memberRights == 0">
-						<span class="fl"></span>
-						<div class="btn-concent" @click="openCouponWin">
-							<button class="fl increase" style="width: 150px;">选择优惠劵</button>
-						</div>
-						<span class="fl" v-if="ruleObj.couponIds.length >= 1">已选择{{ruleObj.couponIds.length}}张</span>
-					</div> -->
-					<!-- <div class="agift-content" id="agift">
-						<span class="fl">消息推送渠道</span>
-						<mulSelect :styles="{backgroundColor:'rgb(247,247,247)'}" :list='list' @selOn='selOnSend' :selects="ruleObj.pushChannel" :name='"name"' :keyName='"id"'></mulSelect>
-						<span class="fl" style="width: auto;color: #666666;">活动发布后将通过该渠道触发会员</span>
-					</div> -->
 					<!-- 消息推送渠道 -->
 					<div class="online-box clearfix">
 						<span class="online-sub fl">消息推送渠道</span>
@@ -192,32 +152,9 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="agift-content">
-						<label>
-							<span class="required required-none" style="vertical-align: top;padding-top: 10px;">内容设置</span>
-							<textarea placeholder="内容设置" style="width: 350px;height: 100px;" v-model="ruleObj.msgContent" maxlength="151"></textarea>
-						</label>
-						<div class="limit">
-							<p class="fl" style="margin-right: 102px;">
-								<img class="icon-i" src="../../../res/images/handle-tips.png" />限150字以内</p>
-							<p class="fl" v-if="msmStatus">您已输入{{ruleObj.msgContent.length}}个字,目前发送{{Math.ceil(ruleObj.msgContent.length / 60)}}条短信</p>
-						</div>
-						<div class="limit">
-							<p>引用参数:
-								<a style="color:#FF9200;" v-for="(item,index) in parameter" :key='index' @click="addParameter(index,1)">{{item.name}}</a>
-							</p>
-						</div>
-					</div> -->
 				</div>
 			</div>
 		</div>
-		<!-- <div class="main_Box" style="overflow: initial;">
-			<div class="agift-content">
-				<span class="fl">活动群体</span>
-				<span class="freeFix" style="margin-right: 14px;" v-for="(item,index) in integralList" :key="index" v-bind:class="{'presentActive':integralOn == index }" @click="chooseIntegral(index)">{{item.name}}</span>
-				<span class="associated" v-if="integralOn == 1">(已关联{{member}}人)</span>
-			</div>
-		</div> -->
 		<!-- 活动说明 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">活动说明</span>
@@ -229,11 +166,8 @@
 			</div>
 		</div>
 		<div class="agift-content" style="padding-left: 60px;">
-			<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a> -->
 			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<!--  <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
-                	<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
 				<el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
 				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
 			</template>
@@ -249,12 +183,6 @@
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
 	import http from 'src/manager/http';
-
-	// 限制输入数字
-	//let intReg = /[^\d]/g;
-
-	// 验证中文
-	// let Chinese = /[^\u4E00-\u9FA5]|[\uFE30-\uFFA0]/g;
 
 	export default {
 		data() {
@@ -457,10 +385,6 @@
 					this.ruleList[this.ruleIndex].couponIds = obj.data.select;
 				}
 			},
-			// openCouponWin: function(item) { //打开优惠券的弹窗
-			// 	this.selectCoupon = item.couponIds;
-			// 	this.showCoupon = true;
-			// },
 			addCoupon: function(item) { //添加优惠券
 				this.selectCoupon = item.couponIds;
 				this.showCoupon = true;
@@ -478,30 +402,6 @@
 				this.ruleList[this.ruleIndex].msgContent += this.parameter[index].id;
 
 			},
-			// getListDetail: function(item, index, type) {
-			// 	// 获取设置list详情
-			// 	if (type == '1') {
-			// 		this.minConsume = index;
-			// 		this.minConsumes = this.minConsume == 1 ? this.minConsumes : '';
-			// 		this.ruleObj.minConsume = this.minConsumes;
-			// 		this.ruleLists[this.ruleIndex] = this.ruleObj;
-			// 		this.isLoops = Number(this.Loops);
-			// 		//this.consumeName = item.name;
-
-			// 		if (this.minConsume != 1) {
-			// 			this.Loops = false;
-			// 			this.ruleObj.isLoop = this.Loops;
-			// 		}
-			// 	} else {
-			// 		this.onListName = item.name;
-			// 		this.memberRights = index; //选中的会员
-			// 		this.ruleObj.couponIds =
-			// 			this.memberRights == 1 ? [] : this.ruleObj.couponIds;
-			// 		if (this.ruleLists.length >= 1) {
-			// 			this.ruleLists[this.ruleIndex].memberRights = Number(!(this.memberRights));
-			// 		}
-			// 	}
-			// },
 			closePage: function() {
 				// 关闭页面
 				this.$router.push('/admin/activity/generalActivity');
