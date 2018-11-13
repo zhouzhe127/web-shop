@@ -324,23 +324,71 @@ let config = [
 		// }
 		{
 			"type": 20,
-			"typeName": "采购单入库",
+			"typeName": "采购单入库",		//采购单的详情,				//入货批次的变化
+			"historyDescripe": "采购单详情",
+			"batchDescripe": "入货批次的变化",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick":function(context,item){
+				let {purchaseId} = item.other; 
+				context.$router.push({
+					path:"/admin/purchaseManagement/detail",
+					query : {
+						id : purchaseId
+					}
+				});	
+			}
 		},
 		{
 			"type": 21,
-			"typeName": "普通盘盈",
+			"typeName": "普通盘盈",							//							//批次变化量
+			"historyDescripe": "",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": false,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": forbiddenClick
 		},
 		{
 			"type": 22,
-			"typeName": "普通盘亏",
+			"typeName": "普通盘亏",										//批次变化量
+			"historyDescripe": "",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": false,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": forbiddenClick
 		},
 		{
 			"type":23,
-			"typeName" : "批量盘亏"
+			"typeName" : "批量盘亏",		//批量盘库详情				//批次变化量	
+			"historyDescripe": "批量盘库详情",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": function(context,item){
+				let obj = {};
+				obj.path = '/admin/materialCountDetail';
+				obj.query = {id:item.other.logId};
+				context.$router.push(obj);	
+			}
 		},
 		{
 			"type":24,
-			"typeName" : "批量盘盈"
+			"typeName" : "批量盘盈",			//批量盘库详情				//批次变化量	
+			"historyDescripe": "批量盘库详情",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": function(context,item){
+				let obj = {};
+				obj.path = '/admin/materialCountDetail';
+				obj.query = {id:item.other.logId};
+				context.$router.push(obj);	
+			}
 		}
 	];
 

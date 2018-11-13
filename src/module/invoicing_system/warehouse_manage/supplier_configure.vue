@@ -305,14 +305,18 @@ export default {
 					return;
 				}
 				distribution = this.getDistribution();
-				if(!this.checkDistributionChange(distribution)){
-					this.alert('保存成功!');					
-					return;
-				}
+
 				if(distribution.length == 0){
 					this.alert('请先填写分销价名称!');
 					return;
 				}
+
+
+				if(!this.checkDistributionChange(distribution)){
+					this.alert('保存成功!');					
+					return;
+				}
+
 				
 				retData = await this.getHttp('invoicingUpdateDistributionConfig',{distribution});
 				if(Array.isArray(retData.distribution)){
