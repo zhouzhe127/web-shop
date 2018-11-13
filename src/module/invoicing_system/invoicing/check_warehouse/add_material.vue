@@ -9,13 +9,16 @@
 	<div class="bom-order">
 		<div class="filter">
 			<div class="inline-box">
-				<input type="text" placeholder="请输入物料名" v-model="matName" />
+				<el-input placeholder="请输入物料名" v-model="matName"></el-input>
 			</div>
 			<div class="inline-box">
-				<select-store @emit="selSortOne" :sorts="sortOne" :tipName="'请选择一级分类'" :isSingle="true"></select-store>
-			</div>
-			<div class="inline-box" @click="checkSelect('sortTwo','towSortDom')">
-				<select-store @emit="selSortTwo" :sorts="sortTwo"  :tipName="'请选择二级分类'" :isSingle="true" ref="towSortDom"></select-store>
+				<el-cascader
+					class="el-size"
+					:options="oneSort"
+					v-model="cidSel"
+					@change="getSortSel"
+					change-on-select>
+				</el-cascader>
 			</div>
 			<div class="inline-box">
 				<select-store @emit="selWare" :sorts="wareList" :tipName="'请选择仓库'" ></select-store>
@@ -124,11 +127,11 @@
 				areaList:[],//区域列表
 				selList:[],//选中的列表
 				searchObj:{},//筛选条件
-				sortOne:[],//一级分类
-				sortTwo:[],//二级分类
 				allSort:[],//总分类列表
+				oneSort:[],//一级分类列表
 				sortOneId:'',//一级分类id
 				sortTwoId:'',//二级分类id
+				cidSel:[-1],//选择的分类数组
 				isEdit:'',//是否编辑模板
 				useList:[],
 			};
@@ -275,58 +278,42 @@
 			},
 			async getCategoryList(){//获取一二级分类
 				let data = await http.invoiv_getCategoryList();
-				let one=[];
+				this.allSort = data;
+				let one = [];
 				for(let item of data){
 					if(item.pid == 0){
-						one.push(item);
+						one.push({value:item.id,label:item.name,children:[]});
+					}
+				}
+				one.unshift({value:-1,label:'全部分类'});
+				this.oneSort = one;
+				for(let one of this.oneSort){
+					let two = [];
+					for(let item of data){
+						if(one.value==item.pid){
+							two.push({value:item.id,label:item.name});
+						}
+					}
+					if(two.length){
+						one.children = two;
+					}else{
+						delete one.children;
 					}
 				}
 				this.sortOne = one;
-				this.allSort = data;
-				this.setDefaultSort();
+				console.log(this.sortOneId,this.sortTwoId);
+				this.cidSel = this.sortTwoId?[this.sortOneId,this.sortTwoId]:[this.sortOneId];
+				console.log(this.cidSel);
 			},
-			selSortOne(res,saveTwo){//选择一级分类
-				let twoArr = [];
-				if(!saveTwo) this.sortTwoId='';
-				this.cid = this.setSortId(res);
-				this.sortOneId = this.cid;
-				for(let item of this.allSort){
-					if(item.pid == this.cid){
-						twoArr.push(item);
-					}
-				}
-				this.sortTwo = twoArr;
-			},
-			selSortTwo(res){//选择二级分类
-				this.cid = this.setSortId(res);
-				this.sortTwoId = this.cid;
-			},
-			setSortId(arr){//设置选中的分类id
-				let id='';
-				for(let item of arr){
-					if(item.selected == true){
-						id = item.id;
-						break;
-					}
-				}
-				return id;
-			},
-			setDefaultSort(){//设置默认分类选中
-				for(let item of this.sortOne){
-					if(this.sortOneId == item.id){
-						item.selected=true;
-						break;
-					}
-				}
-				this.selSortOne(this.sortOne,true);//不清空二级分类id
-				if(this.sortTwo.length){
-					for(let item of this.sortTwo){
-						if(this.sortTwoId == item.id){
-							item.selected=true;
-							break;
-						}
-					}
-					this.selSortTwo(this.sortTwo);
+			getSortSel(res){
+				if(res.length>1){
+					this.sortOneId = res[0];
+					this.sortTwoId = res[1];
+					this.cid = res[1];
+				}else{
+					this.sortOneId = res[0];
+					this.sortTwoId = '';
+					this.cid = res[0];
 				}
 			},
 			async getWarehouseList(){//获取仓库列表
@@ -503,7 +490,7 @@
 					page: this.page,
 					num: this.pageShow,
 					name: this.matName,
-					cid: this.cid,
+					cid: this.cid>0?this.cid:'',
 					wid : this.wid,
 					areaId : this.areaId,
 					type: -1,
@@ -571,7 +558,7 @@
 							this.$message({message: '请选择一级分类!',type: 'error'});
 						}
 					}else{
-						this.$message({message: '请选择仓库!',type: 'error'});
+						this.$message({message: '请先选择仓库！',type: 'error'});
 					}
 				}
 			},

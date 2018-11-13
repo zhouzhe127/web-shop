@@ -141,17 +141,17 @@ export default{
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确定盘库',style: 'background: #fe8d01;border: 1px solid #fe8d01;color: #fff;',
+				{name: '确定盘库',className: 'primary',type:4,
 					fn: () => {
 						this.checkMaterial();
 					}
 				},
-				{name: '添加物料',style: 'background: #29a7e1;border: 1px solid #29a7e1;color: #fff;',
+				{name: '添加物料',className: 'success',type:4,
 					fn: () => {
 						this.addShow = true;
 					}
 				},
-				{name: '取消盘库',style: 'background: #b3b3b3;border: 1px solid #b3b3b3;color: #fff;',
+				{name: '取消盘库',className: 'info',type:4,
 					fn: () => {
 						window.history.go(-1);
 					}
@@ -378,6 +378,7 @@ export default{
 			return true;
 		},
 		checkMaterial(){//物料盘库
+			this.setPageSave();//翻页操作才能触发保存，所以这里调用一下，存入最后一次返回后填写的数据
 			this.setSendList();//设置发送数据
 			if(!this.checkList.length){
 				this.myAlert('请填写盘库数量');
@@ -418,6 +419,7 @@ export default{
 				cid: this.cid,
 				wid : this.wid,
 				areaId : this.areaId,
+				type:-1,
 			}});
 			this.pageTotal = data.total;
 			this.listLength = data.count;

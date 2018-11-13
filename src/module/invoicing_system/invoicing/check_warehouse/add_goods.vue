@@ -9,12 +9,21 @@
 	<div class="bom-order">
 		<div class="filter">
 			<div class="inline-box">
-				<input type="text" placeholder="请输入商品名" v-model="goodsName" />
-				<input type="text" placeholder="请输入条形码" v-model="barCode" />
+				<el-input placeholder="请输入商品名" v-model="goodsName"></el-input>
+			</div>
+			<div class="inline-box">
+				<el-input placeholder="请输入条形码" v-model="barCode"></el-input>
 				<!--<input type="text" placeholder="请输入副条形码" v-model="secBarCode" />-->
 			</div>
 			<div class="inline-box">
-				<selectBtn @emit="dropBomType" :sorts="options" :index="bomTypeIndex"></selectBtn>
+				<el-select v-model="type" placeholder="请选择商品类型">
+					<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+					</el-option>
+				</el-select>
 			</div>
 			<div class="inline-box">
 				<select-store @emit="selWare" :sorts="wareList" :tipName="'请选择仓库'" ></select-store>
@@ -82,8 +91,12 @@
 				tempId:'',//模板id
 				shopId:'',//店铺id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
-				options: ['全部商品类型', '普通商品', '称重商品'], //商品类型 显示
-				bomTypeList: ['', '0', '1'], //商品类型List
+				options: [//商品类型 显示
+					{label:'全部商品类型',value:'',},
+					{label:'普通商品',value:1,},
+					{label:'称重商品',value:2,},
+				], 
+				bomTypeList: ['', 0, 1], //商品类型List
 				type: '', //商品类型 是否公开 0普通 1称重
 				bomTypeIndex: 0, //当前下拉框index
 				page: 1, //当前页
@@ -228,7 +241,6 @@
 				}
 				this.getData();//请求数据
 				this.getWarehouseList();//获取仓库列表
-				this.setDefaultType();//设置默认商品类型
 			},
 			async getUseList(){//根据商品id,区域id获取商品列表
 				let data = await http.GoodsInventoryGetGoodsInventoryListByGids({data:{
@@ -246,18 +258,6 @@
 				this.selectItem = this.selList.map((res)=>{
 					return {gid:res.gid,aid:res.areaId};
 				});
-				this.setDefaultType();//设置默认商品类型
-			},
-			dropBomType(index) { //获取商品类型
-				this.type = this.bomTypeList[index];
-				this.bomTypeIndex = index;
-			},
-			setDefaultType(){//设置默认商品类型
-				for(let i=0;i<this.bomTypeList.length;i++){
-					if(this.bomTypeList[i] === this.type){
-						this.bomTypeIndex = i;
-					}
-				}
 			},
 			formatTime(time) {
 				return utils.format(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss');
@@ -356,7 +356,7 @@
 			checkSelect(){//选择区域验证
 				if(!this.areaList.length){
 					this.$refs.areaDom.sortShow = false;
-					this.myAlert('请选择仓库');
+					this.myAlert('请先选择仓库！');
 				}
 			},
 			myAlert(content) {
@@ -439,7 +439,7 @@
 					goodsName: this.goodsName,
 					barCode: this.barCode,
 					secBarCode: this.secBarCode,
-					type: this.type!==''?this.type+1:'',
+					type: this.type,
 					wid : this.wid,
 					areaId : this.areaId,
 				}});
