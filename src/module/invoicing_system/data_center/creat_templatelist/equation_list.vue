@@ -6,16 +6,23 @@
 	<div id="equationList">
 		<div v-loading="loading">
 			<div class="tableHeard">
-				<span>公式管理&nbsp;·&nbsp;已选择<strong>{{allTotal}}</strong>个条目</span>
+				<span>公式管理&nbsp;·&nbsp;已选择<strong>{{allSelection.length}}</strong>个条目</span>
 			</div>
 			<el-table ref="multipleTable" border :header-cell-style="{'background':'#f5f7fa'}" :data="viewData" tooltip-effect="dark"
-			 style="width: 100%" @selection-change="handleSelectionChange">
+			 style="width: 100%">
 
 				<el-table-column label="批量删除">
 					<template slot="header" slot-scope="scope">
-						<el-button type="text" size="small" @click="dleSelection()">批量删除</el-button>
+						<el-button type="text" size="small" style='color:#D34A2B' @click="dleSelection()">批量删除</el-button>
 					</template>
-					<el-table-column type="selection" width="100"></el-table-column>
+					<el-table-column width="100" v-if="reset">
+						<template slot="header" slot-scope="scope">
+							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+						</template>
+						<template slot-scope="scope">
+							<el-checkbox v-model="scope.row.checkOut" @change="handleSingleChange"></el-checkbox>
+						</template>
+					</el-table-column>
 				</el-table-column>
 				<el-table-column label="名称" prop="name" width="200">
 				</el-table-column>
@@ -37,16 +44,17 @@
 			<add-formula v-if="showFormula" :list="formulaData" :pObj="formulaInsert" @emit="getFormula"></add-formula>
 		</div>
 	</div>
-</template>
+</template>	
 <script>
 import http from 'src/manager/http';
+// import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
 			tableData: [],
 			viewData: [],
 			multipleSelection: [],
-			allSelection: {},
+			allSelection: [],
 			page: 1,
 			allTotal: 0,
 			num: 10, //每页显示多少条
@@ -65,12 +73,18 @@ export default {
 				{label:'向上取值',value:1},
 				{label:'向下取值',value:2},
 			],
+			reset:true,
 			loading:false,//加载动画
+			checkAll:false,
+			isIndeterminate:false
 		};
 	},
 	methods: {
 		async init() {
 			this.loading = true;
+			this.checkAll = false;
+			this.isIndeterminate = false;
+			this.allSelection = [];
 			//获取基础项数据
 			let base = await http.materialreportGetReportItemList();
 			this.baseList = base;
@@ -115,9 +129,18 @@ export default {
 				this.page * this.num
 			);
 		},
-		handleSelectionChange(val) {
-			this.multipleSelection = val;
-			
+		handleCheckAllChange(val) {
+			this.viewData.forEach(v=>{
+				v.checkOut = val;
+			});
+			this.isIndeterminate = false;
+			this.allSelection = this.getChecked(this.tableData);
+			this.resetColumn();
+		},
+		handleSingleChange(){
+			this.allSelection = this.getChecked(this.tableData);
+			this.setCheckChange();
+			this.resetColumn();
 		},
 		//编辑公式
 		editFormula(res){
@@ -155,27 +178,11 @@ export default {
 				idArr = [data.id];
 				str = `是否删除"${name}"`;
 			} else {
-				let num = 0;
-				if(this.multipleSelection.length>0) this.allSelection[this.page] = this.multipleSelection; //保存每页选中
-				if (Object.values(this.allSelection).length>0) {
-					for (let item of Object.values(this.allSelection)) {
-						if (item.length > 0) {
-							for (let v of item) {
-								name = v.name;
-								break;
-							}
-							break;
-						}
+				if (this.allSelection.length>0) {
+					for(let item of this.allSelection){
+						idArr.push(item.id);
 					}
-					for (let key in this.allSelection) {
-						if (this.allSelection[key]) {
-							num += this.allSelection[key].length;
-						}
-						for(let item of this.allSelection[key]){
-							idArr.push(item.id);
-						}
-					}
-					str = `是否删除"${name}"等${num}项`;
+					str = `是否删除"${this.allSelection[0].name}"等${this.allSelection.length}项`;
 				}else{
 					return;
 				}
@@ -196,16 +203,32 @@ export default {
 			});
 		},
 		pageChange(page) {
-			this.allSelection[this.page] = this.multipleSelection; //保存每页选中
 			this.page = page;
 			this.pagination();
-			this.$nextTick(() => { //显示本页选中
-				this.toggleSelection(this.allSelection[page]);
+			this.setCheckChange();
+		},
+		setCheckChange(){
+			let checkNum = this.getChecked(this.viewData).length;
+			this.isIndeterminate = checkNum>0&&checkNum!=this.viewData.length? true:false;
+			this.checkAll = checkNum==this.viewData.length? true:false;
+		},
+		getChecked(list){
+			let arr= [];
+			list.forEach(v=>{
+				if(v.checkOut)arr.push(v);
 			});
+			return arr;
 		},
 		sizeChange(num) {
 			this.num = num;
 			this.pagination();
+			this.setCheckChange();
+		},
+		resetColumn() { //刷新列表方法
+			this.reset = false;
+			this.$nextTick(() => {
+				this.reset = true;
+			});
 		},
 	},
 	activated() {

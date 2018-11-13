@@ -6,16 +6,23 @@
 	<div id="equationList">
 		<div>
 			<div class="tableHeard">
-				<span>集合管理&nbsp;·&nbsp;已选择<strong>{{allTotal}}</strong>个条目</span>
+				<span>集合管理&nbsp;·&nbsp;已选择<strong>{{allSelection.length}}</strong>个条目</span>
 			</div>
-			<el-table ref="multipleTable" border v-loading="loading" :header-cell-style="{'background':'#f5f7fa'}" :data="viewData" tooltip-effect="dark"
-			 style="width: 100%" @selection-change="handleSelectionChange">
+			<el-table ref="multipleTable" border v-loading="loading" :header-cell-style="{'background':'#f5f7fa'}" :data="viewData"
+			 tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
 
 				<el-table-column label="批量删除">
 					<template slot="header" slot-scope="scope">
-						<el-button type="text" size="small" @click="dleSelection()">批量删除</el-button>
+						<el-button type="text" size="small" style='color:#D34A2B' @click="dleSelection()">批量删除</el-button>
 					</template>
-					<el-table-column type="selection" width="100"></el-table-column>
+					<el-table-column width="100" v-if="reset">
+						<template slot="header" slot-scope="scope">
+							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+						</template>
+						<template slot-scope="scope">
+							<el-checkbox v-model="scope.row.checkOut" @change="handleSingleChange"></el-checkbox>
+						</template>
+					</el-table-column>
 				</el-table-column>
 				<el-table-column label="集合名称" prop="name" width="200">
 				</el-table-column>
@@ -41,7 +48,8 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pUnitId="editData.unit?editData.unit.id:null" :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
+		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pUnitId="editData.unit?editData.unit.id:null"
+		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
 	</div>
 </template>
 <script>
@@ -52,17 +60,23 @@
 				tableData: [],
 				viewData: [],
 				multipleSelection: [],
-				allSelection: {},
+				allSelection: [],
 				page: 1,
 				allTotal: 0,
 				num: 10, //每页显示多少条
 				showCreatWin: false,
 				editData: {},
-				loading:true
+				loading: true,
+				reset: true,
+				checkAll: false,
+				isIndeterminate: false
 			};
 		},
 		methods: {
 			async init() {
+				this.checkAll = false;
+				this.isIndeterminate = false;
+				this.allSelection = [];
 				let data = await http.materialreportGetStatisticScopeCategoryList();
 				this.allTotal = data.list.length;
 				this.tableData = data.list;
@@ -120,20 +134,11 @@
 					str = `是否删除"${name}"`;
 					delArr.push(data.id);
 				} else {
-					console.log(Object.values(this.allSelection));
-					let num = 0;
-					if (this.multipleSelection.length > 0) this.allSelection[this.page] = this.multipleSelection; //保存每页选中
-					if (Object.values(this.allSelection).length > 0) {
-						for (let item of Object.values(this.allSelection)) {
-							if (item.length > 0) {
-								num += item.length;
-								for (let v of item) {
-									if (name == '') name = v.name;
-									delArr.push(v.id);
-								}
-							}
+					if (this.allSelection.length > 0) {
+						for (let item of this.allSelection) {
+							delArr.push(item.id);
 						}
-						str = `是否删除"${name}"等${num}项`;
+						str = `是否删除"${this.allSelection[0].name}"等${this.allSelection.length}项`;
 					} else {
 						return;
 					}
@@ -162,17 +167,46 @@
 					});
 				});
 			},
+			handleCheckAllChange(val) {
+				this.viewData.forEach(v => {
+					v.checkOut = val;
+				});
+				this.isIndeterminate = false;
+				this.allSelection = this.getChecked(this.tableData);
+				this.resetColumn();
+			},
+			handleSingleChange() {
+				this.allSelection = this.getChecked(this.tableData);
+				this.setCheckChange();
+				this.resetColumn();
+			},
+			getChecked(list) {
+				let arr = [];
+				list.forEach(v => {
+					if (v.checkOut) arr.push(v);
+				});
+				return arr;
+			},
+			setCheckChange() {
+				let checkNum = this.getChecked(this.viewData).length;
+				this.isIndeterminate = checkNum > 0 && checkNum != this.viewData.length ? true : false;
+				this.checkAll = checkNum == this.viewData.length ? true : false;
+			},
+			resetColumn() { //刷新列表方法
+				this.reset = false;
+				this.$nextTick(() => {
+					this.reset = true;
+				});
+			},
 			pageChange(page) {
-				this.allSelection[this.page] = this.multipleSelection; //保存每页选中
 				this.page = page;
 				this.pagination();
-				this.$nextTick(() => { //显示本页选中
-					this.toggleSelection(this.allSelection[page]);
-				});
+				this.setCheckChange();
 			},
 			sizeChange(num) {
 				this.num = num;
 				this.pagination();
+				this.setCheckChange();
 			}
 		},
 		activated() {
