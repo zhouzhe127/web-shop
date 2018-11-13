@@ -16,8 +16,8 @@
 				</li>
 			</ul>
 			<div class="handle" v-if="confirm">
-				<span class="gray" @click="cancel">取消</span>
-				<span class="yellow" @click="ok">确认</span>
+				<el-button type="info" size="mini" @click="cancel">取消</el-button>
+				<el-button type="primary" size="mini" @click="ok">确认</el-button>
 			</div>
 		</div>
 	</div>
@@ -221,7 +221,7 @@
 </script>
 <style lang="less" scoped>
 	.select-store-body{
-		position: relative;display: inline-block;
+		position: relative;display: inline-block;background: #fff;
 		.select-body-btn {
 			height: 40px;width: 100%;padding-right: 30px;position: relative;cursor: pointer;border-radius: 4px;
 			vertical-align: middle;display: inline-block;border: #dcdfe6 solid 1px;
@@ -242,7 +242,7 @@
 		}
 		.list{
 			position: absolute;left: 0;top: 50px;width: 500px;background: #fff;border-radius: 4px;
-			box-shadow: 0 2px 12px #eee;z-index: 20;border: 1px solid #ebeef5;
+			box-shadow: 0 2px 12px #ddd;z-index: 20;border: 1px solid #ebeef5;
 			em{
 				position: absolute;left: 175px;top: -8px;height: 0;width: 0;
 				border-bottom:8px solid #ebeef5;border-left:7px solid transparent;border-right:7px solid transparent;
@@ -272,6 +272,7 @@
 			}
 			.handle{
 				overflow: hidden;float: left;width: 100%;
+				text-align: right;padding: 10px;
 				span{
 					float: left;color: #fff;width: 50%;height: 40px;line-height: 40px;text-align: center;
 				}
