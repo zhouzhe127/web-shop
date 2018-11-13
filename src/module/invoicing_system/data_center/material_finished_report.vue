@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-12 17:19:19
+ * @Last Modified time: 2018-11-13 10:03:55
  */
 
 <template>
@@ -51,7 +51,7 @@
 					<span class="operation" @click="clickOperation('delete',row)">删除</span>
 					<span class="operation" @click="clickOperation('view',row)">查看</span>
 					<span class="operation" @click="clickOperation('export',row)">导出</span>
-					<span class="operation error" @click="clickOperation('error',row)">异常</span>
+					<span v-if="false" class="operation error" @click="clickOperation('error',row)">异常</span>
 				</span>
 			</el-table-column>
 		</el-table>

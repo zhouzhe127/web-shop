@@ -300,6 +300,10 @@ let config = [
 			"canViewBatch": false,
 			"batchClick": forbiddenClick,
 			"historyClick":forbiddenClick
+		},{
+			"type" : 21,
+			"typeName": "采购单入货",
+			
 		}
 	];
 
