@@ -26,7 +26,7 @@ module.exports = {
         },
         {
             path: 'errorLog',
-            url: 'src/module/invoicing_system/data_center/errorLog' //错误日志
+            url: 'src/module/invoicing_system/data_center/error_log' //错误日志
         },
     ]
 }
