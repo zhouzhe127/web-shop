@@ -9,7 +9,7 @@
 				<span class="textTip" v-if="selectedCoupon">已关联一张优惠券{{selectedCoupon.name? '： '+selectedCoupon.name : ''}}</span>
 			</el-form-item>
 			<!-- prop="imgUrl" -->
-			<el-form-item  label="商品图片" prop="imgUrl">
+			<el-form-item label="商品图片" prop="imgUrl">
 				<div class="good-image">
 					<div class="good-image-div" id="image">
 						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="225" height="150">
@@ -51,7 +51,7 @@
 					<el-radio-button label="1" type="primary">固定金额</el-radio-button>
 					<el-radio-button label="2" type="primary">按比例</el-radio-button>
 				</el-radio-group>
-				<div class="planValueWrap" >
+				<div class="planValueWrap">
 					<el-input v-model="form.planValue" class="w217" :disabled="!qualifiedFloorPrice.isOk"></el-input>
 					<span class="unit">{{form.planType==1?'元':'%'}}</span>
 					<span class="textTip">{{form.planType==1?'请输入数字，只保留小数点后两位。输入金额不能低于1元，也不能超过底价':`请输入比例，区间${minPlanValue}%~100%`}}</span>
@@ -76,7 +76,7 @@
 					<el-button type="primary" @click="gotoAddCoupon" class="fr">新增优惠券</el-button>
 					<el-radio-group v-model="couponType">
 						<el-radio-button label="0">全部</el-radio-button>
-						<el-radio-button label="1">减免优惠券</el-radio-button>
+						<el-radio-button label="1">满减优惠券</el-radio-button>
 						<el-radio-button label="2">赠菜优惠券</el-radio-button>
 					</el-radio-group>
 				</div>
@@ -111,14 +111,20 @@ function validateOriginalPrice(rule, value, cb) {
 		cb();
 	}
 }
-function validateRequired (r,v,cb){
-	if(v.trim() == ''){
+function validateRequired(r, v, cb) {
+	if (v.trim() == '') {
 		cb(new Error('该信息为必填项不能为空'));
-	}else{
+	} else {
 		cb();
 	}
 }
-					
+function validateName(r, v, cb) {
+	if (!/^[\u4e00-\u9fa5()a-zA-Z0-9]+$/.test(v)) {
+		cb(new Error('名称必须由中文、字母、数字以及英文小括号组成'));
+	} else {
+		cb();
+	}
+}
 // function validateFloorPrice(rule, value, cb) {
 // 	if (this.form.originalPrice - value < 1) {
 // 		cb(new Error('底价至少低于原价1元'));
@@ -127,21 +133,36 @@ function validateRequired (r,v,cb){
 // 	}
 // }
 const validateRules = {
-	name: [{ required: true, message: '请输入商品名称', trigger: 'blur' },{validator: validateRequired,trigger: 'blur' }],
-	remark: [{ required: true, message: '请输入活动描述', trigger: 'blur' },{validator: validateRequired,trigger: 'blur' }],
+	name: [
+		{ required: true, message: '请输入商品名称', trigger: 'blur' },
+		{ validator: validateRequired, trigger: 'blur' },
+		{ validator: validateName, trigger: 'blur' }
+	],
+	remark: [
+		{ required: true, message: '请输入活动描述', trigger: 'blur' },
+		{ validator: validateRequired, trigger: 'blur' }
+	],
 	originalPrice: [
 		{ required: true, message: '请输入原价(起砍价)', trigger: 'blur' },
 		{ validator: validateOriginalPrice, trigger: 'blur' }
 	],
-	needPeople: [{ required: true, message: '请选择砍价人数' ,trigger: 'change'}],
+	needPeople: [
+		{ required: true, message: '请选择砍价人数', trigger: 'change' }
+	],
 	floorPrice: [
 		{ required: true, message: '请填写底价', trigger: 'blur' },
-		{ type: 'number', message: '底价必须为数字值' },
+		{ type: 'number', message: '底价必须为数字值' }
 		// { min: 1, message: '底价不能少于一元' , trigger: 'blur'}
 	],
-	lifeCycle: [ { required: true, message: '请选择砍价单次有效时间', trigger: 'change' } ],
-	imgUrl: [ { required: true, message: '请提交一张有效图片', trigger: 'change' } ],
-	planValue: [ { required: true, message: '请填写完整返利方案', trigger: 'blur' } ]
+	lifeCycle: [
+		{ required: true, message: '请选择砍价单次有效时间', trigger: 'change' }
+	],
+	imgUrl: [
+		{ required: true, message: '请提交一张有效图片', trigger: 'change' }
+	],
+	planValue: [
+		{ required: true, message: '请填写完整返利方案', trigger: 'blur' }
+	]
 };
 export default {
 	data: () => {
@@ -182,7 +203,7 @@ export default {
 	},
 	props: {
 		selectGoods: Object,
-		goodsNum: {type:Number,required: true}
+		goodsNum: { type: Number, required: true }
 	},
 	methods: {
 		//编辑图片
@@ -196,17 +217,17 @@ export default {
 			});
 		},
 		deleteGoodImg() {
-			if(this.form.imgUrl == ''){
+			if (this.form.imgUrl == '') {
 				this.$message({
 					message: '此商品无图片!',
 					type: 'warning'
 				});
-			}else{
+			} else {
 				this.form.imgUrl = '';
 			}
 		},
 		cancel(isRefrech) {
-			this.$emit('close',isRefrech);
+			this.$emit('close', isRefrech);
 		},
 		validate() {
 			let isOk = true;
@@ -216,7 +237,7 @@ export default {
 						this.$message.error('请填写合适的底价');
 						isOk = false;
 					}
-					if(!this.selectedCoupon || !this.selectedCoupon.id ){
+					if (!this.selectedCoupon || !this.selectedCoupon.id) {
 						this.$message.error('必须选择关联一张优惠券');
 						isOk = false;
 					}
@@ -238,9 +259,9 @@ export default {
 			let prarm = JSON.parse(JSON.stringify(this.form));
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
-			prarm.couponId = this.selectedCoupon.id ;
+			prarm.couponId = this.selectedCoupon.id;
 			// 新建商品 | 编辑商品有name说明改过了
-			if(!this.selectedGoods || this.selectedCoupon.name){
+			if (!this.selectedGoods || this.selectedCoupon.name) {
 				prarm.coupon = JSON.stringify(this.selectedCoupon);
 			}
 			// prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
@@ -261,18 +282,18 @@ export default {
 				data: prarm
 			});
 			if (data || data === 0) {
-				this.$message({type: 'success',message: '保存成功'});
+				this.$message({ type: 'success', message: '保存成功' });
 				prarm.id = data;
-				this.$store.commit('changeActivity', true,);
-				this.hasGoodsNum++ ;
+				this.$store.commit('changeActivity', true);
+				this.hasGoodsNum++;
 			}
 		},
 		async editGoods(prarm) {
 			let data = await http.activityEditGoods({
 				data: prarm
 			});
-			if(data){
-				this.$message({type: 'success',message: '保存成功'});
+			if (data) {
+				this.$message({ type: 'success', message: '保存成功' });
 				this.$store.commit('changeActivity', true);
 			}
 		},
@@ -295,7 +316,7 @@ export default {
 			selectedGoods.originalPrice = selectedGoods.startPrice;
 
 			this.form = selectedGoods;
-			this.selectedCoupon = {id: selectedGoods.couponId};
+			this.selectedCoupon = { id: selectedGoods.couponId };
 		},
 		async getCouponList() {
 			let list = await http.getAllCouponLists({
@@ -307,7 +328,9 @@ export default {
 		},
 		showCouponListHandle() {
 			this.getCouponList();
-			this.selectedCouponTemp =JSON.parse(JSON.stringify(this.selectedCoupon));
+			this.selectedCouponTemp = JSON.parse(
+				JSON.stringify(this.selectedCoupon)
+			);
 			this.showCouponList = true;
 		},
 		confirmSelectCoupon() {
@@ -350,11 +373,10 @@ export default {
 			}
 			return isQualified
 				? { isOk: true, message: qualifiedMsg }
-				: { isOk: false, message: floorPrice === '' ? '' : (floorPrice >= 1? '底价至少低于原价1元~~' : '底价不能低于1元')};
+				: { isOk: false, message: floorPrice === '' ? '' : floorPrice >= 1 ? '底价至少低于原价1元~~' : '底价不能低于1元' };
 		},
 		minPlanValue: function() {
 			let floorPrice = this.form.floorPrice,
-				// planValue = this.form.planValue,
 				planType = this.form.planType;
 			if (planType == 1 || this.qualifiedFloorPrice.isOk == false)
 				return 1;
@@ -382,17 +404,21 @@ export default {
 			return this.$store.getters.getActivity;
 		},
 		couponFilter() {
-			return this.couponList && this.couponList.filter(v=>{
-				if(this.couponType == '0') return true;
-				if(this.couponType == '1') return v.type=='2';
-				if(this.couponType == '2') return v.type=='5';
-			});
+			return (
+				this.couponList &&
+				this.couponList.filter(v => {
+					if (this.couponType == '0') return true;
+					if (this.couponType == '1') return v.type == '2';
+					if (this.couponType == '2') return v.type == '5';
+				})
+			);
 		}
 	},
 	created() {
 		// 编辑
 		if (this.selectedGoods) {
-			this.$nextTick(()=>{ // 不放到 nextTick resetFieIds 将会无效
+			this.$nextTick(() => {
+				// 不放到 nextTick resetFieIds 将会无效
 				this.initGoods();
 			});
 		}
@@ -528,13 +554,13 @@ export default {
 		}
 	}
 }
-.emtyList{
+.emtyList {
 	height: 90px;
 	line-height: 90px;
 	text-align: center;
 	color: #ccc;
 }
-.addCouponPage{
+.addCouponPage {
 	position: absolute;
 	top: 0;
 	left: 0;

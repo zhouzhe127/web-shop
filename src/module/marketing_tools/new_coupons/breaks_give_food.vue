@@ -282,14 +282,14 @@
 				ischain: '', //0 单店 3 品牌
 				goodlist: [{
 					typeId: 1,
-					name: '整单减免优惠券'
+					name: '满减优惠券'
 				},
 				{
 					typeId: 2,
 					name: '赠菜优惠券'
 				}
 				],
-				commoditySlect: '整单减免优惠券',
+				commoditySlect: '满减优惠券',
 				typeId: 1, //默认单品减免
 				couponName: '', //优惠券名称
 				shopWin: false, // 店铺弹框
