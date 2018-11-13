@@ -264,6 +264,7 @@
 					}
 				});
 				if (data) {
+					window.history.go(-1);
 					this.$message({
 						message: '生成报表成功!',
 						type: 'success'
