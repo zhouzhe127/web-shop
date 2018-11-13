@@ -24,5 +24,9 @@ module.exports = {
             path: 'createReport',
             url: 'src/module/invoicing_system/data_center/creat_templatelist/create_report' //生成报表
         },
+        {
+            path: 'errorLog',
+            url: 'src/module/invoicing_system/data_center/errorLog' //错误日志
+        },
     ]
 }
