@@ -798,7 +798,7 @@
 						this.valiData('随机金额区间为0.01至9999.99，请按照规则填写');
 						return false;
 					}
-					if (this.billPrice > this.reckoningPrice) {
+					if (Number(this.billPrice) > Number(this.reckoningPrice)) {
 						this.valiData('最高金额不能小于最低金额');
 						return false;
 					}
