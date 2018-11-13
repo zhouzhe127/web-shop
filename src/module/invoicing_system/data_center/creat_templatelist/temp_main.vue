@@ -18,13 +18,8 @@
 	export default {
 		data() {
 			return {
-				components: 'gatherManagement'
+				components: 'creatTempList'
 			};
-		},
-		methods: {
-			handleClick(tab, event) {
-				console.log(tab, event);
-			}
 		},
 		components: {
 			creatTempList: () =>
