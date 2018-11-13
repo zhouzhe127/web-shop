@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 10:03:55
+ * @Last Modified time: 2018-11-13 16:39:28
  */
 
 <template>
@@ -51,7 +51,7 @@
 					<span class="operation" @click="clickOperation('delete',row)">删除</span>
 					<span class="operation" @click="clickOperation('view',row)">查看</span>
 					<span class="operation" @click="clickOperation('export',row)">导出</span>
-					<span v-if="false" class="operation error" @click="clickOperation('error',row)">异常</span>
+					<span v-if="row.error" class="operation error" @click="clickOperation('error',row)">异常</span>
 				</span>
 			</el-table-column>
 		</el-table>
@@ -91,19 +91,11 @@ export default {
 		return {
 			loading:false,
 
-			tableData:[
-				{id:0,},
-				{id:1,},
-				{id:2,},
-				{id:3,},
-				{id:4,},
-				{id:5,},
-			],
+			tableData:[],
 			template:{},                        //模板
 			pageObj:{},
 			taskTimer:{
 				rList:'',                       //报表列表,
-				export:'',                      //导出
 			},
 			selectAll:false,                    //全选
 			selectList:[],                      //选中的列表
@@ -134,12 +126,13 @@ export default {
 					this.delTemplate(`确认删除 ${item.name} 报表吗?`,item.id);
 					break;
 				case 'view':
-					this.$router.push({path:'/admin/materialReport/viewReport',id:item.id});
+					this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id}});
 					break;
 				case 'export':
 					this.getHttp('materialreportExportMaterialReportExcel',{id:item.id});
 					break;
 				case 'error':
+					this.$router.push({path:'/admin/materialReport/errorLog',query:{id:item.id,name:item.name}});
 					break;
 				case 'delAll':
 					if(this.selectList.length == 0){
@@ -162,18 +155,17 @@ export default {
 		//获取报表列表
 		async getReportList(){
 			let subObj = {
-				page:this.pageObj.currentPage,
-				size:this.pageObj.pageSize,
-				beginTime:0,
-				endTime:0
+				page : this.pageObj.currentPage,
+				size : this.pageObj.pageSize,
+				id : this.template.id,
 			};
 			
 			this.taskTimer.rList = Timer.add(
 				async ()=>{
-					let tableData = await this.getHttp('materialreportGetMaterialReportList',subObj);
-					
-					if(Array.isArray(tableData)){
-						this.tableData = this.mapListAttr(tableData);
+					let retObj = await this.getHttp('materialreportGetMaterialReportList',subObj);
+					this.pageObj.total = Number(retObj.count) | 0;
+					if(Array.isArray(retObj.data)){
+						this.tableData = this.mapListAttr(retObj.data);
 						this.matchSelectList(this.tableData,this.selectList);
 					}
 				},
@@ -223,6 +215,10 @@ export default {
 		mapListAttr(list){
 			let arr = [];  
 			for(let ele of list){
+				let isError = false;				
+				if(ele.content && Array.isArray(ele.content.error)){
+					isError = ele.content.error.length > 0;
+				}
 				let temp = {
 					id : ele.id,                                    //报表id
 					name : ele.objName,                             //报表名称
@@ -232,6 +228,7 @@ export default {
 					createUName : ele.createUName,                  //生成人   
 					checked : false,                                //是否选中
 					disabled : false,                               //是否可以操作  
+					error : isError									//是否存在异常			
 				};
 				arr.push(temp);
 			}
@@ -312,50 +309,6 @@ export default {
 
 
 
-
-
-		//获取表格任务
-		async createTask(param){
-			let {subDate,url,success,fail,time=3000} = param;
-			let timer = '';
-			let taskId = await this.getHttp(url,subDate);
-
-			timer = Timer.add(
-				()=>{this.getTaskStatus(taskId,success,fail)},
-				time,
-				0,
-				true,
-				()=>{
-					if(typeof fail == 'function') fail(taskId);                   
-				}
-			);
-			return timer;
-		},
-		//获取任务状态
-		async getTaskStatus(...param){
-			let [taskId,success,fail] = param;
-			try{
-				let retData = await this.getHttp('invoicing_taskInfo',{taskId:taskId});
-				switch(retData.status+''){
-					case '1'://进行中
-						break;
-					case '2'://失败
-						if(typeof fail == 'function') fail(taskId);                   
-						break;
-					case '3'://成功
-						if(typeof success == 'function') success(taskId);   
-				}  
-			}catch(e){
-				if(typeof fail == 'function') fail(taskId);                                   
-			}
-		},
-		
-
-
-
-
-
-
 		matchSelectList(list,selectList){
 			let matchAttr = 'id';
 			let attr = 'checked';
@@ -376,15 +329,6 @@ export default {
 				ele[attr] = val;
 			}
 		},        
-		alert(content,fn,title='提示信息',){
-			this.$alert(content, title, {
-				confirmButtonText: '确定',
-				callback: action => {
-					action = action == 'confirm' ? 'ok' :'cancel';
-					if(typeof fn == 'function') fn(action);
-				}
-			});
-		},
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
 			return res;
@@ -392,8 +336,8 @@ export default {
 	},
 	mounted(){
 		this.initBtn();
-		this.getQuery();
 		this.initPageObj();
+		this.getQuery();
 		this.getReportList();
 	},
 	beforeRouteLeave(to,from,next){

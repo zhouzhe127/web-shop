@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-07 16:01:41
+ * @Last Modified time: 2018-11-13 17:38:18
  */
 <template>  
 	<div>
@@ -222,7 +222,6 @@ export default {
 			if(this.collection.id && this.scope.length > 0 ){
 				this.scope = [];
 			}
-			console.log(this.sortObj);
 		},
 
 

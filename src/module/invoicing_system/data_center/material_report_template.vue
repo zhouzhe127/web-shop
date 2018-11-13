@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-12 18:01:39
+ * @Last Modified time: 2018-11-13 15:38:07
  */
 
 <template>
@@ -40,7 +40,7 @@
 			<el-pagination
 				:pager-count="pageObj.pagerCount"
 				:page-size="pageObj.pageSize"
-				layout="prev, pager, next"
+				layout="total,sizes,prev, pager, next,jumper"
 				:background="true"
 				:total="pageObj.total"
 				:current-page.sync="pageObj.currentPage"
