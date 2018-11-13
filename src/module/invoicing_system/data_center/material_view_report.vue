@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-12 16:51:44
+ * @Last Modified time: 2018-11-13 15:18:24
  */
 
 <template>
@@ -359,8 +359,7 @@ export default {
 			if(Number(query.id)){
 				this.reportId = Number(query.id); 
 			}
-
-			this.reportId = 2193;		
+			console.log(this.reportId );
 		},
 		initCondition(){
 			this.condition = {

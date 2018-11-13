@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-09 16:14:32
+ * @Last Modified time: 2018-11-13 17:34:47
  * @file 新建集合
  */
 
@@ -157,6 +157,11 @@ export default {
 		},
 		//集合单位
 		pUnitId:{
+			type:[String,Number],
+			default:''
+		},
+		//集合id
+		pCollectionId:{
 			type:[String,Number],
 			default:''
 		},
@@ -373,26 +378,32 @@ export default {
 			let subObj = {
 				name : obj.name,
 				unitId : obj.unitId,
-				mid : obj.selectList.map( ele => ele.id).join(',')
+				mid : obj.selectList.map( ele => ele.id).join(','),
+				id : Number(this.pCollectionId)
 			};
 
-			retData = await this.getHttp('setStatisticScopeCategory',subObj);
-			if(retData.res){
-				//新建成功
-				this.$message('保存成功!');                    
-				this.throwData(utils.deepCopy(retData.new));
-				this.mCollect.show = false;
-			}else{
-				//新建失败
-				for(let e of retData.invalid){
-					for(let ele of obj.selectList){
-						if(e == ele.id){
-							fail.push(ele.name);
-							break;
+			try{
+				retData = await this.getHttp('setStatisticScopeCategory',subObj,true);
+				if(retData.res){
+					//新建成功
+					this.$message('保存成功!');                    
+					this.throwData(utils.deepCopy(retData.new));
+					this.mCollect.show = false;
+				}else{
+					//新建失败
+					for(let e of retData.invalid){
+						for(let ele of obj.selectList){
+							if(e == ele.id){
+								fail.push(ele.name);
+								break;
+							}
 						}
 					}
+					this.alert(`所选择物料${fail.join(',')}与所选单位不匹配!`);
 				}
-				this.alert(`所选择物料${fail.join(',')}与所选单位不匹配!`);
+			}catch(e){
+				console.log(e);
+				this.alert('该集合名称已存在,请修改集合名称!');
 			}
 		},
 
