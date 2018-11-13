@@ -51,7 +51,7 @@
 								<el-button type="text" slot="reference">{{item.colName}}</el-button>
 							</el-popover>
 							<div class="timeBox">
-								<el-date-picker style="position: relative;top: -8px;left: -54px;" v-model="item.itemData" @blur="resetColumn"
+								<el-date-picker style="position: relative;top: -8px;left: -54px;" v-model="item.itemData" @blur="resetColumn(item)"
 								 type="daterange" align="right" unlink-panels range-separator="——" start-placeholder="开始日期" end-placeholder="结束日期"
 								 :picker-options="pickerOptions">
 								</el-date-picker>
@@ -156,12 +156,15 @@
 					v.itemData = this.applytimeAll;
 					let shopNameArr = [];
 					let wareNameArr = [];
-					let sendShop = [];
+					v.sendShop = [];
 					v.relation.forEach(s => {
-						let obj = {};
 						shopNameArr.push(this.getlistName(shopList, s.shopId, 'id', 'name'));
-						obj[s.shopId] = s.wid;
-						sendShop.push(obj);
+						s.wid.forEach(w=>{//组合店铺数据
+							let obj = {};
+							obj.shopId = s.shopId;
+							obj.wid = w;
+							v.sendShop.push(obj);
+						});
 						s.wid.forEach(w => {
 							wareNameArr.push(this.getlistName(this.wareList, w, 'id', 'name'));
 						});
@@ -170,7 +173,7 @@
 					v.wareNameArr = wareNameArr.join(',');
 					//公式转化
 					if (v.type == 2) {
-						v.formulaStr = v.staticInfo.content.formula.replace(/id_(\d+)/g, (match, p1) => {
+						v.formulaStr = v.staticInfo.formula.replace(/id_(\d+)/g, (match, p1) => {
 							for (let base of this.reportData) {
 								if (p1 == base.id) {
 									return base.name;
@@ -179,25 +182,24 @@
 						});
 						//匹配 是否百分百
 						let isPercent = this.formulaPercent.filter((obj) => {
-							return obj.value == v.staticInfo.content.isPercent;
+							return obj.value == v.staticInfo.isPercent;
 						})[0].label;
 						//匹配 保留几位小数
 						let carryRule = this.formulaRounding.filter((obj) => {
-							return obj.value == v.staticInfo.content.carryRule;
+							return obj.value == v.staticInfo.carryRule;
 						})[0].label;
-						v.formatStr = `${isPercent}, ${v.staticInfo.content.reserveRule}位小数, ${carryRule}`;
+						v.formatStr = `${isPercent}, ${v.staticInfo.reserveRule}位小数, ${carryRule}`;
 					}
 				});
 				this.tableYData = data.statisticScope;
 				this.tableYData.map(v => {
-					if (v.type == 1) {
+					if (v.type == 4) {
 						v.strName =
-							`${v.name}(物料：${v.setInfo.content.mid.length}，单位：${v.setInfo.content.unit})`;
+							`${v.setInfo.name}(物料：${v.setInfo.mid.length}，单位：${v.setInfo.unit.name})`;
 					} else {
 						v.strName = `物料范围(${v.mid.length})`;
 					}
 				});
-				console.log(data);
 			},
 			async getneedData() {
 				let res = await http.All([{
@@ -241,7 +243,7 @@
 					arr[0] = arr[1] - global.timeConst.ONEDAY * 365;
 				}
 			},
-			async cerate() {
+			async cerate() {//生成报表
 				let rgx = /^[A-Za-z0-9_\u4e00-\u9fa5]+$/;
 				if (!rgx.test(this.moldeName)) {
 					this.$message.error('报表名称输入错误');
@@ -249,8 +251,6 @@
 				}
 				let x = this.setXData();
 				let y = this.setYData();
-				console.log(x);
-				console.log(y);
 				let data = await http.materialreportAddReportTask({
 					data: {
 						templateId: this.id,
@@ -270,8 +270,9 @@
 					});
 				}
 			},
-			resetColumn() { //刷新列表方法
+			resetColumn(item) { //刷新列表方法
 				this.reset = false;
+				if(item) this.checkTime(item.itemData);
 				this.$nextTick(() => {
 					this.reset = true;
 				});
@@ -292,12 +293,12 @@
 					});
 					if (item.type == 2) {
 						Object.assign(obj, {
-							isPercent: item.staticInfo.content.isPercent,
-							reserveRule: item.staticInfo.content.reserveRule,
-							carryRule: item.staticInfo.content.carryRule,
-							baseParam: item.staticInfo.content.baseParam,
-							formula: item.staticInfo.content.formula,
-							formulaArray: item.staticInfo.content.formulaArray
+							isPercent: item.staticInfo.isPercent,
+							reserveRule: item.staticInfo.reserveRule,
+							carryRule: item.staticInfo.carryRule,
+							baseParam: item.staticInfo.baseParam,
+							formula: item.staticInfo.formula,
+							formulaArray: item.staticInfo.formulaArray
 						});
 					}
 					arr.push(obj);
@@ -309,11 +310,12 @@
 				for (let item of this.tableYData) {
 					let obj = {};
 					obj.type = item.type;
-					if (item.type == 1) {
+					if (item.type == 4) {
 						Object.assign(obj, {
 							id: item.id,
-							mid: item.setInfo.content.mid,
-							unit: item.setInfo.content.unit,
+							mid: item.setInfo.mid,
+							unit: item.setInfo.unit.id,
+							name: item.setInfo.name
 						});
 					} else {
 						obj.mid = item.mid;
@@ -334,12 +336,10 @@
 		async mounted() {
 			this.crageBtn();
 			this.id = this.$route.query.id;
-			this.moldeName = this.$route.query.name;
+			// this.moldeName = this.$route.query.name;
 			await this.getneedData();
 			this.init();
 		},
-		components: {},
-		computed: {},
 		watch: {
 			applytimeAll(news) {
 				this.checkTime(news);

@@ -8,7 +8,7 @@
 			<div class="tableHeard">
 				<span>集合管理&nbsp;·&nbsp;已选择<strong>{{allTotal}}</strong>个条目</span>
 			</div>
-			<el-table ref="multipleTable" border :header-cell-style="{'background':'#f5f7fa'}" :data="viewData" tooltip-effect="dark"
+			<el-table ref="multipleTable" border v-loading="loading" :header-cell-style="{'background':'#f5f7fa'}" :data="viewData" tooltip-effect="dark"
 			 style="width: 100%" @selection-change="handleSelectionChange">
 
 				<el-table-column label="批量删除">
@@ -41,7 +41,7 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pUnitId="editData.unit.id" :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
+		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pUnitId="editData.unit?editData.unit.id:null" :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
 	</div>
 </template>
 <script>
@@ -57,7 +57,8 @@
 				allTotal: 0,
 				num: 10, //每页显示多少条
 				showCreatWin: false,
-				editData: {}
+				editData: {},
+				loading:true
 			};
 		},
 		methods: {
@@ -65,7 +66,7 @@
 				let data = await http.materialreportGetStatisticScopeCategoryList();
 				this.allTotal = data.list.length;
 				this.tableData = data.list;
-				console.log(data);
+				this.loading = false;
 				this.pagination();
 			},
 			toggleSelection(rows) {

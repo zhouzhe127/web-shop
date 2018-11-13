@@ -168,10 +168,10 @@
 				for (let item of this.tableData) {
 					let obj = {};
 					if (item.pScope.length > 0) {
-						obj.type = 2;
+						obj.type = 3;//物料范围
 						obj.mid = item.pScope;
 					} else {
-						obj.type = 1;
+						obj.type = 4;//统计范围
 						obj.id = item.pCollection.id;
 						// obj.name = item.pCollection.name;
 					}
