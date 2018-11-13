@@ -93,6 +93,7 @@
 				<div class="title">
 					<span>操作</span>
 					<span>商品名称</span>
+					<span>商品编码</span>
 					<span>退品数量</span>
 					<span>退品金额</span>
 					<span>退品原因</span>
@@ -101,9 +102,10 @@
 					<li v-for="(item,index) in returnList" :key="index">
 						<span class="show-order light" :data-index="index">查看详情</span>
 						<span :title="item.goodsName">{{item.goodsName}}</span>
+						<span :title="item.goodsName">{{item.goodsCode}}</span>
 						<span :title="item.returnNum">{{item.returnNum}}</span>
 						<span :title="item.returnPrice">{{item.returnPrice}}</span>
-						<div style="position:relative;display:inline-block;width:20%;">
+						<div style="position:relative;display:inline-block;width:15%;">
 							<span style="cursor:pointer;width:100%;height:100%;" :title="item.reasonL" @click.stop @click="showNames(index,item.reasonL)">{{item.reasonL}}</span>
 							<div v-if="isNames == index" class="detLi" style="">
 								<div class="detDiv" style="">
@@ -185,7 +187,8 @@
 			</div>
 		</template>
 		<div class="page-box" v-if="step!=1 && step!=5">
-			<pageBtn @pageNum="pageChange" :total="pageNum" :page="page" :isNoJump="true"></pageBtn>
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-count="pageNum" :page-size="pageShow" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
+			<!-- <pageBtn @pageNum="pageChange" :total="pageNum" :page="page" :isNoJump="true"></pageBtn> -->
 		</div>
 	</div>
 </template>
@@ -270,7 +273,7 @@ export default {
 		step: 'setStep',
 		order: 'setOrder',
 		loading: 'setLoad',
-		pageShow: 'initData',
+		// pageShow: 'initData',
 		otherData: {
 			deep: true,
 			handler() {
@@ -493,6 +496,17 @@ export default {
 				}
 			}
 		},
+		//分页点击
+		pageClick: function(e) {
+			this.page = e;
+			this.initData();
+		},
+		//每页显示多少条点击
+		numChange(e) {
+			this.pageShow = e;
+			this.page = 1;
+			this.initData();
+		},
 		pageChange(obj) {
 			//翻页
 			let prevPage = this.page;
@@ -565,11 +579,12 @@ export default {
 			let num = 0,
 				price = 0;
 			for (let i = 0; i < this.orderStoreList.length; i++) {
+				this.orderStoreList[i].totalPrice = this.toFloatStr(this.orderStoreList[i].totalPrice);
 				num += this.orderStoreList[i].totalNum;
-				price += this.orderStoreList[i].totalPrice;
+				price += this.orderStoreList[i].totalPrice*1;
 			}
 			this.orderTotal.totalNum = num;
-			this.orderTotal.totalPrice = price;
+			this.orderTotal.totalPrice = this.toFloatStr(price);
 			this.orderTotal.totalDay = Math.ceil(
 				(this.sendData.brand.endTime - this.sendData.brand.startTime) /
 					(24 * 3600 * 1000)
@@ -658,7 +673,7 @@ export default {
 		}
 	}
 	.goods span {
-		width: 20%;
+		width: 15%;
 	}
 	.store-list {
 		margin-top: 20px;
@@ -744,7 +759,7 @@ export default {
 				text-align: center;
 				height: 50px;
 				line-height: 50px;
-				width: 20%;
+				width: 15%;
 			}
 			.short {
 				width: 12%;
@@ -761,7 +776,7 @@ export default {
 					text-align: center;
 					height: 50px;
 					line-height: 50px;
-					width: 20%;
+					width: 15%;
 					color: #666;
 					.text-ellipsis;
 					.light {
@@ -798,11 +813,11 @@ export default {
 	.goods {
 		.title {
 			span {
-				width: 20%;
+				width: 15%;
 			}
 		}
 		ul li span {
-			width: 20%;
+			width: 15%;
 		}
 	}
 	.order {
@@ -810,16 +825,10 @@ export default {
 			span {
 				width: 12%;
 			}
-			.wide {
-				width: 20%;
-			}
 		}
 		ul li {
 			span {
 				width: 12%;
-			}
-			.wide {
-				width: 20%;
 			}
 		}
 	}
@@ -873,9 +882,6 @@ export default {
 				line-height: 40px;
 				text-align: center;
 				.text-ellipsis;
-			}
-			.wide {
-				width: 20%;
 			}
 			ul {
 				max-height: 400px;
