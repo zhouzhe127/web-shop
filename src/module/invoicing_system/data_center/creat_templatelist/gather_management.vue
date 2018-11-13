@@ -36,7 +36,7 @@
 						<span>{{scope.row.unit.name}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" width="200">
+				<el-table-column label="操作" fixed="right" width="200">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="editList(scope.row)">编辑</el-button>
 						<el-button type="text" size="small" @click="dleSelection(scope.row)" style='color:#D34A2B'>删除</el-button>
