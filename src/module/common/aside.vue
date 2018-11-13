@@ -296,7 +296,13 @@
 			routeNeed.routerMap['categoryStatistics'].name = storage.session('userShop').currentShop.industry == 1 ?
 				'categoryCount' : 'categoryStatistics', //'分类统计',
 			this.getData();
-			if(invoicfig&&this.mianNav&&this.mianNav[this.isActive].title=='进销存系统') this.setInventConfig(); //进销存配置
+
+			try{
+				if(invoicfig&&this.mianNav&&this.mianNav[this.isActive].title=='进销存系统') this.setInventConfig(); //进销存配置
+
+			}catch(e){
+				/* eslint-disable-line*/
+			}
 		},
 		updated() {
 			// this.$refs.mainElent.style.height = document.body.clientHeight-65 + 'px';
