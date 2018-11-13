@@ -112,7 +112,7 @@
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
-	import global from 'src/manager/global';
+	//import global from 'src/manager/global';
 
 	export default {
 		data() {
@@ -204,7 +204,7 @@
 				}
 			},
 			'valueTime': {
-				handler: function(newValue, oldValue) {
+				handler: function() {
 					this.timeChange();
 				},
 				deep: true,
@@ -236,9 +236,9 @@
 			returnAct() {
 				this.$router.push('/admin/activity/generalActivity');
 			},
-			checkForm: function() {
+			// checkForm: function() {
 
-			},
+			// },
 			async birthSave(type) {
 				if (!this.checkForm()) return;
 				if (!this.edit) {

@@ -103,9 +103,9 @@
 </template>
 <script type="text/javascript">
 	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
+	//import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
-	import global from 'src/manager/global';
+	//import global from 'src/manager/global';
 
 	export default {
 		data() {
@@ -130,9 +130,6 @@
 					'name': '【会员姓名】',
 					'id': '{memberName}'
 				}, {
-					'name': '【会员生日】',
-					'id': '{memberBirthday}'
-				}, {
 					'name': '【优惠券名称】',
 					'id': '{couponName}'
 				}, {
@@ -141,6 +138,12 @@
 				}, {
 					'name': '【活动名称】',
 					'id': '{activityName}'
+				},{
+					'name': '【距今未消费天数】',
+					'id': '{notConsumeDays}'
+				}, {
+					'name': '【送券时间】',
+					'id': '{giveTime}'
 				}],
 				couponList: [], //优惠券列表
 				selectCoupon: [], //选中的列表
@@ -165,7 +168,7 @@
 				}
 			},
 			'valueTime': {
-				handler: function(newValue, oldValue) {
+				handler: function() {
 					this.timeChange();
 				},
 				deep: true,

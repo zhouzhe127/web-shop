@@ -200,35 +200,30 @@
 				dates: new Date().getTime(), //当前时间
 				returnInt: 1, //相差天数
 				list: [{
-						name: '微信',
-						id: '1'
-					},
-					// {
-					// 	name: '短信',
-					// 	id: '2'
-					// }
-				],
+					name: '微信',
+					id: '1'
+				}],
 				selects: [],
 				msmStatus: false,
 				interestList: [{ //会员权益
-						name: '无',
-						id: 0
-					},
-					{
-						name: '电子优惠券',
-						id: 1
-					}
+					name: '无',
+					id: 0
+				},
+				{
+					name: '电子优惠券',
+					id: 1
+				}
 				],
 				interestName: '无',
 				interestId: 0,
 				durationList: [{ //活动期限
-						name: '不设限制',
-						id: 0
-					},
-					{
-						name: '指定额度',
-						id: 1
-					}
+					name: '不设限制',
+					id: 0
+				},
+				{
+					name: '指定额度',
+					id: 1
+				}
 				],
 				durationId: 0,
 				durationName: '不设限制', //状态
@@ -274,35 +269,35 @@
 				activityDetail: {},
 				explain: '', //内容设置
 				parameter: [{
-						name: '【会员姓名】',
-						id: '{memberName}'
-					},
-					{
-						name: '【优惠券名称】',
-						id: '{couponName}'
-					},
-					{
-						name: '【优惠券数量】',
-						id: '{couponNum}'
-					},
-					{
-						name: '【活动名称】',
-						id: '{activityName}'
-					},
-					{
-						name: '【消费日期】',
-						id: '{salesTime}'
-					}
+					name: '【会员姓名】',
+					id: '{memberName}'
+				},
+				{
+					name: '【优惠券名称】',
+					id: '{couponName}'
+				},
+				{
+					name: '【优惠券数量】',
+					id: '{couponNum}'
+				},
+				{
+					name: '【活动名称】',
+					id: '{activityName}'
+				},
+				{
+					name: '【消费日期】',
+					id: '{salesTime}'
+				}
 				],
 				showRang: false,
 				showCoupon: false,
 				selectsList: [],
 				integralList: [{
-						name: '默认全部'
-					},
-					{
-						name: '会员筛选'
-					}
+					name: '默认全部'
+				},
+				{
+					name: '会员筛选'
+				}
 				],
 				integralOn: 0, //活动对象的选择
 				indexCustom: 0, //活动对象选中的
@@ -320,16 +315,6 @@
 			};
 		},
 		methods: {
-			// haveIndex(i) { //活动对象选择
-			// 	this.integralOn = i;
-			// 	console.log(this.integralOn)
-			// 	if (this.integralOn == '1') {
-			// 		if (this.memberStatus) {
-			// 			this.addVip();
-			// 		}
-			// 	}
-			// 	this.abc();
-			// },
 			selOnSend(arr) {
 				this.ruleList[this.ruleIndex].pushChannel = arr;
 			},

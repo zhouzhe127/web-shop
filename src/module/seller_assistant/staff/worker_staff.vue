@@ -205,7 +205,7 @@
 				} else {
 					this.sorts = [this.userShop.currentShop.name];
 				}
-				console.log(JSON.stringify(this.sorts))
+				//console.log(JSON.stringify(this.sorts))
 			},
 			addworker: function() {
 				this.$store.commit('setPageTools', {});

@@ -55,28 +55,28 @@
 				nickname: '', //用户昵称
 				employeeName: '', //员工姓名			
 				shoptitleList: [{
-						titleName: '操作类型',
-						titleStyle: {
-							fontSize: 16 + 'px',
-							flex: 'none',
-							width: 200 + 'px',
-							height: '100%'
-						},
+					titleName: '操作类型',
+					titleStyle: {
+						fontSize: 16 + 'px',
+						flex: 'none',
+						width: 200 + 'px',
+						height: '100%'
 					},
-					{
-						titleName: '用户昵称 ',
-						dataName: 'name',
-						titleStyle: {
-							fontSize: 16 + 'px',
-						},
+				},
+				{
+					titleName: '用户昵称 ',
+					dataName: 'name',
+					titleStyle: {
+						fontSize: 16 + 'px',
 					},
-					{
-						titleName: '已绑定店员',
-						dataName: 'staffName',
-						titleStyle: {
-							fontSize: 16 + 'px',
-						},
+				},
+				{
+					titleName: '已绑定店员',
+					dataName: 'staffName',
+					titleStyle: {
+						fontSize: 16 + 'px',
 					},
+				},
 				],
 				allFormList: [], //所有的数据
 				formList: [], //展示的数据
@@ -102,7 +102,7 @@
 				if (data) {
 					// this.count = data.count ? data.count : this.count;
 					// this.endTotal = data.total ? data.total : this.endTotal;
-					if(this.page == 1){
+					if (this.page == 1) {
 						this.count = data.count;
 						this.endTotal = data.total;
 					}

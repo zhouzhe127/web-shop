@@ -137,17 +137,17 @@
 				editId: '', //编辑id
 				actName: '', //生日活动名称
 				durationList: [{ //活动期限
-						name: '永久',
-						id: 0
-					},
-					{
-						name: '一年',
-						id: 1
-					},
-					{
-						name: '二年',
-						id: 2
-					}
+					name: '永久',
+					id: 0
+				},
+				{
+					name: '一年',
+					id: 1
+				},
+				{
+					name: '二年',
+					id: 2
+				}
 				],
 				durationId: 0, //活动期限
 				durationName: '永久', //状态
@@ -274,20 +274,20 @@
 			},
 			checkForm: function() {
 				if (!global.checkData({
-						isclick: {
-							cond: '$$!==true',
-							pro: '请勿重复保存'
-						},
-						actName: '活动名称未设置',
-						selectCoupon: {
-							cond: '$$.length!=0',
-							pro: '请关联优惠券'
-						},
-						pushdateNum: {
-							reg: /^([0-9]|(1[0-9])|(2[0-9])|(3[0-1]))$/,
-							pro: '请填写推送日期，推送日期必须为0~31的正整数'
-						}
-					}, this)) return false;
+					isclick: {
+						cond: '$$!==true',
+						pro: '请勿重复保存'
+					},
+					actName: '活动名称未设置',
+					selectCoupon: {
+						cond: '$$.length!=0',
+						pro: '请关联优惠券'
+					},
+					pushdateNum: {
+						reg: /^([0-9]|(1[0-9])|(2[0-9])|(3[0-1]))$/,
+						pro: '请填写推送日期，推送日期必须为0~31的正整数'
+					}
+				}, this)) return false;
 				return true;
 			},
 			async birthSave(type) {

@@ -101,9 +101,9 @@
 </template>
 <script>
 	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
+	//import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
-	import global from 'src/manager/global';
+	//import global from 'src/manager/global';
 
 	export default {
 		data() {
@@ -128,9 +128,6 @@
 					'name': '【会员姓名】',
 					'id': '{memberName}'
 				}, {
-					'name': '【会员生日】',
-					'id': '{memberBirthday}'
-				}, {
 					'name': '【优惠券名称】',
 					'id': '{couponName}'
 				}, {
@@ -139,6 +136,12 @@
 				}, {
 					'name': '【活动名称】',
 					'id': '{activityName}'
+				}, {
+					'name': '【消费券名称】',
+					'id': '{useCouponName}'
+				}, {
+					'name': '【送券时间】',
+					'id': '{sendTime}'
 				}],
 				selectCoupon: [], //选中的列表
 				isactivityDetail: true, //是否查看详情
@@ -164,7 +167,7 @@
 				}
 			},
 			'valueTime': {
-				handler: function(newValue, oldValue) {
+				handler: function() {
 					this.timeChange();
 				},
 				deep: true,

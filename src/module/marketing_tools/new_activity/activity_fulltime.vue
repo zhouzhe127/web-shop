@@ -112,7 +112,7 @@
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
-	import global from 'src/manager/global';
+	//import global from 'src/manager/global';
 
 	export default {
 		data() {
@@ -136,9 +136,6 @@
 					'name': '【会员姓名】',
 					'id': '{memberName}'
 				}, {
-					'name': '【会员生日】',
-					'id': '{memberBirthday}'
-				}, {
 					'name': '【优惠券名称】',
 					'id': '{couponName}'
 				}, {
@@ -147,7 +144,15 @@
 				}, {
 					'name': '【活动名称】',
 					'id': '{activityName}'
-				}],
+				}, {
+					'name': '【消费次数】',
+					'id': '{consumeNum}'
+				},
+				{
+					'name': '【送券时间】',
+					'id': '{giveTime}'
+				},
+				],
 				showBirthCoupon: false,
 				couponList: [], //优惠券列表
 				selectCoupon: [], //选中的列表
@@ -175,7 +180,7 @@
 				}
 			},
 			'valueTime': {
-				handler: function(newValue, oldValue) {
+				handler: function() {
 					this.timeChange();
 				},
 				deep: true,
@@ -310,7 +315,7 @@
 				});
 				this.activityDetail = data;
 				this.actName = data.name; //活动名称
-				this.valueTime = [data.startTime * 1000, data.endTime * 1000];//开始时间 结束时间
+				this.valueTime = [data.startTime * 1000, data.endTime * 1000]; //开始时间 结束时间
 				this.member = data.sendProgress.split(',')[0]; //会员的筛选数量
 				this.memfilter = data.memberIds; //会员的筛选条件
 				let couponIds = JSON.parse(data.rule[0].couponIds);

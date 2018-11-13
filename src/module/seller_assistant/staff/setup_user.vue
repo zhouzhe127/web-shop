@@ -68,7 +68,7 @@
 		</transition>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import global from 'src/manager/global';
@@ -77,33 +77,33 @@
 		data() {
 			return {
 				powList: [{
-						name: '积分商品核销'
-					},
-					{
-						name: '疯抢商品核销'
-					},
-					{
-						name: '优惠券核销'
-					},
-					{
-						name: '扫码消费'
-					},
-					{
-						name: '任务审核'
-					}
+					name: '积分商品核销'
+				},
+				{
+					name: '疯抢商品核销'
+				},
+				{
+					name: '优惠券核销'
+				},
+				{
+					name: '扫码消费'
+				},
+				{
+					name: '任务审核'
+				}
 				], //  权限列表
 				selectPow: [], //  权限选择的数据
 				isShowStaff: false, //  是否展示选择员工弹框
 				selectJob: [],
 				jobList: [{
-						name: '店长'
-					},
-					{
-						name: '店员'
-					},
-					{
-						name: '收银员'
-					}
+					name: '店长'
+				},
+				{
+					name: '店员'
+				},
+				{
+					name: '收银员'
+				}
 				],
 				isShowSelector: false,
 				ischain: '',
@@ -175,20 +175,20 @@
 				///      保存修改
 				if (
 					!global.checkData({
-							userSelectId: {
-								cond: `$$ != ''`,
-								pro: '请选择用户'
-							},
-							staffId: {
-								cond: `$$.trim() != ''`,
-								pro: '请选择工作人员'
-							},
-							selectPow: {
-								cond: '$$.length>0',
-								pro: '请选择权限'
-							}
+						userSelectId: {
+							cond: `$$ != ''`,
+							pro: '请选择用户'
 						},
-						this
+						staffId: {
+							cond: `$$.trim() != ''`,
+							pro: '请选择工作人员'
+						},
+						selectPow: {
+							cond: '$$.length>0',
+							pro: '请选择权限'
+						}
+					},
+					this
 					)
 				) {
 					return false;
