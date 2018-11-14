@@ -23,8 +23,8 @@
 				</el-date-picker>
 				<!-- <el-button type="primary" icon="el-icon-search" style="margin-left: -4px;"></el-button> -->
 			</section>
-			<p v-if="selecteDate != ''">已选中:{{formatTime(selecteDate)}}</p>
-			<span v-else v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span>
+			<p>已选中:{{formatTime(selecteDate)}}</p>
+			<span v-for="(item,index) in payWays" :key="index" @click="changeRadio(item)" :class="{'effect':payType==item.id}">{{item.name}}</span>
 		</div>
 		<!-- 昨日 今日数据 -->
 		<div class="data">
@@ -32,15 +32,38 @@
 				<div class="data_t">{{payName}}新增会员(人)</div>
 				<div class="data_b">
 					<section>
-						<h1>{{newMember}}</h1>
+						<h1>{{bigDate.totalMember}}</h1>
 						<div class="percentage">
 							<div class="percentage_l">
 								<p class="first_p">新会员消费占比</p>
-								<p>{{newAccounted}}</p>
+								<p>{{bigDate.newconsumptionZB}}</p>
 							</div>
 							<div class="percentage_r">
 								<p class="first_p">老会员消费占比</p>
-								<p>{{oldAccounted}}</p>
+								<p>{{bigDate.oldconsumptionZB}}</p>
+							</div>
+							<div class="percentage_r">
+								<p class="first_p">非会员消费占比</p>
+								<p>{{bigDate.nonconsumptionZB}}</p>
+							</div>
+						</div>
+					</section>
+				</div>
+				<!-- 翻台 -->
+				<div class="turnTable" style="padding-left: 74px;">
+					<section>
+						<div class="percentage">
+							<div class="percentage_l">
+								<p class="first_p">新会员翻台率</p>
+								<p>{{bigDate.newturntableZB}}</p>
+							</div>
+							<div class="percentage_r">
+								<p class="first_p">老会员翻台率</p>
+								<p>{{bigDate.oldturntableZB}}</p>
+							</div>
+							<div class="percentage_r">
+								<p class="first_p">非会员翻台率</p>
+								<p>{{bigDate.nonturntableZB}}</p>
 							</div>
 						</div>
 					</section>
@@ -49,17 +72,40 @@
 			<div class="data_l">
 				<div class="data_t">{{payName}}会员消费(元)</div>
 				<div class="data_b">
-					<h1>{{consumeTotal}}</h1>
+					<h1>{{bigDate.totalConsumption}}</h1>
 					<div class="percentage">
 						<div class="percentage_l">
 							<p class="first_p">新会员消费金额</p>
-							<p>{{newAmount}}</p>
+							<p>{{bigDate.newconsumption}}</p>
 						</div>
 						<div class="percentage_r">
 							<p class="first_p">老会员消费金额</p>
-							<p>{{oldAmount}}</p>
+							<p>{{bigDate.oldconsumption}}</p>
+						</div>
+						<div class="percentage_r">
+							<p class="first_p">非会员消费金额</p>
+							<p>{{bigDate.nonconsumption}}</p>
 						</div>
 					</div>
+				</div>
+				<!-- 翻台 -->
+				<div class="turnTable" style="padding-right: 74px;">
+					<section style="padding-left: 74px;">
+						<div class="percentage">
+							<div class="percentage_l">
+								<p class="first_p">新会员翻台(次)</p>
+								<p>{{bigDate.newturntable}}</p>
+							</div>
+							<div class="percentage_r">
+								<p class="first_p">老会员翻台(次)</p>
+								<p>{{bigDate.oldturntable}}</p>
+							</div>
+							<div class="percentage_r">
+								<p class="first_p">非会员翻台(次)</p>
+								<p>{{bigDate.nonturntable}}</p>
+							</div>
+						</div>
+					</section>
 				</div>
 			</div>
 		</div>
@@ -74,6 +120,7 @@
 	// import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
 	// import global from 'src/manager/global';
+	let times = new Date().setHours(0, 0, 0, 0) - 86400000;
 	export default {
 		data() {
 			return {
@@ -117,14 +164,29 @@
 				],
 				echarts: null, //百度图文
 				pie: [], //饼图所需要的数据
-				newMember: '', //新会员数量
-				consumeTotal: '', //消费总计
-				newAccounted: '', //新会员消费占比
-				oldAccounted: '', //老会员消费占比
-				newAmount: '', //新会员消费金额
-				oldAmount: '', //老会员消费金额
 				compareData: {}, //昨日今日数据
-				selecteDate: '' //已选中的日期
+				selecteDate: new Date().setHours(0, 0, 0, 0), //已选中的日期
+				dateFormat: '', //日期格式化
+				newMemberNum: '', //会员数
+				consumeList: '', //消费金额
+				consumeTableList: '', //返台次数
+				bigDate: { //大数据
+					totalMember: '0', //会员总人数
+					totalConsumption: '0', //消费总额
+					totalconsumeTable: '0', //总翻台次数
+					newconsumption: '0', //新会员消费
+					oldconsumption: '0', //老会员消费
+					nonconsumption: '0', //非会员消费
+					newturntable: '0', //新会员翻台
+					oldturntable: '0', //老会员翻台
+					nonturntable: '0', //非会员翻台
+					newconsumptionZB: '0', //新会员消费占比
+					oldconsumptionZB: '0', //老会员消费占比
+					nonconsumptionZB: '0', //非会员消费占比
+					newturntableZB: '0', //新会员翻台占比
+					oldturntableZB: '0', //老会员翻台占比
+					nonturntableZB: '0', //非会员翻台占比								
+				}
 			};
 		},
 		methods: {
@@ -132,18 +194,26 @@
 				if (time.length == 10) {
 					time *= 1000;
 				}
-				return utils.format(new Date(time), 'yyyy年MM月dd日');
+				return utils.format(new Date(time), 'yyyy-MM-dd');
 			},
 			selectdate: function(time) { //选择日期
 				this.selecteDate = time;
 				this.payName = this.formatTime(time);
+				this.dateFormat = this.formatTime(time);
+				this.payType = '-1';
+				this.getConsumeAndGrowth();
 			},
 			changeRadio: function(item) {
 				//选择渠道
 				let id = item.id;
 				this.payType = id;
 				this.payName = item.name;
-				this.getConsumeAndGrowth();
+				if (this.payType == 0) {
+					this.dateFormat = this.formatTime(times);
+				} else {
+					this.dateFormat = this.formatTime(new Date().setHours(0, 0, 0, 0));
+				}
+				this.dataProcessing(this.newMemberNum, this.consumeList, this.consumeTableList);
 			},
 			isPublicNumber: function(ind) { //提示的状态
 				this.title[ind].isPublicNumber = !this.title[ind].isPublicNumber;
@@ -170,21 +240,67 @@
 			async getConsumeAndGrowth() { //昨日今日的会员消费占比
 				let data = await http.getConsumeAndGrowth({
 					data: {
-						type: this.payType //昨日今日
+						time: parseInt(this.startTime / 1000) //昨日今日
 					}
 				});
 				if (data) {
-					this.newMember = data.newMember; //新会员数量
-					this.consumeTotal = data.consumeTotal; //老会员数量
-					this.newAccounted = this.percentage(data.newMemberConsume, data.consumeTotal);
-					this.oldAccounted = this.percentage(data.oldMemberConsume, data.consumeTotal);
-					this.newAmount = data.newMemberConsume; //新会员消费金额
-					this.oldAmount = data.oldMemberConsume; //老会员消费金额
-					this.compareData = data; //获取昨日今日数据
+					this.newMemberNum = data.newMemberNum; //获取会员数量
+					this.consumeList = data.consumeList; //消费金额
+					this.consumeTableList = data.consumeTableList; //翻台次数
+					this.dataProcessing(this.newMemberNum, this.consumeList, this.consumeTableList);
 				}
+			},
+			dataProcessing: function(newMemberNum, consumeList, consumeTableList) { //数据处理
+				let bigDate = {
+					totalMember: '0', //会员总人数
+					totalConsumption: '0', //消费总额
+					totalconsumeTable: '0', //总翻台次数
+					newconsumption: '0', //新会员消费
+					oldconsumption: '0', //老会员消费
+					nonconsumption: '0', //非会员消费
+					newturntable: '0', //新会员翻台
+					oldturntable: '0', //老会员翻台
+					nonturntable: '0', //非会员翻台
+					newconsumptionZB: '0', //新会员消费占比
+					oldconsumptionZB: '0', //老会员消费占比
+					nonconsumptionZB: '0', //非会员消费占比
+					newturntableZB: '0', //新会员翻台占比
+					oldturntableZB: '0', //老会员翻台占比
+					nonturntableZB: '0', //非会员翻台占比					
+				};
+				//获取会员总数
+				let member = newMemberNum[this.dateFormat];
+				if (member && member != '') {
+					bigDate.totalMember = member;
+				}
+				//消费金额和消费占比
+				let list = consumeList[this.dateFormat];
+				if (list && list != '') {
+					//消费总额
+					bigDate.totalConsumption = Number(list.cnt1) + Number(list.cnt2) + Number(list.cnt3);
+					bigDate.newconsumption = list.cnt1;
+					bigDate.oldconsumption = list.cnt2;
+					bigDate.nonconsumption = list.cnt3;
+					bigDate.newconsumptionZB = this.percentage(bigDate.newconsumption, bigDate.totalConsumption);
+					bigDate.oldconsumptionZB = this.percentage(bigDate.oldconsumption, bigDate.totalConsumption);
+					bigDate.nonconsumptionZB = this.percentage(bigDate.nonconsumption, bigDate.totalConsumption);
+				}
+				let tableList = consumeTableList[this.dateFormat];
+				if (tableList && tableList != '') {
+					//翻台次数
+					bigDate.totalconsumeTable = Number(tableList.cnt1) + Number(tableList.cnt2) + Number(tableList.cnt2);
+					bigDate.newturntable = tableList.cnt1;
+					bigDate.oldturntable = tableList.cnt2;
+					bigDate.nonturntable = tableList.cnt3;
+					bigDate.newturntableZB = this.percentage(bigDate.newturntable, bigDate.totalconsumeTable);
+					bigDate.oldturntableZB = this.percentage(bigDate.oldturntable, bigDate.totalconsumeTable);
+					bigDate.nonturntableZB = this.percentage(bigDate.nonturntable, bigDate.totalconsumeTable);
+				}
+				this.bigDate = bigDate;
 			}
 		},
 		mounted() {
+			this.dateFormat = this.formatTime(times);
 			this.memberRemainAndAccounted();
 			this.getEcharts(); //加载百度图标
 			this.getConsumeAndGrowth();
@@ -322,10 +438,22 @@
 
 	#member_analysis .data {
 		max-width: 1247px;
-		height: 326px;
+		height: 356px;
 		border: 1px solid #D2D2D2;
 		margin-bottom: 18px;
 		display: flex;
+	}
+
+	#member_analysis .data .data_l .turnTable {
+		width: 100%;
+		height: 74px;
+	}
+
+	#member_analysis .data .data_l .turnTable section {
+		padding-top: 15px;
+		width: 100%;
+		height: 100%;
+		border-top: 1px solid #D2D2D2;
 	}
 
 	#member_analysis .data .data_l {
@@ -344,8 +472,9 @@
 
 	#member_analysis .data .data_b {
 		width: 100%;
-		height: 220px;
-		padding: 30px 0px 30px 74px;
+		height: 200px;
+		padding: 30px 0px 20px 74px;
+		/* border-bottom: 1px solid #D2D2D2; */
 	}
 
 	#member_analysis .data .data_b h1 {
@@ -354,21 +483,21 @@
 		margin-bottom: 40px;
 	}
 
-	#member_analysis .data .data_b .percentage {
+	#member_analysis .data .percentage {
 		width: 525px;
 		height: 45px;
 		display: flex;
-		margin-bottom: 20px;
+		margin-bottom: 15px;
 	}
 
-	#member_analysis .data .data_b .percentage .percentage_l,
-	#member_analysis .data .data_b .percentage .percentage_c,
-	#member_analysis .data .data_b .percentage .percentage_r {
+	#member_analysis .data .percentage .percentage_l,
+	#member_analysis .data .percentage .percentage_c,
+	#member_analysis .data .percentage .percentage_r {
 		width: 33.33%;
 		height: 100%;
 	}
 
-	#member_analysis .data .data_b .percentage .first_p {
+	#member_analysis .data .percentage .first_p {
 		margin-bottom: 15px;
 	}
 
@@ -376,7 +505,7 @@
 		border-right: 1px solid #D2D2D2;
 	} */
 
-	#member_analysis .data .data_b .percentage .percentage_r {
+	#member_analysis .data .percentage .percentage_r {
 		border-left: 1px solid #D2D2D2;
 		padding-left: 18px;
 	}

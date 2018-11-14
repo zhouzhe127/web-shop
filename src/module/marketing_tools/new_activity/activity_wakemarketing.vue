@@ -99,7 +99,7 @@
 			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="returnAct">取消</el-button>
 			<template v-if='isactivityDetail'>
 				<el-button type="info" style="margin-right: 10px;width:190px;" @click="birthSave('0')">保存</el-button>
-				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="birthSave('1')">发布</el-button>
+				<el-button v-if="editId == ''" type="primary" style="margin-right: 10px;width:190px;" @click="birthSave('1')">发布</el-button>
 			</template>
 		</div>
 		<!-- 关联优惠券的弹窗 -->

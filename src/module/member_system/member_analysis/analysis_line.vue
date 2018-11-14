@@ -45,15 +45,18 @@
 			return {
 				trend: [{
 					id: 0,
+					name: '会员翻台次'
+				}, {
+					id: 1,
 					name: '会员增长趋势'
 				},
 				{
-					id: 1,
+					id: 2,
 					name: '会员消费趋势'
 				}
 				], //类型
 				trendId: 0,
-				startTime: new Date().setHours(23, 59, 59, 999) - constant, //获取当月一号的零点时间戳,
+				startTime: new Date().setHours(23, 59, 59, 999) - constant + oneDay, //获取当月一号的零点时间戳,
 				endTime: new Date().setHours(23, 59, 59, 999),
 				barDom: null,
 				option: {
@@ -107,7 +110,10 @@
 						},
 						data: [],
 					}, ]
-				}
+				},
+				memberIncrease: '', //会员增长趋势数据
+				consumeList: '', //会员消费趋势数据
+				consumeTableList: '', //桌台翻台趋势
 			};
 		},
 		watch: {
@@ -132,7 +138,8 @@
 				//选择渠道
 				let id = item.id;
 				this.trendId = id;
-				this.getConsumeOrGrowthTrend();
+				this.intheDate(this.trendId);
+				//this.getConsumeOrGrowthTrend();
 			},
 			initEchart() {
 				//实例化图表
@@ -160,22 +167,47 @@
 				if (!this.checkForm()) return;
 				let data = await http.getConsumeOrGrowthTrend({
 					data: {
-						type: this.trendId,
 						startTime: parseInt(this.startTime / 1000),
 						endTime: parseInt(this.endTime / 1000)
 					}
 				});
 				if (data != '') {
-					this.option.xAxis.data = [];
-					this.option.series[0].data = [];
-					for (let key in data) {
-						this.option.xAxis.data.push(key);
-						this.option.series[0].data.push(data[key]);
-					}
-					if (this.echarts) {
-						this.initEchart();
-					}
+					this.consumeList = this.getTotal(data.consumeList);
+					this.consumeTableList = this.getTotal(data.consumeTableList);
+					this.memberIncrease = data.memberIncrease;
+					this.intheDate(this.trendId);
 				}
+			},
+			intheDate: function(type) {
+				switch (Number(type)) {
+					case 0:
+						this.dataProcessing(this.consumeTableList);
+						break;
+					case 1:
+						this.dataProcessing(this.memberIncrease);
+						break;
+					case 2:
+						this.dataProcessing(this.consumeList);
+						break;
+				}
+			}, //放进数据
+			dataProcessing: function(data) { //数据处理
+				this.option.xAxis.data = [];
+				this.option.series[0].data = [];
+				for (let key in data) {
+					this.option.xAxis.data.push(key);
+					this.option.series[0].data.push(data[key]);
+				}
+				if (this.echarts) {
+					this.initEchart();
+				}
+			},
+			getTotal: function(dataList) { //求和
+				let list = dataList;
+				for (let key in list) {
+					list[key] = Number(list[key].cnt1) + Number(list[key].cnt2) + Number(list[key].cnt3);
+				}
+				return list;
 			}
 		},
 		components: {
