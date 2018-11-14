@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 15:38:07
+ * @Last Modified time: 2018-11-14 11:29:44
  */
 
 <template>
@@ -95,10 +95,10 @@ export default {
 		clickOperation(sym,row,index){
 			let {id,name} = row;
 			switch(sym){
-				case 'edit'://编辑报表
-					this.$router.push({path:'/admin/materialReport/createReport',query:{id:id}});								
+				case 'edit'://编辑模板
+					this.$router.push({path:'/admin/materialReport/creatTempMain',query:{id:id}});								
 					break;
-				case 'delete'://删除报表
+				case 'delete'://删除模板
 					this.delTemplate(id,index);
 					break;                
 				case 'generator'://生成报表
@@ -107,9 +107,7 @@ export default {
 				case 'view'://查看报表
 					this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:name,tempId:id}});
 					break;                
-
 			}
-
 		},
 
 
