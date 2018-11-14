@@ -15,24 +15,19 @@
 		</div>
 		<div class="tableWrap" v-show="!showEditGoods">
 			<el-table border :data="goodsList" style="width: 100%;text-align: center;" :header-cell-style="{'text-align': 'center'}">
-				<el-table-column prop="name" label="商品名称" width="100">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="发起砍价人数">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="帮砍人数">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="发券量">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="核销量">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="新增会员">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="优惠金额">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="优惠占比">
-				</el-table-column>
-				<el-table-column prop="needPeople" label="拉动消费">
-				</el-table-column>
+				<el-table-column prop="name" label="商品名称" width="200"> </el-table-column>
+				<template v-if="isBrand">
+					<el-table-column prop="launchNum" label="发起砍价人数"> </el-table-column>
+					<el-table-column prop="helperNum" label="帮砍人数"></el-table-column>
+					<el-table-column prop="income" label="券金收入"></el-table-column>
+					<el-table-column prop="fsCoin" label="返利金额"></el-table-column>
+					<el-table-column prop="grantNum" label="发券量"></el-table-column>
+				</template>
+				<el-table-column prop="useNum" label="核销量"></el-table-column>
+				<el-table-column v-if="isBrand" prop="newMemberNum" label="新增会员"></el-table-column>
+				<el-table-column prop="discount" label="优惠金额"></el-table-column>
+				<el-table-column prop="discountRatio" label="优惠占比"> </el-table-column>
+				<el-table-column prop="orderPrice" label="拉动消费"></el-table-column>
 				<el-table-column v-if="isBrand" prop="date" label="操作" width="100">
 					<template slot-scope="scope">
 						<template v-if="scope.row.status == 0">
@@ -57,8 +52,6 @@
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 
-let isBrand =
-	storage.session('userShop').currentShop.ischain == 3 ? true : false;
 // let isUpdate = false;
 export default {
 	data: () => {
@@ -68,7 +61,7 @@ export default {
 			showEditGoods: false,
 			selectGoods: null,
 			isBegin: false,
-			isBrand
+			isBrand: false
 		};
 	},
 	props: {
@@ -77,9 +70,9 @@ export default {
 	},
 	methods: {
 		goodsClose(needRefresh) {
-			if(needRefresh ||  this.$store.state.selectedActivityChange){
+			if (needRefresh || this.$store.state.selectedActivityChange) {
 				this.getDetail();
-				this.$store.commit('changeActivity',false);
+				this.$store.commit('changeActivity', false);
 			}
 			this.showEditGoods = false;
 		},
@@ -92,8 +85,8 @@ export default {
 				}
 			});
 			if (data) {
-				this.$message({type:'success',message: '上架成功'});
-				this.$store.commit('changeActivityList',true);
+				this.$message({ type: 'success', message: '上架成功' });
+				this.$store.commit('changeActivityList', true);
 				goods.status = '1';
 			}
 		},
@@ -106,37 +99,49 @@ export default {
 				}
 			});
 			if (data) {
-				this.$message({type:'success',message: '下架成功'});
-				this.$store.commit('changeActivityList',true);
+				this.$message({ type: 'success', message: '下架成功' });
+				this.$store.commit('changeActivityList', true);
 				// this.getDetail()
 				goods.status = '0';
 			}
 		},
 		// 编辑
-		editActivity(goods) {
-			this.$store.commit('selectGoods', goods);
+		editActivity(v) {
+			this.$store.commit('selectGoods', v);
 			this.showEditGoods = true;
 		},
 		// 按照时间过滤
 		async filterData() {
 			// this.goodsList = await http.getActivityDetail()
-			this.goodsList = this.goodsList.splice(
-				0,
-				this.goodsList.length - 1
-			);
+			// this.goodsList = this.goodsList.splice(
+			// 	0,
+			// 	this.goodsList.length - 1
+			// );
+			this.getDetail(1);
 		},
 		back() {
 			this.$emit('back');
 		},
-		async getDetail() {
-			let data = await http.activityGetActivityDetail({
-				data: {
-					actId: this.selectedActivity.id
-				}
+		async getDetail(isSearch) {
+			let param = {
+				brandId: this.brandId,
+				actId: this.selectedActivity.id
+			};
+			if (isSearch && this.qureyTime && this.qureyTime[0]) {
+				param.beginTime = ~~(this.qureyTime[0] / 1000);
+				param.endTime = ~~(this.qureyTime[1] / 1000);
+			}
+			let data = await http.statisticGetActivityGoods({
+				data: param
 			});
-			this.goodsList = data.goods;
-			this.isBegin = this.selectedActivity.isBegin;
-			console.log(this.isBegin);
+			if (data) {
+				data.forEach(v => {
+					v.discountRatio =
+						~~((v.discount / v.orderPrice) * 10000) / 100 + '%';
+				});
+				this.goodsList = data;
+				this.isBegin = this.selectedActivity.isBegin;
+			}
 		}
 	},
 	computed: {
@@ -145,6 +150,12 @@ export default {
 		}
 	},
 	created() {
+		let currentShop = storage.session('userShop').currentShop;
+		this.isBrand = currentShop.ischain == 3 ? true : false; //单店 0 直营1 加盟2 品牌3
+		this.brandId =
+			currentShop.ischain == 0 || currentShop.ischain == 3
+				? currentShop.id
+				: currentShop.brandId;
 		this.getDetail();
 		// this.goodsList = this.selectedGoods //this.activityDetail.goodsList;
 	},

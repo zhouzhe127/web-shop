@@ -119,7 +119,7 @@ function validateRequired(r, v, cb) {
 	}
 }
 function validateName(r, v, cb) {
-	if (!/^[\u4e00-\u9fa5()a-zA-Z0-9]+$/.test(v)) {
+	if (!/^([\u4e00-\u9fa5()a-zA-Z0-9]|\s)+$/.test(v)) {
 		cb(new Error('名称必须由中文、字母、数字以及英文小括号组成'));
 	} else {
 		cb();
