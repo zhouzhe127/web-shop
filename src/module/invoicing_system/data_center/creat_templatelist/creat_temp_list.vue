@@ -415,6 +415,7 @@
 
 			},
 			addColumnlist(type) {
+				this.isEdit = false;
 				if (type == 1) {
 					this.rowShow = true;
 					this.pSortObj = {
@@ -485,7 +486,6 @@
 					list[i][key].num = i + 1;
 					list[i][key].max = list.length;
 				}
-				this.isEdit = false;
 				return list;
 			},
 			resetColumn() { //刷新列表方法
