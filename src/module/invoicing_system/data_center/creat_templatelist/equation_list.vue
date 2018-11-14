@@ -247,7 +247,7 @@ export default {
 <style lang='less' scoped>
 	#equationList {
 		.tableHeard {
-			border: 1px #f5f7fa solid;
+			border: 1px #ebeef5 solid;
 			border-bottom: none;
 			padding: 15px;
 

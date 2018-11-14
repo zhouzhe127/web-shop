@@ -718,11 +718,14 @@ export default {
 			}
 		},
 		async getList(taskId){
+			let retObj = {};
 			let dataList = [];
 
 			//请求接口数据
-			dataList = await this.getHttp('MaterialstatisticGetStatisticData',{taskId});
-			if(!Array.isArray(dataList)) dataList = [];
+			retObj = await this.getHttp('MaterialstatisticGetStatisticData',{taskId});
+			if(Array.isArray(retObj.data)){
+				dataList = retObj.data;
+			} 
 
 			//数据字段转换
 			this.changeListAttr(dataList);

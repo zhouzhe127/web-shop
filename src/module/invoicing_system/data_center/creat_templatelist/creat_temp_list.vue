@@ -90,6 +90,15 @@
 <script>
 	import http from 'src/manager/http';
 	// import utils from 'src/verdor/utils';
+	import storage from 'src/verdor/storage';
+	let shopMessage = storage.session('userShop');
+	let shopList = [];
+	for (let item of shopMessage.shopList.brand) {
+		shopList = [...shopList, item, ...item.direct, ...item.franchise];
+	}
+	for (let item of shopMessage.shopList.noBrand) {
+		shopList = [...shopList, item];
+	}
 	export default {
 		data() {
 			return {
@@ -107,10 +116,164 @@
 				pScope: [], //行物料范围
 				pCollection: '', //行选择的集合
 				isEdit: false, //是否为编辑
-				editIndex: 0 //编辑项
+				editIndex: 0, //编辑项
+				formulaPercent: [ //是否半分比
+					{
+						label: '数字',
+						value: 0
+					},
+					{
+						label: '百分百',
+						value: 1
+					},
+				],
+				formulaRounding: [ //舍入规则
+					{
+						label: '四舍五入',
+						value: 0
+					},
+					{
+						label: '向上取值',
+						value: 1
+					},
+					{
+						label: '向下取值',
+						value: 2
+					},
+				],
+				id: ''
 			};
 		},
 		methods: {
+			async init() {
+				let data = await http.templateGetReportTemplateDetail({
+					data: {
+						id: this.id
+					}
+				});
+				if (data) {
+					this.listName = data.name;
+					this.sleRoleArr = this.getRoleById(data.position.split(','));
+					this.columnData = this.setColumnData(data.statisticItem);
+					this.tableData = this.setRowData(data.statisticScope);
+					// this.resetColumn();
+				}
+				console.log(this.columnData);
+				console.log(data);
+			},
+			getRoleById(arrId) {
+				let arrItem = [];
+				arrId.forEach(id => {
+					this.roleList.forEach(v => {
+						if (v.id == id) {
+							arrItem.push(v);
+						}
+					});
+				});
+				return arrItem;
+			},
+			setColumnData(columnData) { //处理编辑的列数据
+				let arrItem = [];
+				let sort = 0;
+				for (let item of columnData) {
+					sort++;
+					let obj = {};
+					obj.name = item.colName;
+					obj.item = {};
+					obj.type = item.type;
+					obj.item.name = this.getlistName(this.reportData, item.id, 'id', 'name');
+					obj.item.id = item.id;
+					let wareIdList = [];
+					item.relation.map(v => {
+						console.log(v.shopId);
+						v.id = v.shopId;
+						v.name = this.getlistName(shopList, v.shopId, 'id', 'name');
+						wareIdList = [...wareIdList, ...v.wid];
+					});
+					obj.warehouse = this.getWareArr(wareIdList);
+					obj.store = item.relation;
+					obj.sortObj = { //排序
+						num: sort,
+						max: columnData.length
+					};
+					let shopNameArr = [];
+					let wareNameArr = [];
+					item.relation.forEach(s => {
+						shopNameArr.push(this.getlistName(shopList, s.shopId, 'id', 'name'));
+						s.wid.forEach(w => {
+							wareNameArr.push(this.getlistName(this.wareList, w, 'id', 'name'));
+						});
+					});
+					obj.allShopName = shopNameArr.join(',');
+					obj.allWareName = wareNameArr.join(',');
+					if (item.type == 2) {
+						obj.item.formulaName = item.staticInfo.formula.replace(/id_(\d+)/g, (match, p1) => {
+							for (let base of this.reportData) {
+								if (p1 == base.id) {
+									return base.name;
+								}
+							}
+						});
+						//匹配 是否百分百
+						let isPercent = this.formulaPercent.filter((obj) => {
+							return obj.value == item.staticInfo.isPercent;
+						})[0].label;
+						//匹配 保留几位小数
+						let carryRule = this.formulaRounding.filter((obj) => {
+							return obj.value == item.staticInfo.carryRule;
+						})[0].label;
+						obj.item.formatName = `${isPercent}, ${item.staticInfo.reserveRule}位小数, ${carryRule}`;
+					}
+					arrItem.push(obj);
+				}
+				return arrItem;
+			},
+			getWareArr(arr) {
+				let arrItem = [];
+				arr.forEach(v => {
+					let obj = {
+						id: v,
+						name: this.getlistName(this.wareList, v, 'id', 'name')
+					};
+					arrItem.push(obj);
+				});
+				return arrItem;
+			},
+			setRowData(rowData) { //处理编辑的行数据
+				let arrItem = [];
+				let sort = 0;
+				for (let item of rowData) {
+					let obj = {
+						pScope: [],
+						pCollection: {}
+					};
+					sort++;
+					obj.pSortObj = { //排序
+						num: sort,
+						max: rowData.length
+					};
+					if (item.type == 3) {
+						obj.strTitle = `物料范围（${item.mid.length}）`;
+						obj.pScope = item.mid;
+					} else {
+						obj.pCollection = item.setInfo;
+						obj.strTitle = `${item.setInfo.name}(物料：${item.setInfo.mid.length}，单位：${item.setInfo.unit.name})`;
+					}
+					arrItem.push(obj);
+				}
+				return arrItem;
+			},
+			getlistName(...agurs) {
+				let [list, id, keyId, KeyName] = agurs;
+				let name = '';
+				for (let item of list) {
+					if (item[keyId] == id) {
+						name = item[KeyName];
+						break;
+					}
+				}
+				return name;
+			},
 			handleClose(index) {
 				this.sleRoleArr.splice(index, 1);
 			},
@@ -144,17 +307,17 @@
 				let arr = [];
 				for (let item of this.columnData) {
 					let obj = {};
-					Object.assign(obj,{
-						id:item.item.id,
-						type:item.type,
-						colName:item.name
+					Object.assign(obj, {
+						id: item.item.id,
+						type: item.type,
+						colName: item.name
 					});
 					let wareArr = [];
-					item.store.forEach(v=>{
+					item.store.forEach(v => {
 						let o = {};
-						Object.assign(o,{
-							shopId:v.id,
-							wid:v.wid
+						Object.assign(o, {
+							shopId: v.id,
+							wid: v.wid
 						});
 						wareArr.push(o);
 					});
@@ -168,10 +331,10 @@
 				for (let item of this.tableData) {
 					let obj = {};
 					if (item.pScope.length > 0) {
-						obj.type = 3;//物料范围
+						obj.type = 3; //物料范围
 						obj.mid = item.pScope;
 					} else {
-						obj.type = 4;//统计范围
+						obj.type = 4; //统计范围
 						obj.id = item.pCollection.id;
 						// obj.name = item.pCollection.name;
 					}
@@ -181,17 +344,17 @@
 			},
 			async sendallData() {
 				let rgx = /^[A-Za-z0-9_\u4e00-\u9fa5]+$/;
-				if(!rgx.test(this.listName)){
+				if (!rgx.test(this.listName)) {
 					this.$message.error('模板名称输入错误');
 					return;
 				}
 				let statisticItem = this.setXdata();
 				let statisticScope = this.setYdata();
-				if(statisticScope.length<=0){
+				if (statisticScope.length <= 0) {
 					this.$message.error('请选择添加行！');
 					return;
 				}
-				if(statisticItem.length<=0){
+				if (statisticItem.length <= 0) {
 					this.$message.error('请选择添加列！');
 					return;
 				}
@@ -199,27 +362,30 @@
 				this.sleRoleArr.forEach(v => {
 					arr.push(v.id);
 				});
-				if(arr.length<=0){
+				if (arr.length <= 0) {
 					this.$message.error('请选择职位权限');
 					return;
 				}
-				let data = await http.templateAddReportTemplate({
-					data: {
-						name: this.listName,
-						position: arr.join(','),
-						statisticItem: statisticItem,
-						statisticScope: statisticScope
-					}
+				let url = this.id ? 'templateEditReportTemplate' : 'templateAddReportTemplate';
+				let sendObj = {
+					name: this.listName,
+					position: arr.join(','),
+					statisticItem: statisticItem,
+					statisticScope: statisticScope
+				};
+				if (this.id) sendObj.id = this.id;
+				let data = await http[url]({
+					data: sendObj
 				});
 				if (data) {
 					window.history.go(-1);
 					this.$message({
 						type: 'success',
-						message: '添加成功!'
+						message: `${this.id?'修改':'添加'}成功!`
 					});
 				}
 			},
-			sendErr(str){
+			sendErr(str) {
 				this.$message.error(str);
 			},
 			async getRoleList() {
@@ -249,14 +415,18 @@
 
 			},
 			addColumnlist(type) {
+				this.isEdit = false;
 				if (type == 1) {
 					this.rowShow = true;
 					this.pSortObj = {
 						num: this.tableData.length + 1,
 						max: this.tableData.length + 1,
 					};
+					this.pScope = [];
+					this.pCollection = '';
 				} else {
-					this.columnListData.sortObj={
+					this.columnListData = {};
+					this.columnListData.sortObj = {
 						num: this.columnData.length + 1,
 						max: this.columnData.length + 1,
 					};
@@ -264,18 +434,18 @@
 				}
 			},
 			columnEmit(data) {
-				
+
 				if (data) {
 					this.columnListData = {};
 					console.log(data);
 					let check = true;
-					this.columnData.forEach(v=>{
-						if(v.name == data.name){
+					this.columnData.forEach(v => {
+						if (v.name == data.name && !this.isEdit) {
 							this.$message.error('添加列名重复，请修改！');
 							check = false;
 						}
 					});
-					if(!check) return false;
+					if (!check) return false;
 					data.allWareName = this.getStr(data.warehouse, 'name');
 					data.allShopName = this.getStr(data.store, 'name');
 					this.sortList(this.columnData, data, 'sortObj');
@@ -288,6 +458,7 @@
 				this.editIndex = index;
 				this.columnShow = true;
 				this.isEdit = true;
+				console.log(item);
 				Object.assign(this.columnListData, item);
 			},
 			editRow(item, index) {
@@ -315,7 +486,6 @@
 					list[i][key].num = i + 1;
 					list[i][key].max = list.length;
 				}
-				this.isEdit = false;
 				return list;
 			},
 			resetColumn() { //刷新列表方法
@@ -337,9 +507,25 @@
 					}
 					this.sortList(this.tableData, data, 'pSortObj');
 				}
+			},
+			async getneedData() {
+				let res = await http.All([{
+					httpId: 'materialreportGetReportItemList'
+				}, {
+					httpId: 'warehouseList'
+				}, {
+					httpId: 'materialreportGetStatisticItemFormulaList'
+				}]); //获取统计项数据
+				this.reportData = [...res[0].data, ...res[2].data.list];
+				this.wareList = res[1].data;
 			}
 		},
-		activated() {
+		async activated() {
+			if (this.$route.query.id) {
+				this.id = this.$route.query.id;
+				await this.getneedData();
+				this.init();
+			}
 			this.crageBtn();
 			this.getRoleList();
 		},
