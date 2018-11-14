@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="tableBox">
-			<el-table :data="tableYData" border>
+			<el-table :data="tableYData" style="width: 100%" border>
 				<el-table-column prop="strName" label="名称" width="200">
 				</el-table-column>
 				<el-table-column width="300" v-if="reset" v-for="(item, index) in tableXData" :key="index">
@@ -390,7 +390,7 @@
 
 		.tableBox {
 			display: inline-block;
-
+			width: 100%;
 			.detailsBtn {
 				// p {
 				//     text-align: center;

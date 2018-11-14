@@ -27,7 +27,7 @@
 			<el-button icon="el-icon-plus" @click="addColumnlist(1)" plain>添加行</el-button>
 			<el-button icon="el-icon-plus" @click="addColumnlist(2)" plain>添加列</el-button>
 		</div>
-		<div class="tableBox">
+		<div class="tableBox" style="width: 100%">
 			<el-table :data="tableData">
 				<el-table-column prop="date" label="序号" width="50">
 					<el-table-column type="index" label="#" width="50">
