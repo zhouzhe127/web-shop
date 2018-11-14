@@ -15,12 +15,13 @@
 						<span class="cont">{{chargeDetailInfo.type == 0 ? '首次激活' : '续费'}}</span>
 						<span class="price">
 							价格：
-							<span class="mys">￥{{chargeDetailInfo.renewPrice}}/ {{chargeDetailInfo.renewTime}}</span>
+							<span class="mys" v-if="chargeDetailInfo.type == 0">￥{{chargeDetailInfo.activationPrice}}/ {{chargeDetailInfo.activationTime}}</span>
+							<span class="mys" v-else-if="chargeDetailInfo.type == 1">￥{{chargeDetailInfo.renewPrice}}/ {{chargeDetailInfo.renewTime}}</span>
 						</span>
 					</div>
 					<!--续费价格说明-->
 					<div class="renew-info" v-if="chargeDetailInfo.type == 0">
-						续费费用为：￥{{chargeDetailInfo.activationPrice}} / {{chargeDetailInfo.activationTime}}
+						续费费用为：￥{{chargeDetailInfo.renewPrice}} / {{chargeDetailInfo.renewTime}}
 					</div>
 					<!--扫码支付-->
 					<div class="scan-pay">
@@ -33,7 +34,7 @@
 						</div>
 						<div class="pay-price fl scan-item" style="padding-top: 30px;">
 							<div class="mys" style="font-weight: bold;color: #000;font-size: 28px;margin-bottom: 10px;">
-								￥{{chargeDetailInfo.type == 0 ? chargeDetailInfo.renewPrice : chargeDetailInfo.activationPrice}}
+								￥{{chargeDetailInfo.type == 0 ? chargeDetailInfo.activationPrice : chargeDetailInfo.renewPrice}}
 							</div>
 							<div style="margin-bottom:10px;">请扫码完成支付</div>
 							<span style="font-size: 12px;color: #999;">{{reshowCont}}</span>
