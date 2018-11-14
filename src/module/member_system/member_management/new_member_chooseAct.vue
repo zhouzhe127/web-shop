@@ -149,6 +149,6 @@ export default {
 }
 
 .sp .effect {
-	background: url('./../../../src/res/images/sign.png') #f2f2f2 no-repeat right bottom;
+	background: url('./../../../../src/res/images/sign.png') #f2f2f2 no-repeat right bottom;
 }
 </style>

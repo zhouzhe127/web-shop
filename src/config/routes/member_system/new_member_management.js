@@ -1,2 +1,2 @@
 /* eslint-disable */
-module.exports={"path":"memberManagement","children":[{"path":"","url":"src/module/member_system/new_member_management"},{"path":"detail","url":"src/module/member_system/member_manage_detail"}]}
+module.exports={"path":"memberManagement","children":[{"path":"","url":"src/module/member_system/member_management/new_member_management"},{"path":"detail","url":"src/module/member_system/member_management/member_manage_detail"}]}
