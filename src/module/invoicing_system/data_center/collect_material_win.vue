@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-06 16:52:10
+ * @Last Modified time: 2018-11-14 16:18:57
  */
 <template>  
 	<el-dialog :title="title" center :width="width"  :visible.sync="openWin" @close="()=>{closeWin('cancel')}">
