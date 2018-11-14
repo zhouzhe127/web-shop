@@ -203,6 +203,7 @@ export default {
 					this[item] = this.pObj[item];
 				}
 				this.itemType = this.pObj.type;
+				this.itemObj = this.pObj.item;
 				this.storeList = this.pObj.store;
 				this.wareList = this.pObj.warehouse;
 				if(this.pObj.type==1){
