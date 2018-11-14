@@ -14,7 +14,7 @@
 		<div class="inpStyle">
 			<span class="required label">查看权限</span>
 			<div class="btnbox">
-				<el-tag v-for="(tag,i) in sleRoleArr" style="margin:0 0 15px 15px;" :key="tag.name" @close='handleClose(i)'
+				<el-tag v-for="(tag,i) in sleRoleArr" style="margin:0 0 15px 15px;" :key="i" @close='handleClose(i)'
 				 closable>
 					{{tag.name}}
 				</el-tag>
