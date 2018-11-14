@@ -390,7 +390,7 @@
 
 		.tableBox {
 			display: inline-block;
-			width: 100%;
+			max-width: 100%;
 			.detailsBtn {
 				// p {
 				//     text-align: center;
