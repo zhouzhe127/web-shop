@@ -1137,5 +1137,10 @@ export default {
 	"materialGetMaterialDataByIds":{
 		url:b+"material/getMaterialDataByIds",				//获取多个物料详情
 		method: 'get',
+	},
+	"materialreportGetMaterialErrorLog":{
+		url:b+"materialreport/getMaterialErrorLog",				//生成物料报表-错误日志
+		method: 'get',
 	}
+	
 }

@@ -26,7 +26,7 @@
 									<el-tab-pane label="基础项" name="0">
 										<div class="radio-container">
 											<div class="radio-box" v-for="item in baseList" :key="item.id">
-												<el-button border @click="addItem(item.name)" :disabled="item.type==0">{{item.name}}</el-button>
+												<el-button border @click="addItem(item.name)">{{item.name}}</el-button>
 											</div>
 										</div>
 									</el-tab-pane>

@@ -221,6 +221,12 @@ export default {
 		async getBase(){
 			//基础项集合
 			let data = await http.materialreportGetReportItemList();
+			for(let i=0;i<data.length;i++){
+				if(data[i].type==0){
+					data.splice(i,1);
+					i--;
+				}
+			}
 			this.baseList = data;
 			this.formulaData.base = this.baseList;
 			//公式项集合
