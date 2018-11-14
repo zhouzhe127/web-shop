@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 16:39:28
+ * @Last Modified time: 2018-11-14 09:52:26
  */
 
 <template>
@@ -104,18 +104,11 @@ export default {
 	methods: {
 		//全选,反选
 		selectAllchange(bool){
-			let {canChoose} = this.divideList(this.tableData);
-			this.changeListAttrVal(canChoose,'checked',bool);
-			this.addDelSelectList(canChoose,bool);
+			this.changeListAttrVal(this.tableData,'checked',bool);
+			this.addDelSelectList(this.tableData,bool);
 		},
 		//行选中
 		changeRowSelect(row,bool){
-			if(bool){
-				let {canChoose,checkedList} = this.divideList(this.tableData);
-				this.selectAll = canChoose.length == checkedList.length;
-			}else{
-				this.selectAll = false;				
-			}
 			this.addDelSelectList([row],bool);
 		},
 
@@ -167,9 +160,10 @@ export default {
 					if(Array.isArray(retObj.data)){
 						this.tableData = this.mapListAttr(retObj.data);
 						this.matchSelectList(this.tableData,this.selectList);
+						this.selectAll = this.isSelectCurrentPage(this.tableData);
 					}
 				},
-				5000,
+				15000,
 				0,
 				true,
 				()=>{
@@ -308,7 +302,16 @@ export default {
 
 
 
-
+		//是否选择当前页
+		isSelectCurrentPage(list){
+			let val = true;
+			let attr = 'checked';
+			let sym = false;
+			sym = list.every((ele)=>{
+				return ele[attr] == val;
+			});
+			return sym;
+		},
 		matchSelectList(list,selectList){
 			let matchAttr = 'id';
 			let attr = 'checked';
