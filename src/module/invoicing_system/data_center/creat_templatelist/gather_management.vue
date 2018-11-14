@@ -48,7 +48,7 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pUnitId="editData.unit?editData.unit.id:null"
+		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
 		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
 	</div>
 </template>
@@ -225,7 +225,7 @@
 <style lang='less' scoped>
 	#equationList {
 		.tableHeard {
-			border: 1px #f5f7fa solid;
+			border: 1px #ebeef5 solid;
 			border-bottom: none;
 			padding: 15px;
 

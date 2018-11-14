@@ -1120,7 +1120,10 @@ export default {
 		url: b + "template/deleteReportTemplate", //删除自定义报表模板
 		method: 'post'
 	},
-
+	"templateEditReportTemplate": {
+		url: b + "template/editReportTemplate", //修改自定义报表模板
+		method: 'post'
+	},
 	"templateAddReportTemplate": {
 		url: b + "template/addReportTemplate", //添加自定义报表模板		
 		method: 'post'
@@ -1134,13 +1137,13 @@ export default {
 		method: 'get',
 		type: 'file'
 	},
-	"materialGetMaterialDataByIds":{
-		url:b+"material/getMaterialDataByIds",				//获取多个物料详情
+	"materialGetMaterialDataByIds": {
+		url: b + "material/getMaterialDataByIds", //获取多个物料详情
 		method: 'get',
 	},
-	"materialreportGetMaterialErrorLog":{
-		url:b+"materialreport/getMaterialErrorLog",				//生成物料报表-错误日志
+	"materialreportGetMaterialErrorLog": {
+		url: b + "materialreport/getMaterialErrorLog", //生成物料报表-错误日志
 		method: 'get',
 	}
-	
+
 }
