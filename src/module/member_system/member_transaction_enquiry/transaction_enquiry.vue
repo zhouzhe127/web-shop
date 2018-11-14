@@ -612,7 +612,7 @@
 			selectStore: () =>
 				import ( /*webpackChunkName: 'transaction_shop'*/ './transaction_shop.vue'),
 			memberDetail: () =>
-				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_manage_detail'),
+				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_management/member_manage_detail'),
 		}
 	};
 </script>

@@ -4,7 +4,7 @@
 			<div class="member">
 				<div class="top">
 					<h3>会员信息</h3>
-					<img class="img" @click='modifyMember' src='../../res/icon/iconchange.png' />
+					<img class="img" @click='modifyMember' src='../../../res/icon/iconchange.png' />
 				</div>
 				<div class="memberMsg">
 					<ul class="message">

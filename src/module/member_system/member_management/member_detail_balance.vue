@@ -22,14 +22,14 @@
 					<textarea rows="4" cols="62" style="margin-left: 28px;" placeholder="请输入变动原因" v-model="obj.behavior" maxlength="30"></textarea>
 				</div>
 				<p class="memberNotice">
-					<img src="../../res/images/handle-tips.png" style="width: 17px;height: 17px;margin-right: 5px;" />最佳10个字，最多30个字，在余额详情显示</p>
+					<img src="../../../res/images/handle-tips.png" style="width: 17px;height: 17px;margin-right: 5px;" />最佳10个字，最多30个字，在余额详情显示</p>
 
 				<div class="member-box">
 					<p class="fl box-left">操作</p>
 					<p class="fl" style="width: auto;margin-left: 28px;margin-right:10px;font-size: 16px;" v-if="type == '0'"> {{amount}}{{operationType}}{{obj.amount}}={{changeNum()}}</p>
 					<p class="fl" style="width: auto;margin-left: 28px;margin-right:10px;font-size: 16px;" v-else>{{point}}{{operationType}}{{obj.point}}={{changeNum()}}</p>
 					<p class="fl" style="height: 43px;line-height: 43px;display: flex;align-items: center;color: #A5A5A5;font-size: 14px;">
-						<img src="../../res/images/handle-tips.png" style="width: 17px;height: 17px;margin-right: 7px;" />在原有余额上增加或减少</p>
+						<img src="../../../res/images/handle-tips.png" style="width: 17px;height: 17px;margin-right: 7px;" />在原有余额上增加或减少</p>
 				</div>
 				<div class="reason">
 					<p class="fl box-left" style="margin-top: 5px;">备注</p>

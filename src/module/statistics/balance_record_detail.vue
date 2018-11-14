@@ -284,7 +284,7 @@ export default {
         cardDetail: () =>
             import ( /*webpackChunkName: 'card_queries_detail'*/ './../member_system/card_queries_detail'),
         memberDetail: () =>
-            import ( /*webpackChunkName: 'member_manage_detail'*/ './../member_system/member_manage_detail'),
+            import ( /*webpackChunkName: 'member_manage_detail'*/ './../member_system/member_management/member_manage_detail'),
     },
     created: function() {
         let obj1 = {

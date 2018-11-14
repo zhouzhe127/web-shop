@@ -663,7 +663,7 @@ export default {
 }
 
 .actives {
-	background: url('../../res/icon/selected.png') center center no-repeat, #28A8E0;
+	background: url('../../../res/icon/selected.png') center center no-repeat, #28A8E0;
 }
 
 .arrow {
