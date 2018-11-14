@@ -202,6 +202,7 @@ export default {
 				for(let item of arr){
 					this[item] = this.pObj[item];
 				}
+				this.itemType = this.pObj.type;
 				this.storeList = this.pObj.store;
 				this.wareList = this.pObj.warehouse;
 				if(this.pObj.type==1){
