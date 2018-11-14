@@ -289,7 +289,6 @@ export default {
 		},
 		//选择统计项
 		radioChange(type,res){
-			console.log(res);
 			if(res===null) return;
 			this.visible = false;
 			let itemType='',itemName='';
