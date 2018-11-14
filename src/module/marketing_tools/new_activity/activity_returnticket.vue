@@ -20,9 +20,14 @@
 			<span class="online-sub fl required">活动时间</span>
 			<div class="rightHalf">
 				<!--日期选择和搜索框-->
-				<el-date-picker v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false" @change="chooseTime">
-				</el-date-picker>
-				<span class="returnInt">共{{returnInt}}天</span>
+				<div class="fl" style="cursor: pointer;">
+					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp">
+					</el-date-picker>
+					<span class="fl" style="width: 20px;text-align: center;">-</span>
+					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp">
+					</el-date-picker>
+				</div>
+				<span class="fl returnInt">共{{returnInt}}天</span>
 			</div>
 		</div>
 		<!-- 活动对象 -->
@@ -101,7 +106,7 @@
 </template>
 <script>
 	import storage from 'src/verdor/storage';
-	//import utils from 'src/verdor/utils';
+	import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
 	//import global from 'src/manager/global';
 
@@ -109,6 +114,14 @@
 		data() {
 			return {
 				edit: false, //是否为编辑
+				startObj: {
+					time: utils.getTime({
+						time: new Date()
+					}).start
+				}, //开始时间
+				endObj: {
+					time: new Date().setHours(23, 59, 59, 999)
+				}, //结束时间				
 				editId: '', //编辑id
 				actName: '', //生日活动名称
 				explain: '', //生日活动说明
@@ -145,7 +158,6 @@
 				}],
 				selectCoupon: [], //选中的列表
 				isactivityDetail: true, //是否查看详情
-				valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 				returnInt: 1, //相隔的天数
 				showCoupon: false,
 				chooseType: '', //判断选择的消费券还是赠送券
@@ -166,12 +178,8 @@
 					this.contentSetting = this.contentSetting.substr(0, 150);
 				}
 			},
-			'valueTime': {
-				handler: function() {
-					this.timeChange();
-				},
-				deep: true,
-			}
+			'startObj.time': 'timeChange',
+			'endObj.time': 'timeChange',
 		},
 		methods: {
 			valiData: function(content, title, winType) { //弹窗提示格式化
@@ -218,9 +226,13 @@
 					this.valiData('请输入活动名称');
 					return false;
 				}
-				if (this.valueTime[0] < new Date().setHours(0, 0, 0, 0)) {
+				if (this.startTime < new Date().setHours(0, 0, 0, 0)) {
 					this.valiData('开始时间不能小于当前时间');
 					return false;
+				}
+				if(this.startTime - this.endTime > 0){
+					this.valiData('开始时间不能大于结束时间');
+					return false;					
 				}
 				if (this.vouchersCoupon.length == 0) {
 					this.valiData('请选择消费券关联优惠券');
@@ -240,7 +252,7 @@
 						useCouponIds: this.vouchersCoupon, //消费券
 						giveCouponIds: this.giftCoupon, //返券					
 					},
-					pushChannel: this.goodsSelect.toString().replace(/,/g, ''),//推送渠道
+					pushChannel: this.goodsSelect.toString().replace(/,/g, ''), //推送渠道
 					msgContent: this.contentSetting //内容设置
 				};
 				arr.push(obj);
@@ -254,15 +266,15 @@
 							objectType: 2, //活动对象
 							getType: 0, //获得方式
 							isAuto: type, //保存 
-							startTime: parseInt(this.valueTime[0] / 1000), //开始时间
-							endTime: parseInt(this.valueTime[1] / 1000), //结束时	
+							startTime: parseInt(this.startObj.time / 1000), //开始时间
+							endTime: parseInt(this.endObj.time / 1000), //结束时	间	
 							rule: JSON.stringify(arr)
 						}
 					});
 				} else {
 					this.activityDetail.name = this.actName; //活动名称
-					this.activityDetail.startTime = parseInt(this.valueTime[0] / 1000); //开始时间
-					this.activityDetail.endTime = parseInt(this.valueTime[1] / 1000); //结束时间
+					this.activityDetail.startTime = parseInt(this.startObj.time / 1000); //开始时间
+					this.activityDetail.endTime = parseInt(this.endObj.time / 1000); //结束时间	
 					this.activityDetail.explain = this.explain; //活动说明
 					this.activityDetail.rule = arr;
 					this.activityDetail.isAuto = type;
@@ -288,7 +300,8 @@
 				});
 				this.activityDetail = data;
 				this.actName = data.name; //活动名称
-				this.valueTime = [data.startTime * 1000, data.endTime * 1000];//开始时间 结束时间
+				this.startObj.time = data.startTime * 1000; //开始时间
+				this.endObj.time = data.endTime * 1000; //结束时间
 				let couponIds = JSON.parse(data.rule[0].couponIds);
 				this.vouchersCoupon = couponIds.useCouponIds; //消费券
 				this.giftCoupon = couponIds.giveCouponIds; //赠券
@@ -301,10 +314,10 @@
 			timeChange: function() {
 				//相差天数计算
 				this.returnInt = Math.ceil(
-					(new Date(this.valueTime[1]).getTime() -
-						new Date(this.valueTime[0]).getTime()) /
+					(new Date(this.endObj.time).getTime() -
+						new Date(this.startObj.time).getTime()) /
 					(1000 * 60 * 60 * 24)
-				) + 1;
+				);
 			},
 		},
 		components: {
