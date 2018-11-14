@@ -1092,10 +1092,20 @@ export default {
 					let arr = allShopList.brand;
 					for (let i = 0; i < arr.length; i++) {
 						let obj = arr[i];
-						obj.directNum = obj.direct.length;
-						obj.franchiseNum = obj.franchise.length;
 						if (obj.ischain == '3') {
 							if (obj.status == '0') {
+								for(let j=0;j<obj.direct.length;j++){
+									if(obj.direct[j].status == '3'){
+										obj.direct.splice(j,1);
+										j--;
+									}
+								}
+								for(let j=0;j<obj.franchise.length;j++){
+									if(obj.franchise[j].status == '3'){
+										obj.franchise.splice(j,1);
+										j--;
+									}
+								}
 								//品牌成功的列表
 								this.brandList.push(obj);
 							} else if (obj.status == '1') {
@@ -1106,6 +1116,8 @@ export default {
 								this.examinebrandFail.push(obj);
 							}
 						}
+						obj.directNum = obj.direct.length;
+						obj.franchiseNum = obj.franchise.length;
 					}
 				}
 			} else {
