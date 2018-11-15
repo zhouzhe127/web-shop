@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-15 13:58:54
+ * @Last Modified time: 2018-11-15 17:31:59
  */
 
 <template>
@@ -163,7 +163,7 @@ export default {
 			let subObj = {
 				page : this.pageObj.currentPage,
 				size : this.pageObj.pageSize,
-				id : this.template.id,
+				templateId : this.template.id,
 			};
 			
 			this.taskTimer.rList = Timer.add(
