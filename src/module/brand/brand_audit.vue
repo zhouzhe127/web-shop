@@ -268,11 +268,11 @@
 										<li>{{items.telephone}}</li>
 										<li style="width:20%;cursor: pointer;">
 											<section class="oBox" v-if="franchiseesTotal[0] && franchiseesTotal[0].length>0&&index == 0">
-												<template v-if="items.availableState == 0 || items.availableState == 2">
+												<template v-if="!items.availableState || items.availableState == 0 || items.availableState == 2">
 													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
 													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 												</template>
-												<template v-else-if="items.availableState == 1">
+												<template v-else-if="items.availableStateitems && availableState == 1">
 													<div style="width: 100%;text-align: center;" @click="chargeActivate(items,index,indexs)">充值激活</div>
 												</template>
 
@@ -343,12 +343,12 @@
 										<li>{{items.telephone}}</li>
 										<li style="width:20%;cursor: pointer;">
 											<section class="oBox" v-if="directlyTotal[0] && directlyTotal[0].length>0&&index == 0">
-												<template v-if="items.availableState == 0 || items.availableState == 2">
+												<template v-if="!items.availableState || items.availableState == 0 || items.availableState == 2">
 													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
 													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 												</template>
 												<!--充值激活-->
-												<template v-else-if="items.availableState == 1">
+												<template v-else-if="items.availableState && items.availableState == 1">
 													<div style="width: 100%;text-align: center;" @click="chargeActivate(items,index,indexs)">充值激活</div>
 												</template>
 											</section>
