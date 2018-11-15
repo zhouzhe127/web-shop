@@ -412,10 +412,7 @@
 				return global.comUnit(num,value,def,min);
 			},
 			myAlert(content) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: content,
-				});
+				this.$message({message: content,type: 'error'});
 			},
 			setSendObj(isEdit){//设置发送数据 新建/修改 模板公用
 				if(this.storeAll){
