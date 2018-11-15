@@ -13,6 +13,9 @@
 			<span style="font-size:16px;">当前门店使用权限已到期，可能会影响您正常使用系统，请咨询系统顾问进行续约</span>
 			<el-button size="mini" round style="width:80px;" @click="toRecharge">去充值</el-button>
 		</div>
+		<div class="renew-topUp" v-else-if="currentShop.availableState === 3">
+			<span style="font-size:16px;">当前门店使用权限已到期，可能会影响您正常使用系统，请咨询系统顾问进行续约</span>
+		</div>
 
 		<!--充值弹窗-->
 		<chargeWin @toWin="toWin" v-if="winShow" :currentDetail="currentShop" @changeDetail="changeDetail"></chargeWin>

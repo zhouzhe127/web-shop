@@ -268,7 +268,7 @@
 										<li>{{items.telephone}}</li>
 										<li style="width:20%;cursor: pointer;">
 											<section class="oBox" v-if="franchiseesTotal[0] && franchiseesTotal[0].length>0&&index == 0">
-												<template v-if="!items.availableState || items.availableState == 0 || items.availableState == 2">
+												<template v-if="!items.availableState || items.availableState == 0 || items.availableState == 2 || items.availableState == 3">
 													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
 													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 												</template>
@@ -343,7 +343,7 @@
 										<li>{{items.telephone}}</li>
 										<li style="width:20%;cursor: pointer;">
 											<section class="oBox" v-if="directlyTotal[0] && directlyTotal[0].length>0&&index == 0">
-												<template v-if="!items.availableState || items.availableState == 0 || items.availableState == 2">
+												<template v-if="!items.availableState || items.availableState == 0 || items.availableState == 2 || items.availableState == 3">
 													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
 													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 												</template>
