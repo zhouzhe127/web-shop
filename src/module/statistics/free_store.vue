@@ -93,6 +93,7 @@
 				<div class="title">
 					<span>操作</span>
 					<span>商品名称</span>
+					<span>商品编码</span>
 					<span>赠品数量</span>
 					<span>赠品金额</span>
 				</div>
@@ -100,6 +101,7 @@
 					<li v-for="(item,index) in returnList" :key="index">
 						<span class="show-order light" :data-index="index">查看详情</span>
 						<span>{{item.goodsName}}</span>
+						<span>{{item.goodsCode}}</span>
 						<span>{{item.freeNum}}</span>
 						<span>{{item.freePrice}}</span>
 					</li>

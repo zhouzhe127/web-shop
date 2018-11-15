@@ -102,7 +102,7 @@
 					<li v-for="(item,index) in returnList" :key="index">
 						<span class="show-order light" :data-index="index">查看详情</span>
 						<span :title="item.goodsName">{{item.goodsName}}</span>
-						<span :title="item.goodsName">{{item.goodsCode}}</span>
+						<span :title="item.goodsCode">{{item.goodsCode}}</span>
 						<span :title="item.returnNum">{{item.returnNum}}</span>
 						<span :title="item.returnPrice">{{item.returnPrice}}</span>
 						<div style="position:relative;display:inline-block;width:15%;">
