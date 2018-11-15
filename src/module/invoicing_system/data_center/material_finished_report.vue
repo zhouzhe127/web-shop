@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-15 11:59:00
+ * @Last Modified time: 2018-11-15 13:58:54
  */
 
 <template>
@@ -159,7 +159,7 @@ export default {
 
 
 		//获取报表列表
-		async getReportList(){
+		getReportList(){
 			let subObj = {
 				page : this.pageObj.currentPage,
 				size : this.pageObj.pageSize,
