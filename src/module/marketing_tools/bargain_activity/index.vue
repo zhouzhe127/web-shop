@@ -28,7 +28,7 @@
 						</template>
 					</el-table-column>
 					<template v-if="isBrand">
-						<!-- <el-table-column prop="launchNum" label="活动状态"></el-table-column> -->
+						<el-table-column prop="statusText" label="活动状态"></el-table-column>
 						<el-table-column prop="goodsNum" label="商品数量"> </el-table-column>
 						<el-table-column prop="goodsNum" label="发券量"></el-table-column>
 						<el-table-column prop="launchNum" label="发起砍价人数"></el-table-column>
@@ -139,6 +139,7 @@ export default {
 				);
 				v.formatBeginTime = utils.format(v.beginTime, 'yyyy年MM月dd hh:mm');
 				v.formatEndTime = utils.format(v.endTime, 'yyyy年MM月dd hh:mm');
+				v.statusText = ['未开始','进行中','已结束'][v.status] || '未知';
 				return v;
 			});
 		},
