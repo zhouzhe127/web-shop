@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-14 09:52:26
+ * @Last Modified time: 2018-11-15 11:59:00
  */
 
 <template>
@@ -34,7 +34,10 @@
 			<el-table-column min-width="200px" label="报表名称" prop="name">
 			</el-table-column>
 
-			<el-table-column  min-width="150px"  label="状态" prop="state">
+			<el-table-column  min-width="150px"  label="状态">
+				<span slot-scope="{row,column}" >
+					{{row.percent}}%
+				</span>
 			</el-table-column>
 
 			<el-table-column  min-width="150px"  label="生成时间" prop="createTime">
@@ -49,8 +52,8 @@
 			<el-table-column  min-width="250px"  label="操作" >
 				<span slot-scope="{row,column}" >
 					<span class="operation" @click="clickOperation('delete',row)">删除</span>
-					<span class="operation" @click="clickOperation('view',row)">查看</span>
-					<span class="operation" @click="clickOperation('export',row)">导出</span>
+					<span class="operation" :style="{'cursor':row.percent != percent ? 'not-allowed' : 'pointer'}"   @click="clickOperation('view',row)">查看</span>
+					<span class="operation" :style="{'cursor':row.percent != percent ? 'not-allowed' : 'pointer'}"  @click="clickOperation('export',row)">导出</span>
 					<span v-if="row.error" class="operation error" @click="clickOperation('error',row)">异常</span>
 				</span>
 			</el-table-column>
@@ -90,7 +93,7 @@ export default {
 	data () {
 		return {
 			loading:false,
-
+			percent : 100,						//报表的最终状态
 			tableData:[],
 			template:{},                        //模板
 			pageObj:{},
@@ -99,6 +102,7 @@ export default {
 			},
 			selectAll:false,                    //全选
 			selectList:[],                      //选中的列表
+
 		};
 	},
 	methods: {
@@ -110,6 +114,7 @@ export default {
 		//行选中
 		changeRowSelect(row,bool){
 			this.addDelSelectList([row],bool);
+			this.selectAll = this.isSelectCurrentPage(this.tableData);
 		},
 
 		clickOperation(sym,item){
@@ -119,9 +124,17 @@ export default {
 					this.delTemplate(`确认删除 ${item.name} 报表吗?`,item.id);
 					break;
 				case 'view':
+					if(item.percent != this.percent){
+						this.$message('报表正在生成中,请稍后...');
+						return;
+					}
 					this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id}});
 					break;
 				case 'export':
+					if(item.percent != this.percent){
+						this.$message('报表正在生成中,请稍后...');
+						return;
+					}
 					this.getHttp('materialreportExportMaterialReportExcel',{id:item.id});
 					break;
 				case 'error':
@@ -161,6 +174,9 @@ export default {
 						this.tableData = this.mapListAttr(retObj.data);
 						this.matchSelectList(this.tableData,this.selectList);
 						this.selectAll = this.isSelectCurrentPage(this.tableData);
+						if(this.isSelectCurrentPage(this.tableData,{val:this.percent,attr:'percent'})){
+							this.clearTaskTimer('rList');
+						}
 					}
 				},
 				15000,
@@ -193,7 +209,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(()=>{
-				this.getHttp('materialreportDeleteMaterialByIds',ids)
+				this.getHttp('materialreportDeleteMaterialByIds',{ids:ids})
 					.then((res)=>{
 						if(res){
 							this.$message('删除成功!');  
@@ -216,13 +232,13 @@ export default {
 				let temp = {
 					id : ele.id,                                    //报表id
 					name : ele.objName,                             //报表名称
-					state : '100%',                                 //状态
 					createTime : ele.createTime,                    //生成时间
 					scope : ele.beginTime+' 至 '+ele.endTime,         //数据时间范围
 					createUName : ele.createUName,                  //生成人   
 					checked : false,                                //是否选中
 					disabled : false,                               //是否可以操作  
-					error : isError									//是否存在异常			
+					error : isError,									//是否存在异常			
+					percent : ele.percent
 				};
 				arr.push(temp);
 			}
@@ -303,10 +319,8 @@ export default {
 
 
 		//是否选择当前页
-		isSelectCurrentPage(list){
-			let val = true;
-			let attr = 'checked';
-			let sym = false;
+		isSelectCurrentPage(list,obj={val:true,attr:'checked'}){
+			let {val,attr,sym=false} = obj;
 			sym = list.every((ele)=>{
 				return ele[attr] == val;
 			});
@@ -353,6 +367,9 @@ export default {
 <style lang='less' scoped>
 	.box{
 		padding-top:15px;
+	}
+	.not-allow{
+		cursor: not-allowed;
 	}
 	.table-title{
 		border:1px solid #EAEEF5;
