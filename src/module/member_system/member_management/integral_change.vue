@@ -129,7 +129,7 @@
 				}
 
 				if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
-					'10' || item.type == '11') {
+					'10' || item.type == '11' || item.type == '33') {
 					return operate + item.operatePoint;
 				} else {
 					if (item.type == '1' || item.type == '6') {
