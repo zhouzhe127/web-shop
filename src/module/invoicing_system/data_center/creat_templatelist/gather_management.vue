@@ -48,7 +48,7 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
+		<createCollectionCom v-if="showCreatWin" :title="isEdit?'编辑集合':'新建集合'" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
 		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
 	</div>
 </template>
@@ -69,7 +69,8 @@
 				loading: true,
 				reset: true,
 				checkAll: false,
-				isIndeterminate: false
+				isIndeterminate: false,
+				isEdit:false
 			};
 		},
 		methods: {
@@ -109,6 +110,7 @@
 					icon: 'el-icon-plus',
 					fn: () => {
 						this.editData = {};
+						this.isEdit = false;
 						this.showCreatWin = true;
 					}
 				}]);
@@ -123,6 +125,7 @@
 			editList(data) {
 				this.showCreatWin = true;
 				this.editData = data;
+				this.isEdit = true;
 				console.log(data);
 			},
 			dleSelection(data) {
