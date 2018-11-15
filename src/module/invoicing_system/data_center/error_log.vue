@@ -55,6 +55,7 @@ export default {
 		};
 	},
 	mounted() {
+		this.initBtn();
 		this.id = this.$route.query.id;
 		this.name = this.$route.query.name;
 		this.initData();
