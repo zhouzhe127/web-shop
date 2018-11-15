@@ -89,10 +89,12 @@
 				<div class="rightHalf">
 					<el-switch v-model="isAmountCoupon" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
-				<el-tooltip placement="right">
-					<div slot="content">开启后,会员余额与优惠券可共同使用;关闭后,若使用会员余额则无法使用优惠券,反之使用优惠券规则无法使用会员余额。</div>
-					<i class="el-icon-question" style="font-size:24px;line-height:40px;"></i>
-				</el-tooltip>					
+				<!-- 	<div class="eltips"> -->
+						<el-tooltip placement="right">
+							<div slot="content">开启后,会员余额与优惠券可共同使用;关闭后,若使用会员余额则无法使用优惠券,反之使用优惠券规则无法使用会员余额。</div>
+							<i class="el-icon-question" style="font-size: 18px;"></i>
+						</el-tooltip>
+					<!-- </div> -->
 				</div>
 				<div class="clearfix fl" v-if='payMeals'>
 					<span class="online-sub fl"></span>
@@ -610,6 +612,12 @@
 		height: auto;
 		float: left;
 		line-height: 40px;
+	}
+	#sweepCode .online-box .rightHalf .eltips{
+		width: 24px;
+		height: 24px;
+		float: left;
+		margin: 8px 0 8px 10px;
 	}
 
 	#sweepCode .online-box .el_input {
