@@ -58,7 +58,7 @@
                 <!--选择标签-->
                 <section class="obox">
                     <el-form-item label="标签">
-                        <el-input placeholder="请输入内容" v-model="labelName" class="input-add-tag">
+                        <el-input @keyup.enter.native="addlabel" clearable placeholder="请输入内容" v-model="labelName" class="input-add-tag">
                             <el-button slot="append" icon="el-icon-check" @click="addlabel"></el-button>
                         </el-input>
                         <el-tag type="success" v-for="(v,i) in labelNameList" :key="i" @close="closeLabel(v,i)" style="margin:0 5px" closable>{{v}}</el-tag>
