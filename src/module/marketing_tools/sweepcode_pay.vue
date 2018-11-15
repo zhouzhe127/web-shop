@@ -89,6 +89,10 @@
 				<div class="rightHalf">
 					<el-switch v-model="isAmountCoupon" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
+				<el-tooltip placement="right">
+					<div slot="content">开启后,会员余额与优惠券可共同使用;关闭后,若使用会员余额则无法使用优惠券,反之使用优惠券规则无法使用会员余额。</div>
+					<i class="el-icon-question" style="font-size:24px;line-height:40px;"></i>
+				</el-tooltip>					
 				</div>
 				<div class="clearfix fl" v-if='payMeals'>
 					<span class="online-sub fl"></span>

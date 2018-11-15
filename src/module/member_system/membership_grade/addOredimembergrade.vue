@@ -509,6 +509,7 @@
 				// 	this.validata('默认等级升级金额必须为0');
 				// 	return false;
 				// }
+				if (!this.checkForm()) return;
 				await http.editMemberlevel({
 					data: {
 						id: this.gid, //等级id
