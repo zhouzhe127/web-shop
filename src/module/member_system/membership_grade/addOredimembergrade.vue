@@ -351,12 +351,12 @@
 				}
 				//升至改等级赠送
 				if (this.intereststatus) {
-					if (this.selectCoupon.length == 0 && this.presentIntegral == '') {
+					if (this.selectCoupon.length == 0 && this.presentIntegral.length == 0) {
 						this.validata('升至该等级时，该赠送些什么给会员呢，不需要赠送请关闭该功能呦~');
 						return false;
 					}
-					if (Number(this.presentIntegral) < 1 || Number(this.presentIntegral) > 999) {
-						this.validata('请正确填写赠送积分1-999');
+					if (Number(this.presentIntegral) < 0 || Number(this.presentIntegral) > 999) {
+						this.validata('请正确填写赠送积分0-999');
 						return false;
 					}
 				}

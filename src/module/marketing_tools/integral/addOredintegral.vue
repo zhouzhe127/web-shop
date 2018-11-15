@@ -21,7 +21,7 @@
 		<div class="online-box clearfix" v-if="durationId == 1 && indexOn == 0">
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
-				<el-button type="primary" icon="el-icon-plus" @click="addCount" style="width:179px;">选择关联优惠券</el-button>
+				<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -162,7 +162,7 @@
 			</div>
 		</div>
 		<!-- 优惠券的弹窗 -->
-		<birthCoupon v-if='showBirthCoupon' :selectCoupon='selectCoupon' :couponList='couponList' @winEvent='winEvent'></birthCoupon>
+		<addCoupon v-if='showCoupon' :selectCoupon='selectCoupon' @winEvent='winEvent'></addCoupon>
 		<!-- 弹窗 -->
 		<component v-if="showWin" :is="isPopupwindow" @getAppliedWin='getResult' :shopList='shopList'></component>
 	</div>
@@ -199,7 +199,7 @@
 				],
 				durationId: 0,
 				durationName: '积分商品', //状态
-				showBirthCoupon: false,
+				showCoupon: false,
 				couponList: [], //优惠券列表
 				selectCoupon: [], //选中的列表
 				name: '', //商品名称
@@ -509,28 +509,14 @@
 				this.durationName = this.durationList[i].name; //点击对应的名字
 				this.durationId = this.durationList[i].id; //点击对应的id
 			},
-			async addCount() {
-				let data = await http.getGetCouponCondition({});
-				let coupons = [];
-				for (let item of data) {
-					if (item.type != 7) {
-						coupons.push(item);
-					}
-				}
-				this.couponList = coupons;
-				this.goodsCom = data;
-				this.goodsCom.forEach(function(item) {
-					item.num = 1;
-				});
-
-				this.showBirthCoupon = true;
-
+			//关联优惠券弹窗
+			addCoupon: function() { //添加优惠券
+				this.showCoupon = true;
 			},
-			winEvent(obj) {
-				this.showBirthCoupon = false;
+			winEvent(obj) { //选择优惠券弹窗回掉
+				this.showCoupon = false;
 				if (obj.status == 'ok') {
 					this.selectCoupon = obj.data.select;
-					this.couponList = obj.data.list;
 				}
 			},
 			//修改商品
@@ -566,8 +552,8 @@
 				import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
 			selectBtn: () =>
 				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
-			'birthCoupon': () =>
-				import ( /* webpackChunkName:'activity_birth_coupon' */ './activity_birth_coupon'),
+			'addCoupon': () =>
+				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 		},
 		destroyed() {
 			this.$store.commit('setPageTools', {});
