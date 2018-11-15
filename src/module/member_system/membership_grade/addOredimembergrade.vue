@@ -67,7 +67,7 @@
 		<div class="online-box clearfix" v-if="integral && result == 1">
 			<span class="online-sub required fl">获取基础积分</span>
 			<div class="rightHalf">
-				<el-input class='fl' placeholder="请输入倍数" v-model="multiples" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;" @blur="formatValue('4')">
+				<el-input class='fl' placeholder="请输入倍数" v-model="multiples" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;" @blur="formatValue('4')">
 					<template slot="suffix">倍</template>
 				</el-input>
 				<div class="fl handle-tips">
@@ -231,13 +231,13 @@
 				integral: false,
 				result: 0, //积分获取选中的
 				list: [{
-						name: '按比例',
-						id: 0
-					},
-					{
-						name: '按积分规则',
-						id: 1
-					}
+					name: '按比例',
+					id: 0
+				},
+				{
+					name: '按积分规则',
+					id: 1
+				}
 				],
 				pointName: '按比例',
 				cash: '', //积分比例现金
@@ -527,8 +527,8 @@
 						point: this.point, //积分
 						cash: this.cash, //现金
 						pointMultiples: this.multiple, //积分翻倍倍数
-						giveCoupons: this.getCoupon(this.selectCoupon), //赠送的优惠券
-						givePoints: this.presentIntegral //赠送的积分
+						giveCoupons: this.intereststatus ? this.getCoupon(this.selectCoupon) : '', //赠送的优惠券
+						givePoints: this.intereststatus ? this.presentIntegral : '' //赠送的积分
 					}
 				});
 				this.$store.commit('setWin', {

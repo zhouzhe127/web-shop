@@ -99,6 +99,10 @@ export default {
 	'getRecordList': {
 		url: w + 'Member/getRecordList' //获取消费记录
 	},
+	'exportgetRecordList': {
+		url: w + 'Member/getRecordList', //获取消费记录
+		type: 'file'
+	},
 	'unbindWeiXin': {
 		url: w + 'Member/unbindWeiXin', //解绑微信
 		method: 'post'

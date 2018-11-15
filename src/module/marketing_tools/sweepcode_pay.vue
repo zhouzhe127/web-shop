@@ -21,7 +21,6 @@
 			<!-- 门店折扣-->
 			<div class="online-box clearfix">
 				<span class="online-sub fl">门店折扣</span>
-				<!-- <onOff :key='1' :status="payDiscount" @statusChange="openpayDiscount" class='fl'></onOff> -->
 				<div class="fl" style="height: 40px;line-height: 40px;">
 					<el-switch v-model="payDiscount" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
@@ -34,7 +33,6 @@
 			<div class="online-box clearfix" v-if='payDiscount'>
 				<span class="online-sub fl"></span>
 				<span class="discount">折扣率</span>
-				<!-- <input class="discountinp" type="text" v-model="discounts" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')"> -->
 				<el-input maxlength="3" v-model="discounts" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input>
 				<span class="discount">%</span>
 			</div>
@@ -59,14 +57,12 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl">会员支付</span>
 				<div class="rightHalf">
-					<!-- <onOff :key='1' :status="paySwitch" @statusChange="openpaySwitch"></onOff> -->
 					<el-switch v-model="paySwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
 				</div>
 				<div class="clearfix fl">
 					<span class="online-sub fl">优惠券使用</span>
 					<div class="rightHalf">
-						<!-- <onOff :key='1' :status="couponSwitch" @statusChange="opencouponSwitch"></onOff> -->
 						<el-switch v-model="couponSwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
 						</el-switch>
 					</div>
@@ -76,14 +72,12 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl">积分抵扣</span>
 				<div class="rightHalf">
-					<!-- <onOff :key='1' :status="pointSwitch" @statusChange="openpointSwitch"></onOff> -->
 					<el-switch v-model="pointSwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
 				</div>
 				<div class="clearfix fl">
 					<span class="online-sub fl">开启用餐人数</span>
 					<div class="rightHalf">
-						<!-- <onOff :key='1' :status="payMeals" @statusChange="openpayMeals"></onOff> -->
 						<el-switch v-model="payMeals" active-color="#E1BB4A" inactive-color="#dcdfe6">
 						</el-switch>
 					</div>
@@ -91,10 +85,9 @@
 			</div>
 			<!--开启优惠规则 用餐人数填写 -->
 			<div class="online-box clearfix">
-				<span class="online-sub fl">开启优惠规则</span>
+				<span class="online-sub fl">会员余额与优惠券共用</span>
 				<div class="rightHalf">
-					<!-- <onOff :key='1' :status="preferentialSwitch" @statusChange="openpreferentialSwitch"></onOff> -->
-					<el-switch v-model="preferentialSwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
+					<el-switch v-model="isAmountCoupon" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
 				</div>
 				<div class="clearfix fl" v-if='payMeals'>
@@ -104,6 +97,14 @@
 						<el-input maxlength="2" v-model="diningnums" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input>
 						<span class="discount">人</span>
 					</div>
+				</div>
+			</div>
+			<!-- 开启优惠规则 -->
+			<div class="online-box clearfix">
+				<span class="online-sub fl">开启优惠规则</span>
+				<div class="rightHalf">
+					<el-switch v-model="preferentialSwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
+					</el-switch>
 				</div>
 			</div>
 			<!-- 优惠规则 -->
@@ -189,6 +190,7 @@
 	export default {
 		data() {
 			return {
+				isAmountCoupon: false, //会员与优惠券公用
 				payDiscount: false, //门店折扣开关
 				discount: '', //折扣
 				paySwitch: false, //会员支付
@@ -219,22 +221,6 @@
 				state3: '',
 				value8: '',
 				taList: [],
-				titleList: [{
-					titleName: '姓名',
-					dataName: 'staffName',
-					titleStyle: {
-						width: '400px',
-						flex: 'none'
-					}
-				},
-				{
-					titleName: '操作',
-					titleStyle: {
-						width: '400px',
-						flex: 'none'
-					}
-				},
-				],
 				allTotal: 0,
 				page: 1,
 				pageTotal: 10,
@@ -397,6 +383,7 @@
 						isPointsPay: Number(this.pointSwitch), //积分抵扣
 						isMemberCoupon: Number(this.shareSwitch), //是否共享
 						onlyMember: Number(this.isMember), //仅有会员享受
+						isAmountCoupon: Number(this.isAmountCoupon), //会员与优惠券
 						rules: this.preferentialSwitch == true ? this.configure.join('!#!') : '', //规则
 						fansIds: fansIds,
 						payMode: this.goodsSelect.join(','), //支付方式
@@ -481,6 +468,7 @@
 					this.couponSwitch = Boolean(Number(data.isCouponPay)); //优惠券
 					this.pointSwitch = Boolean(Number(data.isPointsPay)); //积分
 					this.shareSwitch = Boolean(Number(data.isMemberCoupon)); //共享
+					this.isAmountCoupon = Boolean(Number(data.isAmountCoupon));
 					if (data.rules != '') {
 						this.configure = data.rules.split('!#!');
 						this.preferentialSwitch = true;
