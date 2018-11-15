@@ -137,7 +137,7 @@
 				<section class="fl therules">
 					<section class="clearfix" v-if="configure.length <= 9">
 						<div class="rulebox">
-							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="20" />
+							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="30" />
 							<div class='bg fl' @click="saveConcont"></div>
 						</div>
 						<div class="fl handle-tips">
@@ -231,13 +231,13 @@
 				integral: false,
 				result: 0, //积分获取选中的
 				list: [{
-					name: '按比例',
-					id: 0
-				},
-				{
-					name: '按积分规则',
-					id: 1
-				}
+						name: '按比例',
+						id: 0
+					},
+					{
+						name: '按积分规则',
+						id: 1
+					}
 				],
 				pointName: '按比例',
 				cash: '', //积分比例现金
@@ -886,6 +886,23 @@
 		line-height: 40px;
 		text-align: center;
 		font-weight: bold;
+	}
+
+	#sweepCode .del {
+		position: absolute;
+		right: -12px;
+		top: -12px;
+		display: none;
+		width: 25px;
+		height: 25px;
+		background-image: url(../../../res/images/delete.png);
+		background-position: center center;
+		background-repeat: no-repeat;
+		cursor: pointer;
+	}
+
+	#sweepCode .rlues:hover i {
+		display: block;
 	}
 
 	#sweepCode .online-box .therules {
