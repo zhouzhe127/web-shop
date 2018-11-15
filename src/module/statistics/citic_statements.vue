@@ -7,34 +7,41 @@
 -->
 <template>
 	<div id="citic-statements">
-		<section style="width:100%;height:60px;">
-			<section class="orMaRetBox">
-				<calendar style='float:left' :time="startTime" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar>
-
-				<a class="" v-on:click="searchBtn">
-					<span class="order-order-search"></span>
-				</a>
-			</section>
-			<section>
-				<a v-on:click="exportBtn" class="yellow" style="height:45px;line-height: 45px;float: right;margin-right:30px;width: 100px;">导出</a>
-			</section>
+		<section style="width:100%;height:50px;">
+			<el-date-picker @change="searchBtn" :clearable="false" v-model="startTime" type="date" placeholder="选择日期"></el-date-picker>
+			<el-button @click="searchBtn" type="primary" icon="el-icon-search"></el-button>
 		</section>
-		<section style="width:100%;height: 40px;">
-			<ul class="route">
-				<li v-on:click="payBtn(index,item)" v-for="(item,index) in payList" :key='index' class="routeLi" :class="{'onc' : payChannel == payList[index].id}">{{item.name}}</li>
-			</ul>
-			<comTable :showHand="false" :titleData="titleListTop" :introData="allDetial"></comTable>
-			<comTable :showHand="false" :listHeight='50' :titleData="titleListContent" :introData="zxOrderList">
-				<div slot="con-6" slot-scope="props" v-on:click="openDetial(props.data)">
-					<a class="yellow" style="width:100%" href="javascript:void(0);">查看详情</a>
-				</div>
-			</comTable>
-			<div style="">
-				<pageElement @pageNum="pageClick" :page="page" :total="total" :num = 'num' :isNoJump='true'></pageElement>
+		<section style="width:100%;">
+			<el-radio-group v-model="payChannel" @change="payBtn">
+				<el-radio-button v-for="item in payList" :key="item.id" :label="item.id">{{item.name}}</el-radio-button>
+			</el-radio-group>
+			<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="allDetial" border style="width: 100%;margin:10px 0;">
+				<el-table-column fixed min-width="120" align="center" prop="allSum" label="全部收入"></el-table-column>
+				<el-table-column fixed min-width="100" align="center" prop="allHandingFee" label="全部手续费"></el-table-column>
+				<el-table-column min-width="100" align="center" prop="aliPayAll" label="支付宝收入"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="aliPayHandingFee" label="支付宝手续费"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="weChatAll" label="微信收入"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="weChatHandingFee" label="微信手续费"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="weChatPubAll" label="公众账号收入"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="weChatPubHandingFee" label="公众账号手续费"></el-table-column>
+			</el-table>
+			<el-table stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="zxOrderList" border style="width: 100%">
+				<el-table-column fixed min-width="120" align="center" label="操作">
+					<template slot-scope="scope">
+						<span style="color:#fe9200;cursor:pointer" @click="openDetial(scope.row)">查看详情</span>
+					</template>
+				</el-table-column>
+				<el-table-column fixed min-width="180" align="center" prop="shopOrderId" label="商户订单号"></el-table-column>
+				<el-table-column min-width="150" align="center" prop="dealTime" label="交易时间"></el-table-column>
+				<el-table-column min-width="100" align="center" prop="payChannel" label="交易渠道"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="dealSum" label="交易金额"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="handingFee" label="手续费"></el-table-column>
+				<el-table-column min-width="80" align="center" prop="handingPercent" label="费率"></el-table-column>
+			</el-table>
+			<div style="margin:10px 0;">
+				<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-count="total" :page-size="num" layout="sizes, prev, pager, next" :page-sizes="[10,30, 50]"></el-pagination>
 			</div>
-			<!-- <sd-pagejump v-on:click = "getPage" v-if = "total > 1" :page.sync="page" :count.sync='1000' :total.sync='total' :num.sync='10' style="float: left;"></sd-pagejump> -->
 		</section>
-		
 		<citicDetail :detial='detial' v-if='show' @winEvent='winEvent'></citicDetail>
 	</div>
 </template>
@@ -73,32 +80,19 @@ export default {
 			count: 1000,
 			payChannel: '-1', //支付方式
 			detial: {},
-			show: false,
-			titleListTop: [
-				{ titleName: '全部收入', dataName: 'allSum' },
-				{ titleName: '全部手续费', dataName: 'allHandingFee' },
-				{ titleName: '支付宝收入', dataName: 'aliPayAll' },
-				{ titleName: '支付宝手续费', dataName: 'aliPayHandingFee' },
-				{ titleName: '微信收入', dataName: 'weChatAll' },
-				{ titleName: '微信手续费', dataName: 'weChatHandingFee' },
-				{ titleName: '公众账号收入', dataName: 'weChatPubAll' },
-				{ titleName: '公众账号手续费', dataName: 'weChatPubHandingFee' }
-			],
-			titleListContent: [
-				{ titleName: '商户订单号', dataName: 'shopOrderId' },
-				{ titleName: '交易时间', dataName: 'dealTime' },
-				{ titleName: '交易渠道', dataName: 'payChannel' },
-				{ titleName: '交易金额', dataName: 'dealSum' },
-				{ titleName: '手续费', dataName: 'handingFee' },
-				{ titleName: '费率', dataName: 'handingPercent' },
-				{ titleName: '操作' }
-			]
+			show: false
 		};
 	},
 	methods: {
+		//分页点击
 		pageClick: function(e) {
-			this.page = e.page;
-			this.num = e.num;
+			this.page = e;
+			this.inte();
+		},
+		//每页显示多少行
+		numChange(e) {
+			this.num = e;
+			this.page = 1;
 			this.inte();
 		},
 		winEvent() {
@@ -171,96 +165,27 @@ export default {
 			this.detial = item;
 			this.show = true;
 		},
-		getPage: function() {
-			this.inte();
-		},
-		payBtn: function(index) {
+		payBtn: function() {
 			this.page = 1;
-			this.payChannel = this.payList[index].id;
 			this.inte();
 		}
 	},
 	components: {
-		calendar: () =>
-			import(/* webpackChunkName:"calendar_type" */ 'src/components/calendar_type'),
 		citicDetail: () =>
-			import(/* webpackChunkName:"citic_statements_detail" */ './citic_statements_detail'),
-		comTable: () =>
-			import(/*webpackChunkName: "com_table"*/ 'src/components/com_table'),
-		pageElement: () =>
-			import(/*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+			import(/* webpackChunkName:"citic_statements_detail" */ './citic_statements_detail')
 	},
 	mounted: function() {
+		this.$store.commit('setPageTools', [
+			{
+				name: '导出',
+				type: 4,
+				className: 'primary',
+				fn: () => {
+					this.exportBtn();
+				}
+			}
+		]);
 		this.inte();
 	}
 };
 </script>
-
-
-<style scoped>
-#citic-statements .orMaRetBox {
-	height: 42px;
-	float: left;
-}
-#citic-statements .orMaRetBox .calendar-ctr {
-	width: 40px;
-	height: 40px;
-	position: relative;
-	cursor: pointer;
-}
-#citic-statements .orMaRetBox .calendar-ctr i {
-	height: 10px;
-	width: 10px;
-	border-top: 10px #b3b3b3 solid;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	margin-left: -5px;
-	margin-top: -5px;
-	box-sizing: border-box;
-}
-#citic-statements .orMaRetBox a {
-	width: 40px;
-	height: 40px;
-	background: #28a8e0;
-	float: left;
-	display: block;
-}
-#citic-statements .orMaRetBox a span {
-	background: url(../../res/images/search.png) center center no-repeat;
-	display: block;
-	float: left;
-	height: 40px;
-	width: 40px;
-	cursor: pointer;
-}
-#citic-statements .route {
-	width: 100%;
-	height: 40px;
-}
-#citic-statements .route .routeLi {
-	width: 120px;
-	height: 40px;
-	text-align: center;
-	line-height: 40px;
-	background: #f2f2f2;
-	float: left;
-	margin-right: 20px;
-	border-radius: 5px;
-	cursor: pointer;
-}
-input {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	-o-appearance: none;
-	/* appearance: none; */
-	border: 1px solid #ccc;
-	padding: 0;
-}
-.onc {
-	background-color: #29a7e1 !important;
-	color: #fff;
-}
-</style>
