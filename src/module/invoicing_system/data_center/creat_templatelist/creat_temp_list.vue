@@ -14,7 +14,7 @@
 		<div class="inpStyle">
 			<span class="required label">查看权限</span>
 			<div class="btnbox">
-				<el-tag v-for="(tag,i) in sleRoleArr" style="margin:0 0 15px 15px;" :key="tag.name" @close='handleClose(i)'
+				<el-tag v-for="(tag,i) in sleRoleArr" style="margin:0 0 15px 15px;" :key="i" @close='handleClose(i)'
 				 closable>
 					{{tag.name}}
 				</el-tag>
@@ -27,13 +27,13 @@
 			<el-button icon="el-icon-plus" @click="addColumnlist(1)" plain>添加行</el-button>
 			<el-button icon="el-icon-plus" @click="addColumnlist(2)" plain>添加列</el-button>
 		</div>
-		<div class="tableBox">
+		<div class="tableBox" style="max-width: 100%">
 			<el-table :data="tableData">
-				<el-table-column prop="date" label="序号" width="50">
+				<el-table-column prop="date" fixed="left" label="序号" width="50">
 					<el-table-column type="index" label="#" width="50">
 					</el-table-column>
 				</el-table-column>
-				<el-table-column prop="date" label="#">
+				<el-table-column prop="date" fixed="left" width="200" label="#">
 					<el-table-column prop="name" label="名称" width="200">
 						<template slot-scope="scope">
 							<div class="detailsBtn">

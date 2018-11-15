@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 17:38:18
+ * @Last Modified time: 2018-11-14 17:02:19
  */
 <template>  
 	<div>
@@ -153,7 +153,6 @@ export default {
 		},
 	},
 	methods: {
-
 		clickBtn(sym){
 			let obj = {};
 			if(sym == 'cancel'){
@@ -171,14 +170,7 @@ export default {
 				this.throwData( utils.deepCopy(obj));  
 			}
 		},
-		throwData(data){
-			this.$emit('change',data);
-		},
 
-		//打开弹窗
-		openWin(sym){
-			this.showCom = sym;
-		},
 		closeWin(obj){
 			if(!obj){
 				this.showCom = '';
@@ -206,6 +198,16 @@ export default {
 
 
 
+		throwData(data){
+			this.$emit('change',data);
+		},
+		//打开弹窗
+		openWin(sym){
+			this.showCom = sym;
+		},
+
+
+
 		initDataByProps(){
 			let def = {
 				min:1,
@@ -213,9 +215,9 @@ export default {
 				num:1
 			};
 			//排序值
-			this.sortObj =  Object.assign(def,this.pSortObj);      
+			this.sortObj =  Object.assign(def, utils.deepCopy(this.pSortObj));      
 			//选择的物料范围
-			this.scope = this.pScope;
+			this.scope =  utils.deepCopy(this.pScope);
 			//集合
 			this.collection = {id:this.pCollection,unit:{},mid:[]};
 			
@@ -226,17 +228,14 @@ export default {
 
 
 
-
-		async getCollectionList(){
+		//获取集合列表,选中的集合对象
+		async getCollectionList(id){
 			let retData = await this.getHttp('getStatisticScopeCategoryList');
+			let collection = null;
 			if(Array.isArray(retData.list)){
-				this.collectionList = retData.list;
-				
-				this.collection = this.getEle(this.collectionList,'id',this.collection.id);
-				
-				if(!this.collection){
-					this.collection = {mid:[],unit:{}};
-				}
+				collection = this.getEle(retData.list,'id',id);				
+				if(collection) this.collection = collection;
+				this.collectionList = retData.list;				
 			}
 		},
 		async getHttp(url,obj={},err=false){
@@ -253,7 +252,7 @@ export default {
 	},
 	mounted(){
 		this.initDataByProps();
-		this.getCollectionList();
+		this.getCollectionList(this.collection.id);
 	},
 	components:{
 		selectCollectionCom:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
