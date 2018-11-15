@@ -597,7 +597,7 @@ export default {
 		}
 	}
 	.goods span {
-		width: 25%;
+		width: 20%;
 	}
 	.store-list {
 		margin-top: 20px;
@@ -623,7 +623,7 @@ export default {
 			}
 		}
 		.day span {
-			width: 25%;
+			width: 20%;
 		}
 		ul {
 			background: #fff;
@@ -736,11 +736,11 @@ export default {
 	.goods {
 		.title {
 			span {
-				width: 25%;
+				width: 20%;
 			}
 		}
 		ul li span {
-			width: 25%;
+			width: 20%;
 		}
 	}
 	.order {

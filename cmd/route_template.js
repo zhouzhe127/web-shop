@@ -97,12 +97,6 @@ export default [{
                 components: {
                     content: unbrandBuild
                 }
-            },
-            {
-                path: 'unbrandBuildUi',
-                components: {
-                    content: unbrandBuildUi
-                }
             }
         ]
     },
