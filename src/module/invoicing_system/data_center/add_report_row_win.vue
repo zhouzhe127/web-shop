@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-14 16:11:55
+ * @Last Modified time: 2018-11-14 17:02:19
  */
 <template>  
 	<div>
@@ -226,9 +226,6 @@ export default {
 			}
 		},
 
-		getResponse(a){
-			console.log(a);
-		},
 
 
 		//获取集合列表,选中的集合对象
@@ -256,7 +253,6 @@ export default {
 	mounted(){
 		this.initDataByProps();
 		this.getCollectionList(this.collection.id);
-		this.$on('child',this.getResponse);
 	},
 	components:{
 		selectCollectionCom:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
