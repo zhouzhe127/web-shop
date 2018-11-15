@@ -22,9 +22,9 @@
 				<el-table :data="activityList" border style="width: 100%;text-align: center" :header-cell-style="{'text-align': 'center'}">
 					<el-table-column prop="name" label="活动标题" width="120"></el-table-column>
 					<el-table-column prop="formatCreateTime" label="创建时间" width="180"> </el-table-column>
-					<el-table-column label="活动时间" width="280">
+					<el-table-column label="活动时间" width="310">
 						<template slot-scope="scope">
-							<span>{{scope.row.formatBeginTime}}--{{scope.row.formatEndTime}}</span>
+							<span>{{scope.row.formatBeginTime}}至{{scope.row.formatEndTime}}</span>
 						</template>
 					</el-table-column>
 					<template v-if="isBrand">
@@ -137,8 +137,8 @@ export default {
 					v.createTime,
 					'yyyy-MM-dd hh:mm'
 				);
-				v.formatBeginTime = utils.format(v.beginTime, 'yyyy年MM月dd');
-				v.formatEndTime = utils.format(v.endTime, 'yyyy年MM月dd');
+				v.formatBeginTime = utils.format(v.beginTime, 'yyyy年MM月dd hh:mm');
+				v.formatEndTime = utils.format(v.endTime, 'yyyy年MM月dd hh:mm');
 				return v;
 			});
 		},
