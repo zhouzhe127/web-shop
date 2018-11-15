@@ -60,6 +60,16 @@ export default {
 		this.initData();
 	},
 	methods: {
+		initBtn() {
+			let arr = [
+				{name: '返回',className: 'info',type:4,
+					fn: () => {
+						window.history.go(-1);
+					}
+				},
+			];
+			this.$store.commit('setPageTools', arr);
+		},
 		//初始化数据
 		async initData(){
 			let data = await http.materialreportGetMaterialErrorLog({data:{
