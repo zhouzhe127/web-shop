@@ -152,6 +152,13 @@ export default {
 			formula:'',//计算公式
 
 			editHtml:'',//如果第一次加载取不到dom 则使用v-model渲染
+			saveParam:{ //编辑公式时，先保存原数据 用于判断是否修改过
+				name:'',
+				formula:'',
+				isPercent:0,
+				reserveRule:0,
+				carryRule:0,
+			}
 		};
 	},
 	props: {
@@ -208,9 +215,12 @@ export default {
 		editFormula(){
 			for(let key in this.pObj){
 				this[key] = this.pObj[key];
+				
+			}
+			for(let key in this.saveParam){
+				this.saveParam[key] = this.pObj[key];
 			}
 			let str = this.replaceId(this.formula);
-			console.log(str);
 			this.$nextTick(()=>{
 				if(this.$refs.itemEdit){
 					this.addItem(str,true);
@@ -231,20 +241,34 @@ export default {
 				name:this.name,
 			};
 			obj = Object.assign(obj,send);
-			//try catch防止重复提交
-			let data;
-			try{
-				data = await http.materialreportSetStatisticItemFormula({
-					data:obj
-				},true);
-			}catch(e){
-				this.$message({message: e.error.message,type: 'error'});
-				this.loading = false;//接口报错，还能继续点击
+			if(!this.veriChanged(obj)){//验证 编辑时是否改变了公式
+				this.$emit('emit',false);
+			}else{
+				//try catch防止重复提交
+				let data;
+				try{
+					data = await http.materialreportSetStatisticItemFormula({
+						data:obj
+					},true);
+				}catch(e){
+					this.$message({message: e.error.message,type: 'error'});
+					this.loading = false;//接口报错，还能继续点击
+				}
+				if(data){
+					obj.id = data;
+					this.$emit('emit',obj);
+				}
 			}
-			if(data){
-				obj.id = data;
-				this.$emit('emit',obj);
+		},
+		//验证 编辑公式时是否改变
+		veriChanged(obj){
+			let changeNum = 0;
+			for(let key in this.saveParam){
+				if(this.saveParam[key]!=obj[key]){
+					changeNum++;
+				}
 			}
+			return changeNum>0;
 		},
 		computeFormula(){
 			//替换中文括号

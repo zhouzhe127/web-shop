@@ -144,6 +144,7 @@ export default {
 		},
 		//编辑公式
 		editFormula(res){
+			res.title = '编辑公式项';
 			this.formulaInsert = res;
 			this.isAdd = false;
 			this.showFormula = true;
