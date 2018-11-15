@@ -231,13 +231,13 @@
 				integral: false,
 				result: 0, //积分获取选中的
 				list: [{
-					name: '按比例',
-					id: 0
-				},
-				{
-					name: '按积分规则',
-					id: 1
-				}
+						name: '按比例',
+						id: 0
+					},
+					{
+						name: '按积分规则',
+						id: 1
+					}
 				],
 				pointName: '按比例',
 				cash: '', //积分比例现金
@@ -399,9 +399,9 @@
 				return true;
 			},
 			saveConfig: function() { //保存
-				if(this.editState){
+				if (this.editState) {
 					this.editLevel();
-				}else{
+				} else {
 					this.addLevel();
 				}
 			},
@@ -582,10 +582,12 @@
 				this.point = res.point; //积分
 				this.cash = res.cash; //现金
 				this.multiple = res.pointMultiples; //积分翻倍
-				if (res.giveCoupons != '' || res.givePoints != '') { //升至改等级赠送积分
+				if (res.giveCoupons != '' || (res.givePoints != '' && res.givePoints != '0')) { //升至改等级赠送积分
 					this.intereststatus = true;
-					this.selectCoupon = res.giveCoupons;//赠送的优惠券
-					this.presentIntegral = res.givePoints;//赠送的积分
+					if (res.giveCoupons != '') {
+						this.selectCoupon = res.giveCoupons; //赠送的优惠券
+					}
+					this.presentIntegral = res.givePoints; //赠送的积分
 				}
 				this.fileName = res.imgName; //上传的图片
 			},
