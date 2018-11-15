@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-15 11:59:00
+ * @Last Modified time: 2018-11-15 18:11:43
  */
 
 <template>
@@ -34,10 +34,7 @@
 			<el-table-column min-width="200px" label="报表名称" prop="name">
 			</el-table-column>
 
-			<el-table-column  min-width="150px"  label="状态">
-				<span slot-scope="{row,column}" >
-					{{row.percent}}%
-				</span>
+			<el-table-column  min-width="150px"  label="状态" prop="percent">
 			</el-table-column>
 
 			<el-table-column  min-width="150px"  label="生成时间" prop="createTime">
@@ -52,8 +49,8 @@
 			<el-table-column  min-width="250px"  label="操作" >
 				<span slot-scope="{row,column}" >
 					<span class="operation" @click="clickOperation('delete',row)">删除</span>
-					<span class="operation" :style="{'cursor':row.percent != percent ? 'not-allowed' : 'pointer'}"   @click="clickOperation('view',row)">查看</span>
-					<span class="operation" :style="{'cursor':row.percent != percent ? 'not-allowed' : 'pointer'}"  @click="clickOperation('export',row)">导出</span>
+					<span class="operation" :style="{'cursor':row.status != statusMap.resolve ? 'not-allowed' : 'pointer'}"   @click="clickOperation('view',row)">查看</span>
+					<span class="operation" :style="{'cursor':row.status != statusMap.resolve ? 'not-allowed' : 'pointer'}"  @click="clickOperation('export',row)">导出</span>
 					<span v-if="row.error" class="operation error" @click="clickOperation('error',row)">异常</span>
 				</span>
 			</el-table-column>
@@ -93,7 +90,11 @@ export default {
 	data () {
 		return {
 			loading:false,
-			percent : 100,						//报表的最终状态
+			statusMap : {
+				reject : 13,		//报表生成失败
+				resolve : 0,		//报表生成成功
+				opending : 12		//报表生成中
+			},						//报表的最终状态
 			tableData:[],
 			template:{},                        //模板
 			pageObj:{},
@@ -117,25 +118,41 @@ export default {
 			this.selectAll = this.isSelectCurrentPage(this.tableData);
 		},
 
+		changeUrl(url,item){
+			let statusMap = this.statusMap;
+			if(item.status == statusMap.reject){
+				this.$message('报表生成失败!');
+			}else if(item.status == statusMap.resolve){
+				this.$router.push({path:url,query:{id:item.id}});
+			}else{
+				this.$message('报表正在生成中,请稍后...');
+			}
+		},
 		clickOperation(sym,item){
 			let ids = '';
+			let statusMap = this.statusMap;
+			
 			switch(sym){
 				case 'delete':
 					this.delTemplate(`确认删除 ${item.name} 报表吗?`,item.id);
 					break;
 				case 'view':
-					if(item.percent != this.percent){
+					if(item.status == statusMap.reject){
+						this.$message('报表生成失败!');
+					}else if(item.status == statusMap.resolve){
+						this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id}});
+					}else{
 						this.$message('报表正在生成中,请稍后...');
-						return;
 					}
-					this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id}});
 					break;
 				case 'export':
-					if(item.percent != this.percent){
+					if(item.status == statusMap.reject){
+						this.$message('报表生成失败!');
+					}else if(item.status == statusMap.resolve){
+						this.getHttp('materialreportExportMaterialReportExcel',{id:item.id});
+					}else{
 						this.$message('报表正在生成中,请稍后...');
-						return;
 					}
-					this.getHttp('materialreportExportMaterialReportExcel',{id:item.id});
 					break;
 				case 'error':
 					this.$router.push({path:'/admin/materialReport/errorLog',query:{id:item.id,name:item.name}});
@@ -159,11 +176,11 @@ export default {
 
 
 		//获取报表列表
-		async getReportList(){
+		getReportList(){
 			let subObj = {
 				page : this.pageObj.currentPage,
 				size : this.pageObj.pageSize,
-				id : this.template.id,
+				templateId : this.template.id,
 			};
 			
 			this.taskTimer.rList = Timer.add(
@@ -224,21 +241,34 @@ export default {
 		//前后台字段转换
 		mapListAttr(list){
 			let arr = [];  
+			let statusMap = this.statusMap;
 			for(let ele of list){
 				let isError = false;				
+				let state = '';
+
 				if(ele.content && Array.isArray(ele.content.error)){
 					isError = ele.content.error.length > 0;
 				}
+
+				if(ele.status == statusMap.reject){
+					state = '失败';
+				}else if(ele.status == statusMap.resolve){
+					state = '成功';
+				}else{
+					state = ele.percent + '%';
+				}
+
 				let temp = {
 					id : ele.id,                                    //报表id
 					name : ele.objName,                             //报表名称
 					createTime : ele.createTime,                    //生成时间
-					scope : ele.beginTime+' 至 '+ele.endTime,         //数据时间范围
+					scope : ele.beginTime+' 至 '+ele.endTime,        //数据时间范围
 					createUName : ele.createUName,                  //生成人   
 					checked : false,                                //是否选中
 					disabled : false,                               //是否可以操作  
-					error : isError,									//是否存在异常			
-					percent : ele.percent
+					error : isError,								//是否存在异常			
+					percent : state,
+					status : Number(ele.status)							
 				};
 				arr.push(temp);
 			}
