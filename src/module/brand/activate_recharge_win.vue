@@ -28,7 +28,9 @@
 						<div class="qr-code fl scan-item">
 							<div class="qr-show">
 								<img :src="chargeDetailInfo.qrCode" alt="支付二维码">
-								<div class="mask" v-if="refreshMaskShow" @click.stop="reviewQr">刷新</div>
+								<div class="mask" v-if="refreshMaskShow" @click.stop="reviewQr">
+									<span>刷新</span>
+								</div>
 							</div>
 							<div>*如对价格有疑问，可咨询系统顾问</div>
 						</div>
@@ -257,7 +259,6 @@ export default {
 				.mask {
 					width: 100%;
 					height: 100%;
-					background: rgba(0, 0, 0, 0.8);
 					transition: all 0.2s ease-in;
 					position: absolute;
 					left: 0;
@@ -265,9 +266,23 @@ export default {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					color: #fff;
-					font-size: 18px;
-					cursor: pointer;
+					span{
+						color: #fff;
+						font-size: 18px;
+						cursor: pointer;
+						position: relative;
+						z-index: 5;
+					}
+					&:after{
+						content: '';
+						width: 100%;
+						height: 100%;
+						position: absolute;
+						left: 0;
+						top: 0;
+						background: rgba(0, 0, 0, 0.9);
+						filter: blur(3px);
+					}
 				}
 			}
 		}
