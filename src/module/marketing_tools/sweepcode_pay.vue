@@ -119,7 +119,7 @@
 				<section class="fl therules">
 					<section class="clearfix" v-if="configure.length <= 9">
 						<div class="rulebox">
-							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="20" />
+							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="30" />
 							<div class='bg fl' @click="saveConcont"></div>
 						</div>
 						<div class="fl handle-tips">
@@ -689,7 +689,7 @@
 	#sweepCode .online-box .online-sub {
 		display: block;
 		font-size: 16px;
-		width: 150px;
+		width: 160px;
 		height: 40px;
 		line-height: 40px;
 		color: #333;

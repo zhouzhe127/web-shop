@@ -107,7 +107,7 @@
 			</div>
 		</div>
 		<!-- 升级规则 -->
-		<div class="online-box clearfix">
+		<div class="online-box clearfix" v-if="memberInfo && memberInfo.status != '2'">
 			<span class="online-sub fl">升级规则</span>
 			<div class="rightHalf">
 				<el-switch v-model="isNext" active-color="#E1BB4A" inactive-color="#dcdfe6">
@@ -137,7 +137,7 @@
 				<section class="fl therules">
 					<section class="clearfix" v-if="configure.length <= 9">
 						<div class="rulebox">
-							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="20" />
+							<input type="text" placeholder="请输入规则" class="fl define-inp" v-model="content" maxlength="30" />
 							<div class='bg fl' @click="saveConcont"></div>
 						</div>
 						<div class="fl handle-tips">
@@ -221,7 +221,7 @@
 				levelStatus: '', //默认等级状态 1 基础卡 2 粉丝卡
 				isDefault: false,
 				isDefaultVip: false,
-				fileName: this.wfileName,
+				fileName: '',
 				imgHosts: '',
 				gradeWin: false, // 是否显示等级弹框
 				index: [-1],
@@ -886,6 +886,23 @@
 		line-height: 40px;
 		text-align: center;
 		font-weight: bold;
+	}
+
+	#sweepCode .del {
+		position: absolute;
+		right: -12px;
+		top: -12px;
+		display: none;
+		width: 25px;
+		height: 25px;
+		background-image: url(../../../res/images/delete.png);
+		background-position: center center;
+		background-repeat: no-repeat;
+		cursor: pointer;
+	}
+
+	#sweepCode .rlues:hover i {
+		display: block;
 	}
 
 	#sweepCode .online-box .therules {

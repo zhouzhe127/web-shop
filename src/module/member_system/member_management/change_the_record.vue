@@ -63,26 +63,79 @@
 				num: 10, //一页请求的条数
 				total: 0, //总页数
 				count: '',
-				obj: {
-					'1': '店内消费',
-					'2': '店内充值',
-					'3': '积分商城兑换',
-					'4': '消费获得积分',
-					'5': '裂变获得积分',
-					'6': '微信消费',
-					'7': '微信充值',
-					'8': '积分过期',
-					'9': '积分抵扣',
-					'10': '积分调整',
-					'11': '积分调整',
-					'12': '余额调整',
-					'13': '余额调整',
-					'14': '退款失败',
-					'15': '卡激活',
-					'16': '金币记录',
-					'17': '积分卡券',
-					'18': '评论获得积分'
-				},
+				trantypeList: [{ //消费类型
+					name: '店内消费',
+					id: 1
+				}, {
+					name: '充值',
+					id: 2
+				}, {
+					name: '积分商城兑换',
+					id: 3
+				}, {
+					name: '消费获得积分',
+					id: 4
+				}, {
+					name: '裂变获得积分',
+					id: 5
+				}, {
+					name: '微信消费',
+					id: 6
+				}, {
+					name: '微信充值',
+					id: 7
+				}, {
+					name: '积分过期',
+					id: 8
+				}, {
+					name: '积分抵扣',
+					id: 9
+				}, {
+					name: '积分调整(强制增加)',
+					id: 10
+				}, {
+					name: '积分调整(强制减少)',
+					id: 11
+				}, {
+					name: '余额调整(强制增加)',
+					id: 12
+				}, {
+					name: '余额调整(强制减少)',
+					id: 13
+				}, {
+					name: '退款失败',
+					id: 14
+				}, {
+					name: '积分卡券',
+					id: 17
+				}, {
+					name: '评论获得积分',
+					id: 18
+				}, {
+					name: '积分强制增加(失败)',
+					id: 19
+				}, {
+					name: '积分强制减少(失败)',
+					id: 20
+				}, {
+					name: '余额强制增加(失败)',
+					id: 21
+				}, {
+					name: '余额强制减少(失败)',
+					id: 22
+				}, {
+					name: '订单取消返还余额',
+					id: 23
+				}, {
+					name: '订单取消返还抵扣积分',
+					id: 24
+				}, {
+					name: '订单取消扣除获赠积分',
+					id: 25
+				}, {
+					name: '升级获得积分',
+					id: 33
+				}],
 				listInfo: '' //数据
 			};
 		},
@@ -97,14 +150,12 @@
 					}
 				});
 				this.listInfo = data;
-				if (data.typeInfo) {
-					this.obj = data.typeInfo;
-				}
 				this.count = (this.page == 1) ? data.count : this.count;
 				this.total = (this.page == 1) ? data.total : this.total;
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.getRecordList();
 			},
@@ -122,7 +173,13 @@
 				}
 			},
 			filterType: function(type) {
-				return this.obj[type] || '余额';
+				let objType = '--';
+				for (let item of this.trantypeList) {
+					if (type == item.id) {
+						objType = item.name;
+					}
+				}
+				return objType;
 			},
 			judgeType: function(item) {
 				// 判断操作类型 是否加还是减
@@ -135,7 +192,7 @@
 				}
 
 				if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
-					'10' || item.type == '11') {
+					'10' || item.type == '11' || item.type == '33') {
 					return operate + item.operatePoint;
 				} else {
 					if (item.type == '1' || item.type == '6') {

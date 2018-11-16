@@ -18,9 +18,6 @@
 					<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" :editable="false">
 					</el-date-picker>
 				</div>
-				<!-- <span class="order-order-searchA">
-				<span class="order-order-search" href="javascript:void(0)" @click = 'getConsumeOrGrowthTrend'></span>
-				</span> -->
 				<el-button type="primary" icon="el-icon-search" @click="getConsumeOrGrowthTrend" style="margin-left: -4px;"></el-button>
 				<div class="handle-tips" style="margin-left: 20px;">
 					<i></i> 时间跨度最大支持30天
@@ -36,6 +33,7 @@
 <script type="text/javascript">
 	import http from 'src/manager/http';
 	import global from 'src/manager/global';
+	import utils from 'src/verdor/utils';
 	let constant = global.timeConst.ONEMONTH; //一个月
 	let oneDay = global.timeConst.ONEDAY; //一天
 
@@ -172,9 +170,13 @@
 					}
 				});
 				if (data != '') {
-					this.consumeList = this.getTotal(data.consumeList);
-					this.consumeTableList = this.getTotal(data.consumeTableList);
-					this.memberIncrease = data.memberIncrease;
+					let consumeList = this.getTotal(data.consumeList);
+					let consumeTableList = this.getTotal(data.consumeTableList);
+					let memberIncrease = data.memberIncrease;
+					this.consumeList = this.mergeData(consumeList);
+					this.consumeTableList = this.mergeData(consumeTableList);
+					this.memberIncrease = this.mergeData(memberIncrease);
+					//console.log(dateObj)
 					this.intheDate(this.trendId);
 				}
 			},
@@ -205,9 +207,65 @@
 			getTotal: function(dataList) { //求和
 				let list = dataList;
 				for (let key in list) {
-					list[key] = Number(list[key].cnt1) + Number(list[key].cnt2) + Number(list[key].cnt3);
+					list[key] = Number(list[key].cnt1) + Number(list[key].cnt2);
 				}
 				return list;
+			},
+			checkTime: function(i) { //补零法
+				if (i < 10) {
+					i = '0' + i;
+				}
+				return i;
+			},
+			format: function(time) { //日期格式化
+				let s = '';
+				s += time.getFullYear() + '-'; // 获取年份。
+				s += this.checkTime((time.getMonth() + 1)) + '-'; // 获取月份。
+				s += this.checkTime(time.getDate()); // 获取日。
+				return (s); // 返回日期。
+			},
+			getDayAll: function(begin, end) {
+				let dateAllArr = new Array();
+				let ab = begin.split('-');
+				let ae = end.split('-');
+				let db = new Date();
+				db.setUTCFullYear(ab[0], ab[1] - 1, ab[2]);
+				let de = new Date();
+				de.setUTCFullYear(ae[0], ae[1] - 1, ae[2]);
+				let unixDb = db.getTime();
+				let unixDe = de.getTime();
+				for (let k = unixDb; k <= unixDe;) {
+					dateAllArr.push(this.format((new Date(parseInt(k)))).toString());
+					k = k + 24 * 60 * 60 * 1000;
+				}
+				return dateAllArr;
+			},
+			formatTime(time) {
+				if (time.length == 10) {
+					time *= 1000;
+				}
+				return utils.format(new Date(time), 'yyyy-MM-dd');
+			},
+			mergeData: function(oldDate) { //合并数据
+				let obj = {};
+				let dateObj = {};
+				let dateArr = this.getDayAll(this.formatTime(this.startTime), this.formatTime(this.endTime));
+				for (let item of dateArr) {
+					let date = item;
+					dateObj = Object.assign(obj, {
+						[date]: 0
+					});
+				}
+				let newDates = dateObj;
+				for (let key in newDates) {
+					for (let key1 in oldDate) {
+						if (key1 == key) {
+							newDates[key] = oldDate[key1];
+							break;
+						}
+					}
+				}
+				return newDates;
 			}
 		},
 		components: {
