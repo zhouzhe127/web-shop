@@ -221,7 +221,7 @@
 				levelStatus: '', //默认等级状态 1 基础卡 2 粉丝卡
 				isDefault: false,
 				isDefaultVip: false,
-				fileName: this.wfileName,
+				fileName: '',
 				imgHosts: '',
 				gradeWin: false, // 是否显示等级弹框
 				index: [-1],
