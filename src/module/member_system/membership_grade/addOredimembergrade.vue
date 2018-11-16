@@ -231,13 +231,13 @@
 				integral: false,
 				result: 0, //积分获取选中的
 				list: [{
-						name: '按比例',
-						id: 0
-					},
-					{
-						name: '按积分规则',
-						id: 1
-					}
+					name: '按比例',
+					id: 0
+				},
+				{
+					name: '按积分规则',
+					id: 1
+				}
 				],
 				pointName: '按比例',
 				cash: '', //积分比例现金
