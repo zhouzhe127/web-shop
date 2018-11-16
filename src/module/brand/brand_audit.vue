@@ -272,7 +272,7 @@
 													<div v-on:click="closeShop(items,indexs)" style="width:50%;">关闭门店</div>
 													<div v-on:click="joinShop(items)" style="width:50%;">进入门店</div>
 												</template>
-												<template v-else-if="items.availableStateitems && availableState == 1">
+												<template v-else-if="items.availableState && items.availableState == 1">
 													<div style="width: 100%;text-align: center;" @click="chargeActivate(items,index,indexs)">充值激活</div>
 												</template>
 
