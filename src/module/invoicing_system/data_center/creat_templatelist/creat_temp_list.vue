@@ -84,7 +84,7 @@
 		</div>
 		<add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin" @positionEvent="positionEvent"></add-position>
 		<add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>
-		<addRow-win v-if="rowShow" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
+		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
 	</div>
 </template>
 <script>
