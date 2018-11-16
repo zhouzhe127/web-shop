@@ -202,6 +202,7 @@
 				this.formList = pageContent;
 			},
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.setPage();
 			},

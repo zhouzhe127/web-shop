@@ -107,7 +107,7 @@
 			</div>
 		</div>
 		<!-- 升级规则 -->
-		<div class="online-box clearfix">
+		<div class="online-box clearfix" v-if="memberInfo && memberInfo.status != '2'">
 			<span class="online-sub fl">升级规则</span>
 			<div class="rightHalf">
 				<el-switch v-model="isNext" active-color="#E1BB4A" inactive-color="#dcdfe6">

@@ -553,6 +553,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.newgetActivityList();
 			},

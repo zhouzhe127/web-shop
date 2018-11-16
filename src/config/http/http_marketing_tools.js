@@ -73,7 +73,7 @@ export default {
 		method: 'get'
 	},
 	'changeExport': {
-		url: w + 'activityexchange/export', //兑换管理导出
+		url: w + 'ActivityExchange/getListByShopId', //兑换管理导出
 		type: 'file'
 	},
 	'verifyCode': {
