@@ -30,7 +30,6 @@
 					<template v-if="isBrand">
 						<el-table-column prop="statusText" label="活动状态"></el-table-column>
 						<el-table-column prop="goodsNum" label="商品数量"> </el-table-column>
-						<el-table-column prop="goodsNum" label="发券量"></el-table-column>
 						<el-table-column prop="launchNum" label="发起砍价人数"></el-table-column>
 						<el-table-column prop="helperNum" label="帮砍人数"></el-table-column>
 						<el-table-column prop="income" label="券金收入"></el-table-column>
@@ -162,6 +161,7 @@ export default {
 		},
 		// 下载二维码
 		downQrCode() {
+			http.getMiniProQR();
 			console.log('你有一条二维码请接收');
 		},
 		comeBack(isRefresh) {

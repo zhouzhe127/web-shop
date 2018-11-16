@@ -395,6 +395,11 @@ export default {
 		url: f + 'Api/Statistic/getActivityGoods', // 获取砍价活动明细
 		method: 'get'
 	},
+	'getMiniProQR': {
+		url: f + 'Api/Weixin/getMiniProQR', // 获取砍价活动明细
+		type: 'file',
+		// method: 'get'
+	},
 	/* ↑ 砍价活动(粮票集) ↑
 	-------------------*/
 };

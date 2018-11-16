@@ -12,8 +12,8 @@
 			<el-form-item label="商品图片" prop="imgUrl">
 				<div class="good-image">
 					<div class="good-image-div" id="image">
-						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="225" height="150">
-						<img v-else src="../../../res/images/busis.png" width="225" height="150" alt="商品" />
+						<img v-if="form.imgUrl" :src="(form.imgUrl.indexOf('http')>-1)?form.imgUrl: uploadUrl+form.imgUrl" width="160" height="160">
+						<img v-else src="../../../res/images/busis.png" width="160" height="160" alt="商品" />
 						<a class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
 						<a class="good-image-edit">编辑图片</a>
 						<form enctype="multipart/form-data" id="img_upload">
@@ -467,12 +467,12 @@ export default {
 	width: 50px;
 }
 .good-image {
-	width: 225px;
-	height: 150px;
+	width: 160px;
+	height: 160px;
 	.good-image-div {
 		position: relative;
-		width: 225px;
-		height: 150px;
+		width: 160px;
+		height: 160px;
 		background: url(../../../res/images/upload.png) center 40px no-repeat
 			#ddd;
 	}

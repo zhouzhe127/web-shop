@@ -201,7 +201,7 @@ let global = {
 		bc: 'http://bc.api.qa.ishandian.com.cn/api/',
 		wx: 'http://wx.qa.ishandian.com.cn/api/',
 		pos: 'http://v5.qa.ishandian.com.cn/pos/',
-		fs: 'http://fs.qa.ishandian.com.cn/api/'
+		fs: 'http://fs.qa.ishandian.com.cn/'
 	},
 	// pre
 	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "http://fspre.liangpiaoji.com/api/"},
