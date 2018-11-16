@@ -172,6 +172,7 @@ export default {
 					icon: 'el-icon-plus',
 					fn: () => {
 						this.isAdd = true;
+						this.formulaInsert = {};
 						this.showFormula = true;
 					}
 				}
