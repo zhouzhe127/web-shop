@@ -623,7 +623,7 @@ export default {
 			}
 		}
 		.day span {
-			width: 20%;
+			width: 25%;
 		}
 		ul {
 			background: #fff;
