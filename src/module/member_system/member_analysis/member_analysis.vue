@@ -277,7 +277,7 @@
 				let list = consumeList[this.dateFormat];
 				if (list && list != '') {
 					//消费总额
-					bigDate.totalConsumption = Number(list.cnt1) + Number(list.cnt2) + Number(list.cnt3);
+					bigDate.totalConsumption = Number(list.cnt1) + Number(list.cnt2);
 					bigDate.newconsumption = list.cnt1;
 					bigDate.oldconsumption = list.cnt2;
 					bigDate.nonconsumption = list.cnt3;
