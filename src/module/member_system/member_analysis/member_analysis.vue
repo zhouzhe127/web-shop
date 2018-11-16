@@ -277,7 +277,8 @@
 				let list = consumeList[this.dateFormat];
 				if (list && list != '') {
 					//消费总额
-					bigDate.totalConsumption = Number(list.cnt1) + Number(list.cnt2);
+					let totalConsumption = Number(list.cnt1) + Number(list.cnt2);
+					bigDate.totalConsumption = utils.toFloatStr(totalConsumption.toString(),2);
 					bigDate.newconsumption = list.cnt1;
 					bigDate.oldconsumption = list.cnt2;
 					bigDate.nonconsumption = list.cnt3;
@@ -288,7 +289,8 @@
 				let tableList = consumeTableList[this.dateFormat];
 				if (tableList && tableList != '') {
 					//翻台次数
-					bigDate.totalconsumeTable = Number(tableList.cnt1) + Number(tableList.cnt2) + Number(tableList.cnt3);
+					let totalconsumeTable = Number(tableList.cnt1) + Number(tableList.cnt2) + Number(tableList.cnt3);
+					bigDate.totalconsumeTable = utils.toFloatStr(totalconsumeTable.toString(),2);
 					bigDate.newturntable = tableList.cnt1;
 					bigDate.oldturntable = tableList.cnt2;
 					bigDate.nonturntable = tableList.cnt3;

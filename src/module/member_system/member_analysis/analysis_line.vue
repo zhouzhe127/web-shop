@@ -207,7 +207,7 @@
 			getTotal: function(dataList) { //求和
 				let list = dataList;
 				for (let key in list) {
-					list[key] = Number(list[key].cnt1) + Number(list[key].cnt2) + Number(list[key].cnt3);
+					list[key] = Number(list[key].cnt1) + Number(list[key].cnt2);
 				}
 				return list;
 			},
