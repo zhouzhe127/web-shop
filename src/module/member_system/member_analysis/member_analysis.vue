@@ -42,10 +42,10 @@
 								<p class="first_p">老会员消费占比</p>
 								<p>{{bigDate.oldconsumptionZB}}</p>
 							</div>
-							<div class="percentage_r">
+							<!-- <div class="percentage_r">
 								<p class="first_p">非会员消费占比</p>
 								<p>{{bigDate.nonconsumptionZB}}</p>
-							</div>
+							</div> -->
 						</div>
 					</section>
 				</div>
@@ -82,10 +82,10 @@
 							<p class="first_p">老会员消费金额</p>
 							<p>{{bigDate.oldconsumption}}</p>
 						</div>
-						<div class="percentage_r">
+						<!-- <div class="percentage_r">
 							<p class="first_p">非会员消费金额</p>
 							<p>{{bigDate.nonconsumption}}</p>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				<!-- 翻台 -->

@@ -46,6 +46,11 @@
 						<span>{{filterType(scope.row.type)}}</span>
 					</template>
 				</el-table-column>
+				<el-table-column prop="createTime" label="交易金额" align="center">
+					<template slot-scope="scope">
+						<span>{{judgeType(scope.row)}}</span>
+					</template>
+				</el-table-column>				
 				<el-table-column prop="createTime" label="余额" align="center">
 					<template slot-scope="scope">
 						<span v-if="scope.row.type == 1 || scope.row.type == 2 || scope.row.type == 6 || scope.row.type == 7 || scope.row.type == 12 || scope.row.type == 13">{{scope.row.amount}}</span>
@@ -253,7 +258,34 @@
 			searchList: function() { //搜索
 				this.page = 1;
 				this.getRecordList();
-			}
+			},
+			judgeType: function(item) {
+				// 判断操作类型 是否加还是减
+				let operate;
+				if (item.type == '1' || item.type == '3' || item.type == '6' || item.type == '9' || item.type == '11' || item.type ==
+					'13' || item.type == '25' || item.type == '28') {
+					operate = '-';
+				} else {
+					operate = '+';
+				}
+
+				if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
+					'10' || item.type == '11' || item.type == '33') {
+					return operate + item.operatePoint;
+				} else {
+					if (item.type == '1' || item.type == '6') {
+						return operate + (parseInt(Number(item.operateAmount) * 100) + parseInt(Number(item.operateGiftAmount) * 100)) / 100;
+					} else if (item.type == '2') {
+						return operate + (parseInt(Number(item.rechargeAmount) * 100) + parseInt(Number(item.operateGiftAmount) * 100)) / 100;
+					} else {
+						if (this.bannerIndex == 2) {
+							return operate + (Number(item.operatePoint));
+						} else {
+							return operate + (Number(item.operateAmount));
+						}
+					}
+				}
+			},			
 		},
 		mounted() {
 			this.userData = storage.session('userShop');
