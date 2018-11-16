@@ -304,6 +304,10 @@
 			this.memberRemainAndAccounted();
 			this.getEcharts(); //加载百度图标
 			this.getConsumeAndGrowth();
+			this.changeRadio({
+				id: 1,
+				name: '今日'
+			});
 		},
 		created() {
 			let obj1 = {
