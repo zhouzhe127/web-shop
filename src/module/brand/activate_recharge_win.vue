@@ -164,7 +164,6 @@ export default {
 		},
 		reshowCountDown() {
 			this.reshowCont = this.reShowTime + 's后刷新';
-
 			this.reshowClock = setInterval(() => {
 				this.reShowTime--;
 				this.reshowCont = this.reShowTime + 's后刷新';
@@ -174,12 +173,12 @@ export default {
 					this.reshowCont = '60s后刷新';
 					this.reShowTime = 60;
 					this.refreshMaskShow = true;
-					this.handleGetCharge();
 				}
 			}, 1000);
 		},
 		reviewQr() {
 			this.refreshMaskShow = false;
+			this.handleGetCharge();
 			this.reshowCountDown();
 			this.handleGetQuery()
 		}
