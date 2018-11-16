@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-14 17:02:19
+ * @Last Modified time: 2018-11-16 11:04:50
  */
 <template>  
 	<div>
@@ -161,7 +161,7 @@ export default {
 				obj = {
 					pSortObj : this.sortObj,
 					pCollection : this.collection,
-					pScope : this.scope.map( ele => ele.id)
+					pScope : this.scope
 				};
 				if(obj.pScope.length == 0 && !obj.pCollection.id){
 					this.$message('请从物料范围或集合中选择一个!');
@@ -179,7 +179,7 @@ export default {
 			
 			switch(this.showCom){
 				case winType.selectMaterial:    //选择物料
-					this.scope = obj;
+					this.scope = obj.map( ele => ele.id);
 					this.collection = {};
 					break;
 				case winType.createCollection:  //新建集合,抛出新建的集合

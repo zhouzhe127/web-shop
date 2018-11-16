@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 17:54:07
+ * @Last Modified time: 2018-11-16 11:05:02
  */
 
 <template>  
@@ -345,7 +345,7 @@ export default {
 			}else{
 				selectList = this.selectList;
 			}
-			return selectList;
+			return selectList.map(ele => ele);
 		},
 		throwData(data){
 			this.$emit('change',data);            
@@ -424,7 +424,7 @@ export default {
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
-				pageSize:10,			    //每页显示的记录数
+				pageSize:50,			    //每页显示的记录数
 				pagerCount:7,			//每页显示的按钮数
 				currentPage:1,          //当前页
 			};
