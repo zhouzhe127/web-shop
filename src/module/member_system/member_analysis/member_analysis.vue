@@ -288,7 +288,7 @@
 				let tableList = consumeTableList[this.dateFormat];
 				if (tableList && tableList != '') {
 					//翻台次数
-					bigDate.totalconsumeTable = Number(tableList.cnt1) + Number(tableList.cnt2) + Number(tableList.cnt2);
+					bigDate.totalconsumeTable = Number(tableList.cnt1) + Number(tableList.cnt2) + Number(tableList.cnt3);
 					bigDate.newturntable = tableList.cnt1;
 					bigDate.oldturntable = tableList.cnt2;
 					bigDate.nonturntable = tableList.cnt3;
