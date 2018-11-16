@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 17:34:47
+ * @Last Modified time: 2018-11-16 10:02:39
  * @file 新建集合
  */
 
@@ -289,11 +289,11 @@ export default {
 		},
 		//分类的切换
 		changeCategory(){
-			// eslint-disable-next-line
+			this.getMaterialList();
 		},
 		//单位的切换
 		changeUnit(){
-			// eslint-disable-next-line
+			this.getMaterialList();
 		},
 
 
