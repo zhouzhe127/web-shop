@@ -87,6 +87,12 @@ export default {
 			this.allSelection = [];
 			//获取基础项数据
 			let base = await http.materialreportGetReportItemList();
+			for(let i=0;i<base.length;i++){
+				if(base[i].type==0){
+					base.splice(i,1);
+					i--;
+				}
+			}
 			this.baseList = base;
 			this.formulaData.base = this.baseList;
 			//获取公式项数据
