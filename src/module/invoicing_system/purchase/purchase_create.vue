@@ -998,6 +998,7 @@ export default {
 					}
 					this[resName].splice(addIndex+1,0,obj);
 					this.$message({message: '添加成功！',type: 'success'});
+					this.computeTotalPrice();
 				}else{
 					this.$confirm(`该${tipName}已在编辑区，是否覆盖？`, '提示', {
 						confirmButtonText: '确定',
@@ -1016,15 +1017,18 @@ export default {
 						}
 						this[resName].splice(coverIndex,coverNum,obj);
 						this.$message({message: '覆盖成功！',type: 'success'});
-					}).catch();
+						this.computeTotalPrice();
+					}).catch(()=>{
+						//
+					});
 				}
 			}else{
 				this.$message({message: '添加成功！',type: 'success'});
 				this[resName].push(obj);
 				this[alrName].push(res.id);//已经选中的id 存入选中列表
 				this.setAlreadyId(this[listName],alrName);
+				this.computeTotalPrice();
 			}
-			this.computeTotalPrice();
 		},
 		//列表-取消
 		cancelList(res,type,index){
@@ -1078,7 +1082,9 @@ export default {
 					mTotal = mTotal + item.unitPrice*(item.num/item.unitValue);
 				}
 			}
-			this.orderTotal = gTotal+mTotal;
+			console.log(gTotal+mTotal);
+			let str = (gTotal+mTotal)+'';
+			this.orderTotal = parseFloat(str);
 		},
 		setNumfloat(num){//设置2位浮点型数字
 			let str = num+'';
