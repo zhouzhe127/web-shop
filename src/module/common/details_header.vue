@@ -19,6 +19,19 @@
 
 		<!--充值弹窗-->
 		<chargeWin @toWin="toWin" v-if="winShow" :currentDetail="currentShop" @chargeResult="chargeResult"></chargeWin>
+		<!--退出弹窗-->
+		<win @winEvent="backLogin" v-if="backWin" :align="'center'" :width="500" :height="200" type="primary">
+			<!--标题-->
+			<span slot="title">退出</span>
+			<!--内容-->
+			<div slot="content" class="chargeBody">
+				<div style="height: 160px;font-size: 18px;color: red;line-height: 28px;padding: 65px 35px;">
+					充值已完成，需要重新登录激活店铺状态，点击<span style="color: #47B6E3;font-size: 18px">“确定”</span><br>即可退出登录
+				</div>
+			</div>
+		</win>
+
+
 
 	</div>
 </template>
@@ -30,7 +43,8 @@
 				currentShop:{},
 				winShow:false,
 				currentDetail:{},
-				userData:{}
+				userData:{},
+				backWin:false
 			}
 		},
 		methods: {
@@ -58,6 +72,7 @@
 					this.currentShop.availableState = 0;
 					this.userData.currentShop = this.currentShop;
 					this.changeShopInfo();
+					this.backWin = true
 				}
 			},
 			//缓存数据
@@ -120,7 +135,17 @@
 					console.log(this.userData, '改变后的');
 					storage.session('userShop', this.userData);
 				}
-			}
+			},
+			//退出登录
+			backLogin: function(res) {
+				if(res == 'ok'){
+					storage.session(null);
+					this.$store.commit('setlogoName', '');
+					document.querySelector('body').style.backgroundColor = 'rgb(247,247,247)';
+					this.$router.push('/');
+				}
+				this.backWin = false
+			},
 		},
 		computed: {
 			headerTil: function () {
@@ -133,11 +158,16 @@
 		mounted(){
 			this.userData = storage.session('userShop');
 			this.currentShop = this.userData.currentShop
+			// this.$alert('退出登录，获取最新状态', '退出', {
+			// 	confirmButtonText: '退出',
+			// 	callback: this.backLogin()
+			// });
 		},
 		components: {
 			chargeWin: () => import(/*webpackChunkName: "activate_recharge_win"*/ 'src/module/brand/activate_recharge_win'),
 			pageBtn: () =>
-				import ( /*webpackChunkName:'page_tools_btn'*/ 'src/module/common/page_tools_btn')
+				import ( /*webpackChunkName:'page_tools_btn'*/ 'src/module/common/page_tools_btn'),
+			win: () => import(/*webpackChunkName: "win"*/ 'src/components/win')
 		}
 	};
 </script>
