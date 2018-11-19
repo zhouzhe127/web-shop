@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-14 11:29:44
+ * @Last Modified time: 2018-11-16 14:20:50
  */
 
 <template>
@@ -17,7 +17,7 @@
 					{{$index+1}}
 				</span>
 			</el-table-column>
-			<el-table-column  min-width="180px"  label="报表模板名称" prop="name">
+			<el-table-column  min-width="180px"  label="报表模板名称" :show-overflow-tooltip="true" prop="name">
 			</el-table-column>
 
 			<el-table-column  min-width="150px"  label="创建人" prop="createUser">
@@ -49,7 +49,10 @@
 			>
 			</el-pagination>
 		</div>
+
+		<select-material-com :pList="list"></select-material-com>
 	</div>
+
 </template>
 
 <script>
@@ -89,6 +92,9 @@ export default {
 			pageObj:{},
 			tableData:[],
 			roleId:null,				//当前操作人的角色id
+
+
+			list:[],
 		};
 	},
 	methods: {
@@ -289,16 +295,41 @@ export default {
 			let res = await http[url]({data:obj},err);
 			return res;
 		},
+
+
+		//获取所有物料
+		async recursiveGetMaterialList(){
+			let subObj = {
+				name : '',
+				cid : '',
+				type : -1,
+				num : 50
+			};
+
+			let page = 1;
+			let arr = [];
+			
+			for(let i = 0;i < page; i += 1){
+				subObj.page = i + 1;
+				let retObj = await this.getHttp('getMaterialList',subObj);
+				page = Number(retObj.total);
+				arr.push(...retObj.list);
+			}   
+			return arr;
+		},
 	},
-	mounted(){
+	async mounted(){
 		this.initData();
 		this.initBtn();
 		this.initPageObj();
 		this.getUserRoleList();
 		this.getTemplateList();
+		this.list = await this.recursiveGetMaterialList();
 	},
 	components:{
 		addReportRow:() => import(/* webpackChunkName:"add_report_row_win"*/'./add_report_row_win'),
+		selectMaterialCom:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
+
 	}
 };
 </script>
@@ -310,7 +341,7 @@ export default {
 	.operation{
 		color:#E1BB4A;
 		padding-right:15px;
-		height:30px;
+		height:40px;
 		display: inline-flex;
 		align-items: center;
 		cursor: pointer;

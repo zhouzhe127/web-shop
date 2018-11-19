@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-15 18:11:43
+ * @Last Modified time: 2018-11-16 17:03:50
  */
 
 <template>
@@ -163,7 +163,7 @@ export default {
 						return;
 					}
 					ids = this.selectList.map( ele => ele.id).join(',');
-					this.delTemplate('确定要删所选中的报表吗？?',ids);               
+					this.delTemplate('确定要删所选中的报表吗?',ids);               
 					break;     
 			}
 			

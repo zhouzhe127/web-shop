@@ -141,6 +141,11 @@ export default {
 			type:[Number,String],
 			default:''
 		},
+		//是否展示选择物料的弹窗
+		pShowMaterial:{
+			type:[Boolean],
+			default:true
+		},
 		//弹窗标题
 		title:{
 			type:[String],
@@ -179,6 +184,10 @@ export default {
 			
 			switch(this.showCom){
 				case winType.selectMaterial:    //选择物料
+					if(obj.length == 0){
+						this.$message('请选择物料!');
+						return;
+					}
 					this.scope = obj.map( ele => ele.id);
 					this.collection = {};
 					break;
