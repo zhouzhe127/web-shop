@@ -59,11 +59,11 @@
 							<em style="color:#28a8e0;cursor: pointer" @click="openOid(scope.row.oid)">{{scope.row.oid}}</em>
 						</template>
 					</el-table-column>
-					<el-table-column show-overflow-tooltip min-width="50" align="center" prop="times" label="反结账次数"></el-table-column>
+					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="times" label="反结账次数"></el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="oldPrice" label="反结账前(消费/实收)"></el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="newPrice" label="反结账后(消费/实收)"></el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="time" label="反结账时间"> </el-table-column>
-					<el-table-column show-overflow-tooltip min-width="100" align="center" label="反结账原因">
+					<el-table-column show-overflow-tooltip min-width="130" align="center" label="反结账原因">
 						<template slot-scope="scope">
 							<span>{{scope.row.reason?scope.row.reason:'--'}}</span>
 						</template>
@@ -77,12 +77,12 @@
 
 			<section v-show="!isAll" style="margin-bottom:20px;">
 				<el-table ref="multipleTable" stripe :header-cell-style="{'background-color':'#f5f7fa'}" :data="reverseOneList" border>
-					<el-table-column fixed min-width="150" align="center" label="订单号">
+					<el-table-column fixed min-width="180" align="center" label="订单号">
 						<template slot-scope="scope">
 							<span style="color:#28a8e0;cursor: pointer" @click="openOidDetial(oid)">{{oid}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column fixed min-width="50" align="center" label="次数">
+					<el-table-column fixed min-width="80" align="center" label="次数">
 						<template slot-scope="scope">
 							<span>第{{scope.$index+1}}次</span>
 						</template>
@@ -90,7 +90,7 @@
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="oldPrice" label="反结账前(消费/实收)"></el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="newPrice" label="反结账后(消费/实收)"></el-table-column>
 					<el-table-column show-overflow-tooltip min-width="100" align="center" prop="time" label="反结账时间"> </el-table-column>
-					<el-table-column show-overflow-tooltip min-width="100" align="center" label="反结账原因">
+					<el-table-column show-overflow-tooltip min-width="130" align="center" label="反结账原因">
 						<template slot-scope="scope">
 							<span>{{scope.row.reason?scope.row.reason:'--'}}</span>
 						</template>
