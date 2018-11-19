@@ -26,6 +26,7 @@ if(process.env.NODE_ENV === 'development'){
 	Vue.use(ElementUI);
 }
 
+
 if (module.hot) {
     module.hot.accept();
 }
