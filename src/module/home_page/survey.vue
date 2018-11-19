@@ -20,7 +20,7 @@
 
 			<span v-if="userData.currentShop.endTime &&  userData.currentShop.endTime.length > 1">
 				<span style="font-weight: bold;font-size: 16px;color:#47B6E3;margin-left: 100px;">
-					门店使用有效期至{{handelFormatData(userData.currentShop.endTime,'yyyy-MM-dd hh:mm') }}，如需续费请及时咨询系统顾问
+					门店使用有效期至{{handelFormatData(userData.currentShop.endTime,'yyyy-MM-dd') }}，如需续费请及时咨询系统顾问
 				</span>
 			</span>
 
