@@ -204,8 +204,8 @@ let global = {
 		fs: 'http://fs.qa.ishandian.com.cn/'
 	},
 	// pre
-	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "http://fspre.liangpiaoji.com/api/"},
-	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "http://fs.liangpiaoji.com/api/"},
+	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "https://fspre.ishandian.net/"},
+	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "https://fs.i-shandian.com/"},
 
 	groupFansList: {
 		isOwer: false,

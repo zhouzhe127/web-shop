@@ -16,8 +16,8 @@
 						<img v-else src="../../../res/images/busis.png" width="160" height="160" alt="商品" />
 						<a class="gray good-image-delete" @click="deleteGoodImg">删除图片</a>
 						<a class="good-image-edit">编辑图片</a>
-						<form enctype="multipart/form-data" id="img_upload">
-							<input type="file" @change="uploadGoodsImg" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" class="good-image-file" />
+						<form enctype="multipart/form-data" id="img_upload" ref="imgForm">
+							<input type="file" @change="uploadGoodsImg" ref="imgUploadBtn" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" class="good-image-file" />
 						</form>
 					</div>
 				</div>
@@ -68,6 +68,7 @@
 				<el-button @click="cancel(0)">取消</el-button>
 				<el-button type="primary" @click="submit(false)">保存</el-button>
 				<el-button type="primary" @click="submit(true)" v-if="hasGoodsNum<4">保存并新建商品</el-button>
+				<el-button type="primary" @click="resetGoods">重置</el-button>
 			</el-form-item>
 		</el-form>
 		<el-dialog title="添加关联优惠券" :visible.sync="showCouponList" width="720px">
@@ -208,6 +209,8 @@ export default {
 	methods: {
 		//编辑图片
 		async uploadGoodsImg() {
+			let files = this.$refs.imgUploadBtn.files;
+			if(files.length == 0)return;
 			this.form.imgUrl = await http.uploadImg({
 				data: {
 					type: 5,
@@ -303,6 +306,8 @@ export default {
 			this.form.needPeople = '';
 			this.form.imgUrl = '';
 			this.selectedCoupon = '';
+			console.log(this.$refs);
+			this.$refs.imgForm && this.$refs.imgForm.reset(); //
 		},
 		initGoods() {
 			let selectedGoods = JSON.parse(JSON.stringify(this.selectedGoods));
