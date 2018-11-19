@@ -321,6 +321,11 @@ export default {
 				this.$message({message: '计算公式不能为空',type: 'error'});
 				return false;
 			}
+			//检查是否存在基础项
+			if(!/【(.*?)】/.test(formulaStr)){
+				this.$message({message: `公式中必须包含一个基础项`,type: 'error'});
+				return false;
+			}
 			//检测是否出现连续的运算符
 			let regComp = /[-+*/][-+*/]/;
 			if(regComp.test(formulaStr)){
