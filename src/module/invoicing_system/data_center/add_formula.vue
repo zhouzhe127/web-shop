@@ -58,7 +58,7 @@
 				<!-- 规则选项 -->
 				<div class="other">
 					<div class="other-item">
-						<el-select v-model="percent" placeholder="计算结果" class="btn-class">
+						<el-select v-model="isPercent" placeholder="计算结果" class="btn-class">
 							<el-option
 								v-for="item in formulaPercent"
 								:key="item.value"
@@ -69,7 +69,7 @@
 					</div>
 					<div class="other-item">
 						保留
-						<el-select v-model="reserve" placeholder="请选择" style="width:100px;">
+						<el-select v-model="reserveRule" placeholder="请选择" style="width:100px;">
 							<el-option
 								v-for="item in formulaReserve"
 								:key="item.value"
@@ -80,7 +80,7 @@
 						位小数
 					</div>
 					<div class="other-item">
-						<el-select v-model="rounding" placeholder="舍入规则" class="btn-class">
+						<el-select v-model="carryRule" placeholder="舍入规则" class="btn-class">
 							<el-option
 								v-for="item in formulaRounding"
 								:key="item.value"
@@ -136,18 +136,15 @@ export default {
 				{label:'向上取值',value:1},
 				{label:'向下取值',value:2},
 			],
-			percent:0,//是否百分百 true百分百 false数字
-			reserve:0,//保留几位小数
-			rounding:0,//舍入规则
 			baseList:[],
 			formulaList:[],
 			formulaObj:{},
 
 			id:0,//公式id
 			name:'',//公式名称
-			isPercent:'',//是否百分百
-			carryRule:'',//舍入规则
-			reserveRule:'',//保留几位小数
+			isPercent:0,//是否百分百 0百分百 1数字
+			carryRule:0,//舍入规则
+			reserveRule:0,//保留几位小数
 			baseParam:'',//基础字段id
 			formula:'',//计算公式
 
@@ -215,7 +212,6 @@ export default {
 		editFormula(){
 			for(let key in this.pObj){
 				this[key] = this.pObj[key];
-				
 			}
 			for(let key in this.saveParam){
 				this.saveParam[key] = this.pObj[key];
@@ -305,15 +301,15 @@ export default {
 			for(let i=0;i<formulaArray.length;i++){
 				if(!formulaArray[i]){
 					formulaArray.splice(i,1);
-					i++;
+					i--;
 				}
 			}
 			this.formulaObj={
 				formula:formulaStr,//计算公式
 				formulaArray:formulaArray,//公式项拆分数组
-				isPercent:this.percent,//是否百分百 true百分百 false数字
-				reserveRule:this.reserve,//保留几位小数
-				carryRule:this.rounding,//舍入规则
+				isPercent:this.isPercent,//是否百分百 true百分百 false数字
+				reserveRule:this.reserveRule,//保留几位小数
+				carryRule:this.carryRule,//舍入规则
 				baseParam:baseArr.join(','),//基础项
 			};
 			this.addFormula(this.formulaObj);
@@ -349,9 +345,15 @@ export default {
 			let regItem = /【.*?】/g;
 			//检测是否出现单独的数字 如：【入库量】123
 			let alone = formulaStr.replace(regItem,'ALONE');
-			let regAloneNum = /[-+*/](?=\d+)|(?<=\d+)[-+*/]|\(\d+\)|ALONE[-+*/]ALONE/;
-			if(!regAloneNum.test(alone)){
-				this.$message({message: '计算公式不能出现单独的数字或计算公式，需要配合运算符',type: 'error'});
+			let regAloneNum = /[-+*/(](?=\d+)|(?<=\d+)[-+*/)]/;
+			if(/\d+/.test(alone) && !regAloneNum.test(alone)){
+				this.$message({message: '计算公式不能出现单独的数字，需要配合运算符',type: 'error'});
+				return false;
+			}
+			//检测是否出现连续基础项
+			let regBaseLink = /ALONEALONE/;
+			if(regBaseLink.test(alone)){
+				this.$message({message: '计算公式不能出现连续的基础项，需要配合运算符',type: 'error'});
 				return false;
 			}
 			//检测是否出现非法字符
@@ -361,16 +363,16 @@ export default {
 				this.$message({message: '计算公式不合法，请检查公式',type: 'error'});
 				return false;
 			}
-			//检测公式名称
-			if(!this.name){
-				this.$message({message: '请填写计算公式名称',type: 'error'});
-				return false;
-			}
 			//最终检测-带入程序计算 看程序是否报错
 			try {
 				eval(mock);
 			} catch (error) {
-				this.$message({message: '计算公式存在不合法，请检查公式',type: 'error'});
+				this.$message({message: '计算公式不合法，请检查公式',type: 'error'});
+				return false;
+			}
+			//检测公式名称
+			if(!this.name){
+				this.$message({message: '请填写计算公式名称',type: 'error'});
 				return false;
 			}
 			return true;

@@ -285,7 +285,7 @@
 						one.push({value:item.id,label:item.name,children:[]});
 					}
 				}
-				one.unshift({value:-1,label:'全部分类'});
+				one.unshift({value:'',label:'全部分类'});
 				this.oneSort = one;
 				for(let one of this.oneSort){
 					let two = [];
@@ -301,9 +301,7 @@
 					}
 				}
 				this.sortOne = one;
-				console.log(this.sortOneId,this.sortTwoId);
 				this.cidSel = this.sortTwoId?[this.sortOneId,this.sortTwoId]:[this.sortOneId];
-				console.log(this.cidSel);
 			},
 			getSortSel(res){
 				if(res.length>1){
