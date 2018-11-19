@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-19 14:01:21
+ * @Last Modified time: 2018-11-19 14:54:13
  */
 
 <template>  
@@ -249,7 +249,7 @@ export default {
 		},
 		//分类的切换
 		changeCategory(){
-			this.getMaterialList();
+			this.filterReset('filter');
 		},
 
 
@@ -259,6 +259,7 @@ export default {
 
 		//根据条件筛选物料
 		getMaterialList(subObj){
+			console.log('aaaaa');
 			if(!subObj) subObj = this.getCondition();
 			let arr = this.filterListByCid(this.list,subObj.cid);
 			arr = this.filterListByAttr(arr,subObj.name);
@@ -388,7 +389,7 @@ export default {
 			let arr = [];
 
 			for(let ele of list){
-				if(Array.isArray(ele.cate)) ele.cate = [];
+				if(!Array.isArray(ele.cate)) ele.cate = [];
 				for(let e of ele.cate){
 					if(e[attr] == name){
 						arr.push(ele);

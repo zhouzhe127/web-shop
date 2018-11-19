@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-19 10:43:23
+ * @Last Modified time: 2018-11-19 15:10:55
  */
 
 <template>
@@ -206,6 +206,9 @@ export default {
 						if(this.isSelectCurrentPage(this.tableData,{val:this.percent,attr:'percent'})){
 							this.clearTaskTimer('rList');
 						}
+					}
+					if(!retObj.data || (Array.isArray(retObj.data) && retObj.data.length == 0) ){
+							this.clearTaskTimer('rList');						
 					}
 				},
 				15000,
