@@ -25,8 +25,8 @@
 			<span slot="title">退出</span>
 			<!--内容-->
 			<div slot="content" class="chargeBody">
-				<div style="display: flex;align-items: center;justify-content: center;height: 160px;font-size: 18px;color: red;">
-					充值已完成，需要重新登录激活店铺状态，点击“确定”，即可退出登录
+				<div style="height: 160px;font-size: 18px;color: red;line-height: 28px;padding: 65px 35px;">
+					充值已完成，需要重新登录激活店铺状态，点击<span style="color: #47B6E3;font-size: 18px">“确定”</span><br>即可退出登录
 				</div>
 			</div>
 		</win>
@@ -158,7 +158,6 @@
 		mounted(){
 			this.userData = storage.session('userShop');
 			this.currentShop = this.userData.currentShop
-
 			// this.$alert('退出登录，获取最新状态', '退出', {
 			// 	confirmButtonText: '退出',
 			// 	callback: this.backLogin()
