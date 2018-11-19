@@ -96,6 +96,8 @@
 							<span @click="getDetail(scope.row)" style="color:#e1bb4a;">查看详情</span>
 						</template>
 					</el-table-column>
+					<el-table-column label="日期" prop="day" align="center">
+					</el-table-column>					
 					<el-table-column label="支付次数" prop="payTimes" align="center">
 					</el-table-column>
 					<el-table-column prop="totalConsumption" label="消费总额" align="center">
@@ -302,6 +304,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.setPage();
 			},

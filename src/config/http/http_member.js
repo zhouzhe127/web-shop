@@ -99,6 +99,10 @@ export default {
 	'getRecordList': {
 		url: w + 'Member/getRecordList' //获取消费记录
 	},
+	'exportgetRecordList': {
+		url: w + 'Member/getRecordList', //获取消费记录
+		type: 'file'
+	},
 	'unbindWeiXin': {
 		url: w + 'Member/unbindWeiXin', //解绑微信
 		method: 'post'
@@ -287,11 +291,11 @@ export default {
 		method: 'get'
 	},
 	'getConsumeAndGrowth': {
-		url: w + 'member/getConsumeAndGrowth', //昨日今日增长消费
+		url: w + 'Member/dayAnalysis', //昨日今日增长消费翻台
 		method: 'get'
 	},
 	'getConsumeOrGrowthTrend': {
-		url: w + 'member/getConsumeOrGrowthTrend', //消费增长趋势
+		url: w + 'Member/analysis', //会员增长趋势
 		method: 'get'
 	},
 	'newMemberexport': {

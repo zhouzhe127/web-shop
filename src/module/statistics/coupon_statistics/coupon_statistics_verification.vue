@@ -56,7 +56,7 @@
 					<span>{{couponName}}</span>
 					<span></span>
 					<span>共
-								<a href="javascript:;">{{allFormList.length}}</a>条记录</span>
+						<a href="javascript:;">{{allFormList.length}}</a>条记录</span>
 				</div>
 				<div class="list_title_r fr">
 				</div>
@@ -104,7 +104,6 @@
 <script type="text/javascript">
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
 	export default {
 		data() {
 			return {
@@ -127,7 +126,6 @@
 			endTime: Number, //结束时间
 			couponName: String, //优惠券名称
 			couponId: String, //优惠券的id
-			couponName: String //优惠券名称
 		},
 		methods: {
 			ensure: function() {
@@ -202,6 +200,7 @@
 				this.formList = pageContent;
 			},
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.setPage();
 			},

@@ -163,6 +163,7 @@
 				});
 				this.isEdit = true;
 				this.position = res;
+				this.$store.commit('setPageTools',{});
 			},
 			dels(id) {
 				// debugger
@@ -192,6 +193,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.openProList();
 			},

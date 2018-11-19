@@ -701,7 +701,7 @@ export default {
 	height: 40px;
 	line-height: 40px;
 	text-indent: 25px;
-	background: url("../../../src/res/images/prompt.png") 0 center no-repeat;
+	background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
 	color: #999999;
 }
 
@@ -750,7 +750,7 @@ export default {
 	display: none;
 	width: 25px;
 	height: 25px;
-	background-image: url(../../res/images/delete.png);
+	background-image: url(../../../res/images/delete.png);
 	background-position: center center;
 	background-repeat: no-repeat;
 	cursor: pointer;
@@ -761,6 +761,6 @@ export default {
 }
 
 .interests .bg {
-	background: url(../../res/icon/iconright.png) #fff center no-repeat;
+	background: url(../../../res/icon/iconright.png) #fff center no-repeat;
 }
 </style>

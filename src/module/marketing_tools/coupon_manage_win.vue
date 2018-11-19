@@ -1,6 +1,6 @@
 <template>
 	<transition name="fade">
-		<win :width="580" :height="800" :align="'right'" :type="'alert'" :ok="ok" @winEvent="winEvent">
+		<win :width="580" :height="800" :align="'right'" :type="'alert'" :ok="okStyle" @winEvent="winEvent">
 			<section slot="content" id="tanmanagement">
 				<section class="titleTop" style="width:100%;height:40px;">
 					<div style="width:100%;height:40px;margin:10px;line-height: 40px;position: relative;">
@@ -26,7 +26,7 @@
 							<h3 class="showBefore">优惠券名称:</h3>
 							<div class="shopAfter">{{detials.name}}</div>
 						</div>
-						<div style="width:100%;height:40px;" v-if="detials.type =='2' || detials.type =='6'">
+						<div style="width:100%;height:40px;" v-if="detials.type =='2' || detials.type =='6' || detials.type =='8'">
 							<h3 class="showBefore">强制减免:</h3>
 							<div class="shopAfter" v-if="detials.isDiscount == 1">是</div>
 							<div class="shopAfter" v-if="detials.isDiscount == 0">否</div>
@@ -72,6 +72,10 @@
 						<div style="width:100%;height:40px;" v-if="detials.type == 8">
 							<h3 class="showBefore">随机立减金额:</h3>
 							<div class="shopAfter">{{detials.billPrice}}至{{detials.reckoningPrice}}</div>
+						</div>
+						<div style="width:100%;height:40px;" v-if="detials.type == 8">
+							<h3 class="showBefore">随机金额取整:</h3>
+							<div class="shopAfter">{{randomAmountList[detials.priceRule]}}</div>
 						</div>
 						<div v-if="detials.type != 7">
 							<h3 class="showBefore">优惠券共享:</h3>
@@ -145,7 +149,7 @@
 		</win>
 	</transition>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
@@ -156,31 +160,38 @@
 				showShops: '',
 				couponDetail: '',
 				ischain: '',
-				sharing:{
-					'0':'不与其它优惠共享',
-					'1':'可与其他优惠共享,可与会员卡优惠共用',
-					'2':'可与其他优惠共享,不与会员卡优惠共用'
-				}
+				sharing: {
+					'0': '不与其它优惠共享',
+					'1': '可与其他优惠共享,可与会员卡优惠共用',
+					'2': '可与其他优惠共享,不与会员卡优惠共用'
+				},
+				randomAmountList: {
+					'0': '取整至元',
+					'1': '取整至角',
+					'2': '取整至分'
+				},
+				okStyle: null
 			};
 		},
 		props: ['index', 'item'],
 		computed: {
-			ok() {
-				if (this.ischain != 3 && this.ischain != 0) {
-					return {
-						content: '确定'
-					};
-				} else {
-					return {
-						content: '修改'
-					};
-				}
-			}
+			// ok() {
+			// 	console.log(this.details)
+			// 	if (this.ischain == 1 || this.ischain == 2 || this.details.fromType == 2) {
+			// 		return {
+			// 			content: '确定'
+			// 		};
+			// 	} else {
+			// 		return {
+			// 			content: '修改'
+			// 		};
+			// 	}
+			// }
 		},
 		methods: {
 			winEvent(str) {
 				if (str == 'ok') {
-					if (this.ischain != 3 && this.ischain != 0) {
+					if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
 						this.$emit('changeCoupon', 'nochange');
 					} else {
 						//storage.session('couponDetail',this.detials)
@@ -208,7 +219,7 @@
 				if (arr.length == 0) {
 					return '请选择日期';
 				}
-				arr = arr.sort(function (a, b) {
+				arr = arr.sort(function(a, b) {
 					return a - b;
 				});
 				let str = '';
@@ -257,6 +268,23 @@
 					}
 				});
 				this.detials = res;
+				if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
+					this.okStyle = {
+						content: '确定',
+						style: {
+							backgroundColor: '#2a80b9',
+							color: '#fff'
+						}
+					};
+				} else {
+					this.okStyle = {
+						content: '修改',
+						style: {
+							backgroundColor: '#E1BB4A',
+							color: '#fff'
+						}
+					};
+				}
 				// this.couponDetail = res
 			}
 		},

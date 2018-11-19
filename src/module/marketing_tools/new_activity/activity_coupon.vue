@@ -267,19 +267,11 @@ export default {
 			let coupons = [];
 			for (let item of data) {
 				item.num = 1;
-				if (item.type != 7) { //type7是积分卡券
+				if (item.type != 7 && item.fromType != 2) { //type7是积分卡券
 					coupons.push(item);
 				}
 			}
 			this.couponList = this.arrayfilter(coupons, this.couponLists);
-			// this.couponList.forEach(function(item) {
-			//     item.num = 1;
-			// });
-			// if (this.couponType == '1') {
-			//     this.selectCoupon = this.promotersCoupon;
-			// } else if (this.couponType == '2') {
-			//     this.selectCoupon = this.followersCoupon;
-			// }
 			this.showBirthCoupon = true;
 		},
 		arrayfilter: function(array, array2) { //两个数组中过滤不同的元素

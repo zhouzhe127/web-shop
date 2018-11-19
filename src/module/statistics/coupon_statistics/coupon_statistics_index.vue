@@ -47,7 +47,7 @@
 						<span>优惠券统计</span>
 						<span></span>
 						<span>共
-								<a href="javascript:;">{{listLen}}</a>条记录</span>
+							<a href="javascript:;">{{listLen}}</a>条记录</span>
 					</div>
 					<div class="list_title_r fr">
 					</div>
@@ -120,7 +120,6 @@
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
-	import global from 'src/manager/global';
 
 	export default {
 		data() {
@@ -281,7 +280,7 @@
 				}
 				return true;
 			},
-			async getCouponData(obj) {
+			async getCouponData() {
 				if (!this.checkForm()) return;
 				let res = await http.getCouponStatisticsData({
 					data: {
@@ -581,6 +580,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.getCouponData();
 			},
@@ -633,13 +633,13 @@
 		},
 		components: {
 			page: () =>
-				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 			calendar: () =>
-				import ( /*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: "calendar_result"*/ 'src/components/calendar_result'),
 			'select-store': () =>
-				import ( /*webpackChunkName: "select_store"*/ 'src/components/select_store'),
+				import( /*webpackChunkName: "select_store"*/ 'src/components/select_store'),
 			comTable: () =>
-				import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+				import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 			verification: () =>
 				import( /*webpackChunkName: "coupon_statistics_verification"*/ './coupon_statistics_verification'),
 		}

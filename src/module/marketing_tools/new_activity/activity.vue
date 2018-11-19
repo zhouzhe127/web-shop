@@ -94,10 +94,10 @@
 						<span v-if="flag==2" style="padding:0 5px;color: #D2D2D2">|</span>
 						<el-button v-if="flag==2" size="medium" type="text" @click="off(scope.row)" style="color: rgb(40, 168, 224);">下架</el-button>
 						<!-- <span v-if="flag==2" style="padding:0 5px;color: #D2D2D2">|</span> -->
-						<el-button v-if="flag==3" size="medium" type="text" @click="on(scope.row)" style="color: rgb(40, 168, 224);">上架</el-button>
-						<span v-if="flag==3" style="padding:0 5px;color: #D2D2D2">|</span>
-						<el-button v-if="flag==0 || flag==1 || flag==3" size="medium" type="text" @click="modfycoupons(scope.row,'1')" style="color: #ff8d00;">编辑</el-button>
-						<span v-if="flag==0 || flag==1 || flag==3" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="flag==3 && scope.row.type != 8" size="medium" type="text" @click="on(scope.row)" style="color: rgb(40, 168, 224);">上架</el-button>
+						<span v-if="flag==3 && scope.row.type != 8" style="padding:0 5px;color: #D2D2D2">|</span>
+						<el-button v-if="flag==0 || flag==1 || (flag==3 && scope.row.type != 8)" size="medium" type="text" @click="modfycoupons(scope.row,'1')" style="color: #ff8d00;">编辑</el-button>
+						<span v-if="flag==0 || flag==1 || (flag==3 && scope.row.type != 8)" style="padding:0 5px;color: #D2D2D2">|</span>
 						<el-button v-if="!(flag==2)" size="medium" type="text" @click="deletecoupons(scope.row)" style="color: #fd3f1f;">删除</el-button>
 					</template>
 					<!-- <template slot-scope="scope" v-else>
@@ -112,7 +112,7 @@
 					<!-- <template slot-scope="scope" v-else>
 						<el-button size="medium" type="primary" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
 					</template> -->
-				</el-table-column>				
+				</el-table-column>
 			</el-table>
 		</div>
 		<!-- 活动列表 -->
@@ -123,7 +123,7 @@
 		<!-- <activityAdd @winEvent='winEvent' v-if='showAdd'></activityAdd> -->
 	</section>
 </template>
-<script>
+<script type="text/javascript">
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
@@ -189,7 +189,10 @@
 					'4': '裂变活动',
 					'5': '会员日',
 					'6': '满减活动',
-					'7': '领券活动'
+					'7': '领券活动',
+					'8': '消费满次活动',
+					'9': '消费券返券活动',
+					'10': '唤醒营销活动',
 				},
 				count: '',
 			};
@@ -515,6 +518,15 @@
 					case 6:
 						this.$router.push('/admin/activity/generalActivity/fullreduce');
 						break;
+					case 8:
+						this.$router.push('/admin/activity/generalActivity/fulltime');
+						break;
+					case 9:
+						this.$router.push('/admin/activity/generalActivity/returnticket');
+						break;
+					case 10:
+						this.$router.push('/admin/activity/generalActivity/wakemarketing');
+						break;
 				}
 			},
 			// 获取卡属门店店铺列表
@@ -541,6 +553,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.newgetActivityList();
 			},

@@ -308,6 +308,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.getRechargeData();
 			},
@@ -339,7 +340,7 @@
 			cardDetail: () =>
 				import ( /*webpackChunkName: 'card_queries_detail'*/ './../../member_system/card_queries_detail'),
 			memberDetail: () =>
-				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_manage_detail'),
+				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_management/member_manage_detail'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{

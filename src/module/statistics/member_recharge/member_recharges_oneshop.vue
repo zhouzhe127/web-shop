@@ -200,6 +200,7 @@
 			// 	this.getRechargeData();
 			// },
 			handleSizeChange(p) {
+				this.page = 1;
 				this.num = p;
 				this.getRechargeData();
 			},

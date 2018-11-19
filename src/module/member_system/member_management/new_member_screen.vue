@@ -779,7 +779,7 @@ export default {
 	display: block;
 	width: 16px;
 	height: 19px;
-	background: url(../../../src/res/icon/icondelete.png) no-repeat center;
+	background: url(../../../../src/res/icon/icondelete.png) no-repeat center;
 	margin: 10px 25px 10px 0;
 }
 

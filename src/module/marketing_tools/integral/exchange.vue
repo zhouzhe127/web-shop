@@ -6,34 +6,26 @@
 			<div class="filbox fl clearfix">
 				<!--日期组件 开始时间-->
 				<span class="line fl">创建时间</span>
-				<!-- <calendar :time="startTime" class="data-box fl" @emit="startTimeChange" :format="'yyyy年MM月dd日'"></calendar> -->
 				<el-date-picker class="fl" v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" :editable="false">
 				</el-date-picker>
 				<span class="line fl">-</span>
 				<!--日期组件 开始时间-->
-				<!-- <calendar :time="endTime" class="data-box fl" @emit="endTimeChange" :format="'yyyy年MM月dd日'"></calendar> -->
 				<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :clearable="false" @change="endTimeChange" :editable="false">
 				</el-date-picker>
-				<!-- <span class="order-order-searchA fl" @click="searchList">
-                    <span class="order-order-search" href="javascript:void(0)"></span>
-				</span> -->
 				<el-button class="fl" type="primary" icon="el-icon-search" @click="searchList"></el-button>
 			</div>
 			<div class="filbox fl clearfix">
 				<span class="fl line">商品名称</span>
-				<!-- <input type="text" class="name" placeholder="请输入商品名称" v-model='actName' maxlength="10" /> -->
 				<el-input class="fl" v-model="actName" placeholder="请输入商品名称" maxlength="10" style="width:200px;"></el-input>
 			</div>
 			<!-- 筛选 重置 -->
 			<div class="filbox fl">
-				<!-- <a class="fl blue " href="javascript:void(0)" @click="searchList">筛选</a> -->
 				<el-button type="primary" @click="searchList" style="width:100px;">筛选</el-button>
 			</div>
 		</div>
 		<div class="filter clearfix">
 			<div class="filbox">
 				<span class="line">状态:</span>
-				<!-- <span v-for="(item,i) in statusList" :key="i" class="fl mar" :class="{'ons':item.status == 1 }" @click="staTooge(item.id)">{{item.name}}</span> -->
 				<el-radio-group v-model="commoditySlect">
 					<el-radio-button v-for="(item,index) in statusList" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
 				</el-radio-group>
@@ -90,7 +82,7 @@
 				</el-table-column>
 				<el-table-column label="核销人" width="100" align="center">
 					<template slot-scope="scope">
-						<span v-if="scope.row.goodsType == '0'">{{scope.row.mname}}</span>
+						<span v-if="scope.row.goodsType == '1'">{{scope.row.mname}}</span>
 						<span v-else>{{getStaffname(scope.row.updateUid)}}</span>
 					</template>
 				</el-table-column>
@@ -225,7 +217,13 @@
 			async changeExport() {
 				await http.changeExport({
 					data: {
-						shopId: this.shopId
+						page: this.pages,
+						num: this.num,
+						type: this.types,
+						start: parseInt(this.startTime / 1000), //开始时间
+						end: parseInt(this.endTime / 1000), //结束时间
+						name: this.actName,
+						isExport: 1				
 					}
 				});
 			},
@@ -318,6 +316,7 @@
 			},
 			//每页显示多少条数据
 			handleSizeChange(p) {
+				this.pages = 1;
 				this.num = p;
 				this.getListByShopId({
 					page: this.pages

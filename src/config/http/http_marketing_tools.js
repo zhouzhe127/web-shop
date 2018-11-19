@@ -1,7 +1,8 @@
 import {
 	s,
 	w,
-	b
+	b,
+	f
 } from 'src/config/host_var';
 
 export default {
@@ -72,7 +73,7 @@ export default {
 		method: 'get'
 	},
 	'changeExport': {
-		url: w + 'activityexchange/export', //兑换管理导出
+		url: w + 'ActivityExchange/getListByShopId', //兑换管理导出
 		type: 'file'
 	},
 	'verifyCode': {
@@ -180,6 +181,9 @@ export default {
 	},
 	'getGetCouponCondition': {
 		url: s + 'coupon/getCouponCondition', //获取所有优惠券
+	},
+	'getAllCouponLists': {
+		url: w + 'coupon/getCouponCondition', //获取所有的优惠券 可以传参数form=2 找砍价活动的优惠券
 	},
 	'getMemberNum': {
 		url: w + 'member/getMemberNum', //获取筛选会员数量
@@ -352,5 +356,50 @@ export default {
 	'getSubscribeFansCount': {
 		url: w + 'Activityfans/getSubscribeFansCount', //获取活动粉丝
 		method: 'get'
-	}
+	},
+	/* ↓ 砍价活动(粮票集) ↓
+	-------------------*/
+	'activityCreateActivity': {
+		url: f + 'Api/Activity/createActivity', //新建砍价活动
+		method: 'post'
+	},
+	'activityEditActivity': {
+		url: f + 'Api/Activity/editActivity', // 修改砍价活动
+		method: 'post'
+	},
+	'activityAddGoods': {
+		url: f + 'Api/Activity/addGoods', //添加活动商品
+		method: 'post'
+	},
+	'activityEditGoods': {
+		url: f + 'Api/Activity/editGoods', // 编辑活动商品
+		method: 'post'
+	},
+	'activityPushGoods': {
+		url: f + 'Api/Activity/pushGoods', // 上架活动商品
+		method: 'post'
+	},
+	'activityRevokePushGoods': {
+		url: f + 'Api/Activity/revokePushGoods', // 下架活动商品
+		method: 'post'
+	},
+	'statisticGetActivity': {
+		url: f + 'Api/Statistic/getActivity', // 获取砍价活动列表
+		method: 'get'
+	},
+	'activityGetActivityDetail': {
+		url: f + 'Api/activity/getActivityDetail', // 获取 活动统计明细
+		method: 'get'
+	},
+	'statisticGetActivityGoods': {
+		url: f + 'Api/Statistic/getActivityGoods', // 获取砍价活动明细
+		method: 'get'
+	},
+	'getMiniProQR': {
+		url: f + 'Api/Weixin/getMiniProQR', // 获取砍价活动明细
+		type: 'file',
+		// method: 'get'
+	},
+	/* ↑ 砍价活动(粮票集) ↑
+	-------------------*/
 };

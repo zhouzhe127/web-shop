@@ -35,7 +35,8 @@ const marketing_tools = {
 	"0415": "marketing_tools/payment_configuration",
 	"0416": "marketing_tools/sweepcode_pay",
 	"0417": "marketing_tools/member_store_config",
-	"0418": "marketing_tools/template_switching"
+	"0418": "marketing_tools/template_switching",
+	"0419": "marketing_tools/bargain_activity"
 };
 const shop_config = {
 	"051": "shop_config/employee_manage",
@@ -167,8 +168,8 @@ const member_system = {
 	'1111': 'member_system/card_type',
 	'1112': 'member_system/getapplied_entitycardlist',
 	'1113': 'member_system/membercard_import',
-    '1114': 'member_system/member_analysis',
-    '1115': 'member_system/member_activity_value'
+	'1114': 'member_system/member_analysis',
+	'1115': 'member_system/member_activity_value'
 };
 const seller_assistant = {
 	'121': 'seller_assistant/gold_config',
@@ -191,7 +192,7 @@ const ticket_config = {
 	"132": "ticket_config/sales_party"
 };
 let config = {
-	useId: [], //需要用到的路由id
+	useId: ["0419"], //需要用到的路由id
 	configs: {} //需要插入的路由模块
 };
 Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);

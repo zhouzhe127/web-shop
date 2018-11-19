@@ -2,14 +2,6 @@
 	<div>
 		<section v-if="couponType == 0" id="management">
 			<div class='test'>
-				<!-- <div class="oClickBox" style="" @click="showCalendar">
-					<span class="oSpan" style="">{{start}}&nbsp;----&nbsp;{{end}}</span>
-					<span class="down"></span>
-				</div>
-				<a style="background-color: #29A7E1;margin-left: -4px;" @click="seachData" href="javascript:void(0)">
-					<span class="search"></span>
-				</a>
-				<can-multi @castTime="getAddAlltime" @closeCan="()=>{isShowCa=false}" v-if="isShowCa" :apartDays="days" :sideStart="atime" :sideEnd="btime"></can-multi> -->
 				<el-date-picker class="fl" v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false">
 				</el-date-picker>
 				<el-button class="fl" type="primary" icon="el-icon-search" @click="seachData"></el-button>
@@ -49,7 +41,7 @@
 					</el-table-column>
 					<el-table-column label="操作" align="center" width="280">
 						<template slot-scope="scope">
-							<div v-if="ischain == 1 || ischain == 2">
+							<div v-if="ischain == 1 || ischain == 2 || scope.row.fromType == '2'">
 								<el-button size="medium" type="text" @click="opencoupons(scope.$index,scope.row)">查看详情</el-button>
 							</div>
 							<div v-else>
@@ -69,27 +61,6 @@
 			<div class="pageWrap">
 				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="pageNum" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 			</div>
-			<!-- <com-table :listHeight='60' :showHand="false" :listName="'优惠券列表'" :showTitle='2' :listWidth="1300" :introData="couponList" :titleData="titleList">
-				<div slot="con-0" slot-scope="props">{{returnTime(props.data.createTime)}}</div>
-				<div slot="con-2" slot-scope="props">{{getEndTime(props.data)}}</div>
-				<div slot="con-3" slot-scope="props">
-					{{couponTypeList[props.data.type]}}
-				</div>
-				<div slot="con-4" slot-scope="props">
-					<div class="align_item" v-if="ischain == 1 || ischain == 2">
-						<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
-					</div>
-					<div class="align_item" v-else>
-						<section @click="unbundlingCoupon(props.data)" style="border-bottom: 1px solid #fff;background-color: #28A8E0;color: #fff;">同步</section>
-						<section @click="opencoupons(props.index,props.data)" style="border-bottom: 1px solid #fff;background-color: #FF9800;color: #fff;">查看详情</section>
-						<section @click="modfycoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #858585;color: #fff;">修改</section>
-						<section @click="deletecoupons(props.data)" style="border-bottom: 1px solid #fff;background-color: #A7A7A7;color: #fff;">删除</section>
-					</div>
-				</div>
-			</com-table> -->
-			<!-- <footer class="worker_staff_footer">
-				<page v-if="total>1" :page="page" @pageNum="pageChange" :total="total" :len="10"></page>
-			</footer> -->
 		</section>
 		<breakCoupon v-if="couponType == 1 || couponType == 2 || couponType == 8" :couponDetail='couponDetail' @changeMnage='getcouponResult'></breakCoupon>
 		<discountCoupon v-if="couponType == 3 || couponType == 4" :couponDetail='couponDetail' @changeMnage='getcouponResult'></discountCoupon>
@@ -101,7 +72,7 @@
 		<maunBundling v-if='unbindWin' @getAppliedWin='getResult'></maunBundling>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import utils from 'src/verdor/utils';
@@ -140,14 +111,14 @@ export default {
 			couponType: 0, //优惠券的标识
 			couponDetail: Object, //优惠券的详情
 			couponTypeList: {
-				1: '单品减免',
-				2: '整单减免',
-				3: '单品打折',
-				4: '整单打折',
-				5: '赠菜',
+				1: '单品减免优惠券',
+				2: '整单减免优惠券',
+				3: '单品打折优惠券',
+				4: '整单打折优惠券',
+				5: '赠菜优惠券',
 				6: '代金券',
 				7: '积分卡券',
-				8: '随机立减'
+				8: '随机立减优惠券'
 			},
 			unbindWin: false, //同步优惠券的弹窗
 			asyncId: '', //同步优惠券的id
@@ -331,6 +302,7 @@ export default {
 		},
 		//每页显示多少条数据
 		handleSizeChange(p) {
+			this.page = 1;
 			this.pageNum = p;
 			this.inte(this.indexOn);
 		},

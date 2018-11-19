@@ -4,60 +4,60 @@
      *
      * -->
 <template>
-    <div id="membercard">
-        <section v-if="isShow == 'all'">
-            <!-- 条件筛选 -->
-            <div class="filter clearfix">
-                <span>选择时间:{{formatTime(conditions.startTime)}}</span>
-                <span>卡种类:{{conditions.cardType}}</span>
-                <span>条件:{{conditions.addOreduce}}</span>
-                <span>调整结果:{{conditions.result}}</span>
-            </div>
-            <!-- 表格一 -->
-            <section style="margin-bottom:20px;">
-                <com-table :listHeight='80' :listWidth="1000" :showHand="false" :titleData="titleList" :introData="staticLists" :widthType='false'>
-                </com-table>
-            </section>
-            <!-- 表格2 -->
-            <com-table :listWidth="1470" :listHeight='80' :listName="'调整记录'" :key="index" :showTitle='1' :introData="userList" :titleData="titleList_l" :allTotal="total">
-                <div slot="con-0" slot-scope="props" class="operate_worker">
-                    {{formatTime(props.data.createTime)}}
-                </div>
-                <div slot="con-1" slot-scope="props">
-                    <span class="operate_worker" v-if="props.data.memberCardId == '0'">电子卡</span>
-                    <span class="operate_worker" v-else>实体卡</span> 
-                </div>
-                <div slot="con-3" slot-scope="props" @click="openDetail(props.data)">
-                    <span class="operate_worker" v-if="props.data.memberCardId == '0'">{{props.data.mobile}}</span>
-                    <span class="operate_worker" v-else>{{props.data.cardNumber}}</span>
-                </div>
-                 <div slot="con-4" slot-scope="props">
-                    <span class="operate_worker" v-if="conditions.type == '0'">{{judgeType(props.data)}}{{props.data.operateAmount}}</span>
-                    <span class="operate_worker" v-else>{{judgeType(props.data)}}{{props.data.operatePoint}}</span>
-                </div>
-                <div slot="con-5" slot-scope="props" class="operate_worker">
-                    {{getStatus(props.data)}}
-                </div>
-                <div slot="con-6" slot-scope="props" class="remark">
-                    <span v-if="props.data.remark == ''">暂无备注</span>
-                    <span v-else>{{props.data.remark}}</span>
-                </div>
-            </com-table>
-            <!-- 翻页 -->
-            <section class="turn-page">
-                <pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-            </section>
-        </section>
-        <!-- 卡号详情实体卡 -->
-        <cardDetail v-if="isShow == 'detail'" @throwWinResult="getDetail" :cardNumber="cardNumber"></cardDetail>
-        <!-- 会员信息详情电子卡 -->
-        <memberDetail v-if="isShow == 'member'" :mid='mid' :shopsId='shopsId' @throwWinResult="getDetail"></memberDetail>
-    </div>
+	<div id="membercard">
+		<section v-if="isShow == 'all'">
+			<!-- 条件筛选 -->
+			<div class="filter clearfix">
+				<span>选择时间:{{formatTime(conditions.startTime)}}</span>
+				<span>卡种类:{{conditions.cardType}}</span>
+				<span>条件:{{conditions.addOreduce}}</span>
+				<span>调整结果:{{conditions.result}}</span>
+			</div>
+			<!-- 表格一 -->
+			<section style="margin-bottom:20px;">
+				<com-table :listHeight='80' :listWidth="1000" :showHand="false" :titleData="titleList" :introData="staticLists" :widthType='false'>
+				</com-table>
+			</section>
+			<!-- 表格2 -->
+			<com-table :listWidth="1470" :listHeight='80' :listName="'调整记录'" :key="index" :showTitle='1' :introData="userList" :titleData="titleList_l" :allTotal="total">
+				<div slot="con-0" slot-scope="props" class="operate_worker">
+					{{formatTime(props.data.createTime)}}
+				</div>
+				<div slot="con-1" slot-scope="props">
+					<span class="operate_worker" v-if="props.data.memberCardId == '0'">电子卡</span>
+					<span class="operate_worker" v-else>实体卡</span>
+				</div>
+				<div slot="con-3" slot-scope="props" @click="openDetail(props.data)">
+					<span class="operate_worker" v-if="props.data.memberCardId == '0'">{{props.data.mobile}}</span>
+					<span class="operate_worker" v-else>{{props.data.cardNumber}}</span>
+				</div>
+				<div slot="con-4" slot-scope="props">
+					<span class="operate_worker" v-if="conditions.type == '0'">{{judgeType(props.data)}}{{props.data.operateAmount}}</span>
+					<span class="operate_worker" v-else>{{judgeType(props.data)}}{{props.data.operatePoint}}</span>
+				</div>
+				<div slot="con-5" slot-scope="props" class="operate_worker">
+					{{getStatus(props.data)}}
+				</div>
+				<div slot="con-6" slot-scope="props" class="remark">
+					<span v-if="props.data.remark == ''">暂无备注</span>
+					<span v-else>{{props.data.remark}}</span>
+				</div>
+			</com-table>
+			<!-- 翻页 -->
+			<section class="turn-page">
+				<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+			</section>
+		</section>
+		<!-- 卡号详情实体卡 -->
+		<cardDetail v-if="isShow == 'detail'" @throwWinResult="getDetail" :cardNumber="cardNumber"></cardDetail>
+		<!-- 会员信息详情电子卡 -->
+		<memberDetail v-if="isShow == 'member'" :mid='mid' :shopsId='shopsId' @throwWinResult="getDetail"></memberDetail>
+	</div>
 </template>
 <script>
-import http from "src/manager/http";
-// import storage from "src/verdor/storage";
-import utils from "src/verdor/utils";
+	import http from 'src/manager/http';
+// import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
 // import global from 'src/manager/global';
 let amount_h = [{
         titleName: '天数',
@@ -71,7 +71,7 @@ let amount_h = [{
         titleName: '总减少余额 ',
         dataName: 'actualReduce'
     }
-]
+];
 let point_h = [{
         titleName: '天数',
         dataName: 'days'
@@ -84,7 +84,7 @@ let point_h = [{
         titleName: '总减少积分 ',
         dataName: 'actualReduce'
     }
-]
+];
 let amount_b = [{
     titleName: '时间',
     titleStyle: {
@@ -125,7 +125,7 @@ let amount_b = [{
 }, {
     titleName: '操作人',
     dataName: 'staffName'
-}]
+}];
 export default {
     data() {
         return {
@@ -284,7 +284,7 @@ export default {
         cardDetail: () =>
             import ( /*webpackChunkName: 'card_queries_detail'*/ './../member_system/card_queries_detail'),
         memberDetail: () =>
-            import ( /*webpackChunkName: 'member_manage_detail'*/ './../member_system/member_manage_detail'),
+            import ( /*webpackChunkName: 'member_manage_detail'*/ './../member_system/member_management/member_manage_detail'),
     },
     created: function() {
         let obj1 = {
@@ -312,72 +312,72 @@ export default {
         }
         this.adjustRecord();
     }
-}
+};
 </script>
 <style type="text/css" scoped>
-#membercard .plate {
-    width: 100%;
-    height: 45px;
-    margin: 20px 0px;
-}
+	#membercard .plate {
+		width: 100%;
+		height: 45px;
+		margin: 20px 0px;
+	}
 
-#membercard .plate .diel {
-    display: inline-block;
-    width: 136px;
-    height: 42px;
-    font-size: 16px;
-    background: #FFF;
-    border: 1px solid #E9C048;
-    text-align: center;
-    line-height: 40px;
-    cursor: pointer;
-    color: #F8931F;
-}
+	#membercard .plate .diel {
+		display: inline-block;
+		width: 136px;
+		height: 42px;
+		font-size: 16px;
+		background: #FFF;
+		border: 1px solid #E9C048;
+		text-align: center;
+		line-height: 40px;
+		cursor: pointer;
+		color: #F8931F;
+	}
 
-#membercard .plate .on {
-    background: #F8931F;
-    color: #fff;
-}
+	#membercard .plate .on {
+		background: #F8931F;
+		color: #fff;
+	}
 
-#membercard .filter {
-    margin-bottom: 20px;
-    height: 40px;
-}
+	#membercard .filter {
+		margin-bottom: 20px;
+		height: 40px;
+	}
 
-#membercard .filter span {
-    display: block;
-    height: 40px;
-    float: left;
-    margin-right: 15px;
-    line-height: 40px;
-    font-size: 16px;
-}
+	#membercard .filter span {
+		display: block;
+		height: 40px;
+		float: left;
+		margin-right: 15px;
+		line-height: 40px;
+		font-size: 16px;
+	}
 
-#membercard .filter .filbox {
-    height: 40px;
-    margin: 0 20px 20px 0;
-    line-height: 40px;
-}
+	#membercard .filter .filbox {
+		height: 40px;
+		margin: 0 20px 20px 0;
+		line-height: 40px;
+	}
 
-#membercard .filter .filbox .line {
-    margin: 0 5px;
-}
+	#membercard .filter .filbox .line {
+		margin: 0 5px;
+	}
 
-#membercard .filter .filbox a {
-    width: 80px;
-    height: 40px;
-    line-height: 40px;
-}
+	#membercard .filter .filbox a {
+		width: 80px;
+		height: 40px;
+		line-height: 40px;
+	}
 
-#membercard .operate_worker {
-    font-size: 16px;
-}
+	#membercard .operate_worker {
+		font-size: 16px;
+	}
 
-#membercard .remark {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 1.5;
-}
+	#membercard .remark {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		line-height: 1.5;
+	}
 </style>

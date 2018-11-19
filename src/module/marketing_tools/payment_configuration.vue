@@ -74,7 +74,7 @@
 					</el-input>
 				</section>
 				<!-- <a href="javascript:void(0);" class="addclassify" @click="openCouponWin">添加关联优惠券</a> -->
-				<el-button type="primary" icon="el-icon-plus" @click="openCouponWin" style="width:179px;">选择关联优惠券</el-button>
+				<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
 				<span style="color: #A5A5A5;" v-if="couponIds.length >= 1">已关联{{couponIds.length}}张优惠券</span>
 			</div>
 		</div>
@@ -85,7 +85,9 @@
 			<el-button type="primary" style="margin-right: 10px;width:190px;" @click="saveConfig()">保存</el-button>
 		</div>
 		<!-- 优惠券弹窗 -->
-		<coupon @compareArr='ca' v-if='show' @couponChange='couponChange' @winEvent='winEvent' :couponIds='couponIds'></coupon>
+		<!-- <coupon @compareArr='ca' v-if='show' @couponChange='couponChange' @winEvent='winEvent' :couponIds='couponIds'></coupon> -->
+		<!-- 关联优惠券的弹窗 -->
+		<addCoupon v-if='showCoupon' :selectCoupon='couponIds' @winEvent='winEvent'></addCoupon>		
 	</div>
 </template>
 <script type="text/javascript">
@@ -143,7 +145,7 @@
 				], //类型
 				payType: [],
 				point: '', //积分
-				show: false, //优惠券弹窗
+				showCoupon: false, //优惠券弹窗
 				couponIds: [], //json串关联的优惠券
 			};
 		},
@@ -245,18 +247,21 @@
 					this.couponIds = data.giftCoupon; //优惠券
 				}
 			},
-			//打开关联优惠券
-			openCouponWin() {
-				this.show = true;
+			//关联优惠券弹窗
+			addCoupon: function() { //添加优惠券
+				this.showCoupon = true;
 			},
 			ca(arr) {
 				this.compareArr = arr;
 			},
-			couponChange(arr) {
-				this.couponIds = arr.selectList;
-			},
-			winEvent() {
-				this.show = false;
+			// couponChange(arr) {
+			// 	this.couponIds = arr.selectList;
+			// },
+			winEvent(obj) { //选择优惠券弹窗回掉
+				this.showCoupon = false;
+				if (obj.status == 'ok') {
+					this.couponIds = obj.data.select;
+				}
 			},
 			// haveIndex(i) { //评价模式
 			// 	this.result = i;
@@ -270,8 +275,8 @@
 				import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
 			'mul-select': () =>
 				import ( /* webpackChunkName: 'mul_select' */ 'src/components/mul_select'),
-			coupon: () =>
-				import ( /* webpackChunkName:'member_store_coupon' */ './member_store_coupon'),
+			'addCoupon': () =>
+				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			'singleSelect': () =>
 				import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 		},

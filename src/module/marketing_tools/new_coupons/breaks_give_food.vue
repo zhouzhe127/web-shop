@@ -77,8 +77,8 @@
 					</div>
 				</div>
 				<div class="right">
-					<el-radio-group v-model="compulsoryName" class="fl">
-						<el-radio style="width:112px;" v-for="(item,index) in compulsoryCreditsList" :key="index" :label="item.name" border @change.native="changecompulsoryCredits(item)"></el-radio>
+					<el-radio-group v-model="tastePriceName" class="fl">
+						<el-radio style="width:112px;" v-for="(item,index) in tastePriceList" :key="index" :label="item.name" border @change.native="changeTasterice(item)"></el-radio>
 					</el-radio-group>
 				</div>
 			</template>
@@ -258,6 +258,7 @@
 				</div>
 				<!-- 保存 -->
 				<div class="save-coupon">
+					<el-button style="width: 200px;" @click="cancel">取消</el-button>
 					<el-button type="primary" style="width: 200px;" @click="getSendInfo">保存</el-button>
 				</div>
 				<!-- 选择门店的弹窗 -->
@@ -279,17 +280,16 @@
 				editCoupon: false,
 				hiddenText: false,
 				ischain: '', //0 单店 3 品牌
-				goodlist: [
-					{
-						'typeId': 1,
-						'name': '整单减免'
-					},
-					{
-						'typeId': 2,
-						'name': '赠菜券'
-					}
+				goodlist: [{
+					typeId: 1,
+					name: '满减优惠券'
+				},
+				{
+					typeId: 2,
+					name: '赠菜优惠券'
+				}
 				],
-				commoditySlect: '整单减免',
+				commoditySlect: '满减优惠券',
 				typeId: 1, //默认单品减免
 				couponName: '', //优惠券名称
 				shopWin: false, // 店铺弹框
@@ -299,78 +299,98 @@
 				selectGoods: [], //选中的商品
 				selectPackages: [], //选中的套餐
 				compulsoryCreditsList: [{
-						'compulsoryCredits': '0',
-						'name': '否'
-					},
-					{
-						'compulsoryCredits': '1',
-						'name': '是'
-					}
+					compulsoryCredits: '0',
+					name: '否'
+				},
+				{
+					compulsoryCredits: '1',
+					name: '是'
+				}
 				],
 				compulsoryName: '否',
 				compulsoryCredits: '0', //是否强制减免
-				deratePrice: '', //减免金额 
-				validList: [{
-					'validType': '0',
-					'name': '相对时间'
+				tastePriceList: [{
+					id: '0',
+					name: '否'
 				}, {
-					'validType': '1',
-					'name': '指定时间'
+					id: '1',
+					name: '是'
 				}],
+				tastePriceName: '否',
+				tastePriceId: '0',
+				deratePrice: '', //减免金额
+				validList: [{
+					validType: '0',
+					name: '相对时间'
+				},
+				{
+					validType: '1',
+					name: '指定时间'
+				}
+				],
 				validName: '相对时间',
 				validType: {
-					'index': 0, //0指定时间 1相对时间
-					'time': '', //制定时间输入的值 领取后多少日生效
-					'startTime': (new Date()).getTime(), //相对时间的开始时间
-					'endTime': (new Date()).getTime(), //相对时间的结束时间
-					'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
-				}, //券有效期  
-				validTimeList: [{ //过期时间
-						name: '领取后即刻生效',
-						id: 0
-					},
-					{
-						name: '领取1小时后生效',
-						id: 1
-					},
-					{
-						name: '领取2小时后生效',
-						id: 2
-					},
-					{
-						name: '领取3小时后生效',
-						id: 3
-					},
-					{
-						name: '领取6小时后生效',
-						id: 6
-					},
-					{
-						name: '领取12小时后生效',
-						id: 12
-					},
-					{
-						name: '领取24小时后生效',
-						id: 24
-					}
+					index: 0, //0指定时间 1相对时间
+					time: '', //制定时间输入的值 领取后多少日生效
+					startTime: new Date().getTime(), //相对时间的开始时间
+					endTime: new Date().getTime(), //相对时间的结束时间
+					valueTime: [
+						new Date().setHours(0, 0, 0, 0),
+						new Date().setHours(23, 59, 59, 999)
+					] //时间控件
+				}, //券有效期
+				validTimeList: [{
+					//过期时间
+					name: '领取后即刻生效',
+					id: 0
+				},
+				{
+					name: '领取1小时后生效',
+					id: 1
+				},
+				{
+					name: '领取2小时后生效',
+					id: 2
+				},
+				{
+					name: '领取3小时后生效',
+					id: 3
+				},
+				{
+					name: '领取6小时后生效',
+					id: 6
+				},
+				{
+					name: '领取12小时后生效',
+					id: 12
+				},
+				{
+					name: '领取24小时后生效',
+					id: 24
+				}
 				],
 				validTimeId: 0, //领取后选定时间内生效
-				validTime: '领取后即刻生效', //状态 
+				validTime: '领取后即刻生效', //状态
 				useDate: {
-					'list': ['不设限制', '指定每周使用时段', '指定每月使用日期和时段 '],
-					'index': 0,
-					'week': [], //周
-					'month': [], //月
-					'show': false
-				}, //使用时段 
-				useThresholdList: [{ //指定门槛
-						name: '不设限制',
-						id: 0
-					},
-					{
-						name: '指定门槛',
-						id: 1
-					}
+					list: [
+						'不设限制',
+						'指定每周使用时段',
+						'指定每月使用日期和时段 '
+					],
+					index: 0,
+					week: [], //周
+					month: [], //月
+					show: false
+				}, //使用时段
+				useThresholdList: [{
+					//指定门槛
+					name: '不设限制',
+					id: 0
+				},
+				{
+					name: '指定门槛',
+					id: 1
+				}
 				],
 				useThresholdId: 0,
 				useThresholdName: '不设限制',
@@ -381,40 +401,49 @@
 				shopList: [], //店铺
 				isSharingId: 0,
 				isSharing: '不与其它优惠共享',
-				isSharingList: [{ //是否优惠共享
-						name: '不与其它优惠共享',
-						id: 0
-					},
-					{
-						name: '可与其他优惠共享',
-						id: 1
-					}
+				isSharingList: [{
+					name: '不与其它优惠共享',
+					id: 0
+				},
+				{
+					name: '可与其他优惠共享',
+					id: 1
+				}
 				],
 				concessionSharingId: 0,
 				concessionSharing: '不与会员卡优惠共用',
-				concessionSharingList: [{ //优惠共享
-						name: '不与会员卡优惠共用',
-						id: 0
-					},
-					{
-						name: '可与会员卡优惠共用',
-						id: 1
-					}
+				concessionSharingList: [{
+					name: '不与会员卡优惠共用',
+					id: 0
+				},
+				{
+					name: '可与会员卡优惠共用',
+					id: 1
+				}
 				],
 				sharingStatus: '',
 				couponType: {
 					'0': 1,
 					'1': 2,
 					'2': 5
-				}
+				},
+				couponStatus: '' //优惠券入口标识 判断是直接添加还是砍价功能里面添加
 			};
 		},
-		// props: {
-		// 	couponDetail: Object, //详情
-		// },
+		props: {
+			// couponDetail: Object, //详情
+			isBargain: {
+				type: Boolean,
+				default: true
+			}
+		},
+		beforeDestroy() {
+			storage.session('couponStatus', null);
+		},
 		mounted() {
 			this.ischain = storage.session('userShop').currentShop.ischain;
 			this.shopList = storage.session('shopList');
+			this.couponStatus = storage.session('couponStatus');
 			// if (!utils.isEmptyObject(this.couponDetail)) {
 			// 	let couponDetail = this.couponDetail;
 			// 	this.editCoupon = true;
@@ -492,37 +521,41 @@
 		},
 		components: {
 			'can-multi': () =>
-				import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+				import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
 			'coupon-shop-win': () =>
-				import ( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
+				import( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+				import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 			'use-time': () =>
-				import ( /* webpackChunkName:'use_time' */ './use_time'),
+				import( /* webpackChunkName:'use_time' */ './use_time'),
 			goodListWin: () =>
-				import ( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
+				import( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win')
 		},
 		methods: {
 			showText() {
 				this.hiddenText = !this.hiddenText;
 			},
-			openShopWin() { //打开选择店铺的弹窗
+			openShopWin() {
+				//打开选择店铺的弹窗
 				this.shopWin = true;
 			},
-			closeShopWin(val) { //选择店铺弹窗关闭的回掉
+			closeShopWin(val) {
+				//选择店铺弹窗关闭的回掉
 				this.shopWin = false;
 				if (val) {
 					this.selectShops = val.selectShops;
 				}
 			},
-			openGoodsWindow() { //打开关联商品的弹窗
+			openGoodsWindow() {
+				//打开关联商品的弹窗
 				if (this.selectShops.length == 0 && this.ischain == '3') {
 					this.valiData('请先选择店铺', '提示信息');
 					return false;
 				}
 				this.goodsWin = true;
 			},
-			closeGoodWin(res, item) { //  关闭商品弹框
+			closeGoodWin(res, item) {
+				//  关闭商品弹框
 				if (res == 'ok') {
 					if (item.goodArr.length + item.packArr.length > 5) {
 						this.valiData('商品和套餐最多一共只能选择5个', '提示信息');
@@ -533,20 +566,32 @@
 				}
 				this.goodsWin = false;
 			},
-			getArrLength(type) { //返回数组的长度
+			getArrLength(type) {
+				//返回数组的长度
 				return this[type].length;
 			},
-			changecompulsoryCredits: function(item) { //是否强制减免
+			changecompulsoryCredits: function(item) {
+				//是否强制减免
 				this.compulsoryCredits = item.compulsoryCredits;
 			},
-			changeuseThreshold: function(item) { //使用门槛
+			changeTasterice: function(item) { //是否包含口味价格
+				this.tastePriceId = item.id;
+			},
+			changeuseThreshold: function(item) {
+				//使用门槛
 				this.useThresholdId = item.id;
 			},
-			transformDate(t) { //日期格式化
+			transformDate(t) {
+				//日期格式化
 				return utils.format(new Date(t), 'yyyy-MM-dd');
 			},
-			getValidDay() { //获取一共多少天
-				return Math.floor((this.validType.valueTime[1] - this.validType.valueTime[0]) / (24 * 3600 * 1000) + 1);
+			getValidDay() {
+				//获取一共多少天
+				return Math.floor(
+					(this.validType.valueTime[1] - this.validType.valueTime[0]) /
+					(24 * 3600 * 1000) +
+					1
+				);
 			},
 			accessType: function(type) {
 				switch (Number(type)) {
@@ -570,7 +615,8 @@
 			getconcession: function(i) {
 				this.concessionSharingId = i;
 			},
-			getResult: function(val) { //使用时间段
+			getResult: function(val) {
+				//使用时间段
 				this.useDate = val;
 			},
 			//商品点击返回
@@ -581,12 +627,16 @@
 				}
 				this.goodsWin = false;
 			},
-			valiData(content, title = '提示信息', winType = 'alert') {
-				this.$store.commit('setWin', {
-					winType: winType,
-					title: title,
-					content: content
+			valiData(content, winType = 'alert') {
+				this.$message({
+					type: winType == 'alert' ? 'warning' : 'info',
+					message: content
 				});
+				// this.$store.commit('setWin', {
+				// 	winType: winType,
+				// 	title: title,
+				// 	content: content
+				// });
 			},
 			arrToString(arr) {
 				let str = '';
@@ -606,15 +656,14 @@
 						o.week = arr[i].week.sort(function(a, b) {
 							return a - b;
 						});
-
 					} else if (type == 'm') {
 						o.month = arr[i].month.sort(function(a, b) {
 							return a - b;
 						});
 					}
 					o.isNextDay = arr[i].isNextDay;
-					let startslot = (arr[i].startslotH + ':' + arr[i].startslotM);
-					let endslot = (arr[i].endslotH + ':' + arr[i].endslotM);
+					let startslot = arr[i].startslotH + ':' + arr[i].startslotM;
+					let endslot = arr[i].endslotH + ':' + arr[i].endslotM;
 					o.startslot = startslot;
 					o.endslot = endslot;
 					nArr.push(o);
@@ -642,12 +691,16 @@
 			checkData() {
 				let reg = /^[0-9]*$/;
 				let reg2 = /^\d+(\.\d+)?$/;
-				if (!global.checkData({
+				if (
+					!global.checkData({
 						couponName: {
 							cond: `$$.trim() !== '' && $$.length<=20`,
 							pro: '优惠券名称不能为空且不能超过20个字'
-						},
-					}, this)) {
+						}
+					},
+					this
+					)
+				) {
 					return false;
 				}
 				if (this.ischain == '3') {
@@ -657,7 +710,10 @@
 					}
 				}
 				if (this.typeId == 0) {
-					if (this.selectGoods.length == 0 && this.selectPackages.length == 0) {
+					if (
+						this.selectGoods.length == 0 &&
+						this.selectPackages.length == 0
+					) {
 						this.valiData('请选择关联商品或套餐');
 						return false;
 					}
@@ -670,7 +726,9 @@
 				}
 				if (this.typeId == 2) {
 					if (this.billPrice <= 0 || this.reckoningPrice >= 10000) {
-						this.valiData('随机金额区间为0.01至9999.99，请按照规则填写');
+						this.valiData(
+							'随机金额区间为0.01至9999.99，请按照规则填写'
+						);
 						return false;
 					}
 					if (this.billPrice > this.reckoningPrice) {
@@ -680,7 +738,11 @@
 				}
 				//减免金额的验证
 				if (this.typeId != 2) {
-					if (this.deratePrice == '' || (this.deratePrice - 0) < 0 || !reg2.test(this.deratePrice)) {
+					if (
+						this.deratePrice == '' ||
+						this.deratePrice - 0 < 0 ||
+						!reg2.test(this.deratePrice)
+					) {
 						this.valiData('请填写非负数(大于0)的减免金额');
 						return false;
 					}
@@ -703,7 +765,6 @@
 				let arr = [];
 				let alertText = '';
 				if (this.useDate.index != 0) {
-
 					if (this.useDate.index == 1) {
 						arr = this.useDate.week;
 						alertText = '使用时段请选择日期(周)';
@@ -723,21 +784,42 @@
 								return false;
 							}
 						}
-						if (arr[i].startslotH.toString().trim() == '' || arr[i].startslotM.toString().trim() == '' || arr[i].endslotH.toString().trim() == '' || String(arr[i].endslotM).trim() == '') {
+						if (
+							arr[i].startslotH.toString().trim() == '' ||
+							arr[i].startslotM.toString().trim() == '' ||
+							arr[i].endslotH.toString().trim() == '' ||
+							String(arr[i].endslotM).trim() == ''
+						) {
 							this.valiData('使用时段的时间不能为空');
 							return false;
 						}
-						if (!reg.test(arr[i].startslotH) || !reg.test(arr[i].startslotM) || !reg.test(arr[i].endslotH) || !reg.test(arr[i].endslotM)) {
+						if (
+							!reg.test(arr[i].startslotH) ||
+							!reg.test(arr[i].startslotM) ||
+							!reg.test(arr[i].endslotH) ||
+							!reg.test(arr[i].endslotM)
+						) {
 							this.valiData('使用时段的时间只能是整数');
 							return false;
 						}
-						if (arr[i].startslotH > 23 || arr[i].startslotM > 59 || arr[i].endslotH > 23 || arr[i].endslotM > 59) {
+						if (
+							arr[i].startslotH > 23 ||
+							arr[i].startslotM > 59 ||
+							arr[i].endslotH > 23 ||
+							arr[i].endslotM > 59
+						) {
 							this.valiData('请输入正确的使用时间');
 							return false;
 						}
 						if (!arr[i].isNextDay) {
-							if (arr[i].startslotH > arr[i].endslotH || (arr[i].startslotH == arr[i].endslotH && arr[i].startslotM > arr[i].endslotM)) {
-								this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
+							if (
+								arr[i].startslotH > arr[i].endslotH ||
+								(arr[i].startslotH == arr[i].endslotH &&
+									arr[i].startslotM > arr[i].endslotM)
+							) {
+								this.valiData(
+									'使用时段里，未点击隔天,结束时间不能小于开始时间'
+								);
 								return false;
 							}
 						}
@@ -749,7 +831,7 @@
 						this.valiData('指定门槛金额不能为空');
 						return false;
 					}
-					if ((this.threshold - 0) < 0) {
+					if (this.threshold - 0 < 0) {
 						this.valiData('指定门槛金额不能小于0');
 						return false;
 					}
@@ -787,24 +869,31 @@
 					obj.useKnow = this.useKnow; //使用须知
 					obj.validityType = this.validType.index; //券有效期
 					obj.periodSel = this.useDate.index; //使用时间段
-					obj.isDiscount = this.compulsoryCredits; // 是否强免 
+					obj.isDiscount = this.compulsoryCredits; // 是否强免
 
 					obj.useLimit = this.maxCeiling; //最大使用上限
-					obj.billPrice = this.billPrice; //入账金额
-					obj.reckoningPrice = this.reckoningPrice; //结算金额
-					obj.tastePrice = '';
-					obj.priceRule = this.randomId; //随机立减取整规则
+					this.billPrice == undefined ? '' : obj.billPrice = this.billPrice; //入账金额
+					this.reckoningPrice == undefined ? '' : obj.reckoningPrice = this.reckoningPrice; //结算金额
+					obj.tastePrice = this.tastePriceId; //是否包含口味价格
+					this.randomId == undefined ? '' : obj.priceRule = this.randomId; //随机立减取整规则
 
 					// 优惠券共享
 					if (this.isSharingId === 0) {
 						obj.sharingStatus = 0;
-					} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
+					} else if (
+						this.isSharingId == 1 &&
+						this.concessionSharingId == 0
+					) {
 						obj.sharingStatus = 2;
-					} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
+					} else if (
+						this.isSharingId == 1 &&
+						this.concessionSharingId == 1
+					) {
 						obj.sharingStatus = 1;
 					}
 
-					if (this.useThresholdId == 0) { //指定门槛金额
+					if (this.useThresholdId == 0) {
+						//指定门槛金额
 						obj.lowestConsume = 0;
 					} else {
 						obj.lowestConsume = this.threshold;
@@ -823,12 +912,17 @@
 					if (this.validType.index == 0) {
 						obj.relativeTime = this.validType.time;
 					} else {
-						obj.startTime = parseInt(this.validType.valueTime[0] / 1000);
+						obj.startTime = parseInt(
+							this.validType.valueTime[0] / 1000
+						);
 						obj.endTime = parseInt(this.validType.valueTime[1] / 1000);
 					}
 					obj.type = this.couponType[this.typeId]; //优惠券类型
 					if (!utils.isEmptyObject(this.couponDetail)) {
 						obj.id = this.couponDetail.id;
+					}
+					if (this.isBargain) {
+						obj.fromType = 2;
 					}
 					this.operateCoupons(obj);
 				}
@@ -839,7 +933,11 @@
 						data: sendInfo
 					});
 					this.valiData('添加成功');
-					this.$router.push('/admin/addCoupon');
+					if (this.couponStatus && this.couponStatus == 'addCoupon') {
+						this.$router.push('/admin/addCoupon');
+					} else {
+						this.$emit('couponCallBack', 1);
+					}
 				} else {
 					await http.editCoupon({
 						data: sendInfo
@@ -848,13 +946,18 @@
 					this.valiData('修改成功');
 				}
 			},
-			selType: function(item) { //选择电子卡或者实体卡
+			cancel() {
+				this.$emit('couponCallBack', 0);
+			},
+			selType: function(item) {
+				//选择电子卡或者实体卡
 				this.typeId = item.typeId;
 			},
 			clicktheRadio: function(item) {
 				this.validType.index = item.validType;
 			},
-			selData: function(value) { //领取后生效
+			selData: function(value) {
+				//领取后生效
 				this.validTimeId = value;
 			},
 			isWhether: function(item) {
@@ -862,8 +965,8 @@
 			},
 			keepValue: function(value) {
 				this[value] = utils.toFloatStr(this[value], 2);
-			},
-		},
+			}
+		}
 	};
 </script>
 <style type="text/css" scoped>
@@ -875,6 +978,7 @@
 		overflow: hidden;
 		padding-bottom: 300px;
 		position: relative;
+		z-index: 3;
 	}
 
 	#breakCoupon .type {

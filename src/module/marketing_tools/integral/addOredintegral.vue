@@ -3,7 +3,6 @@
 	<div id="user">
 		<!-- 品牌单店 -->
 		<div class="comList clearfix">
-			<!-- <span class="store fl" v-for="(item,index) in bannerList" :key='index' v-bind:class="{'active':indexOn == index}" @click="isFlag && chooseBanner(index)">{{item.name}}</span> -->
 			<el-radio-group v-model="commoditySlect">
 				<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="selType(item)"></el-radio-button>
 			</el-radio-group>
@@ -12,7 +11,6 @@
 		<div class="online-box clearfix" v-if='indexOn == 0'>
 			<span class="online-sub fl required">商品类型</span>
 			<div class="rightHalf">
-				<!-- <select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn> -->
 				<el-select v-model="durationName" placeholder="请选择" @change="selData" style="color:#c0c4cc;width: 179px;">
 					<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
@@ -23,8 +21,7 @@
 		<div class="online-box clearfix" v-if="durationId == 1 && indexOn == 0">
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
-				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount">选择关联优惠券</a> -->
-				<el-button type="primary" icon="el-icon-plus" @click="addCount" style="width:179px;">选择关联优惠券</el-button>
+				<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
 				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
 			</div>
 		</div>
@@ -32,7 +29,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品名称</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入积分商品名称" v-model='name' maxlength="10" /> -->
 				<el-input class="fl" v-model="name" placeholder="请输入积分商品名称" maxlength="10"></el-input>
 			</div>
 		</div>
@@ -40,7 +36,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">兑换所需积分</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入兑换所需积分" v-model='price' maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
 				<el-input class="fl" v-model="price" placeholder="请输入兑换所需积分" maxlength="8" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
@@ -48,7 +43,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">兑换所需现金</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="6" @blur="formatValue" placeholder="请输入兑换现金" v-model='cash' /> -->
 				<el-input class="fl" v-model="cash" placeholder="请输入兑换现金" maxlength="8" onkeyup="value=value.replace(/[^\d\.]/g,'')" @blur="formatValue"></el-input>
 			</div>
 		</div>
@@ -56,7 +50,6 @@
 		<div class="online-box clearfix" v-if='indexOn == 0'>
 			<span class="online-sub fl required">填写库存</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请填写库存" v-model='inventory' maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
 				<el-input class="fl" v-model="inventory" placeholder="请填写库存" maxlength="5" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
@@ -64,7 +57,6 @@
 		<div class="online-box clearfix" v-if='indexOn == 1'>
 			<span class="online-sub fl required">商品库存</span>
 			<div class="rightHalf">
-				<!-- <a href="javascript:void(0);" class="addclassify" @click="choiceShop()" style="width:200px;">增加门店库存</a> -->
 				<el-button type="primary" icon="el-icon-plus" @click="choiceShop()" style="width:179px;">增加门店库存</el-button>
 			</div>
 		</div>
@@ -170,7 +162,7 @@
 			</div>
 		</div>
 		<!-- 优惠券的弹窗 -->
-		<birthCoupon v-if='showBirthCoupon' :selectCoupon='selectCoupon' :couponList='couponList' @winEvent='winEvent'></birthCoupon>
+		<addCoupon v-if='showCoupon' :selectCoupon='selectCoupon' @winEvent='winEvent'></addCoupon>
 		<!-- 弹窗 -->
 		<component v-if="showWin" :is="isPopupwindow" @getAppliedWin='getResult' :shopList='shopList'></component>
 	</div>
@@ -207,7 +199,7 @@
 				],
 				durationId: 0,
 				durationName: '积分商品', //状态
-				showBirthCoupon: false,
+				showCoupon: false,
 				couponList: [], //优惠券列表
 				selectCoupon: [], //选中的列表
 				name: '', //商品名称
@@ -517,28 +509,14 @@
 				this.durationName = this.durationList[i].name; //点击对应的名字
 				this.durationId = this.durationList[i].id; //点击对应的id
 			},
-			async addCount() {
-				let data = await http.getGetCouponCondition({});
-				let coupons = [];
-				for (let item of data) {
-					if (item.type != 7) {
-						coupons.push(item);
-					}
-				}
-				this.couponList = coupons;
-				this.goodsCom = data;
-				this.goodsCom.forEach(function(item) {
-					item.num = 1;
-				});
-
-				this.showBirthCoupon = true;
-
+			//关联优惠券弹窗
+			addCoupon: function() { //添加优惠券
+				this.showCoupon = true;
 			},
-			winEvent(obj) {
-				this.showBirthCoupon = false;
+			winEvent(obj) { //选择优惠券弹窗回掉
+				this.showCoupon = false;
 				if (obj.status == 'ok') {
 					this.selectCoupon = obj.data.select;
-					this.couponList = obj.data.list;
 				}
 			},
 			//修改商品
@@ -574,8 +552,8 @@
 				import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
 			selectBtn: () =>
 				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
-			'birthCoupon': () =>
-				import ( /* webpackChunkName:'activity_birth_coupon' */ './activity_birth_coupon'),
+			'addCoupon': () =>
+				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 		},
 		destroyed() {
 			this.$store.commit('setPageTools', {});

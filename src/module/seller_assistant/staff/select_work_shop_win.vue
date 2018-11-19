@@ -3,24 +3,23 @@
 		<span slot="title">选择工作门店</span>
 		<div class="select_shop" slot="content">
 			<header class="select_shop_nav">
-				<button @click="selectAll" class="btn slect_all">全部选择</button>
-				<button @click="cancelAll" class="btn cancel_all">全部取消</button>
+				<!-- <button @click="selectAll" class="btn slect_all">全部选择</button>
+				<button @click="cancelAll" class="btn cancel_all">全部取消</button> -->
+				<el-button type="primary" style="width:130px;" @click="selectAll">全部选择</el-button>
+				<el-button type="info" style="width:130px;" @click="cancelAll">全部取消</el-button>
 			</header>
 			<section class="select_shop_content">
 				<p>直营店</p>
-				<mul-select :styles="{marginRight:'8px',backgroundColor: 'rgb(236,236,236)'}" :list="direct" :selects="selectDirct" :name="'name'"
-				    :keys="'id'"></mul-select>
+				<mul-select :styles="{'border-radius':'4px',marginRight:'8px'}" :list="direct" :selects="selectDirct" :name="'name'" :keys="'id'"></mul-select>
 			</section>
 			<section class="select_shop_content">
 				<p>加盟店</p>
-				<mul-select :styles="{marginRight:'8px',backgroundColor: 'rgb(236,236,236)'}" :list="franchise" :selects="selectFrash" :name="'name'"
-				    :keys="'id'"></mul-select>
+				<mul-select :styles="{'border-radius':'4px',marginRight:'8px'}" :list="franchise" :selects="selectFrash" :name="'name'" :keys="'id'"></mul-select>
 			</section>
 		</div>
 	</win>
 </template>
 <script>
-
 	import storage from 'src/verdor/storage';
 
 	export default {
@@ -118,25 +117,31 @@
 <style lang="less" scoped>
 	.select_shop {
 		padding: 0 44px;
+
 		.select_shop_nav {
 			padding-left: 366px;
 			padding-top: 13px;
+
 			.btn {
 				width: 132px;
 				height: 43px;
 				border: none;
 				color: #fff;
 			}
+
 			.slect_all {
 				background: RGB(247, 147, 30);
 			}
+
 			.cancel_all {
 				background: RGB(159, 160, 160);
 			}
 		}
+
 		.select_shop_content {
 			margin-top: 30px;
 			margin-bottom: 50px;
+
 			&>p {
 				font-size: 16px;
 				color: RGB(51, 51, 51);

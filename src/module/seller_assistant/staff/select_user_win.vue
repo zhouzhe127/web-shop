@@ -1,11 +1,14 @@
 <template>
-	<win :width="589" :height="349" @winEvent="winEvent">
+	<win :width="700" :height="450" @winEvent="winEvent">
 		<span slot="title">选择用户</span>
 		<div class="user_content" slot="content">
 			<header class="user_header">
-				<input type="text" v-model.trim="keyWords" placeholder="输入关键字">
-				<button @click="selectUser" class="select">筛选</button>
-				<button @click="resertUser" class="resert">重置</button>
+				<!-- <input type="text" v-model.trim="keyWords" placeholder="输入关键字"> -->
+				<el-input v-model="keyWords" maxlength="10" placeholder="输入关键字" style="width:179px;margin-right: 20px;"></el-input>
+				<!-- <button @click="selectUser" class="select">筛选</button>
+				<button @click="resertUser" class="resert">重置</button> -->
+				<el-button type="primary" style="width:100px;" @click="selectUser">筛选</el-button>
+				<el-button type="info" style="width:100px;" @click="resertUser">重置</el-button>
 			</header>
 			<div class="user_list">
 				<ul>
@@ -18,9 +21,9 @@
 			<footer class="user_footer">
 				<!-- 翻页 -->
 				<section class="turn-page">
-					<pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
+					<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(total)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
+					<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 				</section>
-				<!--  <page @pageNum="pageNum" :page="page" :total="total" :len="10" v-if="total>1"></page> -->
 			</footer>
 		</div>
 	</win>
@@ -37,7 +40,7 @@
 				page: 1,
 				num: 10,
 				count: '',
-				total: '',
+				total: 0,
 				selects: ''
 			};
 		},
@@ -101,9 +104,20 @@
 				this.keyWords = '';
 				this.getUserList();
 			},
-			pageChange(obj) { //翻页
-				this.page = obj.page;
-				this.num = obj.num;
+			// pageChange(obj) { //翻页
+			// 	this.page = obj.page;
+			// 	this.num = obj.num;
+			// 	this.getUserList();
+			// },
+			//每页显示多少条数据
+			handleSizeChange(p) {
+				this.page = 1;
+				this.num = p;
+				this.getUserList();
+			},
+			//页码跳转
+			pageChange(p) {
+				this.page = p;
 				this.getUserList();
 			},
 		},
@@ -125,6 +139,7 @@
 <style lang="less" scoped>
 	.user_content {
 		padding: 15px 24px 0;
+
 		.user_header {
 			input {
 				width: 183px;
@@ -132,6 +147,7 @@
 				padding: 0 17px;
 				margin-right: 20px;
 			}
+
 			.select {
 				width: 101px;
 				height: 42px;
@@ -141,6 +157,7 @@
 				color: #fff;
 				font-size: 16px;
 			}
+
 			.resert {
 				width: 101px;
 				height: 42px;
@@ -150,12 +167,14 @@
 				color: #fff
 			}
 		}
+
 		.user_list {
 			ul {
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
 				align-items: center;
+
 				li {
 					width: 94px;
 					height: 121px;
@@ -164,12 +183,14 @@
 					display: flex;
 					flex-direction: column;
 					text-align: center;
+
 					img {
 						width: 60px;
 						height: 60px;
 						border-radius: 50%;
 						margin: 17px 20px
 					}
+
 					span {
 						text-align: center;
 						color: RGB(51, 51, 51);
@@ -182,14 +203,16 @@
 				}
 			}
 		}
+
 		.user_footer {
 			text-align: left;
 			margin-top: 36px;
-			margin-left: 50px;
+
 			.turn-page {
 				margin: 10px 0 30px 0;
 			}
 		}
+
 		.user_color {
 			background: RGB(255, 237, 209) !important;
 			border: 1px solid RGB(255, 152, 0) !important;

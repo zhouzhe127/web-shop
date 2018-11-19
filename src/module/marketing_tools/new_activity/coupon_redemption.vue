@@ -138,6 +138,8 @@
 import storage from 'src/verdor/storage';
 import utils from 'src/verdor/utils';
 // import global from 'src/manager/global';
+
+let QRErrorCorrectLevel = null;
 export default {
 	data() {
 		return {
@@ -350,6 +352,7 @@ export default {
 		},
 		//每页显示多少条数据
 		handleSizeChange(p) {
+			this.page = 1;
 			this.num = p;
 			this.newgetActivityList();
 		},

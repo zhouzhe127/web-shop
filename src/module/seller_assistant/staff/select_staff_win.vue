@@ -3,9 +3,12 @@
 		<span slot="title">选择员工</span>
 		<div class="staff_win" slot="content">
 			<header class="staff_header">
-				<input maxlength="11" type="text" v-model.trim="keyWords" placeholder="输入手机号/员工姓名">
-				<button @click="selectStaff" class="staff_select">筛选</button>
-				<button @click="resetStaff" class="staff_resert">重置</button>
+				<!-- <input maxlength="11" type="text" v-model.trim="keyWords" placeholder="输入手机号/员工姓名"> -->
+				<el-input v-model="keyWords" maxlength="11" placeholder="输入手机号/员工姓名" style="width:179px;margin-right: 20px;"></el-input>
+				<!-- <button @click="selectStaff" class="staff_select">筛选</button>
+				<button @click="resetStaff" class="staff_resert">重置</button> -->
+				<el-button type="primary" style="width:100px;" @click="selectStaff">筛选</el-button>
+				<el-button type="info" style="width:100px;" @click="resetStaff">重置</el-button>
 			</header>
 			<section class="staff_content" v-if="staffList.length>0">
 				<ul>
@@ -20,8 +23,6 @@
 		</div>
 	</win>
 </template>
-
-
 <script>
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
@@ -113,10 +114,10 @@
 		}
 	};
 </script>
-
 <style lang="less" scoped>
 	.staff_win {
 		padding: 15px 25px;
+
 		.staff_header {
 			input {
 				width: 184px;
@@ -125,6 +126,7 @@
 				margin-right: 18px;
 				padding: 0 17px;
 			}
+
 			.staff_select {
 				width: 101px;
 				height: 42px;
@@ -134,6 +136,7 @@
 				color: #fff;
 				margin-right: 15px;
 			}
+
 			.staff_resert {
 				width: 101px;
 				height: 42px;
@@ -143,12 +146,15 @@
 				color: #fff;
 			}
 		}
+
 		.staff_content {
 			margin-top: 10px;
+
 			ul {
 				display: flex;
 				flex-direction: row;
 				flex-wrap: wrap;
+
 				li {
 					width: 165px;
 					height: 120px;
@@ -158,6 +164,7 @@
 					flex-direction: column;
 					text-align: left;
 					border: 1px solid RGB(210, 210, 210);
+
 					span {
 						text-align: left;
 						margin-bottom: 8px;
@@ -167,9 +174,11 @@
 				}
 			}
 		}
+
 		.bg_cor {
 			background: RGB(255, 237, 209);
 			border: 1px solid RGB(255, 152, 0) !important;
+
 			span {
 				color: RGB(255, 152, 0) !important;
 			}

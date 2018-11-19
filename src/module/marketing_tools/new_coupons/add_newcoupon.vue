@@ -26,7 +26,8 @@
 		</ul>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
+	import storage from 'src/verdor/storage';
 	export default {
 		data() {
 			return {
@@ -65,21 +66,22 @@
 						'type': 5,
 						'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
 						'path': '/admin/addCoupon/intergralcardCoupon'
-					}
+					},
+					{
+						'name': '粮票集(券)',
+						'description': '该优惠券仅适用于粮票集,关联砍价时使用,创建后无法同步及修改',
+						'type': 6,
+						'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
+						'path': '/admin/addCoupon/breaksGgiveFood'
+					}					
 				],
 			};
-		},
-
-		components: {
-
 		},
 		methods: {
 			addCoupon: function (path) {
 				this.$router.push(path);
+				storage.session('couponStatus', 'addCoupon');
 			}
-		},
-		computed: {
-
 		}
 	};
 </script>

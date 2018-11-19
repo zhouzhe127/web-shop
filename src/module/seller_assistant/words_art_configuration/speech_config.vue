@@ -20,12 +20,11 @@
 			<div class="nolist" v-if="speechList <= 0">-&nbsp;&nbsp;暂无话术组,请新建&nbsp;&nbsp;-</div>
 		</section>
 		<transition name="fade">
-			<speech-win :speechId="speechId" :speechName="speechName" :speechs="speechs" :type="type" :speechType="speechType" @closeWin="closeWin"
-			    v-if="isShowSpeechWin"></speech-win>
+			<speech-win :speechId="speechId" :speechName="speechName" :speechs="speechs" :type="type" :speechType="speechType" @closeWin="closeWin" v-if="isShowSpeechWin"></speech-win>
 		</transition>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	export default {
 		data() {
@@ -84,7 +83,7 @@
 					this.getSpeechList();
 				}
 			},
-			judgeLength: function (type) {
+			judgeLength: function(type) {
 				let count = 0;
 				for (let i = 0; i < this.speechList.length; i++) {
 					if (type == 'new' && this.speechList[i].type == '0') {
@@ -95,17 +94,25 @@
 					}
 				}
 				return count;
+			},
+			setTitle: function() {
+				this.$store.commit('setPageTools', [{
+					name: '新建话术组',
+					className: 'el-btn-blue',
+					fn: () => {
+						this.createSpeech('new');
+					}
+				}, {
+					name: '新建路径链接',
+					className: 'el-btn-yellow',
+					fn: () => {
+						this.createSpeech('path');
+					}
+				}]);
 			}
 		},
 		mounted() {
-			this.$store.commit('setPageTools', {
-				createSpeech: () => {
-					this.createSpeech('new');
-				},
-				newPath: () => {
-					this.createSpeech('path');
-				}
-			});
+			this.setTitle();
 			this.getSpeechList();
 		},
 		components: {
@@ -119,18 +126,21 @@
 		.speech_content {
 			display: flex;
 			flex-direction: row;
-			flex-wrap: wrap;
+			flex-wrap: wrap;s
 			padding-top: 19px;
+
 			.low_model {
 				width: 301px;
 				height: 201px;
 				margin-right: 24px;
 				border: 1px solid RGB(179, 179, 179);
+
 				img {
 					width: 55px;
 					height: 55px;
 					margin: 53px 123px 0px;
 				}
+
 				p {
 					font-size: 20px;
 					color: RGB(179, 179, 179);
@@ -138,6 +148,7 @@
 					margin-top: 24px;
 				}
 			}
+
 			.content_list {
 				margin-right: 24px;
 				margin-bottom: 25px;
@@ -146,24 +157,29 @@
 				height: 202px;
 				background: RGB(242, 242, 242);
 				padding: 22px;
+
 				.content_header {
 					display: flex;
 					flex-direction: row;
 					flex-wrap: nowrap;
 					justify-content: space-between;
 					align-items: center;
+
 					span:nth-child(1) {
 						color: RGB(51, 51, 51);
 						font-size: 26px;
 					}
+
 					span:nth-child(2) {
 						font-size: 56px;
 						color: RGB(40, 168, 224);
 					}
 				}
+
 				.content_content {
 					height: 44px;
 					line-height: 44px;
+
 					span {
 						display: inline-block;
 						width: 51px;
@@ -174,10 +190,12 @@
 						color: #fff;
 					}
 				}
+
 				.content_foot {
 					display: flex;
 					flex-direction: column;
 					align-items: left;
+
 					span {
 						font-size: 14px;
 						color: RGB(51, 51, 51);
@@ -185,6 +203,7 @@
 					}
 				}
 			}
+
 			.nolist {
 				width: 1436px;
 				text-align: center;
