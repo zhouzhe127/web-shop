@@ -49,10 +49,6 @@ export default {
         url: s + "Brandconfig/setConfig",
         method: "post"
     },
-    "brandSetConfig": { //修改品牌基本信息
-        url: s + "Brandconfig/setConfig",
-        method: "post"
-    },
     "getBrandPaymentList": { //修改品牌支付
         url: s + "Payment/getBrandPaymentList",
         method: "post"
