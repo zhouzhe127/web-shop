@@ -340,7 +340,7 @@
 				});
 				this.bussiness = utils.deepCopy(res);
 			},
-			getEvent: function(item) {//更改记录回掉
+			getEvent: function(item) { //更改记录回掉
 				if (item) {
 					this.detail = item;
 					this.isShow = 'order';
@@ -349,28 +349,31 @@
 			getDetailShow() { //从订单详情返回回来
 				this.isShow = 'all';
 			},
+			setTitle: function() { //设置标题
+				let titleArr = [{
+					name: '返回',
+					className: 'el-btn-blue',
+					fn: () => {
+						this.closePage();
+					}
+				}];
+				if (this.brandId != 3) {
+					let obj = {
+						name: '充值',
+						className: 'el-btn-yellow',
+						fn: () => {
+							this.recharge(this.memberInfo.memberId, this.shopsId);
+						}
+					};
+					titleArr.push(obj);
+				}
+				this.$store.commit('setPageTools', titleArr);
+			}
 		},
 		mounted() {
-			let titleArr = [{
-				name: '返回',
-				className: ['fd-blue'],
-				fn: () => {
-					this.closePage();
-				}
-			}];
-			if (this.brandId != 3) {
-				let obj = {
-					name: '充值',
-					className: ['fd-yellow'],
-					fn: () => {
-						this.recharge(this.memberInfo.memberId, this.shopsId);
-					}
-				};
-				titleArr.push(obj);
-			}
-			this.$store.commit('setPageTools', titleArr);
 			// this.mid = storage.session('memberObj').memberId;
 			// this.shopsId = storage.session('memberObj').shopId;
+			this.setTitle();
 			this.getshopList();
 			this.getMemberDetail();
 			this.getLabelList(); //获取标签列表

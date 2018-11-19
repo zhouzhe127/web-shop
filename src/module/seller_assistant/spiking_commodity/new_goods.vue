@@ -710,7 +710,7 @@
 		height: 40px;
 		line-height: 40px;
 		text-indent: 25px;
-		background: url("../../../src/res/images/prompt.png") 0 center no-repeat;
+		background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
 		color: #999999;
 	}
 
@@ -827,7 +827,7 @@
 	#rushedConfiguration .online-box .bannerbox .uploadImg .delet .delimg {
 		width: 20%;
 		height: 20px;
-		background: url(../../../src/res/icon/icondelete.png) no-repeat center;
+		background: url(../../../../src/res/icon/icondelete.png) no-repeat center;
 	}
 
 	#rushedConfiguration .online-box .uploadImgs {
@@ -847,7 +847,7 @@
 		display: inline-block;
 		width: 18px;
 		height: 18px;
-		background: url(../../../src/res/icon/orderdetial18.png) no-repeat center;
+		background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
 		position: relative;
 		vertical-align: middle;
 		cursor: pointer;
