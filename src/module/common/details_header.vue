@@ -18,7 +18,7 @@
 		</div>
 
 		<!--充值弹窗-->
-		<chargeWin @toWin="toWin" v-if="winShow" :currentDetail="currentShop" @changeDetail="changeDetail"></chargeWin>
+		<chargeWin @toWin="toWin" v-if="winShow" :currentDetail="currentShop" @chargeResult="chargeResult"></chargeWin>
 
 	</div>
 </template>
@@ -50,8 +50,14 @@
 				console.log(res);
 				this.winShow =false
 			},
-			changeDetail(data){
-				this.currentShop = data.currentShop;
+			chargeResult(data){
+				console.log(data,'000000hhhh')
+				if(data == true){
+					this.currentShop.availableState = 0
+				}
+				let userShop = storage.session('userShop');
+				userShop.currentShop.availableState = 0;
+				storage.session('userShop',userShop)
 			}
 		},
 		computed: {
