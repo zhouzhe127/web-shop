@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-16 11:04:50
+ * @Last Modified time: 2018-11-19 11:16:37
  */
 <template>  
 	<div>
@@ -17,12 +17,13 @@
 				</div>
 
 				<div class="pad-bottom">
-				
-					<div class="add-matrial" @click="openWin(winType.selectMaterial)">
-						<span>选择物料</span>
-						<i class="el-icon-plus plus"></i>
-					</div>
-					/
+					<template v-if="pShowMaterial">
+						<div class="add-matrial" @click="openWin(winType.selectMaterial)">
+							<span>选择物料</span>
+							<i class="el-icon-plus plus"></i>
+						</div>
+						/
+					</template>
 
 					<select-collection-com :selectId="collection.id"  @change="getSelectCollection" :list="collectionList"></select-collection-com>
 
@@ -56,7 +57,8 @@
 		<component
 			:is="showCom"
 			:show="true"
-			:selects="scope"
+			:pList="pList"
+			:pSelects="scope"
 			@change="closeWin"
 		>
 		</component>
@@ -145,6 +147,13 @@ export default {
 		pShowMaterial:{
 			type:[Boolean],
 			default:true
+		},
+		//物料列表
+		pList:{
+			type:[Array],
+			default:function(){
+				return [];
+			}
 		},
 		//弹窗标题
 		title:{

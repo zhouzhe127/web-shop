@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-16 14:20:50
+ * @Last Modified time: 2018-11-19 10:34:56
  */
 
 <template>
@@ -49,8 +49,6 @@
 			>
 			</el-pagination>
 		</div>
-
-		<select-material-com :pList="list"></select-material-com>
 	</div>
 
 </template>
@@ -93,8 +91,6 @@ export default {
 			tableData:[],
 			roleId:null,				//当前操作人的角色id
 
-
-			list:[],
 		};
 	},
 	methods: {
@@ -297,26 +293,7 @@ export default {
 		},
 
 
-		//获取所有物料
-		async recursiveGetMaterialList(){
-			let subObj = {
-				name : '',
-				cid : '',
-				type : -1,
-				num : 50
-			};
 
-			let page = 1;
-			let arr = [];
-			
-			for(let i = 0;i < page; i += 1){
-				subObj.page = i + 1;
-				let retObj = await this.getHttp('getMaterialList',subObj);
-				page = Number(retObj.total);
-				arr.push(...retObj.list);
-			}   
-			return arr;
-		},
 	},
 	async mounted(){
 		this.initData();
@@ -324,7 +301,6 @@ export default {
 		this.initPageObj();
 		this.getUserRoleList();
 		this.getTemplateList();
-		this.list = await this.recursiveGetMaterialList();
 	},
 	components:{
 		addReportRow:() => import(/* webpackChunkName:"add_report_row_win"*/'./add_report_row_win'),

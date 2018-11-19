@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:08 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-16 18:09:02
+ * @Last Modified time: 2018-11-19 14:01:21
  */
 
 <template>  
@@ -260,18 +260,14 @@ export default {
 		//根据条件筛选物料
 		getMaterialList(subObj){
 			if(!subObj) subObj = this.getCondition();
-			// console.log(this.list);
 			let arr = this.filterListByCid(this.list,subObj.cid);
-			// console.log(arr);
 			arr = this.filterListByAttr(arr,subObj.name);
-			// console.log(arr);
-			
 			this.pageObj.total = arr.length;
 			this.searchList = arr;
 		},
 		//获取分类
 		async getCategoryList(){
-			this.categoryList = this.pCategory;	
+			this.categoryList = [...this.pCategory];	
 				
 			if(this.categoryList.length > 0){
 				this.categoryList.unshift(allCategory);
@@ -341,8 +337,16 @@ export default {
 
 
 		initSelectListByProps(){
-			this.list = this.pList;
+			let arr = [];
+			this.list = [...this.pList];
+			this.changeListAttrVal(this.list,'checked',false);
 			this.selectList = this.getMaterialInfoByList(this.pSelects,this.list);
+			this.changeListAttrVal(this.selectList,'checked',true);
+			this.addDelSelectList(this.selectList,false,this.list);
+			
+			arr = [...this.list];
+			arr.push(...this.selectList);
+			this.list = arr.reverse();
 		},
 		initPageObj(){
 			this.pageObj = {

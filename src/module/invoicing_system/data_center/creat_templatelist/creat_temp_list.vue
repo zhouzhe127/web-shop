@@ -84,7 +84,7 @@
 		</div>
 		<add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin" @positionEvent="positionEvent"></add-position>
 		<add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>
-		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
+		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pList="materialList" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
 	</div>
 </template>
 <script>
@@ -141,10 +141,32 @@
 						value: 2
 					},
 				],
-				id: ''
+				id: '',
+				materialList:[],				//物料列表
 			};
 		},
 		methods: {
+			//获取所有物料
+			async recursiveGetMaterialList(){
+				let subObj = {
+					name : '',
+					cid : '',
+					type : -1,
+					num : 50
+				};
+
+				let page = 1;
+				let arr = [];
+				
+				for(let i = 0;i < page; i += 1){
+					subObj.page = i + 1;
+					let retObj = await http.getMaterialList({data:subObj});
+					page = Number(retObj.total);
+					arr.push(...retObj.list);
+				}   
+				this.materialList = arr;
+				// return arr;
+			},
 			async init() {
 				let data = await http.templateGetReportTemplateDetail({
 					data: {
@@ -528,6 +550,7 @@
 			}
 			this.crageBtn();
 			this.getRoleList();
+			this.recursiveGetMaterialList();
 		},
 		deactivated() {
 			this.$store.commit('setFixButton', []);
