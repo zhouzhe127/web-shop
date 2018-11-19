@@ -28,7 +28,9 @@
 		data(){
 			return{
 				currentShop:{},
-				winShow:false
+				winShow:false,
+				currentDetail:{},
+				userData:{}
 			}
 		},
 		methods: {
@@ -50,14 +52,74 @@
 				console.log(res);
 				this.winShow =false
 			},
-			chargeResult(data){
-				console.log(data,'000000hhhh')
-				if(data == true){
-					this.currentShop.availableState = 0
+			chargeResult(res){
+				if (res) {
+					console.log(this.currentShop);
+					this.currentShop.availableState = 0;
+					this.userData.currentShop = this.currentShop;
+					this.changeShopInfo();
 				}
-				let userShop = storage.session('userShop');
-				userShop.currentShop.availableState = 0;
-				storage.session('userShop',userShop)
+			},
+			//缓存数据
+			changeShopInfo() {
+				let shopList = this.userData.shopList;
+
+				let currentShop = this.currentShop;
+
+				if (currentShop) {
+					if (currentShop.ischain == '0') {
+						for (let i = 0; i < shopList.noBrand.length; i++) {
+							if (currentShop.id == shopList.noBrand[i].id) {
+								shopList.noBrand[i] = currentShop;
+								shopList.noBrand[i].availableState = 0;
+							}
+						}
+					} else {
+						for (let i = 0; i < shopList.brand.length; i++) {
+							if (currentShop.brandId == shopList.brand[i].id) {
+								if (currentShop.ischain == '1') {
+									for (
+										let j = 0;
+										j < shopList.brand[i].direct.length;
+										j++
+									) {
+										if (
+											currentShop.id ==
+											shopList.brand[i].direct[j].id
+										) {
+											shopList.brand[i].direct[
+												j
+												] = currentShop;
+											shopList.brand[i].direct[
+												j
+												].availableState = 0;
+										}
+									}
+								}
+							} else if (currentShop.ischain == '2') {
+								for (
+									let j = 0;
+									j < shopList.brand[i].franchise.length;
+									j++
+								) {
+									if (
+										currentShop.id ==
+										shopList.brand[i].franchise[j].id
+									) {
+										shopList.brand[i].franchise[
+											j
+											] = currentShop;
+										shopList.brand[i].franchise[
+											j
+											].availableState = 0;
+									}
+								}
+							}
+						}
+					}
+					console.log(this.userData, '改变后的');
+					storage.session('userShop', this.userData);
+				}
 			}
 		},
 		computed: {
@@ -69,7 +131,8 @@
 			}
 		},
 		mounted(){
-			this.currentShop = storage.session('userShop').currentShop;
+			this.userData = storage.session('userShop');
+			this.currentShop = this.userData.currentShop
 		},
 		components: {
 			chargeWin: () => import(/*webpackChunkName: "activate_recharge_win"*/ 'src/module/brand/activate_recharge_win'),
