@@ -68,7 +68,7 @@
 				<el-button @click="cancel(0)">取消</el-button>
 				<el-button type="primary" @click="submit(false)">保存</el-button>
 				<el-button type="primary" @click="submit(true)" v-if="hasGoodsNum<4">保存并新建商品</el-button>
-				<el-button type="primary" @click="resetGoods">重置</el-button>
+				<!-- <el-button type="primary" @click="resetGoods">重置</el-button> -->
 			</el-form-item>
 		</el-form>
 		<el-dialog title="添加关联优惠券" :visible.sync="showCouponList" width="720px">
