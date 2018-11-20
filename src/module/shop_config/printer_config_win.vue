@@ -82,7 +82,7 @@
 							</el-switch>
 						</el-form-item>
 						<el-form-item label="底部标语"  v-if="orderTypeIndex ==19">
-							<el-input v-model="footerContent" maxlength="30" placeholder="请输入底部标语" style="width:340px;"></el-input>
+							<el-input v-model="footerContent" maxlength="500" placeholder="请输入底部标语" style="width:340px;"></el-input>
 						</el-form-item>
 						<el-form-item label="显示店铺名称" v-if="orderTypeIndex ==19">
 							<el-switch
@@ -483,14 +483,14 @@ export default {
 						});
 						return false;
 					}
-					if (this.footerContent.split('').length >= 30) {
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							winType: 'alert',
-							content: '页脚长度不能超过30！'
-						});
-						return false;
-					}
+					// if (this.footerContent.split('').length >= 30) {
+					// 	this.$store.commit('setWin', {
+					// 		title: '温馨提示',
+					// 		winType: 'alert',
+					// 		content: '页脚长度不能超过30！'
+					// 	});
+					// 	return false;
+					// }
 					if (this.areaIndex.length == 0) {
 						this.$store.commit('setWin', {
 							title: '温馨提示',
