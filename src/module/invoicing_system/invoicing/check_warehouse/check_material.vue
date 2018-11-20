@@ -343,17 +343,19 @@ export default{
 			}
 			for(let item of list){
 				let total = Number(item.oneNum)*Number(item.unitValue) + Number(item.twoNum);
-				if(!item.haveBatch && item.oneNum!=='' || item.twoNum!==''){//不选批次，不为空
-					let obj={
-						batchId:0,
-						wid:item.wid,
-						areaId:item.areaId,
-						surplus: total,
-						itemId:item.id,
-						unitId:item.unitId,
-					};
-					this.spliceArr(this.checkList,item);
-					this.checkList.push(obj);
+				if(!item.haveBatch){
+					if(item.oneNum!=='' || item.twoNum!==''){//不选批次，不为空
+						let obj={
+							batchId:0,
+							wid:item.wid,
+							areaId:item.areaId,
+							surplus: total,
+							itemId:item.id,
+							unitId:item.unitId,
+						};
+						this.spliceArr(this.checkList,item);
+						this.checkList.push(obj);
+					}
 				}
 			}
 		},
