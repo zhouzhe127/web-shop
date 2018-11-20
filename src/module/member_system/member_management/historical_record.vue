@@ -184,7 +184,7 @@
 				if(this.trantypeId.length == 0){
 					this.allWritten();
 				}
-				console.log(JSON.stringify(this.trantypeId));
+				//console.log(JSON.stringify(this.trantypeId));
 			},
 			async getRecordList() { //获取记录
 				let data = await http.getRecordList({
@@ -245,7 +245,7 @@
 				// }
 				let res = await http.OrderstatisticsBillDelite({
 					data: {
-						shopId: this.isBrand == true ? fromId : belongToShop,
+						shopId: fromId,
 						oid: oid
 					}
 				});
