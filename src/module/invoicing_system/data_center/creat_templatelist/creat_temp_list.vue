@@ -278,6 +278,7 @@
 					if (item.type == 3) {
 						obj.strTitle = `物料范围（${item.mid.length}）`;
 						obj.pScope = item.mid;
+						this.pShowMaterial = false;
 					} else {
 						obj.pCollection = item.setInfo;
 						obj.strTitle = `${item.setInfo.name}(物料：${item.setInfo.mid.length}，单位：${item.setInfo.unit.name})`;
