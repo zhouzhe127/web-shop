@@ -546,13 +546,13 @@
 			}
 		},
 		async activated() {
+			await this.getRoleList();
 			if (this.$route.query.id) {
 				this.id = this.$route.query.id;
 				await this.getneedData();
 				this.init();
 			}
 			this.crageBtn();
-			this.getRoleList();
 			this.recursiveGetMaterialList();
 		},
 		deactivated() {
