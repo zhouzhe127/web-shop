@@ -1,5 +1,4 @@
 <template>
-
 	<div class="winContainer" :style="{'z-index':1000+win_id}">
 		<div class='win center' :style="{'width': width +'px','height': 'auto','z-index':1000+win_id,'transform':align=='center'?'translate(-50%,-50%)':null,'left':(align == 'left'?'0':(align == 'center'?'50%':null)),'right':align=='right'?'0':null}">
 			<div class='win-head'>
@@ -24,7 +23,7 @@
 <script>
 import global from 'src/manager/global';
 import utils from 'src/verdor/utils';
-
+/* eslint-disable */
 export default {
 	props: {
 		type: {
@@ -45,11 +44,11 @@ export default {
 		},
 		okCallback: {
 			type: Function,
-			// default: function() {}
+			default: function() {}
 		},
 		cancelCallBack: {
 			type: Function,
-			// default: function() {}
+			default: function() {}
 		},
 		maskStr: {
 			type: String,
@@ -59,7 +58,7 @@ export default {
 		cancel: [Object],
 		closeHandle: {
 			type: Function,
-			// default: function() {}
+			default: function() {}
 		},
 		autoHideTime: [Number, String],
 		isBody: {
