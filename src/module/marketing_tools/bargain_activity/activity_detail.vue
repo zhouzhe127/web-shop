@@ -14,7 +14,7 @@
 			</div>
 		</div>
 		<div class="tableWrap" v-show="!showEditGoods">
-			<el-table border :data="goodsList" style="width: 100%;text-align: center;" :header-cell-style="{'text-align': 'center'}">
+			<el-table border :data="goodsList" align="center" style="width: 100%;text-align: center;" :header-cell-style="{'text-align': 'center'}">
 				<el-table-column prop="name" label="商品名称" width="200"> </el-table-column>
 				<template v-if="isBrand">
 					<el-table-column prop="launchNum" label="发起砍价人数"> </el-table-column>

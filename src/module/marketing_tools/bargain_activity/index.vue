@@ -19,7 +19,7 @@
 				</div>
 			</div>
 			<div class="list">
-				<el-table :data="activityList" border style="width: 100%;text-align: center" :header-cell-style="{'text-align': 'center'}">
+				<el-table :data="activityList" align="center" border style="width: 100%;text-align: center" :header-cell-style="{'text-align': 'center'}">
 					<el-table-column prop="name" label="活动标题" width="120"></el-table-column>
 					<el-table-column prop="formatCreateTime" label="创建时间" width="180"> </el-table-column>
 					<el-table-column label="活动时间" width="310">
