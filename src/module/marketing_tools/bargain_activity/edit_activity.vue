@@ -168,13 +168,13 @@ export default {
 			this.$store.commit('selectGoods', goods);
 			this.showEditGoods = true;
 		},
-		submit() {
+		async submit() {
 			let paramData = this.validateAndGeneratorParam();
 			if (!paramData) return;
 			if (paramData.id) {
-				this.editActivity(paramData);
+				await this.editActivity(paramData);
 			} else {
-				this.createActivity(paramData);
+				await this.createActivity(paramData);
 			}
 			this.back('Refresh');
 		},
@@ -182,7 +182,7 @@ export default {
 			let paramData = this.validateAndGeneratorParam();
 			if (!paramData) return;
 			if (paramData.id) {
-				this.editActivity(paramData);
+				await this.editActivity(paramData);
 				this.$store.commit('selectActivity', paramData);
 				// get detail ：商品1 商品2 商品3
 			} else {
