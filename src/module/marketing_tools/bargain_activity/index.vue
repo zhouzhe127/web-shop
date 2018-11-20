@@ -40,7 +40,7 @@
 					<el-table-column prop="useNum" label="核销量"></el-table-column>
 					<el-table-column v-if="isBrand" prop="newMemberNum" label="新增会员"></el-table-column>
 					<el-table-column prop="creator" label="创建人"></el-table-column>
-					<el-table-column label="操作" fixed="right" width="150">
+					<el-table-column label="操作" fixed="right" width="150" class-name="tac">
 						<template slot-scope="scope">
 							<el-button @click="intoDetail(scope.$index)" type="text" size="small">查看详情</el-button>
 							<el-button type="text" v-if="isBrand && !scope.row.isBegin" size="small" @click="editActivity(scope.$index)">编辑</el-button>
@@ -256,5 +256,8 @@ export default {
 .footerPageing {
 	position: absolute;
 	bottom: 40px;
+}
+.tac{
+	text-align: center;
 }
 </style>

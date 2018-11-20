@@ -171,7 +171,7 @@
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
-	import getAppliedWin from './../../seller_assistant/new_goods_win.vue';
+	import getAppliedWin from './../../seller_assistant/spiking_commodity/new_goods_win.vue';
 
 	export default {
 		data() {

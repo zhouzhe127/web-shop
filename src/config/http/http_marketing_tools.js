@@ -360,43 +360,43 @@ export default {
 	/* ↓ 砍价活动(粮票集) ↓
 	-------------------*/
 	'activityCreateActivity': {
-		url: f + 'Api/Activity/createActivity', //新建砍价活动
+		url: f + 'Activity/createActivity', //新建砍价活动
 		method: 'post'
 	},
 	'activityEditActivity': {
-		url: f + 'Api/Activity/editActivity', // 修改砍价活动
+		url: f + 'Activity/editActivity', // 修改砍价活动
 		method: 'post'
 	},
 	'activityAddGoods': {
-		url: f + 'Api/Activity/addGoods', //添加活动商品
+		url: f + 'Activity/addGoods', //添加活动商品
 		method: 'post'
 	},
 	'activityEditGoods': {
-		url: f + 'Api/Activity/editGoods', // 编辑活动商品
+		url: f + 'Activity/editGoods', // 编辑活动商品
 		method: 'post'
 	},
 	'activityPushGoods': {
-		url: f + 'Api/Activity/pushGoods', // 上架活动商品
+		url: f + 'Activity/pushGoods', // 上架活动商品
 		method: 'post'
 	},
 	'activityRevokePushGoods': {
-		url: f + 'Api/Activity/revokePushGoods', // 下架活动商品
+		url: f + 'Activity/revokePushGoods', // 下架活动商品
 		method: 'post'
 	},
 	'statisticGetActivity': {
-		url: f + 'Api/Statistic/getActivity', // 获取砍价活动列表
+		url: f + 'Statistic/getActivity', // 获取砍价活动列表
 		method: 'get'
 	},
 	'activityGetActivityDetail': {
-		url: f + 'Api/activity/getActivityDetail', // 获取 活动统计明细
+		url: f + 'activity/getActivityDetail', // 获取 活动统计明细
 		method: 'get'
 	},
 	'statisticGetActivityGoods': {
-		url: f + 'Api/Statistic/getActivityGoods', // 获取砍价活动明细
+		url: f + 'Statistic/getActivityGoods', // 获取砍价活动明细
 		method: 'get'
 	},
 	'getMiniProQR': {
-		url: f + 'Api/Weixin/getMiniProQR', // 获取砍价活动明细
+		url: f + 'Weixin/getMiniProQR', // 获取砍价活动明细
 		type: 'file',
 		// method: 'get'
 	},

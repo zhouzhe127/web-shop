@@ -201,11 +201,11 @@ let global = {
 		bc: 'http://bc.api.qa.ishandian.com.cn/api/',
 		wx: 'http://wx.qa.ishandian.com.cn/api/',
 		pos: 'http://v5.qa.ishandian.com.cn/pos/',
-		fs: 'http://fs.qa.ishandian.com.cn/'
+		fs: 'http://fs.qa.ishandian.com.cn/api/'
 	},
 	// pre
-	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "http://fspre.liangpiaoji.com/api/"},
-	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "http://fs.liangpiaoji.com/api/"},
+	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "https://fspre.ishandian.net/api/"},
+	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "https://fs.i-shandian.com/api/"},
 
 	groupFansList: {
 		isOwer: false,

@@ -28,7 +28,7 @@
 				<el-table-column prop="discount" label="优惠金额"></el-table-column>
 				<el-table-column prop="discountRatio" label="优惠占比"> </el-table-column>
 				<el-table-column prop="orderPrice" label="拉动消费"></el-table-column>
-				<el-table-column v-if="isBrand" prop="date" label="操作" width="100">
+				<el-table-column v-if="isBrand" prop="date" label="操作" width="100" class-name="tac">
 					<template slot-scope="scope">
 						<template v-if="scope.row.status == 0">
 							<el-button @click="activation(scope.row)" type="text" size="small">上架</el-button>
@@ -180,5 +180,8 @@ export default {
 	.rightBtn {
 		float: right;
 	}
+}
+.tac{
+	text-align: center;
 }
 </style>
