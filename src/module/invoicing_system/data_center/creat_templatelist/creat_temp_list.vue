@@ -36,7 +36,7 @@
 				<el-table-column prop="date" fixed="left" width="200" label="#">
 					<el-table-column prop="name" label="名称" width="200">
 						<template slot-scope="scope">
-							<div class="detailsBtn">
+							<div>
 								<span>{{scope.row.strTitle}}</span>
 								<div class="editbtn">
 									<el-button type="text" v-if="scope.row.pScope.length==0" @click="editRow(scope.row,scope.$index)" icon="el-icon-edit"></el-button>
@@ -72,11 +72,11 @@
 									<el-button type="text" slot="reference">{{item.name}}</el-button>
 								</el-popover>
 
+							</div>
 								<div class="editbtn">
 									<el-button type="text" @click="editColumn(item,index)" icon="el-icon-edit"></el-button>
 									<el-button type="text" @click="delColumn(index,2)" icon="el-icon-delete"></el-button>
 								</div>
-							</div>
 						</template>
 					</el-table-column>
 				</el-table-column>
@@ -605,7 +605,9 @@
 				vertical-align: middle;
 				word-break: break-all;
 			}
-
+			.detailsBtn{
+				vertical-align: middle;
+			}
 			.editbtn {
 				display: inline-block;
 				vertical-align: middle;
