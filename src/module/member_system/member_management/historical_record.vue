@@ -96,7 +96,7 @@
 				count: '',
 				userData: '',
 				isBrand: false, //判断品牌	
-				valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+				valueTime: [], //时间控件
 				trantypeId: [], //交易类型对应的id
 				trantypehigh: '全部',
 				listInfo: '', //数据
@@ -121,8 +121,8 @@
 						page: this.page,
 						num: this.num,
 						type: 0,
-						startTime: parseInt(this.valueTime[0] / 1000),
-						endTime: parseInt(this.valueTime[1] / 1000),
+						startTime: this.valueTime.length == 0 ? '' : parseInt(this.valueTime[0] / 1000),
+						endTime: this.valueTime.length == 0 ? '' : parseInt(this.valueTime[1] / 1000),
 						subType: this.trantypeId.join(',')
 					}
 				});
