@@ -39,15 +39,15 @@
 							<div class="detailsBtn">
 								<span>{{scope.row.strTitle}}</span>
 								<div class="editbtn">
-									<el-button type="text" @click="editRow(scope.row,scope.$index)" icon="el-icon-edit"></el-button>
-									<el-button type="text" @click="delColumn(scope.$index,1)" icon="el-icon-delete"></el-button>
+									<el-button type="text" v-if="scope.row.pScope.length==0" @click="editRow(scope.row,scope.$index)" icon="el-icon-edit"></el-button>
+									<el-button type="text" @click="delColumn(scope.$index,1,scope.row)" icon="el-icon-delete"></el-button>
 								</div>
 							</div>
 						</template>
 					</el-table-column>
 				</el-table-column>
 				<el-table-column prop="date" v-if="reset" :label="`${index+1}`" v-for="(item,index) in columnData" :key="index">
-					<el-table-column width="240">
+					<el-table-column min-width="240">
 						<template slot="header" slot-scope="scope">
 							<div class="detailsBtn">
 								<el-popover trigger="hover" width="300">
@@ -84,7 +84,7 @@
 		</div>
 		<add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin" @positionEvent="positionEvent"></add-position>
 		<add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>
-		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pList="materialList" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
+		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pShowMaterial="pShowMaterial" :pList="materialList" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
 	</div>
 </template>
 <script>
@@ -143,6 +143,7 @@
 				],
 				id: '',
 				materialList:[],				//物料列表
+				pShowMaterial:true //添加行是否展示选择物料的弹窗
 			};
 		},
 		methods: {
@@ -414,7 +415,7 @@
 				let data = await http.getUserRoleList();
 				this.roleList = data;
 			},
-			delColumn(index, type) { //type:1是行，2是列
+			delColumn(index, type,item) { //type:1是行，2是列
 				let str = type == 1 ? '行' : '列';
 				let data = type == 1 ? this.tableData : this.columnData;
 				this.$confirm(`是否删除第${index+1}${str}`, '提示', {
@@ -423,6 +424,7 @@
 					type: 'warning'
 				}).then(() => {
 					data.splice(index, 1);
+					if(item.pScope.length>0) this.pShowMaterial = true;
 					this.resetColumn();
 					this.$message({
 						type: 'success',
@@ -523,6 +525,7 @@
 					this.pCollection = '';
 					this.pScope = [];
 					if (data.pScope.length > 0) {
+						this.pShowMaterial = false;
 						data.strTitle = `物料范围（${data.pScope.length}）`;
 					} else {
 						data.strTitle = `${data.pCollection.name}（${data.pCollection.mid.length}种，单位：${data.pCollection.unit.name}）`;
