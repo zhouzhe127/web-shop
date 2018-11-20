@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-15 18:11:43
+ * @Last Modified time: 2018-11-19 15:10:55
  */
 
 <template>
@@ -86,6 +86,9 @@
 // import global from 'src/manager/global';
 import http from 'src/manager/http';
 import Timer from 'src/verdor/timer';
+import exportFile from 'src/verdor/exportFile';
+import storage from 'src/verdor/storage';
+
 export default {
 	data () {
 		return {
@@ -103,6 +106,7 @@ export default {
 			},
 			selectAll:false,                    //全选
 			selectList:[],                      //选中的列表
+			shopId:'',
 
 		};
 	},
@@ -149,7 +153,15 @@ export default {
 					if(item.status == statusMap.reject){
 						this.$message('报表生成失败!');
 					}else if(item.status == statusMap.resolve){
-						this.getHttp('materialreportExportMaterialReportExcel',{id:item.id});
+						this.getHttp('materialreportExportMaterialReportExcel',{id:item.id}).then((res)=>{
+							exportFile({
+								url:res,
+								// data:{
+								// 	token:this.token,
+								// 	shopId:this.shopId
+								// }
+							});
+						});
 					}else{
 						this.$message('报表正在生成中,请稍后...');
 					}
@@ -163,7 +175,7 @@ export default {
 						return;
 					}
 					ids = this.selectList.map( ele => ele.id).join(',');
-					this.delTemplate('确定要删所选中的报表吗？?',ids);               
+					this.delTemplate('确定要删所选中的报表吗?',ids);               
 					break;     
 			}
 			
@@ -194,6 +206,9 @@ export default {
 						if(this.isSelectCurrentPage(this.tableData,{val:this.percent,attr:'percent'})){
 							this.clearTaskTimer('rList');
 						}
+					}
+					if(!retObj.data || (Array.isArray(retObj.data) && retObj.data.length == 0) ){
+							this.clearTaskTimer('rList');						
 					}
 				},
 				15000,
@@ -345,6 +360,10 @@ export default {
 				},
 			]);
 		},
+		initData(){
+			let currentShop = storage.session('userShop').currentShop;
+			this.shopId = currentShop.id;
+		},
 
 
 
@@ -382,6 +401,7 @@ export default {
 		},
 	},
 	mounted(){
+		this.initData();
 		this.initBtn();
 		this.initPageObj();
 		this.getQuery();

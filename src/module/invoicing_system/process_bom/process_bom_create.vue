@@ -61,7 +61,9 @@
 				<em @click="wareSort(props.index)" class="sort">仓库排序</em>
 			</span>
 		</com-table>
-		<div><select-mat :selObj="winObj" v-if="matWinShow" :choiceType="choiceType" @emit="winClose"></select-mat></div>
+		<div>
+			<select-mat :selObj="winObj" v-if="matWinShow" :title="selMatTitle" :choiceType="choiceType" @emit="winClose"></select-mat>
+		</div>
 		<div>
 			<component :is="showWin" 
 				:winOpen="wareObj"
@@ -111,6 +113,7 @@ export default {
 				list:[],
 				banList:[],
 			},
+			selMatTitle:'选择产出物料',
 			productObj:{//成品对象
 				search:{},
 				list:[],
@@ -162,8 +165,6 @@ export default {
 			import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
 		selectMat: () =>
 			import ( /*webpackChunkName: 'select_material'*/ './select_material'),
-		// selectMat: () =>
-		// 	import ( /*webpackChunkName: 'select_material'*/ '../data_center/add_column'),
 		comTable: () =>
 			import ( /*webpackChunkName: 'table'*/ 'src/components/com_table'),
 		warehouseSort: () =>
@@ -335,10 +336,12 @@ export default {
 				this.choiceType = 'single';
 				this.winObj = this.productObj;
 				this.winObj.banList = this.matObj.list;
+				this.selMatTitle = '选择产出物料（单选）';
 			}else if(type==2){//多选
 				this.choiceType = 'more';
 				this.winObj = this.matObj;
 				this.winObj.banList = this.productObj.list;
+				this.selMatTitle = '选择原料物料（多选）';
 			}
 			this.matWinShow = true;
 		},

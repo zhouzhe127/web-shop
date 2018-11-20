@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-13 15:18:24
+ * @Last Modified time: 2018-11-19 14:08:05
  */
 
 <template>
@@ -112,6 +112,9 @@
 
 */
 import http from 'src/manager/http';
+import exportFile from 'src/verdor/exportFile';
+import storage from 'src/verdor/storage';
+
 export default {
 	data () {
 		return {
@@ -124,6 +127,7 @@ export default {
 
 			reportId : '', 				//报表id
 			reportName : '--',			//报表名
+			shopId:'',
 		};
 	},
 	methods: {
@@ -359,7 +363,6 @@ export default {
 			if(Number(query.id)){
 				this.reportId = Number(query.id); 
 			}
-			console.log(this.reportId );
 		},
 		initCondition(){
 			this.condition = {
@@ -390,12 +393,18 @@ export default {
 					type:'4',
 					className:'primary',
 					fn:async ()=>{
-						this.getHttp('materialreportExportMaterialReportExcel',{id:this.reportId});
+						let res = await this.getHttp('materialreportExportMaterialReportExcel',{id:this.reportId});
+						exportFile({
+							url:res,
+						});
 					}
 				},
 			]);
 		},
-
+		initData(){
+			let currentShop = storage.session('userShop').currentShop;
+			this.shopId = currentShop.id;
+		},
 
 
 		toRaw(data,type){
@@ -408,6 +417,7 @@ export default {
 
 	},
 	mounted(){
+		this.initData();
 		this.getQuery();
 		this.initBtn();
 		this.filterReset('reset');

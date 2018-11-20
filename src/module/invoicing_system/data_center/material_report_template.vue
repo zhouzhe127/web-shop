@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-14 11:29:44
+ * @Last Modified time: 2018-11-19 10:34:56
  */
 
 <template>
@@ -17,7 +17,7 @@
 					{{$index+1}}
 				</span>
 			</el-table-column>
-			<el-table-column  min-width="180px"  label="报表模板名称" prop="name">
+			<el-table-column  min-width="180px"  label="报表模板名称" :show-overflow-tooltip="true" prop="name">
 			</el-table-column>
 
 			<el-table-column  min-width="150px"  label="创建人" prop="createUser">
@@ -50,6 +50,7 @@
 			</el-pagination>
 		</div>
 	</div>
+
 </template>
 
 <script>
@@ -89,6 +90,7 @@ export default {
 			pageObj:{},
 			tableData:[],
 			roleId:null,				//当前操作人的角色id
+
 		};
 	},
 	methods: {
@@ -289,8 +291,11 @@ export default {
 			let res = await http[url]({data:obj},err);
 			return res;
 		},
+
+
+
 	},
-	mounted(){
+	async mounted(){
 		this.initData();
 		this.initBtn();
 		this.initPageObj();
@@ -299,6 +304,8 @@ export default {
 	},
 	components:{
 		addReportRow:() => import(/* webpackChunkName:"add_report_row_win"*/'./add_report_row_win'),
+		selectMaterialCom:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
+
 	}
 };
 </script>
@@ -310,7 +317,7 @@ export default {
 	.operation{
 		color:#E1BB4A;
 		padding-right:15px;
-		height:30px;
+		height:40px;
 		display: inline-flex;
 		align-items: center;
 		cursor: pointer;

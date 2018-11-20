@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-14 17:02:19
+ * @Last Modified time: 2018-11-19 11:16:37
  */
 <template>  
 	<div>
@@ -17,12 +17,13 @@
 				</div>
 
 				<div class="pad-bottom">
-				
-					<div class="add-matrial" @click="openWin(winType.selectMaterial)">
-						<span>选择物料</span>
-						<i class="el-icon-plus plus"></i>
-					</div>
-					/
+					<template v-if="pShowMaterial">
+						<div class="add-matrial" @click="openWin(winType.selectMaterial)">
+							<span>选择物料</span>
+							<i class="el-icon-plus plus"></i>
+						</div>
+						/
+					</template>
 
 					<select-collection-com :selectId="collection.id"  @change="getSelectCollection" :list="collectionList"></select-collection-com>
 
@@ -56,7 +57,8 @@
 		<component
 			:is="showCom"
 			:show="true"
-			:selects="scope"
+			:pList="pList"
+			:pSelects="scope"
 			@change="closeWin"
 		>
 		</component>
@@ -141,6 +143,18 @@ export default {
 			type:[Number,String],
 			default:''
 		},
+		//是否展示选择物料的弹窗
+		pShowMaterial:{
+			type:[Boolean],
+			default:true
+		},
+		//物料列表
+		pList:{
+			type:[Array],
+			default:function(){
+				return [];
+			}
+		},
 		//弹窗标题
 		title:{
 			type:[String],
@@ -161,7 +175,7 @@ export default {
 				obj = {
 					pSortObj : this.sortObj,
 					pCollection : this.collection,
-					pScope : this.scope.map( ele => ele.id)
+					pScope : this.scope
 				};
 				if(obj.pScope.length == 0 && !obj.pCollection.id){
 					this.$message('请从物料范围或集合中选择一个!');
@@ -179,7 +193,11 @@ export default {
 			
 			switch(this.showCom){
 				case winType.selectMaterial:    //选择物料
-					this.scope = obj;
+					if(obj.length == 0){
+						this.$message('请选择物料!');
+						return;
+					}
+					this.scope = obj.map( ele => ele.id);
 					this.collection = {};
 					break;
 				case winType.createCollection:  //新建集合,抛出新建的集合
