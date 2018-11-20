@@ -47,7 +47,7 @@
 					</el-table-column>
 				</el-table-column>
 				<el-table-column prop="date" v-if="reset" :label="`${index+1}`" v-for="(item,index) in columnData" :key="index">
-					<el-table-column width="240">
+					<el-table-column min-width="240">
 						<template slot="header" slot-scope="scope">
 							<div class="detailsBtn">
 								<el-popover trigger="hover" width="300">
