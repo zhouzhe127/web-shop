@@ -13,7 +13,7 @@
 				<div class="inp-block">
 					<span class="inp-name">名称</span>
 					<div class="right">
-						<el-input placeholder="输入名称" class="inp-class" v-model="name" max-length="20" ref="nameDom"></el-input>
+						<el-input placeholder="输入名称" class="inp-class" v-model="name" maxlength="20" ref="nameDom"></el-input>
 					</div>
 					<div class="right">
 						<el-popover
@@ -225,8 +225,21 @@ export default {
 				}
 			});
 		},
+		//修改公式时 验证是否重名 这里只能前端验证，修改时后台不验证重名
+		veriRename(){
+			for(let item of this.pObj.listAll){
+				if(this.name != this.saveParam.name && this.name == item.name){
+					this.$message({type: 'error',message: '该公式名称已存在，不允许重名'});
+					return false;
+				}
+			}
+			return true;
+		},
 		//新建公式项
 		async addFormula(send){
+			if(this.id){
+				if(!this.veriRename()) return;
+			}
 			if(this.loading) {
 				this.$message({message: `请勿重复提交`,type: 'error'});
 				return;
@@ -237,7 +250,7 @@ export default {
 				name:this.name,
 			};
 			obj = Object.assign(obj,send);
-			if(!this.veriChanged(obj)){//验证 编辑时是否改变了公式
+			if(!this.veriChanged(obj)){//验证 未做修改则直接抛出false
 				this.$emit('emit',false);
 			}else{
 				//try catch防止重复提交
@@ -247,7 +260,11 @@ export default {
 						data:obj
 					},true);
 				}catch(e){
-					this.$message({message: e.error.message,type: 'error'});
+					if(e.error.message=='重名'){
+						this.$message({type: 'error',message: '该公式名称已存在，不允许重名'});
+					}else{
+						this.$message({message: e.error.message,type: 'error'});
+					}
 					this.loading = false;//接口报错，还能继续点击
 				}
 				if(data){

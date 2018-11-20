@@ -12,7 +12,7 @@
 			<div class="inp-block">
 				<span class="inp-name">名称</span>
 				<div class="right">
-					<el-input placeholder="输入名称" class="inp-class" v-model="name" max-length="20"></el-input>
+					<el-input placeholder="输入名称" class="inp-class" v-model="name" maxlength="20"></el-input>
 				</div>
 			</div>
 			<div class="inp-block">

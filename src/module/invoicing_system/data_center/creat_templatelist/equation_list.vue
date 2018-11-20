@@ -152,13 +152,16 @@ export default {
 		editFormula(res){
 			res.title = '编辑公式项';
 			this.formulaInsert = res;
+			this.formulaInsert.listAll = this.viewData;
 			this.isAdd = false;
 			this.showFormula = true;
 		},
 		//编辑公式项-完成
 		getFormula(res){
 			if(res){
-				if(this.isAdd) this.page=1;
+				if(this.isAdd){
+					this.page=1;
+				}
 				this.init();
 			}
 			this.showFormula = false;
