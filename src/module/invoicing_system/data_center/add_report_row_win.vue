@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-19 11:16:37
+ * @Last Modified time: 2018-11-20 10:17:56
  */
 <template>  
 	<div>
@@ -241,6 +241,10 @@ export default {
 			
 			if(this.collection.id && this.scope.length > 0 ){
 				this.scope = [];
+			}
+			//template creator's bad meeting
+			if(this.scope.length > 0){
+				this.pSortObj.num = 1;
 			}
 		},
 
