@@ -11,16 +11,6 @@
 			温馨提示:疯抢状态为{{statusType[status]||"未开始"}}...
 		</div>
 		<!-- 列表 -->
-		<!-- <com-table :listHeight='80' :listName="'疯抢历史'" :key="index" :showTitle='1' :listWidth="1436" :introData="historyList" :titleData="titleList"
-		    :allTotal="count" :widthType='true'>
-			<div slot="con-0" slot-scope="props" class="btnLink">
-				<a href="javascript:;" @click="getDetail(props.data)">查看</a>
-			</div>
-			<div slot="con-1" slot-scope="props">{{count - (page - 1)*num -props.index}}</div>
-			<div slot="con-2" slot-scope="props">{{transFormDates(props.data.startTime)}}</div>
-			<div slot="con-3" slot-scope="props">{{transFormDates(props.data.endTime)}}</div>
-			<div slot="con-4" slot-scope="props" :class="props.data.status == '0' ? 'end' : 'start' ">{{changStatus(props.data.status)}}</div>
-		</com-table> -->
 		<!-- 下面的表格 -->
 		<div class="list_box" style="width:100%;">
 			<div class="list_title">
@@ -44,12 +34,12 @@
 						<span>{{count - (page - 1)*num -scope.$index}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="createTime" label="开始时间" align="center">
+				<el-table-column prop="createTime" width="250" label="开始时间" align="center">
 					<template slot-scope="scope">
 						<span>{{transFormDates(scope.row.startTime)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="createTime" label="结束时间" align="center">
+				<el-table-column prop="createTime" width="250" label="结束时间" align="center">
 					<template slot-scope="scope">
 						<span>{{transFormDates(scope.row.endTime)}}</span>
 					</template>
@@ -94,11 +84,6 @@
 			};
 		},
 		methods: {
-			// pageChange(obj) { //翻页
-			// 	this.page = obj.page;
-			// 	this.num = obj.num;
-			// 	this.getHistorys();
-			// },
 			async getHistorys() {
 				let data = await http.getHistory({
 					data: {
@@ -110,8 +95,10 @@
 				if (this.historyList.length > 0) {
 					this.status = this.historyList[0].status;
 				}
-				this.pageNum = data.total;
-				this.count = data.count;
+				if (this.page == 1) {
+					this.pageNum = data.total;
+					this.count = data.count;
+				}
 			},
 			changeFormat: function(t) {
 				t -= 0;
