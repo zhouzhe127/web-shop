@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-16 10:47:11
+ * @Last Modified time: 2018-11-20 16:04:43
  * @file 新建集合
  */
 
@@ -382,9 +382,10 @@ export default {
 				id : Number(this.pCollectionId)
 			};
 
+
 			try{
 				retData = await this.getHttp('setStatisticScopeCategory',subObj,true);
-				if(retData.res){
+				if(retData.invalid.length == 0){
 					//新建成功
 					this.$message('保存成功!');                    
 					this.throwData(utils.deepCopy(retData.new));
@@ -402,7 +403,6 @@ export default {
 					this.alert(`所选择物料${fail.join(',')}与所选单位不匹配!`);
 				}
 			}catch(e){
-				console.log(e);
 				this.alert('该集合名称已存在,请修改集合名称!');
 			}
 		},
@@ -483,6 +483,7 @@ export default {
 		//初始化props
 		async initProps(){
 			let list = [];
+			let unit = {};
 
 			if(this.selects.length > 0 ){
 				list = await this.getHttp('materialGetMaterialDataByIds',{mids:this.selects.join(',')});
@@ -497,12 +498,24 @@ export default {
 				this.selectList = list;
 			}
 
+			this.condition.unitId = this.pUnitId;
 		},
 
 
 
+		checkSame(oldArr,newArr){
+			if(oldArr.length != newArr.length){
+				return false;
+			}
+			oldArr = oldArr.map( ele => Number(ele));
+			newArr = newArr.map( ele => Number(ele));
 
-
+			for(let i = 0 ; i < oldArr.length ; i += 1){
+				if(oldArr[i] != newArr[i]){
+					return false;
+				}
+			}
+		},
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
 				confirmButtonText: '确定',
@@ -511,6 +524,13 @@ export default {
 					if(typeof fn == 'function') fn(action);
 				}
 			});
+		},
+		getEle(list,val,attr='id'){
+			for(let ele of list){
+				if(ele[attr] == val){
+					return ele;
+				}
+			}
 		},
 		//检查列表中的元素某一个属性的值是否相同
 		hasSameAttrVal(list,attr='unitId'){
@@ -564,8 +584,8 @@ export default {
 		this.initPageObj();
 
 		this.getCategoryList();		
-		this.MaterialGetUnitList();
-		
+		await this.MaterialGetUnitList();
+
 		await this.initProps();		
 		this.getMaterialList();
 	},
