@@ -3,20 +3,20 @@ module.exports = {
 	"path": "Assistanthistory",
 	"children": [{
 		"path": "",
-		"url": "src/module/seller_assistant/rushed_history"
+		"url": "src/module/seller_assistant/rushed_to_history/rushed_history"
 	}, {
 		"path": "detail",
 		"children": [{
 			"path": "",
-			"url": "src/module/seller_assistant/rushed_history_detail"
+			"url": "src/module/seller_assistant/rushed_to_history/rushed_history_detail"
 		}, {
 			"path": "record",
 			"children": [{
 				"path": '',
-				"url": "src/module/seller_assistant/rushed_record"
+				"url": "src/module/seller_assistant/rushed_to_history/rushed_record"
 			}, {
 				"path": 'recordDetail',
-				"url": "src/module/seller_assistant/rushed_record_detail"
+				"url": "src/module/seller_assistant/rushed_to_history/rushed_record_detail"
 			}]
 		}]
 	}]

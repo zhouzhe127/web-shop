@@ -466,7 +466,7 @@
 				// }
 				let res = await http.OrderstatisticsBillDelite({
 					data: {
-						shopId: this.isBrand == true ? fromId : belongToShop,
+						shopId: fromId,
 						oid: oid
 					}
 				});
