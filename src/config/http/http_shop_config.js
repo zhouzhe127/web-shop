@@ -541,4 +541,12 @@ export default {
 		url: s + 'payment/deletePayment', //删除支付方式
 		method: 'get'
 	},
+	'getChargeQuery': {
+		url: s + 'Charge/query', //支付状态查询
+		method: 'get'
+	},
+	'getChargeInfo': {
+		url: s + 'Charge/getInfo', //获取激活&续费信息
+		method: 'get'
+	}
 };

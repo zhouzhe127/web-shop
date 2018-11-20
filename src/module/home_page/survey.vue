@@ -17,6 +17,13 @@
 			<span>今天是：
 				<span style="font-weight: bold;font-size: 16px">{{newTime}}</span>
 			</span>
+
+			<span v-if="userData.currentShop.endTime &&  userData.currentShop.endTime.length > 1">
+				<span style="font-weight: bold;font-size: 16px;color:#47B6E3;margin-left: 100px;">
+					门店使用有效期至{{handelFormatData(userData.currentShop.endTime,'yyyy-MM-dd') }}，如需续费请及时咨询系统顾问
+				</span>
+			</span>
+
 		</section>
 		<div style="height: 10px"></div>
 		<div v-if="coverShow&&!isContent" class="loding-cover"><img src="../../res/images/preloader.gif" /></div>
@@ -511,6 +518,10 @@ export default {
 					quickPayment: this.sales.quickPayment.orderNum
 				};
 			}
+		},
+		// format
+		handelFormatData(time,format){
+			return utils.format(time,format);
 		}
 	},
 	components: {

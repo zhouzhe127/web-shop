@@ -33,7 +33,7 @@
 			<section class="top-box fl" v-show="selectedTypeOne==0">
 				<span class="wordSize">时间段筛选：</span>
 				<!--<timehm @timeChoose="getTime" :start="start" :end="end" :index="index"></timehm>-->
-				<el-time-picker style="width: 200px;" is-range :clearable="false" v-model="hourMinute" value-format="HH-mm">
+				<el-time-picker style="width: 200px;" is-range :clearable="false" v-model="hourMinute" value-format="HH-mm-ss">
 				</el-time-picker>
 			</section>
 			<!--交接班-->
@@ -96,7 +96,7 @@ export default {
 			optionsTwo: ['早班', '中班', '晚班', '日常班'],
 			selectedTypeTwo: 0,
 
-			hourMinute: ['00-00', '23-59'], //时分
+			hourMinute: ['00-00-00', '23-59-59'], //时分
 			index: 0, //用于时间段筛选的重置
 
 			shopList: [], //所有店铺列表
@@ -461,10 +461,14 @@ export default {
 				this.hourMinute[0].substring(0, 2) +
 				':' +
 				this.hourMinute[0].substring(3, 5) +
+				':' +
+				this.hourMinute[0].substring(6, 8) +
 				'-' +
 				this.hourMinute[1].substring(0, 2) +
 				':' +
-				this.hourMinute[1].substring(3, 5);
+				this.hourMinute[1].substring(3, 5)+
+				':' +
+				this.hourMinute[1].substring(6, 8) ;
 			this.classifiedReport(timeBetween);
 			//				this.typeFlag = this.selectedType;
 		},
@@ -491,7 +495,7 @@ export default {
 			//					hour: '23',
 			//					minute: '59'
 			//				};
-			this.hourMinute = ['00-00', '23-59']; //时分
+			this.hourMinute = ['00-00-00', '23-59-59']; //时分
 			this.selShopid = [];
 		},
 		//展开表头设置

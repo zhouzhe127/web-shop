@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
     s,
     w,
@@ -44,10 +45,6 @@ export default {
     "brandgetConfig": { //获取品牌基本信息
         url: s + "Brandconfig/getConfig",
         method: "get"
-    },
-    "brandSetConfig": { //修改品牌基本信息
-        url: s + "Brandconfig/setConfig",
-        method: "post"
     },
     "brandSetConfig": { //修改品牌基本信息
         url: s + "Brandconfig/setConfig",

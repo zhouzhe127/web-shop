@@ -7,43 +7,42 @@
 				<template v-if="showStep != 5">
 					<div class="block">
 						<template v-if="showStep == 1">
-							<div class="input-box">
-								<!--日期组件 开始时间-->
-								<calendar :time="timeObj.startTime" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
-							</div>
-							<span class="input-word">至</span>
-							<div class="input-box mr-right">
-								<!--日期组件 结束时间-->
-								<calendar :time="timeObj.endTime" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
-							</div>
+							<el-date-picker :clearable="false" v-model="timeObj.startTime" type="datetime" placeholder="选择日期"></el-date-picker>
+							<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
+							<el-date-picker :clearable="false" v-model="timeObj.endTime" type="datetime" placeholder="选择日期"></el-date-picker>
 						</template>
 						<template v-if="!isBrand && showStep == 3 || !isBrand && showStep == 4">
-							<div class="input-box">
-								<!--日期组件 开始时间-->
-								<calendar :time="timeObj.startTimeStore" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
-							</div>
-							<span class="input-word">至</span>
-							<div class="input-box mr-right">
-								<!--日期组件 结束时间-->
-								<calendar :time="timeObj.endTimeStore" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
-							</div>
-						</template>
-					</div>
-					<div class="block">
-						<!--区域 桌台-->
-						<template v-if="showStep == 3||showStep == 4">
-							<selectBtn :sorts="areas" :index="areaIndex" :width="150" @emit="areaSelect"></selectBtn>
-							<selectBtn :sorts="table" :index="tableIndex" :width="150" @emit="tableSelect"></selectBtn>
+							<el-date-picker :clearable="false" v-model="timeObj.startTimeStore" type="datetime" placeholder="选择日期"></el-date-picker>
+							<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
+							<el-date-picker :clearable="false" v-model="timeObj.endTimeStore" type="datetime" placeholder="选择日期"></el-date-picker>
 						</template>
 						<div class="input-check select-ban" v-if="showStep != 2">
 							<i @click="timeCheck" :class="{active:this.openTime == 1}"></i>
 							按营业时间
 						</div>
+					</div>
+					<div class="block">
+						<!--区域 桌台-->
+						<template v-if="showStep == 3||showStep == 4">
+							<el-select v-model="areaIndex" @change="areaSelect" placeholder="请选择区域" style="width:150px;">
+								<el-option v-for="(item,index) in areas" :key="index" :label="item" :value="index"></el-option>
+							</el-select>
+							<!-- <selectBtn :sorts="areas" :index="areaIndex" :width="150" @emit="areaSelect"></selectBtn> -->
+							<el-select v-model="tableIndex" @change="tableSelect" placeholder="请选择桌台" style="width:150px;">
+								<el-option v-for="(item,index) in table" :key="index" :label="item" :value="index"></el-option>
+							</el-select>
+							<!-- <selectBtn :sorts="areas" :index="areaIndex" :width="150" @emit="areaSelect"></selectBtn>
+							<selectBtn :sorts="table" :index="tableIndex" :width="150" @emit="tableSelect"></selectBtn> -->
+						</template>
+
+						<el-input v-if="showStep == 4" placeholder="请输入订单号" @change="searchOrder" maxlength="18" v-model="orderInputValue" clearable class="input-with-select" style="width:200px;margin:0 10px;">
+							<el-button slot="append" icon="el-icon-search" @click="searchOrder"></el-button>
+						</el-input>
 						<!--根据订单号查询详情-->
-						<div class="search-input mr-right" v-if="showStep == 4">
+						<!-- <div class="search-input mr-right" v-if="showStep == 4">
 							<input type="text" placeholder="请输入订单号" @input="orderInput" @propertychange="orderInput" />
 							<em @click="searchOrder"></em>
-						</div>
+						</div> -->
 					</div>
 					<div class="block">
 						<!--选择店铺按钮-->
@@ -53,8 +52,10 @@
 						</div>
 						<!--搜索 重置-->
 						<div class="search-box" v-if="showStep != 2">
-							<span class="search-btn yellow" @click="search">搜索</span>
-							<span class="reset-btn gray" @click="reset">重置</span>
+							<el-button @click="search" type="primary" icon="el-icon-search">搜索</el-button>
+							<el-button @click="reset" type="info" icon="el-icon-search">重置</el-button>
+							<!-- <span class="search-btn yellow" @click="search">搜索</span>
+							<span class="reset-btn gray" @click="reset">重置</span> -->
 						</div>
 					</div>
 					<!--显示已选中的店铺-->
@@ -129,7 +130,7 @@ export default {
 			timerId: '', //计时器id
 			loading: false, //加载动画
 			dropName: '请选择店铺',
-			shopNameB:[],//已选择的店铺名称
+			shopNameB: [] //已选择的店铺名称
 		};
 	},
 	watch: {
@@ -179,17 +180,15 @@ export default {
 
 		if (this.isBrand) {
 			this.shopNameB = utils.deepCopy(this.userShopList);
-			this.shopList = this.userShopList.map((v) => {
-				return v.id
+			this.shopList = this.userShopList.map(v => {
+				return v.id;
 			});
 		}
-
 
 		this.storeName =
 			this.userShopList.length > 0
 				? this.userShopList[0].name
 				: '选择店铺'; //选中店铺按钮 显示,
-
 
 		this.resetDate(); //设置当前时间
 		if (this.isBrand == 0) {
@@ -217,7 +216,8 @@ export default {
 			if (this.showStep == 3 || this.showStep == 4) {
 				arr.push({
 					name: '导出',
-					className: ['fd-yellow'],
+					type: '4',
+					className: 'primary',
 					fn: () => {
 						this.exportMethods();
 					}
@@ -229,7 +229,8 @@ export default {
 			) {
 				arr.push({
 					name: '返回',
-					className: ['fd-blue'],
+					className: 'info',
+					type: '4',
 					fn: () => {
 						this.back();
 					}
@@ -389,7 +390,7 @@ export default {
 						60,
 						false,
 						() => {
-							Timer.clear(this.timerId);//轮询超时;
+							Timer.clear(this.timerId); //轮询超时;
 							this.repeat = true; //可重新查询
 							this.loading = false; //停止加载动画
 						}
@@ -531,38 +532,44 @@ export default {
 		setIsOneStore(selectNum) {
 			this.isOneStore = selectNum == 1 ? true : false; //判断是否只选择一家店铺 == 1 ? true : false; //判断是否只选择一家店铺
 		},
-//		getDrop(arr) {
-//			this.shopList = arr;
-//			let idArr = [],
-//				selectNum = 0;
-//			this.shopList.forEach((item) => {
-//				if (item.selected == true) {
-//					idArr.push(item.id);
-//					selectNum++;
-//				}
-//			});
-//			this.shopIds = idArr.join(',');
-//			this.setIsOneStore(selectNum);
-//		},
+		//		getDrop(arr) {
+		//			this.shopList = arr;
+		//			let idArr = [],
+		//				selectNum = 0;
+		//			this.shopList.forEach((item) => {
+		//				if (item.selected == true) {
+		//					idArr.push(item.id);
+		//					selectNum++;
+		//				}
+		//			});
+		//			this.shopIds = idArr.join(',');
+		//			this.setIsOneStore(selectNum);
+		//		},
 		//选店返回
 		getDrop(arr) {
-			console.log(arr);
 			this.shopList = arr;
 			this.shopIds = this.shopList.join(',');
 			this.setIsOneStore(this.shopList.length);
-			this.shopNameB=utils.deepCopy(this.userShopList);
-			for(let i=0;i<this.shopNameB.length;i++){
-				if(!this.shopList.includes(this.shopNameB[i].id)){
-					this.shopNameB.splice(i,1);
-					i--
+			this.shopNameB = utils.deepCopy(this.userShopList);
+			for (let i = 0; i < this.shopNameB.length; i++) {
+				if (!this.shopList.includes(this.shopNameB[i].id)) {
+					this.shopNameB.splice(i, 1);
+					i--;
 				}
 			}
-			console.log(this.shopNameB);
 		},
 		searchOrder() {
 			//根据订单号搜索 进入订单详情
 			let orderId = this.orderInputValue;
-			if (orderId) {
+			let regNum = /\d+/g;
+			if (orderId.trim().length > 0) {
+				if (orderId.trim().length < 18 || !regNum.test(orderId)) {
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '请输入正确的订单号!'
+					});
+					return false;
+				}
 				this.getDetail(orderId);
 			} else {
 				this.$store.commit('setWin', {
@@ -617,17 +624,17 @@ export default {
 				this.timeObj.startTime = current;
 				this.timeObj.endTime = current;
 				if (this.isBrand) {
-//					let list = utils.deepCopy(this.shopList);
-//					let idArr = [];
-//					list.forEach(item => {
-//						item.selected = true;
-//						idArr.push(item.id);
-//					});
-					this.shopList=this.userShopList.map((v)=>{
+					//					let list = utils.deepCopy(this.shopList);
+					//					let idArr = [];
+					//					list.forEach(item => {
+					//						item.selected = true;
+					//						idArr.push(item.id);
+					//					});
+					this.shopList = this.userShopList.map(v => {
 						return v.id;
 					});
-					this.shopIds=this.shopList.join(',');
-					this.shopNameB=utils.deepCopy(this.userShopList);
+					this.shopIds = this.shopList.join(',');
+					this.shopNameB = utils.deepCopy(this.userShopList);
 					this.setIsOneStore(this.shopList.length);
 				}
 				this.search();
@@ -661,24 +668,6 @@ export default {
 			} else if (this.showStep == 4) {
 				this.orderStoreSend.store.isRequest = true;
 				this.orderStoreSend.store.tableId = this.tableId;
-			}
-		},
-		startTimeChange(time) {
-			//开始时间
-			if (this.showStep == 3) {
-				//单店模式
-				this.timeObj.startTimeStore = time;
-			} else {
-				this.timeObj.startTime = time;
-			}
-		},
-		endTimeChange(time) {
-			//结束时间
-			if (this.showStep == 3) {
-				//单店模式
-				this.timeObj.endTimeStore = time;
-			} else {
-				this.timeObj.endTime = time;
 			}
 		},
 		formatTime(time) {

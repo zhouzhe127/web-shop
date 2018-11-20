@@ -284,7 +284,7 @@ export default {
 			this.isWarrant = data.isWarrant == 1 ? true : false;
 			this.isShared = data.isShared == 1 ? true : false;
 			this.customPackageName = data.customPackageName;
-			this.screenType = data.screenType;
+			this.screenType = data.screenType?data.screenType:'0';
 			if (!data.elecMenuVip) {
 				this.getLogin(false);
 			}

@@ -190,6 +190,7 @@
 						</s>
 						<s>展开/收起</s>
 						<s>分类名称</s>
+						<s>编码</s>
 						<s v-on:click="openDetial(5,$event)" class="detLi" style="white-space: normal;overflow: inherit;">
 							{{orderAll[5].name}}
 							<div class="detImg1"></div>
@@ -220,6 +221,7 @@
 							<i class="fi fi-double-angle-down fi-2x"></i>
 						</s>
 						<s style="cursor: pointer;" v-bind:title="item.categoryName">{{item.categoryName}}</s>
+						<s style="cursor: pointer;" v-bind:title="item.code">{{(item.code&&item.code!='')?item.code:'--'}}</s>
 						<s>{{item.num ? item.num : 0}}</s>
 						<s>{{item.totalPrice ? item.totalPrice : 0}}</s>
 						<s>{{item.totalProportion ? item.totalProportion : 0}}</s>
@@ -231,6 +233,7 @@
 								<s></s>
 								<s></s>
 								<s style="color: #28A8E0;" v-bind:title="goods.goodsName">{{goods.goodsName}}</s>
+								<s style="color: #28A8E0;" v-bind:title="goods.goodsCode">{{(goods.goodsCode&&goods.goodsCode!='')?goods.goodsCode:'--'}}</s>
 								<s style="color: #28A8E0;">{{goods.num ? goods.num : 0}}</s>
 								<s style="color: #28A8E0;">{{goods.totalPrice ? goods.totalPrice : 0}}</s>
 								<s style="color: #28A8E0;">{{goods.totalProportion ? goods.totalProportion : 0}}</s>
@@ -251,6 +254,7 @@
 									<i class="fi fi-angle-down fi-2x"></i>
 								</s>
 								<s style="cursor: pointer;" v-bind:title="itemTwo.categoryName">{{itemTwo.categoryName}}</s>
+								<s v-bind:title="itemTwo.code">{{(itemTwo.code&&itemTwo.code!='')?itemTwo.code:'--'}}</s>
 								<s>{{itemTwo.num ? itemTwo.num : 0}}</s>
 								<s>{{itemTwo.totalPrice ? itemTwo.totalPrice : 0}}</s>
 								<s>{{itemTwo.totalProportion ? itemTwo.totalProportion : 0}}</s>
@@ -262,6 +266,7 @@
 										<s></s>
 										<s></s>
 										<s style="color: #28A8E0;" v-bind:title="itemThree.goodsName">{{itemThree.goodsName}}</s>
+										<s style="color: #28A8E0;" v-bind:title="itemThree.goodsCode">{{(itemThree.goodsCode&&itemThree.goodsCode!='')?itemThree.goodsCode:'--'}}</s>
 										<s style="color: #28A8E0;">{{itemThree.num ? itemThree.num : 0}}</s>
 										<s style="color: #28A8E0;">{{itemThree.totalPrice ? itemThree.totalPrice : 0}}</s>
 										<s style="color: #28A8E0;">{{itemThree.totalProportion ? itemThree.totalProportion : 0}}</s>
@@ -284,6 +289,7 @@
 						</span>
 						<span>展开/收起</span>
 						<span>分类名称</span>
+						<span>编码</span>
 						<span v-on:click="openDetial(5,$event)" class="detLi" style="white-space: normal;overflow: inherit;">{{orderAll[5].name}}
 							<div class="detImg1"></div>
 							<div v-if="orderAll[5].status" class="detDiv1" style="right: -35px;">
@@ -326,6 +332,7 @@
 							<i class="fi fi-double-angle-down fi-2x"></i>
 						</span>
 						<span style="cursor: pointer;" v-bind:title="item.categoryName">{{item.categoryName}}</span>
+						<span style="cursor: pointer;" v-bind:title="item.code">{{(item.code&&item.code!='')?item.code:'--'}}</span>
 						<span>{{item.num ? item.num : 0}}</span>
 						<span>{{item.totalPrice ? item.totalPrice : 0}}</span>
 						<span>{{item.totalProportion ? item.totalProportion : 0}}</span>
@@ -344,6 +351,7 @@
 								<span></span>
 								<span></span>
 								<span style="color: #28A8E0;" v-bind:title="goods.goodsName">{{goods.goodsName}}</span>
+								<span style="color: #28A8E0;" v-bind:title="goods.goodsCode">{{(item.goodsCode&&item.goodsCode!='')?item.goodsCode:'--'}}</span>
 								<span style="color: #28A8E0;">{{goods.num ? goods.num : 0}}</span>
 								<span style="color: #28A8E0;">{{goods.totalPrice ? goods.totalPrice : 0}}</span>
 								<span style="color: #28A8E0;">{{goods.totalProportion ? goods.totalProportion : 0}}</span>
@@ -371,6 +379,7 @@
 									<i class="fi fi-angle-down fi-2x"></i>
 								</span>
 								<span style="cursor: pointer;" v-bind:title="itemTwo.categoryName">{{itemTwo.categoryName}}</span>
+								<span style="cursor: pointer;" v-bind:title="itemTwo.code">{{(itemTwo.code&&itemTwo.code!='')?itemTwo.code:'--'}}</span>
 								<span>{{itemTwo.num ? itemTwo.num : 0}}</span>
 								<span>{{itemTwo.totalPrice ? itemTwo.totalPrice : 0}}</span>
 								<span>{{itemTwo.totalProportion ? itemTwo.totalProportion : 0}}</span>
@@ -389,6 +398,7 @@
 										<span></span>
 										<span></span>
 										<span style="color: #28A8E0;" v-bind:title="itemThree.goodsName">{{itemThree.goodsName}}</span>
+										<span style="color: #28A8E0;" v-bind:title="itemThree.goodsCode">{{(itemThree.goodsCode&&itemThree.goodsCode!='')?itemThree.goodsCode:'--'}}</span>
 										<span style="color: #28A8E0;">{{itemThree.num ? itemThree.num : 0}}</span>
 										<span style="color: #28A8E0;">{{itemThree.totalPrice ? itemThree.totalPrice : 0}}</span>
 										<span style="color: #28A8E0;">{{itemThree.totalProportion ? itemThree.totalProportion : 0}}</span>
@@ -418,6 +428,7 @@
 						</em>
 						<em>展开/收起</em>
 						<em>分类名称</em>
+						<em>编码</em>
 						<em v-on:click="openDetial(5,$event)" class="detLi" style="white-space: normal;overflow: inherit;">{{orderAll[5].name}}
 							<div class="detImg1"></div>
 							<div v-if="orderAll[5].status" class="detDiv1" style="right: 70px;">
@@ -445,6 +456,7 @@
 							<i class="fi fi-double-angle-down fi-2x"></i>
 						</em>
 						<em style="cursor: pointer;" v-bind:title="item.categoryName">{{item.categoryName}}</em>
+						<em style="cursor: pointer;" v-bind:title="item.code">{{(item.code&&item.code!='')?item.code:'--'}}</em>
 						<em>{{item.num ? item.num : 0}}</em>
 						<em>{{item.totalPrice ? item.totalPrice : 0}}</em>
 						<em>{{item.totalProportion ? item.totalProportion : 0}}</em>
@@ -454,6 +466,7 @@
 								<em></em>
 								<em></em>
 								<em style="color: #28A8E0;" v-bind:title="goods.goodsName">{{goods.goodsName}}</em>
+								<em style="color: #28A8E0;" v-bind:title="goods.goodsCode">{{(goods.goodsCode&&goods.goodsCode!='')?goods.goodsCode:'--'}}</em>
 								<em style="color: #28A8E0;">{{goods.num ? goods.num : 0}}</em>
 								<em style="color: #28A8E0;">{{goods.totalPrice ? goods.totalPrice : 0}}</em>
 								<em style="color: #28A8E0;">{{goods.totalProportion ? goods.totalProportion : 0}}</em>
@@ -472,6 +485,7 @@
 									<i class="fi fi-angle-down fi-2x"></i>
 								</em>
 								<em style="cursor: pointer;" v-bind:title="itemTwo.categoryName">{{itemTwo.categoryName}}</em>
+								<em style="cursor: pointer;" v-bind:title="itemTwo.code">{{(itemTwo.code&&itemTwo.code!='')?itemTwo.code:'--'}}</em>
 								<em>{{itemTwo.num ? itemTwo.num : 0}}</em>
 								<em>{{itemTwo.totalPrice ? itemTwo.totalPrice : 0}}</em>
 								<em>{{itemTwo.totalProportion ? itemTwo.totalProportion : 0}}</em>
@@ -481,6 +495,7 @@
 										<em></em>
 										<em></em>
 										<em style="color: #28A8E0;" v-bind:title="itemThree.goodsName">{{itemThree.goodsName}}</em>
+										<em style="color: #28A8E0;" v-bind:title="itemThree.goodsCode">{{(itemThree.goodsCode&&itemThree.goodsCode!='')?itemThree.goodsCode:'--'}}</em>
 										<em style="color: #28A8E0;">{{itemThree.num ? itemThree.num : 0}}</em>
 										<em style="color: #28A8E0;">{{itemThree.totalPrice ? itemThree.totalPrice : 0}}</em>
 										<em style="color: #28A8E0;">{{itemThree.totalProportion ? itemThree.totalProportion : 0}}</em>
@@ -737,7 +752,7 @@ export default {
 		text-align: center;
 		height: 50px;
 		line-height: 50px;
-		width: 7%;
+		width: 6%;
 		color: #43414a;
 		float: left;
 		position: relative;
@@ -750,19 +765,19 @@ export default {
 		width: 4%;
 	}
 	.orMaReMainList li span:nth-child(2) {
-		width: 5%;
+		width: 4%;
 	}
 	.orMaReMainList li span:nth-child(3) {
 		width: 6%;
 	}
 	.orMaReMainList li span:nth-child(4) {
-		width: 5%;
+		width: 4%;
 	}
 	.orMaReMainList li span:nth-child(5) {
 		width: 5%;
 	}
 	.orMaReMainList li span:nth-child(6) {
-		width: 8%;
+		width: 6%;
 	}
 	.orMaReMainList li span:nth-child(7) {
 		width: 6%;
@@ -771,17 +786,20 @@ export default {
 		width: 6%;
 	}
 	.orMaReMainList li span:nth-child(13) {
-		width: 9%;
+		width: 8%;
 	}
 	.orMaReMainList li span:nth-child(15) {
-		width: 11%;
+		width: 10%;
+	}
+	.orMaReMainList li span:last-child {
+		width: 10%;
 	}
 	.orMaReMainList li em {
 		font-style: none;
 		display: block;
 		text-align: center;
 		height: 50px;
-		width: 18%;
+		width: 13%;
 		line-height: 50px;
 		color: #43414a;
 		float: left;
@@ -805,7 +823,7 @@ export default {
 		display: block;
 		text-align: center;
 		height: 50px;
-		width: 12.5%;
+		width: 10.5%;
 		line-height: 50px;
 		color: #43414a;
 		float: left;

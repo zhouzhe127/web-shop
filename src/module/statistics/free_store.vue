@@ -93,6 +93,7 @@
 				<div class="title">
 					<span>操作</span>
 					<span>商品名称</span>
+					<span>商品编码</span>
 					<span>赠品数量</span>
 					<span>赠品金额</span>
 				</div>
@@ -100,6 +101,7 @@
 					<li v-for="(item,index) in returnList" :key="index">
 						<span class="show-order light" :data-index="index">查看详情</span>
 						<span>{{item.goodsName}}</span>
+						<span>{{item.goodsCode}}</span>
 						<span>{{item.freeNum}}</span>
 						<span>{{item.freePrice}}</span>
 					</li>
@@ -156,7 +158,8 @@
 			</div>
 		</template>
 		<div class="page-box" v-if="step!=1 && step!=5">
-			<pageBtn @pageNum="pageChange" :total="pageNum" :page="page" :isNoJump="true"></pageBtn>
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-count="pageNum" :page-size="pageShow" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
+			<!-- <pageBtn @pageNum="pageChange" :total="pageNum" :page="page" :isNoJump="true"></pageBtn> -->
 		</div>
 	</div>
 </template>
@@ -237,7 +240,6 @@ export default {
 		step: 'setStep',
 		order: 'setOrder',
 		loading: 'setLoad',
-		pageShow: 'initData',
 		otherData: {
 			deep: true,
 			handler() {
@@ -434,20 +436,31 @@ export default {
 				}
 			}
 		},
-		pageChange(obj) {
-			//翻页
-			let prevPage = this.page;
-			this.page = obj.page;
-			this.pageShow = obj.num;
-			if (prevPage != obj.page) {
-				this.initData();
-			}
+		//分页点击
+		pageClick: function(e) {
+			this.page = e;
+			this.initData();
 		},
-		showPageChange(index) {
-			//每行显示多少页
+		//每页显示多少条点击
+		numChange(e) {
+			this.pageShow = e;
 			this.page = 1;
-			this.pageShow = this.showPageList[index];
+			this.initData();
 		},
+		// pageChange(obj) {
+		// 	//翻页
+		// 	let prevPage = this.page;
+		// 	this.page = obj.page;
+		// 	this.pageShow = obj.num;
+		// 	if (prevPage != obj.page) {
+		// 		this.initData();
+		// 	}
+		// },
+		// showPageChange(index) {
+		// 	//每行显示多少页
+		// 	this.page = 1;
+		// 	this.pageShow = this.showPageList[index];
+		// },
 		initData() {
 			let shopId = storage.session('deleteShopId');
 			let stepObj;
@@ -506,11 +519,12 @@ export default {
 			let num = 0,
 				price = 0;
 			for (let i = 0; i < this.orderStoreList.length; i++) {
+				this.orderStoreList[i].totalPrice = this.toFloatStr(this.orderStoreList[i].totalPrice);
 				num += this.orderStoreList[i].totalNum;
-				price += this.orderStoreList[i].totalPrice;
+				price += this.orderStoreList[i].totalPrice*1;
 			}
 			this.orderTotal.totalNum = num;
-			this.orderTotal.totalPrice = price;
+			this.orderTotal.totalPrice = this.toFloatStr(price);
 			this.orderTotal.totalDay = Math.ceil(
 				(this.sendData.brand.endTime - this.sendData.brand.startTime) /
 					(24 * 3600 * 1000)
@@ -583,7 +597,7 @@ export default {
 		}
 	}
 	.goods span {
-		width: 25%;
+		width: 20%;
 	}
 	.store-list {
 		margin-top: 20px;
@@ -722,11 +736,11 @@ export default {
 	.goods {
 		.title {
 			span {
-				width: 25%;
+				width: 20%;
 			}
 		}
 		ul li span {
-			width: 25%;
+			width: 20%;
 		}
 	}
 	.order {

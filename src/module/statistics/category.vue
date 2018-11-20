@@ -14,9 +14,14 @@
 						</div>
 					</div>
 				</div>
-				<section class="statisticsScreen chairFix">
+				<section>
 					<!--日期选择和搜索框-->
-					<section class="statisticsList fl">
+					<el-date-picker :clearable="false" v-model="startTime" type="datetime" placeholder="选择日期"></el-date-picker>
+					<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
+					<el-date-picker :clearable="false" v-model="endTime" type="datetime" placeholder="选择日期"></el-date-picker>
+					<el-button @click="dateSreachOrder" type="primary" icon="el-icon-search"></el-button>
+					<!-- <el-button @click="dateSreachOrder" type="primary" icon="el-icon-search">搜索</el-button> -->
+					<!-- <section class="statisticsList fl">
 						<section class="chairFix">
 							<calendar :time="startTime" :format="'yyyy年MM月dd日'" @emit="getStartTime"></calendar>
 						</section>
@@ -29,13 +34,18 @@
 					</section>
 					<span class="order-order-searchA" style="margin-right:15px;">
 						<span v-on:click="dateSreachOrder" class="order-order-search"></span>
-					</span>
-					<section class="statisticsList fl" style="line-height: 46px;margin-right: 20px;height: 55px;">
+					</span> -->
+					<section style="line-height: 46px;margin-right: 20px;height: 55px;display:inline-block;">
 						<div v-on:click="selectBusinessHours" :class="{'active':isOpenTime}" style="width:20px;height:20px;cursor: pointer;border:1px solid #28A8E0;margin:13px 10px;float: left;"></div>
 						<span style="font-size: 16px;">按营业时间</span>
 					</section>
-					<div class='minView chairFix'>
-						<!--一级分类搜索-->
+					<el-select v-model="oneId" placeholder="请选择一级分类" style="width:150px;">
+						<el-option v-for="item in oneList" :key="item.categoryId" :label="item.categoryName" :value="item.categoryId"></el-option>
+					</el-select>
+					<el-input placeholder="请输入商品名称" maxlength="18" v-model="searchName" clearable style="width:180px;margin:0 10px;"></el-input>
+					<el-button @click="search" type="primary" icon="el-icon-search">搜索</el-button>
+					<el-button @click="resetSearch" type="info">重置</el-button>
+					<!-- <div class='minView chairFix'>
 						<section class="statisticsList fl" style="margin-right:20px;">
 							<section v-on:click="showOneList" class="tableListInp chairFix">
 								<span class="overdian" style="height: 41px;width: 136px;display: block;float: left;text-align: center;border-right: 1px #B3B3B3 solid;">{{oneArea}}</span>
@@ -54,7 +64,7 @@
 							<a @click="search" href="javascript:void(0);" class="yellow" style="width: 90px;height: 40px;line-height: 40px;">搜索</a>
 							<a @click="resetSearch" href="javascript:void(0);" class="gray" style="width: 90px;height: 40px;line-height: 40px;">重置</a>
 						</section>
-					</div>
+					</div> -->
 
 				</section>
 			</section>
@@ -77,7 +87,10 @@
 			<categoryTable :halleatShow="halleatShow" :takeoutShow="takeoutShow" :allTypeShow="allTypeShow" :orderAll="orderAll" :paginationList="paginationList" :classification="classification" :total="total">
 			</categoryTable>
 		</section>
-		<pageElement @pageNum="getPageNum" :page="page" :total="endTotal" :num="num" :isNoJump='true'></pageElement>
+		<div style="margin:20px 0;">
+			<el-pagination background @size-change="numChange" @current-change="pageClick" :current-page="page" :page-count="endTotal" :page-size="num" layout="sizes, prev, pager, next" :page-sizes="[10, 20, 30]"></el-pagination>
+		</div>
+		<!-- <pageElement @pageNum="getPageNum" :page="page" :total="endTotal" :num="num" :isNoJump='true'></pageElement> -->
 	</section>
 </template>
 
@@ -142,7 +155,7 @@ export default {
 			],
 
 			searchName: '', //商品名搜索
-			oneId: -2, //选中一级分类id
+			oneId: '', //选中一级分类id
 			shopList: [
 				{ name: '本页面中所', id: 1 },
 				{ name: '本页面中所', id: 2 },
@@ -193,7 +206,7 @@ export default {
 		]);
 		this.init();
 		document.onclick = () => {
-			this.oneBtn = false;
+			// this.oneBtn = false;
 			for (let i = 0; i < this.orderAll.length; i++) {
 				this.orderAll[i].status = false;
 			}
@@ -258,20 +271,20 @@ export default {
 			this.isOpenTime = !this.isOpenTime;
 		},
 		//显示一级分类列表
-		showOneList(e) {
-			e.stopPropagation();
-			this.oneBtn = !this.oneBtn;
-			if (this.oneList.length == 0) {
-				this.oneBtn = false;
-			}
-		},
+		// showOneList(e) {
+		// 	e.stopPropagation();
+		// 	// this.oneBtn = !this.oneBtn;
+		// 	if (this.oneList.length == 0) {
+		// 		this.oneBtn = false;
+		// 	}
+		// },
 		// 模拟select选择框,一级分类
-		selectOneArea(data) {
-			this.oneArea = data.categoryName;
-			this.oneId = data.categoryId;
-			//                this.twoArea = '请选择二级分类'
-			//                this.twoList = data.child;
-		},
+		// selectOneArea(data) {
+		// 	this.oneArea = data.categoryName;
+		// 	this.oneId = data.categoryId;
+		// 	//                this.twoArea = '请选择二级分类'
+		// 	//                this.twoList = data.child;
+		// },
 		//点击店铺选择 阻止冒泡
 		stop(e) {
 			e.stopPropagation();
@@ -284,6 +297,15 @@ export default {
 		getEndTime(receiveTime) {
 			this.endTime = receiveTime + 24 * 60 * 60 * 1000 - 1;
 		},
+		//分页点击
+		pageClick: function(e) {
+			this.page = e;
+		},
+		//每页显示多少条点击
+		numChange(e) {
+			this.num = e;
+			this.page = 1;
+		},
 		//翻页组件接收
 		getPageNum(res) {
 			this.page = res.page;
@@ -295,8 +317,8 @@ export default {
 			this.startTime = new Date().setHours(0, 0, 0, 0);
 			this.endTime = new Date().setHours(23, 59, 59, 999);
 			this.isOpenTime = true;
-			this.oneArea = '请选择一级分类';
-			this.oneId = -2;
+			// this.oneArea = '请选择一级分类';
+			this.oneId = '';
 			this.search();
 		},
 		//搜索条件
@@ -335,6 +357,8 @@ export default {
 		//初始化，用于显示分类
 		async init(bool) {
 			if (this.searchCondition()) {
+				this.startTime = new Date(this.startTime).getTime();
+				this.endTime = new Date(this.endTime).getTime();
 				this.classification = [];
 				//获取全部数据
 				let res;
@@ -438,7 +462,7 @@ export default {
 						} else if (
 							(this.oneId == list[i].categoryId &&
 								this.searchName) ||
-							(this.oneId == -2 && this.searchName)
+							((this.oneId == -2 || this.oneId == '') && this.searchName)
 						) {
 							//分类与商品名搜索
 							let goods = []; //保存一级分类查询到的商品
@@ -480,7 +504,7 @@ export default {
 							}
 						}
 					}
-					if (this.oneId != -2 || this.searchName) {
+					if ((this.oneId != '-2' && this.oneId != '') || this.searchName) {
 						//去掉没有商品的一级分类和二级分类
 						if (this.searchName) {
 							for (let i = 0; i < newList.length; i++) {
@@ -706,107 +730,104 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@media screen and (max-width: 1440px) {
-	.minView {
-		float: left;
-	}
-}
-.chairFix:after {
-	content: '';
-	display: block;
-	clear: both;
-}
+// @media screen and (max-width: 1440px) {
+// 	.minView {
+// 		float: left;
+// 	}
+// }
+// .chairFix:after {
+// 	content: '';
+// 	display: block;
+// 	clear: both;
+// }
 #statCategory {
 	position: relative;
 }
-#statCategory .statisticsScreen {
-	margin-bottom: 10px;
-}
-#statCategory .statisticsScreen > span {
-	color: #666;
-	font-size: 14px;
-	height: 40px;
-	width: 40px;
-	text-align: center;
-	line-height: 41px;
-}
-#statCategory .tableListInp {
-	color: #666666;
-	border: #b3b3b3 solid 1px;
-	height: 43px;
-	cursor: pointer;
-}
-#statCategory .tableListInp .fl {
-	width: 41px;
-	height: 41px;
-	position: relative;
-	z-index: 5;
-}
-#statCategory .tableListInp .calendar-ctr {
-	width: 41px;
-	height: 41px;
-	border-left: 1px solid #b3b3b3;
-	position: relative;
-	z-index: 5;
-	float: left;
-}
+// #statCategory .statisticsScreen {
+// 	margin-bottom: 10px;
+// }
+// #statCategory .statisticsScreen > span {
+// 	color: #666;
+// 	font-size: 14px;
+// 	height: 40px;
+// 	width: 40px;
+// 	text-align: center;
+// 	line-height: 41px;
+// }
+// #statCategory .tableListInp {
+// 	color: #666666;
+// 	border: #b3b3b3 solid 1px;
+// 	height: 43px;
+// 	cursor: pointer;
+// }
+// #statCategory .tableListInp .fl {
+// 	width: 41px;
+// 	height: 41px;
+// 	position: relative;
+// 	z-index: 5;
+// }
+// #statCategory .tableListInp .calendar-ctr {
+// 	width: 41px;
+// 	height: 41px;
+// 	border-left: 1px solid #b3b3b3;
+// 	position: relative;
+// 	z-index: 5;
+// 	float: left;
+// }
 
-#statCategory .tableListInp div i {
-	height: 10px;
-	width: 10px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -5px;
-	margin-left: -5px;
-	border-top: 10px solid #b3b3b3;
-	border-left: 5px solid transparent;
-	border-right: 5px solid transparent;
-	box-sizing: border-box;
-}
-#statCategory .statisticsList {
-	position: relative;
-}
-#statCategory .statisticsList .searchgoods {
-	width: 174px;
-	height: 41px;
-	text-align: center;
-	border: 1px solid #b3b3b3;
-}
-#statCategory .statisticsList ul {
-	width: 100%;
-	max-height: 200px;
-	margin: 0;
-	position: absolute;
-	top: 43px;
-	left: 0;
-	z-index: 10;
-	background: #fff;
-	overflow-y: auto;
-	border-bottom: 1px solid #ccc;
-}
-#statCategory .statisticsList .overdian {
-	overflow: hidden;
-	display: block;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	line-height: 40px;
-}
-#statCategory .statisticsList ul li {
-	text-align: center;
-	height: 41px;
-	border: 1px #b3b3b3 solid;
-	border-top: 0;
-	background: #fff;
-	cursor: pointer;
-}
-#statCategory .statisticsList ul li:hover {
-	background: #f0f0f0;
-}
+// #statCategory .tableListInp div i {
+// 	height: 10px;
+// 	width: 10px;
+// 	position: absolute;
+// 	top: 50%;
+// 	left: 50%;
+// 	margin-top: -5px;
+// 	margin-left: -5px;
+// 	border-top: 10px solid #b3b3b3;
+// 	border-left: 5px solid transparent;
+// 	border-right: 5px solid transparent;
+// 	box-sizing: border-box;
+// }
+// #statCategory .statisticsList {
+// 	position: relative;
+// }
+// #statCategory .statisticsList .searchgoods {
+// 	width: 174px;
+// 	height: 41px;
+// 	text-align: center;
+// 	border: 1px solid #b3b3b3;
+// }
+// #statCategory .statisticsList ul {
+// 	width: 100%;
+// 	max-height: 200px;
+// 	margin: 0;
+// 	position: absolute;
+// 	top: 43px;
+// 	left: 0;
+// 	z-index: 10;
+// 	background: #fff;
+// 	overflow-y: auto;
+// 	border-bottom: 1px solid #ccc;
+// }
+// #statCategory .statisticsList .overdian {
+// 	overflow: hidden;
+// 	display: block;
+// 	white-space: nowrap;
+// 	text-overflow: ellipsis;
+// 	line-height: 40px;
+// }
+// #statCategory .statisticsList ul li {
+// 	text-align: center;
+// 	height: 41px;
+// 	border: 1px #b3b3b3 solid;
+// 	border-top: 0;
+// 	background: #fff;
+// 	cursor: pointer;
+// }
+// #statCategory .statisticsList ul li:hover {
+// 	background: #f0f0f0;
+// }
 
-#statCategory .blue {
-	background: #00adef;
-}
 // .order-operation {
 // 	position: absolute;
 // 	right: 200px;
@@ -825,34 +846,34 @@ export default {
 // 	text-align: center;
 // 	color: #ffffff;
 // }
-.order-order-search {
-	background: url(../../res/images/search.png) center center no-repeat;
-}
-.order-order-searchA,
-.order-order-search {
-	// display: inline-block;
-	float: left;
-	width: 40px;
-	height: 40px;
-	background-color: #29a7e1;
-	cursor: pointer;
-}
-.order-order-searchA:hover {
-	background-color: #1878a5;
-	transition: background-color ease-in-out 0.2s;
-}
-.order-order-searchA:active {
-	background-color: #154961;
-}
-.export {
-	display: block;
-	width: 90px;
-	height: 40px;
-	line-height: 40px;
-	text-align: center;
-	color: #fff;
-	font-size: 14px;
-}
+// .order-order-search {
+// 	background: url(../../res/images/search.png) center center no-repeat;
+// }
+// .order-order-searchA,
+// .order-order-search {
+// 	// display: inline-block;
+// 	float: left;
+// 	width: 40px;
+// 	height: 40px;
+// 	background-color: #29a7e1;
+// 	cursor: pointer;
+// }
+// .order-order-searchA:hover {
+// 	background-color: #1878a5;
+// 	transition: background-color ease-in-out 0.2s;
+// }
+// .order-order-searchA:active {
+// 	background-color: #154961;
+// }
+// .export {
+// 	display: block;
+// 	width: 90px;
+// 	height: 40px;
+// 	line-height: 40px;
+// 	text-align: center;
+// 	color: #fff;
+// 	font-size: 14px;
+// }
 .active {
 	background: url(../../res/icon/selected.png) center center no-repeat,
 		#28a8e0;
