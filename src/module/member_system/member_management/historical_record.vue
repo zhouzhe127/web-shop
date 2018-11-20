@@ -297,7 +297,7 @@
 						type: 0,
 						startTime: parseInt(this.valueTime[0] / 1000),
 						endTime: parseInt(this.valueTime[1] / 1000),
-						subType: this.trantypeId,
+						subType: this.trantypeId.join(','),
 						isExport: 1
 					}
 				});
