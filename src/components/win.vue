@@ -45,11 +45,15 @@ export default {
 		},
 		okCallback: {
 			type: Function,
-			// default: function() {}
+			default: function() {
+				console.log('1');
+			}
 		},
 		cancelCallBack: {
 			type: Function,
-			// default: function() {}
+			default: function() {
+				console.log('1');
+			}
 		},
 		maskStr: {
 			type: String,
@@ -59,7 +63,9 @@ export default {
 		cancel: [Object],
 		closeHandle: {
 			type: Function,
-			// default: function() {}
+			default: function() {
+				console.log('1');
+			}
 		},
 		autoHideTime: [Number, String],
 		isBody: {
