@@ -292,8 +292,8 @@
 				await http.exportgetRecordList({
 					data: {
 						mid: this.mid,
-						page: '',
-						num: '',
+						page: this.page,
+						num: this.num,
 						type: 0,
 						startTime: parseInt(this.valueTime[0] / 1000),
 						endTime: parseInt(this.valueTime[1] / 1000),
