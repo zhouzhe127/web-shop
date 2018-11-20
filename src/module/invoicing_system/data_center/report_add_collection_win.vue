@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:19 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-20 16:04:43
+ * @Last Modified time: 2018-11-20 16:08:27
  * @file 新建集合
  */
 
@@ -483,7 +483,6 @@ export default {
 		//初始化props
 		async initProps(){
 			let list = [];
-			let unit = {};
 
 			if(this.selects.length > 0 ){
 				list = await this.getHttp('materialGetMaterialDataByIds',{mids:this.selects.join(',')});
