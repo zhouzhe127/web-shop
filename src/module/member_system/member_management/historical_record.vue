@@ -75,85 +75,91 @@
 		<div class="pageWrap">
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
+		<component v-if="showWin" :is="isPopupwindow" @getAppliedWin='getResult' :constructionsId='constructionsId' :oid='oid'></component>
 	</div>
 </template>
 <script type="text/javascript">
-	import storage from 'src/verdor/storage';
-	import http from 'src/manager/http';
-	import { mixin } from './mixin.js';
+import storage from 'src/verdor/storage';
+import http from 'src/manager/http';
+import getAppliedWin from './../../statistics/quick_payment_statistics/scancode_static_win.vue';
+import { mixin } from './mixin.js';
 
-	export default {
-		props: {
-			mid: String,
-			shopsId: String
+export default {
+	props: {
+		mid: String,
+		shopsId: String
+	},
+	mixins: [mixin],
+	data() {
+		return {
+			page: 1, //页数
+			num: 10, //一页请求的条数
+			total: 0, //总页数
+			count: '',
+			userData: '',
+			isBrand: false, //判断品牌	
+			valueTime: [], //时间控件
+			trantypeId: [], //交易类型对应的id
+			trantypehigh: '全部',
+			listInfo: '', //数据
+			detail: '', //订单详情
+			showWin: false,
+			isPopupwindow: '',
+			oid: '',
+			constructionsId:''
+		};
+	},
+	methods: {
+		chooseTime: function(time) { //获取时间
+			this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
 		},
-		mixins: [mixin],
-		data() {
-			return {
-				page: 1, //页数
-				num: 10, //一页请求的条数
-				total: 0, //总页数
-				count: '',
-				userData: '',
-				isBrand: false, //判断品牌	
-				valueTime: [], //时间控件
-				trantypeId: [], //交易类型对应的id
-				trantypehigh: '全部',
-				listInfo: '', //数据
-				detail: '' //订单详情
-			};
+		selData: function(value) { //选择交易类型返回的
+			this.trantypeId = value;
+			if (this.trantypeId.length == 0) {
+				this.allWritten();
+			}
+			//console.log(JSON.stringify(this.trantypeId));
 		},
-		methods: {
-			chooseTime: function(time) { //获取时间
-				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
-			},
-			selData: function(value) { //选择交易类型返回的
-				this.trantypeId = value;
-				if(this.trantypeId.length == 0){
-					this.allWritten();
+		async getRecordList() { //获取记录
+			let data = await http.getRecordList({
+				data: {
+					mid: this.mid,
+					page: this.page,
+					num: this.num,
+					type: 0,
+					startTime: this.valueTime.length == 0 ? '' : parseInt(this.valueTime[0] / 1000),
+					endTime: this.valueTime.length == 0 ? '' : parseInt(this.valueTime[1] / 1000),
+					subType: this.trantypeId.join(',')
 				}
-				//console.log(JSON.stringify(this.trantypeId));
-			},
-			async getRecordList() { //获取记录
-				let data = await http.getRecordList({
-					data: {
-						mid: this.mid,
-						page: this.page,
-						num: this.num,
-						type: 0,
-						startTime: this.valueTime.length == 0 ? '' : parseInt(this.valueTime[0] / 1000),
-						endTime: this.valueTime.length == 0 ? '' : parseInt(this.valueTime[1] / 1000),
-						subType: this.trantypeId.join(',')
-					}
-				});
-				this.listInfo = data;
-				this.count = (this.page == 1) ? data.count : this.count;
-				this.total = (this.page == 1) ? data.total : this.total;
-			},
-			//每页显示多少条数据
-			handleSizeChange(p) {
-				this.page = 1;
-				this.num = p;
-				this.getRecordList();
-			},
-			//页码跳转
-			pageChange(p) {
-				this.page = p;
-				this.getRecordList();
-			},
-			//点击查看详情
-			async openOid(oid, belongToShop, fromId) {
-				if (oid == '' || oid == '0') {
-					return;
-				}
-				// if(belongToShop == '' || belongToShop == 0){
-				// 	this.$store.commit('setWin', {
-				// 		title: '温馨提示',
-				// 		winType: 'alter',
-				// 		content: '快捷支付暂无法查看订单详情'
-				// 	});
-				// 	return false;				
-				// }
+			});
+			this.listInfo = data;
+			this.count = (this.page == 1) ? data.count : this.count;
+			this.total = (this.page == 1) ? data.total : this.total;
+		},
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.page = 1;
+			this.num = p;
+			this.getRecordList();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.getRecordList();
+		},
+		//点击查看详情
+		async openOid(oid, belongToShop, fromId) {
+			if (oid == '' || oid == '0') {
+				return;
+			}
+			let subOid = oid.substring(8, 11);
+			if (subOid == '011') {
+				//打开新增用户标签的弹窗
+				this.showWin = true; //打开弹窗
+				this.isPopupwindow = 'getAppliedWin';
+				this.oid = oid;
+				this.constructionsId = fromId;
+			} else {
 				let res = await http.OrderstatisticsBillDelite({
 					data: {
 						shopId: fromId,
@@ -168,88 +174,95 @@
 					}
 				}
 				this.$emit('eventrecord', this.detail);
-			},
-			getshopName(id) { //根据id获取店铺名称
-				let shopName;
-				for (let i = 0; i < this.shopList.length; i++) {
-					if (id == this.shopList[i].id) {
-						shopName = this.shopList[i].shopName;
-					}
-				}
-				return shopName;
-			},
-			getShopList: function() { //获取店铺列表
-				let shopList = storage.session('shopList');
-				let oneShop = storage.session('userShop').currentShop;
-				let obj = {
-					brandId: oneShop.brandId,
-					id: oneShop.id,
-					ischain: '',
-					openTime: '',
-					shopName: oneShop.name,
-					shopNumber: ''
-				};
-				shopList.push(obj);
-				this.shopList = shopList;
-			},
-			resetFun: function() { //重置
-				this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)];
-				this.page = 1;
-				this.num = 10;
-				this.allWritten();
-				this.getRecordList();
-			},
-			async Export() { //导出
-				await http.exportgetRecordList({
-					data: {
-						mid: this.mid,
-						page: this.page,
-						num: this.num,
-						type: 0,
-						startTime: parseInt(this.valueTime[0] / 1000),
-						endTime: parseInt(this.valueTime[1] / 1000),
-						subType: this.trantypeId.join(','),
-						isExport: 1
-					}
-				});
-			},
-			searchList: function() { //搜索
-				this.page = 1;
-				this.getRecordList();
-			},
-			allWritten: function() {
-				this.trantypeId = [];
-				for (let item of this.trantypeList) {
-					this.trantypeId.push(item.id);
-				}
 			}
 		},
-		mounted() {
-			this.userData = storage.session('userShop');
-			if (this.userData.currentShop && this.userData.currentShop.ischain == 3) { //ischain状态为3 说明是品牌下面的店铺
-				this.isBrand = true; //更改品牌店的状态
-			} else {
-				this.isBrand = false;
+		getshopName(id) { //根据id获取店铺名称
+			let shopName;
+			for (let i = 0; i < this.shopList.length; i++) {
+				if (id == this.shopList[i].id) {
+					shopName = this.shopList[i].shopName;
+				}
 			}
+			return shopName;
+		},
+		getShopList: function() { //获取店铺列表
+			let shopList = storage.session('shopList');
+			let oneShop = storage.session('userShop').currentShop;
+			let obj = {
+				brandId: oneShop.brandId,
+				id: oneShop.id,
+				ischain: '',
+				openTime: '',
+				shopName: oneShop.name,
+				shopNumber: ''
+			};
+			shopList.push(obj);
+			this.shopList = shopList;
+		},
+		resetFun: function() { //重置
+			this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)];
+			this.page = 1;
+			this.num = 10;
 			this.allWritten();
-			this.getShopList();
 			this.getRecordList();
+		},
+		async Export() { //导出
+			await http.exportgetRecordList({
+				data: {
+					mid: this.mid,
+					page: this.page,
+					num: this.num,
+					type: 0,
+					startTime: parseInt(this.valueTime[0] / 1000),
+					endTime: parseInt(this.valueTime[1] / 1000),
+					subType: this.trantypeId.join(','),
+					isExport: 1
+				}
+			});
+		},
+		searchList: function() { //搜索
+			this.page = 1;
+			this.getRecordList();
+		},
+		allWritten: function() {
+			this.trantypeId = [];
+			for (let item of this.trantypeList) {
+				this.trantypeId.push(item.id);
+			}
+		},
+		getResult: function() {
+			this.showWin = false;
+		},
+	},
+	components: {
+		getAppliedWin
+	},
+	mounted() {
+		this.userData = storage.session('userShop');
+		if (this.userData.currentShop && this.userData.currentShop.ischain == 3) { //ischain状态为3 说明是品牌下面的店铺
+			this.isBrand = true; //更改品牌店的状态
+		} else {
+			this.isBrand = false;
 		}
-	};
+		this.allWritten();
+		this.getShopList();
+		this.getRecordList();
+	}
+};
 </script>
 <style scoped>
-	.historical_record {
-		width: 100%;
-		height: 100%;
-	}
+.historical_record {
+	width: 100%;
+	height: 100%;
+}
 
-	.historical_record .searchbar {
-		width: 100%;
-		height: 40px;
-		margin-bottom: 20px;
-	}
+.historical_record .searchbar {
+	width: 100%;
+	height: 40px;
+	margin-bottom: 20px;
+}
 
-	.historical_record .searchbar .selbox {
-		margin-right: 15px;
-	}
+.historical_record .searchbar .selbox {
+	margin-right: 15px;
+}
 </style>

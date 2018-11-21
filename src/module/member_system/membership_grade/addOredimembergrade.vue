@@ -9,7 +9,7 @@
 	<div id="sweepCode">
 		<!-- 新建会员等级 -->
 		<div class="set-line">
-			<div class="titles">新建会员等级</div>
+			<div class="titles">{{editState ? '编辑' : '新建'}}会员等级</div>
 			<div class="line"></div>
 		</div>
 		<!-- 等级名称 -->
@@ -66,7 +66,7 @@
 		<!-- 获取基础积分 -->
 		<div class="online-box clearfix" v-if="integral && result == 1">
 			<span class="online-sub required fl">获取基础积分</span>
-			<div class="rightHalf">
+			<div class="rightHalf" style="line-height:40px;">
 				<el-input class='fl' placeholder="请输入倍数" v-model="multiples" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;" @blur="formatValue('4')">
 					<template slot="suffix">倍</template>
 				</el-input>
@@ -845,7 +845,7 @@
 		max-width: 900px;
 		height: auto;
 		float: left;
-		line-height: 40px;
+		/* line-height: 40px; */
 	}
 
 	/* #sweepCode .online-box .el_input {
@@ -964,15 +964,18 @@
 
 	#sweepCode .rlues {
 		width: 292px;
-		height: 40px;
+		min-height: 40px;
 		border: 1px solid #dcdfe6;
 		text-align: center;
-		line-height: 40px;
+		/* line-height: 40px; */
 		position: relative;
 		font-size: 12px;
 		background-color: #fff;
 		margin-bottom: 25px;
 		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	#sweepCode .rlues:hover i {
