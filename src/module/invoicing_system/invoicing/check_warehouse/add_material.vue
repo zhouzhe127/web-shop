@@ -685,36 +685,6 @@
 				vertical-align: middle;
 				padding-top: 10px;
 				margin-right: 10px;
-				.search-btn {
-					float: left;
-					height: 40px;
-					width: 40px;
-					cursor: pointer;
-					background: url(../../../../res/images/search.png)#29abe2 center no-repeat;
-				}
-				input {
-					width: 180px;
-					height: 40px;
-					padding: 0 10px;
-					font-size: 14px;
-					margin-right: 10px;
-					&:focus {
-						outline: none;
-					}
-					&:last-child{margin-right: 0;}
-				}
-				.select-body-btn{margin-right: 10px;}
-			}
-			.date-box {
-				.calendar {
-					float: left;
-				}
-				&:after {
-					content: '';
-					zoom: 1;
-					clear: both;
-					display: block;
-				}
 			}
 			.button-box {
 				display: inline-block;
