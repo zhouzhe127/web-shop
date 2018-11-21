@@ -205,6 +205,7 @@ export default {
 			}
 		},
 		async imgUpload1(e) {
+			if(!e.target.value) return;
 			if(e.target.value!=''){
 				let data = await http.bigImgUpload({
 					data: {
@@ -219,6 +220,7 @@ export default {
 
 		},
 		async imgUpload2(e) {
+			if(!e.target.value) return;
 			if(e.target.value!=''){
 				let data = await http.bigImgUpload({
 					data: {
