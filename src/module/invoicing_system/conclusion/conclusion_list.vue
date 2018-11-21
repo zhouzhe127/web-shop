@@ -91,7 +91,7 @@
 						<el-button type="text" size="small" v-if="scope.row.auditStatus != 1 || scope.row.dispatchStatus > 2" @click="detailBtn(scope.row)">查看详情</el-button>
 					</template>
 				</el-table-column>
-				<el-table-column label="序号" width="100" type="index" :index="indexMethod"></el-table-column>
+				<el-table-column label="序号" width="50" type="index" :index="indexMethod"></el-table-column>
 				<el-table-column prop="code" label="审核状态">
 					<template slot-scope="scope">
 						<div>{{auditStatus[scope.row.auditStatus]}}</div>
@@ -186,12 +186,18 @@
 		},
 		methods: {
 			async init() {
+				let audiStartTime = this.audittimeAll[0] ? parseInt((this.audittimeAll[0] || 0) / 1000) : '';
+				let audiEndtTime = this.audittimeAll[1] ? parseInt((utils.getTime({
+					time: this.audittimeAll[1] || 0
+				}).end) / 1000) : '';
 				let data = await http.invoic_getAuditList({
 					data: {
 						applyStartTime: parseInt(this.applytimeAll[0] / 1000),
-						applyEndTime: parseInt(this.applytimeAll[1] / 1000),
-						auditTimeStart: parseInt(this.audittimeAll[0] || 0 / 1000),
-						auditTimeEnd: parseInt(this.audittimeAll[1] || 0 / 1000),
+						applyEndTime: parseInt(utils.getTime({
+							time: this.applytimeAll[1]
+						}).end / 1000),
+						auditTimeStart: audiStartTime,
+						auditTimeEnd: audiEndtTime,
 						auditStatus: this.auditType || 0,
 						dispatchStatus: this.dispatchType || 0,
 						uName: this.upUser,
