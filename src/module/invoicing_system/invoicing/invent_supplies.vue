@@ -88,7 +88,7 @@
 					data: {
 						page: this.page,
 						name: this.goodsName,
-						cid: this.sleCate[this.sleCate.length-1],
+						cid: this.sleCate[this.sleCate.length-1]||0,
 						type: this.typeValue,
 						num: 10
 					}
