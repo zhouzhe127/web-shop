@@ -162,7 +162,8 @@
 				showCoupon: false,
 				chooseType: '', //判断选择的消费券还是赠送券
 				vouchersCoupon: [], //消费券
-				giftCoupon: [] //赠送券
+				giftCoupon: [] ,//赠送券
+				ruleId: '', //规则ID
 			};
 		},
 		watch: {
@@ -248,6 +249,7 @@
 				if (!this.checkForm()) return;
 				let arr = [];
 				let obj = {
+					id: this.ruleId,
 					couponIds: {
 						useCouponIds: this.vouchersCoupon, //消费券
 						giveCouponIds: this.giftCoupon, //返券					
@@ -308,7 +310,8 @@
 				this.goodsSelect = data.rule[0].pushChannel.length > 1 ? data.rule[0].pushChannel.split('').toString().split(',') :
 					data.rule[0].pushChannel.split(','); //消息推送渠道
 				this.contentSetting = data.rule[0].msgContent; //内容设置	
-				this.explain = data.explain; //活动说明			
+				this.explain = data.explain; //活动说明	
+				this.ruleId = data.rule[0].id; //规则id		
 				this.edit = true;
 			},
 			timeChange: function() {
