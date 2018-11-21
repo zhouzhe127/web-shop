@@ -13,14 +13,8 @@
 					<div class="cList">
 						<div style="width:100%;height:40px;">
 							<h3 class="showBefore">优惠券类型:</h3>
-							<div v-if="detials.type =='1'" class="shopAfter">单品减免</div>
-							<div v-if="detials.type =='2'" class="shopAfter">整单减免</div>
-							<div v-if="detials.type =='3'" class="shopAfter">单品打折</div>
-							<div v-if="detials.type =='4'" class="shopAfter">整单打折</div>
-							<div v-if="detials.type =='5'" class="shopAfter">赠菜</div>
-							<div v-if="detials.type =='6'" class="shopAfter">代金券</div>
-							<div v-if="detials.type =='7'" class="shopAfter">积分卡券</div>
-							<div v-if="detials.type =='8'" class="shopAfter">随机立减</div>
+							<div class="shopAfter" v-if="detials.fromType == '2'">满减优惠券</div>
+							<div class="shopAfter" v-else>{{couponTypeList[detials.type]}}</div>
 						</div>
 						<div style="width:100%;height:40px;">
 							<h3 class="showBefore">优惠券名称:</h3>
@@ -127,10 +121,10 @@
 						<div class="shopAfter">{{detials.useLimit}}</div>
 					</div>
 					<!--<div style="width:100%;height:40px;">
-                        <h3 class="showBefore">最高消费:</h3>
-                        <div class="shopAfter" v-if = "parseFloat(detials.highestConsume) == 0.00">不限制</div>
-                        <div class="shopAfter" v-else>{{detials.highestConsume}}</div>
-                    </div>-->
+						<h3 class="showBefore">最高消费:</h3>
+						<div class="shopAfter" v-if = "parseFloat(detials.highestConsume) == 0.00">不限制</div>
+						<div class="shopAfter" v-else>{{detials.highestConsume}}</div>
+					</div>-->
 				</div>
 				<div style="width:100%;height:40px;margin:10px;line-height: 40px;position: relative;">
 					<i style="width:2px;height:28px;position: absolute;top:6px;left:0;background-color:#28A8E0 ;"></i>
@@ -150,184 +144,194 @@
 	</transition>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	export default {
-		data() {
-			return {
-				detials: {}, //优惠券详情
-				showShops: '',
-				couponDetail: '',
-				ischain: '',
-				sharing: {
-					'0': '不与其它优惠共享',
-					'1': '可与其他优惠共享,可与会员卡优惠共用',
-					'2': '可与其他优惠共享,不与会员卡优惠共用'
-				},
-				randomAmountList: {
-					'0': '取整至元',
-					'1': '取整至角',
-					'2': '取整至分'
-				},
-				okStyle: null
-			};
-		},
-		props: ['index', 'item'],
-		computed: {
-			// ok() {
-			// 	console.log(this.details)
-			// 	if (this.ischain == 1 || this.ischain == 2 || this.details.fromType == 2) {
-			// 		return {
-			// 			content: '确定'
-			// 		};
-			// 	} else {
-			// 		return {
-			// 			content: '修改'
-			// 		};
-			// 	}
-			// }
-		},
-		methods: {
-			winEvent(str) {
-				if (str == 'ok') {
-					if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
-						this.$emit('changeCoupon', 'nochange');
-					} else {
-						//storage.session('couponDetail',this.detials)
-						this.$emit('changeCoupon', this.detials);
-					}
-				} else {
-					this.$emit('changeCoupon', 'nochange');
-				}
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+export default {
+	data() {
+		return {
+			detials: {}, //优惠券详情
+			showShops: '',
+			couponDetail: '',
+			ischain: '',
+			sharing: {
+				'0': '不与其它优惠共享',
+				'1': '可与其他优惠共享,可与会员卡优惠共用',
+				'2': '可与其他优惠共享,不与会员卡优惠共用'
 			},
-			getEndTime() {
-				let item1 = utils.deepCopy(this.detials);
-				if (item1.validityType == 0) {
-					return '领券后' + item1.relativeTime + '天过期';
-				} else if (item1.validityType == 1) {
-					item1.endTime -= 0;
-					item1.endTime = item1.endTime * 1000;
-					console.log(item1.endTime);
-					return (
-						'到' + utils.format(new Date(item1.endTime), 'yyyy-MM-dd') + '过期'
-					);
-				}
+			randomAmountList: {
+				'0': '取整至元',
+				'1': '取整至角',
+				'2': '取整至分'
 			},
-			changeDays(arr) {
-				arr = utils.deepCopy(arr);
-				if (arr.length == 0) {
-					return '请选择日期';
-				}
-				arr = arr.sort(function(a, b) {
-					return a - b;
-				});
-				let str = '';
-
-				function findItem(item) {
-					let index = arr.indexOf(item);
-					for (let i = index; i < arr.length; i++) {
-						if (arr[i + 1] - arr[i] != 1) {
-							let rs = '';
-							if (arr[i] - item == 0) {
-								rs = arr[i];
-							} else if (arr[i] - item == 1) {
-								rs = item + ',' + arr[i];
-							} else {
-								rs = item + '到' + arr[i];
-							}
-							if (i < arr.length - 1) {
-								rs += ',';
-							}
-							return rs;
-						}
-					}
-				}
-				for (let j = 0; j < arr.length; j++) {
-					if (arr[j] - arr[j - 1] != 1) {
-						str += findItem(arr[j]);
-					}
-				}
-				return str;
+			okStyle: null,
+			couponTypeList: {
+				1: '单品减免优惠券',
+				2: '整单减免优惠券',
+				3: '单品打折优惠券',
+				4: '整单打折优惠券',
+				5: '赠菜优惠券',
+				6: '代金券',
+				7: '积分卡券',
+				8: '随机立减优惠券'
 			},
-			getNum(type) {
-				if (
-					this.detials[type] &&
-					this.detials[type].length > 0 &&
-					this.detials[type] != 0
-				) {
-					return this.detials[type].split(',').length;
-				} else {
-					return 0;
-				}
-			},
-			async getCouponInfo() {
-				let res = await http.getCouponById({
-					data: {
-						couponId: this.item.id
-					}
-				});
-				this.detials = res;
+		};
+	},
+	props: ['index', 'item'],
+	computed: {
+		// ok() {
+		// 	console.log(this.details)
+		// 	if (this.ischain == 1 || this.ischain == 2 || this.details.fromType == 2) {
+		// 		return {
+		// 			content: '确定'
+		// 		};
+		// 	} else {
+		// 		return {
+		// 			content: '修改'
+		// 		};
+		// 	}
+		// }
+	},
+	methods: {
+		winEvent(str) {
+			if (str == 'ok') {
 				if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
-					this.okStyle = {
-						content: '确定',
-						style: {
-							backgroundColor: '#2a80b9',
-							color: '#fff'
-						}
-					};
+					this.$emit('changeCoupon', 'nochange');
 				} else {
-					this.okStyle = {
-						content: '修改',
-						style: {
-							backgroundColor: '#E1BB4A',
-							color: '#fff'
-						}
-					};
+					//storage.session('couponDetail',this.detials)
+					this.$emit('changeCoupon', this.detials);
 				}
-				// this.couponDetail = res
+			} else {
+				this.$emit('changeCoupon', 'nochange');
 			}
 		},
-		mounted() {
-			this.ischain = storage.session('userShop').currentShop.ischain;
-			if (this.ischain == 3) {
-				this.showShops = true;
+		getEndTime() {
+			let item1 = utils.deepCopy(this.detials);
+			if (item1.validityType == 0) {
+				return '领券后' + item1.relativeTime + '天过期';
+			} else if (item1.validityType == 1) {
+				item1.endTime -= 0;
+				item1.endTime = item1.endTime * 1000;
+				console.log(item1.endTime);
+				return (
+					'到' + utils.format(new Date(item1.endTime), 'yyyy-MM-dd') + '过期'
+				);
 			}
-			this.getCouponInfo();
 		},
-		components: {
-			win: () =>
-				import ( /* webpackChunkName: 'win' */ 'src/components/win')
+		changeDays(arr) {
+			arr = utils.deepCopy(arr);
+			if (arr.length == 0) {
+				return '请选择日期';
+			}
+			arr = arr.sort(function(a, b) {
+				return a - b;
+			});
+			let str = '';
+
+			function findItem(item) {
+				let index = arr.indexOf(item);
+				for (let i = index; i < arr.length; i++) {
+					if (arr[i + 1] - arr[i] != 1) {
+						let rs = '';
+						if (arr[i] - item == 0) {
+							rs = arr[i];
+						} else if (arr[i] - item == 1) {
+							rs = item + ',' + arr[i];
+						} else {
+							rs = item + '到' + arr[i];
+						}
+						if (i < arr.length - 1) {
+							rs += ',';
+						}
+						return rs;
+					}
+				}
+			}
+			for (let j = 0; j < arr.length; j++) {
+				if (arr[j] - arr[j - 1] != 1) {
+					str += findItem(arr[j]);
+				}
+			}
+			return str;
+		},
+		getNum(type) {
+			if (
+				this.detials[type] &&
+				this.detials[type].length > 0 &&
+				this.detials[type] != 0
+			) {
+				return this.detials[type].split(',').length;
+			} else {
+				return 0;
+			}
+		},
+		async getCouponInfo() {
+			let res = await http.getCouponById({
+				data: {
+					couponId: this.item.id
+				}
+			});
+			this.detials = res;
+			if (this.ischain == 1 || this.ischain == 2 || this.detials.fromType == 2) {
+				this.okStyle = {
+					content: '确定',
+					style: {
+						backgroundColor: '#2a80b9',
+						color: '#fff'
+					}
+				};
+			} else {
+				this.okStyle = {
+					content: '修改',
+					style: {
+						backgroundColor: '#E1BB4A',
+						color: '#fff'
+					}
+				};
+			}
+			// this.couponDetail = res
 		}
-	};
+	},
+	mounted() {
+		this.ischain = storage.session('userShop').currentShop.ischain;
+		if (this.ischain == 3) {
+			this.showShops = true;
+		}
+		this.getCouponInfo();
+	},
+	components: {
+		win: () =>
+			import( /* webpackChunkName: 'win' */ 'src/components/win')
+	}
+};
 </script>
 <style type="text/css" scoped>
-	#tanmanagement .showBefore {
-		font-size: 16px;
-		width: 140px;
-		height: 40px;
-		line-height: 40px;
-		float: left;
-		text-align: right;
-		color: #333;
-		margin-right: 15px;
-	}
+#tanmanagement .showBefore {
+	font-size: 16px;
+	width: 140px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	text-align: right;
+	color: #333;
+	margin-right: 15px;
+}
 
-	#tanmanagement .shopAfter {
-		font-size: 16px;
-		width: 370px;
-		height: 40px;
-		line-height: 40px;
-		float: left;
-		text-align: left;
-		color: #333;
-		margin-right: 10px;
-	}
+#tanmanagement .shopAfter {
+	font-size: 16px;
+	width: 370px;
+	height: 40px;
+	line-height: 40px;
+	float: left;
+	text-align: left;
+	color: #333;
+	margin-right: 10px;
+}
 
-	#tanmanagement .cList {
-		font-size: 16px;
-		overflow: hidden;
-		width: 550px;
-		margin-left: 30px;
-	}
+#tanmanagement .cList {
+	font-size: 16px;
+	overflow: hidden;
+	width: 550px;
+	margin-left: 30px;
+}
 </style>

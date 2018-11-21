@@ -36,7 +36,8 @@
 					</el-table-column>
 					<el-table-column prop="type" label="类型" align="center">
 						<template slot-scope="scope">
-							<span>{{couponTypeList[scope.row.type]}}</span>
+							<span v-if="scope.row.fromType == '2'">满减优惠券</span>
+							<span v-else>{{couponTypeList[scope.row.type]}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="操作" align="center" width="280">

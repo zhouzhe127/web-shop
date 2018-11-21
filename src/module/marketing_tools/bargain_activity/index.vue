@@ -19,28 +19,28 @@
 				</div>
 			</div>
 			<div class="list">
-				<el-table :data="activityList" border style="width: 100%;text-align: center" :header-cell-style="{'text-align': 'center'}">
-					<el-table-column prop="name" label="活动标题" width="120"></el-table-column>
-					<el-table-column prop="formatCreateTime" label="创建时间" width="180"> </el-table-column>
-					<el-table-column label="活动时间" width="310">
+				<el-table :data="activityList"  border style="width: 100%;text-align: center" :header-cell-style="{'text-align': 'center'}">
+					<el-table-column align="center" prop="name" label="活动标题" width="120"></el-table-column>
+					<el-table-column align="center" prop="formatCreateTime" label="创建时间" width="180"> </el-table-column>
+					<el-table-column align="center" label="活动时间" width="310">
 						<template slot-scope="scope">
 							<span>{{scope.row.formatBeginTime}}至{{scope.row.formatEndTime}}</span>
 						</template>
 					</el-table-column>
 					<template v-if="isBrand">
-						<el-table-column prop="statusText" label="活动状态"></el-table-column>
-						<el-table-column prop="goodsNum" label="商品数量"> </el-table-column>
-						<el-table-column prop="launchNum" label="发起砍价人数"></el-table-column>
-						<el-table-column prop="helperNum" label="帮砍人数"></el-table-column>
-						<el-table-column prop="income" label="券金收入"></el-table-column>
-						<el-table-column prop="fsCoin" label="返利金额"></el-table-column>
-						<el-table-column prop="grantNum" label="发券量"></el-table-column>
+						<el-table-column align="center" prop="statusText" label="活动状态"></el-table-column>
+						<el-table-column align="center" prop="goodsNum" label="商品数量"> </el-table-column>
+						<el-table-column align="center" prop="launchNum" label="发起砍价人数"></el-table-column>
+						<el-table-column align="center" prop="helperNum" label="帮砍人数"></el-table-column>
+						<el-table-column align="center" prop="income" label="券金收入"></el-table-column>
+						<el-table-column align="center" prop="fsCoin" label="返利金额"></el-table-column>
+						<el-table-column align="center" prop="grantNum" label="发券量"></el-table-column>
 					</template>
 
-					<el-table-column prop="useNum" label="核销量"></el-table-column>
-					<el-table-column v-if="isBrand" prop="newMemberNum" label="新增会员"></el-table-column>
-					<el-table-column prop="creator" label="创建人"></el-table-column>
-					<el-table-column label="操作" fixed="right" width="150" class-name="tac">
+					<el-table-column align="center" prop="useNum" label="核销量"></el-table-column>
+					<el-table-column align="center" v-if="isBrand" prop="newMemberNum" label="新增会员"></el-table-column>
+					<el-table-column align="center" prop="creator" label="创建人"></el-table-column>
+					<el-table-column align="center" label="操作" fixed="right" width="150" class-name="tac">
 						<template slot-scope="scope">
 							<el-button @click="intoDetail(scope.$index)" type="text" size="small">查看详情</el-button>
 							<el-button type="text" v-if="isBrand && !scope.row.isBegin" size="small" @click="editActivity(scope.$index)">编辑</el-button>
