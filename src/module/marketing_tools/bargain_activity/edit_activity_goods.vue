@@ -255,7 +255,7 @@ export default {
 			});
 			return isOk;
 		},
-		submit(createAgain) {
+		async submit(createAgain) {
 			if (!this.validate()) {
 				return;
 			}
@@ -270,9 +270,9 @@ export default {
 			// prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
-				this.editGoods(prarm);
+				await this.editGoods(prarm);
 			} else {
-				this.addGoods(prarm);
+				await this.addGoods(prarm);
 			}
 			if (createAgain) {
 				this.resetGoods();
