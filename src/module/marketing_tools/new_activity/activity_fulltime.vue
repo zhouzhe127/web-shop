@@ -176,6 +176,7 @@
 				showVip: false,
 				member: 0, //会员关联的人数
 				memfilter: '',
+				ruleId: '', //规则ID
 			};
 		},
 		watch: {
@@ -272,6 +273,7 @@
 				if (!this.checkForm()) return;
 				let arr = [];
 				let obj = {
+					id: this.ruleId,
 					couponIds: {
 						couponIds: this.selectCoupon,
 						consumeNum: this.number //消费满次数
@@ -340,6 +342,7 @@
 					data.rule[0].pushChannel.split(','); //消息推送渠道
 				this.contentSetting = data.rule[0].msgContent; //内容设置
 				this.explain = data.explain; //活动说明
+				this.ruleId = data.rule[0].id; //规则id
 				this.edit = true;
 			},
 			timeChange: function() {
