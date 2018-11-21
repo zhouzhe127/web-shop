@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-21 09:58:54
+ * @Last Modified time: 2018-11-21 17:18:46
  */
 
 <template>
@@ -238,7 +238,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(()=>{
-				this.getHttp('materialreportDeleteMaterialByIds',ids)
+				this.getHttp('materialreportDeleteMaterialByIds',{ids:ids})
 					.then((res)=>{
 						if(res){
 							this.$message('删除成功!');  
