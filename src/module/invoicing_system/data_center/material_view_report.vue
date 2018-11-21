@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-19 14:08:05
+ * @Last Modified time: 2018-11-21 09:58:54
  */
 
 <template>
@@ -345,7 +345,7 @@ export default {
 				for(let i = 0 ;i < tableTitle.length ; i += 1){
 					let ele = tableTitle[i];
 					let customItem = item[ele.attr];
-
+					if(!customItem) customItem = {};
 					if(!customItem['value']) customItem['value'] = 0;
 					if(!customItem['unitName']) customItem['unitName'] = '';
 

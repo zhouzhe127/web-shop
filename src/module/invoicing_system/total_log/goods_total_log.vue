@@ -23,7 +23,7 @@
             </div>
 
             <div class="in-block" >
-                <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" clearable>
+                <el-select v-model="condition.operationType" :multiple="true" placeholder="操作类型" collapse-tags clearable>
                     <el-option
                     v-for="item in operationList"
                     :key="item.id"
