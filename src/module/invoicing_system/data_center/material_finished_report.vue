@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-19 15:10:55
+ * @Last Modified time: 2018-11-21 17:31:40
  */
 
 <template>
@@ -95,7 +95,9 @@ export default {
 			loading:false,
 			statusMap : {
 				reject : 13,		//报表生成失败
+				rejectName:'失败',
 				resolve : 0,		//报表生成成功
+				resolveName:'成功',
 				opending : 12		//报表生成中
 			},						//报表的最终状态
 			tableData:[],
@@ -107,6 +109,7 @@ export default {
 			selectAll:false,                    //全选
 			selectList:[],                      //选中的列表
 			shopId:'',
+
 
 		};
 	},
@@ -203,7 +206,7 @@ export default {
 						this.tableData = this.mapListAttr(retObj.data);
 						this.matchSelectList(this.tableData,this.selectList);
 						this.selectAll = this.isSelectCurrentPage(this.tableData);
-						if(this.isSelectCurrentPage(this.tableData,{val:this.percent,attr:'percent'})){
+						if(this.isSelectCurrentPage(this.tableData,{val:this.statusMap.resolve,attr:'status'})){
 							this.clearTaskTimer('rList');
 						}
 					}
@@ -266,9 +269,9 @@ export default {
 				}
 
 				if(ele.status == statusMap.reject){
-					state = '失败';
+					state = statusMap.rejectName;
 				}else if(ele.status == statusMap.resolve){
-					state = '成功';
+					state = statusMap.resolveName;
 				}else{
 					state = ele.percent + '%';
 				}
