@@ -1082,7 +1082,6 @@ export default {
 					mTotal = mTotal + item.unitPrice*(item.num/item.unitValue);
 				}
 			}
-			console.log(gTotal+mTotal);
 			let str = (gTotal+mTotal)+'';
 			this.orderTotal = parseFloat(str);
 		},
