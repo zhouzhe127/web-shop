@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-20 10:17:56
+ * @Last Modified time: 2018-11-20 17:10:44
  */
 <template>  
 	<div>
@@ -247,9 +247,6 @@ export default {
 				this.pSortObj.num = 1;
 			}
 		},
-
-
-
 		//获取集合列表,选中的集合对象
 		async getCollectionList(id){
 			let retData = await this.getHttp('getStatisticScopeCategoryList');
