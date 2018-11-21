@@ -527,6 +527,7 @@ export default{
 				width:50px;border-left: 0;text-align: center;
 				border-top-right-radius: 4px;
 				border-bottom-right-radius: 4px;
+				background: #f5f7fa;
 			}
 		}
 	}

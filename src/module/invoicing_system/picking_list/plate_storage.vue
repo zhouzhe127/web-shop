@@ -132,7 +132,8 @@
 		},
 		methods: {
 			initBtn() {
-				let arr = [{
+				let arr = [
+					{
 						name: '确认',
 						className: 'primary',
 						type: 4,
@@ -172,17 +173,17 @@
 					item.haveBatch = false;
 					item.usemin = item.surplus * item.selUnit.value + item.useWeight * 1; //全部剩余，消耗数量为0
 					item.batchDetail = []; //清空批次
-
 					item.backNum = '';
 					item.backWeight = '';
 					item.backmin = 0;
-				}).catch(() => {});
+				}).catch(() => {
+					//
+				});
 			},
 			setInitData() {
 				for (let j = 0; j < this.infoList.length; j++) {
 					let infoItem = this.infoList[j];
-					let options = [],
-						index = 0;
+					let options = [];
 					for (let i = 0; i < infoItem.materialUnit.length; i++) {
 						let item = infoItem.materialUnit[i];
 						let obj = {
@@ -197,22 +198,16 @@
 						if (item.isDefault == 1) {
 							infoItem.isDefault = item.name;
 							this.$set(infoItem, 'index', item.muId);
+							this.$set(infoItem, 'selUnit', item);
 						}
 					}
 					this.$set(infoItem, 'options', options);
 				}
 				for (let infoItem of this.infoList) {
 					for (let unitItem of infoItem.materialUnit) {
-						this.$set(infoItem, 'selUnit', unitItem);
 						infoItem.unit = this.comUnit(infoItem.surplus, unitItem.value, unitItem.name, infoItem.minUnit.name);
 						this.setDefaultItem(infoItem);
 						break;
-					}
-					for (let unitItem of infoItem.materialUnit) {
-						if (unitItem.isDefault == 1) {
-							this.$set(infoItem, 'defUnit', unitItem);
-							break;
-						}
 					}
 				}
 			},
@@ -355,7 +350,6 @@
 						});
 						return false;
 					}
-					console.log(infoItem.backmin,infoItem.usemin)
 					if (infoItem.backmin > infoItem.usemin) {
 						this.$message({
 							message: `物料: ${infoItem.materialName} 回库数量不足`,
@@ -396,8 +390,6 @@
 						continue; //没有填写数量  过滤掉
 					}
 					obj.batchDetail = [];
-					let consumeNum = 0; // 计算批次内消耗总量
-					let returnNum = 0; // 计算批次内回库总量
 					if (infoItem.batchDetail && infoItem.batchDetail.length) {
 						for (let bathcItem of infoItem.batchDetail) {
 							let batch = {
@@ -420,8 +412,8 @@
 								}
 							}
 							batch.number = bathcItem.minNumber;
-							consumeNum += batch.consumeNum * 1;
-							returnNum += batch.returnNum * 1;
+							batch.consumeNum += batch.consumeNum * 1;
+							batch.consumeNum += batch.returnNum * 1;
 							obj.batchDetail.push(batch);
 						}
 					}
@@ -670,7 +662,7 @@
 	.span_line {
 		display: inline-block;
 		height: 40px;
-		padding: 0 15px;
+		width: 50px;
 		line-height: 38px;
 		text-align: center;
 		border: 1px solid #dcdfe6;
