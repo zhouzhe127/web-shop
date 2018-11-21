@@ -293,8 +293,8 @@
 				}
 			},
 			searchReset() {
-				this.auditType = 0;
-				this.dispatchType = 0;
+				this.auditType = '';
+				this.dispatchType = '';
 				this.upUser = '';
 				this.checkUser = '';
 				this.bathcode = '';
