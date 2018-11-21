@@ -34,6 +34,7 @@
 1. 请自行查找安装方法
 2. 在自己的电脑中生成ssh密钥，在gitlab设置中将公钥添加进去
 3. 克隆库
+
 ```sh
 	git clone git@gitlab.shandian.tech:tom/web-shop.git project_dir
 ```
@@ -47,6 +48,7 @@
 > svn 地址: svn://192.168.31.221/WEB/share/node_modules
 
 使用SVN从服务器拉取 npm 库后，可以直接拷贝到你的 project_dir，或者创建一个链接
+
 ```cmd
 mklink /j D:xxx/xxx/project_dir/node_modules D:yyy/svn_node_modules
 ```
@@ -54,6 +56,7 @@ mklink /j D:xxx/xxx/project_dir/node_modules D:yyy/svn_node_modules
 #### 启动
 
 一起准备都已经做好，现在你可以启动你的开发环境了
+
 ```bash
 npm start
 ```
@@ -95,6 +98,7 @@ npm buildDev
 
 1. 在 src/config/routes/route_id_config.js 中找到你需要打包模块的对应的 id
 2. 在当前文件中 找到如下代码
+
 ```js
 let config = {
 	useId: ["0419"], //需要用到的路由id
