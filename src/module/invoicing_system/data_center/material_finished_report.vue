@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-21 17:29:15
+ * @Last Modified time: 2018-11-21 17:31:40
  */
 
 <template>
@@ -269,9 +269,9 @@ export default {
 				}
 
 				if(ele.status == statusMap.reject){
-					state = this.state.fail;
+					state = statusMap.rejectName;
 				}else if(ele.status == statusMap.resolve){
-					state = this.state.success;
+					state = statusMap.resolveName;
 				}else{
 					state = ele.percent + '%';
 				}
