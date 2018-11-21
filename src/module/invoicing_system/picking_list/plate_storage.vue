@@ -412,8 +412,6 @@
 								}
 							}
 							batch.number = bathcItem.minNumber;
-							batch.consumeNum += batch.consumeNum * 1;
-							batch.consumeNum += batch.returnNum * 1;
 							obj.batchDetail.push(batch);
 						}
 					}
