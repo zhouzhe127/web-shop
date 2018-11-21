@@ -14,21 +14,21 @@
 			</div>
 		</div>
 		<div class="tableWrap" v-show="!showEditGoods">
-			<el-table border :data="goodsList" style="width: 100%;text-align: center;" :header-cell-style="{'text-align': 'center'}">
-				<el-table-column prop="name" label="商品名称" width="200"> </el-table-column>
+			<el-table border :data="goodsList"  style="width: 100%;text-align: center;" :header-cell-style="{'text-align': 'center'}">
+				<el-table-column align="center" prop="name" label="商品名称" width="200"> </el-table-column>
 				<template v-if="isBrand">
-					<el-table-column prop="launchNum" label="发起砍价人数"> </el-table-column>
-					<el-table-column prop="helperNum" label="帮砍人数"></el-table-column>
-					<el-table-column prop="income" label="券金收入"></el-table-column>
-					<el-table-column prop="fsCoin" label="返利金额"></el-table-column>
-					<el-table-column prop="grantNum" label="发券量"></el-table-column>
+					<el-table-column align="center" prop="launchNum" label="发起砍价人数"> </el-table-column>
+					<el-table-column align="center" prop="helperNum" label="帮砍人数"></el-table-column>
+					<el-table-column align="center" prop="income" label="券金收入"></el-table-column>
+					<el-table-column align="center" prop="fsCoin" label="返利金额"></el-table-column>
+					<el-table-column align="center" prop="grantNum" label="发券量"></el-table-column>
 				</template>
-				<el-table-column prop="useNum" label="核销量"></el-table-column>
-				<el-table-column v-if="isBrand" prop="newMemberNum" label="新增会员"></el-table-column>
-				<el-table-column prop="discount" label="优惠金额"></el-table-column>
-				<el-table-column prop="discountRatio" label="优惠占比"> </el-table-column>
-				<el-table-column prop="orderPrice" label="拉动消费"></el-table-column>
-				<el-table-column v-if="isBrand" prop="date" label="操作" width="100" class-name="tac">
+				<el-table-column align="center" prop="useNum" label="核销量"></el-table-column>
+				<el-table-column v-if="isBrand" align="center" prop="newMemberNum" label="新增会员"></el-table-column>
+				<el-table-column align="center" prop="discount" label="优惠金额"></el-table-column>
+				<el-table-column align="center" prop="discountRatio" label="优惠占比"> </el-table-column>
+				<el-table-column align="center" prop="orderPrice" label="拉动消费"></el-table-column>
+				<el-table-column v-if="isBrand" align="center" label="操作" width="100" class-name="tac">
 					<template slot-scope="scope">
 						<template v-if="scope.row.status == 0">
 							<el-button @click="activation(scope.row)" type="text" size="small">上架</el-button>
