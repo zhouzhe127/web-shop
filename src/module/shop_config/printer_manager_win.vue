@@ -5,21 +5,22 @@
  * @Module:打印机管理弹窗
 **/
 <template>
-	<win @winEvent="printMueueWin" :align="isTerminal?'center':'right'" :width="580" :height="550" :ok="okStyle">
+	<win @winEvent="printMueueWin" :align="isTerminal?'center':'right'" :width="580" :height="winHeight" :ok="okStyle">
 		<span slot="title">{{title}}</span>
 		<div id="tan" slot="content" v-cloak>
 			<section class="print-form" v-if="!isTerminal">
 				<el-form :model="printDetial" ref="printDetial" label-width="120px">
 					<el-form-item required label="打印机类型">
 						<el-radio-group v-model="index">
-							<el-radio class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
+							<el-radio v-if="ischain == '3'" class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in lists" :key="i" :label="i" border>{{item.name}}</el-radio>
+							<el-radio v-if="ischain != '3'" class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<!-- <el-form-item required label="打印服务终端">
+					<el-form-item v-if="ischain != '3'" required label="打印服务终端">
 						<el-radio-group v-model="terminaIndex">
 							<el-radio class="labItem" size="small" v-for="(item,i) in newTerminalList" :key="i" :label="item.id" border>{{item.name}}</el-radio>
 						</el-radio-group>
-					</el-form-item> -->
+					</el-form-item>
 					<el-form-item required label="打印机名称">
 						<el-input v-model="printerName" placeholder = "请输入名称" maxlength="30" style = "width:300px;"></el-input>
 					</el-form-item>
@@ -74,6 +75,7 @@ import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
+			ischain:'3',//判断品牌--店铺
 			shopId: '',
 			createUid: '',
 			title: '打印机',
@@ -87,6 +89,7 @@ export default {
 				{type: 5,name: 'USB打印机'},
 				{type: 6,name: '蓝牙打印机'}
 			],
+			lists: [{type: 0,name: '网口打印机'}],
 			type: 0,
 			index: 0,
 			terminaIndex:'0',//打印服务终端id
@@ -103,6 +106,7 @@ export default {
 			reTi: false,
 			newPrintDetial: { id: 0 }, //新建的打印机详情
 			newTerminalList:[],//打印终端列表
+			winHeight:500,//弹窗高度
 		};
 	},
 	components: {
@@ -116,8 +120,10 @@ export default {
 		let userData = storage.session('userShop');
 		this.shopId = userData.currentShop.id;
 		this.createUid = userData.user.createUid;
+		this.ischain = userData.currentShop.ischain;
+		this.winHeight = this.isTerminal?200 : 500;//判断弹窗高度
 		if (this.types == 'addPrint') {
-			this.title = '添加打印机';
+			this.title = this.isTerminal?'添加服务终端' : '添加打印机';
 			this.okStyle = {
 				content: '保存',
 				style: {
@@ -126,7 +132,7 @@ export default {
 				}
 			};
 		} else if (this.types == 'edit') {
-			this.title = '修改打印机';
+			this.title = this.isTerminal?'修改服务终端' : '修改打印机';
 			this.okStyle = {
 				content: '确定',
 				style: {
@@ -331,7 +337,7 @@ export default {
 
 		//测试打印机设置
 		async testPrinter() {
-			let abc = false;
+			// let abc = false;
 			if (this.types == 'addPrint') {
 				this.newPrintDetial = await http.addPrint({
 					data: {
@@ -345,12 +351,12 @@ export default {
 					}
 				});
 				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
-				abc = await http.printerTestPage({
-					data: {
-						shopId: this.shopId,
-						printerId: this.newPrintDetial.id
-					}
-				});
+				// abc = await http.printerTestPage({
+				// 	data: {
+				// 		shopId: this.shopId,
+				// 		printerId: this.newPrintDetial.id
+				// 	}
+				// });
 				this.printerList.push(this.newPrintDetial);
 			} else if (this.types == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
@@ -365,18 +371,26 @@ export default {
 						sort: this.num
 					}
 				});
-				abc = await http.printerTestPage({
-					data: {
-						shopId: this.shopId,
-						printerId: this.newPrintDetial.id
-					}
-				});
 				this.printerList.splice(
 					this.printIndex,
 					1,
 					this.newPrintDetial
 				);
 			}
+			let that = this;
+			setTimeout(function(){
+				that.printerTestPage();
+			},50);
+		},
+		//测试打印机接口
+		async printerTestPage(){
+			let abc = false;
+			abc = await http.printerTestPage({
+				data: {
+					shopId: this.shopId,
+					printerId: this.newPrintDetial.id
+				}
+			});
 			if (abc) {
 				this.$store.commit('setWin', {
 					title: '提示',

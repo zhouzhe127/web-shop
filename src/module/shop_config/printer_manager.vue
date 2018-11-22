@@ -7,16 +7,16 @@
 <template>
 	<section class="fl" id="printer" style="width:100%;">
 		<div>
-			<!-- <el-select v-model="terType" @change="showList" placeholder="请选择服务终端" style="width:170px;">
+			<el-select v-if="ischain != '3'" v-model="terType" @change="showList" placeholder="请选择服务终端" style="width:170px;">
 				<el-option
 					v-for="(item,i) in newTerminalList" 
 					:key="i"
 					:label="item.name"
 					:value="item.id">
 				</el-option>
-			</el-select> -->
+			</el-select>
 			<!-- <span>打印机类型</span> -->
-			<el-select v-model="selectType" @change="showList" placeholder="请选择打印机类型" style="width:170px;">
+			<el-select v-if="ischain != '3'" v-model="selectType" @change="showList" placeholder="请选择打印机类型" style="width:170px;">
 				<el-option
 					v-for="(item,i) in list" 
 					:key="i"
@@ -29,16 +29,16 @@
 			</el-input>
 			<el-button @click="reseat" type="info">重置</el-button>
 		</div>
-		<!-- <div style="padding:10px 0;color:#606266;" v-if="oldId!==''&&terminalList.length>0">
+		<div style="padding:10px 0;color:#606266;" v-if="oldId!==''&&terminalList.length>0 && ischain != '3'">
 			<span>打印服务总端口配置</span>
 			<el-button @click="selectTerminal" size="small" type="primary" style="margin:0 10px;">终端配置</el-button>
 			<span style="color:#ccc;">当前配置：</span>
 			<span style="color:#ccc;">{{terminalName}}</span>
 		</div>
-		<el-radio-group v-model="selectTab" style="margin:10px 0;">
+		<el-radio-group v-if="ischain != '3'" v-model="selectTab" style="margin:10px 0;">
 			<el-radio-button label="0">打印机列表</el-radio-button>
 			<el-radio-button label="1">打印服务终端</el-radio-button>
-		</el-radio-group> -->
+		</el-radio-group>
 		<div v-if="selectTab==0" style="margin:10px 0;">
 			<el-table
 				stripe :header-cell-style = "{'background-color':'#f5f7fa'}"
@@ -106,6 +106,7 @@ export default {
 	data() {
 		return {
 			shopId: null, //店铺id
+			ischain:'3',//判断品牌--店铺
 			printerList: [],//打印机列表
 			copyprinterList:[],//copy打印机列表
 			detial: null,
@@ -140,7 +141,8 @@ export default {
 	mounted() {
 		let userData = storage.session('userShop');
 		this.shopId = userData.currentShop.id;
-		this.$store.commit('setPageTools', [
+		this.ischain = userData.currentShop.ischain;
+		let arr = [
 			{
 				name: '添加打印机',
 				type:4,
@@ -149,15 +151,19 @@ export default {
 					this.openWin({pid:null,types:'addPrint',index:null,bel:false});
 				},
 			},
-			// {
-			// 	name: '添加打印服务终端',
-			// 	type:4,
-			// 	className: 'plain',
-			// 	fn:()=>{
-			// 		this.openWin({pid:null,types:'addPrint',index:null,bel:true});
-			// 	}
-			// }
-		]);
+			{
+				name: '添加打印服务终端',
+				type:4,
+				className: 'plain',
+				fn:()=>{
+					this.openWin({pid:null,types:'addPrint',index:null,bel:true});
+				}
+			}
+		];
+		if(this.ischain == '3'){
+			arr.splice(1,1);
+		}
+		this.$store.commit('setPageTools', arr);
 		this.getPrinterList();
 	},
 	computed: {
