@@ -87,10 +87,10 @@
 					</el-form-item>
 				</section>
 				<!--*************-->
-				<section class="obox" style="position: relative;">
-					<form class="fr" style="width: 100%;" id="imageUpForm" enctype="multipart/form-data">
+				<section class="obox">
+					<form  style="width: 100%;" id="imageUpForm" enctype="multipart/form-data">
 						<el-form-item label="上传营业执照" required>
-							<el-button type="primary" style="position: relative;">
+							<el-button type="primary" style="position: relative;overflow:hidden;">
 								立刻上传
 								<input type="file" @change="imgUpload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" style="cursor: pointer;display:block;background:red;position: absolute;left: 0;top: 0;width: 100%;height: 100%;opacity: 0;" />
 
@@ -106,9 +106,9 @@
 				</section>
 
 				<section v-show="typeIndex == 0" class="obox">
-					<form class="fr" style="width: 100%;" id="imageUpForm2" enctype="multipart/form-data">
+					<form  style="width: 100%;" id="imageUpForm2" enctype="multipart/form-data">
 						<el-form-item label="卫生许可证" required>
-							<el-button type="primary" style="position: relative;">
+							<el-button type="primary" style="position: relative;overflow:hidden;">
 								立刻上传
 								<input type="file" @change="imgUpload2" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" style="cursor: pointer;display:block;background:red;position: absolute;left: 0;top: 0;width: 100%;height: 100%;opacity: 0;" />
 							</el-button>
