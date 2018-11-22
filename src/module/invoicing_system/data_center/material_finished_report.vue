@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-21 17:31:40
+ * @Last Modified time: 2018-11-22 14:48:04
  */
 
 <template>
@@ -197,7 +197,6 @@ export default {
 				size : this.pageObj.pageSize,
 				templateId : this.template.id,
 			};
-			
 			this.taskTimer.rList = Timer.add(
 				async ()=>{
 					let retObj = await this.getHttp('materialreportGetMaterialReportList',subObj);
@@ -353,6 +352,18 @@ export default {
 		},
 		initBtn(){
 			this.$store.commit('setPageTools',[
+				{
+					name: '生成报表',
+					type:'4',
+					className:'primary',
+					fn:()=>{
+						let temp = this.template;
+						this.$router.push({path:'/admin/materialReport/createReport',query:{
+							id : temp.id,
+							name : temp.name,
+						}});				
+					}
+				},
 				{
 					name: '返回',
 					type:'4',
