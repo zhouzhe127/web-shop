@@ -40,7 +40,7 @@
 				</div>
 				<div class="timebox">
 					<span>仓库所属：</span>
-					<el-select multiple collapse-tags v-model="selWare" placeholder="请选择店铺">
+					<el-select multiple collapse-tags v-model="selWare" placeholder="请选择店铺" @change="setMulSelWidth">
 						<el-option v-for="item in wareList" :key="item.shopId" :label="item.shopName" :value="item.shopId"></el-option>
 					</el-select>
 				</div>
@@ -142,6 +142,19 @@
 			this.init();
 		},
 		methods: {
+			//设置多选框标签的宽度
+			setMulSelWidth(){
+				let span = document.querySelector('.warehouse-lists .el-select__tags-text');
+				if(span){
+					span.style.cssText = 
+						`max-width: 90px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						display: inline-block;
+						vertical-align: top;`;
+				}
+			},
 			async init() {
 				let data = await http.invoicing_getOwners();
 				this.wareList = data;
@@ -156,6 +169,9 @@
 				if (inventConfigure == 1 || inventConfigure == 0) {
 					this.getlistAll();
 				}
+				this.$nextTick(()=>{
+					this.setMulSelWidth();
+				});
 			},
 			async getlistAll() {
 				let data = await http.getMultiShopGoodsList({
@@ -248,7 +264,6 @@
 			margin-top: 10px;
 		}
 	}
-
 	.warehouse-lists {
 		.topstyle {
 			&::before {
