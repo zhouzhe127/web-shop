@@ -75,7 +75,7 @@
 						</span>
 							<!-- <input class="inp fl" type="text" placeholder="示例:http://www.baidu.com" v-model="item.url"> 
 							-->
-							<el-input v-model="item.url" maxlength="20" placeholder="示例:http://www.baidu.com" style="width:350px;" class="fl"></el-input>
+							<el-input v-model="item.url" placeholder="示例:http://www.baidu.com" style="width:350px;" class="fl"></el-input>
 						</div>
 						<!-- 二级图文推送 -->
 						<section class="clearfix" style="margin-bottom:20px;">

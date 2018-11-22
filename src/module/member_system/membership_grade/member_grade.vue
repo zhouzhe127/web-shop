@@ -44,6 +44,7 @@
 			addNewlevel: function(item) { //新建会员等级
 				if (item) {
 					storage.session('memberlevelInfo', item);
+					storage.session('gradeList', this.gradeList);
 				}
 				this.$router.push('/admin/memberLevelManagement/addMembergrade');
 			},
