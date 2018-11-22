@@ -154,7 +154,7 @@
 					'id': '{useCouponName}'
 				}, {
 					'name': '【送券时间】',
-					'id': '{sendTime}'
+					'id': '{giveTime}'
 				}],
 				selectCoupon: [], //选中的列表
 				isactivityDetail: true, //是否查看详情
