@@ -204,6 +204,10 @@
 			//对店铺进行排序--序号显示
 			comShopIndex(){
 				for(let i=0;i<this.shopList.length;i++){
+					if(this.shopList[i].status !='0'&&this.shopList[i].status !='5'){
+						this.shopList.splice(i,1);
+						i--;
+					}
 					this.shopList[i].sort = i+1;
 				}
 			},

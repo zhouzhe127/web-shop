@@ -10,8 +10,7 @@
 				<h3 class="titleDashed"></h3>
 			</div>
 			<el-form label-position="left" label-width="110px">
-				<section class="oTop">
-
+				<section class="oTop clearfix">
 					<section style="width:50%;float: left;">
 						<section class="obox">
 							<el-form-item label="品牌名称" required>
@@ -21,8 +20,8 @@
 						<section class="obox">
 							<el-form-item label="行业分类" required>
 								<el-radio-group v-model="typeShopIndex" required @change="changeType">
-									<el-radio-button  label="0">餐饮</el-radio-button>
-									<el-radio-button  label="1">零售</el-radio-button>
+									<el-radio-button label="0">餐饮</el-radio-button>
+									<el-radio-button label="1">零售</el-radio-button>
 								</el-radio-group>
 								<span style="color: red">行业类型一经填写,无法修改!</span>
 							</el-form-item>
@@ -39,41 +38,38 @@
 						</section>
 					</section>
 					<section style="width:50%;float: left;">
-
-						<form class="fr" style="width: 100%;" id="imageUpForm1" enctype="multipart/form-data">
-							<section class="obox" style="position: relative;">
+						<section class="obox" style="position: relative;">
+							<form style="width: 100%;" id="imageUpForm1" enctype="multipart/form-data">
 								<el-form-item label="上传LOGO" required>
 									<el-button type="primary" style="position: relative;overflow: hidden">
 										<template v-if="logoimg !==''">重新上传</template>
 										<template v-else>立刻上传</template>
-										<input type="file" id="file_upload1" @change="imgUpload1" accept="image/jpeg,image/png,image/gif,image/tiff" name="image"
-											   style="cursor: pointer;display: block;position: absolute;left: 0;top:0;width:100%;height:100%; opacity: 0;background:red;" />
+										<input type="file" id="file_upload1" @change="imgUpload1" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" style="cursor: pointer;display: block;position: absolute;left: 0;top:0;width:100%;height:100%; opacity: 0;background:red;" />
 									</el-button>
 									<div v-if="logoimg !==''" style="display: inline-block;">
-										<span>( 已上传：</span>
+										<span>( 已上传:</span>
 										<label>{{spliceFileName(logoimg)}} </label>
 										<span>)</span>
 									</div>
 								</el-form-item>
-							</section>
-						</form>
-						<form class="fr" style="width: 100%;" id="imageUpForm2" enctype="multipart/form-data">
-							<section class="obox" style="position: relative;">
+							</form>
+						</section>
+						<section class="obox" style="position: relative;">
+							<form style="width: 100%;" id="imageUpForm2" enctype="multipart/form-data">
 								<el-form-item label="上传商标" required>
 									<el-button type="primary" style="position: relative;overflow: hidden">
 										<template v-if="trademarkimg !==''">重新上传</template>
 										<template v-else>立刻上传</template>
-										<input type="file" id="file_upload2" @change="imgUpload2" accept="image/jpeg,image/png,image/gif,image/tiff" name="image"
-											   style="cursor: pointer;display: block;position: absolute;left: 0px;top:0px;width:100%;height:100%; opacity: 0;background:red;" />
+										<input type="file" id="file_upload2" @change="imgUpload2" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" style="cursor: pointer;display: block;position: absolute;left: 0px;top:0px;width:100%;height:100%; opacity: 0;background:red;" />
 									</el-button>
 									<div v-if="trademarkimg !==''" style="display: inline-block;">
-										<span>( 已上传：</span>
+										<span>( 已上传:</span>
 										<span>{{spliceFileName(trademarkimg)}}</span>
 										<span> )</span>
 									</div>
 								</el-form-item>
-							</section>
-						</form>
+							</form>
+						</section>
 					</section>
 				</section>
 				<div class="aTitle" style="width:100%;height:20px;line-height: 20px;margin-left: 61px;margin-top:20px;">
@@ -81,7 +77,7 @@
 					<h3>绑定微信</h3>
 					<h3 class="titleDashed"></h3>
 				</div>
-				<section class="oTop" style="height:100px;">
+				<section class="oTop">
 					<section class="obox">
 						<el-form-item label="AppID" required>
 							<el-input v-model="appId" :maxlength="30" @keyup.native="appId=appId.replace(/[^\w\.\/]/ig,'')" placeholder="请输入微信AppID"></el-input>
@@ -133,7 +129,7 @@ export default {
 
 			typeShop: false, //false为餐饮true为零售
 			showPic: false,
-			typeShopIndex:0
+			typeShopIndex: 0
 		};
 	},
 	created() {
@@ -205,7 +201,8 @@ export default {
 			}
 		},
 		async imgUpload1(e) {
-			if(e.target.value!=''){
+			if (!e.target.value) return;
+			if (e.target.value != '') {
 				let data = await http.bigImgUpload({
 					data: {
 						type: 4,
@@ -216,10 +213,10 @@ export default {
 				this.logoimg = e.target.value;
 				this.imglogo1 = data;
 			}
-
 		},
 		async imgUpload2(e) {
-			if(e.target.value!=''){
+			if (!e.target.value) return;
+			if (e.target.value != '') {
 				let data = await http.bigImgUpload({
 					data: {
 						type: 4,
@@ -281,13 +278,12 @@ export default {
 }
 .creatStores .oTop {
 	width: 100%;
-	height: 250px;
+	height: auto;
 	padding-left: 100px;
 }
 
 .creatStores .oTop .obox {
 	width: 435px;
-	height: 40px;
 	margin-top: 20px;
 }
 
