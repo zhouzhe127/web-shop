@@ -39,7 +39,7 @@
 							<div>
 								<span>{{scope.row.strTitle}}</span>
 								<div class="editbtn">
-									<el-button type="text" v-if="scope.row.pScope.length==0" @click="editRow(scope.row,scope.$index)" icon="el-icon-edit"></el-button>
+									<el-button type="text" @click="editRow(scope.row,scope.$index)" icon="el-icon-edit"></el-button>
 									<el-button type="text" @click="delColumn(scope.$index,1,scope.row)" icon="el-icon-delete"></el-button>
 								</div>
 							</div>
@@ -491,6 +491,7 @@
 				this.isEdit = true;
 				this.rowShow = true;
 				console.log(item);
+				if(item.pScope.length>0) this.pShowMaterial = true;
 				this.pSortObj = item.pSortObj;
 				this.pScope = item.pScope;
 				this.pCollection = item.pCollection.id;
