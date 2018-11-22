@@ -21,7 +21,7 @@
 		<div class="zero-time" v-if="clearZeroId == 1">
 			<section style='clear: both;'>
 				<div class='required' style='display:block;float:left;width:70px;line-height: 40px;margin-left:100px; margin-bottom:20px;'>清除时间</div>
-				<el-date-picker v-model="expirationTime" type="date" placeholder="选择日期" :clearable="false" :editable="false">
+				<el-date-picker v-model="expirationTime" type="date" placeholder="选择日期" :clearable="false" :editable="false" format="MM 月 dd 日">
 				</el-date-picker>
 			</section>
 		</div>
@@ -159,7 +159,7 @@
     			}],
     			clearZeroId: 0,
     			clearZeroName: '关闭', //年度清零开关
-    			expirationTime: (new Date()).setHours(0, 0, 0, 0), //重置时间 
+    			expirationTime: (new Date()).setHours(0, 0, 0, 0) - 86400000, //重置时间 
     			days: '', //未消费天数
     			reduceActive: '', //降低活跃度 
     			isReduceName: '关闭',
