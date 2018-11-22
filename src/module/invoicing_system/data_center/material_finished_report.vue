@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-22 14:48:04
+ * @Last Modified time: 2018-11-22 16:10:08
  */
 
 <template>
@@ -82,8 +82,6 @@
 		导出报表:materialreportExportMaterialReportExcel
 
 */
-// import utils from 'src/verdor/utils';
-// import global from 'src/manager/global';
 import http from 'src/manager/http';
 import Timer from 'src/verdor/timer';
 import exportFile from 'src/verdor/exportFile';
@@ -141,7 +139,7 @@ export default {
 			
 			switch(sym){
 				case 'delete':
-					this.delTemplate(`确认删除 ${item.name} 报表吗?`,item.id);
+					this.delTemplate(`确认删除 ${item.name} 报表吗?`,[item.id]);
 					break;
 				case 'view':
 					if(item.status == statusMap.reject){
@@ -177,7 +175,7 @@ export default {
 						this.$message('请先选择需要删除的报表!');
 						return;
 					}
-					ids = this.selectList.map( ele => ele.id).join(',');
+					ids = this.selectList.map( ele => ele.id);
 					this.delTemplate('确定要删所选中的报表吗?',ids);               
 					break;     
 			}
@@ -243,10 +241,22 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(()=>{
-				this.getHttp('materialreportDeleteMaterialByIds',{ids:ids})
+				this.getHttp('materialreportDeleteMaterialByIds',{ids:ids.join(',')})
 					.then((res)=>{
 						if(res){
 							this.$message('删除成功!');  
+							this.tableData = this.delListByIds(this.tableData,ids);
+							this.selectList = this.delListByIds(this.selectList,ids);
+							this.selectAll = this.isSelectCurrentPage(this.tableData);
+							
+							if(this.tableData.length == 0){
+								if(this.pageObj.currentPage > 1){
+									this.pageObj.currentPage -= 1;
+									this.funGetPage('current-change',this.pageObj.currentPage);
+								}else{
+									this.pageObj.total = 0;
+								}
+							}
 						}else{
 							this.$message('删除失败!');  
 						}
@@ -380,13 +390,36 @@ export default {
 		},
 
 
+		delListByIds(list,ids,attr='id'){
+			let arr = [];
 
+			for(let ele of list){
+				let flag = true;
+				for(let id of ids){
+					if(ele[attr] == id){
+						flag = false;
+						break;
+					}
+				}
+				if(flag){
+					arr.push(ele);
+				}
+			}
+			return arr;
+		},
 		//是否选择当前页
 		isSelectCurrentPage(list,obj={val:true,attr:'checked'}){
-			let {val,attr,sym=false} = obj;
-			sym = list.every((ele)=>{
-				return ele[attr] == val;
-			});
+			let {val,attr,sym=true} = obj;
+
+			for(let ele of list){
+				if(ele[attr] != val){
+					sym = false;
+					break;
+				}
+			}
+			if(list.length == 0){
+				sym = false;
+			}
 			return sym;
 		},
 		matchSelectList(list,selectList){
