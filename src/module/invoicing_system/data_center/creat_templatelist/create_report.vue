@@ -331,7 +331,7 @@
 				}).start, utils.getTime({
 					time: new Date()
 				}).end];
-				this.moldeName = '';
+				this.moldeName = this.$route.query.name;
 			}
 		},
 		async mounted() {
