@@ -326,8 +326,8 @@ export default {
 			for(let item of this.matList){
 				mTotal = mTotal+Number(item.unitPrice*item.numRes);
 			}
-			let str = (gTotal+mTotal)+'';
-			this.totalPrice = parseFloat(str);
+			let str = (gTotal+mTotal);
+			this.totalPrice = str.toFixed(2);
 		},
 		getSupplierName(id){
 			for(let item of this.supplierList){

@@ -1082,8 +1082,8 @@ export default {
 					mTotal = mTotal + item.unitPrice*(item.num/item.unitValue);
 				}
 			}
-			let str = (gTotal+mTotal)+'';
-			this.orderTotal = parseFloat(str);
+			let str = (gTotal+mTotal);
+			this.orderTotal = str.toFixed(2);
 		},
 		setNumfloat(num){//设置2位浮点型数字
 			let str = num+'';
