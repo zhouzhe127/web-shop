@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-21 17:18:46
+ * @Last Modified time: 2018-11-22 17:46:07
  */
 
 <template>
@@ -60,10 +60,15 @@
 
 
 				<template v-for="(t,ti) in tableTitle" >
-					<el-table-column  min-width="150px"  :label="t.name" :key="ti">
-						<span slot-scope="{row,column}">
+					<el-table-column  min-width="200px"  :key="ti">
+						<template slot="header" slot-scope="{row,column}">
+							{{t.name}}
+							<p class="create-time">{{t.beginDate}} 至 {{t.endDate}}</p>
+						</template>
+
+						<template slot-scope="{row,column}">
 							{{row[t.attr]}}
-						</span>
+						</template>
 					</el-table-column>
 				</template>
 
@@ -158,9 +163,9 @@ export default {
 				//报表id
 				this.reportId = res.id;
 				//表头名称
-				let {customItem,data} = res;
+				let {customItem=[],data=[],timeQuantum=[]} = res;
 				//组合表头
-				this.tableTitle = this.organizeTableTitle(customItem);
+				this.tableTitle = this.organizeTableTitle(customItem,timeQuantum);
 				//组合表数据
 				tableData = this.organizeTableData(data);
 				//展开所有列表
@@ -252,13 +257,20 @@ export default {
 			});
 		},
 		//组合表头
-		organizeTableTitle(list){
+		organizeTableTitle(list,times){
 			let arr = [];
 			for(let i = 0 ; i < list.length; i += 1){
+				if(!list[i]){
+					list[i] = {};
+				} 
+				if(!times[i]){
+					times[i] = {};
+				}
 				let obj = {
 					attr:'t-'+i,
 					name:list[i]
 				};
+				Object.assign(obj,times[i]);
 				arr[i] = obj;
 			}
 			return arr;

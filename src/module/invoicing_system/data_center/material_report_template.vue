@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-19 10:34:56
+ * @Last Modified time: 2018-11-22 16:09:31
  */
 
 <template>
@@ -151,11 +151,12 @@ export default {
 							this.tableData.splice(index,1);
 
 							if(this.tableData.length == 0){
-								this.pageObj.currentPage -= 1;
-								if(this.pageObj.currentPage <= 0){
-									this.pageObj.currentPage = 1;
+								if(this.pageObj.currentPage > 1){
+									this.pageObj.currentPage -= 1;
+									this.getTemplateList();
+								}else{
+									this.pageObj.total = 0;
 								}
-								this.getTemplateList();
 							}
 						}else{
 							this.$message('删除失败!');

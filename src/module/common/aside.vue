@@ -154,9 +154,11 @@
 					if (this.openTo.indexOf(index) != -1) {
 						this.openTo.splice(this.openTo.indexOf(index), 1);
 					} else {
+						this.openTo = [Number(this.onActive)];
 						this.openTo.push(index);
 					}
 				} else {
+					this.openTo = [];
 					this.onActive = index;
 					this.toRouter(item.name);
 				}
@@ -184,6 +186,7 @@
 			},
 			threeList: function (...argus) {
 				let [list, i, index] = argus;
+				this.openTo = [Number(index)];
 				this.soActive = i;
 				this.onActive = index;
 				this.check = `${this.onActive}` + `${this.soActive}`;

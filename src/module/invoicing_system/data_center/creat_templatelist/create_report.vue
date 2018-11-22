@@ -331,13 +331,13 @@
 				}).start, utils.getTime({
 					time: new Date()
 				}).end];
-				this.moldeName = '';
+				this.moldeName = this.$route.query.name;
 			}
 		},
 		async mounted() {
 			this.crageBtn();
 			this.id = this.$route.query.id;
-			// this.moldeName = this.$route.query.name;
+			this.moldeName = this.$route.query.name;
 			await this.getneedData();
 			this.init();
 		},
