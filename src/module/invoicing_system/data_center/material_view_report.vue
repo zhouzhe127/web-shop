@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-22 16:32:11
+ * @Last Modified time: 2018-11-22 17:46:07
  */
 
 <template>
@@ -63,7 +63,7 @@
 					<el-table-column  min-width="200px"  :key="ti">
 						<template slot="header" slot-scope="{row,column}">
 							{{t.name}}
-							<p class="create-time">{{t.beginDate}} - {{t.endDate}}</p>
+							<p class="create-time">{{t.beginDate}} 至 {{t.endDate}}</p>
 						</template>
 
 						<template slot-scope="{row,column}">
