@@ -319,7 +319,6 @@ export default {
 		//改变品牌打印机通信类型
 		changeBrandIndex: function(e) {
 			console.log(e);
-			console.log(this.docType);
 			if (this.docType[e] && this.docType[e].name) {
 				this.orderName = this.docType[e].name;
 			}

@@ -17,10 +17,10 @@
 				<li v-if="!isBrand">
 					<!--日期选择和搜索框-->
 					<section class="statisticsList fl">
-						<el-date-picker :clearable="false" v-model="startTime" type="datetime" placeholder="选择日期" style="width:200px;">
+						<el-date-picker :clearable="false" v-model="startTime" type="date" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
-						<el-date-picker :clearable="false" v-model="endTime" type="datetime" placeholder="选择日期" style="width:200px;">
+						<el-date-picker :clearable="false" v-model="endTime" type="date" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 					</section>
@@ -34,6 +34,16 @@
 					<el-select v-model="conSize" @change="selectTypeTwo" placeholder="请选择类型" style="width:150px;">
 						<el-option v-for="item in conTypeSize" :key="item.type" :label="item.name" :value="item.type"></el-option>
 					</el-select>
+					<el-time-picker
+						v-if="conSize == '2'"
+						is-range
+						v-model="timelate"
+						range-separator="至"
+						start-placeholder="开始时间"
+						end-placeholder="结束时间"
+						@change="timechange"
+						placeholder="选择时间范围">
+					</el-time-picker>
 				</li>
 				<li v-if="!isBrand && conType=='1'">
 					<el-select v-model="conShifts" @change="selectTypeBan" placeholder="请选择班次" style="width:150px;">
@@ -254,6 +264,7 @@ export default {
 			isBrand: '', //品牌判断
 			startTime: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
 			endTime: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
+			timelate: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)],//时间组件
 			allDayPage: {
 				page: 1,
 				num: 10,
@@ -279,7 +290,7 @@ export default {
 			conSize:'1',//营业时间和自然日
 			conShifts:'',//班次
 			conTypeList:[{type:'0',name:'按日别'},{type:'1',name:'按交接班'}],
-			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'}],
+			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'},{type:'2',name:'时间段'}],
 			shiftList:[],//交接班次列表
 			baseDetial:{},//店铺的基本信息
 		};
@@ -363,6 +374,31 @@ export default {
 			if(this.conType == '0'){
 				this.selectTypeTwo();
 			}
+		},
+		//时间组件
+		timechange(e){
+			console.log(e);
+			let startTime = new Date(this.startTime).getTime();
+			let endTime = new Date(this.endTime).getTime();
+			let startY = utils.format(startTime, 'yyyy');
+			let startM = utils.format(startTime, 'MM')-1;
+			let startD = utils.format(startTime, 'dd');
+			let endY = utils.format(endTime, 'yyyy');
+			let endM = utils.format(endTime, 'MM')-1;
+			let endD = utils.format(endTime, 'dd');
+			let timearr1 = new Date(e[0]).getTime();
+			let timearr2 = new Date(e[1]).getTime();
+			let startH = utils.format(timearr1, 'hh');
+			let startm = utils.format(timearr1, 'mm');
+			let startS = utils.format(timearr1, 'ss');
+			let endH = utils.format(timearr2, 'hh');
+			let endm = utils.format(timearr2, 'mm');
+			let endS = utils.format(timearr2, 'ss');
+			this.startTime = new Date(startY, startM, startD, startH, startm,startS);
+			this.endTime = new Date(endY, endM, endD, endH, endm,endS);
+			// console.log(startY+'-'+startM+'-'+startD+'-'+startH+'-'+startm+'-'+startS);
+			// console.log(this.startTime);
+			this.getOrderListInDays();
 		},
 		//按日别筛选-自然日-营业时间
 		selectTypeTwo(){
@@ -537,7 +573,11 @@ export default {
 				startTime: this.startTime,
 				endTime: this.endTime,
 				dayPage: this.dayPage,
-				isOpenTime: this.conSize
+				isOpenTime: this.conSize,
+				conType: this.conType,
+				conSize: this.conSize,
+				conShifts: this.conShifts,
+				timelate:this.timelate,
 			};
 			storage.session('orderDetial', res);
 			this.$router.push({
@@ -675,7 +715,11 @@ export default {
 						startTime: this.startTime,
 						endTime: this.endTime,
 						isOpenTime: this.conSize,
-						allDayPage: this.allDayPage //多天分页信息
+						allDayPage: this.allDayPage, //多天分页信息
+						conType: this.conType,
+						conSize: this.conSize,
+						conShifts: this.conShifts,
+						timelate:this.timelate,
 					};
 					storage.session('orderOne', detial);
 					this.$router.push({
@@ -811,7 +855,11 @@ export default {
 				startTime: this.startTime,
 				endTime: this.endTime,
 				isOpenTime: this.conSize,
-				allDayPage: this.allDayPage //多天分页信息
+				allDayPage: this.allDayPage, //多天分页信息
+				conType: this.conType,
+				conSize: this.conSize,
+				conShifts: this.conShifts,
+				timelate:this.timelate,
 			};
 			this.$route.query.arear = 1;
 			storage.session('orderOne', detial);
@@ -870,6 +918,11 @@ export default {
 			endTime = orderMore.endTime;
 			isOpenTime = orderMore.isOpenTime;
 			allDayPage = orderMore.allDayPage;
+			this.conType = orderMore.conType?orderMore.conType:'0';//交接班--日别
+			this.conSize = orderMore.conSize?orderMore.conSize:'0';//交接班下标
+			this.conShifts = orderMore.conShifts?orderMore.conShifts:'0';//日别下标
+			this.timelate = orderMore.timelate?orderMore.timelate:this.timelate;//日别下标
+			// this.timechange(this.timelate);
 		} else if (dataDetial) {
 			//品牌进入返回
 			startTime = dataDetial.startTime;
