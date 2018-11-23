@@ -15,7 +15,7 @@
 						<el-form-item label="单据数据"  required>
 							<el-radio-group v-model="brandOrderTypeIndex">
 								<div style="margin-bottom:2px;">
-									<el-radio size="small" class="labItem" @change="changeBrandIndex(i)" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
+									<el-radio size="small" class="labItem" @change="changeBrandIndex" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
 								</div>
 							</el-radio-group>
 						</el-form-item>
@@ -319,6 +319,7 @@ export default {
 		//改变品牌打印机通信类型
 		changeBrandIndex: function(e) {
 			console.log(e);
+			console.log(this.docType);
 			if (this.docType[e] && this.docType[e].name) {
 				this.orderName = this.docType[e].name;
 			}
@@ -434,7 +435,9 @@ export default {
 					this.printerIndex = i;
 				}
 			}
-			this.orderTypeIndex = this.printDetial.orderType*1;
+			if(this.ischain != '3'){
+				this.orderTypeIndex = this.printDetial.orderType*1;
+			}
 			//单据列表少了type为18和19的，
 			if (this.printDetial.orderType == '21') {
 				//储值凭证
@@ -454,6 +457,12 @@ export default {
 			}else if(this.printDetial.orderType == '100'){//品牌入货申请单
 				this.brandOrderTypeIndex = 0;//品牌配置下单据数据下标
 			}
+			// console.log(this.orderTypeIndex);
+			if(this.ischain != '3'){ //如果是非品牌情况下走以前逻辑，
+				this.orderName = this.docType[this.orderTypeIndex].name;
+			}else{
+				this.orderName = this.docType[this.brandOrderTypeIndex].name;//如果是品牌状态，则走品牌下标
+			}
 			// this.customQrCode = JSON.parse(this.printDetial.customQrCode);
 			this.printDetial.customQrCode = this.printDetial.customQrCode?this.printDetial.customQrCode:[];
 			this.customQrCode = this.printDetial.customQrCode;
@@ -465,9 +474,7 @@ export default {
 			if(this.printDetial.customQrCode.length == 0){
 				this.customQrCode = [{qrcode:'',explain:''}];//二维码URL和寄语
 			}
-			// console.log(this.orderTypeIndex);
 			this.isWait = this.printDetial.isPrintWait == 1 ? true : false; //是否开启等叫打印单
-			this.orderName = this.docType[this.orderTypeIndex].name;
 			this.footerContent = this.printDetial.footerContent;
 			this.printTimes = this.printDetial.printTimes;
 			this.isAlam = this.printDetial.isAlam == '0' ? false : true;
