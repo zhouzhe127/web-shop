@@ -136,7 +136,7 @@
 				type: '', //商品类型 是否公开 0普通 1称重
 				bomTypeIndex: 0, //当前下拉框index
 				page: 1, //当前页
-				pageShow: 4, //每页显示多少天数据
+				pageShow: 10, //每页显示多少天数据
 				pageTotal: 1, //数据总页数
 				list: [], //数据列表
 				listLength: 0, //数据条数
