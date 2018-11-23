@@ -330,7 +330,7 @@ export default {
 				fullerrorMessage: '', //错误的信息
 				reduceerrorMessage: ''
 			};
-			if (!this.validationForm()) {
+			if (this.preferential && !this.validationForm()) {
 				this.valiData('订单金额或满减金额未填写或填写有误!');
 				return false;
 			}
@@ -426,7 +426,7 @@ export default {
 				this.valiData('请添加优惠规则方案!');
 				return false;
 			}
-			if (!this.validationForm()) {
+			if (this.preferential && !this.validationForm()) {
 				this.valiData('订单金额或满减金额信息有误,请更改!');
 				return false;
 			}
