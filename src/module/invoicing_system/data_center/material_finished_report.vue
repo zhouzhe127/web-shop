@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-22 16:10:08
+ * @Last Modified time: 2018-11-23 18:16:01
  */
 
 <template>
@@ -107,6 +107,9 @@ export default {
 			selectAll:false,                    //全选
 			selectList:[],                      //选中的列表
 			shopId:'',
+			permission:{
+				addReportTask : false,			//是否有生成报表的权限
+			}
 
 
 		};
@@ -350,6 +353,8 @@ export default {
 				id:query.tempId,
 				name:query.tempName
 			};
+			let p = Number(query.permission);
+			this.permission.addReportTask = Boolean(p);
 		},
 		//初始化分页组件
 		initPageObj(){
@@ -361,19 +366,7 @@ export default {
 			};
 		},
 		initBtn(){
-			this.$store.commit('setPageTools',[
-				{
-					name: '生成报表',
-					type:'4',
-					className:'primary',
-					fn:()=>{
-						let temp = this.template;
-						this.$router.push({path:'/admin/materialReport/createReport',query:{
-							id : temp.id,
-							name : temp.name,
-						}});				
-					}
-				},
+			let arr = [
 				{
 					name: '返回',
 					type:'4',
@@ -382,7 +375,26 @@ export default {
 						this.$router.go(-1);
 					}
 				},
-			]);
+			];
+			
+			let obj = {
+				name: '生成报表',
+				type:'4',
+				className:'primary',
+				fn:()=>{
+					let temp = this.template;
+					this.$router.push({path:'/admin/materialReport/createReport',query:{
+						id : temp.id,
+						name : temp.name,
+					}});				
+				}
+			};
+
+			if(this.permission.addReportTask){
+				arr.push(obj);
+			}
+
+			this.$store.commit('setPageTools',arr);
 		},
 		initData(){
 			let currentShop = storage.session('userShop').currentShop;
@@ -449,9 +461,9 @@ export default {
 	},
 	mounted(){
 		this.initData();
+		this.initPageObj();		
+		this.getQuery();		
 		this.initBtn();
-		this.initPageObj();
-		this.getQuery();
 		this.getReportList();
 	},
 	beforeRouteLeave(to,from,next){

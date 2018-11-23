@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-22 16:09:31
+ * @Last Modified time: 2018-11-23 18:09:38
  */
 
 <template>
@@ -106,8 +106,8 @@ export default {
 				case 'generator'://生成报表
 					this.$router.push({path:'/admin/materialReport/createReport',query:{id,name}});				
 					break;                
-				case 'view'://查看报表
-					this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:name,tempId:id}});
+				case 'view'://查看已生成报表
+					this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:name,tempId:id,permission:Number(this.permission.addReportTask)}});
 					break;                
 			}
 		},

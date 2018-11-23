@@ -2,13 +2,13 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-22 17:46:07
+ * @Last Modified time: 2018-11-23 18:24:04
  */
 
 <template>
 	<div class="pad-bottom">
 		<div class="head">
-			<span>{{reportName}}</span>
+			<span>报表名称 : {{reportName}}</span>
 			<div></div>
 		</div>
 		<div class="search-header">
@@ -360,6 +360,8 @@ export default {
 					if(!customItem) customItem = {};
 					if(!customItem['value']) customItem['value'] = 0;
 					if(!customItem['unitName']) customItem['unitName'] = '';
+
+					customItem['value'] = Number(customItem['value']).toFixed(3);
 
 					item[ele.attr] = customItem['value'] + customItem['unitName'];
 				}
