@@ -42,7 +42,7 @@
 				</el-table-column>
 				<el-table-column label="订单" prop="name" align="center">
 					<template slot-scope="scope">
-						<span @click="openOid(scope.row.oid,scope.row.belongToShop,scope.row.fromId)" style="color: #E1BB4A ">{{(scope.row.oid == '' || scope.row.oid == '0')?'--':scope.row.oid}}</span>
+						<span @click="openOid(scope.row.oid,scope.row.shopId,scope.row.fromId)" style="color: #E1BB4A ">{{(scope.row.oid == '' || scope.row.oid == '0')?'--':scope.row.oid}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop="createTime" label="交易类型" align="center">
@@ -148,6 +148,8 @@ export default {
 			this.getRecordList();
 		},
 		//点击查看详情
+		//品牌下面查看订单 有fromId 
+		//单店下面 fromId为0
 		async openOid(oid, belongToShop, fromId) {
 			if (oid == '' || oid == '0') {
 				return;
@@ -162,7 +164,7 @@ export default {
 			} else {
 				let res = await http.OrderstatisticsBillDelite({
 					data: {
-						shopId: fromId,
+						shopId: this.isBrand ? fromId : belongToShop,
 						oid: oid
 					}
 				});

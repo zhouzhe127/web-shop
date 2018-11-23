@@ -8,12 +8,9 @@
 					<el-option v-for="item in sorts" :key="item" :label="item" :value="item">
 					</el-option>
 				</el-select>
-				<!-- <input type="text" v-model.trim="keyWords" placeholder="关键字"> -->
 				<el-input v-model="keyWords" maxlength="10" placeholder="关键字" style="width:179px;margin:0 20px;"></el-input>
 				<el-button type="primary" style="width:100px;" @click="selectWorker">筛选</el-button>
 				<el-button type="info" style="width:100px;" @click="resertWorker">重置</el-button>
-				<!-- <button @click="selectWorker" class="shop_selects">筛选</button>
-				<button @click="resertWorker" class="shop_resert">重置</button> -->
 			</header>
 			<div class="list_box">
 				<div class="list_title">
@@ -124,7 +121,7 @@
 				let reg = new RegExp(this.keyWords);
 				let arr = [];
 				if (this.selects.toString() != '') {
-					let reg1 = new RegExp(this.sorts[this.selects]);
+					let reg1 = new RegExp(this.selects);
 					arr = this.allList.filter((item) => {
 						return reg1.test(item.shopNames) && (reg.test(item.staffName || reg.test(item.nickNmae)));
 					});

@@ -30,7 +30,7 @@
 			<span class="online-sub fl required">过期时间</span>
 			<div class="rightHalf">
 				<el-select v-model="expirationTime" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
-					<el-option v-for="item in expirationTimeList" :key="item.id" :label="item.name" :value="item.id">
+					<el-option v-for="item in expirationTimeList" :key="item.id" :label="item.name" :value="item.name">
 					</el-option>
 				</el-select>
 				<span style="margin-left:10px;">分钟</span>
@@ -76,7 +76,7 @@
 			<span class="online-sub fl required">订阅提醒</span>
 			<div class="rightHalf">
 				<el-select class="fl" v-model="subscribeTime" placeholder="请选择" @change="selsubscribeTime" style="color:#c0c4cc;width: 179px;">
-					<el-option v-for="item in subscribeTimeList" :key="item.id" :label="item.name" :value="item.id">
+					<el-option v-for="item in subscribeTimeList" :key="item.id" :label="item.name" :value="item.name">
 					</el-option>
 				</el-select>
 				<span class="fl subscribe">分钟</span>
@@ -245,9 +245,6 @@
 			};
 		},
 		methods: {
-			// openflipSwitch: function (res) {
-			// 	this.flipSwitch = res; //是否开启疯抢 
-			// },
 			getStartTime: function(receiveTime) { //选择开始时间
 				this.startObj.time = (new Date(receiveTime)).getTime(); //毫秒
 			},
