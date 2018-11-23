@@ -133,7 +133,7 @@
 				<div class="info-content userinfo conbox">
 					<label class="content-box">
 						<span class="required icon-none" style="color: #ccc;">入库类型:</span>
-						<span style="color: #ccc;display: inline-block;width: 230px;height: 40px;">已有批次入库:</span>
+						<span style="color: #ccc;display: inline-block;width: 230px;height: 40px;">已有批次入库</span>
 					</label>
 					<label class="content-box">
 						<span class="required icon-none" style="color: #ccc;vertical-align: top;">生产日期:</span>
