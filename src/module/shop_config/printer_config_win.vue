@@ -11,7 +11,32 @@
 			<div id="prin_con" slot="content" v-cloak>
 				<!--打印机创建修改表单-->
 				<section class="Pconfig" slot="content">
-					<el-form :model="printDetial" ref="printDetial" label-width="120px">
+					<el-form v-if="this.ischain =='3'" :model="printDetial" ref="printDetial" label-width="120px">
+						<el-form-item label="单据数据"  required>
+							<el-radio-group v-model="brandOrderTypeIndex">
+								<div style="margin-bottom:2px;">
+									<el-radio size="small" class="labItem" @change="changeBrandIndex(i)" v-for="(item,i) in docType" :key="i" :label="i" border>{{item.name}}</el-radio>
+								</div>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item required label="打印机">
+							<el-radio-group v-model="printerIndex">
+								<div style="margin-bottom:2px;">
+									<el-radio size="small" class="labItem" @change="changePrintIndex(i)" v-for="(item,i) in printerList" :key="i" :label="i" border>{{item.printerName}}</el-radio>
+								</div>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item required label="打印次数">
+							<el-input-number v-model="printTimes" @change="changeNum" style="width:150px;" :min="1" :max="10"></el-input-number>
+							<span style="color:#606266;margin:0 20px;">蜂鸣</span>
+							<el-switch
+								v-model="isAlam"
+								active-color="#E1BB4A"
+								inactive-color="#e6e6e6">
+							</el-switch>
+						</el-form-item>
+					</el-form>
+					<el-form v-if="this.ischain!='3'" :model="printDetial" ref="printDetial" label-width="120px">
 						<el-form-item label="单据数据"  required>
 							<el-radio-group v-model="orderTypeIndex">
 								<div style="margin-bottom:2px;">
@@ -142,6 +167,7 @@ import goodListWin from 'src/components/good_list_win.vue';
 export default {
 	data() {
 		return {
+			ischain:'',
 			orderType: null, //单据数据orderType值
 			printTimes: 1, //打印次数
 			isAlam: false, //蜂鸣开关
@@ -177,12 +203,14 @@ export default {
 			isQrcode:false,//是否显示支付二维码
 			iscustomQrCode:false,//显示二维码
 			customQrCode:[{qrcode:'',explain:''}],//二维码URL和寄语
+			brandOrderTypeIndex:-1,//品牌的单据数据下标
 		};
 	},
 	components: {
 		win,
 	},
 	watch: {
+		brandOrderTypeIndex: 'changeBrandIndex',
 		orderTypeIndex: 'orderTypeIndexChange',
 		goodsIds: 'goodsNonull',
 		packages: 'packagesNonull'
@@ -199,6 +227,7 @@ export default {
 	},
 	mounted() {
 		let userData = storage.session('userShop');
+		this.ischain = userData.currentShop.ischain;
 		this.createUid = userData.user.id;
 		//如果初始为查看打印机详情则执行
 		if (this.types == 'edit') {
@@ -286,6 +315,16 @@ export default {
 				}
 			}
 			this.$emit('printConfigWin', res, item);
+		},
+		//改变品牌打印机通信类型
+		changeBrandIndex: function(e) {
+			console.log(e);
+			if (this.docType[e] && this.docType[e].name) {
+				this.orderName = this.docType[e].name;
+			}
+			this.brandOrderTypeIndex = e;
+			this.status = this.docType[this.brandOrderTypeIndex].orderStatus;
+			this.orderType = this.docType[this.brandOrderTypeIndex].type;
 		},
 		//改变打印机通信类型
 		changeIndex: function(e) {
@@ -388,6 +427,7 @@ export default {
 			// this.printDetial = await http.getPrintsetById({
 			// 	data: { printsetId: this.printerConId }
 			// });
+			console.log(this.printDetial);
 			this.printerId = this.printDetial.printerId;
 			for (let i = 0; i < this.printerList.length; i++) {
 				if (this.printerId == this.printerList[i].id) {
@@ -406,11 +446,13 @@ export default {
 				//扫码支付对账单
 				this.orderTypeIndex = 20;
 			} else if (this.printDetial.orderType == '24') {
-				//扫码支付对账单
+				//出品单
 				this.orderTypeIndex = 21;
 			}else if (this.printDetial.orderType == '25') {
-				//扫码支付对账单
+				//外卖出品单
 				this.orderTypeIndex = 22;
+			}else if(this.printDetial.orderType == '100'){//品牌入货申请单
+				this.brandOrderTypeIndex = 0;//品牌配置下单据数据下标
 			}
 			// this.customQrCode = JSON.parse(this.printDetial.customQrCode);
 			this.printDetial.customQrCode = this.printDetial.customQrCode?this.printDetial.customQrCode:[];

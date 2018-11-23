@@ -145,16 +145,16 @@ export default {
 		let arr = [
 			{
 				name: '添加打印机',
-				type:4,
-				className: 'plain',
+				type:5,
+				className: '',
 				fn: ()=>{
 					this.openWin({pid:null,types:'addPrint',index:null,bel:false});
 				},
 			},
 			{
 				name: '添加打印服务终端',
-				type:4,
-				className: 'plain',
+				type:5,
+				className: '',
 				fn:()=>{
 					this.openWin({pid:null,types:'addPrint',index:null,bel:true});
 				}
