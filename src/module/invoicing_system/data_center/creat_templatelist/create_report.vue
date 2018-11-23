@@ -5,7 +5,7 @@
 <template>
 	<div id="createReport">
 		<div class="split-title">
-			报表模板名称
+			报表模板名称：{{moldeName}}
 		</div>
 		<div class="inpStyle">
 			<span class="required label">报表名称</span>

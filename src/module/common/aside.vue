@@ -154,7 +154,7 @@
 					if (this.openTo.indexOf(index) != -1) {
 						this.openTo.splice(this.openTo.indexOf(index), 1);
 					} else {
-						this.openTo = [Number(this.onActive)];
+						this.openTo = [];
 						this.openTo.push(index);
 					}
 				} else {
@@ -186,7 +186,7 @@
 			},
 			threeList: function (...argus) {
 				let [list, i, index] = argus;
-				this.openTo = [Number(index)];
+				// this.openTo = [Number(index)];
 				this.soActive = i;
 				this.onActive = index;
 				this.check = `${this.onActive}` + `${this.soActive}`;
