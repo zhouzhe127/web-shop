@@ -33,7 +33,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动期限</span>
 			<div class="rightHalf">
-				<!-- <select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn> -->
 				<el-select v-model="durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
 					<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
@@ -45,7 +44,6 @@
 			<span class="online-sub fl required">推送日期</span>
 			<div class="rightHalf">
 				<span class="fl thetext">提前</span>
-				<!--  <input type="text" placeholder="请输入推送日期" v-model="pushdateNum" class="name" style="width: 200px;margin:0 10px;" /> -->
 				<el-input class="fl" style="width:auto;margin-right:10px;" v-model="pushdateNum" maxlength="10" placeholder="请输入推送日期"></el-input>
 				<span class="fl thetext">天,发起生日活动推送</span>
 			</div>

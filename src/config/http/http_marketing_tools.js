@@ -402,4 +402,8 @@ export default {
 	},
 	/* ↑ 砍价活动(粮票集) ↑
 	-------------------*/
+	'couponRemind': {
+		url: w + 'Activityconfig/couponRemind', // 获取砍价活动明细
+		method: 'post'
+	},
 };

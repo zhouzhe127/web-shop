@@ -8,14 +8,6 @@
 <template>
 	<div id="userLabel">
 		<!-- 列表 -->
-		<!-- <com-table :listHeight='80' :listName="'用户标签'" :key="index" :showTitle='1' :introData="labelist" :titleData="titleList" :allTotal="labelist.length" :listWidth="1436" :widthType='true'>
-			<div slot="con-0" slot-scope="props" class="btnLink">
-				<a href="javascript:;" @click="openStore(scope.row,'edi')">编辑</a>
-				<a href="javascript:;" @click="deletLabel(scope.row)">删除</a>
-			</div>
-			<div slot="con-1" slot-scope="props">{{labelist.length - props.index}}</div>
-			<div slot="con-2" slot-scope="props">{{userType[scope.row.type]}}</div>
-		</com-table> -->
 		<div class="list_box">
 			<div class="list_title">
 				<div class="list_title_l fl">

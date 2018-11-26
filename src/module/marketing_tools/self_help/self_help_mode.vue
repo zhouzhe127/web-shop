@@ -10,7 +10,6 @@
 			<div class="self-help-box clearfix">
 				<span class="fl self-help-sub">开启自助模式</span>
 				<div class="rightHalf">
-					<!-- <onOff :key='1' :status="selfStatus" @statusChange="openselfStatus" class='fl'></onOff> -->
 					<el-switch v-model="selfStatus" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
 				</div>
@@ -19,17 +18,10 @@
 			<div class="self-help-box clearfix" v-if="!selfStatus">
 				<span class="fl self-help-sub">查看菜单</span>
 				<div class="rightHalf">
-					<!-- <onOff :key='1' :status="menuState" @statusChange="openmenuState" class='fl'></onOff> -->
 					<el-switch v-model="menuState" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
 				</div>
 			</div>
-			<!-- <div class="self-help-box">
-				<span class="fl self-help-sub">商品显示</span>
-				<span class="fl">
-					<mulSelect :list.sync="contentLsit" :selects.sync="contenSelect" :name='"name"' :key='"id"' :styles="{backgroundColor:'rgb(240,240,240)'}"></mulSelect>
-				</span>
-			</div> -->
 			<!-- 生成二维码 -->
 			<div class="self-help-box clearfix">
 				<span class="fl self-help-sub">生成二维码</span>
@@ -42,7 +34,6 @@
 			<div class="self-help-box clearfix">
 				<span class="fl self-help-sub">扫码选择门店功能</span>
 				<div class="rightHalf">
-					<!-- <onOff :key='1' :status="storeSwitch" @statusChange="selectStores"></onOff> -->
 					<el-switch v-model="storeSwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
 				</div>
@@ -50,7 +41,6 @@
 			<!-- 支付后发送自助短信 -->
 			<div class="self-help-box clearfix">
 				<span class="fl self-help-sub">支付后发送自助短信</span>
-				<!-- <onOff :key='1' :status="smsSwitch" @statusChange="selectSMS"></onOff> -->
 				<div class="rightHalf">
 					<el-switch v-model="smsSwitch" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
@@ -101,7 +91,6 @@
 			<!-- 关注公众号并点餐 -->
 			<div class="self-help-box clearfix">
 				<span class="fl self-help-sub">关注公众号并点餐</span>
-				<!-- <onOff :key='1' :status="isattention" @statusChange="openisattention" class='fl'></onOff> -->
 				<div class="rightHalf" style="width:50px;">
 					<el-switch v-model="isattention" active-color="#E1BB4A" inactive-color="#dcdfe6">
 					</el-switch>
@@ -119,7 +108,6 @@
 				<!-- 标题设置 -->
 				<div class="self-help-box clearfix">
 					<span class="fl self-help-sub">标题设置</span>
-					<!-- <singleSelect class='fl' :index='integralOn' @selOn='haveIndex' :styles="{width:'108px',border: '1px solid #cecdcd',marginRight: '8px'}" :list="integralList" :name="'name'" :key='"id"'></singleSelect> -->
 					<el-radio-group v-model="integralName" class="fl">
 						<el-radio v-for="(item,index) in integralList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
 					</el-radio-group>
@@ -137,7 +125,6 @@
 				<div class="self-help-box clearfix" v-if="integralOn == '0'">
 					<span class="fl self-help-sub"></span>
 					<div class="rightHalf">
-						<!-- <input type="text" class="inp" name="" v-model="title1" placeholder="请输入固定标题" maxlength="15" /> -->
 						<el-input v-model="title1" maxlength="15" placeholder="请输入固定标题" style="width:200px;"></el-input>
 						<div class="handle-tips">
 							<i></i> 限15字以内
@@ -158,7 +145,6 @@
 					<div class="self-help-box clearfix">
 						<span class="fl self-help-sub">显示图片</span>
 						<div class="uploadImgs fl">
-							<!-- <a href="javascript:void(0);" class="addclassify fl" style="margin-right: 15px;">上传图片</a> -->
 							<el-button type="primary" icon="el-icon-plus" class="buttons">
 								上传图片
 							</el-button>
@@ -173,7 +159,6 @@
 					<!-- 下载二维码 -->
 					<div class="self-help-box clearfix">
 						<span class="fl self-help-sub">下载二维码</span>
-						<!-- <a @click="downloadCode()" class="download" href="javascript:void(0);">下载二维码</a> -->
 						<el-button type="primary" icon="el-icon-download" class="buttons" @click="downloadCode()">
 							下载二维码
 						</el-button>
@@ -182,9 +167,7 @@
 			<!--取消，保存按钮-->
 			<div class="self-help-box clearfix">
 				<span class="fl self-help-sub"></span>
-				<!-- <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right: 2px;">取消</a> -->
 				<el-button type="info" style="margin-right: 15px;width:190px;">取消</el-button>
-				<!-- <a href="javascript:void(0);" class="blue fl" style="width: 200px;" @click="saveFunction">保存</a> -->
 				<el-button type="primary" style="margin-right: 15px;width:190px;" @click="saveFunction">保存</el-button>
 			</div>
 		</section>
