@@ -92,6 +92,7 @@
 	// import utils from 'src/verdor/utils';
 	import storage from 'src/verdor/storage';
 	let shopMessage = storage.session('userShop');
+	let shopId = storage.session('shopId');
 	let shopList = [];
 	for (let item of shopMessage.shopList.brand) {
 		shopList = [...shopList, item, ...item.direct, ...item.franchise];
@@ -414,7 +415,9 @@
 			},
 			async getRoleList() {
 				let data = await http.getUserRoleList();
-				this.roleList = data;
+				data.forEach(v=>{
+					if(v.shopId==shopId)this.roleList.push(v);
+				});
 			},
 			delColumn(index, type,item) { //type:1是行，2是列
 				let str = type == 1 ? '行' : '列';
