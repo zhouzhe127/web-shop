@@ -102,7 +102,7 @@
 							</section>
 						</div>
 						<label class="content-box">
-							<span class="required">供应商</span>
+							<span class="notop">供应商</span>
 							<section @click="showSupply" class="tableListInp chairFix" style="vertical-align: middle;">
 								<span class="inptext">{{selectSupply}}</span>
 								<div class="fl">
@@ -133,7 +133,7 @@
 				<div class="info-content userinfo conbox">
 					<label class="content-box">
 						<span class="required icon-none" style="color: #ccc;">入库类型:</span>
-						<span style="color: #ccc;display: inline-block;width: 230px;height: 40px;">已有批次入库:</span>
+						<span style="color: #ccc;display: inline-block;width: 230px;height: 40px;">已有批次入库</span>
 					</label>
 					<label class="content-box">
 						<span class="required icon-none" style="color: #ccc;vertical-align: top;">生产日期:</span>
@@ -627,11 +627,11 @@
 			this.newareaName = resole;
 			if (resole && this.$route.query.isStatus) {
 				this.isStatus = this.$route.query.isStatus;
-				this.productionTime = utils.format(
+				this.productionTime =resole.productionTime==0? '--':utils.format(
 					resole.productionTime,
 					'yyyy年MM月dd日'
 				);
-				this.invalidTime = utils.format(resole.expiryTime, 'yyyy年MM月dd日');
+				this.invalidTime =resole.expiryTime==0? '--':utils.format(resole.expiryTime, 'yyyy年MM月dd日');
 				if (this.isStatus == 2) {
 					this.startTime = resole.productionTime * 1000;
 					this.endTime = resole.expiryTime * 1000||new Date().setHours(0, 0, 0, 0);
@@ -722,7 +722,9 @@
 						padding-left: 8px;
 						outline: none;
 					}
-
+					.notop{
+						.required
+					}
 					.required {
 						display: inline-block;
 						font-size: 16px;

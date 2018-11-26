@@ -141,6 +141,7 @@
 					<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
 					<span slot="con-3" slot-scope="props">{{getTime(props.data.productionTime)}}</span>
 					<span slot="con-5" slot-scope="props">{{props.data.surplus}}{{shopGoods.unit}}</span>
+					<span slot="con-6" slot-scope="props">{{props.data.distributionPrice}}元/{{shopGoods.unit}}</span>
 					<span slot="con-7" slot-scope="props">{{props.data.wName||"暂无"}}/{{props.data.aName||"暂无"}}</span>
 				</com-table>
 			</section>

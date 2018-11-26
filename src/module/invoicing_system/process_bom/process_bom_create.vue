@@ -30,7 +30,7 @@
 				<div class="form-input">
 					<el-switch
 						v-model="isMinus"
-						active-color="#34A9AA"
+						active-color="#E1BB4A"
 						inactive-color="#909399"
 						style="width:80px;height:40px;"
 						@change="getOnoff">
@@ -61,7 +61,9 @@
 				<em @click="wareSort(props.index)" class="sort">仓库排序</em>
 			</span>
 		</com-table>
-		<div><select-mat :selObj="winObj" v-if="matWinShow" :choiceType="choiceType" @emit="winClose"></select-mat></div>
+		<div>
+			<select-mat :selObj="winObj" v-if="matWinShow" :title="selMatTitle" :choiceType="choiceType" @emit="winClose"></select-mat>
+		</div>
 		<div>
 			<component :is="showWin" 
 				:winOpen="wareObj"
@@ -111,6 +113,7 @@ export default {
 				list:[],
 				banList:[],
 			},
+			selMatTitle:'选择产出物料',
 			productObj:{//成品对象
 				search:{},
 				list:[],
@@ -172,7 +175,7 @@ export default {
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确认',className: 'success',type:4,
+				{name: '确认',className: 'primary',type:4,
 					fn: () => {
 						if(this.bomId){
 							this.editBom();
@@ -233,7 +236,7 @@ export default {
 					pid:this.bomId,
 					mid:res.id,
 					wids:res.wids.join(','),
-				}
+				};
 			});
 			let data = await http.ProcessbomEditProcessBom({data:{
 				id:this.bomId,
@@ -305,7 +308,9 @@ export default {
 				this.setDelId(this.matList[index].itemId);
 				this.matList.splice(index,1);
 				this.matObj.list = this.matList;//原料列表
-			}).catch();
+			}).catch(()=>{
+				//
+			});
 		},
 		wareSort(index){//打开弹框-仓库消耗排序
 			this.handleIndex = index;
@@ -315,7 +320,7 @@ export default {
 				widList:item.wids?item.wids:[],
 				isBrand:this.isBrand,
 				shopId:this.shopId,
-			}
+			};
 			this.showWin = 'warehouseSort';
 		},
 		getWareSort(res){//关闭弹窗-获得仓库排序结果
@@ -331,10 +336,12 @@ export default {
 				this.choiceType = 'single';
 				this.winObj = this.productObj;
 				this.winObj.banList = this.matObj.list;
+				this.selMatTitle = '选择产出物料（单选）';
 			}else if(type==2){//多选
 				this.choiceType = 'more';
 				this.winObj = this.matObj;
 				this.winObj.banList = this.productObj.list;
+				this.selMatTitle = '选择原料物料（多选）';
 			}
 			this.matWinShow = true;
 		},
@@ -347,7 +354,7 @@ export default {
 					if(this.subMitObj.mid && !this.bomId){
 						let data = await http.ProcessbomCheckProcessBomExits({data:{
 							mid:this.subMitObj.mid
-						}})
+						}});
 						if(!data){
 							this.$message({message: '该物料已生成加工bom单，无法重复加工!'});
 							return;
@@ -429,7 +436,7 @@ export default {
 					return {
 						mid:res.id,
 						wids:res.wids.join(','),
-					}
+					};
 				});
 				data = await http.ProcessbomAddProcessBom({data:
 					this.subMitObj

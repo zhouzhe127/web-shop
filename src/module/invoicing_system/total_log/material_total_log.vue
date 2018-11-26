@@ -323,7 +323,7 @@ export default {
                 }else{
                     info.sumStoreNum = this.placeholder;
                 }
-                if(info.brandName){
+                if(!info.brandName){
                     info.brandName = this.placeholder;
                 }
                 info.validityTypeName = this.getAttr(this.valiDate,info.validityType);

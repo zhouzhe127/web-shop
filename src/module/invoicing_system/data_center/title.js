@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
     '物料名称,单位选择,期初数量,结存数量,入库量,入库成本总额,入库均价,加工入库数量,加工入库成本总额,加工入库成本均价,'+
     '调入数量,调入成本总额,调入成本均价,调出数量,调出成本总额,调出成本均价,调出分销总额,调出分销均价,调出分销利润,加工消耗,'+
@@ -14,6 +15,7 @@
         toFixed-3:该字段需要保留三位小数的字段
         toFixed-2:该字段需要保留两位小数的字段
 */
+
 
 module.exports = [
 // {
@@ -286,7 +288,7 @@ module.exports = [
     
 }, {
     "id": 30,
-    "name": "领料消耗",
+    "name": "领料消耗数量",
     "title": "t-30",
     "changeNum": true,
     "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_NUM",
@@ -294,7 +296,7 @@ module.exports = [
     
 }, {
     "id": 31,
-    "name": "领料消耗总金额",
+    "name": "领料消耗金额",
     "title": "t-31",
     "changeNum": false,
     "attr":"MATERIAL_RECEIVE_CHECK_CONSUME_COST",

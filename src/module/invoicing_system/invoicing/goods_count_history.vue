@@ -5,53 +5,58 @@
 	 -->
 	<div id="goods-count-history">
 		<div class="tab-div">
-			<span class="select-tab">{{tabObj[0].name}}</span>
-			<span @click="linkToPage('template')">{{tabObj[1].name}}</span>
+			<el-button-group>
+				<el-button type="primary">{{tabObj[0].name}}</el-button>
+				<el-button @click="linkToPage('template')">{{tabObj[1].name}}</el-button>
+			</el-button-group>
 		</div>
 		<div>
 			<div class="search-div">
 				<span class="submit-time">{{headTips}}&nbsp;:&nbsp;</span>
 				<div class="in-block">
-					<calendar :pObj="startTime" @throwTime="(res)=>{getTime('startTime',res)}"></calendar>
-					<span class="line"></span>
-					<calendar :pObj="endTime" @throwTime="(res)=>{getTime('endTime',res)}"></calendar>
+					<el-date-picker
+						v-model="timeDate"
+						type="daterange"
+						range-separator="-"
+						start-placeholder="开始日期"
+						end-placeholder="结束日期"
+						:clearable="false"
+						unlink-panels
+						@change="timeChange">
+					</el-date-picker>
 				</div>
 				<div class="in-block">
-					<input type="text" maxlength="30" class="input-txt" v-model="operaUser" placeholder="请输入操作人">
+					<el-input maxlength="30" v-model="operaUser" placeholder="请输入操作人"></el-input>
 				</div>
 				<div class="in-block">
-					<span class="common-btn blue" @click="clickBtn('filter')">筛选</span><span class="common-btn gray" @click="clickBtn('reset')">重置</span>
+					<el-button @click="clickBtn('filter')" type="primary">筛选</el-button>
+					<el-button @click="clickBtn('reset')" type="info">重置</el-button>
 				</div>
 			</div>
 
 			<div class="content-body">
-				<com-table	
-					:showHand ="true"
-					:listName ="tableObj.listName"
-					:listHeight ='70'
-					:showTitle ="1"
-					:titleData ="titleData"
-					:introData="history"
-					:allTotal ="pageObj.listNum"
-					:fixed="0"
-					:bannerStyle="{'color':'#43414a','font-size':'16px'}"
-					:widthType ="true"
-					:listWidth ="1435" 
-					:contentStyle ="{'color':'#666',fontSize:'14px'}"           
-				>
-				<div slot-scope="{data,index}" slot="con-0">
-					<span class="operation" @click="linkToPage('detail',data)">查看详情</span>
-				</div>
-				</com-table>
+				<el-table :data="history" stripe border style="width: 100%;">
+					<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+		   	 		</el-table-column>
+					<template v-for="column in titleData">
+						<el-table-column :label="column.titleName" :prop="column.dataName" min-width="200" :key="column.dataName">
+						</el-table-column>
+					</template>
+					<el-table-column label="操作" fixed="right" width="150">
+						<template slot-scope="scope">
+							<el-button type="text" @click="linkToPage('detail',scope.row)">查看详情</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
 			</div>
-
 			<div>
-				<page-element 
-					:page="pageObj.page" 
-					:total="pageObj.total" 
-					:num="pageObj.num" 
-					@pageNum="getPageNum"
-				></page-element>
+				<el-pagination background @current-change="pageChange"
+					@size-change="sizeChange"
+					:current-page="pageObj.page"
+					:page-sizes="[10, 20, 50]"
+					layout="sizes, total, prev, pager, next, jumper"
+					:total="pageObj.listNum">
+				</el-pagination>
 			</div>
 		</div>
 	</div>
@@ -67,8 +72,6 @@ export default {
 	data () {
 		return {
 			titleData:[
-				{titleName:'操作'},
-				{titleName:'序号',dataName:'itemIndex'},
 				{titleName:'记录编号',dataName:'code'},
 				{titleName:'操作时间',dataName:'createTimeZh'},
 				{titleName:'操作人',dataName:'createUName'},
@@ -97,7 +100,8 @@ export default {
 			headTips:'提交时间',		 //头部信息				
 			tableObj:{
 				listName:''				//列表名
-			}
+			},
+			timeDate:[new Date(Date.parse(new Date())-30*3600*24*1000),new Date()],
 		};
 	},
 	props:{
@@ -121,13 +125,19 @@ export default {
 		this.clickBtn('reset');
 	},
 	methods: {
-		getTime(flag,res){
-			this[flag].time = res;
+		indexMethod(index){
+			return this.pageObj.num*(this.pageObj.page-1)+index+1;
 		},
-		getPageNum(obj){
-			this.pageObj.page = obj.page;
-			this.pageObj.num = obj.num;
-
+		timeChange(res){
+			this.startTime.time = new Date(res[0]).setHours(0,0,0,0);
+			this.endTime.time = new Date(res[1]).setHours(23,59,59,0);
+		},
+		pageChange(res){
+			this.pageObj.page = res;
+			this.getHistory();
+		},
+		sizeChange(size){
+			this.pageObj.num = size;
 			this.getHistory();
 		},
 		clickBtn(flag){
@@ -218,7 +228,7 @@ export default {
 					}
 					
 					this.pageObj.total = obj.total || 0;
-					this.pageObj.listNum = obj.count || 0;
+					this.pageObj.listNum = Number(obj.count) || 0;
 					break;
 				case '3'://加工记录
 					url = 'ProcessbomGetProcessBomLogList';
@@ -272,7 +282,8 @@ export default {
 			this.$store.commit('setPageTools',[
 				{
 					name: obj.name,
-					style:{height:'40px','color':'#fff'},
+					type:4,
+					className: 'primary',
 					fn:()=>{
 						this.$router.push({path:obj.path,query:this.$route.query});
 					}
@@ -287,8 +298,6 @@ export default {
 					break;
 				case '3'://加工记录
 					this.titleData = [
-						{titleName:'操作'},
-						{titleName:'序号',dataName:'itemIndex'},
 						{titleName:'产出物料',dataName:'finishedKind'},
 						{titleName:'加工时间',dataName:'createTimeZh'},
 						{titleName:'操作人',dataName:'createUName'},
@@ -359,7 +368,6 @@ export default {
 			return date;
 		},	
 		initDateTime(){
-			let date = {};
 			this.endTime.time = Date.now();
 			// date = this.generatorDate(this.endTime.time);
 			// this.startTime.time = new Date(date.year,date.month,1,0,0,0).getTime();
@@ -382,22 +390,21 @@ export default {
 	#goods-count-history{
 		.search-div{
 			.submit-time{
-				.lfc(#333,40px,16px);
+				.lfc(#333,40px,14px);
 				display: inline-block;
 				vertical-align: top;
 			}
 			.in-block{
 				display: inline-block;
 				margin-right:15px;
-				vertical-align: top;
-				margin-bottom:10px;
+				margin-bottom:20px;
 				.line{
 					display: inline-block;
 					.whb(10px,20px);
 					border-top:1px solid #ccc;
 				}
 				.font{
-					font-size:16px;
+					font-size:14px;
 				}
 				.input-txt{
 					.input-text(180px);
@@ -408,6 +415,7 @@ export default {
 			}
 		}
 		.content-body{
+			margin-bottom: 20px;
 			.operation{
 				color:#22aae0;
 				font-size: 14px;

@@ -26,10 +26,10 @@
 					</div>
 				</template>
 				<template v-if="v.type == 4">
-					<el-button @click="v.fn" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
+					<el-button @click="v.fn" :icon="v.icon" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
 				</template>
 				<template v-if="v.type == 5">
-					<el-button @click="v.fn" :type="v.className" :key="i+keyRan" plain>{{v.name}}</el-button>
+					<el-button @click="v.fn" :icon="v.icon" :type="v.className" :key="i+keyRan" plain>{{v.name}}</el-button>
 				</template>
 				<template v-if="v.type == 6">
 					<form id="form_import_good" :key="i+keyRan" class='elfire' enctype="multipart/form-data">

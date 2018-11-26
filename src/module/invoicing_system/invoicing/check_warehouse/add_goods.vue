@@ -9,12 +9,21 @@
 	<div class="bom-order">
 		<div class="filter">
 			<div class="inline-box">
-				<input type="text" placeholder="请输入商品名" v-model="goodsName" />
-				<input type="text" placeholder="请输入条形码" v-model="barCode" />
+				<el-input placeholder="请输入商品名" v-model="goodsName"></el-input>
+			</div>
+			<div class="inline-box">
+				<el-input placeholder="请输入条形码" v-model="barCode"></el-input>
 				<!--<input type="text" placeholder="请输入副条形码" v-model="secBarCode" />-->
 			</div>
 			<div class="inline-box">
-				<selectBtn @emit="dropBomType" :sorts="options" :index="bomTypeIndex"></selectBtn>
+				<el-select v-model="type" placeholder="请选择商品类型">
+					<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+					</el-option>
+				</el-select>
 			</div>
 			<div class="inline-box">
 				<select-store @emit="selWare" :sorts="wareList" :tipName="'请选择仓库'" ></select-store>
@@ -29,21 +38,57 @@
 				</div>
 			</div>
 		</div>
-		<com-table :listName="'商品列表'" :titleData="titleList" :allTotal="listLength" :introData="list" :listHeight="70" :listWidth="1200">
-			<div slot="title-0" slot-scope="props" class="select-all select-ban">
-				<span @click="radioAll('store')">{{storeAll?'取消全选':'全选'}}</span>
-				<i>|</i>
-				<span class="page-all" :class="{ban:storeAll}" @click="radioAll('page')">{{pageAll?'取消本页':'全选本页'}}</span>
+		<div class="list">
+			<div class="list-head">
+				商品列表 · 共<em>{{listLength}}</em>个条目， 
+				<template v-if="storeAll">已选择：全部</template>
+				<template v-else>
+					已选择:<em>{{this.selectItem.length}}</em>个
+				</template>
 			</div>
-			<span class="detail select-ban" slot="con-0" slot-scope="props" @click="listHandle(props.index)">
-				<i :class="{'sel-active':props.data.selected,storeAll:storeAll}"></i>
-			</span>
-			<span slot="con-1" slot-scope="props">{{(page-1)*pageShow+props.index>=9?(page-1)*pageShow+props.index+1:'0'+((page-1)*pageShow+props.index+1)}}</span>
-			<span slot="con-4" slot-scope="props">{{props.data.warehouse}} / {{props.data.warehouseArea}}</span>
-			<span slot="con-5" slot-scope="props">{{props.data.price}}{{props.data.unit?'/'+props.data.unit:''}}</span>
-			<span slot="con-6" slot-scope="props">{{goodsTypeObj[props.data.type]}}</span>
-			<span slot="con-7" slot-scope="props">{{props.data.surplus}}{{props.data.unit}}</span>
-		</com-table>
+			<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column width="180" fixed="left">
+					<template slot="header" slot-scope="scope">
+						<el-checkbox v-model="storeAll" @change="radioAll('store')">全选</el-checkbox>
+						<el-checkbox v-model="pageAll" :disabled="storeAll" @change="radioAll('page')">全选本页</el-checkbox >
+					</template>
+					<template slot-scope="scope" >
+						<div class="check-slot">
+							<el-checkbox v-model="scope.row.selected" :disabled="storeAll" @change="listHandle(scope.row)">
+							</el-checkbox>
+						</div>
+					</template>
+				</el-table-column>
+				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+				</el-table-column>
+				<el-table-column prop="name" label="商品名" min-width="200">
+				</el-table-column>
+				<el-table-column prop="barCode" label="条形码" min-width="200">
+				</el-table-column>
+				<el-table-column label="所属仓库" width="150">
+					<template slot-scope="scope">
+						{{scope.row.warehouse}} / {{scope.row.warehouseArea}}
+					</template>
+				</el-table-column>
+				<el-table-column label="售价" min-width="200">
+					<template slot-scope="scope">
+						{{scope.row.price}}{{scope.row.unit?'/'+scope.row.unit:''}}
+					</template>
+				</el-table-column>
+				<el-table-column label="商品类型" width="200">
+					<template slot-scope="scope">
+						{{goodsTypeObj[scope.row.type]}}
+					</template>
+				</el-table-column>
+				<el-table-column label="库存数量/重量" width="200">
+					<template slot-scope="scope">
+						{{scope.row.surplus}}{{scope.row.unit}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="batch" label="批次数量" width="100">
+				</el-table-column>
+			</el-table>
+		</div>
 		<div class="page-box">
 			<el-pagination @current-change="pageChange"
 				:current-page="page"
@@ -82,8 +127,12 @@
 				tempId:'',//模板id
 				shopId:'',//店铺id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
-				options: ['全部商品类型', '普通商品', '称重商品'], //商品类型 显示
-				bomTypeList: ['', '0', '1'], //商品类型List
+				options: [//商品类型 显示
+					{label:'全部商品类型',value:'',},
+					{label:'普通商品',value:1,},
+					{label:'称重商品',value:2,},
+				], 
+				bomTypeList: ['', 0, 1], //商品类型List
 				type: '', //商品类型 是否公开 0普通 1称重
 				bomTypeIndex: 0, //当前下拉框index
 				page: 1, //当前页
@@ -117,9 +166,7 @@
 				},
 				storeAll:false,//全选
 				pageAll:false,//全选本页
-				savePage:[],//保存全选本页的页数，翻页以后还能选中
 				selectItem:[],//保存零散选中的所有id,
-				selNum:0,//每一页已选中条目的数量
 				wareList:[],//仓库列表
 				areaList:[],//区域列表
 				selList:[],//选中的列表
@@ -164,6 +211,9 @@
 			}
 		},
 		methods: {
+			indexMethod(index){
+				return this.pageShow*(this.page-1)+index+1;
+			},
 			initBtn() {
 				let arr = [
 					{name: '取消',className: 'info',type:4,
@@ -196,6 +246,9 @@
 				this.$store.commit('setPageTools', arr);
 			},
 			confirmClick(){//确认选中
+				this.selList = this.selectItem.map((res)=>{
+					return res.item;
+				});
 				if(!this.selList.length && !this.storeAll){
 					this.myAlert('请选择商品');
 					return;
@@ -228,7 +281,6 @@
 				}
 				this.getData();//请求数据
 				this.getWarehouseList();//获取仓库列表
-				this.setDefaultType();//设置默认商品类型
 			},
 			async getUseList(){//根据商品id,区域id获取商品列表
 				let data = await http.GoodsInventoryGetGoodsInventoryListByGids({data:{
@@ -244,27 +296,11 @@
 				if(!this.storeAll) this.selList = this.selObj.list;
 				this.modelName = this.selObj.name;
 				this.selectItem = this.selList.map((res)=>{
-					return {gid:res.gid,aid:res.areaId};
+					return {item:res,gid:res.gid,aid:res.areaId};
 				});
-				this.setDefaultType();//设置默认商品类型
-			},
-			dropBomType(index) { //获取商品类型
-				this.type = this.bomTypeList[index];
-				this.bomTypeIndex = index;
-			},
-			setDefaultType(){//设置默认商品类型
-				for(let i=0;i<this.bomTypeList.length;i++){
-					if(this.bomTypeList[i] === this.type){
-						this.bomTypeIndex = i;
-					}
-				}
 			},
 			formatTime(time) {
 				return utils.format(new Date(time * 1000), 'yyyy-MM-dd hh:mm:ss');
-			},
-			filter() { //筛选 时间搜索公用
-				this.page = 1;
-				this.getData();
 			},
 			nameWinEmit(res,name){
 				this.nameWinShow = false;
@@ -325,7 +361,6 @@
 				this.areaId = aidArr.join(',');
 			},
 			setWareDefault(){//设置仓库-区域默认选中
-				console.log(this.wid);
 				if(this.wid){
 					let widArr = this.wid.split(',');
 					let wList = utils.deepCopy(this.wareList);
@@ -356,14 +391,11 @@
 			checkSelect(){//选择区域验证
 				if(!this.areaList.length){
 					this.$refs.areaDom.sortShow = false;
-					this.myAlert('请选择仓库');
+					this.myAlert('请先选择仓库！');
 				}
 			},
 			myAlert(content) {
-				this.$store.commit('setWin', {
-					title: '操作提示',
-					content: content,
-				});
+				this.$message({message: content,type: 'error'});
 			},
 			setSendObj(isEdit){//设置发送数据 新建/修改 模板公用
 				if(this.storeAll){
@@ -439,7 +471,7 @@
 					goodsName: this.goodsName,
 					barCode: this.barCode,
 					secBarCode: this.secBarCode,
-					type: this.type!==''?this.type+1:'',
+					type: this.type,
 					wid : this.wid,
 					areaId : this.areaId,
 				}});
@@ -451,48 +483,30 @@
 				this.list = this.setAlready(data.list);
 				this.listLength = data.count;
 				this.pageTotal = data.total;
-				this.setSelNum();
+				this.pageAllLight();
 			},
 			setAlready(list){//设置已经选中过的数据
-				let havePage = false;//本页 是否在页码数组中
 				for(let item of list){
 					if(this.storeAll){//如果已经全选-则默认每页全部选中
 						item.selected = true;
 					}else{
-						for(let save of this.savePage){//循环变量选中页码数组
-							if(save==this.page){
-								havePage = true;
+						let isSelId=false;
+						for(let selId of this.selectItem){
+							if(selId.gid==item.gid && selId.aid==item.areaId){
+								isSelId = true;
 								break;
 							}
 						}
-						if(havePage){//本页在页码数组中 该页全选
-							item.selected = true;
-						}else{//不在数组中，可能单选了几个，可能全部都未选
-							let isSelId=false;
-							for(let selId of this.selectItem){
-								if(selId.gid==item.gid && selId.aid==item.areaId){
-									isSelId = true;
-									break;
-								}
-							}
-							if(isSelId) item.selected = true;
-							else item.selected = false;
-						}
+						if(isSelId) item.selected = true;
+						else item.selected = false;
 					}
-				}
-				if(havePage){//页码数组中 含有选过的页码
-					this.pageAll = true;
-				}else{
-					this.pageAll = false;
 				}
 				return list;
 			},
-			setSelNum(){//设置本页选中数量
-				for(let item of this.list){
-					if(item.selected==true){
-						this.selNum++;
-					}
-				}
+			filter() { //筛选 时间搜索公用
+				this.page = 1;
+				this.clearList();
+				this.getData();
 			},
 			reset() { //重置
 				let arr = ['goodsName','barCode','wid','areaId'];
@@ -509,121 +523,95 @@
 				}
 				this.wareList = list;
 				this.areaList = [];
+				this.clearList();
 				this.getData();
+			},
+			//筛选-重置 清空选中项
+			clearList(){
+				this.selectItem = [];
+				this.storeAll = false;
+				this.pageAll = false;
 			},
 			pageChange(res) { //分页 获取页数
 				this.page = res;
 				this.getData();
 			},
-			listHandle(index) { //列表操作,点击单个radio按钮
-				let thisList = this.list[index];
-				if(!this.storeAll){//非全选状态，才能操作单个按钮
-					thisList.selected = !thisList.selected;
-					if(thisList.selected){//选中
-						this.selectItem.push({gid:thisList.gid,aid:thisList.areaId});
-						this.selList.push(thisList);
-						this.selNum++;//本页已选中+1
-						if(this.selNum==this.list.length){//选满一页，自动变为全选本页状态
-							this.savePage.push(this.page);
-							this.pageAll = true;
-						}
-					}else{//取消
-						this.selNum--;//本页已选中-1
-						for(let i=0;i<this.selectItem.length;i++){
-							let gid = this.selectItem[i].gid;
-							let aid = this.selectItem[i].aid;
-							if(gid==thisList.gid && aid==thisList.areaId){
-								this.selectItem.splice(i,1);
-								this.selList.splice(i,1);
-								i--;
-								break;
-							}
-						}
-						if(this.pageAll){//本页全选时
-							this.removePageNum();
-							this.pageAll = false;
-						}
+			listHandle(thisItem) { //列表操作,点击单个radio按钮
+				this.setSelList(thisItem,thisItem.selected);
+				this.pageAllLight();
+			},
+			//点亮-全选本页
+			pageAllLight(){
+				let num=0;
+				for(let item of this.list){
+					if(item.selected===true){
+						num++;
 					}
 				}
+				this.pageAll = !this.storeAll && num==this.list.length;
 			},
+			//全选,全选本页
 			radioAll(type){
 				if(!this.list.length) return;
 				if(type=='store'){//全选
-					this.storeAll = !this.storeAll;
 					this.pageAll = false;//如果点击全选，重置全选本页
-					this.setSelAll(this.storeAll);
-					this.selList = [];
+					for(let item of this.list){
+						item.selected = this.storeAll;
+					}
 					this.selectItem = [];
 				}else if(type=='page'){//全选本页
-					if(this.storeAll) return;
-					this.pageAll = !this.pageAll;
-					if(this.pageAll){//选中该页，加入选中页码数组
-						this.savePage.push(this.page);
-						this.pageSetId('add');
-					}else{//取消该页，移除该页码
-						this.removePageNum();
-						this.pageSetId('cancel');
+					for(let item of this.list){
+						this.setSelList(item,this.pageAll);
 					}
 				}
 			},
-			removePageNum(){//在选中的页码组中，移除本页的页码
-				for(let i=0;i<this.savePage.length;i++){
-					if(this.savePage[i]==this.page){
-						this.savePage.splice(i,1);
-						i--;
-					}
-				}
-			},
-			pageSetId(type){//全选本页，取消全选本页时 设置id
-				if(type=='add'){
-					for(let item of this.list){
-						let isEqual = false;
-						for(let sel of this.selectItem){
-							if(item.gid==sel.gid && item.areaId==sel.aid){
-								isEqual = true;
-								break;
-							}
-						}
-						if(!isEqual){
-							this.selectItem.push({gid:item.gid,aid:item.areaId});
-							this.selList.push(item);
-							item.selected = true;
+			//存储选中列表
+			setSelList(item,isAdd){
+				if(isAdd){//添加
+					let isEqual = false;
+					for(let sel of this.selectItem){
+						if(item.gid==sel.gid && item.areaId==sel.aid){
+							isEqual = true;
+							break;
 						}
 					}
-				}else if(type=='cancel'){
-					for(let item of this.list){
-						for(let i=0;i<this.selectItem.length;i++){
-							let gid = this.selectItem[i].gid;
-							let aid = this.selectItem[i].aid;
-							if(gid==item.gid && aid==item.areaId){
-								this.selectItem.splice(i,1);
-								this.selList.splice(i,1);
-								item.selected = false;
-								i--;
-								break;
-							}
-						}
-					}
-				}
-			},
-			setSelAll(isSelected){//设置选中样式
-				if(isSelected){//选中
-					for(let item of this.list){
+					if(!isEqual){//防止重复添加
+						this.selectItem.push({
+							item:item,
+							gid:item.gid,
+							aid:item.areaId
+						});
 						item.selected = true;
 					}
-				}else{//取消
-					for(let item of this.list){
-						item.selected = false;
+				}else{//移除
+					for(let i=0;i<this.selectItem.length;i++){
+						let sel = this.selectItem[i];
+						if(item.gid==sel.gid && item.areaId==sel.aid){
+							this.selectItem.splice(i,1);
+							item.selected = false;
+							i--;
+						}
 					}
-					this.selectItem = [];//清空选中id
 				}
-			}
+			},
 		}
 	};
 </script>
 
 <style lang="less" scoped>
 	.bom-order {
+		.el-checkbox+.el-checkbox{margin-left: 20px;}
+		.check-slot{height: 40px;line-height: 40px;display: inline-block;}
+		.list{
+			padding: 20px 0;
+			.list-head{
+				border: 1px solid #ebeef5;border-bottom: 0;
+				padding: 0 20px;height: 50px;line-height: 50px;font-size: 14px;
+				em{
+					color: #E1BB4A;padding: 0 2px;font-size: 14px;
+				}
+			}
+		}
 		.filter {
 			.inline-box {
 				display: inline-block;
@@ -679,20 +667,6 @@
 			.inline-span {
 				display: inline-block;
 				padding: 0 5px;
-			}
-		}
-		/*标题全选按钮*/
-		.select-all{color: #ccc;
-			span{color: #28a8e0;display: inline-block;padding: 0 10px;height: 20px;line-height: normal;cursor: pointer;}
-			.ban{color: #666;cursor: not-allowed;}
-		}
-		/*列表-radio按钮*/
-		.detail {
-			display: inline-block;line-height: normal;padding: 15px;
-			cursor: pointer;vertical-align: middle;
-			i{height: 20px;width: 20px;display: block;border: 1px solid #ccc;border-radius: 50%;
-				&.sel-active{background: url(../../../../res/icon/white_select.png)#28a8e0 center;border: 1px solid #28a8e0;}
-				&.storeAll{background: url(../../../../res/icon/white_select.png)#999 center;border: 1px solid #999;cursor: not-allowed;}
 			}
 		}
 	}

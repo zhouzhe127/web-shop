@@ -1,23 +1,5 @@
 <template>
 	<div id="supplise">
-		<!-- <div class="search-module">
-			<div class="sleType">
-				<el-input v-model="goodsName" placeholder="请输入物料名称"></el-input>
-			</div>
-			<div class="sleType">
-				<el-select v-model="typeValue" placeholder="全部类型">
-					<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
-				</el-select>
-			</div>
-			<div class="sleBtn">
-				<select-store @emit="getDrop" :sorts="oneCate" :isSingle="true" :tipName="'请选择一级分类'"></select-store>
-			</div>
-			<div class="sleBtn" @click="checkOne">
-				<select-store @emit="getNext" :sorts="twoCate" :isSingle="true" :tipName="'请选择二级分类'" ref="twosel"></select-store>
-			</div>
-			<div @click="search" class="blue filter">筛选</div>
-			<div @click="reset" class="gray reset">重置</div>
-		</div> -->
 		<div class="asideone">
 			<div class="sleType">
 				<el-input v-model="goodsName" placeholder="请输入物料名称"></el-input>
@@ -30,29 +12,37 @@
 			<div class="sleType">
 				<el-cascader :options="cataList" expand-trigger="hover" :placeholder="'请选择分类'" v-model="sleCate" @change="getDrop" change-on-select></el-cascader>
 			</div>
-			<!-- <div class="sleType" style="width:200px">
-				<select-store @emit="getDrop" :sorts="oneCate" :isSingle="true" :tipName="'请选择一级分类'"></select-store>
-			</div>
-			<div class="sleType" style="width:200px">
-				<select-store @emit="getNext" :sorts="twoCate" :isSingle="true" :tipName="'请选择二级分类'" ref="twosel"></select-store>
-			</div> -->
 			<div class="sleType">
 				<el-button @click="search" type="primary">筛选</el-button>
 				<el-button @click="reset" type="info">重置</el-button>
 			</div>
 		</div>
-		<com-table v-if="tabactive == 1" :listName="'物料列表'" :titleData="titleList" :allTotal="count" :introData="allList"
-		 :listWidth="1500">
-			<div class="infoDetail" slot="con-0" slot-scope="props">
-				<a href="javascript:void(0);" @click="addDetailhouse(props.data)" style="color:#5ebee8;">查看详情</a>|
-				<a href="javascript:void(0);" v-if="inventConfigs.commonStock==1" @click="batchLose(props.data)" style="color:red;">入库</a><span
-				 v-if="inventConfigs.commonStock==1">|</span>
-				<a href="javascript:void(0);" @click="revamp(props.data)" style="color:orange;">盘库</a>
-			</div>
-			<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
-			<span slot="con-4" slot-scope="props">{{typeCate[Number(props.data.type)+1].label}}</span>
-			<span slot="con-5" slot-scope="props" v-if="props.data.goodsNum">{{getNum(props.data.goodsNum.surplus,props.data.unit)}}</span>
-		</com-table>
+		<el-table :data="allList" stripe border style="width: 100%">
+				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+		   	 	</el-table-column>
+				<el-table-column prop="name" label="物料名称" min-width="200">
+				</el-table-column>
+				<el-table-column prop="barCode" label="物料编码" min-width="200">
+				</el-table-column>
+				<el-table-column label="物料类型" min-width="150">
+					<template slot-scope="scope">
+						{{typeCate[Number(scope.row.type)+1].label}}
+					</template>
+				</el-table-column>
+				<el-table-column label="数量/重量" min-width="200">
+					<template slot-scope="scope" v-if="scope.row.goodsNum">
+						{{getNum(scope.row.goodsNum.surplus,scope.row.unit)}}
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" fixed="right" width="200">
+					<template slot-scope="scope">
+						<el-button type="text" @click="addDetailhouse(scope.row)">查看详情</el-button>
+						<el-button type="text"  @click="batchLose(scope.row)" v-if="inventConfigs.commonStock==1"
+						style="color:#D34A2B;">入库</el-button>
+						<el-button type="text" @click="revamp(scope.row)" style="color:#34A9AA;">盘库</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
 		<div style="margin-top:10px">
 			<!-- <page-turn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-turn> -->
 			<el-pagination @current-change="pageChange" background :current-page="page" layout="total, prev, pager, next, jumper"
@@ -67,7 +57,7 @@
 	export default {
 		data() {
 			return {
-				allList: '',
+				allList: [],
 				cataList: [],
 				page: 1,
 				pageTotal: 0,
@@ -78,46 +68,27 @@
 				// oneSle: '',
 				// twoSle: '',
 				goodsName: '', //搜索名称
-				typeCate: [{
-					value: -1,
-					label: '全部类型'
-				}, {
-					value: 0,
-					label: '成品'
-				}, {
-					value: 1,
-					label: '半成品'
-				}, {
-					value: 2,
-					label: '普通物料'
-				}],
+				typeCate: [
+					{value: -1,label: '全部类型'},
+					{value: 0,label: '成品'},
+					{value: 1,label: '半成品'},
+					{value: 2,label: '普通物料'}
+				],
 				typeValue: -1,
 				count: 0,
-				titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: '250px'
-					}
-				}, '序号',
-				{
-					titleName: '物料名称',
-					dataName: 'name'
-				},
-				{
-					titleName: '物料编码',
-					dataName: 'barCode'
-				},
-				'物料类型', '数量/重量']
 			};
 		},
 		props: ['tabactive', 'inventConfigs'],
 		methods: {
+			indexMethod(index){
+				return this.num*(this.page-1)+index+1;
+			},
 			async init() {
 				let data = await http.getMaterialList({
 					data: {
 						page: this.page,
 						name: this.goodsName,
-						cid: this.sleCate[this.sleCate.length-1],
+						cid: this.sleCate[this.sleCate.length-1]||0,
 						type: this.typeValue,
 						num: 10
 					}
@@ -327,6 +298,7 @@
 	}
 
 	.asideone {
+		margin-bottom: 20px;
 		.sleType {
 			width: 170px;
 			margin-right: 10px;

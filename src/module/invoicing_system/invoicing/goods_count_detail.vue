@@ -89,7 +89,6 @@
 */
 import http from 'src/manager/http';
 import global from 'src/manager/global';
-import utils from 'src/verdor/utils';
 
 export default {
 	data () {
@@ -97,10 +96,8 @@ export default {
 			tableData:[],
 			info:[],
 			logId:'',				//记录id
-
 			header:'盘库记录详情',	//头部信息
-            pageObj:{},
-
+			pageObj:{},
 		};
 	},
 	props:{
@@ -127,11 +124,9 @@ export default {
 				this.pageObj.currentPage = res;
 			}
 			this.getData();
-        },
+		},
 		async getData(){
-			let subObj={},
-				retData = {};
-
+			let subObj={},retData = {};
 			subObj = {
 				logId:this.logId,
 				page:this.pageObj.currentPage,
@@ -228,10 +223,6 @@ export default {
 			}
 			this.info = list;
 		},
-
-
-
-
 		//获取单位信息
 		getMaterilaUnitInfo(unit=[],unitId){
 			let obj ={};
@@ -273,19 +264,19 @@ export default {
 				second:time.getSeconds(),
 				week:0,
 				str:'',
-                time:'',
-                dateTime:'',          
-			}
+				time:'',
+				dateTime:'',          
+			};
 			let {year,month,day,hour,minute} = date;
-            month += 1;
+			month += 1;
 			hour = hour > 9 ? hour : '0'+hour;
 			minute = minute > 9 ? minute : '0'+minute;
-            date.time = `${hour}:${minute}`;
-            date.dateTime = `${year}-${month}-${day}`;
+			date.time = `${hour}:${minute}`;
+			date.dateTime = `${year}-${month}-${day}`;
 			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
 			return date;
 		},
-        //初始化分页组件
+		//初始化分页组件
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
@@ -293,7 +284,7 @@ export default {
 				pagerCount:11,			//每页显示的按钮数
 				currentPage:1,          //当前页
 			};
-        },
+		},
 		initBtn(){
 			this.$store.commit('setPageTools',[
 				{
@@ -341,7 +332,7 @@ export default {
 		border:@table-border;
 		border-bottom:none;
 		border-radius:4px;
-		width:90%;
+		width:100%;
 	}
 	.bottom{
 		padding-top:15px;
