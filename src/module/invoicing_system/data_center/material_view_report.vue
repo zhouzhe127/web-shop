@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:36 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-23 18:24:04
+ * @Last Modified time: 2018-11-26 18:20:24
  */
 
 <template>
@@ -361,11 +361,21 @@ export default {
 					if(!customItem['value']) customItem['value'] = 0;
 					if(!customItem['unitName']) customItem['unitName'] = '';
 
-					customItem['value'] = Number(customItem['value']).toFixed(3);
+					customItem['value'] = this.calcValue(customItem['value']);
 
 					item[ele.attr] = customItem['value'] + customItem['unitName'];
 				}
 			}
+		},
+		calcValue(str,scope = 4){
+			if(!str) str = 0;
+			
+			str += '';
+			let index = str.indexOf(".");
+			if(index > -1){
+				str = str.slice(0,index + scope);
+			}
+			return str;
 		},
 
 
