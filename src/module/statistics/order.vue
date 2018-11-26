@@ -31,13 +31,8 @@
 					<el-select v-model="conType" @change="selectType" placeholder="请选择类型" style="width:150px;">
 						<el-option v-for="item in conTypeList" :key="item.type" :label="item.name" :value="item.type"></el-option>
 					</el-select>
-				</li>
-				<li v-if="!isBrand && conType=='0'">
-					<el-select v-model="conSize" @change="selectTypeTwo" placeholder="请选择类型" style="width:150px;">
-						<el-option v-for="item in conTypeSize" :key="item.type" :label="item.name" :value="item.type"></el-option>
-					</el-select>
 					<el-time-picker
-						v-if="conSize == '2'"
+						v-if="conType == '2'"
 						is-range
 						v-model="timelate"
 						range-separator="至"
@@ -46,6 +41,11 @@
 						@change="timechange"
 						placeholder="选择时间范围">
 					</el-time-picker>
+				</li>
+				<li v-if="!isBrand && conType=='0'">
+					<el-select v-model="conSize" @change="selectTypeTwo" placeholder="请选择类型" style="width:150px;">
+						<el-option v-for="item in conTypeSize" :key="item.type" :label="item.name" :value="item.type"></el-option>
+					</el-select>
 				</li>
 				<li v-if="!isBrand && conType=='1'">
 					<el-select v-model="conShifts" @change="selectTypeBan" placeholder="请选择班次" style="width:150px;">
@@ -314,8 +314,8 @@ export default {
 			conType:'0',//按日别或交接班
 			conSize:'1',//营业时间和自然日
 			conShifts:'',//班次
-			conTypeList:[{type:'0',name:'按日别'},{type:'1',name:'按交接班'}],
-			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'},{type:'2',name:'时间段'}],
+			conTypeList:[{type:'0',name:'按日别'},{type:'1',name:'按交接班'},{type:'2',name:'时间段'}],
+			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'}],
 			shiftList:[],//交接班次列表
 			baseDetial:{},//店铺的基本信息
 		};
@@ -408,6 +408,8 @@ export default {
 		selectType(){
 			if(this.conType == '0'){
 				this.selectTypeTwo();
+			}else if(this.conType == '1'){
+				this.conShifts = '';
 			}
 		},
 		//时间组件
