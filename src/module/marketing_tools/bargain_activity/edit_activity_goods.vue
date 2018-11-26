@@ -126,13 +126,6 @@ function validateName(r, v, cb) {
 		cb();
 	}
 }
-// function validateFloorPrice(rule, value, cb) {
-// 	if (this.form.originalPrice - value < 1) {
-// 		cb(new Error('底价至少低于原价1元'));
-// 	} else {
-// 		cb();
-// 	}
-// }
 const validateRules = {
 	name: [
 		{ required: true, message: '请输入商品名称', trigger: 'blur' },
@@ -183,15 +176,6 @@ export default {
 				planType: 1, // 返利方案类型 1：固定金额；2按比例
 				planValue: '', // 返利值。如果planType=1，则表示返利金额；如果planType=2，则表示返利百分比；
 				lifeCycle: '' // 砍价生存时间 （按小时计）
-				// delayHours: '', // 延迟生效时间，按小时计算
-				// isDiscount: '1', // 是与其他优惠共享 0否，1是
-				// validityType: '0', // 有效期类型:0相对时间,1绝对时间
-				// relativeTime: '', // 有效期相对时间（领券后按天计算）
-				// validityTime: '',
-				// beginTime: '', // 优惠券生效时间
-				// endTime: '', // 优惠券失效时间
-				// useTime: '', // 使用时段,空代表不限制
-				// status: '' // 状态 0.初始；1上架；3下架
 			},
 			couponType: '0',
 			validateRules: validateRules,
@@ -306,7 +290,6 @@ export default {
 			this.form.needPeople = '';
 			this.form.imgUrl = '';
 			this.selectedCoupon = '';
-			console.log(this.$refs);
 			this.$refs.imgForm && this.$refs.imgForm.reset(); //
 		},
 		initGoods() {
@@ -318,7 +301,7 @@ export default {
 			selectedGoods.planType -= 0;
 			selectedGoods.planValue -= 0;
 			selectedGoods.floorPrice -= 0;
-			selectedGoods.originalPrice = selectedGoods.startPrice;
+			selectedGoods.originalPrice = +selectedGoods.startPrice;
 
 			this.form = selectedGoods;
 			this.selectedCoupon = { id: selectedGoods.couponId };
@@ -430,11 +413,6 @@ export default {
 		this.hasGoodsNum = this.goodsNum;
 	},
 	components: {
-		// ElShopList: () => {
-		// 	return import(/*webpackChunkName: 'el_shopList'*/ 'src/components/el_shopList');
-		// },
-		// GoodsListWin: () =>
-		// 	import(/*webpackChunkName: 'good_list_win'*/ 'src/components/good_list_win.vue')
 		AddCoupon: () =>
 			import(/*webpackChunkName: 'breaks_give_food'*/ './../new_coupons/breaks_give_food.vue')
 	}

@@ -102,16 +102,12 @@ export default {
 			}
 		};
 	},
-	props: {
-		// selectActivity: Object,
-		// activityDetail: Object
-	},
 	methods: {
 		back(isRefresh) {
 			this.$emit('back', isRefresh === 'Refresh');
 		},
 		goodsClose(needRefresh) {
-			if (needRefresh || this.$store.state.selectedActivityChange) {
+			if (needRefresh || this.$store.state.activity.selectedActivityChange) {
 				this.getDetail();
 				this.$store.commit('changeActivity', false);
 			}

@@ -70,7 +70,7 @@ export default {
 	},
 	methods: {
 		goodsClose(needRefresh) {
-			if (needRefresh || this.$store.state.selectedActivityChange) {
+			if (needRefresh || this.$store.state.activity.selectedActivityChange) {
 				this.getDetail();
 				this.$store.commit('changeActivity', false);
 			}

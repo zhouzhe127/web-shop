@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 // import s from "src/manager/store";
-let store = {
+export let activityStore = {
 	state: {
 		activityListChange: false,
 		selectedActivity: null,
@@ -39,4 +39,4 @@ let store = {
 	//   global: s
 	// }
 };
-export default new Vuex.Store(store);
+export default new Vuex.Store(activityStore);
