@@ -494,7 +494,7 @@
 				this.isEdit = true;
 				this.rowShow = true;
 				console.log(item);
-				if(item.pScope.length>0) this.pShowMaterial = true;
+				this.pShowMaterial = item.pScope.length>0? true:false;
 				this.pSortObj = item.pSortObj;
 				this.pScope = item.pScope;
 				this.pCollection = item.pCollection.id;
