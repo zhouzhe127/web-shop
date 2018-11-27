@@ -785,7 +785,11 @@ export default {
 				for(let f in ele){
 					for(let a of this.tableTitle){
 						if(a.attr && f == a.attr){
-							ele[a.title] = this.calcValue(ele[f],a.toFixed);
+							if(a.toFixed != undefined){
+								ele[a.title] = this.calcValue(ele[f],a.toFixed);
+							}else{
+								ele[a.title] = ele[f];
+							}
 							break;
 						}
 					}
