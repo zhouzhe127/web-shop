@@ -24,9 +24,13 @@
 		<div class="online-box clearfix" v-if="overdueStatus">
 			<span class="online-sub fl required">推送日期</span>
 			<div class="rightHalf">
-				<span class="fl thetext">提前</span>
-				<el-input class="fl" style="width:auto;margin-right:10px;" v-model="pushdateNum" maxlength="3" placeholder="请输入推送日期" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
-				<span class="fl thetext">天,发起过期提醒推送</span>
+				<span class="thetext">提前</span>
+				<!-- <el-input class="fl" style="width:auto;margin-right:10px;" v-model="pushdateNum" maxlength="3" placeholder="请输入推送日期" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input> -->
+				<el-select v-model="pushdateNum" placeholder="请选择" @change="selpushdate" style="color:#c0c4cc;width: 179px;">
+					<el-option v-for="item in pushdateList" :key="item.name" :label="item.name" :value="item.name">
+					</el-option>
+				</el-select>
+				<span style="margin-left:10px;">天,发起过期提醒推送</span>
 			</div>
 		</div>
 		<!-- 推送时间 -->
@@ -56,32 +60,45 @@ export default {
 	data() {
 		return {
 			overdueStatus: false, //优惠券过期提醒状态
-			pushdateNum: '', //推送日期
-			pushtimeList: [ //推送时间
-				{
-					name: '8',
-				}, {
-					name: '9'
-				}, {
-					name: '10'
-				}, {
-					name: '14'
-				}, {
-					name: '15'
-				}, {
-					name: '16'
-				}, {
-					name: '17'
-				}, {
-					name: '18'
-				}, {
-					name: '21'
-				}, {
-					name: '22'
-				}, {
-					name: '23'
-				}
-			],
+			pushdateNum: '1', //推送日期
+			pushdateList: [{ //推送日期
+				name: '1'
+			}, {
+				name: '2'
+			}, {
+				name: '3'
+			}, {
+				name: '4'
+			}, {
+				name: '5'
+			}, {
+				name: '6'
+			}, {
+				name: '7'
+			}],
+			pushtimeList: [{ //推送时间
+				name: '8',
+			}, {
+				name: '9'
+			}, {
+				name: '10'
+			}, {
+				name: '14'
+			}, {
+				name: '15'
+			}, {
+				name: '16'
+			}, {
+				name: '17'
+			}, {
+				name: '18'
+			}, {
+				name: '21'
+			}, {
+				name: '22'
+			}, {
+				name: '23'
+			}],
 			pushNum: '8', //推送时间选中的 也是传给后台的			
 		};
 	},
@@ -108,18 +125,21 @@ export default {
 		selpushtime: function(val) { //推送时间
 			this.pushNum = val;
 		},
+		selpushdate: function(val) { //推送日期
+			this.pushdateNum = val;
+		},
 		saveConfig: function() { //保存配置
 			this.couponRemind();
 		},
-		checkForm: function() {
-			if (this.overdueStatus && (this.pushdateNum > 31 || this.pushdateNum < 1)) {
-				this.valiData('请填写推送日期1～31');
-				return false;
-			}
-			return true;
-		},
+		// checkForm: function() {
+		// 	if (this.overdueStatus && (this.pushdateNum > 31 || this.pushdateNum < 1)) {
+		// 		this.valiData('请填写推送日期1～31');
+		// 		return false;
+		// 	}
+		// 	return true;
+		// },
 		async couponRemind() {
-			if (!this.checkForm()) return;
+			// if (!this.checkForm()) return;
 			let advanceTime = 0;
 			if (this.overdueStatus) {
 				advanceTime = this.pushdateNum + ',' + this.pushNum;
