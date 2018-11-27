@@ -210,7 +210,12 @@
 			},
 			initBtn() {
 				let arr = [
-					{name: '取消',className: 'info',type:4,
+					{name: '保存模板',className: 'primary',type:4,
+						fn: () => {
+							this.saveModel();
+						}
+					},
+					{name: '取消',className: '',type:4,
 						fn: () => {
 							if(!this.selObj && this.isEdit){
 								window.history.go(-1);
@@ -224,14 +229,9 @@
 							}
 						}
 					},
-					{name: '保存模板',className: 'primary',type:4,
-						fn: () => {
-							this.saveModel();
-						}
-					},
 				];
 				if(this.selObj || !this.isEdit){
-					arr.push({name: '确定',className: 'primary',type:4,
+					arr.unshift({name: '确定',className: 'primary',type:4,
 						fn: () => {
 							this.confirmClick();
 						}

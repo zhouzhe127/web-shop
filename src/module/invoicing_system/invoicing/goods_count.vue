@@ -5,28 +5,34 @@
 	 -->
 	<div id="goods-count-history">
 		<div class="content-body" v-if="!showAddGoodsCom">
-			<com-table
-				:showHand ="true"
-				:listName ="'盘库商品列表'"
-				:listHeight ='70'
-				:showTitle ="1"
-				:titleData ="titleData"
-				:introData="nowList"
-				:allTotal ="pageObj.listNum"
-				:fixed="0"
-				:bannerStyle="{'color':'#333','font-size':'16px'}"
-				:widthType ="true"
-				:listWidth ="1435" 
-				:contentStyle ="{'color':'#666',fontSize:'14px'}"           
-			>
-			<div slot="con-0" slot-scope="{data,index}">
-				<span class="operation-left line" @click="clearInput(data)">清空</span>
-				<span class="operation-right" @click="openWin(data)">批量盘库</span>
-			</div>
-			<div slot="con-1" slot-scope="{data,index}">
-				<input type="text" v-model="data.countNum" class="count-num" :readonly="data.canWrite" :class="{'canWrite':data.canWrite}" maxlength="9" placeholder="请输入数字" @input="checkNum(data,index)">
-			</div>
-			</com-table>
+			<el-table :data="nowList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column width="180" fixed="left">
+					<template slot-scope="scope" >
+						<el-button type="text" @click="clearInput(scope.row)" style='color:#D34A2B'>清空输入</el-button>
+						<el-button type="text" @click="openWin(scope.row)">批次盘库</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column label="盘库数量" width="200">
+					<template slot-scope="scope">
+						<el-input v-model="scope.row.countNum" maxlength="9" placeholder="请输入数字" 
+						@input="checkNum(scope.row,scope.$index)"
+						:disabled="scope.row.canWrite">
+						</el-input>
+					</template>
+				</el-table-column>
+				<el-table-column prop="surplusUnit" label="库存数量" min-width="200">
+				</el-table-column>
+				<el-table-column prop="name" label="商品名" min-width="200">
+				</el-table-column>
+				<el-table-column prop="barCode" label="条形码" width="200">
+				</el-table-column>
+				<el-table-column prop="storeName" label="所属仓库" width="200">
+				</el-table-column>
+				<el-table-column prop="batch" label="批次数量" width="100">
+				</el-table-column>
+				<el-table-column prop="typeName" label="商品类型" width="150">
+				</el-table-column>
+			</el-table>
 			<div>
 				<page-element 
 					:page="pageObj.page" 
@@ -459,9 +465,6 @@ export default {
 		},
 		clearInput(item){
 			//清空输入
-			if(item.canWrite){
-				return;
-			}
 			item.countNum = '';
 		},
 		ininList(list){

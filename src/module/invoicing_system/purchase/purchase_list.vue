@@ -16,13 +16,13 @@
 			</div>
 			<div class="timebox">
 				<span>提交时间：</span>
-				<el-date-picker v-model="applytimeAll" type="daterange" align="right" unlink-panels range-separator="至"
+				<el-date-picker v-model="applytimeAll" type="daterange" align="right" unlink-panels range-separator="-"
 				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 				</el-date-picker>
 			</div>
 			<div class="timebox">
 				<span>审核时间：</span>
-				<el-date-picker v-model="audittimeAll" type="daterange" align="right" unlink-panels range-separator="至"
+				<el-date-picker v-model="audittimeAll" type="daterange" align="right" unlink-panels range-separator="-"
 				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 				</el-date-picker>
 			</div>

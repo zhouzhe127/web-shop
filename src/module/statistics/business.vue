@@ -137,7 +137,7 @@ export default {
 	created() {
 		this.userData = storage.session('userShop');//获取店铺数据
 		this.shopId = this.userData.currentShop.id;
-		let shopIdArr = [],shopList = [];
+		let shopIdArr = [];
 		if (this.userData.currentShop.ischain == '3') {
 			this.shopList = storage.session('shopList');
 			for(let item of this.shopList){//组合店铺列表
@@ -399,11 +399,10 @@ export default {
 			} else {
 				//多店 品牌
 				this.isBrandSend = 1;
-				//this.getTaskId();
+				this.getTaskId();
 				//执行循环前，先清除保存的数据
 				this.eachGetShopData();
 			}
-			
 		},
 		stopRepeat(){//停止轮询
 			Timer.clear(this.timerId);
