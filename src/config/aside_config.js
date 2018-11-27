@@ -473,6 +473,12 @@ let need = {
 		},
 		getReportTemplate: {
 			name: 'materialReport' //物料报表模板
+		},
+		materialWorking: { //加工物料
+			name: 'processHistory'
+		},
+		getReportTemplate: {
+			name: 'materialReport' //物料报表模板
 		}
 	},
 

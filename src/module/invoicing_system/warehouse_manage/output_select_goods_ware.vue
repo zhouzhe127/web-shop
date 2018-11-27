@@ -192,6 +192,7 @@ export default {
 				let thisItem = this[item].trim();
 				if(thisItem == '') num++;
 			}
+			this.page = 1;
 			if(num >= 3) {
 				this.init();
 			} else {

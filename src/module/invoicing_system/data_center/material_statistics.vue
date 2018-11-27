@@ -785,7 +785,11 @@ export default {
 				for(let f in ele){
 					for(let a of this.tableTitle){
 						if(a.attr && f == a.attr){
-							ele[a.title] = ele[f];
+							if(a.toFixed != undefined){
+								ele[a.title] = this.calcValue(ele[f],a.toFixed);
+							}else{
+								ele[a.title] = ele[f];
+							}
 							break;
 						}
 					}
@@ -808,7 +812,23 @@ export default {
 			}
 		},
 
+		calcValue(str,scope = 0){
+			if(!str) str = 0;
 
+			if(!scope){
+				scope = 0
+			}else{
+				scope = Number(scope);				
+				scope += 1;
+			}
+			
+			str += '';
+			let index = str.indexOf(".");
+			if(index > -1){
+				str = str.slice(0,index + scope);
+			}
+			return str;
+		},
 		//清除定时器
 		clearTaskTimer(attr){
 			if(this.timerTask[attr]){
