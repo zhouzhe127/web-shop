@@ -331,6 +331,8 @@ export default {
 					return;
 				}
 			}
+			this.shopsList = [];
+			this.shopsIndex = [];
 			let res = await http.getTakeoutShop(
 				{
 					data: {
@@ -354,10 +356,10 @@ export default {
 			this.shopsList = arr;
 			this.shopsIndex = [arr[0].TakeoutShopId];
 			//切换渠道，重置选中店铺
-			if (this.eleShopid&&arr[0].TakeoutShopId != this.eleShopid) {
-				this.shopsList = [];
-				this.shopsIndex = [];
-			}
+			// if (this.eleShopid&&arr[0].TakeoutShopId != this.eleShopid) {
+			// 	this.shopsList = [];
+			// 	this.shopsIndex = [];
+			// }
 			this.initTogath();
 		},
 		//获取选择店铺的id
