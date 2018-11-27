@@ -262,6 +262,7 @@ export default {
 		},
 		search() {
 			//搜索
+			this.page = 1;
 			this.init();
 		},
 		reset() {

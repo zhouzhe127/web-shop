@@ -262,12 +262,13 @@ export default {
 			item.select = false;
 			this.checkSle();
 		},
+		//搜索
 		search() {
-			//搜索
+			this.page = 1;
 			this.init();
 		},
+		//重置
 		reset() {
-			//重置
 			this.page = 1;
 			this.mName = '';
 			this.oneSle = '';
