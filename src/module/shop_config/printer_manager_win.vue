@@ -387,10 +387,6 @@ export default {
 				}
 				this.printerTestPage();
 			}
-			// let that = this;
-			// setTimeout(function(){
-			// 	that.printerTestPage();
-			// },50);
 		},
 		//测试打印机接口
 		async printerTestPage(){
