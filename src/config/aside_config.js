@@ -468,6 +468,9 @@ let need = {
 		ActiveConf:{			//活跃值配置
 			name:'ActiveConf'
 		},
+		priceTemplate:{     //价格模板
+			name:'priceTemplate'
+		}
 	}
 };
 export default need;

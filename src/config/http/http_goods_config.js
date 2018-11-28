@@ -361,5 +361,34 @@ export default {
 		//删除热区商品
 		url: s + 'Hotgoods/delete',
 		method: 'get'
+	},
+	getPricetemplate :{
+		// 获取价格模板列表
+		url: s + 'Pricetemplate/getList',
+		method:'get'
+	},
+	createPricetemplate :{
+		// 创建价格模板
+		url: s + 'Pricetemplate/create',
+		method:'post'
+	},
+	editPricetemplate:{
+		// 编辑价格模板
+		url: s + 'Pricetemplate/edit',
+		method:'post'
+	},
+	clearPricetemplate:{
+		// 清空缓存
+		url: s + 'Pricetemplate/clear',
+		method:'get'
+	},
+	// 删除模板
+	deletePricetemplate :{
+		url: s + '/Pricetemplate/delete',
+		method:'get'
+	},
+	moveSortPricetemplate:{
+		url: s+ 'Pricetemplate/moveSort',
+		method:'get'
 	}
 };

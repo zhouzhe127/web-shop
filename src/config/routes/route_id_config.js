@@ -9,7 +9,8 @@ const goods_config = {
 	"024": "goods_config/category_manager",
 	"025": "goods_config/invcontrol",
 	"026": "goods_config/more_menu",
-	"027": "goods_config/marker"
+	"027": "goods_config/marker",
+	"028": "goods_config/price_temp_manager"
 };
 const outfood = {
 	"031": "outfood/warrant",
@@ -118,7 +119,7 @@ const invoicing_system = {
 	"0837": "invoicing_system/shelve_rule",
 	"0838": "invoicing_system/purchase_management", //采购单管理
 	"0839": "invoicing_system/purchase_audit", //采购单审核
-	"0840": "invoicing_system/material_statistics", //物料统计	
+	"0840": "invoicing_system/material_statistics", //物料统计
 	"0841": "invoicing_system/process_bom",
 }
 const statistics = {
@@ -203,6 +204,6 @@ module.exports = config;
  *|routes|----->文件夹。包含所需要的路由json文件和route_id_config路由配置文件
  *       |route_id_config.js：中id-'0923'的命名规则09为模块的顺序23为路由内部的顺序
  *|route_template.js为路由的模板文件generate_routes.js以此为模板生成路径为src/config/route_template.js。
- *|generate_routes.js最后生成的路由文件路径为src/config/generate_routes.js       
+ *|generate_routes.js最后生成的路由文件路径为src/config/generate_routes.js
  *|generate_route_config.js生成路由的入口文件路径为Attachment/generate_route_config.js
  **/
