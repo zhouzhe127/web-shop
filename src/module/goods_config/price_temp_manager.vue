@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-11-28 19:03:21
+ * @LastEditTime: 2018-11-28 19:04:51
  * @LastEditors: Please set LastEditors
  -->
 
@@ -58,11 +58,11 @@
 		  border
 		  stripe
 		>
-		  <el-table-column width="100" type="index" fixed label="序号" align="center"></el-table-column>
-		  <el-table-column width="100" fixed label="商品名称" align="center">
+		  <el-table-column min-width="100" type="index" fixed label="序号" align="center"></el-table-column>
+		  <el-table-column min-width="100" fixed label="商品名称" align="center">
 			<template slot-scope="scope">{{scope.row.goodsName}}</template>
 		  </el-table-column>
-		  <el-table-column width="100" fixed label="编码" align="center">
+		  <el-table-column min-width="100" fixed label="编码" align="center">
 			<template slot-scope="scope">
 			  <span
 				v-if="scope.row.categoryCode!==''&&scope.row.goodsCode!==''&&scope.row.id*1<10000"
@@ -70,7 +70,7 @@
 			  <span v-else>-</span>
 			</template>
 		  </el-table-column>
-		  <el-table-column width="100" label="原始价格" align="center">
+		  <el-table-column min-width="100" label="原始价格" align="center">
 			<template slot-scope="scope">{{scope.row.price}}</template>
 		  </el-table-column>
 		  <el-table-column
@@ -209,11 +209,11 @@
 		  border
 		  stripe
 		>
-		  <el-table-column width="100" type="index" fixed label="序号" align="center"></el-table-column>
-		  <el-table-column width="100" fixed label="商品名称" align="center">
+		  <el-table-column min-width="100" type="index" fixed label="序号" align="center"></el-table-column>
+		  <el-table-column min-width="100" fixed label="商品名称" align="center">
 			<template slot-scope="scope">{{scope.row.goodsName}}</template>
 		  </el-table-column>
-		  <el-table-column width="100" fixed label="编码" align="center">
+		  <el-table-column min-width="100" fixed label="编码" align="center">
 			<template slot-scope="scope">
 			  <span
 				v-if="scope.row.categoryCode!==''&&scope.row.goodsCode!==''&&scope.row.id*1<10000"
@@ -221,7 +221,7 @@
 			  <span v-else>-</span>
 			</template>
 		  </el-table-column>
-		  <el-table-column width="150" label="原始价格" align="center">
+		  <el-table-column min-width="150" label="原始价格" align="center">
 			<el-table-column min-width="75" label="基础价" align="center">
 			  <template slot-scope="scope">{{scope.row.price}}</template>
 			</el-table-column>
