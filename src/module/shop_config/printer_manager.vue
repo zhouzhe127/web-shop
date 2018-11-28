@@ -369,7 +369,7 @@ export default {
 			this.printIndex = (this.currentPage-1)*this.num + index; //打印机下标
 		},
 		//接收弹窗传递的内容数据
-		throwWinResult: function(res, item,isTestCom) {
+		throwWinResult: function(res, item) {
 			this.printDetial = item;
 			if (res == 'ok') {
 				//判断添加修改打印机，请求不同的接口
@@ -378,11 +378,7 @@ export default {
 				} else if (this.types == 'edit') {
 					this.editPrinter();
 				}
-				if(isTestCom){
-					this.showWin = true;
-				}else{
-					this.showWin = false;
-				}
+				this.showWin = false;
 			// } else if (res == 'cancel' && this.types == 'edit') {
 			// 	this.$store.commit('setWin', {
 			// 		title: '操作提示',
