@@ -508,7 +508,7 @@ export default{
 	padding-top: 10px;overflow:auto;
 	.main{
 		.head{
-			height: 50px;line-height: 50px;padding: 0 20px;font-size: 14px;
+			height: 45px;line-height: 45px;padding: 0 10px;font-size: 14px;
 			border: 1px solid #ebeef5;border-bottom: 0;
 			em{color: #ff3c04;padding: 0 2px;}
 		}
