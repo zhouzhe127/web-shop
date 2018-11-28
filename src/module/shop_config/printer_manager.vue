@@ -366,10 +366,10 @@ export default {
 			this.showWin = true;
 			this.printerId = pid; //打印机id
 			this.types = types; //添加、修改 标识
-			this.printIndex = index; //打印机下标
+			this.printIndex = (this.currentPage-1)*this.num + index; //打印机下标
 		},
 		//接收弹窗传递的内容数据
-		throwWinResult: function(res, item) {
+		throwWinResult: function(res, item,isTestCom) {
 			this.printDetial = item;
 			if (res == 'ok') {
 				//判断添加修改打印机，请求不同的接口
@@ -378,7 +378,11 @@ export default {
 				} else if (this.types == 'edit') {
 					this.editPrinter();
 				}
-				this.showWin = false;
+				if(isTestCom){
+					this.showWin = true;
+				}else{
+					this.showWin = false;
+				}
 			// } else if (res == 'cancel' && this.types == 'edit') {
 			// 	this.$store.commit('setWin', {
 			// 		title: '操作提示',

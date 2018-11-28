@@ -337,7 +337,7 @@ export default {
 
 		//测试打印机设置
 		async testPrinter() {
-			// let abc = false;
+			let abc = false;
 			if (this.types == 'addPrint') {
 				this.newPrintDetial = await http.addPrint({
 					data: {
@@ -347,17 +347,13 @@ export default {
 						slaveIp: this.slaveIp,
 						maxLen: this.maxLen,
 						type: this.type,
-						sort: this.num
+						sort: this.num,
+						printTerminalId:this.terminaIndex,
 					}
 				});
 				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
-				// abc = await http.printerTestPage({
-				// 	data: {
-				// 		shopId: this.shopId,
-				// 		printerId: this.newPrintDetial.id
-				// 	}
-				// });
 				this.printerList.push(this.newPrintDetial);
+				abc = true;
 			} else if (this.types == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
@@ -368,7 +364,8 @@ export default {
 						slaveIp: this.slaveIp,
 						maxLen: this.maxLen,
 						type: this.type,
-						sort: this.num
+						sort: this.num,
+						printTerminalId:this.terminaIndex,
 					}
 				});
 				this.printerList.splice(
@@ -376,11 +373,24 @@ export default {
 					1,
 					this.newPrintDetial
 				);
+				abc = true;
 			}
-			let that = this;
-			setTimeout(function(){
-				that.printerTestPage();
-			},50);
+			if(abc){
+				//插入终端名称
+				for(let i=0;i<this.printerList.length;i++){
+					this.$set(this.printerList[i], 'terminaName', '路由器');
+					for(let j=0;j<this.terminalList.length;j++){
+						if(this.printerList[i].printTerminalId == this.terminalList[j].id){
+							this.printerList[i].terminaName = this.terminalList[j].name;
+						}
+					}
+				}
+				this.printerTestPage();
+			}
+			// let that = this;
+			// setTimeout(function(){
+			// 	that.printerTestPage();
+			// },50);
 		},
 		//测试打印机接口
 		async printerTestPage(){
