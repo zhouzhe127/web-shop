@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-11-28 19:04:51
+ * @LastEditTime: 2018-11-28 19:11:36
  * @LastEditors: Please set LastEditors
  -->
 
@@ -717,10 +717,10 @@ export default {
 	},
 	// 获取模板
 	async getPricetemplateData(goodIds) {
-	  this.tableTemplate = {
-		priceTemplate: [],
-		templateTitle: []
-	  };
+	  //   this.tableTemplate = {
+	  // 	priceTemplate: [],
+	  // 	templateTitle: []
+	  //   };
 	  //   this.reRenderTable= false
 	  let data = await http.getPricetemplate({
 		data: {
@@ -786,6 +786,10 @@ export default {
 	  this.selectTwoArea(item, index);
 	},
 	selectOneArea(item, index, type) {
+	  this.tableTemplate = {
+		priceTemplate: [],
+		templateTitle: []
+	  };
 	  if (!type) {
 		//如果是从分类点击进入，则页码为1，反之为原来的页数
 		this.currentPage = 1;
@@ -814,6 +818,10 @@ export default {
 	  this.initPage(this.tempGoods);
 	},
 	selectTwoArea(item, index, type) {
+	  this.tableTemplate = {
+		priceTemplate: [],
+		templateTitle: []
+	  };
 	  if (!type) {
 		//如果是从分类点击进入，则页码为1，反之为原来的页数
 		this.currentPage = 1;
@@ -857,12 +865,20 @@ export default {
 	},
 	//商品搜索
 	funSearchkeyUp() {
+	  this.tableTemplate = {
+		priceTemplate: [],
+		templateTitle: []
+	  };
 	  this.searchGoods = this.funSearchGoods(this.tempGoods);
 	  this.currentPage = 1;
 	  this.initPage(this.searchGoods);
 	},
 	//返回搜索的结果
 	funSearchGoods(goodsList) {
+	  this.tableTemplate = {
+		priceTemplate: [],
+		templateTitle: []
+	  };
 	  let tempGoods = [];
 	  if (!this.search || this.search.trim().length == 0) {
 		return goodsList;
@@ -1100,6 +1116,10 @@ export default {
 	},
 	// 分页切换
 	async pageClick(page) {
+	  this.tableTemplate = {
+		priceTemplate: [],
+		templateTitle: []
+	  };
 	  this.currentPage = page;
 	  this.initPage(this.tempGoods);
 	  if (this.currentPage > this.totalNum - 2) {
