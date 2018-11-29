@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-11-29 13:58:43
+ * @LastEditTime: 2018-11-29 15:05:20
  * @LastEditors: Please set LastEditors
  -->
 
@@ -777,6 +777,7 @@ export default {
 				priceTemplate: [],
 				templateTitle: []
 			};
+			this.search = ''
 			if (!type) {
 				//如果是从分类点击进入，则页码为1，反之为原来的页数
 				this.currentPage = 1;
@@ -809,6 +810,7 @@ export default {
 				priceTemplate: [],
 				templateTitle: []
 			};
+			this.search = ''
 			if (!type) {
 				//如果是从分类点击进入，则页码为1，反之为原来的页数
 				this.currentPage = 1;
