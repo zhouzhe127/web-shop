@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-11-29 09:46:30
+ * @LastEditTime: 2018-11-29 10:06:55
  * @LastEditors: Please set LastEditors
  -->
 
@@ -86,6 +86,7 @@
 				<template v-if="thEditer && thEditerIndex == index">
 				  <el-input
 					v-model="thEditerName"
+					ref="editHeadSucessRef"
 					maxlength="10"
 					@blur="editHeadSucess(tableTemplate.templateTitle[index],index)"
 					style="width:150px;padding:0"
@@ -242,6 +243,7 @@
 				<template v-if="thEditer && thEditerIndex == index">
 				  <el-input
 					v-model="thEditerName"
+					ref="editHeadSucessRef"
 					maxlength="10"
 					@blur="editHeadSucess(tableTemplate.templateTitle[index],index)"
 					style="width:150px;padding:0"
@@ -571,9 +573,15 @@ export default {
 	},
 	// 编辑头部
 	handleEditHeader(item, index) {
+		
 	  this.thEditer = true;
 	  this.thEditerIndex = index;
-	  this.thEditerName = item.name ? item.name : "价格模板";
+		this.thEditerName = item.name ? item.name : "价格模板";
+		this.$nextTick(()=>{
+			this.$refs.editHeadSucessRef.forEach(el=>{
+				el.focus()
+			})
+		})
 	},
 	// 编辑头部名称提交
 	async editHeadSucess(item, index) {
@@ -586,16 +594,18 @@ export default {
 
 	  console.log(data, "data");
 	  if (data) {
-		this.initPage(this.nowGoods);
-		this.getPricetemplateData(this.goodIds);
-		this.thEditer = false;
-		(this.thEditerName = ""), (this.thEditerIndex = -1);
+			this.initPage(this.nowGoods);
+			this.getPricetemplateData(this.goodIds);
+			this.thEditer = false;
+			this.thEditerName = "";
+			this.thEditerIndex = -1;
 	  }
 	},
 	// 取消编辑头部名称
 	editHeadCancel() {
 	  this.thEditer = false;
-	  (this.thEditerName = ""), (this.thEditerIndex = -1);
+		this.thEditerName = ""; 
+		this.thEditerIndex = -1;
 	},
 	// 点击编辑价格
 	changeTemp(item, index, sindex, column, type) {
@@ -611,9 +621,9 @@ export default {
 		this.tempEditPrice = price.itemPrice;
 	  }
 	  this.$nextTick(() => {
-		this.$refs.editTempInputRef.forEach(el => {
-		  el.focus();
-		});
+			this.$refs.editTempInputRef.forEach(el => {
+				el.focus();
+			});
 	  });
 	},
 	async editSucess(item, index, sindex, column, type) {
