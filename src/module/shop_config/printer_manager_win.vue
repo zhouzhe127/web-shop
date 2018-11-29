@@ -402,6 +402,7 @@ export default {
 				}
 			});
 			if (abc) {
+				this.$emit('printManagerWin', 'aa',this.newPrintDetial, true);
 				this.$store.commit('setWin', {
 					title: '提示',
 					winType: 'alert',
