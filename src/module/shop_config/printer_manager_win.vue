@@ -47,8 +47,8 @@
 					</el-form-item>
 					<el-form-item required label="排序">
 						<el-input-number v-model="num" @change="changeNum" style="width:150px;" :min="1" :max="255"></el-input-number>
-						<button v-if="isTest" v-on:click="savePrinter" style="width: 110px;height: 30px;margin-left: 20px;text-align: center;margin-top:5px">测试并保存</button>
-						<button v-if="reTi" style="width: 110px;height: 30px;margin-left: 20px;text-align: center;margin-top:5px;background-color: #ccc;">{{reTime}}秒后重新测试</button>
+						<el-button v-if="isTest"  type="primary" v-on:click="savePrinter" style="width: 150px;margin-left: 20px;">测试并保存</el-button>
+						<el-button v-if="reTi" type="info" style="width: 150px;margin-left: 20px;text-align: center;">{{reTime}}秒后重新测试</el-button>
 					</el-form-item>
 				</el-form>
 			</section>
@@ -339,7 +339,6 @@ export default {
 
 		//测试打印机设置
 		async testPrinter() {
-			let abc = false;
 			if (this.newtypes == 'addPrint') {
 				this.newPrintDetial = await http.addPrint({
 					data: {
@@ -355,7 +354,7 @@ export default {
 				});
 				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
 				this.printerList.push(this.newPrintDetial);
-				abc = true;
+				this.printerTestPage();
 			} else if (this.newtypes == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
@@ -375,18 +374,6 @@ export default {
 					1,
 					this.newPrintDetial
 				);
-				abc = true;
-			}
-			if(abc){
-				//插入终端名称
-				for(let i=0;i<this.printerList.length;i++){
-					this.$set(this.printerList[i], 'terminaName', '路由器');
-					for(let j=0;j<this.terminalList.length;j++){
-						if(this.printerList[i].printTerminalId == this.terminalList[j].id){
-							this.printerList[i].terminaName = this.terminalList[j].name;
-						}
-					}
-				}
 				this.printerTestPage();
 			}
 		},
@@ -401,6 +388,15 @@ export default {
 					printerId: this.newPrintDetial.id
 				}
 			});
+			//插入终端名称
+			for(let i=0;i<this.printerList.length;i++){
+				this.$set(this.printerList[i], 'terminaName', '路由器');
+				for(let j=0;j<this.terminalList.length;j++){
+					if(this.printerList[i].printTerminalId == this.terminalList[j].id){
+						this.printerList[i].terminaName = this.terminalList[j].name;
+					}
+				}
+			}
 			if (abc) {
 				this.$emit('printManagerWin', 'aa',this.newPrintDetial, true);
 				this.$store.commit('setWin', {
