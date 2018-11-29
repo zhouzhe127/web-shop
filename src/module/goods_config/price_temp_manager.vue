@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-11-29 09:38:27
+ * @LastEditTime: 2018-11-29 09:46:30
  * @LastEditors: Please set LastEditors
  -->
 
@@ -47,8 +47,6 @@
 	  <!-- 默认不显示会员价列表 -->
 	  <div class="table-box" v-show="!vipPriceOpen">
 		<el-table
-		  v
-		  v-if="reRenderTable"
 		  style="width:100%;margin-top:-1px;"
 		  :header-cell-style="{'background-color':'#f5f7fa'}"
 		  :data="nowGoods"
@@ -199,7 +197,6 @@
 	  <!-- 显示会员价列表 -->
 	  <div class="table-box" v-show="vipPriceOpen">
 		<el-table
-		  v-if="reRenderTable"
 		  style="width:100%;margin-top:-1px;"
 		  :header-cell-style="{'background-color':'#f5f7fa'}"
 		  :data="nowGoods"
@@ -398,7 +395,7 @@
 				  >
 					<!-- 编辑按钮 -->
 					<span
-					  v-if="tableTemplate.priceTemplate[index].list"
+					v-if="tableTemplate.priceTemplate[index].list[scope.$index].isVip"
 					  @click.stop="changeTemp(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='vip')"
 					  class="edit-btn"
 					>
