@@ -369,7 +369,7 @@ export default {
 			this.printIndex = (this.currentPage-1)*this.num + index; //打印机下标
 		},
 		//接收弹窗传递的内容数据
-		throwWinResult: function(res, item) {
+		throwWinResult: function(res, item,isBlu) {
 			this.printDetial = item;
 			if (res == 'ok') {
 				//判断添加修改打印机，请求不同的接口
@@ -392,7 +392,7 @@ export default {
 			// 		}
 			// 	});
 			} else {
-				this.showWin = false;
+				this.showWin = isBlu?true:false;
 			}
 		},
 		//添加打印机请求
