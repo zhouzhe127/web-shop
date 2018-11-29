@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-11-28 19:11:36
+ * @LastEditTime: 2018-11-29 09:38:27
  * @LastEditors: Please set LastEditors
  -->
 
@@ -42,7 +42,7 @@
 	<el-checkbox v-model="vipPriceOpen">开启会员价</el-checkbox>
 	<!-- 价格模板列表 -->
 	<div class="price_temp_table">
-	  <div class="table_title">商品列表·共{{nowGoods.length}}个条目</div>
+	  <div class="table_title">商品列表·共{{goodsList.length}}个条目</div>
 
 	  <!-- 默认不显示会员价列表 -->
 	  <div class="table-box" v-show="!vipPriceOpen">
@@ -440,7 +440,7 @@
 	  <div slot="content" style="padding:0 30px;margin-top:25px;">
 		<el-input maxlength="10" v-model="addTempName" placeholder="请输入模板名称"></el-input>
 		<p style="margin-top:10px;color:red;">
-		  <em>*</em>最多可输入10各字
+		  <em>*</em>最多可输入10个字
 		</p>
 	  </div>
 	</win>
