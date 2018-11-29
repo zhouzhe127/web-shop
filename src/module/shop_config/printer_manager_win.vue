@@ -47,8 +47,8 @@
 					</el-form-item>
 					<el-form-item required label="排序">
 						<el-input-number v-model="num" @change="changeNum" style="width:150px;" :min="1" :max="255"></el-input-number>
-						<button v-if="isTest" v-on:click="savePrinter" style="width: 110px;height: 30px;margin-left: 20px;text-align: center;margin-top:5px">测试并保存</button>
-						<button v-if="reTi" style="width: 110px;height: 30px;margin-left: 20px;text-align: center;margin-top:5px;background-color: #ccc;">{{reTime}}秒后重新测试</button>
+						<el-button v-if="isTest"  type="primary" v-on:click="savePrinter" style="width: 150px;margin-left: 20px;">测试并保存</el-button>
+						<el-button v-if="reTi" type="info" style="width: 150px;margin-left: 20px;text-align: center;">{{reTime}}秒后重新测试</el-button>
 					</el-form-item>
 				</el-form>
 			</section>
