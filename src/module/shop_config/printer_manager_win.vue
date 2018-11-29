@@ -415,6 +415,7 @@ export default {
 				this.isTest = false;
 				this.reTi = true;
 				let that = this;
+				that.testPrinter();
 				let timer = setInterval(function() {
 					that.reTime--;
 					if (that.reTime < 1) {
@@ -424,7 +425,6 @@ export default {
 						that.reTime = 5;
 					}
 				}, 1000);
-				that.testPrinter();
 			}
 		},
 		//初始化获取打印机详情
