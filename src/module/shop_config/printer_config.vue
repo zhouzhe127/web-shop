@@ -58,8 +58,8 @@ export default {
 		this.$store.commit('setPageTools', [
 			{
 				name: '新建打印机配置',
-				type:4,
-				className: 'plain',
+				type:5,
+				className: '',
 				fn: ()=>{
 					this.openWin(null,'addPcon',null);
 				},
