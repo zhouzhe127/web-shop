@@ -5,21 +5,22 @@
  * @Module:打印机管理弹窗
 **/
 <template>
-	<win @winEvent="printMueueWin" :align="isTerminal?'center':'right'" :width="580" :height="550" :ok="okStyle">
+	<win @winEvent="printMueueWin" :align="isTerminal?'center':'right'" :width="580" :height="winHeight" :ok="okStyle">
 		<span slot="title">{{title}}</span>
 		<div id="tan" slot="content" v-cloak>
 			<section class="print-form" v-if="!isTerminal">
 				<el-form :model="printDetial" ref="printDetial" label-width="120px">
 					<el-form-item required label="打印机类型">
 						<el-radio-group v-model="index">
-							<el-radio class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
+							<el-radio v-if="ischain == '3'" class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in lists" :key="i" :label="i" border>{{item.name}}</el-radio>
+							<el-radio v-if="ischain != '3'" class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<!-- <el-form-item required label="打印服务终端">
+					<el-form-item v-if="ischain != '3'" required label="打印服务终端">
 						<el-radio-group v-model="terminaIndex">
 							<el-radio class="labItem" size="small" v-for="(item,i) in newTerminalList" :key="i" :label="item.id" border>{{item.name}}</el-radio>
 						</el-radio-group>
-					</el-form-item> -->
+					</el-form-item>
 					<el-form-item required label="打印机名称">
 						<el-input v-model="printerName" placeholder = "请输入名称" maxlength="30" style = "width:300px;"></el-input>
 					</el-form-item>
@@ -46,8 +47,8 @@
 					</el-form-item>
 					<el-form-item required label="排序">
 						<el-input-number v-model="num" @change="changeNum" style="width:150px;" :min="1" :max="255"></el-input-number>
-						<button v-if="isTest" v-on:click="savePrinter" style="width: 110px;height: 30px;margin-left: 20px;text-align: center;margin-top:5px">测试并保存</button>
-						<button v-if="reTi" style="width: 110px;height: 30px;margin-left: 20px;text-align: center;margin-top:5px;background-color: #ccc;">{{reTime}}秒后重新测试</button>
+						<el-button v-if="isTest"  type="primary" v-on:click="savePrinter" style="width: 150px;margin-left: 20px;">测试并保存</el-button>
+						<el-button v-if="reTi" type="info" style="width: 150px;margin-left: 20px;text-align: center;">{{reTime}}秒后重新测试</el-button>
 					</el-form-item>
 				</el-form>
 			</section>
@@ -74,6 +75,7 @@ import utils from 'src/verdor/utils';
 export default {
 	data() {
 		return {
+			ischain:'3',//判断品牌--店铺
 			shopId: '',
 			createUid: '',
 			title: '打印机',
@@ -87,6 +89,7 @@ export default {
 				{type: 5,name: 'USB打印机'},
 				{type: 6,name: '蓝牙打印机'}
 			],
+			lists: [{type: 0,name: '网口打印机'}],
 			type: 0,
 			index: 0,
 			terminaIndex:'0',//打印服务终端id
@@ -103,6 +106,8 @@ export default {
 			reTi: false,
 			newPrintDetial: { id: 0 }, //新建的打印机详情
 			newTerminalList:[],//打印终端列表
+			winHeight:500,//弹窗高度
+			newtypes:''
 		};
 	},
 	components: {
@@ -116,8 +121,11 @@ export default {
 		let userData = storage.session('userShop');
 		this.shopId = userData.currentShop.id;
 		this.createUid = userData.user.createUid;
+		this.ischain = userData.currentShop.ischain;
+		this.newtypes = this.types;
+		this.winHeight = this.isTerminal?200 : 500;//判断弹窗高度
 		if (this.types == 'addPrint') {
-			this.title = '添加打印机';
+			this.title = this.isTerminal?'添加服务终端' : '添加打印机';
 			this.okStyle = {
 				content: '保存',
 				style: {
@@ -126,7 +134,7 @@ export default {
 				}
 			};
 		} else if (this.types == 'edit') {
-			this.title = '修改打印机';
+			this.title = this.isTerminal?'修改服务终端' : '修改打印机';
 			this.okStyle = {
 				content: '确定',
 				style: {
@@ -331,8 +339,7 @@ export default {
 
 		//测试打印机设置
 		async testPrinter() {
-			let abc = false;
-			if (this.types == 'addPrint') {
+			if (this.newtypes == 'addPrint') {
 				this.newPrintDetial = await http.addPrint({
 					data: {
 						createUid: this.createUid,
@@ -341,34 +348,25 @@ export default {
 						slaveIp: this.slaveIp,
 						maxLen: this.maxLen,
 						type: this.type,
-						sort: this.num
+						sort: this.num,
+						printTerminalId:this.terminaIndex,
 					}
 				});
 				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
-				abc = await http.printerTestPage({
-					data: {
-						shopId: this.shopId,
-						printerId: this.newPrintDetial.id
-					}
-				});
 				this.printerList.push(this.newPrintDetial);
-			} else if (this.types == 'edit') {
+				this.printerTestPage();
+			} else if (this.newtypes == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
-						printerId: this.printerId,
+						printerId: this.printerId?this.printerId:this.newPrintDetial.id,
 						createUid: this.createUid,
 						printerName: this.printerName,
 						ip: this.ip,
 						slaveIp: this.slaveIp,
 						maxLen: this.maxLen,
 						type: this.type,
-						sort: this.num
-					}
-				});
-				abc = await http.printerTestPage({
-					data: {
-						shopId: this.shopId,
-						printerId: this.newPrintDetial.id
+						sort: this.num,
+						printTerminalId:this.terminaIndex,
 					}
 				});
 				this.printerList.splice(
@@ -376,6 +374,28 @@ export default {
 					1,
 					this.newPrintDetial
 				);
+				this.printerTestPage();
+			}
+		},
+		//测试打印机接口
+		async printerTestPage(){
+			let abc = false;
+			this.newtypes = 'edit';
+			this.title = '修改打印机';
+			abc = await http.printerTestPage({
+				data: {
+					shopId: this.shopId,
+					printerId: this.newPrintDetial.id
+				}
+			});
+			//插入终端名称
+			for(let i=0;i<this.printerList.length;i++){
+				this.$set(this.printerList[i], 'terminaName', '路由器');
+				for(let j=0;j<this.terminalList.length;j++){
+					if(this.printerList[i].printTerminalId == this.terminalList[j].id){
+						this.printerList[i].terminaName = this.terminalList[j].name;
+					}
+				}
 			}
 			if (abc) {
 				this.$store.commit('setWin', {
@@ -391,6 +411,7 @@ export default {
 				this.isTest = false;
 				this.reTi = true;
 				let that = this;
+				that.testPrinter();
 				let timer = setInterval(function() {
 					that.reTime--;
 					if (that.reTime < 1) {
@@ -400,7 +421,6 @@ export default {
 						that.reTime = 5;
 					}
 				}, 1000);
-				that.testPrinter();
 			}
 		},
 		//初始化获取打印机详情
