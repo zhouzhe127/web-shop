@@ -359,7 +359,7 @@ export default {
 			} else if (this.newtypes == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
-						printerId: this.printerId,
+						printerId: this.printerId?this.printerId:this.newPrintDetial.id,
 						createUid: this.createUid,
 						printerName: this.printerName,
 						ip: this.ip,
