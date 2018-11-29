@@ -353,13 +353,13 @@ export default {
 						printTerminalId:this.terminaIndex,
 					}
 				});
-				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
-				this.printerList.push(this.newPrintDetial);
+				// this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
+				// this.printerList.push(this.newPrintDetial);
 				abc = true;
 			} else if (this.newtypes == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
-						printerId: this.printerId,
+						printerId: this.printerId?this.printerId:this.newPrintDetial.id,
 						createUid: this.createUid,
 						printerName: this.printerName,
 						ip: this.ip,
@@ -370,23 +370,23 @@ export default {
 						printTerminalId:this.terminaIndex,
 					}
 				});
-				this.printerList.splice(
-					this.printIndex,
-					1,
-					this.newPrintDetial
-				);
+				// this.printerList.splice(
+				// 	this.printIndex,
+				// 	1,
+				// 	this.newPrintDetial
+				// );
 				abc = true;
 			}
 			if(abc){
 				//插入终端名称
-				for(let i=0;i<this.printerList.length;i++){
-					this.$set(this.printerList[i], 'terminaName', '路由器');
-					for(let j=0;j<this.terminalList.length;j++){
-						if(this.printerList[i].printTerminalId == this.terminalList[j].id){
-							this.printerList[i].terminaName = this.terminalList[j].name;
-						}
-					}
-				}
+				// for(let i=0;i<this.printerList.length;i++){
+				// 	this.$set(this.printerList[i], 'terminaName', '路由器');
+				// 	for(let j=0;j<this.terminalList.length;j++){
+				// 		if(this.printerList[i].printTerminalId == this.terminalList[j].id){
+				// 			this.printerList[i].terminaName = this.terminalList[j].name;
+				// 		}
+				// 	}
+				// }
 				this.printerTestPage();
 			}
 		},
