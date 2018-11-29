@@ -339,7 +339,6 @@ export default {
 
 		//测试打印机设置
 		async testPrinter() {
-			let abc = false;
 			if (this.newtypes == 'addPrint') {
 				this.newPrintDetial = await http.addPrint({
 					data: {
@@ -355,7 +354,7 @@ export default {
 				});
 				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
 				this.printerList.push(this.newPrintDetial);
-				abc = true;
+				this.printerTestPage();
 			} else if (this.newtypes == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
@@ -375,18 +374,6 @@ export default {
 					1,
 					this.newPrintDetial
 				);
-				abc = true;
-			}
-			if(abc){
-				//插入终端名称
-				for(let i=0;i<this.printerList.length;i++){
-					this.$set(this.printerList[i], 'terminaName', '路由器');
-					for(let j=0;j<this.terminalList.length;j++){
-						if(this.printerList[i].printTerminalId == this.terminalList[j].id){
-							this.printerList[i].terminaName = this.terminalList[j].name;
-						}
-					}
-				}
 				this.printerTestPage();
 			}
 		},
@@ -401,6 +388,15 @@ export default {
 					printerId: this.newPrintDetial.id
 				}
 			});
+			//插入终端名称
+			for(let i=0;i<this.printerList.length;i++){
+				this.$set(this.printerList[i], 'terminaName', '路由器');
+				for(let j=0;j<this.terminalList.length;j++){
+					if(this.printerList[i].printTerminalId == this.terminalList[j].id){
+						this.printerList[i].terminaName = this.terminalList[j].name;
+					}
+				}
+			}
 			if (abc) {
 				this.$emit('printManagerWin', 'aa',this.newPrintDetial, true);
 				this.$store.commit('setWin', {
