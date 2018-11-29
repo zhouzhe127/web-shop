@@ -107,6 +107,7 @@ export default {
 			newPrintDetial: { id: 0 }, //新建的打印机详情
 			newTerminalList:[],//打印终端列表
 			winHeight:500,//弹窗高度
+			newtypes:''
 		};
 	},
 	components: {
@@ -121,6 +122,7 @@ export default {
 		this.shopId = userData.currentShop.id;
 		this.createUid = userData.user.createUid;
 		this.ischain = userData.currentShop.ischain;
+		this.newtypes = this.types;
 		this.winHeight = this.isTerminal?200 : 500;//判断弹窗高度
 		if (this.types == 'addPrint') {
 			this.title = this.isTerminal?'添加服务终端' : '添加打印机';
@@ -338,7 +340,7 @@ export default {
 		//测试打印机设置
 		async testPrinter() {
 			let abc = false;
-			if (this.types == 'addPrint') {
+			if (this.newtypes == 'addPrint') {
 				this.newPrintDetial = await http.addPrint({
 					data: {
 						createUid: this.createUid,
@@ -354,7 +356,7 @@ export default {
 				this.newPrintDetial.id = this.newPrintDetial.id + ''; //添加打印机，id转化为字符串类型
 				this.printerList.push(this.newPrintDetial);
 				abc = true;
-			} else if (this.types == 'edit') {
+			} else if (this.newtypes == 'edit') {
 				this.newPrintDetial = await http.editPrinter({
 					data: {
 						printerId: this.printerId,
@@ -391,6 +393,8 @@ export default {
 		//测试打印机接口
 		async printerTestPage(){
 			let abc = false;
+			this.newtypes = 'edit';
+			this.title = '修改打印机';
 			abc = await http.printerTestPage({
 				data: {
 					shopId: this.shopId,
