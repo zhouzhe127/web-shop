@@ -255,14 +255,14 @@
 			</div>
 		</div>
 		<!-- 跑马灯设置 -->
-		<div class="pay-window-box clearfix">
+		<div class="pay-window-box clearfix" v-if="type != '2'">
 			<span class="fl pay-window-sub">跑马灯设置</span>
 			<div class="rightHalf">
 				<el-switch v-model="entertainingStatus" active-color="#E1BB4A" inactive-color="#dcdfe6">
 				</el-switch>
 			</div>
 		</div>
-		<div class="pay-window-box clearfix" v-if="entertainingStatus">
+		<div class="pay-window-box clearfix" v-if="type != '2' && entertainingStatus">
 			<span class="fl pay-window-sub"></span>
 			<div class="rightHalf">
 				<el-input type="textarea" :rows="6" placeholder="请输入内容" v-model="entertainingTxt" maxlength="100">
@@ -878,8 +878,8 @@ export default {
 					return false;
 				}
 			}
-			//跑马灯设置
-			if (this.entertainingStatus && this.entertainingTxt == '') {
+			//跑马灯设置 自提模式下没有跑马灯
+			if (this.type != '2' && this.entertainingStatus && this.entertainingTxt == '') {
 				this.valiData('请填写跑马灯内容');
 				return false;
 			}

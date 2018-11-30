@@ -203,12 +203,12 @@ export default {
 			}
 		}
 	},
-	mounted() {
+	async mounted() {
 		let userData = storage.session('userShop');
 		this.ischain = userData.currentShop.ischain;
 		this.shopName = userData.currentShop.name;
 		this.shopId = userData.currentShop.id;
-		this.getShopList();
+		await this.getShopList();
 		this.getPointConfig();
 	},
 	components: {

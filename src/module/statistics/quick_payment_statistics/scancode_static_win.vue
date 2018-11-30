@@ -34,7 +34,7 @@
 				</ul>
 				<!-- 标题 -->
 				<div class="title">
-					<span>订单计数据:</span>
+					<span>订单数据:</span>
 				</div>
 				<!-- 内容 -->
 				<ul class="content">
@@ -73,7 +73,7 @@
 					<li style="width:25%;"></li>
 				</ul>
 				<!-- 标题 -->
-				<div class="title">
+				<div class="title" v-if="couponDetail != ''">
 					<span>优惠券详情:</span>
 				</div>
 				<template v-if="couponDetail != ''">
@@ -95,9 +95,9 @@
 						</template>
 					</ul>
 				</template>
-				<ul class="content">
+				<!-- <ul class="content" v-else>
 					<li>暂未使用优惠券</li>
-				</ul>
+				</ul> -->
 			</div>
 		</div>
 	</Win>
