@@ -345,16 +345,15 @@
 			},
 			// 获取卡属门店店铺列表
 			clickShopList: function (arr) {
-				console.log(arr,'arr');
+				//console.log(arr,'arr');
 				let idArr = [];
 				arr.forEach((item) => {//,index
 					if (item.selected == true) {
-						idArr.push(item.name);
+						idArr.push(item.id);
 						this.selectedShopList = idArr; 
 					}
 				});
 				this.listObj.belongToShop = idArr.join(',');
-				
 			},
 			selexpirationTime: function (i) {
 				this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
