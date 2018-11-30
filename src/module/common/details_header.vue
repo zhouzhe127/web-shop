@@ -158,10 +158,6 @@ export default {
 	mounted() {
 		this.userData = storage.session('userShop');
 		this.currentShop = this.userData.currentShop;
-		// this.$alert('退出登录，获取最新状态', '退出', {
-		// 	confirmButtonText: '退出',
-		// 	callback: this.backLogin()
-		// });
 	},
 	components: {
 		chargeWin: () =>
