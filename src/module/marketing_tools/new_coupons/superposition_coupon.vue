@@ -48,7 +48,7 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<el-button class="fl" type="primary" icon="el-icon-plus" @click="openGoodsWindow">选择菜品</el-button>
+					<el-button class="fl" type="primary" icon="el-icon-plus" @click="openGoodsWindow('1')">选择菜品</el-button>
 					<div class="associated">
 						共关联商品{{getArrLength('selectGoods')}}份，套餐{{getArrLength('selectPackages')}}份
 					</div>
@@ -61,13 +61,35 @@
 				</div>
 			</div>
 			<div class="right" style="text-align:left;padding-left:10px;">
-				<!-- <el-radio-group v-model="secondthingName" class="fl">
-					<el-radio v-for="(item,index) in secondthingList" :key="index" :label="item.name" border @change.native="choiceSec(item)"></el-radio>
-				</el-radio-group> -->
 				<el-select v-model="secondthingName" @change="choiceSec" style="color:#c0c4cc">
 					<el-option v-for="item in secondthingList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
+			</div>
+			<!-- 按照折扣 -->
+			<div class="left" v-if="secondId != '0'">
+				<div class="text">
+				</div>
+			</div>
+			<!-- 折扣 -->
+			<div class="right" style="text-align:left;padding-left:10px;" v-if="secondId != '0'">
+				<span>{{secNameList[secondId - 1].name}}</span>
+				<el-input v-if="secondId == '1'" v-model="discount" placeholder="1-100" maxlength="3" style="width:80px;" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+				<el-input v-else v-model="disamount" maxlength="6" style="width:80px;" onkeyup="value=value.replace(/[^\d.]/g,'')" @blur="formatValue"></el-input>
+				<span>{{secNameList[secondId - 1].discribe}}</span>
+				<el-button type="primary" icon="el-icon-plus" @click="openGoodsWindow('2')" style="margin:0 10px;">选择菜品</el-button>
+				<span>共关联商品{{getArrLength('selectGoodsSec')}}份，套餐{{getArrLength('selectPackagesSec')}}份</span>
+			</div>
+			<!-- 是否叠加 -->
+			<div class="left">
+				<div class="text required">
+					是否叠加
+				</div>
+			</div>
+			<div class="right">
+				<el-radio-group v-model="superpositionName" class="fl">
+					<el-radio style="width:112px;" v-for="(item,index) in superpositionList" :key="index" :label="item.name" border @change.native="chooseStack(item)"></el-radio>
+				</el-radio-group>
 			</div>
 			<!-- 是否包含口味价格 -->
 			<div class="left">
@@ -219,7 +241,7 @@
 				<!-- 选择门店的弹窗 -->
 				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
 				<!-- 关联商品的弹窗 -->
-				<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :isGoods="true" :packages="selectPackages" :goInName="'isCoupon'"></goodListWin>
+				<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="Goods" :isGoods="true" :packages="Packages" :goInName="'isCoupon'"></goodListWin>
 			</div>
 	</section>
 </template>
@@ -239,6 +261,8 @@ export default {
 			goodsWin: false, // 商品弹框
 			isShowCa: false, // 是否展示时间选择组件
 			selectShops: [], //选中的商铺
+			Goods: [],
+			Packages: [],
 			selectGoods: [], //选中的商品
 			selectPackages: [], //选中的套餐
 			compulsoryCreditsList: [{
@@ -346,18 +370,42 @@ export default {
 				}
 			],
 			sharingStatus: '',
-			secondthingName: '按照折扣', //第二件商品名称
+			secondthingName: '请选择优惠方式', //第二件商品名称
 			secondthingList: [{
-				id: 0,
+				id: 1,
 				name: '按照折扣'
 			}, {
-				id: 1,
+				id: 2,
 				name: '按照立减'
 			}, {
-				id: 2,
+				id: 3,
 				name: '按照指定金额'
 			}],
-			secondId: 0 //第二件商品选中的
+			secondId: 0, //第二件商品选中的
+			discount: '', //第二件商品的折扣数
+			disamount: '', //第二件商品立减
+			secNameList: [{
+				name: '折扣力度为',
+				discribe: '折,第二件可优惠商品有'
+			}, {
+				name: '立减金额为',
+				discribe: '元,第二件可优惠商品有'
+			}, {
+				name: '指定金额为',
+				discribe: '元,第二件可优惠商品有'
+			}],
+			goodsType: '0', //标示菜品弹窗
+			selectGoodsSec: [], //第二件选中的商品
+			selectPackagesSec: [], //第二件选中的套餐	
+			superpositionList: [{ //是否叠加
+				name: '否',
+				id: 0
+			}, {
+				name: '是',
+				id: 1
+			}],
+			superpositionName: '否',
+			superpositionId: 0
 		};
 	},
 	props: {
@@ -379,6 +427,21 @@ export default {
 			if (couponDetail.pids && couponDetail.pids.length > 0 && couponDetail.pids != null && couponDetail.pids != 0) {
 				this.selectPackages = couponDetail.pids.split(',');
 			} //关联套餐
+			//是否叠加
+			this.superpositionId = couponDetail.isSuperposition;
+			this.superpositionName = this.superpositionList[this.superpositionId].name;
+			//第二件商品优惠方式
+			this.secondId = couponDetail.discountType;
+			this.secondthingName = this.secondthingList[this.secondId - 1].name;
+			//第二件商品折扣
+			if (this.secondId == 1) {
+				this.discount = couponDetail.param;
+			} else {
+				this.discount = couponDetail.param;
+			}
+			//第二件商品套餐选中
+			this.selectGoodsSec = couponDetail.giveGids.split(',');
+			this.selectPackagesSec = couponDetail.givePids.split(',');
 			this.compulsoryCredits = couponDetail.tastePrice; //是否包含口味
 			if (this.compulsoryCredits == '1') {
 				this.compulsoryName = '是';
@@ -413,7 +476,6 @@ export default {
 				this.useThresholdName = '指定门槛';
 				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
 			}
-
 			//判断优惠共享更改的状态
 			if (couponDetail.sharingStatus == 0) {
 				this.isSharingId = 0;
@@ -429,7 +491,6 @@ export default {
 				this.isSharing = '可与其他优惠共享';
 				this.concessionSharing = '可与会员卡优惠共用';
 			}
-
 			this.annotation = couponDetail.annotation; //备注
 			this.useKnow = couponDetail.useKnow; //使用须知
 
@@ -462,10 +523,18 @@ export default {
 				this.selectShops = val.selectShops;
 			}
 		},
-		openGoodsWindow() { //打开关联商品的弹窗
+		openGoodsWindow(type) { //打开关联商品的弹窗
 			if (this.selectShops.length == 0 && this.ischain == '3') {
 				this.valiData('请先选择店铺', '提示信息');
 				return false;
+			}
+			this.goodsType = type;
+			if (this.goodsType == '1') {
+				this.Goods = this.selectGoods;
+				this.Packages = this.selectPackagesl;
+			} else {
+				this.Goods = this.selectGoodsSec;
+				this.Packages = this.selectPackagesSec;
 			}
 			this.goodsWin = true;
 		},
@@ -475,10 +544,15 @@ export default {
 					this.valiData('商品和套餐最多一共只能选择5个', '提示信息');
 					return false;
 				}
-				this.selectGoods = item.goodArr;
-				this.selectPackages = item.packArr;
+				if (this.goodsType == '1') {
+					this.selectGoods = item.goodArr;
+					this.selectPackages = item.packArr;
+				} else {
+					this.selectGoodsSec = item.goodArr;
+					this.selectPackagesSec = item.packArr;
+				}
+				this.goodsWin = false;
 			}
-			this.goodsWin = false;
 		},
 		getArrLength(type) { //返回数组的长度
 			return this[type].length;
@@ -599,6 +673,25 @@ export default {
 				this.valiData('请选择关联商品或套餐');
 				return false;
 			}
+			//第二件优惠方式
+			if (this.secondId == 0) {
+				this.valiData('请选择第二件商品优惠方式');
+				return false;
+			}
+			//验证折扣范围
+			if (this.secondId == 1 && (this.discount < 1 || this.discount > 100)) {
+				this.valiData('折扣范围1-100');
+				return false;
+			}
+			//验证第二件商品是否选择
+			if (this.selectGoodsSec.length == 0 && this.selectPackagesSec.length == 0) {
+				this.valiData('请选择第二件商品或套餐');
+				return false;
+			}
+			if (this.secondId != 1 && this.disamount == '') {
+				this.valiData('请输入第二件商品优惠金额');
+				return false;
+			}
 			//领券多长时间有效的限制
 			if (this.validType.index == 0) {
 				if (this.validType.time.toString().trim() == '') {
@@ -699,7 +792,7 @@ export default {
 				obj.gids = this.arrToString(this.selectGoods); //关联商品
 				obj.pids = this.arrToString(this.selectPackages); //关联套餐
 				obj.name = this.couponName; //优惠券名称
-				obj.param = ''; //减免金额
+				//obj.param = ''; //减免金额
 				obj.delayHours = this.validTimeId; //领取后生效时间
 				//  'useTime' => '{'type':'week','list':[{'startslot':'09:00','endslot':'05:00','week':[0,1],'isNextDay':0}]}',       //使用时段，为空代表不限制
 				obj.annotation = this.annotation; //优惠券备注
@@ -711,7 +804,6 @@ export default {
 				obj.useLimit = ''; //最大使用上限
 				obj.billPrice = ''; //入账金额
 				obj.reckoningPrice = ''; //结算金额
-
 				// 优惠券共享
 				if (this.isSharingId === 0) {
 					obj.sharingStatus = 0;
@@ -743,10 +835,23 @@ export default {
 					obj.startTime = parseInt(this.validType.valueTime[0] / 1000);
 					obj.endTime = parseInt(this.validType.valueTime[1] / 1000);
 				}
-				obj.type = 5;
+				//第二件商品券
+				obj.type = 9;
+				//是否叠加
+				obj.isSuperposition = this.superpositionId;
+				//折扣类型
+				obj.discountType = this.secondId;
+				if (this.secondId == '1') {
+					obj.param = this.discount;
+				} else {
+					obj.param = this.disamount;
+				}
 				if (!utils.isEmptyObject(this.couponDetail)) {
 					obj.id = this.couponDetail.id;
 				}
+				//第二件菜品
+				obj.giveGids = this.arrToString(this.selectGoodsSec); //关联商品
+				obj.givePids = this.arrToString(this.selectPackagesSec); //关联套餐
 				this.operateCoupons(obj);
 			}
 		},
@@ -776,6 +881,12 @@ export default {
 		},
 		choiceSec: function(value) { //第二件商品选择
 			this.secondId = value;
+		},
+		formatValue(type) {
+			this.disamount = utils.toFloatStr(this.disamount, 2);
+		},
+		chooseStack: function(item) { //是否叠加
+			this.superpositionId = item.id;
 		}
 	},
 };

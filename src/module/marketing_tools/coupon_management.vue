@@ -63,11 +63,19 @@
 				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="pageNum" layout="sizes, prev, pager, next" :page-count="total" :page-sizes="[10, 20, 30]"></el-pagination>
 			</div>
 		</section>
+		<!-- 减免优惠券 -->
 		<breakCoupon v-if="couponType == 1 || couponType == 2 || couponType == 8" :couponDetail='couponDetail' @changeMnage='getcouponResult'></breakCoupon>
+		<!-- 折扣优惠券 -->
 		<discountCoupon v-if="couponType == 3 || couponType == 4" :couponDetail='couponDetail' @changeMnage='getcouponResult'></discountCoupon>
+		<!-- 赠菜券 -->
 		<giveCoupon v-if="couponType == 5" :couponDetail='couponDetail' @changeMnage='getcouponResult'></giveCoupon>
+		<!-- 代金券 -->
 		<vouchersCoupon v-if="couponType == 6" :couponDetail='couponDetail' @changeMnage='getcouponResult'></vouchersCoupon>
+		<!-- 积分卡券 -->
 		<intergralcardCoupon v-if="couponType == 7" :couponDetail='couponDetail' @changeMnage='getcouponResult'></intergralcardCoupon>
+		<!-- 第二件商品券 -->
+		<superpositionCoupon v-if="couponType == 9" :couponDetail='couponDetail' @changeMnage='getcouponResult'></superpositionCoupon>
+		<!-- 优惠券详情弹窗 -->
 		<coupon-manage-win @changeCoupon="toEditCoupon" v-if="showCoupon" v-bind="couponInfo"></coupon-manage-win>
 		<!-- 解绑弹窗 -->
 		<maunBundling v-if='unbindWin' @getAppliedWin='getResult'></maunBundling>
@@ -91,17 +99,17 @@ export default {
 			days: 0, //一共的天数
 			indexOn: 0,
 			bannerList: [{
-				index: 0,
-				name: '未关联'
-			},
-			{
-				index: 1,
-				name: '已关联'
-			},
-			{
-				index: -1,
-				name: '已过期'
-			}
+					index: 0,
+					name: '未关联'
+				},
+				{
+					index: 1,
+					name: '已关联'
+				},
+				{
+					index: -1,
+					name: '已过期'
+				}
 			], //
 			isShowCa: false, //  是否展示时间选择组件
 			changeMnage: true, //  是否显示修改优惠券页面
@@ -119,7 +127,8 @@ export default {
 				5: '赠菜优惠券',
 				6: '代金券',
 				7: '积分卡券',
-				8: '随机立减优惠券'
+				8: '随机立减优惠券',
+				9: '第二件商品券'
 			},
 			unbindWin: false, //同步优惠券的弹窗
 			asyncId: '', //同步优惠券的id
@@ -265,14 +274,7 @@ export default {
 				index,
 				item
 			};
-			// openWin(index, item);
 		},
-		// getAddAlltime(time) {
-		// 	this.atime = time.startTime;
-		// 	this.btime = time.endTime;
-		// 	this.days = time.days;
-		// 	this.isShowCa = false;
-		// },
 		getcouponResult: function() {
 			this.couponType = 0;
 			this.inte(this.indexOn); //重新刷新一下列表
@@ -318,26 +320,26 @@ export default {
 		this.ischain = storage.session('userShop').currentShop.ischain;
 	},
 	components: {
-		'can-multi': () =>
-			import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
 		breakCoupon: () =>
-			import ( /*webpackChunkName: 'breaks_coupon'*/ './new_coupons/breaks_coupon'),
+			import( /*webpackChunkName: 'breaks_coupon'*/ './new_coupons/breaks_coupon'),
 		discountCoupon: () =>
-			import ( /*webpackChunkName: 'discount_coupon'*/ './new_coupons/discount_coupon'),
+			import( /*webpackChunkName: 'discount_coupon'*/ './new_coupons/discount_coupon'),
 		giveCoupon: () =>
-			import ( /*webpackChunkName: 'give_coupon'*/ './new_coupons/give_coupon'),
+			import( /*webpackChunkName: 'give_coupon'*/ './new_coupons/give_coupon'),
 		vouchersCoupon: () =>
-			import ( /*webpackChunkName: 'vouchers_coupon'*/ './new_coupons/vouchers_coupon'),
+			import( /*webpackChunkName: 'vouchers_coupon'*/ './new_coupons/vouchers_coupon'),
 		intergralcardCoupon: () =>
-			import ( /*webpackChunkName: 'integralcard_coupon'*/ './new_coupons/integralcard_coupon'),
+			import( /*webpackChunkName: 'integralcard_coupon'*/ './new_coupons/integralcard_coupon'),
 		'coupon-manage-win': () =>
-			import ( /* webpackChunkName:'coupon_manage_win' */ './coupon_manage_win'),
+			import( /* webpackChunkName:'coupon_manage_win' */ './coupon_manage_win'),
 		page: () =>
-			import ( /* webpackChunkName: 'page_element' */ 'src/components/page_element'),
+			import( /* webpackChunkName: 'page_element' */ 'src/components/page_element'),
 		comTable: () =>
-			import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+			import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 		maunBundling: () =>
-			import ( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
+			import( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
+		superpositionCoupon: () =>
+			import( /*webpackChunkName: 'superposition_coupon'*/ './new_coupons/superposition_coupon'),
 	}
 };
 </script>
