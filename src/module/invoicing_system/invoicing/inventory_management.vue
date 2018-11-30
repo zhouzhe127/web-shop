@@ -5,7 +5,7 @@
 		<!-- <ul class="tebBox" v-if="inventConfigure==0">
 			<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
 		</ul> -->
-		<el-radio-group v-if="inventConfigure==0" v-model="tabactive" fill="#e1bb4a" size="medium" @change="tebClick">
+		<el-radio-group v-if="inventConfigure==0" v-model="tabactive" fill="#e1bb4a" @change="tebClick">
 			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
 		</el-radio-group>
 		<!--列表数据-->

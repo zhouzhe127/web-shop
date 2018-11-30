@@ -5,34 +5,46 @@
 	 -->
 	<div id="goods-count-history">
 		<div class="content-body" v-if="!showAddGoodsCom">
-			<com-table
-				:showHand ="true"
-				:listName ="'盘库商品列表'"
-				:listHeight ='70'
-				:showTitle ="1"
-				:titleData ="titleData"
-				:introData="nowList"
-				:allTotal ="pageObj.listNum"
-				:fixed="0"
-				:bannerStyle="{'color':'#333','font-size':'16px'}"
-				:widthType ="true"
-				:listWidth ="1435" 
-				:contentStyle ="{'color':'#666',fontSize:'14px'}"           
-			>
-			<div slot="con-0" slot-scope="{data,index}">
-				<span class="operation-left line" @click="clearInput(data)">清空</span>
-				<span class="operation-right" @click="openWin(data)">批量盘库</span>
+			<div class="main">
+				<div class="head">
+					盘库商品列表 · 共<em>{{pageObj.listNum}}</em>个条目
+				</div>
+				<el-table :data="nowList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column width="180" fixed="left">
+						<template slot-scope="scope" >
+							<el-button type="text" @click="clearInput(scope.row)" style='color:#D34A2B'>清空输入</el-button>
+							<el-button type="text" @click="openWin(scope.row)">批次盘库</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column label="盘库数量" width="200">
+						<template slot-scope="scope">
+							<el-input v-model="scope.row.countNum" maxlength="9" placeholder="请输入数字" 
+							@input="checkNum(scope.row,scope.$index)"
+							:disabled="scope.row.canWrite">
+							</el-input>
+						</template>
+					</el-table-column>
+					<el-table-column prop="surplusUnit" label="库存数量" min-width="200">
+					</el-table-column>
+					<el-table-column prop="name" label="商品名" min-width="200">
+					</el-table-column>
+					<el-table-column prop="barCode" label="条形码" width="200">
+					</el-table-column>
+					<el-table-column prop="storeName" label="所属仓库" width="200">
+					</el-table-column>
+					<el-table-column prop="batch" label="批次数量" width="100">
+					</el-table-column>
+					<el-table-column prop="typeName" label="商品类型" width="150">
+					</el-table-column>
+				</el-table>
 			</div>
-			<div slot="con-1" slot-scope="{data,index}">
-				<input type="text" v-model="data.countNum" class="count-num" :readonly="data.canWrite" :class="{'canWrite':data.canWrite}" maxlength="9" placeholder="请输入数字" @input="checkNum(data,index)">
-			</div>
-			</com-table>
-			<div>
-				<page-element 
-					:page="pageObj.page" 
-					:total="pageObj.total"  
-					@pageNum="getPageNum"
-				></page-element>
+			<div class="page-box">
+				<el-pagination @current-change="getPageNum"
+					:current-page="pageObj.page"
+					background
+					layout="prev, pager, next"
+					:page-count="pageObj.total">
+				</el-pagination>
 			</div>
 			<component
 				:is ="showCom"
@@ -100,7 +112,7 @@ export default {
 			pageObj: {
 				page: 1,
 				total: 0,				//总页数
-				num: 10, 				//每页显示多少条
+				num: 4, 				//每页显示多少条
 				listNum:0,				//总记录数
 				flag:true,				//前端分页,false,后端分页
 			},
@@ -163,22 +175,16 @@ export default {
 				//去重并保存已盘点批次
 				this.batchListNum = this.delBatchCountNum(res);
 				this.batchListNum.push(...arr);
-
+				this.opearItem.batchList = res;
 				num += '';
 				//批次求和
-				for(let i = 0;i<this.nowList.length;i++){
-					if(this.nowList[i].id == this.opearItem.id){
-						if(!num){
-							//未盘点数量时
-							this.opearItem.canWrite = false;	//当盘点批次数量总和为空时,可以继续填写盘点总量
-						}else{
-							//已盘点数量时
-							this.opearItem.canWrite = true;		//当盘点批次数量总和为不空时,不可以继续填写盘点总量
-							this.opearItem.countNum = num;
-						}
-						this.nowList.splice(i,1,this.opearItem);
-						break;
-					}
+				if(!num){
+					//未盘点数量时
+					this.opearItem.canWrite = false;	//当盘点批次数量总和为空时,可以继续填写盘点总量
+				}else{
+					//已盘点数量时
+					this.opearItem.canWrite = true;		//当盘点批次数量总和为不空时,不可以继续填写盘点总量
+					this.opearItem.countNum = num;
 				}
 			}
 
@@ -245,14 +251,10 @@ export default {
 				this.pageObj.listNum = this.list.length;
 			}
 			this.pageObj.page = 1;
-			this.getPageNum({
-				page:this.pageObj.page,
-				num:this.pageObj.num
-			});
+			this.getPageNum(this.pageObj.page);
 		},
 		getPageNum(obj){
-			this.pageObj.page = obj.page;
-			this.pageObj.num = obj.num;
+			this.pageObj.page = obj;
 
 			if(this.pageObj.flag){
 				//前端分页
@@ -342,8 +344,6 @@ export default {
 			});
 			return temp;
 		},
-
-
 		async getList(){
 			//搜索商品
 			let obj = {
@@ -371,7 +371,7 @@ export default {
 				this.nowList = res.list;
 				this.nowList = this.ininList(this.nowList);
 				this.nowList = this.matchStateList(this.stateCountNum,this.nowList);
-				this.list = [];				//清空
+				this.list = [];
 			}
 		},
 		async useTemplate(){
@@ -417,14 +417,9 @@ export default {
 				}
 				this.pageObj.page = 1;
 
-				this.getPageNum({
-					page:this.pageObj.page,
-					num:this.pageObj.num
-				});
+				this.getPageNum(this.pageObj.page);
 			}
 		},
-
-
 		checkNum(item){
 			if(item.canWrite) return;
 			let num = item.countNum+'',
@@ -457,12 +452,12 @@ export default {
 			temp[0] += '';
 			item.countNum = temp[0];
 		},
+		//清空输入
 		clearInput(item){
-			//清空输入
-			if(item.canWrite){
-				return;
-			}
+			this.batchListNum = this.delBatchCountNum(item.batchList);
 			item.countNum = '';
+			item.canWrite = false;
+			item.batchList = [];
 		},
 		ininList(list){
 			//初始化列表数据,组合字段
@@ -473,14 +468,13 @@ export default {
 				if(!ele.warehouseArea){
 					ele.warehouseArea = ele.areaName;//接口兼容
 				}
-				if(!ele.countNum){
-					ele.countNum = '';												//盘点数量
-				}
+				this.$set(ele,'countNum','');
+				this.$set(ele,'canWrite',false);
 				ele.storeName = `${ele.warehouse}/${ele.warehouseArea}`;			//仓库区域
 				ele.typeName = types[ele.type];										//商品类型
 				ele.surplusUnit = ele.surplus+ele.unit;								//库存数
 				ele.id = ele.gid;													//统一商品id
-				ele.batchId = '0';													//盘总数量时,后台接受的batchId为0
+				ele.batchId = '0';//盘总数量时,后台接受的batchId为0
 				return ele;
 			});
 			return arr;
@@ -528,7 +522,7 @@ export default {
 			temp = this.formatData(sum);
 			return temp;
 		},
-		async submitData(){
+		submitData(){
 			let obj = {};
 
 			this.addStateCountNum();
@@ -536,68 +530,57 @@ export default {
 			obj = this.mergeList();
 			obj.new.push(...obj.old);
 			if(obj.new.length == 0){
-				this.alert('请先填写盘库数量!');
+				this.$message({message: '请先填写盘库数量',type: 'error'});
 				return;
 			}
-
-			this.alert('确认盘库?',async ()=>{
+			this.$confirm('确认盘库?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(async () => {
 				let retData = await this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
 					data:obj.new,
 					type:0
 				});
 				if(retData.result){
-					this.alert('盘库成功!');
+					this.$message({message: '盘库成功',type: 'success'});
 					delete this.$route.query.id;
 					this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
 				}else{
-					this.alert('盘库失败!');
+					this.$message({message: '盘库失败',type: 'error'});
 				}
+			}).catch(()=>{
+				//
 			});
 		},
 		initBtn(){
-			let style = {height:'40px','color':'#fff'};
 			this.$store.commit('setPageTools',[
 				{
 					name: '确认盘库',
-					className:'yellow',
-					style,
+					className:'primary',
+					type:4,
 					fn:()=>{
 						this.submitData();
 					}
 				},
 				{
 					name: '添加商品',
-					style,
+					className:'success',
+					type:4,
 					fn:()=>{
 						this.showAddGoodsCom = true;
 					}
 				},
 				{
-					name: '取消盘库',
-					className:'gray',
-					style,
+					name: '取消',
+					className:'',
+					type:4,
 					fn:()=>{
 						this.$router.go(-1);
 					}
 				},
 
 			]);            
-		},
-		alert(str,callback){
-			let obj = {
-				title:'温馨提示',
-				content:str,
-				winType:'alert'			
-			};
-			if(typeof callback == 'function'){
-				obj.winType = 'confirm';
-				obj.callback = (res)=>{
-					if(res == 'ok'){
-						callback();
-					}
-				};
-			}
-			this.$store.commit('setWin',obj);
 		},
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
@@ -636,6 +619,15 @@ export default {
 	@import url('../warehouse_manage/z_less.less');
 	#goods-count-history{
 		.content-body{
+			padding-top: 10px;
+			.main{
+				.head{
+					height: 45px;line-height: 45px;padding: 0 10px;font-size: 14px;
+					border: 1px solid #ebeef5;border-bottom: 0;
+					em{color: #ff3c04;padding: 0 2px;}
+				}
+			}
+			.page-box{padding: 20px 0;}
 			.opera-common{
 				display: inline-block;
 				.whb(auto,40px,none);

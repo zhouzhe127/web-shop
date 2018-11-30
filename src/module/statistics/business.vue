@@ -403,7 +403,6 @@ export default {
 				//执行循环前，先清除保存的数据
 				this.eachGetShopData();
 			}
-			
 		},
 		stopRepeat(){//停止轮询
 			Timer.clear(this.timerId);
