@@ -361,15 +361,15 @@ export default{
 				if(item.oneNum!=='' || item.twoNum!==''){
 					let total = Number(item.oneNum)*Number(item.unitValue) + Number(item.twoNum);
 					if(isNaN(item.oneNum) || isNaN(item.twoNum)) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量必须为数字`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量必须为数字`,type: 'error'});
 						return false;
 					}
 					if(total<0) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量不能小于0`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量不能小于0`,type: 'error'});
 						return false;
 					}
 					if(total>999999999) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量过大!`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量过大!`,type: 'error'});
 						return false;
 					}
 				}
@@ -380,21 +380,20 @@ export default{
 			this.setPageSave();//翻页操作才能触发保存，所以这里调用一下，存入最后一次返回后填写的数据
 			this.setSendList();//设置发送数据
 			if(!this.checkList.length){
-				this.myAlert('请填写盘库数量');
+				this.$message({message: '请填写盘库数量',type: 'error'});
 				return;
 			}
 			if(!this.veriList()) return;
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '操作提示',
-				content: '确认盘库？',
-				callback: (res) => {
-					if (res == 'ok') {
-						setTimeout(()=>{
-							this.checkMatSubmit();
-						});
-					}
-				},
+			this.$confirm('确认盘库?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(async () => {
+				setTimeout(()=>{
+					this.checkMatSubmit();
+				});
+			}).catch(()=>{
+				//
 			});
 		},
 		async checkMatSubmit(){
@@ -403,11 +402,11 @@ export default{
 				data:this.checkList,
 			}});
 			if(data.result){
-				this.myAlert('物料盘库成功！');
+				this.$message({message: '物料盘库成功！',type: 'success'});
 				delete this.$route.query.id;
 				this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
 			}else{
-				this.myAlert('物料盘库失败！');
+				this.$message({message: '物料盘库失败！',type: 'error'});
 			}
 		},
 		async getMatList(){//获取物料列表
@@ -423,12 +422,6 @@ export default{
 			this.pageTotal = data.total;
 			this.listLength = data.count;
 			this.setListData(data.list);
-		},
-		myAlert(content) {
-			this.$store.commit('setWin', {
-				title: '操作提示',
-				content: content,
-			});
 		},
 		setListData(list){//设置列表数据
 			for(let item of list){

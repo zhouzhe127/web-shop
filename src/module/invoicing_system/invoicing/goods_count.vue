@@ -522,7 +522,7 @@ export default {
 			temp = this.formatData(sum);
 			return temp;
 		},
-		async submitData(){
+		submitData(){
 			let obj = {};
 
 			this.addStateCountNum();
@@ -530,22 +530,27 @@ export default {
 			obj = this.mergeList();
 			obj.new.push(...obj.old);
 			if(obj.new.length == 0){
-				this.alert('请先填写盘库数量!');
+				this.$message({message: '请先填写盘库数量',type: 'error'});
 				return;
 			}
-
-			this.alert('确认盘库?',async ()=>{
+			this.$confirm('确认盘库?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(async () => {
 				let retData = await this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
 					data:obj.new,
 					type:0
 				});
 				if(retData.result){
-					this.alert('盘库成功!');
+					this.$message({message: '盘库成功',type: 'success'});
 					delete this.$route.query.id;
 					this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
 				}else{
-					this.alert('盘库失败!');
+					this.$message({message: '盘库失败',type: 'error'});
 				}
+			}).catch(()=>{
+				//
 			});
 		},
 		initBtn(){
@@ -576,22 +581,6 @@ export default {
 				},
 
 			]);            
-		},
-		alert(str,callback){
-			let obj = {
-				title:'温馨提示',
-				content:str,
-				winType:'alert'			
-			};
-			if(typeof callback == 'function'){
-				obj.winType = 'confirm';
-				obj.callback = (res)=>{
-					if(res == 'ok'){
-						callback();
-					}
-				};
-			}
-			this.$store.commit('setWin',obj);
 		},
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
