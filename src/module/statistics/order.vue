@@ -820,7 +820,8 @@ export default {
 						this.dateTime == newEndTime
 							? this.getTime(endDay)
 							: this.getTime(this.dateTime + ' 23:59:59'),
-					isOpenTime: Number(this.isOpenTime)
+					isOpenTime: Number(this.isOpenTime),
+					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
 			this.$store.commit('setWin', {
@@ -876,7 +877,8 @@ export default {
 							this.dateTime == newEndTime
 								? this.getTime(endDay)
 								: this.getTime(this.dateTime + ' 23:59:59'),
-						isOpenTime: Number(this.isOpenTime)
+						isOpenTime: Number(this.isOpenTime),
+						type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 					}
 				},
 				'csv'

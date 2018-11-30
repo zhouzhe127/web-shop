@@ -766,7 +766,8 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.conSize)
+					isOpenTime: Number(this.conSize),
+					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
 			this.$store.commit('setWin', {
@@ -831,7 +832,8 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.conSize)
+					isOpenTime: Number(this.conSize),
+					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
 		},
