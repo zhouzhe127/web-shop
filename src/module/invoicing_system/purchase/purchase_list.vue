@@ -43,26 +43,26 @@
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
 				<el-table-column prop="date" label="序号" fixed width="100" type="index" :index="indexMethod">
 				</el-table-column>
-				<el-table-column label="采购单状态">
+				<el-table-column label="采购单状态" width="120">
 					<template slot-scope="scope">
 						<span>{{getstatus(scope.row.status)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="code" label="采购单号">
+				<el-table-column prop="code" label="采购单号" min-width="200">
 				</el-table-column>
-				<el-table-column label="提交时间">
+				<el-table-column label="提交时间" min-width="200">
 					<template slot-scope="scope">
 						<div>{{getTime(scope.row.createTime)}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="createUser" label="申请人">
+				<el-table-column prop="createUser" label="申请人" width="120">
 				</el-table-column>
-				<el-table-column label="审核时间">
+				<el-table-column label="审核时间" min-width="180">
 					<template slot-scope="scope">
 						<div>{{getTime(scope.row.auditTime)}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="auditUser" label="审核人">
+				<el-table-column prop="auditUser" label="审核人" width="120">
 				</el-table-column>
 				<el-table-column label="操作" fixed="right" width="100">
 					<template slot-scope="scope">

@@ -65,6 +65,9 @@
 						<el-input  v-model="mName" placeholder="请输入物料名称"></el-input>
 					</div>
 					<div class="inline-box">
+						<el-input  v-model="matBarCode" placeholder="请输入物料编码"></el-input>
+					</div>
+					<div class="inline-box">
 						<el-select v-model="matType" placeholder="请选择物料类型" @change="dropSelect" class="el-size">
 						    <el-option
 								v-for="item in matTypeList"
@@ -94,28 +97,28 @@
 		<div class="main">
 			<template v-if="tabIndex==1">
 				<div class="list">
-					<el-table :data="goodsList" stripe border style="width: 100%" :key="1">
+					<el-table :data="goodsList" stripe border style="width: 100%" :key="1" :header-cell-style="{'background-color':'#f5f7fa'}">
 						<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 					    </el-table-column>
-					    <el-table-column prop="goodsName" label="商品名称">
+					    <el-table-column prop="goodsName" label="商品名称" width="200">
 					    </el-table-column>
-					    <el-table-column prop="barCode" label="条形码">
+					    <el-table-column prop="barCode" label="条形码" width="200">
 					    </el-table-column>
-					    <el-table-column prop="price" label="售价">
+					    <el-table-column prop="price" label="售价" min-width="150">
 					    </el-table-column>
-					    <el-table-column label="商品类型">
+					    <el-table-column label="商品类型" min-width="120">
 					    	<template slot-scope="scope">
 					        	{{typeNameArr[Number(scope.row.type)+1].label}}
 					      	</template>
 					    </el-table-column>
-					    <el-table-column label="库存数量/重量">
+					    <el-table-column label="库存数量/重量" min-width="150">
 					    	<template slot-scope="scope">
 					        	{{scope.row.surplus}}{{scope.row.unit}}
 					      	</template>
 					    </el-table-column>
-					    <el-table-column prop="batch" label="批次数量">
+					    <el-table-column prop="batch" label="批次数量" width="120">
 					    </el-table-column>
-					    <el-table-column label="操作" fixed="right" width="150">
+					    <el-table-column label="操作" fixed="right" width="100">
 					    	<template slot-scope="scope">
 					        	<el-button @click="listHandle(scope.row,1)" type="text" size="small">查看详情</el-button>
 					      	</template>
@@ -134,29 +137,31 @@
 			</template>
 			<template v-if="tabIndex==2">
 				<div class="list">
-					<el-table :data="materialList" stripe border style="width: 100%" :key="2">
+					<el-table :data="materialList" stripe border style="width: 100%" :key="2" :header-cell-style="{'background-color':'#f5f7fa'}">
 						<el-table-column type="index" :index="indexMethodMat" label="序号" width="100">
 					    </el-table-column>
-					    <el-table-column prop="name" label="物料名称">
+					    <el-table-column prop="name" label="物料名称" min-width="200">
 					    </el-table-column>
-					    <el-table-column label="类型">
+						<el-table-column prop="barCode" label="物料编码" width="200">
+					    </el-table-column>
+					    <el-table-column label="类型" min-width="120">
 					    	<template slot-scope="scope">
 					    		{{matTypeList[Number(scope.row.type)+1].label}}
 					    	</template>
 					    </el-table-column>
-					    <el-table-column label="分类">
+					    <el-table-column label="分类" min-width="150">
 					    	<template slot-scope="scope">
 					    		{{setWlSort(scope.row.cate)}}
 					    	</template>
 					    </el-table-column>
-					    <el-table-column label="库存数量/重量">
+					    <el-table-column label="库存数量/重量" width="200">
 					    	<template slot-scope="scope">
 					        	{{setUnit(scope.row.surplus,scope.row.unit)}}
 					      	</template>
 					    </el-table-column>
-					    <el-table-column prop="batch" label="批次数量">
+					    <el-table-column prop="batch" label="批次数量" width="150">
 					    </el-table-column>
-					    <el-table-column label="操作" fixed="right" width="150">
+					    <el-table-column label="操作" fixed="right" width="100">
 					    	<template slot-scope="scope">
 					        	<el-button @click="listHandle(scope.row,2)" type="text" size="small">查看详情</el-button>
 					      	</template>
@@ -216,6 +221,7 @@ export default {
 			matType:'-1',
 			barCode:'',//条形码
 			secBarCode:'',//副条形码
+			matBarCode:'',//物料编码
 			veri:['goodsName','barCode','secBarCode'],//用于验证筛选条件
 			mName:'',//物料名称
 			allSort:[],//所有分类
@@ -259,7 +265,7 @@ export default {
 	methods: {
 		initBtn(){
 			let arr = [
-				{name: '返回',className: 'info',type:4,
+				{name: '返回',className: '',type:4,
 					fn: () => {
 						storage.session('warehouseListsDestroy',true);
 						storage.session('warehouseDetail',null);
@@ -312,6 +318,7 @@ export default {
 				name:this.mName,
 				cid:this.mCid>0?this.mCid:'',
 				type:this.matType,
+				barCode:this.matBarCode,
 			}});
 			this.materialList = data.list;
 			this.mLength = Number(data.count);
@@ -506,6 +513,7 @@ export default {
 			this.mCid = '';
 			this.mPage = 1;
 			this.mShowNum = 10;
+			this.matBarCode = '';
 			this.filter();
 		},
 		codeInput(event){//限制文本框输入 只能输入数字
@@ -565,7 +573,7 @@ export default {
 <style lang='less' scoped>
 	.warehouse-detail{padding-bottom: 100px;padding-top: 10px;
 		.detail-box{border: 1px solid #dcdfe6;
-			.title{height: 40px;line-height: 40px;padding: 0 20px;font-size: 16px;background: #e6e6e6;}
+			.title{height: 40px;line-height: 40px;padding: 0 20px;font-size: 16px;background: #f5f7fa;}
 			.word{overflow: hidden;
 				.block{overflow: hidden;width: 100%;}
 				.item{width: 33.33%;float: left;padding: 15px 20px;min-height: 54px;font-size: 16px;color: #333;position: relative;

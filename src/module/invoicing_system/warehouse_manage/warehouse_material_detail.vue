@@ -38,7 +38,7 @@
 			</el-select>
 		    </div>
 			<div class="list">
-				<el-table :data="batchList" stripe border style="width: 100%" >
+				<el-table :data="batchList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 				    </el-table-column>
 				    <el-table-column prop="batchCode" label="批次编号">
