@@ -9,7 +9,10 @@
 	<div class="bom-order">
 		<div class="filter">
 			<div class="inline-box">
-				<el-input placeholder="请输入物料名" v-model="matName"></el-input>
+				<el-input placeholder="请输入物料名称" v-model="matName"></el-input>
+			</div>
+			<div class="inline-box">
+				<el-input placeholder="请输入物料编码" v-model="barCode"></el-input>
 			</div>
 			<div class="inline-box">
 				<el-cascader
@@ -57,6 +60,8 @@
 				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 				</el-table-column>
 				<el-table-column prop="name" label="物料名称" min-width="200">
+				</el-table-column>
+				<el-table-column prop="barCode" label="物料编码" min-width="200">
 				</el-table-column>
 				<el-table-column label="类型" width="150">
 					<template slot-scope="scope">
@@ -121,6 +126,7 @@
 		data() {
 			return {
 				userName: '', //用户名
+				barCode:'',//物料编码
 				tempId:'',//模板id
 				shopId:'',//店铺id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
@@ -523,6 +529,7 @@
 					wid : this.wid,
 					areaId : this.areaId,
 					type: -1,
+					barCode:this.barCode,
 				}});
 				this.searchObj = {
 					cid: this.cid,
@@ -574,7 +581,7 @@
 				this.getData();
 			},
 			reset() { //重置
-				let arr = ['matName','cid','wid','areaId','sortOneId','sortOneId'];
+				let arr = ['matName','cid','wid','areaId','sortOneId','sortOneId','barCode'];
 				for(let item of arr){
 					this[item] = '';
 				}

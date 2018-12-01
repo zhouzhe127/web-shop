@@ -47,6 +47,9 @@
 						<el-input v-model="mName" placeholder="请输入物料名称"></el-input>
 					</div>
 					<div class="sleType">
+						<el-input v-model="barCode" placeholder="请输入物料编码"></el-input>
+					</div>
+					<div class="sleType">
 						<el-select v-model="typeValue" placeholder="全部类型">
 							<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
 						</el-select>
@@ -159,6 +162,7 @@ export default {
 					cid: this.twoSle ? this.twoSle.id ? this.twoSle.id : '' : this.oneSle.id ? this.oneSle.id : '',
 					shopId: this.shopId,
 					type:this.typeValue,
+					barCode:this.barCode,
 				}
 			});
 			this.goodsList = data.list;
@@ -273,6 +277,7 @@ export default {
 			this.mName = '';
 			this.oneSle = '';
 			this.twoSle = '';
+			this.barCode = '';
 			this.typeValue = -1;
 			for(let item of this.oneCate) {
 				item.selected = false;

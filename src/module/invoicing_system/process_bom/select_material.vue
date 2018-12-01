@@ -7,7 +7,10 @@
 					<input type="text" placeholder="请输入物料名称" v-model="matName"/>
 				</div>
 				<div class="inline-box">
-					<el-select v-model="typeSel" placeholder="请选择" style="width:200px;">
+					<input type="text" placeholder="请输入物料编码" v-model="barCode"/>
+				</div>
+				<div class="inline-box">
+					<el-select v-model="typeSel" placeholder="请选择" class="el-size">
 					    <el-option
 							v-for="item in typeList"
 							:key="item.value"
@@ -21,7 +24,7 @@
 						class="el-size"
 						:options="oneSort"
 						v-model="cidSel"
-						@change="getSortSel"
+						@change="getSortSel" 
 						change-on-select>
 					</el-cascader>
 				</div>
@@ -83,6 +86,7 @@
 				page:1,
 				showNum:50,
 				matName:'',
+				barCode:'',
 				pageTotal:1,
 				selType:'',//已选中的物料类型
 				oneSort:[],//一级分类
@@ -209,6 +213,7 @@
 				this.cid = '';
 				this.cidSel = [''];
 				this.typeSel = -1;
+				this.barCode = '';
 				this.getMaterialList();
 			},
 			getPageNum(page){//获取分页数据
@@ -222,6 +227,7 @@
 					name:this.matName,
 					cid:this.cid,
 					type:this.typeSel,
+					barCode:this.barCode,
 				}});
 				this.materialList = data.list;
 				this.pageTotal = Number(data.total);
@@ -268,6 +274,7 @@
 <style lang="less" scoped>
 	#sel-material{
 		padding: 15px;position: relative;height: 560px;
+		.el-size{width: 200px;}
 		.filter{
 			.inline-box{display: inline-block;padding-right: 5px;vertical-align: middle;
 				input {
