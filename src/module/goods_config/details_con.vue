@@ -24,7 +24,7 @@
 					</el-radio-button>
 				</el-radio-group>
 			</div>
-			<section style="width:100%;height:50px;">
+			<section style="width:100%;margin-bottom:10px;">
 				<div v-if="ischain == 1|| ischain == 2" style="float:left;margin-right:10px;">
 					<el-select v-model="typeName" @change="selectType" placeholder="请选择指派类型" style="width:150px;">
 						<el-option v-for="item in goodSec" :key="item.id" :label="item.name" :value="item.id">

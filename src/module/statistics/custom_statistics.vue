@@ -9,22 +9,20 @@
 	<div id="stat-com">
 		<section v-if="showDet == 'all'" class="top">
 			<!--日期选择和搜索框-->
-			<div class="input-box">
-				<!--日期组件 开始时间-->
-				<calendar :time="startTime" class="data-box" :format="'yyyy年MM月dd日'" @emit="startTimeChange"></calendar>
-			</div>
-			<span class="input-word">至</span>
-			<div class="input-box">
-				<!--日期组件 开始时间-->
-				<calendar :time="endTime" class="data-box" :format="'yyyy年MM月dd日'" @emit="endTimeChange"></calendar>
-			</div>
+			<!--日期选择和搜索框-->
+			<el-date-picker :clearable="false" v-model="startTime" type="date" placeholder="选择日期" style="width:150px;">
+			</el-date-picker>
+			<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
+			<el-date-picker :clearable="false" v-model="endTime" @change="getendTime" type="date" placeholder="选择日期" style="width:150px;">
+			</el-date-picker>
 			<section class="isTimeOne">
 				<div v-on:click="selectBusinessHours" :class="{'act':isOpenTime}"></div>
 				<span>按营业时间</span>
 			</section>
-			<a class="fl yellow searchOne" v-on:click="selects()" href="javascript:void(0)">搜索</a>
-			<a class="fl gray backOne" v-on:click="resetting()" href="javascript:void(0)">重置</a>
+			<el-button @click="selects" type="primary" icon="el-icon-search">搜索</el-button>
+			<el-button @click="resetting" type="info" icon="el-icon-search">重置</el-button>
 		</section>
+		
 		<section v-if="showDet == 'all'">
 			<!--总-->
 			<div class="oidList">
@@ -51,39 +49,49 @@
 					<li>{{total.paidAmount}}</li>
 				</ul>
 			</div>
-			<ul class="orMaReMainList">
-				<section>
-					<h3>自定义商品统计 共
-						<span>{{withoutOrder.length}}</span>条记录</h3>
-				</section>
-				<li>
-					<span v-on:click="allSel" class="allSpan">全选</span>
-					<span style="width:18%">商品名称</span>
-					<span>商品总数</span>
-					<span style="width:8%;">销量</span>
-					<span>赠品总数</span>
-					<span>赠品金额</span>
-					<span style="width:8%;">退品数量</span>
-					<span>退品金额</span>
-					<span>消费金额</span>
-					<span>实收金额</span>
-				</li>
-				<li style="width: 100%;background-color: #F2F2F2;color: #F8931F; " v-if="withoutOrder.length == 0">没有自定义商品</li>
-				<li v-for="(item,index) in withoutOrder" :key="index">
-					<span style="cursor: pointer;position: relative;width:6%;" v-on:click="ocSelOne(item)">
-						<div v-bind:class="{'active circle':item.selected,'circle':!item.selected}"></div>
-					</span>
-					<span style="width:18%">{{item.goodsName}}</span>
-					<span v-on:click="openGoodSel(item,'goodsNum',index)" class="cursorAll">{{item.goodsNum}}</span>
-					<span v-on:click="openGoodSel(item,'salesNum',index)" style="width:8%;" class="cursorAll">{{item.salesNum}}</span>
-					<span v-on:click="openGoodSel(item,'freeNum',index)" class="cursorAll">{{item.freeNum}}</span>
-					<span>{{item.freeAmount}}</span>
-					<span v-on:click="openGoodSel(item,'returnNum',index)" style="width:8%;" class="cursorAll">{{item.returnNum}}</span>
-					<span>{{item.returnAmount}}</span>
-					<span>{{item.consumptionAmount}}</span>
-					<span>{{item.paidAmount}}</span>
-				</li>
-			</ul>
+			<section class="oBox">
+				<div class="boxTop">
+					<div class="oSpan">
+						自定义商品统计 · 共<em style="color: #ff3c04;font-size: inherit;">{{withoutOrder.length}}</em>条记录
+					</div>
+				</div>
+				<el-table
+					ref="multipleTable" stripe
+					:data="withoutOrder"
+					fixed
+					:header-cell-style = "{'background-color':'#f5f7fa'}"
+					style="width: 100%"
+					@selection-change="handleSelectionChange">
+					<template slot-scope="scope">
+						<el-table-column reserve-selection type="selection" width="55"> </el-table-column>
+						<el-table-column fixed min-width = "150" align="center" prop="goodsName" label="商品名称"></el-table-column>
+						<el-table-column fixed min-width = "120" align="center" prop="goodsNum" label="商品总数">
+							<template slot-scope="scope">
+								<span @click="openGoodSel(scope.row,'goodsNum',scope.$index)" style="color:#01AAE5;cursor:pointer">{{scope.row.goodsNum}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column min-width = "120" align="center" prop="salesNum" label="销量">
+							<template slot-scope="scope">
+								<span @click="openGoodSel(scope.row,'salesNum',scope.$index)" style="color:#01AAE5;cursor:pointer">{{scope.row.salesNum}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column prop="freeNum" align="center" label="赠品总数" >
+							<template slot-scope="scope">
+								<span @click="openGoodSel(scope.row,'freeNum',scope.$index)" style="color:#01AAE5;cursor:pointer">{{scope.row.freeNum}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" prop="freeAmount" label="赠品金额" ></el-table-column>
+						<el-table-column align="center" prop="billPrice" label="退品数量">
+							<template slot-scope="scope">
+								<span @click="openGoodSel(scope.row,'returnNum',scope.$index)" style="color:#01AAE5;cursor:pointer">{{scope.row.returnNum}}</span>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" prop="returnAmount" label="退品金额"></el-table-column>
+						<el-table-column align="center" prop="consumptionAmount" label="消费金额"></el-table-column>
+						<el-table-column align="center" prop="paidAmount" label="实收金额"></el-table-column>
+					</template>
+				</el-table>
+			</section>
 		</section>
 		<custom-detail v-if="isShow" @throwWinResult="doThrowWinResult" :userData="userData" :showDet="showDet" :itemdetial="itemdetial"></custom-detail>
 	</div>
@@ -122,7 +130,8 @@ export default {
 
 			itemdetial: {}, //从主页面进入详情
 			itemIndex: 0,
-			showDet: 'all'
+			showDet: 'all',
+			selectList:[],//选择的列表
 		};
 	},
 	mounted() {
@@ -131,15 +140,21 @@ export default {
 		this.init();
 	},
 	methods: {
+		handleSelectionChange(val){
+			this.selectList = val;
+		},
 		initBtn() {
-			let obj = {
+			let arr = [{
 				name: '导出',
-				className: ['fd-yellow'],
-				fn: () => {
-					this.importDet();
-				}
-			};
-			this.$store.commit('setPageTools', [obj]);
+				type:4,
+				className: 'primary',
+				fn: this.importDet
+			}];
+			this.$store.commit('setPageTools', arr);
+		},
+		//结束时间为当天的最后一秒，组件为开始
+		getendTime(re){
+			this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
 		},
 		startTimeChange(time) {
 			//开始时间
@@ -313,12 +328,13 @@ export default {
 		},
 		//导出
 		async importDet() {
-			let withoutList = this.withoutOrder;
+			let selectList = this.selectList;
 			let str = ''; //保存要导出的id
-			for (let i = 0; i < withoutList.length; i++) {
-				if (withoutList[i].selected == true) {
-					str = str + withoutList[i].goodsId + ',';
-				}
+			for (let i = 0; i < selectList.length; i++) {
+				str = str + selectList[i].goodsId + ',';
+				// if (selectList[i].selected == true) {
+				// 	str = str + selectList[i].goodsId + ',';
+				// }
 			}
 			if (str == '' || str == ',') {
 				this.$store.commit('setWin', {
@@ -346,9 +362,9 @@ export default {
 			});
 		},
 		doThrowWinResult(res) {
+			this.initBtn();
 			this.showDet = res;
 			this.isShow = false;
-			this.initBtn();
 		}
 	},
 	components: {
@@ -360,7 +376,20 @@ export default {
 };
 </script>
 
-<style  type="text/css" scoped>
+<style  type="text/css" lang="less" scoped>
+#stat-com .oBox{
+		width:100%;border:1px solid #ebeef5;border-bottom:none;padding:1px;margin:10px 0;
+		.boxTop{
+			height:50px;border-bottom:1px solid #ebeef5;
+			.oSpan{
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				padding: 0 10px;
+				font-size: 16px;
+			}
+		}
+	}
 #stat-com {
 	position: relative;
 }
@@ -389,7 +418,7 @@ export default {
 #stat-com .isTimeOne {
 	line-height: 46px;
 	width: 125px;
-	float: left;
+	display: inline-block;
 	margin: 0 10px;
 }
 #stat-com .isTimeOne div {
