@@ -37,6 +37,10 @@
 						<li>-</li>
 						<li>优惠券抵扣:{{detail.couponCash}}元</li>
 					</template>
+					<template v-if="detail.discount > 0">
+						<li>-</li>
+						<li>优惠金额:{{detail.discount}}元</li>
+					</template>
 					<li>=</li>
 					<li>实付金额:{{detail.pain}}元</li>
 				</ul>
