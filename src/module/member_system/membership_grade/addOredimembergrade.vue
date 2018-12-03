@@ -1,9 +1,9 @@
 <!--
-	**新建会员等级
-	*
-	* miaochuan.sha
-	* *
-	*
+    **新建会员等级
+    *
+    * miaochuan.sha
+    * *
+    *
 -->
 <template>
     <div id="sweepCode">
@@ -95,8 +95,8 @@
         <div class="online-box clearfix" v-if="intereststatus">
             <span class="online-sub fl">关联优惠券</span>
             <div class="rightHalf">
-                <el-button type="primary" icon="el-icon-plus" style="width:179px;" @click="addCoupon">关联优惠券</el-button>
-                <span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
+                <el-button class="fl" type="primary" icon="el-icon-plus" style="width:179px;" @click="addCoupon">关联优惠券</el-button>
+                <span class="coupon_name" v-if="selectCoupon.length > 0">(已关联:{{getCouponName(selectCoupon)}})</span>
             </div>
         </div>
         <!-- 赠送积分 -->
@@ -180,7 +180,7 @@
             <div class="rightHalf">
                 <div class="win-imgShow">
                     <img :src="imgHost+fileName">
-				</div>
+                </div>
                 </div>
             </div>
             <!-- 保存 -->
@@ -242,14 +242,22 @@ export default {
             pointName: '按比例',
             cash: '', //积分比例现金
             point: '', //积分比例积分
-            multiple: '', //倍数	
-            gid: '', //自身的id	
-            intereststatus: false, //升至该等级赠送权益	
-            presentIntegral: '', //升至改等级赠送的积分	
+            multiple: '', //倍数  
+            gid: '', //自身的id    
+            intereststatus: false, //升至该等级赠送权益  
+            presentIntegral: '', //升至改等级赠送的积分   
             showCoupon: false, //展示优惠券的弹窗
             selectCoupon: [], //被选中的优惠券数组
             memberInfo: '', //某一个等级的信息
         };
+    },
+    watch: {
+        'selectCoupon': {
+            deep: true,
+            handler: function(val) {
+                this.getCouponName(this.selectCoupon);
+            }
+        }
     },
     methods: {
         getResult: function(str, item) { //选择会员等级的弹窗回掉
@@ -356,25 +364,6 @@ export default {
                 this.validata('请上传图片');
                 return false;
             }
-            // if (this.isDefault == true) {
-            // 	for (let i = 0; i < this.gradeList.length; i++) {
-            // 		if (this.gradeList[i].id != this.gid) {
-            // 			if (this.gradeList[i].status == this.levelStatus) {
-            // 				this.validata('已有默认等级,不能再次设置！');
-            // 				return false;
-            // 			}
-            // 		}
-            // 	}
-            // }
-            // 关联默认等级提示
-            // for (let i = 0; i < this.gradeList.length; i++) {
-            // 	if (this.gradeList[i].status == '1') {
-            // 		if (this.gradeList[i].id == this.gradeId) {
-            // 			this.validata('您关联的为默认等级,该等级不会生效');
-            // 		}
-            // 		return false;
-            // 	}
-            // }
             return true;
         },
         saveConfig: function() { //保存
@@ -427,13 +416,6 @@ export default {
             });
         },
         async delLevel() {
-            //console.log('1111')
-            // 删除会员等级
-            // if (this.memberInfo.status == '1') {
-            // 	this.validata('该会员等为默认等级,不可删除');
-            // 	return false;
-            // } else {
-            //console.log('2222')
             let res = await http.delMemberlevel({
                 data: {
                     id: this.gid
@@ -483,11 +465,6 @@ export default {
             }
         },
         async editLevel() {
-            // 编辑会员等级
-            // if (Number(this.isDefaultVip) == '1' && this.activeValue != '0.00') {
-            // 	this.validata('默认等级升级金额必须为0');
-            // 	return false;
-            // }
             if (!this.checkForm()) return;
             await http.editMemberlevel({
                 data: {
@@ -536,12 +513,12 @@ export default {
             //this.isDefaultVip = res.status == '1' ? true : false;
             // let arr = [];
             // for (let j = 0; j < this.gradeList.length; j++) {
-            // 	if (this.gradeList[j].status == '0') {
-            // 		arr.push(this.gradeList[j]);
-            // 		if (arr.length == this.gradeList.length) {
-            // 			this.isDefaultVip = true;
-            // 		}
-            // 	}
+            //  if (this.gradeList[j].status == '0') {
+            //      arr.push(this.gradeList[j]);
+            //      if (arr.length == this.gradeList.length) {
+            //          this.isDefaultVip = true;
+            //      }
+            //  }
             // }
             this.isNext = Boolean(Number(res.isNext)); //升级规则的开关
             if (res.nextLevel != '') { //下一等级的id
@@ -680,6 +657,16 @@ export default {
                 this.gradeList = res;
             }
         },
+        getCouponName: function(arr) { //获取优惠券名称
+            let couponName = '';
+            let couponArr = [];
+            for (let item of arr) {
+                let oneCoupon = item.name + '*' + item.num;
+                couponArr.push(oneCoupon);
+            }
+            couponName = couponArr.join(';');
+            return couponName;
+        }
     },
     computed: {
         cancel() {
@@ -816,9 +803,20 @@ export default {
     /* line-height: 40px; */
 }
 
+#sweepCode .online-box .rightHalf .coupon_name {
+    float: left;
+    display: block;
+    width: 600px;
+    height: 40px;
+    line-height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* #sweepCode .online-box .el_input {
-		width: 218px
-	} */
+        width: 218px
+    } */
 
 #sweepCode .online-box .businessHours {
     float: left;

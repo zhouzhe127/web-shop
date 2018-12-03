@@ -540,11 +540,12 @@ export default {
 		},
 		closeGoodWin(res, item) { //  关闭商品弹框
 			if (res == 'ok') {
-				if (item.goodArr.length + item.packArr.length > 5) {
-					this.valiData('商品和套餐最多一共只能选择5个', '提示信息');
-					return false;
-				}
+				// if (item.goodArr.length + item.packArr.length > 5) {
+				// 	this.valiData('商品和套餐最多一共只能选择5个', '提示信息');
+				// 	return false;
+				// }
 				if (this.goodsType == '1') {
+					console.log(JSON.stringify(item.goodArr))
 					this.selectGoods = item.goodArr;
 					this.selectPackages = item.packArr;
 				} else {
@@ -553,6 +554,7 @@ export default {
 				}
 				this.goodsWin = false;
 			}
+			this.goodsWin = false;
 		},
 		getArrLength(type) { //返回数组的长度
 			return this[type].length;

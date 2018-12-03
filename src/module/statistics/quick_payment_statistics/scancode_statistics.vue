@@ -170,20 +170,6 @@ export default {
 		selectBusinessHours: function() {
 			this.isOpenTime = !this.isOpenTime;
 		},
-		// getSelectShopList: function(res) {
-		// 	this.postSelectShopList = res; //返回已经选好的店铺的数组 选中true 未选false
-		// 	let shopIdsStr = []; //存id
-		// 	let selectNameStr = []; //存店铺名
-		// 	for (let i = 0; i < res.length; i++) {
-		// 		if (res[i].selected == true) {
-		// 			shopIdsStr.push(res[i].id);
-		// 			selectNameStr.push(res[i].name);
-		// 		}
-		// 	}
-		// 	this.shopIds = shopIdsStr.join(',');
-		// 	this.selectName =
-		// 		selectNameStr == '' ? '请选择店铺' : selectNameStr.join(',');
-		// },
 		//选择店铺返回
 		getSelectShopList: function(res) {
 			console.log(this.postSelectShopList);

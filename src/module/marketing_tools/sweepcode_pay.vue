@@ -26,7 +26,7 @@
 					</el-switch>
 				</div>
 				<div class="fl handle-tips" style="margin-left: 20px;">
-					<i></i> 门店折扣与会员折扣不共享
+					<i></i> 门店折扣与会员折扣不共享,如果门店参与满减活动.则不参与门店折扣,望知晓.
 				</div>
 			</div>
 			<!-- 门店折扣 -->

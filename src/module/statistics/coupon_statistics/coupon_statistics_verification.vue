@@ -253,15 +253,10 @@
 		height: auto;
 	}
 
-	.verification .timeSearch {
-		width: 100%;
-		height: 40px;
-		margin-bottom: 16px;
-	}
-
 	.verification .timeSearch .selectDate {
 		margin-right: 21px;
 		float: left;
+		margin-bottom: 10px;
 	}
 
 	.verification .activation {

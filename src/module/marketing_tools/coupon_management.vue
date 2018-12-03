@@ -75,6 +75,10 @@
 		<intergralcardCoupon v-if="couponType == 7" :couponDetail='couponDetail' @changeMnage='getcouponResult'></intergralcardCoupon>
 		<!-- 第二件商品券 -->
 		<superpositionCoupon v-if="couponType == 9" :couponDetail='couponDetail' @changeMnage='getcouponResult'></superpositionCoupon>
+		<!-- 买送券 -->
+		<buysendCoupon v-if="couponType == 10" :couponDetail='couponDetail' @changeMnage='getcouponResult'></buysendCoupon>
+		<!-- 定额券 -->
+		<quotaCoupon v-if="couponType == 11" :couponDetail='couponDetail' @changeMnage='getcouponResult'></quotaCoupon>
 		<!-- 优惠券详情弹窗 -->
 		<coupon-manage-win @changeCoupon="toEditCoupon" v-if="showCoupon" v-bind="couponInfo"></coupon-manage-win>
 		<!-- 解绑弹窗 -->
@@ -128,7 +132,9 @@ export default {
 				6: '代金券',
 				7: '积分卡券',
 				8: '随机立减优惠券',
-				9: '第二件商品券'
+				9: '第二件商品券',
+				10: '买送券',
+				11: '定额券'
 			},
 			unbindWin: false, //同步优惠券的弹窗
 			asyncId: '', //同步优惠券的id
@@ -153,10 +159,6 @@ export default {
 		}
 	},
 	methods: {
-		// pageChange(obj) {
-		// 	this.page = obj.page;
-		// 	this.inte(this.indexOn);
-		// },
 		toEditCoupon(str) {
 			if (str == 'nochange') {
 				this.showCoupon = false;
@@ -340,6 +342,10 @@ export default {
 			import( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
 		superpositionCoupon: () =>
 			import( /*webpackChunkName: 'superposition_coupon'*/ './new_coupons/superposition_coupon'),
+		buysendCoupon: () =>
+			import( /*webpackChunkName: 'buysend_coupon'*/ './new_coupons/buysend_coupon'),
+		quotaCoupon: () =>
+			import( /*webpackChunkName: 'quota_coupon'*/ './new_coupons/quota_coupon'),
 	}
 };
 </script>

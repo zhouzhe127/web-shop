@@ -268,14 +268,6 @@
 				//console.log(new Date())
 				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
 			},
-			//选择开始时间
-			// getStartTime(receiveTime) {
-			// 	this.startTime = (new Date(receiveTime)).getTime(); //毫秒
-			// },
-			//选择结束时间
-			// getEndTime(receiveTime) {
-			// 	this.endTime = (new Date(receiveTime)).getTime(); //毫秒
-			// },
 			//接受子组件传递回来的事件
 			getDetailShow() { //从订单详情返回回来
 				this.isShow = 'all';
