@@ -11,7 +11,7 @@
 			<span slot='title'>添加关联优惠券</span>
 			<section style="padding: 20px 50px;" :slot="'content'">
 				<el-tabs v-model="activeName" @tab-click="handleClick">
-					<el-tab-pane v-for="(item,index) in CountList" :label="item.name" :name="item.id" v-on:click="showCount(index)">
+					<el-tab-pane v-for="(item,index) in CountList" :key="index" :label="item.name" :name="item.id" v-on:click="showCount(index)">
 						<div class="clearfix">
 							<el-button type="info" v-on:click="wholeOffCom" class="fr">全部取消</el-button>
 							<!-- <a href="javascript:void(0)" class="unselect fr" v-on:click="wholeOffCom">全部取消</a> -->

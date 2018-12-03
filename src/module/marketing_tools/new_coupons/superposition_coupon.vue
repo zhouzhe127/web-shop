@@ -43,7 +43,7 @@
 			<!-- 关联商品 -->
 			<div class="left ">
 				<div class="text required">
-					需购买商品
+					须购买商品
 				</div>
 			</div>
 			<div class="right">

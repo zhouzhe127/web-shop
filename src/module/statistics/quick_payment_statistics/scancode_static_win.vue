@@ -1,6 +1,6 @@
 /** * 扫码支付统计 * *miaochuan.sha */
 <template>
-	<Win :width='853' :height='600' @winEvent='getAppliedWin' :align="'center'" :ok="okStyle">
+	<Win :width='853' :height='600' @winEvent='getAppliedWin' :align="'center'" :ok="okStyle" :type="'alert'">
 		<span slot="title">查看详情</span>
 		<div id="details" slot="content" v-cloak>
 			<div class="statistical_details">
@@ -19,16 +19,24 @@
 					<span>订单计算:</span>
 				</div>
 				<!-- 内容 -->
-				<ul class="content">
+				<ul class="amount">
 					<li>订单原价:{{detail.consumption}}元</li>
-					<li>-</li>
-					<li>会员折扣:{{detail.memberDiscountCash}}元</li>
-					<li>-</li>
-					<li>门店折扣:{{detail.shopDiscountCash}}元</li>
-					<li>-</li>
-					<li>积分抵扣:{{detail.pointCash}}元</li>
-					<li>-</li>
-					<li>优惠券抵扣:{{detail.couponCash}}元</li>
+					<template v-if="detail.memberDiscountCash > 0">
+						<li>-</li>
+						<li>会员折扣:{{detail.memberDiscountCash}}元</li>
+					</template>
+					<template v-if="detail.shopDiscountCash > 0">
+						<li>-</li>
+						<li>门店折扣:{{detail.shopDiscountCash}}元</li>
+					</template>
+					<template v-if="detail.pointCash > 0">
+						<li>-</li>
+						<li>积分抵扣:{{detail.pointCash}}元</li>
+					</template>
+					<template v-if="detail.couponCash > 0">
+						<li>-</li>
+						<li>优惠券抵扣:{{detail.couponCash}}元</li>
+					</template>
 					<li>=</li>
 					<li>实付金额:{{detail.pain}}元</li>
 				</ul>
@@ -37,41 +45,67 @@
 					<span>订单数据:</span>
 				</div>
 				<!-- 内容 -->
-				<ul class="content">
+				<ul class="orderDate clearfix">
 					<li style="width:25%;">订单原价:{{detail.consumption}}元</li>
-					<li style="width:25%;">实付金额:{{detail.pain}}元</li>
-					<li style="width:25%;"></li>
-					<li style="width:25%;"></li>
+					<template v-if="detail.pain > 0">
+						<li style="width:25%;">实付金额:{{detail.pain}}元</li>
+					</template>
+					<template v-if="detail.discount > 0">
+						<li style="width:25%;">优惠金额:{{detail.discount}}元
+							<el-tooltip placement="right">
+								<div slot="content">优惠金额为订单原价-积分抵扣后的实际优惠金额,<br />优惠金额可能为1.门店折扣2.门店减免3.会员折扣4.优惠券优惠金额</div>
+								<i class="el-icon-question" style="font-size:18px;"></i>
+							</el-tooltip>
+						</li>
+					</template>
+					<template v-if="detail.discount > 0">
+						<li style="width:25%;">参与优惠金额:{{detail.discount}}元</li>
+					</template>
+					<template v-if="detail.noDiscountPrice > 0">
+						<li style="width:25%;">不参与优惠金额:{{detail.noDiscountPrice}}元</li>
+					</template>
+					<template v-if="detail.pointCash > 0">
+						<li style="width:25%;">积分抵扣金额:{{detail.pointCash}}元</li>
+					</template>
 				</ul>
-				<ul class="content">
-					<li style="width:25%;">优惠金额:{{detail.discount}}元
-						<el-tooltip placement="right">
-							<div slot="content">优惠金额为订单原价-积分抵扣后的实际优惠金额,<br />优惠金额可能为1.门店折扣2.门店减免3.会员折扣4.优惠券优惠金额</div>
-							<i class="el-icon-question" style="font-size:18px;"></i>
-						</el-tooltip>
-					</li>
-					<li style="width:25%;">参与优惠金额:{{detail.discount}}元</li>
-					<li style="width:25%;">不参与优惠金额:{{detail.noDiscountPrice}}元</li>
-					<li style="width:25%;">积分抵扣金额:{{detail.pointCash}}元</li>
-				</ul>
-				<ul class="content">
+				<ul class="orderDate clearfix">
 					<li style="width:25%;">支付方式:{{getpayment(detail)}}</li>
+				</ul>
+				<ul class="orderDate clearfix" v-if="detail.memberConsumption > 0 || detail.weChatPain > 0 || detail.aliPayPain > 0">
+					<template v-if="detail.memberConsumption > 0">
+						<li style="width:25%;">会员支付:{{detail.memberConsumption}}元</li>
+					</template>
+					<template v-if="detail.weChatPain > 0">
+						<li style="width:25%;">微信支付:{{detail.weChatPain}}元</li>
+					</template>
+					<template v-if="detail.aliPayPain > 0">
+						<li style="width:25%;">支付宝支付:{{detail.aliPayPain}}元</li>
+					</template>
+				</ul>
+				<ul class="orderDate clearfix">
+					<template v-if="detail.couponCash > 0">
+						<li style="width:25%;">使用优惠券:{{detail.couponCash}}元</li>
+					</template>
+					<template v-if="couponDetail != ''">
+						<li style="width:25%;">
+							<el-button type="primary">{{couponDetail.couponName}}</el-button>
+						</li>
+					</template>
+				</ul>
+				<!-- <ul class="content">
+				</ul>
+				<ul class="content">
 					<li style="width:25%;"></li>
 					<li style="width:25%;"></li>
 					<li style="width:25%;"></li>
 				</ul>
 				<ul class="content">
-					<li style="width:25%;">会员支付:{{detail.memberConsumption}}元</li>
-					<li style="width:25%;">微信支付:{{detail.weChatPain}}元</li>
-					<li style="width:25%;">支付宝支付:{{detail.aliPayPain}}元</li>
 					<li style="width:25%;"></li>
 				</ul>
 				<ul class="content">
-					<li style="width:25%;">使用优惠券:{{detail.couponCash}}元</li>
 					<li style="width:25%;"></li>
 					<li style="width:25%;"></li>
-					<li style="width:25%;"></li>
-				</ul>
+				</ul> -->
 				<!-- 标题 -->
 				<div class="title" v-if="couponDetail != ''">
 					<span>优惠券详情:</span>
@@ -179,7 +213,6 @@ export default {
 			}
 		}
 	},
-	computed: {},
 	components: {
 		Win: () =>
 			import( /* webpackChunkName:'Win' */ 'src/components/win')
@@ -222,5 +255,30 @@ export default {
 
 .statistical_details .content li {
 	line-height: 40px;
+}
+
+.statistical_details .amount {
+	padding: 0 20px;
+	width: 100%;
+	height: 40px;
+}
+
+.statistical_details .amount li {
+	height: 40px;
+	float: left;
+	line-height: 40px;
+	margin-right: 10px;
+}
+
+.statistical_details .orderDate {
+	padding: 0 20px;
+	width: 100%;
+}
+
+.statistical_details .orderDate li {
+	width: 25%;
+	height: 40px;
+	line-height: 40px;
+	float: left;
 }
 </style>
