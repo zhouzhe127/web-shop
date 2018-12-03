@@ -198,12 +198,10 @@ export default {
 				}
 			});
 			this.couponList = res.list;
-			if (res.count) {
+			if (this.page == 1) {
 				this.count = res.count;
 			}
-			//this.allTotal = res.list.length;
 			this.total = res.total;
-			//this.pageCount = res.list.length;
 		},
 		//
 		showCalendar() {
@@ -323,15 +321,15 @@ export default {
 	},
 	components: {
 		breakCoupon: () =>
-			import( /*webpackChunkName: 'breaks_coupon'*/ './new_coupons/breaks_coupon'),
+			import( /*webpackChunkName: 'breaks_coupon'*/ './../new_coupons/breaks_coupon'),
 		discountCoupon: () =>
-			import( /*webpackChunkName: 'discount_coupon'*/ './new_coupons/discount_coupon'),
+			import( /*webpackChunkName: 'discount_coupon'*/ './../new_coupons/discount_coupon'),
 		giveCoupon: () =>
-			import( /*webpackChunkName: 'give_coupon'*/ './new_coupons/give_coupon'),
+			import( /*webpackChunkName: 'give_coupon'*/ './../new_coupons/give_coupon'),
 		vouchersCoupon: () =>
-			import( /*webpackChunkName: 'vouchers_coupon'*/ './new_coupons/vouchers_coupon'),
+			import( /*webpackChunkName: 'vouchers_coupon'*/ './../new_coupons/vouchers_coupon'),
 		intergralcardCoupon: () =>
-			import( /*webpackChunkName: 'integralcard_coupon'*/ './new_coupons/integralcard_coupon'),
+			import( /*webpackChunkName: 'integralcard_coupon'*/ './../new_coupons/integralcard_coupon'),
 		'coupon-manage-win': () =>
 			import( /* webpackChunkName:'coupon_manage_win' */ './coupon_manage_win'),
 		page: () =>
@@ -341,11 +339,11 @@ export default {
 		maunBundling: () =>
 			import( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
 		superpositionCoupon: () =>
-			import( /*webpackChunkName: 'superposition_coupon'*/ './new_coupons/superposition_coupon'),
+			import( /*webpackChunkName: 'superposition_coupon'*/ './../new_coupons/superposition_coupon'),
 		buysendCoupon: () =>
-			import( /*webpackChunkName: 'buysend_coupon'*/ './new_coupons/buysend_coupon'),
+			import( /*webpackChunkName: 'buysend_coupon'*/ './../new_coupons/buysend_coupon'),
 		quotaCoupon: () =>
-			import( /*webpackChunkName: 'quota_coupon'*/ './new_coupons/quota_coupon'),
+			import( /*webpackChunkName: 'quota_coupon'*/ './../new_coupons/quota_coupon'),
 	}
 };
 </script>
@@ -415,7 +413,7 @@ export default {
 }
 
 .search {
-	background: url(../../res/images/search.png) center center no-repeat;
+	background: url(../../../res/images/search.png) center center no-repeat;
 }
 
 .diel {

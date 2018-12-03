@@ -84,7 +84,7 @@
 			</div>
 		</div>
 		<!-- 强制减免 -->
-		<div class="online-box clearfix">
+		<div class="online-box clearfix" v-if="activitySceneId == 1">
 			<span class="online-sub fl required">强制减免</span>
 			<div class="rightHalf">
 				<el-radio-group v-model="compulsoryCreditsName" class="fl">

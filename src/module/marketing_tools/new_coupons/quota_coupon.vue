@@ -62,7 +62,7 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<el-input placeholder="请输入正整数" v-model="param" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;">
+					<el-input placeholder="请输入定额券金额" v-model="param" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;">
 						<template slot="suffix">元</template>
 					</el-input>
 				</div>

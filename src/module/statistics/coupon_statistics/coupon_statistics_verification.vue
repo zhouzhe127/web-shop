@@ -139,7 +139,7 @@
 				}
 				this.selectedCoupon = selArr.join(',');
 				if (!this.selectedCoupon) {
-					this.selectedCoupon = '请选择优惠券类型';
+					this.selectedCoupon = '请选择门店';
 				}
 			},
 			selallcoupon: function() { //选择优惠券 全选
@@ -170,8 +170,10 @@
 					});
 					return false;
 				}
+				return true;
 			},
 			async getOneCoupon() {
+				if(!this.checkForm()) return;
 				let res = await http.getOneCoupon({
 					data: {
 						startTime: this.startTime / 1000, //开始时间
