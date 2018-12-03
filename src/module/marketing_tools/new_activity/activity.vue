@@ -31,49 +31,51 @@
 				</div>
 			</div>
 			<el-table :data="activityList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'60px'}">
-				<el-table-column fixed label="活动类型" align="center" width="125">
+				<el-table-column fixed label="活动类型" align="center">
 					<template slot-scope="scope">
 						{{setType(scope.row.type)}}
 					</template>
 				</el-table-column>
-				<el-table-column label="活动名称" prop="name" align="center" width="125">
+				<el-table-column label="活动名称" prop="name" align="center">
 				</el-table-column>
-				<el-table-column label="创建时间" align="center" width="125">
+				<el-table-column label="创建时间" align="center">
 					<template slot-scope="scope">
 						<span>{{transFormData(scope.row.createTime)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="活动期限" align="center" width="125">
+				<el-table-column label="活动期限" align="center">
 					<template slot-scope="scope">
 						<span v-if="scope.row.type == '0'">{{timeLimit[scope.row.limit].name}}</span>
 						<span v-else>{{setEndTime(scope.row.startTime,scope.row.endTime)}}</span>
 					</template>
 				</el-table-column>
-				<!-- 优惠总额 -->
-				<el-table-column label="优惠总额" prop="totalDiscount" align="center" width="125">
-				</el-table-column>
-				<!-- 拉动消费 -->
-				<el-table-column label="拉动消费" prop="pullConsume" align="center" width="125">
-				</el-table-column>
-				<!-- 活动场景 -->
-				<el-table-column label="活动场景" prop="scene" align="center" width="125">
-					<template slot-scope="scope">
-						<span>{{sceneList[scope.row.scene]}}</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="券发放数量" align="center" width="125">
+				<template v-if="activityType == '6'">
+					<!-- 优惠总额 -->
+					<el-table-column label="优惠总额" prop="totalDiscount" align="center">
+					</el-table-column>
+					<!-- 拉动消费 -->
+					<el-table-column label="拉动消费" prop="pullConsume" align="center">
+					</el-table-column>
+					<!-- 活动场景 -->
+					<el-table-column label="活动场景" prop="scene" align="center">
+						<template slot-scope="scope">
+							<span>{{sceneList[scope.row.scene]}}</span>
+						</template>
+					</el-table-column>
+				</template>
+				<el-table-column label="券发放数量" align="center">
 					<template slot-scope="scope">
 						<span v-if="scope.row.giveNum == '0'">无限制</span>
 						<span v-else>{{scope.row.giveNum}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="每日发放上限" align="center" width="125">
+				<el-table-column label="每日发放上限" align="center">
 					<template slot-scope="scope">
 						<span v-if="scope.row.dayGiveNum == '0'">无限制</span>
 						<span v-else>{{scope.row.giveNum}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="对象" align="center" width="125">
+				<el-table-column label="对象" align="center">
 					<template slot-scope="scope">
 						<span v-if="scope.row.type == '1' && scope.row.objectType == '0'">
 							店内
