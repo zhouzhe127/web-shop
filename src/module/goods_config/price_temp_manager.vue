@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-03 15:44:15
+ * @LastEditTime: 2018-12-03 16:33:30
  * @LastEditors: Please set LastEditors
  -->
 
@@ -798,7 +798,7 @@ export default {
 			) {
 				this.$store.commit("setWin", {
 					title: "温馨提示",
-					content: "价格有最多可输入7位,小数位最多两位！",
+					content: "价格最多可输入7位,小数位最多两位！",
 					winType: "alert",
 				});
 				return;
@@ -1483,5 +1483,8 @@ export default {
 			height: 12px;
 		}
 	}
+}
+body .el-table th.gutter{
+	display: table-cell!important;
 }
 </style>
