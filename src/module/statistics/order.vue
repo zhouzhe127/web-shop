@@ -410,6 +410,8 @@ export default {
 				this.selectTypeTwo();
 			}else if(this.conType == '1'){
 				this.conShifts = '';
+			}else{
+				this.selectTypeTwo();
 			}
 		},
 		//时间组件

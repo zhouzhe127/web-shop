@@ -371,11 +371,12 @@ export default {
 		//可以做统一，但为了后期增加需求，暂时分开
 		//按类型筛选
 		selectType(){
-			console.log(this.endTime);
 			if(this.conType == '0'){
 				this.selectTypeTwo();
 			}else if(this.conType == '1'){
 				this.conShifts = '';
+			}else{
+				this.selectTypeTwo();
 			}
 		},
 		//时间组件
