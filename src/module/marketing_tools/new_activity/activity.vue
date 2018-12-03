@@ -50,13 +50,16 @@
 					</template>
 				</el-table-column>
 				<!-- 优惠总额 -->
-				<el-table-column label="优惠总额" prop="name" align="center" width="125">
+				<el-table-column label="优惠总额" prop="totalDiscount" align="center" width="125">
 				</el-table-column>
 				<!-- 拉动消费 -->
-				<el-table-column label="拉动消费" prop="name" align="center" width="125">
+				<el-table-column label="拉动消费" prop="pullConsume" align="center" width="125">
 				</el-table-column>
 				<!-- 活动场景 -->
-				<el-table-column label="活动场景" prop="name" align="center" width="125">
+				<el-table-column label="活动场景" prop="scene" align="center" width="125">
+					<template slot-scope="scope">
+						<span>{{sceneList[scope.row.scene]}}</span>
+					</template>
 				</el-table-column>
 				<el-table-column label="券发放数量" align="center" width="125">
 					<template slot-scope="scope">
@@ -189,6 +192,11 @@ export default {
 				'10': '唤醒营销活动',
 			},
 			count: '',
+			sceneList: {
+				'0': '全部',
+				'1': '微店',
+				'2': '快捷支付'
+			}
 		};
 	},
 	computed: {

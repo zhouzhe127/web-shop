@@ -56,7 +56,7 @@
 			<span class="online-sub fl required">活动场景</span>
 			<div class="rightHalf">
 				<el-radio-group v-model="activitySceneName" class="fl">
-					<el-radio style="width:112px;text-align:center;" v-for="(item,index) in activityScene" :key="index" :label="item.name" border @change.native="selectScene(index)"></el-radio>
+					<el-radio style="width:112px;text-align:center;" v-for="(item,index) in activityScene" :key="index" :label="item.name" border @change.native="selectScene(item)"></el-radio>
 				</el-radio-group>
 			</div>
 		</div>
@@ -273,13 +273,13 @@ export default {
 			activityDetail: true, //是否查看详情
 			activityScene:[{
 				name: '微店',
-				id: 0
+				id: 1
 			}, {
 				name: '快捷支付',
-				id: 1
+				id: 2
 			}],
 			activitySceneName:'微店',
-			activitySceneId: 0,
+			activitySceneId: 1,
 			compulsoryCreditsName:'否',//强制减免
 			compulsoryCreditsId: 0//强制减免id
 		};
@@ -314,9 +314,6 @@ export default {
 		chooseIntegral: function(index) {
 			this.isMemberShare = index;
 		},
-		// openpayDiscount: function(res) { //开启默认规则
-		// 	this.payDiscount = res;
-		// },
 		openpreferential: function(res) { //开启优惠规则
 			this.preferential = res;
 		},
@@ -448,6 +445,7 @@ export default {
 			let arr = [];
 			let obj = {
 				couponIds: {
+					isCompel: this.compulsoryCreditsId,//强制减免
 					isMemberShare: this.isMemberShare, //会员折扣共享
 					isItemShare: this.isItemShare, //单品优惠券共享
 					isWholeShare: this.isWholeShare, //整单优惠券共享
@@ -475,6 +473,7 @@ export default {
 					type: 6, //活动类别
 					shopIds: this.ischain == '3' ? this.selectsList.join(',') : this.shopId,
 					mouldType: 0, //长期活动模板
+					scene:this.activitySceneId,//活动场景
 					name: this.activityName, //活动名
 					objectType: 2, //活动对象
 					startTime: parseInt(this.startTime / 1000), //开始时间
@@ -497,11 +496,13 @@ export default {
 			activityDetail.startTime = parseInt(this.startTime / 1000);
 			activityDetail.endTime = parseInt(this.endTime / 1000);
 			activityDetail.isAuto = type;
+			activityDetail.scene = this.activitySceneId;//活动场景
 			activityDetail.rule = [];
 			let arr = [];
 			let obj = {
 				id: this.ruleId,
 				couponIds: {
+					isCompel: this.compulsoryCreditsId,//强制减免
 					isMemberShare: this.isMemberShare, //会员折扣共享
 					isItemShare: this.isItemShare, //单品优惠券共享
 					isWholeShare: this.isWholeShare, //整单优惠券共享
@@ -555,6 +556,8 @@ export default {
 				this.isMemberShare = data.rule[0].couponIds.isMemberShare;
 				this.compulsoryName = this.list[this.isMemberShare].name;
 				this.isWholeShare = data.rule[0].couponIds.isWholeShare;
+				this.compulsoryCreditsId = data.rule[0].couponIds.isCompel;//强制减免
+				this.compulsoryCreditsName = this.list[this.compulsoryCreditsId].name;
 				this.payDiscount = Boolean(Number(data.rule[0].couponIds.otherRule.status));
 				this.cash = data.rule[0].couponIds.otherRule.orderPrice;
 				this.payCash = data.rule[0].couponIds.otherRule.pay;
@@ -571,11 +574,14 @@ export default {
 						reduceerrorMessage: ''
 					};
 					this.formList.push(obj);
-				}
+				};
+				this.activitySceneId = data.scene;//活动场景
+				this.activitySceneName = this.activityScene[this.activitySceneId - 1].name;
 			}
 		},
-		selectScene:function(index){
-			this.activitySceneId = index;
+		selectScene:function(item){
+			this.activitySceneId = item.id;
+			//console.log(this.activitySceneId)
 		},
 		chooseReduction:function(index){
 			this.compulsoryCreditsId = index;

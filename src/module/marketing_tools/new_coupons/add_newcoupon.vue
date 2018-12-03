@@ -78,21 +78,21 @@ export default {
 					'name': '第二件商品券',
 					'description': '只能从第二件或其倍数开始计算优惠使用。',
 					'type': 7,
-					'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
+					'PlaceImgUrl': require('../../../res/images/coupon_shang.png'), // eslint-disable-line
 					'path': '/admin/addCoupon/superposition'
 				},
 				{
 					'name': '定额券',
 					'description': '只能用于指定商品,购买时只需要支付配置的金额。',
 					'type': 8,
-					'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
+					'PlaceImgUrl': require('../../../res/images/coupon_ding.png'), // eslint-disable-line
 					'path': '/admin/addCoupon/quota'
 				},
 				{
 					'name': '买送券',
 					'description': '只能用于购买指定商品赠送指定商品。',
 					'type': 9,
-					'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
+					'PlaceImgUrl': require('../../../res/images/coupon_mai.png'), // eslint-disable-line
 					'path': '/admin/addCoupon/buysend'
 				}
 			],
