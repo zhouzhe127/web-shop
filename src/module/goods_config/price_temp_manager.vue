@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-03 12:46:15
+ * @LastEditTime: 2018-12-03 15:44:15
  * @LastEditors: Please set LastEditors
  -->
 
@@ -660,7 +660,11 @@ export default {
 					priceTemplateIsVip: isVip
 				}
 			});
-			this.initPage(this.tempGoods);
+				if(this.search &&this.searchGoods){
+							this.initPage(this.searchGoods);
+				}else{
+					this.initPage(this.tempGoods);
+				}
 			this.getPricetemplateData(this.goodIds);
 			this.vipPriceShow = isVip;
 		},
@@ -697,7 +701,11 @@ export default {
 				}
 			});
 			if (data) {
-				this.initPage(this.tempGoods);
+					if(this.search && this.searchGoods){
+							this.initPage(this.searchGoods);
+				}else{
+					this.initPage(this.tempGoods);
+				}
 				this.thEditerName = item.name;
 			}
 		},
@@ -733,7 +741,12 @@ export default {
 				}
 			});
 			if (data) {
+				
+				if(this.search &&this.searchGoods){
+						this.initPage(this.searchGoods);
+				}else{
 				this.initPage(this.tempGoods);
+				}
 				this.getPricetemplateData(this.goodIds);
 				this.thEditer = false;
 				this.thEditerName = "";
@@ -769,15 +782,24 @@ export default {
 			let price = this.tableTemplate.priceTemplate[index].list[sindex];
 			let isVip = price.isVip == true ? "1" : "0";
 			let data = null;
+			
+			if(!this.checkNumber(this.tempEditVipPrice) || !this.checkNumber(this.tempEditPrice)){
+				this.$store.commit("setWin", {
+					title: "温馨提示",
+					content: "请输入正确的数字！",
+					winType: "alert"
+				});
+				return;
+			}
 
 			if (
-				parseInt(this.tempEditVipPrice).toString().length >= 6 ||
-				parseInt(this.tempEditPrice).toString().length >= 6
+				parseInt(this.tempEditVipPrice).toString().length >= 8 ||
+				parseInt(this.tempEditPrice).toString().length >= 8
 			) {
 				this.$store.commit("setWin", {
 					title: "温馨提示",
-					content: "价格有误，请重新输入！",
-					winType: "alert"
+					content: "价格有最多可输入7位,小数位最多两位！",
+					winType: "alert",
 				});
 				return;
 			}
@@ -806,8 +828,21 @@ export default {
 			if (data) {
 				this.columnId = "";
 				this.cellIndex = -1;
-				this.initPage(this.tempGoods);
+				if(this.search &&  this.searchGoods){
+							this.initPage(this.searchGoods);
+				}else{
+					this.initPage(this.tempGoods);
+				}
+				
 			}
+		},
+		// 验证数字
+		checkNumber(theObj) {
+			var reg = /^(?:[\+\-]?\d+(?:\.\d+)?)?$/;
+			if (theObj.match(reg)) {
+				return true;
+			}
+			return false;
 		},
 		editCancel(item, index, sindex, column, type) {
 			this.columnId = "";
@@ -824,7 +859,7 @@ export default {
 			this.$store.commit("setWin", {
 				title: "温馨提示",
 				content: "确定删除此模板？",
-				winType: "alert",
+				winType: "confirm",
 				callback: res => {
 					if (res == "ok") {
 						this.deleteTempWin(id);
@@ -840,10 +875,13 @@ export default {
 				}
 			});
 			if (data) {
-				this.initPage(this.tempGoods);
+					if(this.search &&this.searchGoods){
+							this.initPage(this.searchGoods);
+				}else{
+					this.initPage(this.tempGoods);
+				}
 			}
 		},
-
 		//  初始化头部按钮
 		initPageTools() {
 			let arr = [
@@ -989,8 +1027,6 @@ export default {
 				this.goodsList,
 				this.twoArea.id
 			);
-
-			console.log(this.goodsList.length, "this.goodsList,");
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 			}
