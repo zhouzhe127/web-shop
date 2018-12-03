@@ -58,13 +58,16 @@
 						<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
 					</el-select>
 				</div>
-				<div class="sleBtn">
-					<select-store @emit="getDrop" :sorts="oneCate" :isSingle="true" :tipName="'请选择一级分类'"></select-store>
+				<div class="sleType">
+					<el-cascader
+						class="el-size"
+						:options="oneSort"
+						v-model="cidSel"
+						@change="getSortSel"
+						change-on-select>
+					</el-cascader>
 				</div>
-				<div class="sleBtn" @click="checkOne">
-					<select-store @emit="getNext" :sorts="twoCate" :isSingle="true" :tipName="'请选择二级分类'" ref="twosel"></select-store>
-				</div>
-				<div class="setSpeen">
+				<div class="sleType">
 					<el-button type="primary" @click="search">筛选</el-button>
 					<el-button type="info" @click="reset">重置</el-button>
 				</div>
@@ -81,8 +84,8 @@
 						<template slot-scope="scope">
 							<el-button type="text" v-if="scope.row.select" style="color:#999">已添加</el-button>
 							<el-button type="text" @click="addList(scope.row,scope.$index)" 
-							v-if="!scope.row.checkAdd&!scope.row.select"
-							:disabled="scope.row.checkAdd && !scope.row.select">添加</el-button>
+							v-if="!scope.row.select"
+							:disabled="scope.row.checkAdd">添加</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column prop="name" label="物料名称" min-width="200">
@@ -138,27 +141,19 @@
 				sleList: [], //选择的物料
 				goodsName: '',
 				barCode:'',
-				oneCate: [],
-				twoCate: [],
-				oneSle: '',
-				twoSle: '',
+				oneSort:[],//一级分类列表
+				cid:'',//分类id
+				cidSel:[''],//选中的分类id
 				cataList: '', //分类列表
 				listTotal: 0, //商品总数
 				sinSle: [],
 				show: true,
-				typeCate: [{
-					value:-1,
-					label:'全部类型'
-				},{
-					value:0,
-					label:'成品'
-				},{
-					value:1,
-					label:'半成品'
-				},{
-					value:2,
-					label:'普通物料'
-				}],
+				typeCate: [
+					{value:-1,label:'全部类型'},
+					{value:0,label:'成品'},
+					{value:1,label:'半成品'},
+					{value:2,label:'普通物料'},
+				],
 				typeValue:-1,
 			};
 		},
@@ -175,7 +170,7 @@
 					data: {
 						page: this.page,
 						name: this.goodsName,
-						cid: this.twoSle ? this.twoSle.id ? this.twoSle.id : '' : this.oneSle.id ? this.oneSle.id : '',
+						cid: this.cid,
 						type:this.typeValue,
 						num:10,
 						barCode:this.barCode,
@@ -215,11 +210,35 @@
 				}
 				this.checkSle();
 			},
-			async getCate() {
+			async getCate(){//获取一二级分类
 				let data = await http.invoiv_getCategoryList();
-				this.cataList = data;
-				for(let item of this.cataList) {
-					if(item.pid == 0) this.oneCate.push(item);
+				let one = [];
+				for(let item of data){
+					if(item.pid == 0){
+						one.push({value:item.id,label:item.name,children:[]});
+					}
+				}
+				one.unshift({value:'',label:'全部分类'});
+				this.oneSort = one;
+				for(let one of this.oneSort){
+					let two = [];
+					for(let item of data){
+						if(one.value==item.pid){
+							two.push({value:item.id,label:item.name});
+						}
+					}
+					if(two.length){
+						one.children = two;
+					}else{
+						delete one.children;
+					}
+				}
+			},
+			getSortSel(res){
+				if(res.length>1){
+					this.cid = res[1];
+				}else{
+					this.cid = res[0];
 				}
 			},
 			checkIn() {
@@ -271,12 +290,6 @@
 			tebClick(index) {
 				this.tabactive = index;
 			},
-			checkOne() {
-				if(this.oneSle.length == 0) {
-					this.$refs.twosel.sortShow = false;
-					this.alert('请选择一级分类');
-				}
-			},
 			addList(item) {
 				item.select = true;
 				this.sleList.push(item);
@@ -299,40 +312,9 @@
 				this.twoSle = '';
 				this.barCode = '';
 				this.typeValue = -1;
-				for(let item of this.oneCate) {
-					item.selected = false;
-				}
-				this.oneCate = utils.deepCopy(this.oneCate);
-				for(let item of this.twoCate) {
-					item.selected = false;
-				}
-				this.twoCate = utils.deepCopy(this.twoCate);
+				this.cidSel = [''];
+				this.cid = '';
 				this.init();
-			},
-			getDrop(sle) {
-				for(let i in sle) {
-					if(sle[i].selected) {
-						this.oneSle = sle[i];
-						break;
-					} else {
-						this.oneSle = '';
-					}
-				}
-				this.twoCate = [];
-				for(let i in this.cataList) {
-					if(this.cataList[i].pid == this.oneSle.id)
-						this.twoCate.push(this.cataList[i]);
-				}
-			},
-			getNext(sle) {
-				for(let i in sle) {
-					if(sle[i].selected) {
-						this.twoSle = sle[i];
-						break;
-					} else {
-						this.twoSle = '';
-					}
-				}
 			},
 			alert(con, title) {
 				this.$store.commit('setWin', {
@@ -342,7 +324,6 @@
 			}
 		},
 		async mounted() {
-			console.log(this.sleSupplies);
 			if(this.sleSupplies) {
 				this.sleList = this.sleSupplies;
 			}
@@ -394,8 +375,7 @@
 				overflow: hidden;
 				border-left: 3px solid #E1BB4A;
 				h3 {
-					height: 20px;
-					line-height: 20px;
+					height: 40px;
 					margin-left: 10px;
 					float: left;
 					font-size: 16px;
@@ -413,7 +393,7 @@
 			.search-module {
 				padding-top: 20px;
 				.sleType{
-					width: 170px;
+					width: 200px;
 					display: inline-block;
 					margin-right: 10px;
 					margin-bottom: 20px;
@@ -451,65 +431,32 @@
 					font-size: 16px;
 					color: #333;
 					border: 1px solid #ebeef5;
-				border-bottom: 0;
-				.packUp {
-					cursor: pointer;
-					color: #5ebee8;
-					text-decoration: underline;
-				}
-				.circle {
-					display: inline-block;
-					width: 4px;
-					height: 4px;
-					border: 1px solid #333;
-					border-radius: 50%;
-					margin: 0 15px;
-					background-color: #333;
-					vertical-align: middle;
-					margin-top: -4px;
-				}
-				.select-num {
-					color: #ff3c04;
-					font-size: 16px;
+					border-bottom: 0;
+					.packUp {
+						cursor: pointer;
+						color: #5ebee8;
+						text-decoration: underline;
+					}
+					.circle {
+						display: inline-block;
+						width: 4px;
+						height: 4px;
+						border: 1px solid #333;
+						border-radius: 50%;
+						margin: 0 15px;
+						background-color: #333;
+						vertical-align: middle;
+						margin-top: -4px;
+					}
+					.select-num {
+						color: #ff3c04;
+						font-size: 16px;
+					}
 				}
 			}
-		}
 		.page-box {
 			margin-top: 10px;
 			padding-bottom: 30px;
 		}
-		#emptyData {
-			margin: 0 auto;
-			text-align: center;
-			height: 50px;
-			line-height: 50px;
-			color: orange;
-		}
-	}
-	
-	.bounce-enter-active {
-		animation: bounce-in 0.5s;
-	}
-	
-	.bounce-leave-active {
-		animation: bounce-out 0.5s;
-	}
-	
-	@keyframes bounce-in {
-		0% {
-			height: 0;
-		}
-		100% {
-			height: auto;
-		}
-	}
-	
-	@keyframes bounce-out {
-		0% {
-			height: auto;
-		}
-		100% {
-			height: 0px;
-		}
-	}
+	}	
 </style>

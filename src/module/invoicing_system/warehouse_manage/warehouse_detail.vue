@@ -340,7 +340,7 @@ export default {
 					one.push({value:item.id,label:item.name,children:[]});
 				}
 			}
-			one.unshift({value:-1,label:'全部分类'});
+			one.unshift({value:'',label:'全部分类'});
 			this.oneSort = one;
 			for(let one of this.oneSort){
 				let two = [];
