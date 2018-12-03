@@ -20,7 +20,7 @@
 						<el-date-picker :clearable="false" v-model="startTime" type="date" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
-						<el-date-picker :clearable="false" v-model="endTime" type="date" placeholder="选择日期" style="width:200px;">
+						<el-date-picker :clearable="false" @click="getendTime" v-model="endTime" type="date" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 					</section>
@@ -371,6 +371,7 @@ export default {
 		//可以做统一，但为了后期增加需求，暂时分开
 		//按类型筛选
 		selectType(){
+			console.log(this.endTime);
 			if(this.conType == '0'){
 				this.selectTypeTwo();
 			}else if(this.conType == '1'){
@@ -586,6 +587,10 @@ export default {
 				path: '/admin/orderStatistics/orderDetail',
 				query: this.$route.query
 			});
+		},
+		//结束时间为当天的最后一秒，组件为开始
+		getendTime(re){
+			this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
 		},
 		//获取时间段内 订单列表
 		async getOrderListInDays() {
