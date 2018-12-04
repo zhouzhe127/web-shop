@@ -224,7 +224,7 @@
 				<!-- 选择门店的弹窗 -->
 				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
 				<!-- 关联商品的弹窗 -->
-				<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="Goods" :isGoods="isGoods" :packages="Packages" :goInName="'isCoupon'"></goodListWin>
+				<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="Goods" :isGoods="isGoods" :packages="Packages" :goInName="'beingJudged'"></goodListWin>
 			</div>
 	</section>
 </template>

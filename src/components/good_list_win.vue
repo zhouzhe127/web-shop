@@ -25,7 +25,6 @@
 						<elCategory @selectCategory="newselectOneArea" :categoryArr="oneArea.oneAreaList" :itemIndex="oneArea.oneAreaIndex" :itemArea="oneArea"></elCategory>
 						<!--二级级分类选择框-->
 						<elCategory @selectCategory="newselectTwoArea" :categoryArr="twoArea.twoAreaList" :itemIndex="twoArea.twoAreaIndex" :itemArea="twoArea"></elCategory>
-
 						<!--搜索-->
 						<el-input placeholder="请输入名称" clearable v-model="search" @change="searchGoods" style="width:200px;">
 							<el-button slot="append" icon="el-icon-search" @click="searchGoods"></el-button>
@@ -36,13 +35,15 @@
 							<el-radio-button label="-1">全部</el-radio-button>
 							<el-radio-button v-if="!isPackType || isPackType.indexOf('0')>-1" label="0">固定套餐</el-radio-button>
 							<el-radio-button v-if="!isPackType || isPackType.indexOf('1')>-1" label="1">可选套餐</el-radio-button>
-							<el-radio-button v-if="!isPackType || isPackType.indexOf('2')>-1" label="2">自定义套餐</el-radio-button>
+							<!-- 第二件商品券 买送券 定额券 不显示自定义套餐 -->
+							<template v-if="goInName != 'beingJudged'">
+								<el-radio-button v-if="!isPackType || isPackType.indexOf('2')>-1" label="2">自定义套餐</el-radio-button>
+							</template>
 						</el-radio-group>
 					</div>
 				</section>
 				<ul class="aUl" style="">
 					<section v-if="allGood">
-
 						<template v-if="goInName=='goodsChoice' || goInName=='packsChoice'">
 							<li v-if="!isPackage" v-for="(item,index) in goodsCom" :key='index' v-on:click="!item.isSynOk?choseGood(item):''" class="aLi" :class="[{'shoName-select':item.selected&&!item.isSynOk},{'dis-type':item.isSynOk}]">{{item.goodsName}}</li>
 							<li v-if="isPackage" v-for="(item,index) in packCom" :key='index' v-on:click="!item.isSynOk?choseGood(item):''" class="aLi" :class="[{'shoName-select':item.selected&&!item.isSynOk},{'dis-type':item.isSynOk}]">{{item.packageName}}</li>
@@ -81,7 +82,6 @@
 								</template>
 							</section>
 						</div>
-
 					</section>
 				</ul>
 				<div v-if="isGoods" style="width:100%;height: 40px;background-color: #f7f7f7;position: fixed;bottom: 50px;left: 0;">
@@ -93,8 +93,7 @@
 		</div>
 	</win>
 </template>
-
-<script>
+<script type="text/javascript">
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
@@ -183,9 +182,9 @@ export default {
 		isPackType: String //0:固定，1：可选，2：自定义，如果有这方面的需求筛选，传要求显示的如'1,2'：就是要求固定和可选
 	},
 	components: {
-		win: () => import(/*webpackChunkName: "win"*/ 'src/components/win'),
+		win: () => import( /*webpackChunkName: "win"*/ 'src/components/win'),
 		elCategory: () =>
-			import(/*webpackChunkName:'el_category'*/ 'src/components/el_category')
+			import( /*webpackChunkName:'el_category'*/ 'src/components/el_category')
 	},
 	methods: {
 		// myClick() {
@@ -254,8 +253,7 @@ export default {
 				}
 				if (this.isCashier) {
 					if (
-						!global.checkData(
-							{ reportName: '请输入分类名称' },
+						!global.checkData({ reportName: '请输入分类名称' },
 							this
 						)
 					)
@@ -446,6 +444,20 @@ export default {
 					}
 				}
 				goodList = goods;
+			} else if (this.goInName == 'beingJudged') {
+				//在原有的优惠券的基础上新增的三种优惠券过滤斤两菜
+				//<!-- 第二件商品券 买送券 定额券 不显示自定义套餐 不显示斤两菜 -->
+				let goods = [];
+				for (let i = 0; i < goodList.length; i++) {
+					if (
+						goodList[i].isGroup != '1' &&
+						goodList[i].status != '2' &&
+						goodList[i].type != '2' && goodList[i].type != '1'
+					) {
+						goods.push(goodList[i]);
+					}
+				}
+				goodList = goods;
 			}
 			for (let i = 0; i < goodList.length; i++) {
 				this.$set(goodList[i], 'selected', false); //往列表里塞selected，单选全选点击用
@@ -549,6 +561,15 @@ export default {
 				}
 				packlist = this.asyncGoods;
 			}
+			// 第二件商品券 买送券 定额券 不显示自定义套餐
+			if (this.goInName == 'beingJudged') {
+				for (let k = 0; k < packlist.length; k++) {
+					if (packlist[k].type == '2') {
+						packlist.splice(k, 1);
+						k--;
+					}
+				}
+			}
 			this.packlist = packlist;
 			this.packCom = packlist;
 			// console.log(this.packCom);
@@ -625,9 +646,7 @@ export default {
 						if (this.oneGoodList.goodsList.length > 0) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
 								for (
-									let i = 0;
-									i < this.oneGoodList.goodsList.length;
-									i++
+									let i = 0; i < this.oneGoodList.goodsList.length; i++
 								) {
 									this.oneGoodList.goodsList[
 										i
@@ -647,16 +666,12 @@ export default {
 						) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
 								for (
-									let i = 0;
-									i < this.oneGoodList.child.length;
-									i++
+									let i = 0; i < this.oneGoodList.child.length; i++
 								) {
 									for (
-										let j = 0;
-										j <
+										let j = 0; j <
 										this.oneGoodList.child[i].goodsList
-											.length;
-										j++
+										.length; j++
 									) {
 										this.oneGoodList.child[i].goodsList[
 											j
@@ -690,9 +705,7 @@ export default {
 						if (this.oneGoodList.goodsList.length > 0) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
 								for (
-									let i = 0;
-									i < this.oneGoodList.goodsList.length;
-									i++
+									let i = 0; i < this.oneGoodList.goodsList.length; i++
 								) {
 									this.oneGoodList.goodsList[
 										i
@@ -712,16 +725,12 @@ export default {
 						) {
 							for (let m = 0; m < this.goodsCom.length; m++) {
 								for (
-									let i = 0;
-									i < this.oneGoodList.child.length;
-									i++
+									let i = 0; i < this.oneGoodList.child.length; i++
 								) {
 									for (
-										let j = 0;
-										j <
+										let j = 0; j <
 										this.oneGoodList.child[i].goodsList
-											.length;
-										j++
+										.length; j++
 									) {
 										this.oneGoodList.child[i].goodsList[
 											j
@@ -919,6 +928,7 @@ export default {
 	cursor: pointer;
 	box-sizing: border-box;
 }
+
 .oCont .oDe {
 	width: 50%;
 	height: 38px;
@@ -929,23 +939,28 @@ export default {
 	box-sizing: border-box;
 	color: #ff9801;
 }
+
 .oCont .Box .act {
 	background-color: #ff9801;
 	color: #fff;
 }
+
 .overHid {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
 .selected {
 	background: url(../res/icon/selected.png) center center no-repeat, #28a8e0;
 }
+
 .staList {
 	position: relative;
 	line-height: 41px;
 	width: 210px;
 }
+
 .tableList {
 	height: 40px;
 	color: #666666;
@@ -953,6 +968,7 @@ export default {
 	cursor: pointer;
 	background: #fff;
 }
+
 .tableList .oSpan {
 	height: 39px;
 	line-height: 39px;
@@ -963,12 +979,14 @@ export default {
 	border-right: 1px solid #b3b3b3;
 	overflow: hidden;
 }
+
 .tableList div {
 	width: 40px;
 	height: 40px;
 	position: relative;
 	z-index: 5;
 }
+
 .tableList div i {
 	height: 10px;
 	width: 10px;
@@ -982,6 +1000,7 @@ export default {
 	border-right: 5px solid transparent;
 	box-sizing: border-box;
 }
+
 /* .detLi {
 	position: relative;
 	cursor: pointer;
@@ -1030,10 +1049,12 @@ export default {
 	color: #fff;
 	padding: 0 10px;
 }
+
 .shoName-select {
 	border-color: #ff9800;
 	background: url(../res/images/sign.png?18274) right bottom no-repeat;
 }
+
 /* .shoName-select-one {
 	border-color: #ff9800;
 	color: #ff9800;
@@ -1073,12 +1094,14 @@ export default {
 	background-color: #f2f2f2;
 	min-height: 560px;
 }
+
 #configTan .aUl {
 	width: 100%;
 	height: auto;
 	overflow: auto;
 	padding: 10px 0;
 }
+
 #configTan .aUl .aLi {
 	padding: 0 15px;
 	height: 40px;
@@ -1091,6 +1114,7 @@ export default {
 	border: 1px solid #d2d2d2;
 	color: #919191;
 }
+
 .isallselect {
 	cursor: pointer;
 	width: 100px;
@@ -1103,16 +1127,19 @@ export default {
 	color: #a0a0a0;
 	float: left;
 }
+
 .allselect {
 	border: 1px solid #ff9700;
 	color: #ff9700;
 }
+
 .onecate {
 	width: 100%;
 	border-bottom: 1px solid #e3e3e3;
 	height: auto;
 	overflow: hidden;
 }
+
 .onecate .twoI {
 	width: 10px;
 	height: 10px;
@@ -1120,6 +1147,7 @@ export default {
 	margin: 20px 10px;
 	float: left;
 }
+
 .onecate .twoTitle {
 	/* width: 70px; */
 	height: 50px;
@@ -1132,12 +1160,15 @@ export default {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
 .onecate .oneI {
 	background-color: #049fef;
 }
+
 .onecate .oneTitle {
 	color: #049fef;
 }
+
 .dis-type {
 	background-color: #f2f2f2 !important;
 	border: none !important;
