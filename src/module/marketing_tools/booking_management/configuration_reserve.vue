@@ -77,38 +77,29 @@
 								<div class="ac-text" style="width: 80px;" v-if="index!=0 && cancel.arr.length>1">
 									{{cancel.arr[index-1].time}}分钟 --
 								</div>
-								<div class="way-con" style="margin-left: 10px;width: 92px;">
-									<input type="text" maxlength="3" v-model="item.time" :class="{'redi':item.red}" style="width: 94px;height: 36px;" />
-									<div class="wc-p">
-										分钟内
-									</div>
-								</div>
+								<el-input class="fl" v-model="item.time" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:100px;">
+									<template slot="suffix">分钟内</template>
+								</el-input>
 								<div class="ac-text" style="width: 30px;">
 									退
 								</div>
-								<div class="way-con" style="margin-left: 10px;width: 94px;">
-									<input type="text" v-model="item.value" maxlength="3" :class="{'redi':item.red}" style="width: 84px;height: 36px;" />
-									<div class="wc-p" style="right:16px;">
-										%
-									</div>
-								</div>
+								<el-input class="fl" v-model="item.value" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:100px;">
+									<template slot="suffix">%</template>
+								</el-input>
 								<div class="ac-icon ac-add" @click="funAddDelTag(false)" v-if="cancel.arr.length<2"></div>
 								<div class="ac-icon ac-del" @click="funAddDelTag(true)" v-if="cancel.arr.length>1 && index!=0"></div>
 							</div>
 						</template>
 						<div class="ac-bottom">
-							<div class="ac-text" style="width: 102px;margin-top: 10px;margin-left: 80px;text-align: center;">
+							<div class="ac-text" style="width: 102px;margin-left: 80px;text-align: center;">
 								{{cancel.arr[cancel.arr.length-1].time}}分钟外
 							</div>
 							<div class="ac-text" style="width: 30px;">
 								退
 							</div>
-							<div class="way-con" style="margin-left: 10px;width: 94px;">
-								<input type="text" style="width: 84px;height: 36px;" v-model="cancel.other" maxlength="3" />
-								<div class="wc-p" style="right:16px;">
-									%
-								</div>
-							</div>
+							<el-input class="fl" v-model="cancel.other" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:100px;">
+								<template slot="suffix">%</template>
+							</el-input>
 						</div>
 					</div>
 				</div>
@@ -264,19 +255,6 @@ export default {
 				payAttr: '', //定金支付百分比
 				red: false
 			},
-			table: {
-				tableRemindTime: '关闭提醒', //桌台提醒
-				show: 0 //是否开启提醒
-			},
-			wei: {
-				wechatRemindTime: '关闭提醒', //微信提醒
-				show: 0
-			},
-			delay: {
-				show: 0,
-				isExtendSeat: '10分钟', //预留
-				red: false
-			},
 			cancel: {
 				show: 0,
 				isCancel: '', //取消订单
@@ -287,11 +265,6 @@ export default {
 				}],
 				other: ''
 			},
-			returnBack: {
-				show: 0,
-				isReturn: '', //退款百分比
-				red: false
-			}
 		};
 	},
 	methods: {
@@ -374,7 +347,7 @@ export default {
 						this.cancel.isCancel = res.isCancel;
 						//0_100,10_80,60_10     0_100,10_10
 						let arr = res.isCancel.split(',');
-						if (arr.length > 1) {
+						if (arr.length > 2) {
 							this.funAddDelTag(false);
 						}
 						let temp = [];
@@ -425,6 +398,18 @@ export default {
 				};
 				if (this.payAttr < 1 || this.payAttr > 100) {
 					this.valiData('定金百分比取值范围1-100');
+					return false;
+				}
+			}
+			if (this.orderId == 1) {
+				for (let item of this.cancel.arr) {
+					if (item.time == '' || item.value == '') {
+						this.valiData('请完善到店取消规则信息');
+						return false;
+					}
+				}
+				if (this.cancel.other == '') {
+					this.valiData('请完善到店取消规则信息');
 					return false;
 				}
 			}
@@ -560,6 +545,8 @@ export default {
 
 #configuration-reserve .online-box .rightHalf .ac-bordr .ac-options {
 	width: 100%;
+	display: flex;
+	align-items: center;
 	float: left;
 	height: 50px;
 }
@@ -570,13 +557,34 @@ export default {
 	text-align: right;
 	width: 180px;
 	line-height: 40px;
-	margin-top: 10px;
+	margin-right: 10px;
 }
 
 .ac-bottom {
 	position: absolute;
 	bottom: 10px;
 	left: 0;
+	display: flex;
+	align-items: center;
+}
+
+.ac-icon {
+	width: 40px;
+	height: 30px;
+	float: left;
+	margin-left: 20px;
+	margin-top: 15px;
+	text-align: center;
+	line-height: 30px;
+}
+
+
+.ac-add {
+	background: url(../../../res/images/grayadd.png) center center no-repeat;
+}
+
+.ac-del {
+	background: url(../../../res/icon/delete.png) center center no-repeat;
 }
 
 .way-con {

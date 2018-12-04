@@ -62,9 +62,12 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<el-input placeholder="请输入定额券金额" v-model="param" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;">
+					<el-input class="fl" placeholder="请输入定额券金额" v-model="param" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;">
 						<template slot="suffix">元</template>
 					</el-input>
+					<div class="fl handle-tips">
+						<i></i> 券金额高于商品价格时,该券不参与优惠
+					</div>
 				</div>
 			</div>
 			<!-- 是否强折 -->
@@ -495,7 +498,7 @@ export default {
 			this.validTimeId = this.validTimeList[i].id; //点击卡类型对应的id
 		},
 		getSharing: function(value) {
-			console.log(value);
+			//console.log(value);
 			this.isSharingId = value;
 		},
 		getconcession: function(value) {
@@ -503,7 +506,7 @@ export default {
 		},
 		getResult: function(val) { //使用时间段
 			this.useDate = val;
-			console.log(JSON.stringify(val));
+			//console.log(JSON.stringify(val));
 		},
 		//商品点击返回
 		doThrowWinGoods(res, item) {
@@ -1087,5 +1090,13 @@ export default {
 	position: absolute;
 	bottom: 60px;
 	left: 180px;
+}
+
+.handle-tips {
+	height: 40px;
+	line-height: 40px;
+	text-indent: 30px;
+	background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
+	color: #999999;
 }
 </style>
