@@ -16,11 +16,11 @@
 							</li>
 							<li>
 								<span>会员余额：{{memberInfo.totalAmount}}</span>
-								<a href="javascript:void(0)" class="operation fl" @click="balance('0')">余额操作</a>
+								<a href="javascript:void(0)" class="operation fl" @click="balance('0')" v-if="brandId == '0' || brandId == '3'">余额操作</a>
 							</li>
 							<li>
 								<span>会员积分：{{memberInfo.point}}</span>
-								<a href="javascript:void(0)" class="operation fl" @click="balance('1')">积分操作</a>
+								<a href="javascript:void(0)" class="operation fl" @click="balance('1')" v-if="brandId == '0' || brandId == '3'">积分操作</a>
 							</li>
 						</ul>
 						<ul class="message">
@@ -168,9 +168,10 @@
 				this.shopId = this.shopsId == undefined ? storage.session('userShop').currentShop.id : this.shopsId;
 				this.showCon = 'balance';
 			},
+			//修改会员余额弹窗的回调
 			winEvent() {
 				this.showCon = '';
-				//this.getRecordList(this.bannerIndex);
+				this.bannerIndex = 0;
 			},
 			recharge(gid, shopId) {
 				this.showCon = 'recharge';
@@ -227,23 +228,6 @@
 				this.listName = this.bannerList[index].name;
 				//this.getRecordList(type);
 			},
-			// async getRecordList(type) {
-			// 	let data = await http.getRecordList({
-			// 		data: {
-			// 			page: this.page,
-			// 			mid: this.mid,
-			// 			num: this.num,
-			// 			type: type == undefined ? 0 : type
-			// 		}
-			// 	});
-			// 	this.listInfo = data;
-			// 	if (data.typeInfo) {
-			// 		this.obj = data.typeInfo;
-			// 	}
-			// 	this.count = (this.page == 1) ? data.count : this.count;
-			// 	this.total = (this.page == 1) ? data.total : this.total;
-
-			// },
 			judgeType: function(item) {
 				// 判断操作类型 是否加还是减
 				let operate;
@@ -285,7 +269,6 @@
 							});
 							this.memberInfo.openId = '';
 						}
-
 					}
 				});
 			},
@@ -371,8 +354,6 @@
 			}
 		},
 		mounted() {
-			// this.mid = storage.session('memberObj').memberId;
-			// this.shopsId = storage.session('memberObj').shopId;
 			this.setTitle();
 			this.getshopList();
 			this.getMemberDetail();
