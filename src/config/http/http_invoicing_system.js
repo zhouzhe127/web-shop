@@ -1143,6 +1143,18 @@ export default {
 	"materialreportGetMaterialErrorLog": {
 		url: b + "materialreport/getMaterialErrorLog", //生成物料报表-错误日志
 		method: 'get',
-	}
+	},
+	//总日志导出
+	"InvoicingExportGoodsLogList":{
+		url:b+"Invoicing/exportGoodsLogList",
+		method:"get",
+		type:"file"		
+	},
+	"InvoicingExportMaterialLogList":{
+		url:b+"Invoicing/exportMaterialLogList",
+		method:"get",
+		type:"file"
+	},
+
 
 }

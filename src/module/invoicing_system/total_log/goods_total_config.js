@@ -299,7 +299,8 @@ let config = [
 			"canViewBatch": false,
 			"batchClick": forbiddenClick,
 			"historyClick":forbiddenClick
-		},{
+		},
+		{
 			"type" : 21,
 			"typeName": "采购单入货",				
 			"historyDescripe":"采购单详情",
@@ -316,7 +317,16 @@ let config = [
 				});								
 			},
 			"batchClick":defaultBatchClick
-		}
+		},
+		{
+			"type" : 22,
+			"typeName": "批盘消耗",				
+			"historyDescripe":"",
+			"batchDescripe": "",
+			"canViewHistory": false,
+			"canViewBatch": false,
+		},
+
 	];
 
 export default config;
