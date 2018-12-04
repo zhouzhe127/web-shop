@@ -492,6 +492,7 @@ export default {
 				});
 				return false;
 			}
+			this.allDayPage.page = 1;
 			this.dayPage.page = 1;
 			this.takeoutMultidayList();
 		},
@@ -580,6 +581,8 @@ export default {
 			// this.selectTypeNum = index;
 			// this.allTakeawaytype = this.takeawaytypeList[this.selectTypeNum];
 			// this.takeawaytypeBtn = false;
+			this.allDayPage.page = 1;
+			this.dayPage.page = 1;
 			if (this.showDay == true) {
 				this.takeoutOnedayList(this.detailTime);
 			} else if (this.showAllDay == true) {

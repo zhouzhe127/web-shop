@@ -201,10 +201,9 @@ export default {
 		let arr = [
 			{
 				name: '返回',
-				className: 'huiC',
-				fn: () => {
-					this.returnList();
-				}
+				type:4,
+				className: 'info',
+				fn: this.returnList
 			}
 		];
 		this.$store.commit('setPageTools', arr);
@@ -212,7 +211,7 @@ export default {
 	destroyed() {
 		//离开页面时 清除缓存数据
 		storage.session('orderDetial', null);
-		this.$store.commit('setPageTools', []);
+		// this.$store.commit('setPageTools', []);
 	},
 	methods: {
 		getDetailShow() {

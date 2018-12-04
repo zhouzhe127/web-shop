@@ -40,6 +40,9 @@
 						</el-button>
 					</form>
 				</template>
+				<template v-if="v.type == 7">
+					<el-button :icon="v.icon" @click="v.fn" :type="v.className" :key="i+keyRan">{{v.name}}</el-button>
+				</template>
 			</template>
 		</section>
 	</div>
@@ -58,9 +61,9 @@
 		constructor(...args) {
 			/* eslint-disable */
 			if (args.length === 1 && typeof args[0] == 'object') {
-				var { name, className, fn, type, style, inputName } = Object.assign({ style: {}, name: '', className: ['blue', 'btn'], fn: () => {}, type: 0 }, args[0])
+				var { name, className, fn, type, style, inputName,icon } = Object.assign({ style: {}, name: '', className: ['blue', 'btn'], fn: () => {}, type: 0 ,icon}, args[0])
 			} else {
-				var [name = "", className = "blue", fn = () => {}, type = 0, style = {}, inputName] = [...args];
+				var [name = "", className = "blue", fn = () => {}, type = 0, style = {}, inputName,icon = ""] = [...args];
 			}
 			this.name = name;
 			this.className = className;
@@ -68,6 +71,7 @@
 			this.type = type;
 			this.styles = style;
 			this.inputName = inputName || "file";
+			this.icon = icon || ""
 			/* eslint-enable */
 		}
 	}

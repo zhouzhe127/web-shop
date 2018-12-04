@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-19 11:39:01 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-11-12 17:08:04
+ * @Last Modified time: 2018-11-27 18:00:11
  * @Module:支付方式配置
 **/
 <template>
@@ -41,7 +41,7 @@
 									<span v-if="scope.row.isOpen == 0" class="line isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">开启</span>
 									<span v-if="scope.row.isOpen == 1" class="line isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">关闭</span>
 								</template>
-								<template v-if="scope.row.paymentName == '现金' || scope.row.paymentName == '银行卡' ">
+								<template v-if="scope.row.paymentName == '现金' || scope.row.paymentName == '银行卡'  || scope.row.paymentName == '商米支付' ">
 									<span v-if="scope.row.isOpen == 0" class="isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">开启</span>
 									<span v-if="scope.row.isOpen == 1" class="isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">关闭</span>
 								</template>

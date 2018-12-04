@@ -468,19 +468,9 @@ let need = {
 		ActiveConf: { //活跃值配置
 			name: 'ActiveConf'
 		},
-		materialWorking: { //加工物料
-			name: 'processHistory'
-		},
-		getReportTemplate: {
-			name: 'materialReport' //物料报表模板
-		},
-		materialWorking: { //加工物料
-			name: 'processHistory'
-		},
-		getReportTemplate: {
-			name: 'materialReport' //物料报表模板
+		priceTemplate:{     //价格模板
+			name:'priceTemplate'
 		}
-	},
-
+	}
 };
 export default need;

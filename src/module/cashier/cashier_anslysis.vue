@@ -77,7 +77,7 @@
 			<!--<span style="font-size: 16px;line-height:20px">选择店铺：{{shopName}}</span>-->
 			<!--</div>-->
 		</section>
-		<dataform v-show="chartList.flag === 0" @back="getBack" :num="num" :shopId="shopId" :exportIndex="exportIndex" :width="showWidth" :loading="loading" :headList="headList" :reportList="orderList" :selShopid="selShopid" :selectedType="typeFlag" :selHead="selHead" :flag="buttonList.flag" :isBack="isBack"></dataform>
+		<dataform v-show="chartList.flag === 0" @back="getBack" :num="num" :shopId="shopId" :exportIndex="exportIndex" :width="showWidth" :loading="loading" :headList="headList" :reportList="orderList" :selShopid="selShopid" :selectedType="typeFlag" :selHead="selHead" :flag="buttonList.flag" :isBack="isBack" :taskId = 'taskId'></dataform>
 		<datacharts v-if="chartList.flag === 1" @search="chartSearch" :num="num" :loading="loading" :ChartShop="ChartShopName" :selShopid="selShopid" :chartFlag="chartType.flag" :typeFlag="typeFlag" :reportList="orderList" :flag="buttonList.flag" :headList="headList"></datacharts>
 		<loading v-if="!loading" :totalCount="totalCount" :taskCountTotal="taskCountTotal" :taskCount="taskCount"></loading>
 	</div>
@@ -296,6 +296,7 @@ export default {
 				})
 				.then(data => {
 					this.taskCountTotal = data.taskCount;
+					this.taskId = data.taskId;
 					this.totalCount = 1;
 					this.taskInfo(data);
 					window.timer = setInterval(() => {
