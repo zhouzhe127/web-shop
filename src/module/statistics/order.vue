@@ -280,7 +280,7 @@ export default {
 			timelate: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)],//时间组件
 			// newStartTime: '', //点击日历组件获取的开始时间
 			// newEndTime: '', //点击日历组件获取的结束时间
-			isOpenTime: '', //是否按营业时间，默认 false 0 否
+			isOpenTime: true, //是否按营业时间，默认 false 0 否
 			orderNumber: null, //订单号
 			// allArea: '选择区域',
 			// areaBtn: false, //区域
@@ -652,7 +652,7 @@ export default {
 						time == newEndTime
 							? this.getTime(endDay)
 							: this.getTime(time + ' 23:59:59'),
-					isOpenTime: Number(this.conSize),
+					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
 					page: this.dayPage.page,
 					num: this.dayPage.num, //一页显示多少
 					oid: this.orderNumber,
@@ -826,7 +826,7 @@ export default {
 						this.dateTime == newEndTime
 							? this.getTime(endDay)
 							: this.getTime(this.dateTime + ' 23:59:59'),
-					isOpenTime: Number(this.isOpenTime),
+					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
 					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
@@ -883,7 +883,7 @@ export default {
 							this.dateTime == newEndTime
 								? this.getTime(endDay)
 								: this.getTime(this.dateTime + ' 23:59:59'),
-						isOpenTime: Number(this.isOpenTime),
+						isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
 						type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 					}
 				},

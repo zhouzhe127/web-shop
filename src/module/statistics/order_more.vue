@@ -620,7 +620,7 @@ export default {
 						: this.shopId,
 					startTime: parseInt(startTime / 1000),
 					endTime: parseInt(endTime / 1000),
-					isOpenTime: Number(this.conSize),
+					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
 					page: this.allDayPage.page,
 					num: this.allDayPage.num,
 					type:this.conType,//0代表按自然日，1代表按交接班
@@ -722,7 +722,7 @@ export default {
 						day: startYear + '-' + startMonth + '-' + startDay, //日期，注意---和从查看详情进入传的值不一样
 						startTime: this.startTime,
 						endTime: this.endTime,
-						isOpenTime: this.conSize,
+						isOpenTime: this.conType == '0' ? this.conSize : '0',
 						allDayPage: this.allDayPage, //多天分页信息
 						conType: this.conType,
 						conSize: this.conSize,
@@ -772,7 +772,7 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.conSize),
+					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
 					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
@@ -838,7 +838,7 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.conSize),
+					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
 					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});

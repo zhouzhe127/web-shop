@@ -127,6 +127,7 @@ export default {
 	},
 	importGoods: {
 		url: s + 'goods/importNew', //导入商品
+		method: 'post',
 		type: 'upload'
 	},
 	GoodsGetBrandGoodsDetail: {
