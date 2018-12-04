@@ -16,11 +16,11 @@
 							<el-radio v-if="ischain != '3'" class="labItem" size="small" @change="changeIndex(i)" v-for="(item,i) in list" :key="i" :label="i" border>{{item.name}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item v-if="ischain != '3'" required label="打印服务终端">
+					<!-- <el-form-item v-if="ischain != '3'" required label="打印服务终端">
 						<el-radio-group v-model="terminaIndex">
 							<el-radio class="labItem" size="small" v-for="(item,i) in newTerminalList" :key="i" :label="item.id" border>{{item.name}}</el-radio>
 						</el-radio-group>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item required label="打印机名称">
 						<el-input v-model="printerName" placeholder = "请输入名称" maxlength="30" style = "width:300px;"></el-input>
 					</el-form-item>
