@@ -1151,5 +1151,18 @@ export default {
 	"materialCreateCateBarCode": {
 		url: b + "material/createCateBarCode", //自动生成分类编码
 		method: 'post',
-	}
+	},
+	//总日志导出
+	"InvoicingExportGoodsLogList":{
+		url:b+"Invoicing/exportGoodsLogList",
+		method:"get",
+		type:"file"		
+	},
+	"InvoicingExportMaterialLogList":{
+		url:b+"Invoicing/exportMaterialLogList",
+		method:"get",
+		type:"file"
+	},
+
+
 }
