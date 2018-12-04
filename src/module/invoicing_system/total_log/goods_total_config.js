@@ -262,7 +262,6 @@ let config = [
 					id:item.other.dispatchId
 				};  
 				context.$router.push(obj);				
-				
 			}	
 		},
 		{
@@ -300,6 +299,23 @@ let config = [
 			"canViewBatch": false,
 			"batchClick": forbiddenClick,
 			"historyClick":forbiddenClick
+		},{
+			"type" : 21,
+			"typeName": "采购单入货",				
+			"historyDescripe":"采购单详情",
+			"batchDescripe": "入货批次的变化",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"historyClick": function(context,item){
+				let {purchaseId} = item.other; 
+				context.$router.push({
+					path:"/admin/purchaseManagement/detail",
+					query : {
+						id : purchaseId
+					}
+				});								
+			},
+			"batchClick":defaultBatchClick
 		}
 	];
 

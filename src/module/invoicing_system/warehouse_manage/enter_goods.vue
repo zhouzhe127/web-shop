@@ -173,7 +173,7 @@
 							<div class="unit">
 								<template v-if="item.isSurplus">
 									<div class="input-box">
-										<input type="text" placeholder="输入数字" @input="intoInput(item,'into')" v-model="item.intoNum" 
+										<input type="text" placeholder="输入数字" @input="intoInput(item,'into','mat')" v-model="item.intoNum" 
 										:disabled="item.haveBatch" maxlength="10"/>
 										<em>{{item.unit}}</em>
 									</div>
@@ -184,7 +184,7 @@
 							<div class="unit">
 								<template v-if="item.isSurplus">
 									<div class="input-box">
-										<input type="text" placeholder="输入数字" @input="intoInput(item,'consume')" v-model="item.consumeNum"
+										<input type="text" placeholder="输入数字" @input="intoInput(item,'consume','mat')" v-model="item.consumeNum"
 										:disabled="item.haveBatch" maxlength="10"/>
 										<em>{{item.unit}}</em>
 									</div>
@@ -422,11 +422,11 @@ export default {
 				}
 			}
 		},
-		intoInput(item, handle) { //监听输入框的值
+		intoInput(item, handle, mat) { //监听输入框的值
 			if(handle == 'into') { //入货
-				this.autoGoodsBatch(item, item.intoNum, 'intoNum', 'consumeNum');
+				this.autoGoodsBatch(item, item.intoNum, 'intoNum', 'consumeNum',mat);
 			} else { //耗损
-				this.autoGoodsBatch(item, item.consumeNum, 'consumeNum', 'intoNum');
+				this.autoGoodsBatch(item, item.consumeNum, 'consumeNum', 'intoNum',mat);
 			}
 		},
 		setUnit(num, unit, unitData) { //设置单位显示

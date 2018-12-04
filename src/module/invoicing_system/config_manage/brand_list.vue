@@ -21,7 +21,7 @@
 					<li class="oLi">
 						<section v-if="list.status == 0">
 							<h3 v-if='list.edit'>{{list.name}}</h3>
-							<textarea v-else v-model="editname" autofocus="autofocus" maxlength="20"></textarea>
+							<textarea v-else v-model="editname" style="resize:none" autofocus="autofocus" maxlength="20"></textarea>
 							<!-- <span class="detail" @click='detailsee(list.id)'>查看商品&gt;&gt;</span> -->
 							<p class="index">{{index+1}}</p>
 							<div class="delete" @click="deleteOff(list.id,index)">删除</div>
@@ -30,7 +30,7 @@
 						</section>
 						<section v-else>
 							<h3 v-if='list.edit'>{{list.name}}</h3>
-							<textarea v-else v-model="editname" autofocus="autofocus" maxlength="20"></textarea>
+							<textarea v-else v-model="editname" style="resize:none" autofocus="autofocus" maxlength="20"></textarea>
 							<!-- <span class="detail" @click='detailsee(list.id)'>查看商品&gt;&gt;</span> -->
 							<p class="index">{{index+1}}</p>
 						</section>

@@ -84,7 +84,7 @@
 						<div class="select-row">
 							<li v-if="item.select">已添加</li>
 							<li v-if="!item.select && item.surplus>0" @click="addList(item,index)" class="add">添加</li>
-							<li v-if="item.surplus<=0" @click="addEmpty" class="surplus-empty">添加</li>
+							<li v-if="item.surplus<=0&&!item.select" @click="addEmpty" class="surplus-empty">添加</li>
 							<li v-if="(index+1)+(page-1)*10<10">{{`0${index+1}`}}</li>
 							<li v-else>{{(index+1)+(page-1)*10}}</li>
 							<li>{{item.name||'--'}}</li>
@@ -262,12 +262,13 @@ export default {
 			item.select = false;
 			this.checkSle();
 		},
+		//搜索
 		search() {
-			//搜索
+			this.page = 1;
 			this.init();
 		},
+		//重置
 		reset() {
-			//重置
 			this.page = 1;
 			this.mName = '';
 			this.oneSle = '';

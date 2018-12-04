@@ -17,22 +17,25 @@
 			<div v-for="(item,index) in checkList" :key="index" class="check-div" :class="[{active:barSelect[item.name]},item.className]" :data-index="index" @click="chartSelect">
 				<i></i>{{item.name}}</div>
 		</div>
-		<div v-if="coverShow" class="loding-cover bar-cover"><i class="el-icon-loading"></i></div>
+		<div v-show="coverShow" class="loding-cover bar-cover"><i class="el-icon-loading"></i></div>
 	</div>
 </template>
 <script>
+
+import http from 'src/manager/http';
+
 export default {
-	props: ['bar', 'cover', 'echarts', 'shopList'],
+	props: ['cover', 'echarts', 'shopList','barObj'],
 	data() {
 		return {
+			xAxis: {
+				turnover: [],
+				amount: [],
+				orderNum: [],
+				discount: [],
+				passengerFlow: [],
+			},
 			dataBar: {
-				xAxis: {
-					turnover: [],
-					amount: [],
-					orderNum: [],
-					discount: [],
-					passengerFlow: [],
-				},
 				total: {
 					turnover: [],
 					amount: [],
@@ -80,6 +83,7 @@ export default {
 			yNameIndexBar: 0,
 			tabIndex: 0,
 			barType: 'turnover',
+			sliderBarStart: 0,
 			sliderBarEnd: 100,
 			options: ['日', '周', '月', '季度', '年'],
 			barDom: null,
@@ -91,15 +95,36 @@ export default {
 			},
 			coverShow: false,
 			seriesData:[],//柱状图 样式列表
+			reqObj:{},
+			shopNum: 5,//每组的店铺数量
+			idGroup:{},//每10个shopId分组
+			alrGroup:[],//记录已经请求过的店铺id 防止重复请求
+			eachRequestNum:0,//记录循环调用次数
+			eachRequestObj:{},//循环请求获取的数据 最后在赋值给bar
+			reserveData:{},
+			dataZoom:{
+				type: 'slider',
+				show: true,
+				startValue:'',
+				endValue:'',
+			},
+			shopListObj:{},//店铺id对应name
 		};
 	},
 	watch: {
-		bar: 'analytic',
-		cover: 'setCover',
-		echarts: 'initEchart'
+		echarts: 'initEchart',
+		barObj:{
+			handler(newValue, oldValue) {
+				this.reqObj = this.barObj;
+				this.setIdGroup();
+			},
+			deep: true
+		},
 	},
 	mounted() {
-		if (this.echarts) this.initEchart();
+		if (this.echarts){
+			this.initEchart();
+		}
 	},
 	methods: {
 		initEchart() {
@@ -107,17 +132,116 @@ export default {
 			this.barDom = this.echarts.init(
 				document.getElementById('bar-charts')
 			);
-			this.barDom.setOption(this.getBarData(this.dataBar, this.barType));
+			this.barDom.setOption(this.getBarData(this.barType));
+			this.reqObj = this.barObj;
+			this.setIdGroup();
+			this.initData();
+
+			//绑定echarts滚动条事件 监听滚动条编号
+			//使用百分比监听滚动条变化
+			this.barDom.on('datazoom',(params)=>{
+				this.dataZoom.start = params.start;
+				this.dataZoom.end = params.end;
+				this.slide(params.start,params.end);
+			});
+		},
+		//初始化数据 初始化数据只最多显示5家店铺 使用绝对值
+		initData(){
+			this.reserveData = {};//清空数据
+			this.alrGroup = [];//清空已请求
+			delete this.dataZoom.start;
+			delete this.dataZoom.end;
+
+			//店铺id对应名称，方便调用
+			for(let item of this.reqObj.shopIds){
+				for (let shop of this.shopList) {
+					if(item==shop.id){
+						this.shopListObj[item] = shop.shopName;
+						break;
+					}
+				}
+			}
+			for(let i=0;i<this.reqObj.shopIds.length;i++){
+				let item = this.reqObj.shopIds[i];
+				this.$set(this.reserveData,item,{});
+				
+				if(this.reqObj.shopIds.length>=5){//选择店铺>=5
+					if(i==0) this.dataZoom.startValue = this.shopListObj[item];
+					if(i==4) this.dataZoom.endValue = this.shopListObj[item];
+				}else{//选择店铺<5
+					let start = this.reqObj.shopIds[0],
+						end = this.reqObj.shopIds[this.reqObj.shopIds.length-1];
+					this.dataZoom.startValue = this.shopListObj[start];
+					this.dataZoom.endValue = this.shopListObj[end];
+				}
+			}
+			this.slide(0,1);
+		},
+		//echarts滚动条变化调用
+		slide(start,end){
+			let shopLen = this.reqObj.shopIds.length;//店铺数量
+			let groupNum = Math.ceil(shopLen/this.shopNum);//分组数量
+			let point = parseInt(100/groupNum+'');//每次请求的临界点
+			let endNum = parseInt(end+'');
+			for(let i=0;i<groupNum;i++){
+				if(endNum>point*i){
+					let shopIds = this.setShopIds(i);
+					if(shopIds){
+						this.alrGroup.push(i);
+						this.requestBarData(shopIds);
+					}
+				}
+			}
+		},
+		//请求数据
+		async requestBarData(shopIds){
+			this.coverShow = true;
+			let data = await http.BusinessGetStatByShopIds({data:{
+				startTime: this.reqObj.reqStartTime,
+				endTime: this.reqObj.reqEndTime,
+				shopIds: shopIds.join('-'),
+				isOpenTime: this.reqObj.openTime,
+			}});
+			this.coverShow = false;
+			for(let key in data){
+				this.reserveData[key] = data[key];
+			}
+			this.analytic();
+		},
+		//设置请求的shopIds 并返回
+		setShopIds(num){
+			let alrRequst = false;//是否已经请求过数据 默认未请求
+			for(let item of this.alrGroup){
+				if(num==item){
+					alrRequst = true;
+					break;
+				}
+			}
+			if(!alrRequst){
+				return this.idGroup[num];
+			}else{
+				return false;
+			}
+		},
+		//设置id分组
+		setIdGroup(){
+			this.idGroup = {};
+			let grounNum = Math.ceil(this.reqObj.shopIds.length/this.shopNum);
+			for(let i=0;i<grounNum;i++){
+				let begin = this.shopNum*i,end = this.shopNum*(i+1);
+				let sliceArr = this.reqObj.shopIds.slice(begin,end);
+				this.idGroup[i] = sliceArr;
+			}
 		},
 		setCover() {
 			this.coverShow = this.cover;
 		},
 		analytic() {
-			let bar = this.bar;
+			let bar = this.reserveData;
 			for (let x in this.dataBar) {
 				//清空之前的数据,不做其他处理
 				for (let m in this.dataBar[x]) {
-					this.dataBar.xAxis[m] = [];
+					this.xAxis[m] = [];
 					this.dataBar[x][m] = [];
 				}
 			}
@@ -131,9 +255,9 @@ export default {
 					}
 				}
 				
-				for (let xKey in this.dataBar.xAxis) {
+				for (let xKey in this.xAxis) {
 					//店铺名称加入x轴
-					this.dataBar.xAxis[xKey] = xBar;
+					this.xAxis[xKey] = xBar;
 				}
 				for (let j in bar[i]) {
 					//2遍历 j = eatIn/takeout/total/quickPayment/
@@ -143,18 +267,9 @@ export default {
 					}
 				}
 			}
-			//设置柱状图滑块范围
-			if (xBar.length > 10) {
-				let sBarEnd = 10 / xBar.length;
-				sBarEnd = sBarEnd.toFixed(2) - 0;
-				if (sBarEnd > 1) sBarEnd = 1;
-				this.sliderBarEnd = sBarEnd * 100;
-			}
 			if (this.echarts) {
-				this.setBarListData(this.dataBar, this.barType);//循环设置柱状图图样式列表
-				this.barDom.setOption(
-					this.getBarData(this.dataBar, this.barType)
-				);
+				this.setBarListData(this.barType);//循环设置柱状图图样式列表
+				this.barDom.setOption(this.getBarData(this.barType));
 			}
 		},
 		chartSelect(event) {
@@ -162,8 +277,8 @@ export default {
 			let index = parseInt(target.getAttribute('data-index'));
 			let name = this.checkList[index].name;
 			this.barSelect[name] = !this.barSelect[name];
-			this.setBarListData(this.dataBar, this.barType);//循环设置柱状图图样式列表
-			this.barDom.setOption(this.getBarData(this.dataBar, this.barType));
+			this.setBarListData(this.barType);//循环设置柱状图图样式列表
+			this.barDom.setOption(this.getBarData(this.barType));
 		},
 		tabBtn() {
 			let target = event.target;
@@ -172,13 +287,13 @@ export default {
 				this.tabIndex = index;
 				this.barType = this.tabList[index].type;
 				this.yNameIndexBar = index; //重置图表下标
-				this.setBarListData(this.dataBar, this.barType);//循环设置柱状图图样式列表
+				this.setBarListData(this.barType);//循环设置柱状图图样式列表
 				this.barDom.setOption(
-					this.getBarData(this.dataBar, this.barType)
+					this.getBarData(this.barType)
 				); //重置柱状图表数据
 			}
 		},
-		setBarListData($data,$name){//设置折线图的样式
+		setBarListData($name){//设置折线图的样式
 			let list=[];//折线图样式列表
 			for(let item of this.checkList){
 				let obj = {
@@ -192,13 +307,13 @@ export default {
 							color: item.color
 						}
 					},
-					data: $data[item.className][$name],
+					data: this.dataBar[item.className][$name],
 				};
 				list.push(obj);
 			}
 			this.seriesData = list;
 		},
-		getBarData: function($data, $name) {
+		getBarData($name) {
 			//获取柱状图数据格式
 			return {
 				legend: {
@@ -224,7 +339,7 @@ export default {
 					{
 						name: this.xNameBar,
 						axisTick: { show: false },
-						data: $data.xAxis[$name]
+						data: this.xAxis[$name]
 					}
 				],
 				yAxis: [
@@ -237,12 +352,7 @@ export default {
 					}
 				],
 				dataZoom: [
-					{
-						type: 'slider',
-						show: true,
-						start: 0,
-						end: this.sliderBarEnd
-					}
+					this.dataZoom,
 				],
 				series: this.seriesData
 			};
@@ -402,12 +512,13 @@ export default {
 	height: 100%;
 	z-index: 9;
 	background: #fff;
-	opacity: 0.7;
+	opacity: 0.9;
 	text-align: center;
 	display: flex;
-	i{display: inline-block;font-size: 40px;margin: auto;color: #666;opacity: 1;}
+	i{display: inline-block;font-size: 40px;margin: auto;color: #666;}
 }
 .bar-cover {
-	height: 440px;
+	height: 340px;
+	bottom: 100px;
 }
 </style>

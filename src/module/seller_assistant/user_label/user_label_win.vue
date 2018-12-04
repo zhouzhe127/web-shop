@@ -15,11 +15,10 @@
 						标签名称
 					</div>
 					<div class="rightHalf">
-						<!-- <input type="text" class="txt" placeholder="请输入名称" v-model="name" maxlength="20" /> -->
 						<el-input v-model="name" maxlength="20" placeholder="请输入名称"></el-input>
 					</div>
 				</div>
-				<!-- <div class="phoneBox">
+				<div class="phoneBox" v-if="type == 'view'">
 					<div class="leftHalf required">
 						类型
 					</div>
@@ -28,7 +27,7 @@
 							<el-radio v-for="(item,index) in payWays" :key="index" :label="item.name" border @change.native="changeRadio(item)"></el-radio>
 						</el-radio-group>
 					</div>
-				</div> -->
+				</div>
 			</div>
 		</div>
 	</Win>
@@ -143,7 +142,7 @@
 </script>
 <style scoped>
 	.mobilePhone {
-		margin: 63px 0 0 66px;
+		margin: 30px 0 0 66px;
 		box-sizing: border-box;
 	}
 

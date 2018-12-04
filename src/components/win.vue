@@ -19,6 +19,7 @@
 		<div ref="mask" class="win-mask" v-show="maskShow" @click="closeMask" :style="{'z-index':1000 + win_id - 1}"></div>
 	</div>
 
+
 </template>
 <script>
 import global from 'src/manager/global';

@@ -196,6 +196,7 @@ export default {
 			this.checkSle();
 		},
 		search() {
+			this.page = 1;
 			this.init();
 		},
 		reset() {

@@ -40,11 +40,12 @@
 		<!--统计数据-->
 		<specific :cover="coverShow" :specific="sales"></specific>
 		<!--饼图-->
-		<pieChart :pie="pie" :cover="coverShow" :echarts="echarts" v-if="isOneShow"></pieChart>
+		<pie-chart :pie="pie" :cover="coverShow" :echarts="echarts" v-if="isOneShow"></pie-chart>
 		<!--柱状图 各个店铺的数据-->
-		<barChart :bar="bar" :cover="coverShowShop" :echarts="echarts" :shopList="shopList" v-if="isBrand && !isOneShow"></barChart>
+		<bar-chart :barObj="barObj" :cover="coverShowShop" :echarts="echarts" :shopList="shopList" v-if="isBrand && !isOneShow"
+		ref="barRef"></bar-chart>
 		<!--条形图-->
-		<lineChart :line="line" :cover="coverShow" :echarts="echarts"></lineChart>
+		<line-chart :line="line" :cover="coverShow" :echarts="echarts"></line-chart>
 
 		<!--提示弹框-->
 		<div class="busi-tips" :style="posiTips" v-if="tipShow">
@@ -85,7 +86,6 @@ export default {
 			allSelected: true, //选中全部
 			sales: null,
 			pie: null,
-			bar: null,
 			line: null,
 			tipsContent: {
 				turnover:
@@ -110,8 +110,12 @@ export default {
 			timerId:'',//轮询id
 			isShowStore:false,//已选中店铺列表 是否展开
 			storeShowH:'20px',
-			eachRequestNum:0,//记录循环调用次数
-			eachRequestObj:{},//循环请求获取的数据 最后在赋值给bar
+			barObj:{//柱状图请求参数
+				shopIds:'',
+				reqStartTime:'',
+				reqEndTime:'',
+				openTime:'',
+			},
 		};
 	},
 	components: {
@@ -133,7 +137,7 @@ export default {
 	created() {
 		this.userData = storage.session('userShop');//获取店铺数据
 		this.shopId = this.userData.currentShop.id;
-		let shopIdArr = [],shopList = [];
+		let shopIdArr = [];
 		if (this.userData.currentShop.ischain == '3') {
 			this.shopList = storage.session('shopList');
 			for(let item of this.shopList){//组合店铺列表
@@ -241,38 +245,16 @@ export default {
 		},
 		//遍历获取店铺数据-暂时先用递归 下版本优化异步加载
 		eachGetShopData(){
-			let shopIds = [];
-			this.coverShowShop = true;
-			if(this.shopIds.length>5){
-				let start = this.eachRequestNum*5;
-				let end = (this.eachRequestNum+1)*5;
-				shopIds = this.shopIds.slice(start,end);
-				if(shopIds.length){
-					this.eachRequestNum++;
-					this.getShopData(shopIds);
-					this.eachGetShopData();
-				}else{
-					this.eachRequestNum = 0;
-					this.bar = this.eachRequestObj;
-					this.coverShowShop = false;
-				}
-			}else{
-				this.getShopData(this.shopIds);
-				this.bar = this.eachRequestObj;
+			let arr=['shopIds','reqStartTime','reqEndTime','openTime'];
+			let obj={};
+			for(let item of arr){
+				obj[item] = this[item];
 			}
-		},
-		//获取店铺数据
-		async getShopData(shopIds){
-			let data = await http.BusinessGetStatByShopIds({data:{
-				startTime: this.reqStartTime,
-				endTime: this.reqEndTime,
-				shopIds: shopIds.join('-'),
-				isOpenTime: this.openTime,
-			}});
-			if(data){
-				for(let key in data){
-					this.$set(this.eachRequestObj,key,data[key]);
-				}
+			this.barObj = obj;
+			if(this.$refs.barRef){
+				this.$nextTick(()=>{
+					this.$refs.barRef.initData();
+				});
 			}
 		},
 		//获取品牌数据
@@ -419,7 +401,6 @@ export default {
 				this.isBrandSend = 1;
 				this.getTaskId();
 				//执行循环前，先清除保存的数据
-				this.eachRequestObj = {};
 				this.eachGetShopData();
 			}
 			

@@ -252,14 +252,6 @@
 					content: con
 				});
 			}
-		},
-		components: {
-			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
-			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
-			pageTurn: () =>
-				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 		}
 	};
 </script>

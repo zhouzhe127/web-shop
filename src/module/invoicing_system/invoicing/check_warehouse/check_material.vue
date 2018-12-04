@@ -12,67 +12,68 @@
 				<div class="head">
 					盘库物料列表 · 共<em>{{listLength}}</em>个条目
 				</div>
-				<div class="scroll-box">
-					<div class="title">
-						<span>操作</span>
-						<span>单位选择</span>
-						<span class="wide">盘库数量</span>
-						<span>物料名称</span>
-						<span>库存数量</span>
-						<span>所属仓库</span>
-						<span>批次数量</span>
-						<span>类型</span>
-					</div>
-					<div class="list-item" v-for="(item,index) in list" :key="index">
-						<!--操作-->
-						<div class="cell select-ban">
-							<em class="clear" @click="clearItem(index)">清空输入</em>
-							<em @click="openBatchWin(index)">批量盘库</em>
-						</div>
-						<!--单位选择-->
-						<div class="cell">
-							<drop-down @emit="(res)=>{unitSel(res,index)}" class="sel-box"
-								:list="item.unitArr" 
-								:value="item.unitIndex" 
-								:width="90" 
-								:noRepeat="true"></drop-down>
-						</div>
-						<!--盘库数量-->
-						<div class="cell wide">
-							<template v-if="item.oneName">
+				<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column label="单位选择" width="150">
+						<template slot-scope="scope">
+							<el-select v-model="scope.row.unitIndex" placeholder="请选择仓库" @change="unitSel(scope.row)">
+								<el-option
+									v-for="item in scope.row.unitArr"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
+							</el-select>
+						</template>
+					</el-table-column>
+					<el-table-column label="盘库数量" width="320" align="center">
+						<template slot-scope="scope">
+							<template v-if="scope.row.oneName">
 								<div class="input-box">
-									<input type="text" v-model="item.oneNum" maxlength="10" placeholder="请输入数量" :disabled="item.haveBatch"/>
-									<div class="word">{{item.oneName}}</div>
+									<input type="text" v-model="scope.row.oneNum" maxlength="10" placeholder="请输入数量" :disabled="scope.row.haveBatch"/>
+									<div class="word">{{scope.row.oneName}}</div>
 								</div>
 								+
 							</template>
 							<div class="input-box">
-								<input type="text" v-model="item.twoNum" maxlength="10" placeholder="请输入数量" :disabled="item.haveBatch"/>
-								<div class="word">{{item.twoName}}</div>
+								<input type="text" v-model="scope.row.twoNum" maxlength="10" placeholder="请输入数量" :disabled="scope.row.haveBatch"/>
+								<div class="word">{{scope.row.twoName}}</div>
 							</div>
-						</div>
-						<!--物料名称-->
-						<div class="cell text-ellipsis" :title="item.name">
-							{{item.name}}
-						</div>
-						<!--库存数量-->
-						<div class="cell text-ellipsis" :title="setSuprlus(item.surplus,item.unit)">
-							{{setSuprlus(item.surplus,item.unit)}}
-						</div>
-						<!--所属仓库-->
-						<div class="cell text-ellipsis" :title="item.wName+(item.aName?' / '+item.aName:'')">
-							{{item.wName}}{{item.aName?' / '+item.aName:''}}
-						</div>
-						<!--批次数量-->
-						<div class="cell">{{item.batch}}</div>
-						<!--类型-->
-						<div class="cell">{{matTypeHash[item.type]}}</div>
-					</div>
-					<div class="empty" v-if="!list.length">- 暂无条目 -</div>
-				</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="name" label="物料名称" min-width="200">
+					</el-table-column>
+					<el-table-column label="库存数量" min-width="200">
+						<template slot-scope="scope">
+							{{setSuprlus(scope.row.surplus,scope.row.unit)}}
+						</template>
+					</el-table-column>
+					<el-table-column label="所属仓库" width="200">
+						<template slot-scope="scope">
+							{{scope.row.wName}}{{scope.row.aName?' / '+scope.row.aName:''}}
+						</template>
+					</el-table-column>
+					<el-table-column prop="batch" label="批次数量" min-width="100">
+					</el-table-column>
+					<el-table-column label="类型" width="120">
+						<template slot-scope="scope">
+							{{matTypeHash[scope.row.type]}}
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" fixed="left" width="160">
+						<template slot-scope="scope" >
+							<el-button type="text" style='color:#D34A2B' @click="clearItem(scope.row)">清空输入</el-button>
+							<el-button type="text" @click="openBatchWin(scope.row,scope.$index)">批次盘库</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
 			</div>
 			<div class="page-box">
-				<pageBtn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></pageBtn>
+				<el-pagination @current-change="pageChange"
+					:current-page="page"
+					background
+					layout="prev, pager, next"
+					:page-count="pageTotal">
+				</el-pagination>
 			</div>
 		</template>
 		<!--<add-goods v-if="addShow" :selItem='selMatItem'></add-goods>-->
@@ -141,17 +142,17 @@ export default{
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确定盘库',style: 'background: #fe8d01;border: 1px solid #fe8d01;color: #fff;',
+				{name: '确定盘库',className: 'primary',type:4,
 					fn: () => {
 						this.checkMaterial();
 					}
 				},
-				{name: '添加物料',style: 'background: #29a7e1;border: 1px solid #29a7e1;color: #fff;',
+				{name: '添加物料',className: 'success',type:4,
 					fn: () => {
 						this.addShow = true;
 					}
 				},
-				{name: '取消盘库',style: 'background: #b3b3b3;border: 1px solid #b3b3b3;color: #fff;',
+				{name: '取消盘库',className: 'info',type:4,
 					fn: () => {
 						window.history.go(-1);
 					}
@@ -203,14 +204,12 @@ export default{
 			this.selObj.list = data;
 			this.setListData(data);
 		},
-		unitSel(obj,index){//单位选择 res:单位列表下标 , index:列表下标
-			let list = this.list[index];
-			let unit = list.unit[obj.value];
+		unitSel(list){//单位选择 res:单位列表下标 , index:列表下标
+			let unit = list.unit[list.unitIndex];
 			list.oneNum = '';
 			list.twoNum = '';
 			list.selBatchList = [];
 			list.haveBatch = false;
-			list.unitIndex = obj.value;
 			if(unit.isMin==1){
 				list.oneName = '';
 				list.unitValue = 1;
@@ -265,8 +264,7 @@ export default{
 			//number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称
 			return global.comUnit(num,value,def,min);
 		},
-		clearItem(index){//清空输入
-			let list = this.list[index];
+		clearItem(list){//清空输入
 			list.oneNum = '';
 			list.twoNum = '';
 			list.selBatchList = [];
@@ -279,8 +277,7 @@ export default{
 				}
 			}
 		},
-		openBatchWin(index){//打开批次选择弹框
-			let list = this.list[index];
+		openBatchWin(list,index){//打开批次选择弹框
 			this.batchShow = true;
 			this.openIndex = index;
 			this.batchObj = {
@@ -343,17 +340,19 @@ export default{
 			}
 			for(let item of list){
 				let total = Number(item.oneNum)*Number(item.unitValue) + Number(item.twoNum);
-				if(!item.haveBatch && item.oneNum!=='' || item.twoNum!==''){//不选批次，不为空
-					let obj={
-						batchId:0,
-						wid:item.wid,
-						areaId:item.areaId,
-						surplus: total,
-						itemId:item.id,
-						unitId:item.unitId,
-					};
-					this.spliceArr(this.checkList,item);
-					this.checkList.push(obj);
+				if(!item.haveBatch){
+					if(item.oneNum!=='' || item.twoNum!==''){//不选批次，不为空
+						let obj={
+							batchId:0,
+							wid:item.wid,
+							areaId:item.areaId,
+							surplus: total,
+							itemId:item.id,
+							unitId:item.unitId,
+						};
+						this.spliceArr(this.checkList,item);
+						this.checkList.push(obj);
+					}
 				}
 			}
 		},
@@ -378,6 +377,7 @@ export default{
 			return true;
 		},
 		checkMaterial(){//物料盘库
+			this.setPageSave();//翻页操作才能触发保存，所以这里调用一下，存入最后一次返回后填写的数据
 			this.setSendList();//设置发送数据
 			if(!this.checkList.length){
 				this.myAlert('请填写盘库数量');
@@ -418,6 +418,7 @@ export default{
 				cid: this.cid,
 				wid : this.wid,
 				areaId : this.areaId,
+				type:-1,
 			}});
 			this.pageTotal = data.total;
 			this.listLength = data.count;
@@ -447,12 +448,13 @@ export default{
 						unitId = unit.muId;
 					}
 				}
-				item.unitArr = unitArr;
-				item.unitIndex = unitIndex;
-				item.unitId = unitId;
-				item.oneNum = '',item.twoNum = '';
-				item.oneName = oneName,item.twoName = twoName;
-				item.unitValue = value;
+				this.$set(item,'haveBatch',false);
+				this.$set(item,'unitArr',unitArr);
+				this.$set(item,'unitIndex',unitIndex);
+				this.$set(item,'unitId',unitId);
+				this.$set(item,'oneNum',''),this.$set(item,'twoNum','');
+				this.$set(item,'oneName',oneName),this.$set(item,'twoName',twoName);
+				this.$set(item,'unitValue',value);
 			}
 			this.eachSaveList(list);
 		},
@@ -488,9 +490,8 @@ export default{
 				}
 			}
 		},
-		pageChange(obj){//翻页
-			this.page = obj.page;
-			this.pageShow = obj.num;
+		pageChange(res){//翻页
+			this.page = res;
 			this.setPageSave();//设置翻页后保存的数据
 			if(this.selObj.list.length){
 				this.webPage();
@@ -505,33 +506,31 @@ export default{
 <style lang="less" scoped>
 #check-material{
 	padding-top: 10px;overflow:auto;
-	.main{border: 1px solid #ccc;
-		.head{height: 50px;line-height: 50px;padding: 0 20px;font-size: 16px;
+	.main{
+		.head{
+			height: 50px;line-height: 50px;padding: 0 20px;font-size: 14px;
+			border: 1px solid #ebeef5;border-bottom: 0;
 			em{color: #ff3c04;padding: 0 2px;}
 		}
-		.scroll-box{overflow: auto;}
-		.title{overflow:hidden;background: #e6e6e6;min-width: 1300px;
-			span{float: left;height: 40px;line-height: 40px;width: 11%;text-align: center;}
-			.wide{width:23%}
-		}
-		.list-item{border-bottom: 1px solid #ddd;min-width: 1300px;
-			.cell{float: left;height: 70px;line-height: 70px;width: 11%;text-align: center;
-				.sel-box{line-height: normal;}
-				em{color: #29a7e1;display: inline-block;height: 40px;line-height: 40px;padding: 0 5px;cursor: pointer;}
-				.clear{color: red;}
-				.input-box{
-					display: inline-block;vertical-align: middle;overflow: hidden;
-					input,.word{height: 40px;line-height: 38px;border: 1px solid #ccc;float: left;background: #fff;}
-					input{width: 85px;padding: 0 5px;}
-					.word{width: 40px;border-left: 0;text-align: center;}
-				}
+		.input-box{
+			display: inline-block;vertical-align: middle;overflow: hidden;
+			input,.word{
+				height: 40px;line-height: 38px;border: 1px solid #dcdfe6;float: left;background: #fff;
 			}
-			.wide{width:23%}
-			&:last-child{border-bottom: 0;}
-			&:after{content: '';zoom: 1;clear: both;display: block;}
+			input{
+				width: 85px;padding: 0 5px;
+				border-top-left-radius: 4px;
+				border-bottom-left-radius: 4px;
+				&:focus{outline: none;}
+			}
+			.word{
+				width:50px;border-left: 0;text-align: center;
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+				background: #f5f7fa;
+			}
 		}
-		.empty{line-height: 70px;text-align: center;color: #ccc;font-size: 20px;}
 	}
-	.page-box{padding: 20px 0;padding-bottom: 100px;}
+	.page-box{padding: 20px 0;}
 }
 </style>

@@ -1,7 +1,9 @@
 import storage from '../verdor/storage';
 import Timer from '../verdor/timer';
 import utils from '../verdor/utils';
-import { store } from './store';
+import {
+	store
+} from './store';
 
 let global = {
 	checkLogin() {
@@ -72,8 +74,8 @@ let global = {
 				let fun = new Function(
 					'value',
 					'if(' +
-						cond.replace(/\$\$/g, 'value') +
-						'){return true;}return false;'
+					cond.replace(/\$\$/g, 'value') +
+					'){return true;}return false;'
 				);
 				if (!fun.call(context, value)) {
 					store.commit('setWin', {
@@ -230,7 +232,10 @@ let global = {
 		let obj = {};
 		if (showName == minName) {
 			if (type) {
-				obj = { oNull: '', tNull: number == 0.0 ? '' : number };
+				obj = {
+					oNull: '',
+					tNull: number == 0.0 ? '' : number
+				};
 				return obj;
 			} else {
 				showNum = number + minName;
@@ -241,7 +246,10 @@ let global = {
 		let fltint = (number % value).toFixed(3) + ''; //小数
 		if (integer == 0) {
 			if (type) {
-				obj = { oNull: '', tNull: fltint == 0.0 ? '' : fltint };
+				obj = {
+					oNull: '',
+					tNull: fltint == 0.0 ? '' : fltint
+				};
 				return obj;
 			} else {
 				showNum = fltint + minName;
@@ -249,7 +257,10 @@ let global = {
 			}
 		} else if (parseInt(fltint * 1000) == 0) {
 			if (type) {
-				obj = { oNull: integer == 0.0 ? '' : integer, tNull: '' };
+				obj = {
+					oNull: integer == 0.0 ? '' : integer,
+					tNull: ''
+				};
 				return obj;
 			} else {
 				showNum = integer + showName;
@@ -257,7 +268,10 @@ let global = {
 			}
 		} else {
 			if (type) {
-				obj = { oNull: integer, tNull: fltint };
+				obj = {
+					oNull: integer,
+					tNull: fltint
+				};
 				return obj;
 			} else {
 				if (Number(fltint) < 0) {
