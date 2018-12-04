@@ -459,14 +459,14 @@ let need = {
 		getPurchaseOrderReviewList: { //采购审核
 			name: 'purchaseAudit'
 		},
-		materialWorking:{			//加工物料
-			name:'processMaterial'
+		materialWorking: { //加工物料
+			name: 'processMaterial'
 		},
-		bargaining:{			// 砍价功能
+		bargaining: { // 砍价功能
 			name: 'bargainActivity'
 		},
-		ActiveConf:{			//活跃值配置
-			name:'ActiveConf'
+		ActiveConf: { //活跃值配置
+			name: 'ActiveConf'
 		},
 		priceTemplate:{     //价格模板
 			name:'priceTemplate'

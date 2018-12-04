@@ -121,6 +121,7 @@ const invoicing_system = {
 	"0839": "invoicing_system/purchase_audit", //采购单审核
 	"0840": "invoicing_system/material_statistics", //物料统计
 	"0841": "invoicing_system/process_bom",
+	"0842": "invoicing_system/material_report_template", //报表模板
 }
 const statistics = {
 	'091': 'statistics/order_brand',
@@ -192,12 +193,16 @@ const ticket_config = {
 	"131": "ticket_config/ticketed_point_list",
 	"132": "ticket_config/sales_party"
 };
+let modelArr = [invoicing_system, outfood]; //开发环境下需要打包的模块
 let config = {
 	useId: [], //需要用到的路由id
 	configs: {} //需要插入的路由模块
 };
-Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
-// Object.assign(config.configs, invoicing_system);
+if (process.argv[2] == '--dev' && modelArr.length > 0) {
+	Object.assign(config.configs, ...modelArr);
+} else {
+	Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
+}
 module.exports = config;
 /*
  *现在路由主要由以下文件构成
