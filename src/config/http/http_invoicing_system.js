@@ -1143,6 +1143,13 @@ export default {
 	"materialreportGetMaterialErrorLog": {
 		url: b + "materialreport/getMaterialErrorLog", //生成物料报表-错误日志
 		method: 'get',
+	},
+	"materialCreateMaterialBarCode": {
+		url: b + "material/createMaterialBarCode", //自动生成物料编码
+		method: 'post',
+	},
+	"materialCreateCateBarCode": {
+		url: b + "material/createCateBarCode", //自动生成分类编码
+		method: 'post',
 	}
-
 }
