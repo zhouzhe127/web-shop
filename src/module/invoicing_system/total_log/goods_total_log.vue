@@ -32,12 +32,17 @@
                     </el-option>
                 </el-select>
 
+            </div>
+
+            <div class="in-block">
                 <el-input clearable v-model="condition.goodsName" placeholder="商品名称" style="width:194px"></el-input>
             </div>
 
             <div class="in-block" >
                 <el-input clearable v-model="condition.code" placeholder="条形码" style="width:194px"></el-input>
+            </div>
 
+            <div class="in-block" >
                 <el-input clearable v-model="condition.operationUser" placeholder="操作人" style="width:194px"></el-input>
             </div>
 
@@ -93,6 +98,12 @@
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
 						{{row.cost}}
+					</template>	  
+                </el-table-column>
+                <el-table-column  label="结存金额" width="150px">
+					<template slot-scope="{row,column,index}">
+						<!-- <span class="arrow" :class="{'arrow-up':row.arrowBalanceAmount,'arrow-down':!row.arrowBalanceAmount}"></span> -->
+						{{row.balanceAmount}}
 					</template>	  
                 </el-table-column>
                 <el-table-column label="售卖价格" width="150px">
@@ -215,6 +226,7 @@ import http from 'src/manager/http';
     请求:
         获取商品日志类型:invoicing_getInventoryLogType
         获取商品库存详情:InvoicingGetGoodsDetail
+        导出:InvoicingExportGoodsLogList
 */
 export default {
     mixins:[common],
@@ -285,6 +297,10 @@ export default {
 
                 ele.arrowPrice = ele.price > 0;
 
+                ele.arrowBalanceAmount = ele.balanceAmount > 0;
+
+                this.calcNum(ele,['balanceAmount','cost']);
+
                 ele.changeBefore = ele.changeBefore + ele.itemUnit;
                 ele.change = ele.change + ele.itemUnit;
                 ele.changeAfter = ele.changeAfter + ele.itemUnit;
@@ -296,6 +312,22 @@ export default {
             });
         },
 
+        initBtn(btns){
+            if(!btns){
+                btns = [
+                    {
+                        name: '导出',
+                        type:'4',
+                        className:'primary',
+                        fn:async ()=>{
+                            let obj = this.getSubmitData();
+                            this.getHttp('InvoicingExportGoodsLogList');
+                        }
+                    },
+                ]
+            }
+			this.$store.commit('setPageTools',btns);
+        },
 
         //查看商品详情
         async viewDetail(row,column){
@@ -332,12 +364,12 @@ export default {
         this.initCondition();
     },
     async activated(){
+        this.initBtn();
         await this.getOperationList();
-        
         this.getCategoryList();
         this.getWarehouseList();
         this.filterReset('filter',this.pageObj.currentPage);
-    },
+    }
 };
 </script>
 <style lang='less' scoped>
