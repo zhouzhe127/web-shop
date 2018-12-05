@@ -462,6 +462,9 @@ let need = {
 		materialWorking: { //加工物料
 			name: 'processMaterial'
 		},
+		getReportTemplate: {
+			name: 'materialReport' //物料报表模板
+		},
 		bargaining: { // 砍价功能
 			name: 'bargainActivity'
 		},
