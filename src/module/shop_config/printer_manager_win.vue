@@ -431,7 +431,6 @@ export default {
 			this.ip = this.printDetial.ip;
 			this.slaveIp = this.printDetial.slaveIp;
 			this.maxLen = this.printDetial.maxLen;
-			console.log(this.printDetial.type);
 			if (parseInt(this.printDetial.type) == 0) {
 				this.isTest = true; //如果为网口打印机，测试按钮显示，否则不显示
 			} else if (parseInt(this.printDetial.type) == 2) {
@@ -461,7 +460,6 @@ export default {
 				this.isTest = false;
 			}
 			this.num = this.printDetial.sort;
-			console.log(this.isTest);
 		}
 	}
 };
