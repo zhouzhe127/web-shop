@@ -282,8 +282,8 @@
 						<el-input v-model="detial.paymentName" class="inputWidth" :disabled="true"></el-input>
 					</div>
 					<div class="payShowList">
-						<h3 class="showListBefore">merchantId</h3>
-						<el-input v-model="detial.payConfig.merchantId" class="inputWidth" placeholder = "请输入merchantId"></el-input>
+						<h3 class="showListBefore"> 商户号</h3>
+						<el-input v-model="detial.payConfig.merchantId" class="inputWidth" placeholder = "请输入 商户号"></el-input>
 					</div>
 					<div class="payShowList">
 						<h3 class="showListBefore">商户私钥</h3>

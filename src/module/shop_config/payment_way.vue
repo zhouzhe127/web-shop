@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-19 11:39:01 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-11-27 18:00:11
+ * @Last Modified time: 2018-12-05 17:31:25
  * @Module:支付方式配置
 **/
 <template>
@@ -227,6 +227,12 @@ export default {
 			let arr = await http.getPaymentList({ data: {} });
 			// arr.sort(this.paySort('sort'));
 			utils.sortByAll(arr,'sort');
+			for(let i=0;i<arr.length;i++){
+				if(arr[i].paymentName =='先锋支付'){
+					arr.splice(i,1);
+					i--;
+				}
+			}
 			this.payNameList = arr;
 		},
 		//修改微信、支付宝
