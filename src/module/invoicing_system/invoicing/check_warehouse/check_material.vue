@@ -95,6 +95,7 @@ export default{
 				list:[],
 				search:{},
 				storeAll:false,
+				isUpdateZero:false,//未选中的商品/物料库存消耗至0
 			},
 			selMatItem:[],//已选择物料列表
 			selMatSearch:null,
@@ -384,7 +385,11 @@ export default{
 				return;
 			}
 			if(!this.veriList()) return;
-			this.$confirm('确认盘库?', '提示', {
+			let tips='确认盘库?';
+			if(this.selObj.isUpdateZero){
+				tips = '确认盘库? 未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量';
+			}
+			this.$confirm(tips, '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
@@ -400,6 +405,7 @@ export default{
 			let data = await http.GoodsinventoryBatchSetMaterialInventory({data:{
 				type:1,
 				data:this.checkList,
+				isUpdateZero:this.selObj.isUpdateZero,
 			}});
 			if(data.result){
 				this.$message({message: '物料盘库成功！',type: 'success'});
@@ -503,6 +509,7 @@ export default{
 		.head{
 			height: 45px;line-height: 45px;padding: 0 10px;font-size: 14px;
 			border: 1px solid #ebeef5;border-bottom: 0;
+			overflow: hidden;
 			em{color: #ff3c04;padding: 0 2px;}
 		}
 		.input-box{

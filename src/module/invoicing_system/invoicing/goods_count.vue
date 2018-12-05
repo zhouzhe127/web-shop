@@ -238,8 +238,8 @@ export default {
 				return;	
 			}
 
-			let {list=[],search={},storeAll,name=''} = res;
-			this.stateStore.addGoods = {search,list,storeAll,name};
+			let {list=[],search={},storeAll,name='',isUpdateZero=false,} = res;
+			this.stateStore.addGoods = {search,list,storeAll,name,isUpdateZero};
 
 			if(list.length == 0){
 				this.pageObj.flag = false;
@@ -533,14 +533,19 @@ export default {
 				this.$message({message: '请先填写盘库数量',type: 'error'});
 				return;
 			}
-			this.$confirm('确认盘库?', '提示', {
+			let tips='确认盘库?';
+			if(this.stateStore.addGoods.isUpdateZero){
+				tips = '确认盘库? 未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量';
+			}
+			this.$confirm(tips, '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
 			}).then(async () => {
 				let retData = await this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
 					data:obj.new,
-					type:0
+					type:0,
+					isUpdateZero:this.stateStore.addGoods.isUpdateZero,
 				});
 				if(retData.result){
 					this.$message({message: '盘库成功',type: 'success'});

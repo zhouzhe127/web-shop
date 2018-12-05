@@ -13,52 +13,54 @@
 		</div>	
 		<div class="table">
 			<!-- 商品盘库记录 -->
-			<el-table :data="tableData" v-if="tab == 1" style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
-				<el-table-column label="序号" align="center"  prop="itemIndex"></el-table-column>
-				<el-table-column label="商品名" align="center" width="150px" prop="itemName"></el-table-column>
-				<el-table-column label="条码" align="center" width="150px" prop="barCode"></el-table-column>
-				<el-table-column label="仓库所属" align="center" width="150px" prop="storeName"></el-table-column>
-				<el-table-column label="盘库前" align="center" width="150px" prop="before"></el-table-column>
-				<el-table-column label="盘库后" align="center" width="150px" prop="after"></el-table-column>
-				<el-table-column label="变化量" align="center" width="150px">
+			<el-table :data="tableData" v-if="tab == 1" border style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column label="序号" width="100px" prop="itemIndex"></el-table-column>
+				<el-table-column label="商品名" min-width="200px" prop="itemName"></el-table-column>
+				<el-table-column label="条码" width="150px" prop="barCode"></el-table-column>
+				<el-table-column label="仓库所属" width="150px" prop="storeName"></el-table-column>
+				<el-table-column label="盘库前" width="150px" prop="before"></el-table-column>
+				<el-table-column label="盘库后" width="150px" prop="after"></el-table-column>
+				<el-table-column label="变化量" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrow,'arrow-down':!row.arrow}"></span>
 						{{row.change}}
 					</template>						
 				</el-table-column>
-				<el-table-column label="成本价" align="center" prop="cost"></el-table-column>
+				<el-table-column label="成本价" min-width="150px" prop="cost"></el-table-column>
+				<el-table-column label="批盘消耗" min-width="150px" prop="cost"></el-table-column>
 			</el-table>
 
 			<!-- 物料盘库记录 -->
-			<el-table v-if="tab == 2" :data="tableData" style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
-				<el-table-column label="序号" align="center"  prop="itemIndex"></el-table-column>
-				<el-table-column label="物料名称" align="center"  width="150px" prop="itemName"></el-table-column>
-				<el-table-column label="物料编码" align="center"  width="150px" prop="barCode"></el-table-column>
-				<el-table-column label="仓库所属" align="center" width="150px"  prop="storeName"></el-table-column>
-				<el-table-column label="盘库前" align="center" width="150px" prop="before"></el-table-column>
-				<el-table-column label="盘库后" align="center" width="150px" prop="after"></el-table-column>
-				<el-table-column label="变化量" align="center" width="150px">
+			<el-table v-if="tab == 2" :data="tableData" border style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column label="序号" width="100px" prop="itemIndex"></el-table-column>
+				<el-table-column label="物料名称"  min-width="200px" prop="itemName"></el-table-column>
+				<el-table-column label="物料编码"  width="150px" prop="barCode"></el-table-column>
+				<el-table-column label="仓库所属" width="150px"  prop="storeName"></el-table-column>
+				<el-table-column label="盘库前" width="150px" prop="before"></el-table-column>
+				<el-table-column label="盘库后" width="150px" prop="after"></el-table-column>
+				<el-table-column label="变化量" width="150px">
 					<template slot-scope="{row,column,index}">
 						<span class="arrow" :class="{'arrow-up':row.arrow,'arrow-down':!row.arrow}"></span>
 						{{row.change}}
 					</template>						
 				</el-table-column>
 				<!-- 单店内有调入的有分销价的按分销价计算 -->
-				<el-table-column label="成本金额" align="center" prop="cost"></el-table-column>
+				<el-table-column label="成本金额" min-width="150px" prop="cost"></el-table-column>
+				<el-table-column label="批盘消耗" min-width="150px" prop="cost"></el-table-column>
 			</el-table>
 			
 			<!-- 批量审核日志详情 -->
-			<el-table v-if="tab == 3" :data="tableData" style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
-				<el-table-column label="操作" align="center">
+			<el-table v-if="tab == 3" :data="tableData" border style="width: 100%" stripe :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column label="操作">
 					<template slot-scope="{row,column,index}">
 						<span class="view-detail" @click="linkUrl(row)">查看详情</span>
 					</template>						
 				</el-table-column>
-				<el-table-column label="序号" align="center" prop="itemIndex"></el-table-column>
-				<el-table-column label="申请单号" align="center" prop="applicationCode"></el-table-column>
-				<el-table-column label="申请店铺/品牌" align="center" prop="applicationShop"></el-table-column>
-				<el-table-column label="申请人" align="center" prop="applicant"></el-table-column>
-				<el-table-column label="申请时间" align="center" prop="zh_applicationTime"></el-table-column>
+				<el-table-column label="序号" width="100px" prop="itemIndex"></el-table-column>
+				<el-table-column label="申请单号" prop="applicationCode"></el-table-column>
+				<el-table-column label="申请店铺/品牌" prop="applicationShop"></el-table-column>
+				<el-table-column label="申请人" prop="applicant"></el-table-column>
+				<el-table-column label="申请时间" prop="zh_applicationTime"></el-table-column>
 			</el-table>
 			
 		</div>

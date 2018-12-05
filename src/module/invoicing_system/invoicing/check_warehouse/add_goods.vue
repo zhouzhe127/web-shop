@@ -45,6 +45,20 @@
 				<template v-else>
 					已选择:<em>{{this.selectItem.length}}</em>个
 				</template>
+				<div class="check-div">
+					<el-checkbox v-model="isUpdateZero">未选中的商品库存消耗至0</el-checkbox>
+					<el-tooltip 
+						class="item" 
+						effect="dark" 
+						placement="bottom">
+						<div slot="content"><i class="el-icon-warning"> 说明</i>
+						<br/><br/>
+						该条目被勾选后，所有未选中的商品，库存统一变更为0
+						<br/>
+						操作日志及进销存统计中记录类型为批盘消耗。</div>
+						<i class="check-icon el-icon-info"></i>
+					</el-tooltip>
+				</div>
 			</div>
 			<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 				<el-table-column width="180" fixed="left">
@@ -173,6 +187,7 @@
 				searchObj:{},//筛选条件
 				isEdit:false,//是否编辑模板
 				useList:[],
+				isUpdateZero:false,
 			};
 		},
 		props:[
@@ -239,16 +254,35 @@
 				if(this.selObj || !this.isEdit){
 					arr.unshift({name: '确定',className: 'primary',type:4,
 						fn: () => {
-							this.confirmClick();
+							this.veriConfirmClick();
 						}
 					});
 				}
 				this.$store.commit('setPageTools', arr);
 			},
+			veriConfirmClick(){
+				if(this.isUpdateZero){
+					this.$confirm('未选中的商品库存将消耗至0，减少量日志记录为批盘消耗量', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						this.confirmClick();
+					}).catch(()=>{
+						//
+					});
+				}else{
+					this.confirmClick();
+				}
+			},
 			confirmClick(){//确认选中
 				this.selList = this.selectItem.map((res)=>{
 					return res.item;
 				});
+				if(this.isUpdateZero && !this.selList.length && !this.storeAll){
+					this.checkGoodsSubmit();
+					return;
+				}
 				if(!this.selList.length && !this.storeAll){
 					this.myAlert('请选择商品');
 					return;
@@ -259,6 +293,20 @@
 					storeAll:this.storeAll,//是否全选
 				};
 				this.$emit('emit',obj);
+			},
+			//不填写数量直接提交
+			async checkGoodsSubmit(){
+				let data = await http.GoodsinventoryBatchSetGoodsInventory({data:{
+					type:1,
+					data:'',
+					isUpdateZero:this.isUpdateZero,
+				}});
+				if(data.result){
+					this.$message({message: '商品盘库成功！',type: 'success'});
+					this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
+				}else{
+					this.$message({message: '商品盘库失败！',type: 'error'});
+				}
 			},
 			async editTemplate(){//编辑模板
 				let data = await http.templateGetInventoryGoodsTemplate({data:{
@@ -293,6 +341,7 @@
 					this[key] = this.selObj.search[key];
 				}
 				this.storeAll = this.selObj.storeAll;
+				this.isUpdateZero = this.selObj.isUpdateZero;
 				if(!this.storeAll) this.selList = this.selObj.list;
 				this.modelName = this.selObj.name;
 				this.selectItem = this.selList.map((res)=>{
@@ -609,6 +658,13 @@
 				padding: 0 20px;height: 50px;line-height: 50px;font-size: 14px;
 				em{
 					color: #E1BB4A;padding: 0 2px;font-size: 14px;
+				}
+				.check-div{
+					float: right;
+					.check-icon{
+						margin-left: 10px;
+						color: #666;
+					}
 				}
 			}
 		}

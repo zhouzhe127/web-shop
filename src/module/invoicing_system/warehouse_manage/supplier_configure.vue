@@ -76,9 +76,9 @@
 					<el-button @click="openDialog">变更</el-button>
 				</div>
 				<p>
-					<span>
+					<!-- <span>
 						分类 : {{condition.multiCategory ? '物料可以存在多个分类' : '物料不能存在多个分类'}}
-					</span>
+					</span> -->
 				</p>
 				<p>
 					<span>
@@ -179,9 +179,9 @@
 		</template>
 
 		<div class="component" >
-			<el-dialog :title="dialog.title" :visible.sync="dialog.show" width="500px">
+			<el-dialog :title="dialog.title" :visible.sync="dialog.show" width="500px" :append-to-body="true">
 				<div class="content">
-					<p>
+					<!-- <p>
 						物料是否存在多个分类 :
 						<el-switch
 							v-model="dialog.multiCategory"
@@ -192,7 +192,7 @@
 							class="switch-left"
 						>
 						</el-switch>						
-					</p>
+					</p> -->
 					<p>
 						物料全码 :
 						<el-select style="width:240px" v-model="dialog.wholeBarCode"   placeholder="请选择" class="switch-left">
@@ -275,7 +275,7 @@ export default {
 			condition:{},														//
 			dialog:{
 				show:false,
-				title:'编码配置',
+				title:'物料编码配置',
 				wholeBarCode:0,													//物料全码
 				multiCategory:false,											//物料是否存在多个分类
 				sortByBarCode:false,											//是否根据物料编码排序
@@ -289,9 +289,7 @@ export default {
 	methods: {
 		//底部确定按钮,只针对分销价
 		async clickBtn(flag){
-			let temp = {},
-				distribution = [],
-				res = {},
+			let distribution = [],
 				retData = {};
 
 			if(flag == 'ok'){
@@ -334,7 +332,8 @@ export default {
 			if(sym == 'confirm'){
 				//确定
 				subData = {
-					multiCategory : Number(this.dialog.multiCategory),
+					// multiCategory : Number(this.dialog.multiCategory),
+					multiCategory : 0,
 					sortByBarCode : Number(this.dialog.sortByBarCode),
 					wholeBarCode : this.dialog.wholeBarCode
 				};
@@ -353,7 +352,7 @@ export default {
 		},
 
 		//商品物料应用
-		async goodsMaterial(bool){
+		async goodsMaterial(){
 			let temp = this.getSelectConfig(this.config);
 			let ctrl = {};
 			await this.getHttp('invoicingUpdateTopConfig',temp);
@@ -573,7 +572,6 @@ export default {
 		},
 		//检验是否重名,true表示无重名
 		checkSameValue(list,attr='name'){
-			let flag = true;
 			for(let i = 0; i < list.length; i += 1){
 				for(let j = i+1; j < list.length ;j += 1){
 					if(list[i][attr] == list[j][attr]){

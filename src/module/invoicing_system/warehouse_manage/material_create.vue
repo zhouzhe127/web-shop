@@ -38,9 +38,9 @@
 					添加物料分类
 				</div>
 
-				<span class="tips" v-show="selectCategory.length > 0">
+				<span class="tips" v-show="selectCategory.id">
                     (已选择:
-                        <i v-for="(item,index) in selectCategory" :key="index">{{item.name}}<i v-if="index!=selectCategory.length-1">,</i></i>
+                        {{selectCategory.name}}
                     )
                 </span>
 			</div>
@@ -147,8 +147,6 @@
 		<component 
 			:is="showCom" 
 			:pObj="comObj" 
-			:list="comObj.category" 
-			:selectList="comObj.selectCategory"  
 			:title ="comObj.title" 
 			:radio ="comObj.radio"
 			:tips ="comObj.tips"
@@ -207,7 +205,10 @@ export default {
 			typeValue:'',				//物料类型
 
 			category: [], 				//物料分类
-			selectCategory: [], 		//选择的分类
+			selectCategory: {			//选择的分类
+				id:'',
+				name:'',
+			}, 		
 
 			selectBrand: [], 			//选择的品牌
 			brandList: [], 				//品牌列表
@@ -269,11 +270,7 @@ export default {
 			this.showCom = 'addCategory';
 			this.flag = flag;
 			this.comObj = {
-				category: this.category,
-				title: '选择分类',
-				selectCategory: this.selectCategory,
-				radio: true,
-				tips: '请先配置分类!'
+				id:this.selectCategory.id,
 			};
 		},
 		openAddUnitWin(flag) {
@@ -346,7 +343,6 @@ export default {
 			let brandId = '',	
 				distributionData = [],				//分销价
 				convertUnit = this.convertUnit,
-				arr = [],							//分类id
 				unitData = [],						//换算比例
 				obj = {};							//最终提交的数据
 
@@ -354,11 +350,6 @@ export default {
 			if(this.selectBrand[0]) {
 				brandId = this.selectBrand[0].id;
 			}
-
-			//分类id
-			this.selectCategory.forEach((ele) => {
-				arr.push(ele.id);
-			});
 
 			//换率
 			this.groupUnit.forEach((ele) => {
@@ -384,7 +375,7 @@ export default {
 				brandId,
 				validity: this.validityObj.time,
 				validityType: this.validityObj.type,
-				cids: arr.join(','),
+				cid: this.selectCategory.id,
 				unitData: unitData,
 				type:this.typeValue
 			};
@@ -425,7 +416,7 @@ export default {
 				return false;
 			}
 
-			if(this.selectCategory.length == 0) {
+			if(!this.selectCategory.id) {
 				this.$message.error('请选择分类!');
 				return false;
 			}
@@ -574,27 +565,6 @@ export default {
 			});
 			return res;
 		},
-		//获取分类列表
-		async MaterialGetCategoryList() {
-			let res = await http.MaterialGetCategoryList({
-				data: {}
-			});
-			let temp = [];
-
-			if(!Array.isArray(res)) res = [];
-			temp = [...res];
-			res.forEach((ele) => {
-				ele.child = [];
-				if(ele.pid == 0) {
-					for(let i = 0, len = temp.length; i < len; i++) {
-						if(ele.id == temp[i].pid && ele.id != temp[i].id) {
-							ele.child.push(temp[i]);
-						}
-					}
-					this.category.push(ele);
-				}
-			});
-		},
 		//获取物料单位
 		async MaterialGetUnitList() {
 			let res = await http.MaterialGetUnitList({
@@ -637,7 +607,6 @@ export default {
 		this.initConvert();
 		this.initBtn();
 
-		this.MaterialGetCategoryList();
 		this.MaterialGetUnitList();
 		this.InvoicingBrandList();
 		this.autoBarCode();
@@ -647,7 +616,7 @@ export default {
 		unitBrand: () =>
 			import( /*webpackChunkName:'unit_brand_win'*/ './unit_brand_win'),
 		addCategory: () =>
-			import( /*webpackChunkName:'add_category_com'*/ 'src/components/add_category_com'),
+			import( /*webpackChunkName:'material_create_cate'*/ './material_create_cate'),
 
 	},
 };
