@@ -142,9 +142,9 @@ export default {
 				path = '/admin/totalLog/materialTotalLog';
 			}
 			if(type=='add'){//盘盈
-				obj.ms_operationType = 24;
+				obj.ms_operationType = this.tab==1?23:24;
 			}else if(type=='reduce'){//盘亏
-				obj.ms_operationType = 23;
+				obj.ms_operationType = this.tab==1?24:23;
 			}
 			this.$router.push({path:path,query:obj});
 		},
