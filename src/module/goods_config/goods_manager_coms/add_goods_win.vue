@@ -192,9 +192,14 @@
 										</el-select>
 										<span v-if="good.isVip =='1'" class="required">会员价格</span>
 										<el-input v-if="good.isVip =='1'" v-model="group.vipPrice" maxlength="10" placeholder="输入会员价" style="width:120px;"></el-input>
+										<span v-if="isSpecial" class="required" style="margin-left:10px;">特价</span>
+										<el-input v-if="isSpecial" v-model="group.specialPrice" maxlength="10" placeholder="输入特价" style="width:120px;"></el-input>
 									</el-form-item>
 									<el-form-item v-if="good.isVip =='1' && good.isInvoicing==0" required label="会员价格" style="width:300px;">
 										<el-input v-model="group.vipPrice" maxlength="10" placeholder="输入会员价" style="width:120px;"></el-input>
+									</el-form-item>
+									<el-form-item v-if="isSpecial && good.isInvoicing==0" required label="特价" style="width:300px;">
+										<el-input v-model="group.specialPrice" maxlength="10" placeholder="输入特价" style="width:120px;"></el-input>
 									</el-form-item>
 									<el-form-item v-if="!group.id" label="">
 										<el-button @click="openMultipleAddRelativeGoodWin(group,groupIndex)" type="primary" style="width:140px;">添加关联商品</el-button>
@@ -238,7 +243,10 @@
 							<el-form-item v-if="ischain !='3'" label="开启库存" style="width:200px;">
 								<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 							</el-form-item>
-							<el-form-item label="参与会员 ">
+							<el-form-item label="时价菜" style="width:200px;">
+								<el-switch v-model="good.isSeasonal" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							</el-form-item>
+							<el-form-item label="参与会员 " style="min-width:200px;">
 								<el-switch v-model="isVipShow" @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 								<template v-if="isVipShow">
 									<el-radio @click="getVipRadio('1')" v-model="good.isVip" label="1" border style="margin-left:10px;">会员价格</el-radio>
@@ -249,8 +257,12 @@
 									<el-input v-model="good.vipPrice" maxlength="10" placeholder="输入会员价" style="width:120px;"></el-input>
 								</template>
 							</el-form-item>
-							<el-form-item label="时价菜" style="width:200px;">
-								<el-switch v-model="good.isSeasonal" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<el-form-item label="特价" style="min-width:200px;">
+								<el-switch v-model="isSpecial" @change="openSpecialRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+								<template v-if="isSpecial && good.isGroup==0">
+									<span style="color:#606266;margin:0 20px;">特价价格</span>
+									<el-input v-model="good.specialPrice" maxlength="10" placeholder="输入特价价格" style="width:120px;"></el-input>
+								</template>
 							</el-form-item>
 							<el-form-item label="描述" prop="description">
 								<el-input type="textarea" placeholder="请输入描述" maxlength="100" :autosize="{minRows: 3, maxRows: 6}" v-model="good.description" style="width:500px;"></el-input>
@@ -417,7 +429,8 @@ export default {
 				GoodWeighgoodsGetList: 'GoodWeighgoodsGetList', //获取识别码
 				goodUpOrDownShelf: 'goodUpOrDownShelf' //商品的上下架
 			},
-			isVipShow: false //是否VIP
+			isVipShow: false, //是否VIP
+			isSpecial:false //是否特价
 		};
 	},
 	props: {
@@ -448,6 +461,10 @@ export default {
 			} else {
 				this.good.isVip = '0';
 			}
+		},
+		//特价开通关闭
+		openSpecialRadio(res) {
+			this.isSpecial = res;
 		},
 		//切换商品的类型
 		toggleGoodType(id) {
@@ -983,6 +1000,7 @@ export default {
 						price: ele.price,
 						cost: ele.cost,
 						unit: ele.unit,
+						specialPrice: ele.specialPrice,
 						groupAttrs: '', //口味
 						id: '' //关联商品的id
 					};
@@ -992,6 +1010,9 @@ export default {
 					}
 					if (this.good.isVip == 2) {
 						group.vipDiscount = ele.vipDiscount;
+					}
+					if (this.good.isSpecial == 1) {
+						group.specialPrice = ele.specialPrice;
 					}
 
 					//关联的商品id
@@ -1064,7 +1085,8 @@ export default {
 				'barCode',
 				'secBarCode',
 				'goodsCode',
-				'categoryCode'
+				'categoryCode',
+				'specialPrice'
 			];
 			for (let key of keys) {
 				obj[key] = this.good[key];
@@ -1075,6 +1097,7 @@ export default {
 			obj.cids = cids.join(',');
 			obj.validityType = this.good.validityType;
 			obj.attrs = attrId.join(',');
+			obj.isSpecial = Number(this.isSpecial);
 
 			if (this.good.type == 0 && this.good.isGroup == 1) {
 				obj.groupData = groupData;
@@ -1198,6 +1221,29 @@ export default {
 					}
 					if (Number(this.good.vipPrice) > 100000) {
 						this.alertWin('会员价格超过10万!');
+						return false;
+					}
+				}
+				if (this.isSpecial) {
+					if (
+						!global.checkData(
+							{
+								specialPrice: {
+									reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+									pro: '请输入正确的会员价格!'
+								}
+							},
+							this.good
+						)
+					)
+						return false;
+
+					if (Number(this.good.specialPrice) > Number(this.good.price)) {
+						this.alertWin('特价商品价格不能大于售价!');
+						return false;
+					}
+					if (Number(this.good.specialPrice) > 100000) {
+						this.alertWin('特价商品价格超过10万!');
 						return false;
 					}
 				}
@@ -1385,6 +1431,21 @@ export default {
 								this.alertWin('会员价格不能大于售价!');
 								return true;
 							}
+						}
+					}
+					if (this.isSpecial) {
+						if (Number(ele.specialPrice) > 100000) {
+							this.$store.commit('setWin', {
+								title: '温馨提示',
+								content: '特价商品价格超过10万!'
+							});
+							return true;
+						}
+						let price = ele.price;
+						let specialPrice = ele.specialPrice;
+						if (Number(specialPrice) > Number(price)) {
+							this.alertWin('特价商品价格不能大于售价!');
+							return true;
 						}
 					}
 				});
@@ -1623,6 +1684,9 @@ export default {
 			if (this.good.isVip * 1 > 0) {
 				this.isVipShow = true;
 			}
+			if (this.good.isSpecial && this.good.isSpecial * 1 > 0) {
+				this.isSpecial = true;
+			}
 			//为good添加字段
 			this.$set(this.good, 'code', ''); //称重商品的类别识别码
 			this.$set(this.good, 'identifyCode', ''); //称重商品的商品识别码
@@ -1653,6 +1717,9 @@ export default {
 						return true;
 					}
 				});
+			}
+			if(this.good.isInvoicing == '1'){
+				this.brandList = await this.getHttp(this.mapHttp.brandList);
 			}
 
 			//1.groupData添加showValidity字段控制日期的显示与隐藏,2.将保质期的类型映射为文字,3.映射关联商品
@@ -1730,7 +1797,6 @@ export default {
 					{ data: { shopId: this.shopId, brandId: this.brandId } }
 				);
 			}
-			this.brandList = await this.getHttp(this.mapHttp.brandList);
 			let res = null;
 			if (this.editGoodsId) {
 				res = await this.getHttp(this.mapHttp.getGoodsDetail, {

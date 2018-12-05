@@ -276,6 +276,28 @@
 						<el-input-number v-model="detial.sort" :min="1" :max="100" label="描述文字"></el-input-number>
 					</div>
 				</section>
+				<section v-if="types == 'xfzf'">
+					<div class="payShowList">
+						<h3 class="showListBefore">支付方式名称</h3>
+						<el-input v-model="detial.paymentName" class="inputWidth" :disabled="true"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">merchantId</h3>
+						<el-input v-model="detial.payConfig.merchantId" class="inputWidth" placeholder = "请输入merchantId"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">商户私钥</h3>
+						<el-input v-model="detial.payConfig.mer_pri_key" class="inputWidth" placeholder = "请输入商户私钥"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">先锋公钥</h3>
+						<el-input v-model="detial.payConfig.xf_pub_key" class="inputWidth" placeholder = "请输入先锋公钥"></el-input>
+					</div>
+					<div class="payShowList">
+						<h3 class="showListBefore">排序</h3>
+						<el-input-number v-model="detial.sort" :min="1" :max="100" label=""></el-input-number>
+					</div>
+				</section>
 			</section>
 		</div>
 	</win>
