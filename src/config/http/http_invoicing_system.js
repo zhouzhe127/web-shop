@@ -1143,6 +1143,21 @@ export default {
 	"materialreportGetMaterialErrorLog": {
 		url: b + "materialreport/getMaterialErrorLog", //生成物料报表-错误日志
 		method: 'get',
-	}
-
+	},
+	"materialReportSetStatisticScopeMaterial": {
+		url: b + "materialReport/setStatisticScopeMaterial", //添加或更新物料集合
+		method: 'post',
+	},
+	"materialreportSetStatisticScopeUnitMaterial": {
+		url: b + "materialreport/setStatisticScopeUnitMaterial", //添加或更新单位-物料集合
+		method: 'post',
+	},
+	"materialReportSetStatisticScopeSupplierMaterial": {
+		url: b + "materialReport/setStatisticScopeSupplierMaterial", //添加或更新供应商-物料集合
+		method: 'post',
+	},
+	"materialReportSetStatisticScopeMaterialSupplier": {
+		url: b + "materialReport/setStatisticScopeMaterialSupplier", //添加或更新物料-供应商集合
+		method: 'post',
+	},
 }
