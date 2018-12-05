@@ -251,17 +251,6 @@ export default {
 				this.selectedCoupon = '请选择优惠券类型';
 			}
 		},
-		selectShopType(val) {
-			this.FilterName = val;
-			this.currentName = [];
-			this.fiterId = [];
-			for (let i of this.FilterName) {
-				if (i.selected) {
-					this.currentName.push(i.name);
-					this.fiterId.push(i.id);
-				}
-			}
-		},
 		checkForm: function() { //验证表单
 			if (this.endTime - this.startTime < 0) {
 				this.$store.commit('setWin', {
@@ -296,9 +285,9 @@ export default {
 				}
 			});
 			if (res) {
-				if (res.list) {
-					this.list = utils.sortByAll(res.list, 'createTime');
-				}
+				// if (res.list) {
+				this.list = utils.sortByAll(res.list, 'createTime');
+				// }
 				this.listLen = res.count;
 				this.pageTotal = res.total;
 			}
@@ -345,84 +334,34 @@ export default {
 			//  筛选优惠券类型
 			this.getCouponData();
 		},
-		initResert() {
+		initResert: function() {
 			// 过滤优惠券类型
-			this.startTime = {
-				time: utils.getTime({
-					time: new Date(),
-					type: true
-				}).start
-			}; //日期组件的开始时间
-			this.endTime = {
-				time: utils.getTime({
-					time: new Date(),
-					type: true
-				}).end
-			}; //日期组件的结束时间
-			this.list = [];
-			this.page = 1;
-			this.shopListBtn = false;
-			this.selectName = ['请选择优惠券类型'];
-			//this.fiterCards = [];
-			this.listLen = 0;
-			this.pageTotal = 0;
-			this.isShow0 = false; // 判断优惠券状态添加class
-			this.isShow1 = this.isShow2 = this.isShow3 = true;
-			this.couponStatus = 0;
-			this.isClick = false;
-			for (let i = 0; i < this.card.length; i++) {
-				this.card[i].selected = false;
+			this.startTime = utils.getTime({
+				time: new Date().setDate(1)
+			}).start;
+			//日期组件的开始时间
+			this.endTime = utils.getTime({
+				time: new Date()
+			}).end; //日期组件的结束时间
+			let arr = [];
+			let selbrr = [];
+			for (let item of this.card) {
+				arr.push(item.id);
+				selbrr.push(item.name);
 			}
-			this.$refs.selectStore.init();
+			this.showCard = arr;
+			this.selectedCoupon = selbrr.join(',');
+			this.searchInDate();
 		},
-		searchCurrentDate() {
-			let start = this.currstartTime.time || this.currstartTime;
-			let end = this.currendTime.time || this.currendTime;
-			if (!this.isBrand) {
-				this.getOneCoupon(start, end, this.userData.currentShop.id);
-			} else {
-				this.getOneCoupon(start, end, this.fiterId.join());
-			}
-		},
-		handleToResert() {
-			//  重置核销量
-			this.currstartTime = {
-				time: utils.getTime({
-					time: new Date(),
-					type: true
-				}).start
-			}; //日期组件的开始时间
-			this.currendTime = {
-				time: utils.getTime({
-					time: new Date(),
-					type: true
-				}).end
-			}; //日期组件的结束时间
-			this.currentList = [];
-			this.currentName = [];
-			this.fiterId = [];
-			this.FilterName = [];
-			this.currentTotal = 0;
-			if (!this.isBrand) {
-				this.currentName.push(this.userData.currentShop.name);
-			} else {
-				for (let i = 0; i < this.shopList.length; i++) {
-					this.FilterName.push({
-						name: this.shopList[i].name,
-						selected: false,
-						id: this.shopList[i].id
-					});
-				}
-				this.$refs.selectStore1.init();
-			}
-			this.$refs.selectStore1.init();
-		},
-		handleClose() {
-			this.shopListBtn = false;
-		},
-		selecToOut() {
-			this.getToOut();
-		},
+		// searchCurrentDate() {
+		// 	let start = this.currstartTime.time || this.currstartTime;
+		// 	let end = this.currendTime.time || this.currendTime;
+		// 	if (!this.isBrand) {
+		// 		this.getOneCoupon(start, end, this.userData.currentShop.id);
+		// 	} else {
+		// 		this.getOneCoupon(start, end, this.fiterId.join());
+		// 	}
+		// },
 		//方案列表点击选择方案
 		chooseStore: function(index) {
 			this.page = 1;

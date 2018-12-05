@@ -6,12 +6,12 @@
 					时间筛选
 				</div>
 				<div class="inp-box inp-start fl">
-					<el-date-picker v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+					<el-date-picker v-model="couponStartTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
 					</el-date-picker>
 				</div>
 				<span class="line"> - </span>
 				<div class="inp-box inp-start fl">
-					<el-date-picker v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+					<el-date-picker v-model="couponEndTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
 					</el-date-picker>
 				</div>
 				<el-button type="primary" icon="el-icon-search"></el-button>
@@ -88,7 +88,7 @@
 						<span v-else>{{scope.row.billPrice}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="结算金额" prop="endTime" align="center">
+				<el-table-column label="结算金额" align="center">
 					<template slot-scope="scope">
 						<span v-if="scope.row.reckoningPrice != '-'">{{(scope.row.reckoningPrice * scope.row.useCoupon).toFixed(2)}}</span>
 						<span v-else>{{scope.row.reckoningPrice}}</span>
@@ -118,7 +118,10 @@
 				formList: [], //展示的数据
 				endTotal: 1,
 				allFormList: [], //所有的数据
-				isBrand: false //判断是否品牌
+				isBrand: false, //判断是否品牌
+				couponStartTime:'',//开始时间
+				couponEndTime:''//结束时间
+
 			};
 		},
 		props: {
@@ -154,7 +157,7 @@
 				}
 			},
 			checkForm: function() {
-				if (this.endTime - this.startTime < 0) {
+				if (this.couponEndTime - this.couponStartTime < 0) {
 					this.$store.commit('setWin', {
 						title: '提示信息',
 						content: '开始日期不能大于结束日期',
@@ -176,8 +179,8 @@
 				if(!this.checkForm()) return;
 				let res = await http.getOneCoupon({
 					data: {
-						startTime: this.startTime / 1000, //开始时间
-						endTime: this.endTime / 1000, //结束时间
+						startTime: this.couponStartTime / 1000, //开始时间
+						endTime: this.couponEndTime / 1000, //结束时间
 						couponId: this.couponId,
 						shopIds: this.showCard.join(','),
 						ischain: this.ischain,
@@ -212,6 +215,8 @@
 				this.setPage();
 			},
 			resetFun: function() {
+				this.couponStartTime = this.startTime;
+				this.couponEndTime = this.endTime;
 				let arr = [];
 				let selbrr = [];
 				if (this.isBrand) {
@@ -245,6 +250,8 @@
 			} else {
 				this.isBrand = false;
 			}
+			this.couponStartTime = this.startTime;
+			this.couponEndTime = this.endTime;
 			this.resetFun();
 		},
 	};
