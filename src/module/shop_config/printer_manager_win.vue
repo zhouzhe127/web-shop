@@ -455,6 +455,7 @@ export default {
 				this.index = 5;
 				this.isNum = 3;
 				this.isDisabled = false;
+				this.isTest = false;
 			} else {
 				this.isTest = false;
 			}
