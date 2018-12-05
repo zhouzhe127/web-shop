@@ -291,6 +291,7 @@
 					list:this.selList,//选中的列表
 					search:this.searchObj,//筛选条件
 					storeAll:this.storeAll,//是否全选
+					isUpdateZero:this.isUpdateZero,
 				};
 				this.$emit('emit',obj);
 			},

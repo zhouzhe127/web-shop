@@ -27,7 +27,12 @@
 					</template>						
 				</el-table-column>
 				<el-table-column label="成本价" min-width="150px" prop="cost"></el-table-column>
-				<el-table-column label="批盘消耗" min-width="150px" prop="cost"></el-table-column>
+				<el-table-column label="批盘消耗" min-width="150px">
+					<template slot-scope="scope">
+						<span class="arrow" :class="{'arrow-up':scope.row.balanceAmount>0,'arrow-down':scope.row.balanceAmount<0}"></span>
+						{{scope.row.balanceAmount}}
+					</template>
+				</el-table-column>
 			</el-table>
 
 			<!-- 物料盘库记录 -->
@@ -46,7 +51,12 @@
 				</el-table-column>
 				<!-- 单店内有调入的有分销价的按分销价计算 -->
 				<el-table-column label="成本金额" min-width="150px" prop="cost"></el-table-column>
-				<el-table-column label="批盘消耗" min-width="150px" prop="cost"></el-table-column>
+				<el-table-column label="批盘消耗" min-width="150px">
+					<template slot-scope="scope">
+						<span class="arrow" :class="{'arrow-up':scope.row.balanceAmount>0,'arrow-down':scope.row.balanceAmount<0}"></span>
+						{{scope.row.balanceAmount}}
+					</template>
+				</el-table-column>
 			</el-table>
 			
 			<!-- 批量审核日志详情 -->

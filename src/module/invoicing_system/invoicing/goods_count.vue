@@ -112,7 +112,7 @@ export default {
 			pageObj: {
 				page: 1,
 				total: 0,				//总页数
-				num: 4, 				//每页显示多少条
+				num: 10, 				//每页显示多少条
 				listNum:0,				//总记录数
 				flag:true,				//前端分页,false,后端分页
 			},
@@ -240,7 +240,7 @@ export default {
 
 			let {list=[],search={},storeAll,name='',isUpdateZero=false,} = res;
 			this.stateStore.addGoods = {search,list,storeAll,name,isUpdateZero};
-
+			console.log(this.stateStore.addGoods);
 			if(list.length == 0){
 				this.pageObj.flag = false;
 			}else{
@@ -313,7 +313,7 @@ export default {
 				temp = list.filter((ele)=>{
 					let flag = true;
 					for(let e of nowList){
-						if(ele.id == e.id){
+						if(ele.id == e.id && ele.wid == e.wid && ele.areaId == e.areaId){
 							flag = false;
 							break;
 						}
@@ -327,7 +327,7 @@ export default {
 			let temp = [];
 			this.stateCountNum = this.delStateCountNum(this.stateCountNum,this.nowList);
 			temp = this.getHasNumItem(this.nowList);
-			this.stateCountNum.push(...temp);			
+			this.stateCountNum.push(...temp);	
 		},
 		delBatchCountNum(list=[]){
 			//根据商品id,区域id,区域id,仓库id清除批次,之后再添加批次
@@ -483,7 +483,6 @@ export default {
 			//获取提交的数据
 			let temp = {
 				new:[],
-				old:[],
 			};
 			
 			for(let ele of list){
@@ -518,7 +517,6 @@ export default {
 
 			sum = [...this.stateCountNum];
 			sum.push(...this.batchListNum);
-
 			temp = this.formatData(sum);
 			return temp;
 		},
@@ -528,7 +526,6 @@ export default {
 			this.addStateCountNum();
 			this.delSameList();
 			obj = this.mergeList();
-			obj.new.push(...obj.old);
 			if(obj.new.length == 0){
 				this.$message({message: '请先填写盘库数量',type: 'error'});
 				return;
