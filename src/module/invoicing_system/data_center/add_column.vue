@@ -32,30 +32,35 @@
 						trigger="click"
 						v-model="visible">
 						<div class="column-container">
-							<el-tabs v-model="columnTabIndex" type="card">
-								<el-tab-pane label="基础项" name="0">
-									<div class="radio-container">
-										<el-radio-group v-model="baseRadio" @change="(res)=>{radioChange(1,res)}">
-											<span class="radio-box" v-for="item in baseList" :key="item.id">
-												<el-radio border :label="item.id">{{item.name}}</el-radio>
-											</span>
-										</el-radio-group>
-									</div>
-								</el-tab-pane>
-								<el-tab-pane label="公式项" name="1">
-									<div class="radio-container">
-										<el-table :data="formulaList" highlight-current-row @current-change="(res)=>{radioChange(2,res)}"
-											border height="249" style="width: 100%" ref="singleTable">
-											<el-table-column property="name" label="名称" width="150">
-											</el-table-column>
-											<el-table-column property="formulaStr" label="计算公式" width="250">
-											</el-table-column>
-											<el-table-column property="formatStr" label="格式" width="200">
-											</el-table-column>
-										</el-table>
-									</div>
-								</el-tab-pane>
-							</el-tabs>
+							<el-radio-group v-model="columnTabIndex">
+								<el-radio-button label="0">基础项</el-radio-button>
+								<el-radio-button label="1">公式项</el-radio-button>
+							</el-radio-group>
+							<template v-if="columnTabIndex==0">
+								<el-input placeholder="搜索基础项" v-model="baseText" class="search-box" >
+									<el-button slot="append" icon="el-icon-search" @click="search(1)"></el-button>
+								</el-input>
+								<el-button @click="search(2)">重置</el-button>
+							</template>
+							<div class="radio-container" v-show="columnTabIndex==0">
+								<el-radio-group v-model="baseRadio" @change="(res)=>{radioChange(1,res)}">
+									<span class="radio-box" v-for="item in baseList" :key="item.id">
+										<el-radio border :label="item.id">{{item.name}}</el-radio>
+									</span>
+								</el-radio-group>
+								<div class="empty" v-if="!baseList.length"><i class="el-icon-warning"></i>没有搜索到您想要的内容</div>
+							</div>
+							<div class="radio-container" v-show="columnTabIndex==1">
+								<el-table :data="formulaList" highlight-current-row @current-change="(res)=>{radioChange(2,res)}"
+									border height="249" style="width: 100%" ref="singleTable">
+									<el-table-column property="name" label="名称" width="150">
+									</el-table-column>
+									<el-table-column property="formulaStr" label="计算公式" width="250">
+									</el-table-column>
+									<el-table-column property="formatStr" label="格式" width="200">
+									</el-table-column>
+								</el-table>
+							</div>
 						</div>
 						<el-button slot="reference" class="btn-class">
 							选择统计项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -106,7 +111,7 @@ export default {
 				num:1,
 				max:1,
 			},
-			columnTabIndex:'0',
+			columnTabIndex:0,
 			columnItem:'',//选择项
 			visible:false,//选择列表项是否显示
 
@@ -134,6 +139,7 @@ export default {
 
 			showFormula:false,
 			formulaData:{},//公式列表数据
+			baseListAll:[],
 			baseList:[],//基础项列表
 			baseRadio:'',//基础项radio绑定
 			formulaList:[],
@@ -146,6 +152,7 @@ export default {
 			},
 			shopId:'',//店铺id
 			only:'',//是否只显示品牌
+			baseText:'',//基础项搜索
 		};
 	},
 	props: {
@@ -180,6 +187,21 @@ export default {
 			import( /*webpackChunkName:'add_formula'*/ './add_formula'),
 	},
 	methods: {
+		//搜索基础项
+		search(type){
+			if(type==1){
+				if(this.baseText){
+					this.baseList = this.baseListAll.filter((res)=>{
+						return res.name.includes(this.baseText);
+					});
+				}else{
+					this.baseList = this.baseListAll;
+				}
+			}else{
+				this.baseText = '';
+				this.baseList = this.baseListAll;
+			}
+		},
 		closeSelfWin(res) {
 			if(res == 'ok') {
 				this.confirmWin();
@@ -229,6 +251,7 @@ export default {
 					i--;
 				}
 			}
+			this.baseListAll = data;
 			this.baseList = data;
 			this.formulaData.base = this.baseList;
 			//公式项集合
@@ -440,7 +463,10 @@ export default {
 	.el-popper{
 		.column-container{
 			padding: 0 20px;
-			
+			.search-box{
+				width: 200px;
+				margin-left: 10px;
+			}
 		}
 		.radio-container{
 			height: 250px;
@@ -451,6 +477,19 @@ export default {
 				display: inline-block;
 				margin-right: 10px;
 				margin-bottom: 10px;
+			}
+			.empty{
+				text-align: center;
+				height: 100px;
+				line-height: 100px;
+				color:#999;
+				width: 100%;
+				font-size: 18px;
+				i{
+					font-size: 18px;
+					color:#999;
+					margin-right: 10px;
+				}
 			}
 		}
 		.handle{text-align: right;}
