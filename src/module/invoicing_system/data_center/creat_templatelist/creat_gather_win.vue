@@ -1,0 +1,422 @@
+/*
+* @Author: zhouzhe
+* @Date: 2018-11-29 15:23:16
+*/
+<template>
+	<div class="gatherBox">
+		<el-dialog :title="title" :visible.sync="dialogShow" width="550px" :before-close="handleClose">
+			<span slot="title" class="winTitle">{{title}}</span>
+			<div class="dialogContent">
+				<div class="inpStyle">
+					<span class="required label">集合名称</span>
+					<div class="inpbox">
+						<el-input clearable v-model="gatherName" maxlength="20" class="el-in" placeholder="输入集合名称"></el-input>
+					</div>
+				</div>
+				<div>
+					<div class="inpStyle">
+						<el-radio-group v-model="sleType" @change="tabChange">
+							<el-radio-button v-for="(item,index) in typeArr" :key="index" :label="index" border>{{item}}</el-radio-button>
+						</el-radio-group>
+					</div>
+					<div class="tip-icon inpStyle">
+						<i></i>
+						<span>{{iconText}}</span>
+						<!-- <span v-if="chooseCate">一个集合中物料分类的最大数量为100</span> -->
+					</div>
+					<!-- ------------------------ -->
+					<div class="operate" v-if="sleType==0">
+						<el-checkbox v-model="chooseCate">按物料分类新建集合</el-checkbox>
+						<div class="btnstyle">
+							<el-button type="primary" @click="showWin(0)" icon="el-icon-plus">{{chooseCate?"选择物料分类":"选择物料"}}</el-button>
+							<span>{{chooseCate?"已选择物料分类数量："+selectClassifyId.length:"已选择物料数量："+selectMater.length}}</span>
+						</div>
+					</div>
+					<!-- ------------------------ -->
+					<div class="operate" v-if="sleType==1">
+						<el-checkbox v-model="chooseCate">按物料单位，物料分类新建集合</el-checkbox>
+						<div class="btnstyle">
+							<div class="steps">
+								<span>步骤一：</span>
+								<el-button type="primary" @click="showWin(1)" icon="el-icon-plus">选择物料单位</el-button>
+								<span>已选择物料单位：{{selectUnit.name}}</span>
+							</div>
+							<div class="steps">
+								<span>步骤二：</span>
+								<el-button type="primary" @click="showWin(0)" icon="el-icon-plus" :disabled="!selectUnit.name&&!chooseCate">{{chooseCate?"选择物料分类":"选择物料"}}</el-button>
+								<span>{{chooseCate?"已选择物料分类数量："+selectClassifyId.length:"已选择物料数量："+selectMater.length}}</span>
+							</div>
+						</div>
+					</div>
+					<!-- ------------------------ -->
+					<div class="operate" v-if="sleType==2">
+						<el-checkbox v-model="chooseCate">按供应商，物料分类新建集合</el-checkbox>
+						<div class="btnstyle">
+							<div class="steps">
+								<span>步骤一：</span>
+								<el-button type="primary" @click="showWin(2)" icon="el-icon-plus">选择供应商</el-button>
+								<span>已选择供应商数量：{{selectSuppier.length}}</span>
+							</div>
+							<div class="steps">
+								<span>步骤二：</span>
+								<el-button type="primary" @click="showWin(0)" icon="el-icon-plus">{{chooseCate?"选择物料分类":"选择物料"}}</el-button>
+								<span>{{chooseCate?"已选择物料分类数量："+selectClassifyId.length:"已选择物料数量："+selectMater.length}}</span>
+							</div>
+						</div>
+					</div>
+					<!-- ------------------------ -->
+					<div class="operate" v-if="sleType==3">
+						<!-- <el-checkbox v-model="chooseCate">按物料单位，物料分类新建集合</el-checkbox> -->
+						<div class="btnstyle">
+							<div class="steps">
+								<span>步骤一：</span>
+								<el-button type="primary" @click="showWin(0)" icon="el-icon-plus">选择物料</el-button>
+								<span>已选择物料名称：{{selectMater.name}}</span>
+							</div>
+							<div class="steps">
+								<span>步骤二：</span>
+								<el-button type="primary" @click="showWin(2)" icon="el-icon-plus">选择供应商</el-button>
+								<span>已选择供应商数量：{{selectSuppier.length}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="handleClose">取 消</el-button>
+				<el-button type="primary" @click="handleClose('ok')">确 定</el-button>
+			</span>
+		</el-dialog>
+		<selectWin v-if="unitWin" @positionEvent="getUnit" :title="'选择物料单位'" :list="unitsArr" :selectArr="selectUnit"
+		 :isSingle="true"></selectWin>
+		<selectWin v-if="suppierWin" @positionEvent="getSuppier" :title="'选择供应商'" :list="suppierList" :selectArr="selectSuppier"
+		 :isSingle="false"></selectWin>
+		<selectClassifyWin v-if="classify" :select="selectClassify" @positionEvent="getClassify"></selectClassifyWin>
+		<selectMaterialWin v-if="showMaterWin" :unitName="selectUnit.name" :pSelects="selectMater" :isSingle="materisSingle"
+		 :pList="sendMaterial" @change="getMaterial"></selectMaterialWin>
+	</div>
+</template>
+<script>
+	import http from 'src/manager/http';
+	import utils from 'src/verdor/utils';
+	export default {
+		data() {
+			return {
+				id: 0, //编辑是需要用到的ID
+				gatherName: '',
+				dialogShow: true,
+				typeArr: ['物料', '单位-物料', '供应商-物料', '物料-供应商'],
+				sleType: 0,
+				chooseCate: false, //是否显示分类按钮
+				unitsArr: [], //物料单位数据
+				unitWin: false,
+				selectUnit: {}, //选中的单位
+				suppierList: [], //供应商数据
+				selectSuppier: [], //选择的供应商
+				suppierWin: false,
+				showMaterWin: false, //显示选择物料弹窗
+				materialList: [], //所有物料
+				sendMaterial: [],
+				selectMater: [], //选中的物料
+				classify: false, //分类弹窗
+				selectClassify: [], //选中的分类
+				selectClassifyId: [], //选中的分类id
+				materisSingle: false, //物料弹窗是否为单选
+			};
+		},
+		props: {
+			//弹窗标题
+			title: {
+				type: [String],
+				default: '新建集合'
+			},
+			editData:Object
+		},
+		methods: {
+			async init() {
+				let res = await http.All([{
+					httpId: 'MaterialGetUnitList'
+				}, {
+					httpId: 'suppierList'
+				}]);
+				console.log(res);
+				this.unitsArr = res[0].data;
+				this.suppierList = res[1].data;
+			},
+			showWin(type) {
+				switch (type) {
+					case 0:
+						if (this.chooseCate) {
+							this.classify = true;
+						} else {
+							this.showMaterWin = true;
+							if (this.sleType == 3) this.materisSingle = true;
+						}
+						break;
+					case 1:
+						this.unitWin = true;
+						break;
+					case 2:
+						this.suppierWin = true;
+				}
+			},
+			//获取所有物料
+			async recursiveGetMaterialList() {
+				let subObj = {
+					name: '',
+					cid: '',
+					type: -1,
+					num: 50
+				};
+
+				let page = 1;
+				let arr = [];
+
+				for (let i = 0; i < page; i += 1) {
+					subObj.page = i + 1;
+					let retObj = await http.getMaterialList({
+						data: subObj
+					});
+					page = Number(retObj.total);
+					arr.push(...retObj.list);
+				}
+				this.materialList = arr;
+				this.sendMaterial = utils.deepCopy(arr);
+				// return arr;
+			},
+			tabChange() {
+				this.chooseCate = false;
+				this.materisSingle = false;
+				this.selectUnit = {};
+				this.selectMater = [];
+				this.selectClassify = [];
+				this.selectClassifyId = [];
+				this.selectSuppier = [];
+				this.sendMaterial = utils.deepCopy(this.materialList);
+			},
+			handleClose(done) {
+				if (done == 'ok') {
+					if(!this.checkData()){
+						return false;
+					}
+					this.sendData();
+					this.$emit('change', true);
+				} else {
+					this.$emit('change', false);
+				}
+
+			},
+			sendWarning(type,str){
+				this.$message({
+					type: type,
+					message: str,
+				});
+				return false;
+			},
+			checkData(){
+				let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/;
+				if(!reg.test(this.gatherName)) return this.sendWarning('warning','请输入正确的集合名称！');
+				if(this.chooseCate){
+					if(this.selectClassifyId.join(',')==''){
+						return this.sendWarning('warning','请选择分类！');
+					}
+				}else{
+					if(Array.from([this.selectMater].flat(), x => x.id).join(',')==''){
+						return this.sendWarning('warning','请选择物料！');
+					}
+				}
+				if(this.sleType==1&&!this.selectUnit.id){
+					return this.sendWarning('warning','请选择单位！');
+				}
+				if(this.sleType==2||this.sleType==3){
+					if(Array.from(this.selectSuppier, x => x.id).join(',')==''){
+						return this.sendWarning('warning','请选择供应商！');
+					}
+				}
+				return true;
+			},
+			async sendData() {
+				let url = '';
+				let obj = {
+					id: this.id,
+					name: this.gatherName,
+				};
+				
+				if (this.sleType != 3) {
+					obj.isCategory = this.chooseCate ? 1 : 0;
+					this.chooseCate ? obj.cid = this.selectClassifyId.join(',') : obj.mid = Array.from(this.selectMater, x => x.id).join(
+						',');
+				}
+				switch (this.sleType) {
+					case 0:
+						url = 'materialReportSetStatisticScopeMaterial';
+						break;
+					case 1:
+						url = 'materialreportSetStatisticScopeUnitMaterial';
+						obj.unitId = this.selectUnit.id;
+						break;
+					case 2:
+						url = 'materialReportSetStatisticScopeSupplierMaterial';
+						obj.supplierId = Array.from(this.selectSuppier, x => x.id).join(',');
+						break;
+					case 3:
+						url = 'materialReportSetStatisticScopeMaterialSupplier';
+						Object.assign(obj, {
+							mid: this.selectMater.id,
+							supplierId: Array.from(this.selectSuppier, x => x.id).join(','),
+						});
+						break;
+				}
+				let data = await http[url]({
+					data: obj
+				});
+				// this.$message({
+				// 	type: 'success',
+				// 	message: `${this.id?'修改':'添加'}成功!`
+				// });
+				this.sendWarning('success',`${this.id?'修改':'添加'}成功!`);
+				console.log(data);
+			},
+			getMaterial(data) {
+				console.log(data);
+				if (data) {
+					if(data.length>500){
+						return this.sendWarning('warning','一个集合中物料的最大数量为500');
+					}
+					this.selectMater = data;
+				}
+				this.showMaterWin = false;
+			},
+			getClassify(data) {
+				console.log(data);
+				if (data) {
+					let arr = [];
+					data.forEach(v => {
+						if (v.selectChildren.length > 0) {
+							arr.push(Array.from(v.selectChildren, x => x.id));
+						} else if (v.selectAll) {
+							arr.push(v.id);
+						}
+					});
+					if(data.length>100){
+						return this.sendWarning('warning','一个集合中物料分类的最大数量为100');
+					}
+					this.selectClassify = data;
+					this.selectClassifyId = arr.flat();
+				}
+				this.classify = false;
+			},
+			getUnit(data) {
+				this.unitWin = false;
+				if (data) {
+					this.selectUnit = data;
+					let arr = [];
+					this.materialList.forEach(v => {
+						v.unit.forEach(u => {
+							if (data.id == u.muId) {
+								arr.push(v);
+							}
+						});
+					});
+					this.sendMaterial = arr;
+				}
+			},
+			getSuppier(data) {
+				if (data) {
+					if(data.length>100){
+						return this.sendWarning('warning','一个集合中供应商的数量最大数量为100');
+					}
+					this.selectSuppier = data;
+				}
+				this.suppierWin = false;
+			}
+		},
+		mounted() {
+			this.init();
+			if(this.editData.id){
+				this.id = this.editData.id;
+				this.sleType = this.editData.type;
+			}
+			this.recursiveGetMaterialList();
+		},
+		components: {
+			selectWin: () =>
+				import( /*webpackChunkName: 'select_win'*/ './select_win'), //选择单位
+			selectClassifyWin: () =>
+				import( /*webpackChunkName: 'select_classify_win'*/ './select_classify_win'), //选择分类
+			selectMaterialWin: () =>
+				import( /*webpackChunkName: 'select_material_win'*/ './select_material_win'), //选择分类
+
+		},
+		computed: {
+			iconText() {
+				let str = '一个集合中物料的最大数量为500';
+				if (this.sleType == 2) {
+					if (this.chooseCate) {
+						str = '一个集合中供应商、物料分类的数量分别最大为100';
+					}
+				} else if (this.sleType == 3) {
+					str = '一个集合中供应商的数量最大为100';
+				} else if (this.chooseCate) {
+					str = '一个集合中物料分类的最大数量为100';
+				}
+				return str;
+			}
+		}
+	};
+</script>
+<style lang='less' scoped>
+	.gatherBox {
+		.winTitle {
+			display: block;
+			font-size: 20px;
+			text-align: center;
+			color: #606266;
+		}
+
+		.dialogContent {
+			.inpStyle {
+				margin-bottom: 15px;
+
+				.inpbox {
+					display: inline-block;
+					width: 200px;
+					margin-left: 15px;
+				}
+			}
+
+			.btnstyle {
+				margin-top: 15px;
+
+				// border: 1px #cccccc dotted;
+				span {
+					vertical-align: middle;
+				}
+
+				.steps {
+					width: 80%;
+					border: 1px #cccccc dashed;
+					margin-bottom: 15px;
+					padding: 10px 15px;
+				}
+			}
+
+			.tip-icon {
+				i {
+					vertical-align: middle;
+					display: inline-block;
+					width: 18px;
+					height: 18px;
+					background: url(../../../../res/icon/prompt.png) center center no-repeat;
+				}
+
+				span {
+					color: #999999;
+					vertical-align: middle;
+				}
+			}
+		}
+
+		.dialog-footer {}
+	}
+</style>

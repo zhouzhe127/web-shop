@@ -9,7 +9,10 @@
 	<div class="bom-order">
 		<div class="filter">
 			<div class="inline-box">
-				<el-input placeholder="请输入物料名" v-model="matName"></el-input>
+				<el-input placeholder="请输入物料名称" v-model="matName"></el-input>
+			</div>
+			<div class="inline-box">
+				<el-input placeholder="请输入物料编码" v-model="barCode"></el-input>
 			</div>
 			<div class="inline-box">
 				<el-cascader
@@ -57,6 +60,8 @@
 				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 				</el-table-column>
 				<el-table-column prop="name" label="物料名称" min-width="200">
+				</el-table-column>
+				<el-table-column prop="barCode" label="物料编码" min-width="200">
 				</el-table-column>
 				<el-table-column label="类型" width="150">
 					<template slot-scope="scope">
@@ -121,6 +126,7 @@
 		data() {
 			return {
 				userName: '', //用户名
+				barCode:'',//物料编码
 				tempId:'',//模板id
 				shopId:'',//店铺id
 				isBrand: 0, //是否品牌 1品牌 0非品牌
@@ -210,7 +216,12 @@
 			},
 			initBtn() {
 				let arr = [
-					{name: '取消',className: 'info',type:4,
+					{name: '保存模板',className: 'primary',type:4,
+						fn: () => {
+							this.saveModel();
+						}
+					},
+					{name: '取消',className: '',type:4,
 						fn: () => {
 							if(!this.selObj && this.isEdit){
 								window.history.go(-1);
@@ -224,14 +235,9 @@
 							}
 						}
 					},
-					{name: '保存模板',className: 'primary',type:4,
-						fn: () => {
-							this.saveModel();
-						}
-					},
 				];
 				if(this.selObj || !this.isEdit){
-					arr.push({name: '确定',className: 'primary',type:4,
+					arr.unshift({name: '确定',className: 'primary',type:4,
 						fn: () => {
 							this.confirmClick();
 						}
@@ -523,6 +529,7 @@
 					wid : this.wid,
 					areaId : this.areaId,
 					type: -1,
+					barCode:this.barCode,
 				}});
 				this.searchObj = {
 					cid: this.cid,
@@ -574,7 +581,7 @@
 				this.getData();
 			},
 			reset() { //重置
-				let arr = ['matName','cid','wid','areaId','sortOneId','sortOneId'];
+				let arr = ['matName','cid','wid','areaId','sortOneId','sortOneId','barCode'];
 				for(let item of arr){
 					this[item] = '';
 				}

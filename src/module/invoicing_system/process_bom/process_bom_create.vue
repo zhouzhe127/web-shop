@@ -42,8 +42,10 @@
 				<div class="form-input">
 					<el-button type="primary" icon="el-icon-plus" style="width:210px;" @click="openWin(1)">选择产出物料</el-button>
 					<div class="tips">
-						已选择：{{productName}}<em>|</em>默认入库仓库：{{pWareObj.warehouse}}-{{pWareObj.warehouseArea}}
-						<i class="el-icon-edit" @click="editProductWare"></i>
+						已选择：<span>{{productName}}</span>
+						<em>|</em>
+						默认入库仓库：<span>{{pWareObj.warehouse}}-{{pWareObj.warehouseArea}}</span>
+						<i class="el-icon-edit" @click="editProductWare">修改</i>
 					</div>
 				</div>
 			</div>
@@ -54,13 +56,20 @@
 				</div>
 			</div>
 		</div>
-		<com-table :listName="'原料物料列表'" :titleData="titleList" :allTotal="matList.length" :listWidth="1000" :introData="matList">
-			<span class="detail" slot="con-0" slot-scope="props">
-				<em @click="deleteMat(props.data.id,props.index)" class="del">删除</em>
-				<em>|</em>
-				<em @click="wareSort(props.index)" class="sort">仓库排序</em>
-			</span>
-		</com-table>
+		<el-table :data="matList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+		    <el-table-column prop="name" label="原理物料" min-width="200">
+		    </el-table-column>
+		    <el-table-column prop="unitStr" label="物料单位"  min-width="100">
+		    </el-table-column>
+			<el-table-column prop="wareNum" label="已选仓库"  min-width="100">
+		    </el-table-column>
+		    <el-table-column label="操作" fixed="left" width="150">
+		    	<template slot-scope="scope">
+		        	<el-button @click="deleteMat(scope.row.id,scope.$index)" type="text" class="danger-color">删除</el-button>
+					<el-button @click="wareSort(scope.$index)" type="text">仓库排序</el-button>
+		      	</template>
+		    </el-table-column>
+	  	</el-table>
 		<div>
 			<select-mat :selObj="winObj" v-if="matWinShow" :title="selMatTitle" :choiceType="choiceType" @emit="winClose"></select-mat>
 		</div>
@@ -89,12 +98,6 @@ export default {
 		return {
 			isMinus: true, //库存可以为负数
 			matList:[],//原料物料列表
-			titleList:[
-				{titleName: '操作',titleStyle:{width:200+'px',}},
-				{titleName:'原料物料',dataName: 'name'},
-				{titleName: '物料单位',dataName: 'unitStr'},
-				{titleName: '已选仓库',dataName: 'wareNum'},
-			],
 			bomTypeList:[
 				{value:'0',label:'手动填写bom单'},
 				{value:'1',label:'自动填写bom单',disabled: true},
@@ -175,7 +178,12 @@ export default {
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确认',className: 'primary',type:4,
+				{name: '取消',className:'info',type:1,
+					fn: () => {
+						window.history.go(-1);
+					}
+				},
+				{name: '确认',className: 'primary',type:1,
 					fn: () => {
 						if(this.bomId){
 							this.editBom();
@@ -184,13 +192,8 @@ export default {
 						}
 					}
 				},
-				{name: '取消',className:'info',type:4,
-					fn: () => {
-						window.history.go(-1);
-					}
-				},
 			];
-			this.$store.commit('setPageTools', arr);
+			this.$store.commit('setFixButton', arr);
 		},
 		async getBomDetail(){//编辑bom单
 			let data = await http.ProcessbomGetProcessBomDetail({data:{
@@ -286,16 +289,16 @@ export default {
 		editProductWare(){//默认仓库操作
 			this.showWin = 'warehouseWin';
 		},
-		getProductWare(res,obj){//关闭弹窗-获取默认仓库数据
-			if(res=='ok'){
+		getProductWare(res){//关闭弹窗-获取默认仓库数据
+			if(res){
 				this.pWareObj = {
-					wid:obj.wid,
-					areaId:obj.areaId,
-					warehouse:obj.warehouse,
-					warehouseArea:obj.wArea,
+					wid:res.wid,
+					areaId:res.areaId,
+					warehouse:res.warehouse,
+					warehouseArea:res.wArea,
 				};
-				this.subMitObj.wid = obj.wid;
-				this.subMitObj.areaId = obj.areaId;
+				this.subMitObj.wid = res.wid;
+				this.subMitObj.areaId = res.areaId;
 			}
 			this.showWin = null;
 		},
@@ -472,6 +475,7 @@ export default {
 		padding-left: 10px;font-size: 16px;
 		p{position: absolute;height: 16px;border-bottom: 2px dashed #ddd;left: 140px;top: 0;width: 100%;}
 	}
+	.danger-color{color: #d34a2b;}
 	.main{
 		padding-top: 20px;
 		.form-box{margin-bottom: 20px;
@@ -490,6 +494,7 @@ export default {
 				.tips{color: #999;margin-top: 10px;font-size: 16px;
 					em{color: #ccc;padding: 0 20px;}
 					i{margin-left: 10px;cursor: pointer;display: inline-block;font-size: 18px;}
+					span{color: #333;font-size: 16px;}
 				}
 			}
 			&:after{content: '';zoom: 1;display: block;clear: both;}

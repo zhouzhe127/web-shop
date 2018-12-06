@@ -186,16 +186,20 @@
 		},
 		methods: {
 			async init() {
+				if(!this.audittimeAll) this.audittimeAll = [];
+				if(!this.applytimeAll) this.applytimeAll = [];
 				let audiStartTime = this.audittimeAll[0] ? parseInt((this.audittimeAll[0] || 0) / 1000) : '';
 				let audiEndtTime = this.audittimeAll[1] ? parseInt((utils.getTime({
 					time: this.audittimeAll[1] || 0
 				}).end) / 1000) : '';
+				let applyStartTime = this.applytimeAll[0] ? parseInt((this.applytimeAll[0] || 0) / 1000) : '';
+				let applyEndtTime = this.applytimeAll[1] ? parseInt((utils.getTime({
+					time: this.applytimeAll[1] || 0
+				}).end) / 1000) : '';
 				let data = await http.invoic_getAuditList({
 					data: {
-						applyStartTime: parseInt(this.applytimeAll[0] / 1000),
-						applyEndTime: parseInt(utils.getTime({
-							time: this.applytimeAll[1]
-						}).end / 1000),
+						applyStartTime: applyStartTime,
+						applyEndTime: applyEndtTime,
 						auditTimeStart: audiStartTime,
 						auditTimeEnd: audiEndtTime,
 						auditStatus: this.auditType || 0,
@@ -384,6 +388,17 @@
 					this.bathcode = '';
 				}
 			},
+			// applytimeAll(news){
+			// 	console.log(news);
+			// 	if(!news){
+			// 		this.applytimeAll = [];
+			// 	}
+			// },
+			// audiStartTime(news){
+			// 	if(!news){
+			// 		this.audiStartTime = [];
+			// 	}
+			// },
 			$route() {
 				if (this.$route.path == '/admin/conclusionList') {
 					this.addEduce();

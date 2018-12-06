@@ -8,7 +8,7 @@
 		<div slot="content" class="content">
 			<div class="input-box">
 				模板名称 <em>*</em>
-				<input type="text" v-model="modelName" placeholder="模板名称" maxlength="20" />
+				<el-input v-model="modelName" placeholder="模板名称" maxlength="20"></el-input>
 			</div>
 		</div>
 	</win>

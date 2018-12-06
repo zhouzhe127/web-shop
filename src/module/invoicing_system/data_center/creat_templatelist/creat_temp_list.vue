@@ -569,8 +569,7 @@
 			addColumn: () =>
 				import( /*webpackChunkName: 'addColumn'*/ 'src/module/invoicing_system/data_center/add_column.vue'), //添加列  
 			addRowWin: () =>
-				import( /*webpackChunkName: 'addRowWin'*/
-					'src/module/invoicing_system/data_center/add_report_row_win.vue'), //添加行      
+				import( /*webpackChunkName: 'addRowWin'*/ 'src/module/invoicing_system/data_center/add_report_row_win.vue'), //添加行  	    
 		}
 	};
 </script>

@@ -1,8 +1,5 @@
 <template>
 	<div id="output-select-goods">
-		<!-- <ul class="tebBox">
-        <li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
-    </ul> -->
 		<div class="title">
 			<i></i>
 			<h3>选择添加商品</h3>
@@ -17,46 +14,56 @@
 						{{show?'收起':'展开'}}
 					</a>
 				</div>
-				<div class="select-body">
-					<div class="select-head">
-						<li>操作</li>
-						<li>序号</li>
-						<li>商品名</li>
-						<li>条形码</li>
-						<li>售价</li>
-						<li>商品类型</li>
-						<li>库存数量/重量</li>
-						<li>批次数量</li>
-					</div>
-					<div v-if="show" class="select-item" v-for="(item,index) in sleList" :key="index">
-						<div class="select-row">
-							<li style="color:#ff3c04;" @click="delList(item,index)">删除</li>
-							<li v-if="index<9">{{`0${index+1}`}}</li>
-							<li v-else>{{index+1}}</li>
-							<li>{{item.goodsName}}</li>
-							<li>{{item.barCode}}</li>
-							<li>{{item.price}}</li>
-							<li>{{typeList[Number(item.type)+1]}}</li>
-							<li>{{item.surplus}}{{item.unit}}</li>
-							<li>{{item.batch}}</li>
-						</div>
-					</div>
-					<div v-if="sleList.length == 0" id="emptyData">-----暂无条目-----</div>
-				</div>
+				<el-table :data="sleList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column width="100" fixed="left" label="操作">
+						<template slot-scope="scope">
+							<el-button type="text" @click="delList(scope.row,scope.$index)" class="danger-color">删除</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column prop="gName" label="商品名称" min-width="200">
+					</el-table-column>
+					<el-table-column prop="barCode" label="条形码" min-width="200">
+					</el-table-column>
+					<el-table-column label="售价" min-width="200">
+						<template slot-scope="scope">
+							{{scope.row.price}}元
+						</template>
+					</el-table-column>
+					<el-table-column label="商品类型" width="150">
+						<template slot-scope="scope">
+							{{typeList[Number(scope.row.type)+1].label}}
+						</template>
+					</el-table-column>
+					<el-table-column label="库存数量/重量" min-width="200">
+						<template slot-scope="scope">
+							{{scope.row.surplus}}{{scope.row.unit}}
+						</template>
+					</el-table-column>
+					<el-table-column label="批次数量" width="150">
+						<template slot-scope="scope">
+							{{scope.row.batch}}
+						</template>
+					</el-table-column>
+				</el-table>
 			</div>
-
 			<div class="search-module">
-				<div class="inline-box">
-					<input type="text" class="search-input" v-model="goodsName" placeholder="请输入商品名">
-					<input type="text" class="search-input" v-model="barCode" placeholder="请输入条形码">
-					<input type="text" class="search-input" v-model="secBarCode" placeholder="请输入副条形码">
+				<div class="sleType">
+					<el-input v-model="goodsName" placeholder="请输入商品名称"></el-input>
 				</div>
-				<div class="inline-box search-select">
-					<select-btn :sorts="typeList" :name="allGoods" @selOn="selectList" ref="select"></select-btn>
+				<div class="sleType">
+					<el-input v-model="barCode" placeholder="请输入条形码"></el-input>
 				</div>
-				<div class="inline-box setspeen">
-					<div class="blue filter" @click="search">筛选</div>
-					<div class="gray reset" @click="reset">重置</div>
+				<div class="sleType">
+					<el-input v-model="secBarCode" placeholder="请输入副条形码"></el-input>
+				</div>
+				<div class="sleType">
+					<el-select v-model="selType" placeholder="全部类型">
+						<el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+					</el-select>
+				</div>
+				<div class="sleType">
+					<el-button type="primary" @click="search">筛选</el-button>
+					<el-button type="info" @click="reset">重置</el-button>
 				</div>
 			</div>
 
@@ -66,40 +73,50 @@
 					<span class="circle"></span> 共
 					<span class="select-num">{{listTotal}}</span> 个条目
 				</div>
-				<div class="select-body">
-					<div class="select-head">
-						<li>操作</li>
-						<li>序号</li>
-						<li>商品名</li>
-						<li>条形码</li>
-						<li>售价</li>
-						<li>商品类型</li>
-						<li>库存数量/重量</li>
-						<li>批次数量</li>
-					</div>
-					<div class="select-item" v-for="(item,index) in goodsdetail" :key="index" :class="{'active':item.select}">
-						<div class="select-row">
-							<li v-if="item.select">已添加</li>
-							<li v-if="!item.select && item.surplus>0" @click="addList(item,index)" class="add">添加</li>
-							<li v-if="item.surplus<=0&&!item.select" @click="addEmpty" class="surplus-empty">添加</li>
-							<li v-if="(index+1)+(page-1)*10<10">{{`0${index+1}`}}</li>
-							<li v-else>{{(index+1)+(page-1)*10}}</li>
-							<li>{{item.goodsName}}</li>
-							<li>{{item.barCode}}</li>
-							<li>{{item.price}}</li>
-							<li>{{typeList[Number(item.type)+1]}}</li>
-							<li>{{item.surplus}}{{item.unit}}</li>
-							<li>{{item.batch}}</li>
-						</div>
-					</div>
-					<div v-if="goodsdetail.length == 0" id="emptyData">-----暂无条目-----</div>
-				</div>
+				<el-table :data="goodsdetail" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column width="100" fixed="left" label="操作">
+						<template slot-scope="scope">
+							<el-button type="text" v-if="scope.row.select" style="color:#999">已添加</el-button>
+							<el-button type="text" @click="addList(scope.row,scope.$index)" 
+							v-if="!scope.row.select" 
+							:disabled="scope.row.surplus<=0">添加</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column prop="gName" label="商品名称" min-width="200">
+					</el-table-column>
+					<el-table-column prop="barCode" label="条形码" min-width="200">
+					</el-table-column>
+					<el-table-column label="售价" min-width="200">
+						<template slot-scope="scope">
+							{{scope.row.price}}元
+						</template>
+					</el-table-column>
+					<el-table-column label="商品类型" width="150">
+						<template slot-scope="scope">
+							{{typeList[Number(scope.row.type)+1].label}}
+						</template>
+					</el-table-column>
+					<el-table-column label="库存数量/重量" min-width="200">
+						<template slot-scope="scope">
+							{{scope.row.surplus}}{{scope.row.unit}}
+						</template>
+					</el-table-column>
+					<el-table-column label="批次数量" width="150">
+						<template slot-scope="scope">
+							{{scope.row.batch}}
+						</template>
+					</el-table-column>
+				</el-table>
 			</div>
 			<div class="page-box">
-				<pageBtn @pageNum="pageChange" :isNoPaging="false" :isNoJump="true" :total="pageTotal" :page="page"></pageBtn>
+				<el-pagination @current-change="pageChange"
+					:current-page="page"
+					background
+					layout="prev, pager, next"
+					:page-count="pageTotal">
+				</el-pagination>
 			</div>
 		</div>
-		<!-- <selectSupplies v-show="tabactive == 1" :addBtn="true" :wid="wid" :sleSupplies="getSupplies" :type="true" ref="supplies"></selectSupplies> -->
 	</div>
 </template>
 <script>
@@ -110,18 +127,19 @@ export default {
 		return {
 			page: 1,
 			selType: -1,
-			goodsdetail: '',
-			typeList: ['全部类型', '普通商品', '称重商品'],
+			goodsdetail: [],
+			typeList: [
+				{value:-1,label:'全部类型'},
+				{value:0,label:'普通商品'},
+				{value:1,label:'称重商品'},
+			],
 			allGoods: '全部类型',
 			pageTotal: 0,
-			// tebData: ['商品', '物料'],
-			// tabactive: 0,
 			sleList: [], //选择的商品
 			listTotal: 0,
 			goodsName: '',
 			barCode: '',
 			secBarCode: '',
-			// sleSupplies: '', //选择的物料
 			num: 10,
 			veri: ['goodsName', 'barCode', 'secBarCode'], //用于验证筛选条件
 			sinSle: [],
@@ -200,6 +218,10 @@ export default {
 			}
 		},
 		async addList(item) {//点击添加
+			if(item.surplus<=0){
+				this.alert('该商品库存数量不足');
+				return;
+			}
 			let check = await this.checkGoods(item);
 			if(check) {
 				item.select = true;
@@ -208,7 +230,7 @@ export default {
 		},
 		checkSle() {
 			for(let item of this.goodsdetail) {
-				item.select = false;
+				this.$set(item,'select',false);
 			}
 			for(let item of this.goodsdetail) {
 				for(let sleItem of this.sleList) {
@@ -244,13 +266,12 @@ export default {
 			this.page = 1;
 			this.goodsName = '';
 			this.barCode = '';
-			this.$refs.select.sortName = '全部类型';
-			this.$refs.select.selected = 0;
+			this.secBarCode = '';
 			this.selType = -1;
 			this.init();
 		},
 		pageChange(res) {
-			this.page = res.page;
+			this.page = res;
 			this.init();
 		},
 		async checkGoods(res) { //匹配物料
@@ -279,20 +300,21 @@ export default {
 	},
 	async mounted() {
 		if(this.sleCommodity) this.sleList = utils.deepCopy(this.sleCommodity);
-		this.$store.commit('setPageTools', [
-			{name: '确定',className: ['firstBtn wearhouse'],
+		let arr = [
+			{name: '取消',className: 'info',type:1,
 				fn: () => {
-					this.$store.commit('setPageTools', []);
+					this.$store.commit('setFixButton',[]);
+					this.$emit('select', false);
+				}
+			},
+			{name: '确定',className: 'primary',type:1,
+				fn: () => {
+					this.$store.commit('setFixButton',[]);
 					this.$emit('select', this.sleList);
 				}
 			},
-			{name: '取消',className: ['abrogate'],
-				fn: () => {
-					this.$store.commit('setPageTools', []);
-					this.$emit('select', false);
-				}
-			}
-		]);
+		];
+		this.$store.commit('setFixButton',arr);
 		this.init();
 		await this.checkIn();
 	},
@@ -305,35 +327,21 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-	@media only screen and (max-width:1250px) {
-		.setspeen {
-			margin-top: 10px;
-			display: block;
-		}
-	}
-	
+	.danger-color{color: #d34a2b;}
 	#output-select-goods {
 		.title {
 			width: 98%;
-			height: 40px;
-			margin: 10px;
-			line-height: 40px;
+			height: 20px;
+			margin-bottom: 15px;
 			position: relative;
 			overflow: hidden;
-			i {
-				width: 2px;
-				height: 28px;
-				position: absolute;
-				top: 6px;
-				left: 0;
-				background-color: #f8941f;
-			}
+			border-left: 3px solid #E1BB4A;
 			h3 {
 				height: 40px;
 				margin-left: 10px;
 				float: left;
 				font-size: 16px;
-				font-family: '微软雅黑';
+				font-family: "微软雅黑";
 			}
 		}
 		.table-head {
@@ -349,11 +357,13 @@ export default {
 			padding-bottom: 30px
 		}
 		.search-module {
-			.inline-box {
+			.sleType{
+				width: 200px;
 				display: inline-block;
-				padding-top: 15px;
+				margin-right: 10px;
+				margin-bottom: 20px;
 			}
-			padding-bottom: 15px;
+			padding-top: 20px;
 			.search-input {
 				height: 40px;
 				font-size: 14px;
@@ -383,13 +393,14 @@ export default {
 			}
 		}
 		.table-select {
-			border: 1px solid #ccc;
 			.select-title {
 				height: 50px;
 				line-height: 50px;
 				padding-left: 20px;
 				font-size: 16px;
 				color: #333;
+				border: 1px solid #ebeef5;
+				border-bottom: 0;
 				.packUp {
 					cursor: pointer;
 					color: #5ebee8;
@@ -411,73 +422,6 @@ export default {
 					font-size: 16px;
 				}
 			}
-			.select-head {
-				background-color: #f2f2f2;
-				overflow: auto;
-				display: flex;
-				justify-content: space-between;
-				li {
-					.table-head;
-					line-height: 40px;
-					height: 40px;
-					font-size: 16px;
-					color: #43414a;
-				}
-			}
-			.active {
-				background-color: #cccccc;
-				border-bottom: 1px #fff solid;
-			}
-			.select-item {
-				.select-row {
-					overflow: auto;
-					border-bottom: 1px #ccc solid;
-					display: flex;
-					justify-content: space-between;
-					li {
-						.table-head;
-						height: 70px;
-						line-height: 70px;
-						font-size: 14px;
-						color: #666666;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						&:first-child {
-							font-size: 16px;
-							cursor: pointer;
-						}
-					}
-					.add {
-						color: #29abe2;
-					}
-					.surplus-empty {
-						color: #999;
-					}
-				}
-			}
-		}
-		.tebBox {
-			display: inline-block;
-			color: orange;
-			margin-bottom: 20px;
-			cursor: pointer;
-			li {
-				border: 1px orange solid;
-				display: inline-block;
-				padding: 10px 40px;
-			}
-			.active {
-				background-color: orange;
-				color: #ffffff;
-			}
-		}
-		#emptyData {
-			margin: 0 auto;
-			text-align: center;
-			height: 50px;
-			line-height: 50px;
-			color: orange;
 		}
 	}
 </style>

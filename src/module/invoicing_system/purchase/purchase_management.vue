@@ -6,7 +6,7 @@
 <template>
 	<div id="purchase">
 		<div class="teb">
-			<el-radio-group v-model="tabactive" fill="#e1bb4a" size="medium">
+			<el-radio-group v-model="tabactive" fill="#e1bb4a">
 				<el-radio-button v-for="(item,index) in tebData" :key="index" plain :label="index">{{item}}</el-radio-button>
 			</el-radio-group>
 		</div>

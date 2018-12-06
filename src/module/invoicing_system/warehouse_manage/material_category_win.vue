@@ -9,17 +9,24 @@
 			<span slot="title">{{title}}</span>
 			<div slot="content" v-cloak class="container">
 				<div class="content">
-					<div>
-						<span class="label"> 分类名 : </span>  
-						<el-input class="input" v-model="categoryName" maxlength="20" style="width:240px;" placeholder="请输入分类名" ></el-input>
+					<div class="label-top">
+						<span class="label">分类名：</span>
+						<div class="inp-box">
+							<el-input class="input" v-model="categoryName" maxlength="20" style="width:240px;" placeholder="请输入分类名" ></el-input>
+						</div>
 					</div>
 					<div class="label-top">
-						<span class="label">分类编码 :</span>
-						<el-input class="input" v-model="barCode" maxlength="4" style="width:240px;" placeholder="请输入分类编码" ></el-input>						
+						<span class="label">分类编码：</span>
+						<div class="inp-box">
+							<el-input class="input" v-model="barCode" maxlength="4" style="width:240px;" placeholder="请输入分类编码" ></el-input>
+							<el-button type="text" class="auto-code" @click="autoCateCode">生成编码</el-button>	
+						</div>			
 					</div>
 					<div class="label-top">
 						<span class="label">排序 :</span>
-						<el-input-number v-model="sort" :min="1" :max="255" label="排序" style="margin-left:10px;"></el-input-number>
+						<div class="inp-box">
+							<el-input-number v-model="sort" :min="1" :max="255" label="排序" style="margin-left:10px;"></el-input-number>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -28,6 +35,7 @@
 </template>
 <script>
 import global from 'src/manager/global';
+import http from 'src/manager/http';
 export default {
 	data() {
 		return {
@@ -35,6 +43,7 @@ export default {
 			sort: '', //排序值
 			categoryName: '', //分类名
 			barCode:'',
+			id:0,
 		};
 	},
 	props: {
@@ -46,13 +55,24 @@ export default {
 		            sort:                   排序值
 					title:                  标题
 					barCode:				分类编码
+					id:						分类id 新建一级分类为0
 		        }
 		*/
 	},
 	mounted() {
 		this.initData();
+		if(!this.pObj.barCode){
+			this.autoCateCode();
+		}
 	},
 	methods: {
+		//自动生成分类编码
+		async autoCateCode(){
+			let data = await http.materialCreateCateBarCode({data:{
+				pid:this.id,
+			}});
+			this.barCode = data;
+		},
 		initData() {
 			if(typeof this.pObj == 'object') {
 				for(let attr in this.pObj) {
@@ -108,6 +128,9 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.auto-code{
+	margin-left: 10px;
+}
 .container{
 	position: relative;
 	height:100%;
@@ -124,7 +147,17 @@ export default {
 		line-height: 40px;
 	}
 	.label-top{
-		margin-top:20px;
+		padding-top:20px;
+		overflow: hidden;
+		.label,.inp-box{
+			height: 40px;
+			line-height: 40px;
+			float: left;
+		}
+		.label{
+			width: 80px;
+			text-align: right;
+		}
 	}
 }
 </style>

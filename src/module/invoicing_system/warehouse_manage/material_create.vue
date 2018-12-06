@@ -15,14 +15,11 @@
 				<label class="required label">物料名称</label>
 				<el-input clearable v-model="materialName" maxlength="20" class="el-in" placeholder="请输入物料名称"></el-input>
 			</div>
-
-
 			<div class="label-content">
 				<label class="required label">物料编码</label>
 				<el-input clearable v-model="materialCode"  maxlength="6" class="el-in" placeholder="请输入物料编码"></el-input>
+				<el-button type="text" class="auto-code" @click="autoBarCode">生成编码</el-button>
 			</div>
-
-
 			<div class="label-content">
 				<label class="required label">物料类型</label>
 				<el-select v-model="typeValue" placeholder="全部类型" class="el-in">
@@ -34,8 +31,6 @@
 					></el-option>
 				</el-select>
 			</div>
-
-
 			<div class="label-content">
 				<label class="required label">物料分类</label>
 				<div class="icon-div" @click="openCategoryWin(winName.category)">
@@ -49,7 +44,6 @@
                     )
                 </span>
 			</div>
-
 			<div class="label-content">
 				<label class="label required-no">品牌</label>
 
@@ -63,7 +57,6 @@
                     )
                 </span>
 			</div>
-
 			<div class="label-content">
 				<label class="required label">保质期</label>
 				<el-input placeholder="请输入保质期" v-model="validityObj.time" @change="(res)=>{typeRatio(validityObj,'time','validate')}" class="el-in" maxlength="3">
@@ -77,7 +70,6 @@
 					</el-select>
 				</el-input>
 			</div>
-
 			<div class="label-content">
 				<label class="required label">物料单位</label>
 
@@ -91,7 +83,6 @@
                     )
                 </span>
 			</div>
-
 			<!-- 单位选择 -->
 			<div class="label-content" v-show="selectUnit.length > 0">
 				<label class="required label">默认单位</label>
@@ -104,7 +95,6 @@
 					></el-option>
 				</el-select>
 			</div>
-
 			<div class="label-content" v-show="selectUnit.length > 0">
 				<label class="required label">最小单位</label>
 				<el-select v-model="convertUnit.minUnitId" @change="(res)=>{changeUnit(res,'minUnitName')}" placeholder="请选择最小单位" class="el-in">
@@ -116,7 +106,6 @@
 					></el-option>
 				</el-select>
 			</div>
-
 			<!-- 单位换算 -->
 			<div class="label-content" v-for="(item,index) in groupUnit" :key="index" v-if="item.unitId != convertUnit.minUnitId">
 				<label :class="{'required':index == 0,'label':true}">{{ index == 0 ? '单位换算' : ''}}</label>
@@ -129,7 +118,6 @@
 				<span class="equal-unit"> = 1 {{item.unitName}}</span>
 			</div>
 		</div>
-
 		<!-- 分销价 -->
 		<div class="head" v-if="isBrand">
 			<span>分销价格</span>
@@ -156,9 +144,6 @@
 				</div>
 			</div>
 		</div>
-
-
-
 		<component 
 			:is="showCom" 
 			:pObj="comObj" 
@@ -238,6 +223,11 @@ export default {
 		};
 	},
 	methods: {
+		//自动生成物料编码
+		async autoBarCode(){
+			let data = await http.materialCreateMaterialBarCode();
+			this.materialCode = data;
+		},
 		closeCommonWin(arr, res) {
 			let winName = this.winName;
 			let tempObj = {};
@@ -342,7 +332,7 @@ export default {
 
 			val = item[attr] + '';
 			val = val.trim();
-			temp = val.match(reg)
+			temp = val.match(reg);
 			if(!temp){
 				temp = [];
 				temp[0] = '';
@@ -428,36 +418,36 @@ export default {
 					reg: /^[0-9A-Za-z]{1,6}$/,
 					pro: '编码由1-6位英文,数字组成!'
 				}
-			}, this)) return;
+			}, this)) return false;
 
 			if(this.typeValue === ''){
 				this.$message.error('请选择物料类型!');
-				return;
+				return false;
 			}
 
 			if(this.selectCategory.length == 0) {
 				this.$message.error('请选择分类!');
-				return;
+				return false;
 			}
 
 			if(this.selectUnit.length == 0) {
 				this.$message.error('请选择单位!');
-				return;
+				return false;
 			}
 
 			if(this.convertUnit.defUnitId === ''){
 				this.$message.error('请选择默认单位!');	
-				return;			
+				return false;			
 			}
 			if(this.convertUnit.minUnitId === ''){
 				this.$message.error('请选择最小单位!');	
-				return;			
+				return false;			
 			}
 
 			for(let ele of this.groupUnit){
 				if(!ele.value){
 					this.$message.error('请输入换算比例!');	
-					return;
+					return false;
 				}
 			}
 
@@ -465,36 +455,30 @@ export default {
 			if(this.isBrand){
 				for(let ele of this.dispiceArr){
 					if(ele.value !== '' && !ele.unitId){
-						let tips = `请为 ${ele.name} 分销价选择相应的单位!`
+						let tips = `请为 ${ele.name} 分销价选择相应的单位!`;
 						this.$message.error(tips);						
-						return;
+						return false;
 					}
 				}
 			}
 			return true;
 		},
 		async clickBtn(flag) {
-			let temp = {};
 			storage.session('tabactive', 1);
-			switch(flag) {
-				case 'continue':
-				case 'ok':
-					if(!this.checkform()) return;
+			if(flag=='continue' || flag=='ok'){
+				if(this.checkform()){
 					let obj = this.formatData();
-
-					temp = await this.MaterialAddMaterial(obj);
+					await this.MaterialAddMaterial(obj);
 					this.alert('新建物料成功!');
-
 					if(flag == 'continue') {
 						this.initCondtion();
 						this.initConvert();
 					}else{
 						this.$router.go(-1);
 					}
-					break;
-				case 'cancel':
-					this.$router.go(-1); //返回到上一个页面
-					break;
+				}
+			}else if(flag=='cancel'){
+				this.$router.go(-1); //返回到上一个页面
 			}
 		},		
 
@@ -564,7 +548,7 @@ export default {
 
 
 
-    	getEle(arr,val,attr){
+		getEle(arr,val,attr){
 			let temp = {};
 			for(let ele of arr){
 				if(ele[attr] == val){
@@ -573,7 +557,7 @@ export default {
 				}
 			}
 			return temp;
-        },
+		},
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
 				confirmButtonText: '确定',
@@ -656,6 +640,7 @@ export default {
 		this.MaterialGetCategoryList();
 		this.MaterialGetUnitList();
 		this.InvoicingBrandList();
+		this.autoBarCode();
 		this.getDistr();
 	},
 	components: {
@@ -668,7 +653,9 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-
+	.auto-code{
+		margin-left: 10px;
+	}
 	.head{
 		display: flex;
 		flex-flow: row nowrap;

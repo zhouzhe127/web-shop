@@ -1160,4 +1160,25 @@ export default {
 		url: b + "materialReport/setStatisticScopeMaterialSupplier", //添加或更新物料-供应商集合
 		method: 'post',
 	},
+	"materialCreateMaterialBarCode": {
+		url: b + "material/createMaterialBarCode", //自动生成物料编码
+		method: 'post',
+	},
+	"materialCreateCateBarCode": {
+		url: b + "material/createCateBarCode", //自动生成分类编码
+		method: 'post',
+	},
+	//总日志导出
+	"InvoicingExportGoodsLogList": {
+		url: b + "Invoicing/exportGoodsLogList",
+		method: "get",
+		type: "file"
+	},
+	"InvoicingExportMaterialLogList": {
+		url: b + "Invoicing/exportMaterialLogList",
+		method: "get",
+		type: "file"
+	},
+
+
 }

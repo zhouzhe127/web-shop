@@ -35,7 +35,7 @@
 							<span style="word-wrap:break-word" v-bind:title = "itemChild.name" >{{itemChild.name}}</span>
 						</span>
 						<div class="openoperation" style="margin-top:-35px ;">
-							<img src="../../../res/icon/change.png" @click="openTwoCategoryEdit(itemChild,chindex)" />
+							<img src="../../../res/icon/change.png" @click="openTwoCategoryEdit(itemChild,item)" />
 							<img style="margin-left:5px;" @click="deleteTwoCategory(itemChild,chindex)" src="../../../res/icon/delete.png" />
 						</div>
 					</li>
@@ -66,7 +66,6 @@
 
 */
 import http from 'src/manager/http';
-import global from 'src/manager/global';
 import utils from 'src/verdor/utils';
 export default {
 	data() {
@@ -165,6 +164,7 @@ export default {
 				sort: 1,
 				title: '添加一级分类',
 				barCode:'',
+				id:0,
 			};
 			this.flag = {
 				id: '',
@@ -182,7 +182,8 @@ export default {
 				categoryName: item.name,
 				sort: item.sort,
 				title: '修改一级分类',
-				barCode: item.barCode,				
+				barCode: item.barCode,
+				id:0,	
 			};
 			this.flag = {
 				id: item.id,
@@ -196,12 +197,13 @@ export default {
 
 		},
 		//编辑二级分类
-		openTwoCategoryEdit(item) {
+		openTwoCategoryEdit(item,parItem) {
 			this.comObj = {
 				categoryName: item.name,
 				sort: item.sort,
 				title: '修改二级分类',
-				barCode: item.barCode,								
+				barCode: item.barCode,
+				id: parItem.id,							
 			};
 			this.flag = {
 				id: item.id,
@@ -219,7 +221,8 @@ export default {
 				categoryName: '',
 				sort: 1,
 				title: '添加二级分类',
-				barCode: '',								
+				barCode: '',
+				id:item.id,						
 			};
 			this.flag = {
 				id: '',
@@ -340,9 +343,7 @@ export default {
 		},
 		//获取物料分类
 		async MaterialGetCategoryList() {
-			let res = await http.MaterialGetCategoryList({
-				data: {}
-			});
+			let res = await http.MaterialGetCategoryList();
 			return res;
 		},
 		async MaterialAddCategory(obj) {

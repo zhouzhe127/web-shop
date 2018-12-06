@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-20 17:10:44
+ * @Last Modified time: 2018-12-04 14:25:38
  */
 <template>  
 	<div>
@@ -276,7 +276,9 @@ export default {
 	components:{
 		selectCollectionCom:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
 		selectMaterialCom:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
-		createCollectionCom:() => import(/* webpackChunkName:"report_add_collection_win"*/'./report_add_collection_win'),
+		// createCollectionCom:() => import(/* webpackChunkName:"report_add_collection_win"*/'./report_add_collection_win'),
+		createCollectionCom:()=>import( /*webpackChunkName: 'creat_gather_win'*/ 'src/module/invoicing_system/data_center/creat_templatelist/creat_gather_win.vue'), //新建集合
+		
 	}
 };
 </script>

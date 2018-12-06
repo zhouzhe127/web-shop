@@ -11,18 +11,19 @@
 			<el-table ref="multipleTable" border v-loading="loading" :header-cell-style="{'background':'#f5f7fa'}" :data="viewData"
 			 tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
 
-				<el-table-column label="批量删除">
-					<template slot="header" slot-scope="scope">
+				<el-table-column v-if="reset" width="150">
+					<!-- <template slot="header" slot-scope="scope">
 						<el-button type="text" size="small" style='color:#D34A2B' @click="dleSelection()">批量删除</el-button>
 					</template>
-					<el-table-column width="100" v-if="reset">
+					<el-table-column width="100" v-if="reset"> -->
 						<template slot="header" slot-scope="scope">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+							<el-button type="text" size="small" style='color:#606266' @click="dleSelection()">批量删除</el-button>
 						</template>
 						<template slot-scope="scope">
 							<el-checkbox v-model="scope.row.checkOut" @change="handleSingleChange"></el-checkbox>
 						</template>
-					</el-table-column>
+					<!-- </el-table-column> -->
 				</el-table-column>
 				<el-table-column label="集合名称" prop="name" width="200">
 				</el-table-column>
@@ -36,10 +37,10 @@
 						<span>{{scope.row.unit.name}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" fixed="right" width="200">
+				<el-table-column label="操作" fixed="right" width="150">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="editList(scope.row)">编辑</el-button>
-						<el-button type="text" size="small" @click="dleSelection(scope.row)" style='color:#D34A2B'>删除</el-button>
+						<el-button type="text" size="small" @click="dleSelection(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -48,8 +49,9 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :title="isEdit?'编辑集合':'新建集合'" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
-		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
+		<!-- <createCollectionCom v-if="showCreatWin" :title="isEdit?'编辑集合':'新建集合'" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
+		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom> -->
+		 <creatGatherWin v-if="showCreatWin" :title="isEdit?'编辑集合':'新建集合'" :editData='editData' @change="creatWinClose"></creatGatherWin>
 	</div>
 </template>
 <script>
@@ -104,6 +106,14 @@
 
 			crageBtn() {
 				this.$store.commit('setPageTools', [{
+					name: '返回',
+					className: '',
+					type: 4,
+					icon: 'el-icon-plus',
+					fn: () => {
+						window.history.go(-1);
+					}
+				},{
 					name: '新建集合',
 					className: 'primary',
 					type: 4,
@@ -221,7 +231,9 @@
 		},
 		components: {
 			createCollectionCom: () => import( /* webpackChunkName:"report_add_collection_win"*/
-				'src/module/invoicing_system/data_center/report_add_collection_win.vue')
+				'src/module/invoicing_system/data_center/report_add_collection_win.vue'),
+			creatGatherWin: () =>
+				import( /*webpackChunkName: 'creat_gather_win'*/ './creat_gather_win.vue'), //新建集合
 		}
 	};
 </script>

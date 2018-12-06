@@ -29,13 +29,17 @@
                     :value="item.id">
                     </el-option>
                 </el-select>
+            </div>
 
+            <div class="in-block">
                 <el-input clearable v-model="condition.goodsName" placeholder="物料名称" style="width:194px"></el-input>
             </div>
 
             <div class="in-block" >
                 <el-input v-if="false" clearable v-model="condition.code" placeholder="物料编码" style="width:194px"></el-input>
+            </div>
 
+            <div class="in-block">
                 <el-input clearable v-model="condition.operationUser" placeholder="操作人" style="width:194px"></el-input>
             </div>
 
@@ -51,7 +55,8 @@
                     clearable
                     >
                 </el-cascader>
-
+            </div>
+            <div class="in-block">
                 <el-select v-model="condition.wid" placeholder="仓库选择" multiple collapse-tags>
                     <el-option
                     v-for="item in warehouseList"
@@ -94,6 +99,12 @@
 						<span class="arrow" :class="{'arrow-up':row.arrowCost,'arrow-down':!row.arrowCost}"></span>
 						{{Number(row.cost)}}
 					</template>	                    
+                </el-table-column>
+                <el-table-column  label="结存金额" width="150px">
+					<template slot-scope="{row,column,index}">
+						<!-- <span class="arrow" :class="{'arrow-up':row.arrowBalanceAmount,'arrow-down':!row.arrowBalanceAmount}"></span> -->
+						{{row.balanceAmount}}
+					</template>	  
                 </el-table-column>
                 <el-table-column prop="createTime" label="日期" width="150px">
                 </el-table-column>
@@ -185,6 +196,7 @@
         获取物料总日志列表:invoicingGetMaterialLogList
         获取一个或多个物料的单位和关联:materialGetUnitRelation
         获取物料详情:MaterialGetMaterialDetail
+        导出:InvoicingExportMaterialLogList
 
     问题:
         仓库的选择
@@ -282,6 +294,10 @@ export default {
 
                 ele.arrowCost = ele.cost > 0;                                           //成本红色箭头
 
+                ele.arrowBalanceAmount = ele.balanceAmount > 0;                         //结存金额
+
+                this.calcNum(ele,['balanceAmount','cost']);
+
                 this.getMaterialUnitInfo(ele,null,'relation');
                 
                 this.initObject(ele,['changeBefore','change','changeAfter'],0);
@@ -306,6 +322,22 @@ export default {
             });
         },
 
+        initBtn(btns){
+            if(!btns){
+                btns = [
+                    {
+                        name: '导出',
+                        type:'4',
+                        className:'primary',
+                        fn:async ()=>{
+                            let obj = this.getSubmitData();
+                            this.getHttp('InvoicingExportMaterialLogList');
+                        }
+                    }
+                ];
+            }
+			this.$store.commit('setPageTools',btns);
+        },
 
         //查看物料详情
         async viewDetail(row,column){
@@ -351,7 +383,6 @@ export default {
                 });
             }
         },
-
 
 
         //匹配
@@ -438,6 +469,7 @@ export default {
         this.initPageObj();
     },
     async activated(){
+        this.initBtn();        
         this.getQueryData();        
         await this.getOperationList('material');
         this.getCategoryList();

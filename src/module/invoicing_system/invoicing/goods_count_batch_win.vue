@@ -8,16 +8,24 @@
 
 			<div class="nav">
 				<div class="in-block">
-					<input type="text" v-model="condObj.batchCode" class="input-txt" placeholder="请输入批次编号" maxlength="40">
-					<input type="text" v-model="condObj.supplier" class="input-txt" placeholder="请输入供应商" maxlength="40">
+					<el-input v-model="condObj.batchCode" placeholder="请输入批次编号" class="input-txt" maxlength="40"></el-input>
+					<el-input v-model="condObj.supplier" placeholder="请输入供应商" class="input-txt" maxlength="40"></el-input>
 				</div>
 				<div class="in-block marginL-10">
-					<calendar :pObj="startTime" :tips="startTime.tips" @throwTime="(res)=>{getTime('startTime',res)}" style="background-color:#fff"></calendar>
-					<span class="line"></span>
-					<calendar :pObj="endTime" :tips="endTime.tips" @throwTime="(res)=>{getTime('endTime',res)}" style="background-color:#fff"></calendar>
+					<el-date-picker
+						v-model="timeData"
+						type="daterange"
+						range-separator="-"
+						start-placeholder="开始日期"
+						end-placeholder="结束日期"
+						:clearable="false"
+						unlink-panels
+						@change="getTime">
+					</el-date-picker>
 				</div>
 				<div class="in-block" style="margin:0">
-					<span class="common-btn blue" @click="clickBtn('filter')">筛选</span><span style="margin:0" class="common-btn gray" @click="clickBtn('reset')">重置</span>
+					<el-button type="primary" @click="clickBtn('filter')">筛选</el-button>
+					<el-button type="info" @click="clickBtn('reset')">重置</el-button>
 				</div>
 			</div>
 
@@ -56,6 +64,7 @@ import utils from 'src/verdor/utils';
 export default {
 	data () {
 		return {
+			timeData:[],
 			startTime:{
 				time:'',               //需要展示的时间(时间戳)(默认展示当前时间)
 				show:true,             //是否展示时分秒控件(默认显示)
@@ -103,7 +112,6 @@ export default {
 			default:function(){
 				return {
 					content:'确定',
-					style:{'background-color':'#ff8d01'}
 				};
 			}
 		},
@@ -112,7 +120,6 @@ export default {
 			default:function(){
 				return {
 					content:'取消',
-					style:{'background-color':'#b3b3b3'}
 				};
 			}           
 		},
@@ -229,12 +236,9 @@ export default {
 			temp[0] += '';
 			item.countNum = temp[0];
 		},
-
-
-		getTime(flag,res){
-			this[flag].time = res;
-			this.startTime.tips = undefined;
-			this.endTime.tips = undefined;
+		getTime(res){
+			this.startTime.time = new Date(res[0]).setHours(0,0,0,0);
+			this.endTime.time = new Date(res[1]).setHours(23,59,59,0);
 			this.startTime.flag = false;
 		},
 		initDateTime(){
@@ -286,7 +290,7 @@ export default {
 		this.clickBtn('reset');
 	},
 	components: {
-		win:()=>import (/*webpackChunkName:'win'*/'src/components/win'),
+		win:()=>import (/*webpackChunkName:'win'*/'src/components/win_element'),
 		calendar: () =>import(/*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 
 	},
@@ -302,7 +306,6 @@ li{
 }
 .content{
 	padding:25px 20px;
-	background-color: #f7f7f7;
 	height:100%;
 	.head{
 		.info{
@@ -319,7 +322,6 @@ li{
 			display: inline-block;
 			margin-right:7px;
 			vertical-align: top;
-			margin-bottom:10px;
 			.line{
 				display: inline-block;
 				.whb(10px,20px);
@@ -329,24 +331,22 @@ li{
 				font-size:16px;
 			}
 			.input-txt{
-				.input-text(160px);
+				width: 160px;
 				font-size:14px;
-				margin-right:7px;
+				margin-right: 10px;
 			}
 		}
-		padding-bottom:25px;
+		padding-bottom:20px;
 	}
 	.table{
 		@border:1px solid #d5d5d5;
 		.title{
 			border-top:@border;
 			border-bottom:@border;
-			height:58px;			
-			padding-top:10px;			
 			li{
 				text-align: center;
 				float:left;
-				font-size: 16px;
+				font-size: 14px;
 				color:#333333;
 				height:40px;
 				border-right:@border;
@@ -364,7 +364,7 @@ li{
 		.clearInput{
 			color:@r;
 			text-decoration: underline @r;
-			font-size:16px;
+			font-size:14px;
 			cursor: pointer;
 		}
 		.body{
@@ -384,22 +384,28 @@ li{
 					.text-ellipsis;
 				}
 				.input-div{
-					border:@border;
 					display: inline-block;
 					background-color: #fff;
 					vertical-align: middle;
 					.count-num{
-						.whb(70px,38px);
+						.whb(100px,38px);
 						float:left;
 						outline: none;
 						padding:0 5px;
+						border:@border;
+						border-right: 0;
+						border-top-left-radius: 4px;
+						border-bottom-left-radius: 4px;
 					}
 					.unit{
 						.whb(40px,38px);
 						float:left;
-						border-left:@border;
+						border:@border;
 						text-align: center;
 						line-height: 38px;
+						border-top-right-radius: 4px;
+						border-bottom-right-radius: 4px;
+						background: #f5f7fa;
 					}
 				}
 			}

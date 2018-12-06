@@ -155,6 +155,16 @@ export default {
         },
 		
 
+		//计算数值
+        calcNum(obj,attrs = []){
+            let fixed = 2;
+            for(let key of attrs){
+                let num = Number(obj[key]);
+                if(!num) num = 0;
+                num = num.toFixed(fixed);
+                obj[key] = num;
+            }
+        },
         //初始化对象的属性
         initObject(obj,attrs=[],val=0){
             for(let a of attrs){
