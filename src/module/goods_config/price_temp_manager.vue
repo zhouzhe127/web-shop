@@ -33,10 +33,9 @@
 		<!-- 价格模板列表 -->
 		<div class="price_temp_table">
 			<div class="table_title">商品列表·共{{goodsList.length}}个条目</div>
-
 			<!-- 默认不显示会员价列表 -->
 			<div class="table-box" v-show="!vipPriceOpen">
-				<el-table style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
+				<el-table ref="multipleTableOne" style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
 					<el-table-column min-width="100" type="index" fixed label="序号" align="center"></el-table-column>
 					<el-table-column min-width="100" fixed label="商品名称" align="center">
 						<template slot-scope="scope">{{scope.row.goodsName}}</template>
@@ -50,7 +49,7 @@
 					<el-table-column min-width="100" label="原始价格" align="center">
 						<template slot-scope="scope">{{scope.row.price}}</template>
 					</el-table-column>
-					<el-table-column min-width="240" width="300" v-if="tableTemplate.templateTitle.length > 0" v-for="(item,index) in 
+					<el-table-column min-width="240" width="300" v-if="tableTemplate.templateTitle.length > 0" v-for="(item,index) in
 								tableTemplate.templateTitle" class-name="edithead" :key="index">
 						<!-- 自定义表头 -->
 						<template slot="header" slot-scope="scope">
@@ -76,7 +75,7 @@
 											<i class="el-icon-caret-left"></i>
 										</span>
 										<!-- 右边移动 -->
-										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1 
+										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1
 															|| index + 1 >= tableTemplate.templateTitle.length} " @click.stop="handleMoveTemp(tableTemplate.templateTitle[index],index,dir='right')">
 											<i class="el-icon-caret-right"></i>
 										</span>
@@ -120,10 +119,9 @@
 					</el-table-column>
 				</el-table>
 			</div>
-
 			<!-- 显示会员价列表 -->
 			<div class="table-box" v-show="vipPriceOpen">
-				<el-table style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
+				<el-table ref="multipleTableTow" style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
 					<el-table-column min-width="100" type="index" fixed label="序号" align="center"></el-table-column>
 					<el-table-column min-width="100" fixed label="商品名称" align="center">
 						<template slot-scope="scope">{{scope.row.goodsName}}</template>
@@ -142,7 +140,7 @@
 							<template slot-scope="scope">{{scope.row.vipPrice}}</template>
 						</el-table-column>
 					</el-table-column>
-					<el-table-column min-width="360" width="400" v-if="tableTemplate.templateTitle.length > 0" align="center" v-for="(item,index) in 
+					<el-table-column min-width="360" width="400" v-if="tableTemplate.templateTitle.length > 0" align="center" v-for="(item,index) in
 								tableTemplate.templateTitle" class-name="edithead" :key="index">
 						<!-- 自定义表头 -->
 						<template slot="header" slot-scope="scope">
@@ -169,7 +167,7 @@
 											<i class="el-icon-caret-left"></i>
 										</span>
 										<!-- 右边移动 -->
-										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1 
+										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1
 																|| index + 1 >= tableTemplate.templateTitle.length} " @click.stop="handleMoveTemp(tableTemplate.templateTitle[index],index,dir='right')">
 											<i class="el-icon-caret-right"></i>
 										</span>
@@ -693,7 +691,8 @@ export default {
 
 			this.tempGoods = this.pageGoods = this.filterGoodsByCategoryByPid(
 				this.goodsList,
-				this.oneArea.id
+				this.oneArea.id,
+				item.child
 			);
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
@@ -995,16 +994,6 @@ export default {
 			}
 			return goods;
 		},
-		initIds() {
-			if (this.nowGoods.length > 0) {
-				let ids = [];
-				this.nowGoods.forEach(item => {
-					ids.push(item.id);
-				});
-				this.goodIds = ids.join(',');
-				this.getPricetemplateData(this.goodIds);
-			}
-		},
 		//-----------分页---------
 		initPage(arr) {
 			this.totalNum = Math.ceil(arr.length / this.pageSize);
@@ -1028,10 +1017,16 @@ export default {
 				});
 				this.goodIds = ids.join(',');
 				this.getPricetemplateData(this.goodIds);
+				this.$refs.multipleTableTow.bodyWrapper.scrollTop = 0;
+				this.$refs.multipleTableOne.bodyWrapper.scrollTop = 0;
 			}
 		},
 		// 分页条数改变
 		sizeChange(num) {
+			this.tableTemplate = {
+				priceTemplate: [],
+				templateTitle: []
+			};
 			this.pageSize = num;
 			this.currentPage = 1;
 			this.initPage(this.tempGoods);
