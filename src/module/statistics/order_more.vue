@@ -17,10 +17,10 @@
 				<li v-if="!isBrand">
 					<!--日期选择和搜索框-->
 					<section class="statisticsList fl">
-						<el-date-picker :clearable="false" v-model="startTime" type="date" placeholder="选择日期" style="width:200px;">
+						<el-date-picker :clearable="false" @change="getstaTime" v-model="startTime" type="date" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<span style="width: 25px;line-height: 40px;text-align: center;">至</span>
-						<el-date-picker :clearable="false" @click="getendTime" v-model="endTime" type="date" placeholder="选择日期" style="width:200px;">
+						<el-date-picker :clearable="false" @change="getendTime" v-model="endTime" type="date" placeholder="选择日期" style="width:200px;">
 						</el-date-picker>
 						<el-button @click="sreachOrderInDays" type="primary" icon="el-icon-search">搜索</el-button>
 					</section>
@@ -30,6 +30,24 @@
 						<el-option v-for="item in conTypeList" :key="item.type" :label="item.name" :value="item.type"></el-option>
 					</el-select>
 					<el-time-picker
+						v-model="timelate[0]"
+						v-if="conType == '2'"
+						@change="statimechange"
+						:picker-options="{
+						selectableRange: '00:00:00 - 23:59:59'
+						}"
+						placeholder="任意时间点">
+					</el-time-picker>
+					<el-time-picker
+						v-if="conType == '2'"
+						v-model="timelate[1]"
+						@change="endtimechange"
+						:picker-options="{
+						selectableRange: '00:00:00 - 23:59:59'
+						}"
+						placeholder="任意时间点">
+					</el-time-picker>
+					<!-- <el-time-picker
 						v-if="conType == '2'"
 						is-range
 						v-model="timelate"
@@ -38,7 +56,7 @@
 						end-placeholder="结束时间"
 						@change="timechange"
 						placeholder="选择时间范围">
-					</el-time-picker>
+					</el-time-picker> -->
 				</li>
 				<li v-if="!isBrand && conType=='0'">
 					<el-select v-model="conSize" @change="selectTypeTwo" placeholder="请选择类型" style="width:150px;">
@@ -379,31 +397,59 @@ export default {
 				this.selectTypeTwo();
 			}
 		},
-		//时间组件
-		timechange(e){
-			console.log(e);
+		//开始时间
+		statimechange(e){
 			let startTime = new Date(this.startTime).getTime();
-			let endTime = new Date(this.endTime).getTime();
 			let startY = utils.format(startTime, 'yyyy');
 			let startM = utils.format(startTime, 'MM')-1;
 			let startD = utils.format(startTime, 'dd');
-			let endY = utils.format(endTime, 'yyyy');
-			let endM = utils.format(endTime, 'MM')-1;
-			let endD = utils.format(endTime, 'dd');
-			let timearr1 = new Date(e[0]).getTime();
-			let timearr2 = new Date(e[1]).getTime();
+			
+			let timearr1 = new Date(e).getTime();
 			let startH = utils.format(timearr1, 'hh');
 			let startm = utils.format(timearr1, 'mm');
 			let startS = utils.format(timearr1, 'ss');
+			this.startTime = new Date(startY, startM, startD, startH, startm,startS);
+			this.getOrderListInDays();
+
+		},
+		//开始时间
+		endtimechange(e){
+			let endTime = new Date(this.endTime).getTime();
+			let endY = utils.format(endTime, 'yyyy');
+			let endM = utils.format(endTime, 'MM')-1;
+			let endD = utils.format(endTime, 'dd');
+			
+			let timearr2 = new Date(e).getTime();
 			let endH = utils.format(timearr2, 'hh');
 			let endm = utils.format(timearr2, 'mm');
 			let endS = utils.format(timearr2, 'ss');
-			this.startTime = new Date(startY, startM, startD, startH, startm,startS);
 			this.endTime = new Date(endY, endM, endD, endH, endm,endS);
-			// console.log(startY+'-'+startM+'-'+startD+'-'+startH+'-'+startm+'-'+startS);
-			// console.log(this.startTime);
 			this.getOrderListInDays();
+
 		},
+		//时间组件
+		// timechange(e){
+		// 	console.log(e);
+		// 	let startTime = new Date(this.startTime).getTime();
+		// 	let endTime = new Date(this.endTime).getTime();
+		// 	let startY = utils.format(startTime, 'yyyy');
+		// 	let startM = utils.format(startTime, 'MM')-1;
+		// 	let startD = utils.format(startTime, 'dd');
+		// 	let endY = utils.format(endTime, 'yyyy');
+		// 	let endM = utils.format(endTime, 'MM')-1;
+		// 	let endD = utils.format(endTime, 'dd');
+		// 	let timearr1 = new Date(e[0]).getTime();
+		// 	let timearr2 = new Date(e[1]).getTime();
+		// 	let startH = utils.format(timearr1, 'hh');
+		// 	let startm = utils.format(timearr1, 'mm');
+		// 	let startS = utils.format(timearr1, 'ss');
+		// 	let endH = utils.format(timearr2, 'hh');
+		// 	let endm = utils.format(timearr2, 'mm');
+		// 	let endS = utils.format(timearr2, 'ss');
+		// 	this.startTime = new Date(startY, startM, startD, startH, startm,startS);
+		// 	this.endTime = new Date(endY, endM, endD, endH, endm,endS);
+		// 	this.getOrderListInDays();
+		// },
 		//按日别筛选-自然日-营业时间
 		selectTypeTwo(){
 			this.getOrderListInDays();
@@ -589,9 +635,37 @@ export default {
 				query: this.$route.query
 			});
 		},
-		//结束时间为当天的最后一秒，组件为开始
-		getendTime(re){
-			this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
+		//开始时间为当天的最后一秒，组件为开始
+		getstaTime(e){
+			// console.log(e);
+			let startTime = new Date(e).getTime();
+			let startY = utils.format(startTime, 'yyyy');
+			let startM = utils.format(startTime, 'MM')-1;
+			let startD = utils.format(startTime, 'dd');
+			
+			let timearr1 = new Date(this.timelate[0]).getTime();
+			let startH = utils.format(timearr1, 'hh');
+			let startm = utils.format(timearr1, 'mm');
+			let startS = utils.format(timearr1, 'ss');
+			this.startTime = new Date(startY, startM, startD, startH, startm,startS);
+			// this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
+			// console.log(this.startTime);
+		},
+		//结束时间为当天
+		getendTime(e){
+			// this.endTime = new Date(re).getTime()
+			// console.log(e);
+			let endTime = new Date(e).getTime();
+			let endY = utils.format(endTime, 'yyyy');
+			let endM = utils.format(endTime, 'MM')-1;
+			let endD = utils.format(endTime, 'dd');
+			let timearr2 = new Date(this.timelate[1]).getTime();
+			let endH = utils.format(timearr2, 'hh');
+			let endm = utils.format(timearr2, 'mm');
+			let endS = utils.format(timearr2, 'ss');
+			this.endTime = new Date(endY, endM, endD, endH, endm,endS);
+			// this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
+			// console.log(this.endTime);
 		},
 		//获取时间段内 订单列表
 		async getOrderListInDays() {
@@ -932,6 +1006,7 @@ export default {
 			this.conSize = orderMore.conSize?orderMore.conSize:'0';//交接班下标
 			this.conShifts = orderMore.conShifts?orderMore.conShifts:'0';//日别下标
 			this.timelate = orderMore.timelate?orderMore.timelate:this.timelate;//日别下标
+			console.log(this.timelate);
 			// this.timechange(this.timelate);
 		} else if (dataDetial) {
 			//品牌进入返回
