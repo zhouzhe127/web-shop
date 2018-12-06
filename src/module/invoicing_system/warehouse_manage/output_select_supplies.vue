@@ -10,11 +10,11 @@
 					货品信息
 					<span class="circle"></span> 共
 					<span class="select-num">{{sleList.length}}</span> 个条目
-					<a class="packUp" @click="show=!show">
+					<a class="packUp" @click="cutTable">
 						{{show?'收起':'展开'}}
 					</a>
 				</div>
-				<el-table :data="sleList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table :data="sleList" stripe border style="width:100%" :max-height="tableHeight" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column width="100" fixed="left" label="操作">
 						<template slot-scope="scope">
 							<el-button type="text" @click="delList(scope.row,scope.$index)" class="danger-color">删除</el-button>
@@ -155,15 +155,25 @@
 					{value:2,label:'普通物料'},
 				],
 				typeValue:-1,
+				tableHeight:700,
 			};
 		},
 		props: ['type', 'sleSupplies', 'wid', 'addBtn'],
 		methods: {
+			cutTable(){
+				this.show = !this.show;
+				this.tableHeight = this.show?700:120;
+			},
 			//获取最小单位名称
 			getMinUnit(item){
-				return item.unit.filter((res)=>{
+				let minUnit = item.unit.filter((res)=>{
 					return res.isMin==1;
-				})[0].name;
+				});
+				if(minUnit.length){
+					return minUnit[0].name;
+				}else{
+					return '';
+				}
 			},
 			async init() {
 				let data = await http.getMaterialList({

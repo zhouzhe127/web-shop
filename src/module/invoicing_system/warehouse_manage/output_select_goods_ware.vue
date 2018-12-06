@@ -10,11 +10,11 @@
 					货品信息
 					<span class="circle"></span> 共
 					<span class="select-num">{{sleList.length}}</span> 个条目
-					<a class="packUp" @click="show=!show">
+					<a class="packUp" @click="cutTable">
 						{{show?'收起':'展开'}}
 					</a>
 				</div>
-				<el-table :data="sleList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table :data="sleList" stripe border style="width:100%" :max-height="tableHeight" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column width="100" fixed="left" label="操作">
 						<template slot-scope="scope">
 							<el-button type="text" @click="delList(scope.row,scope.$index)" class="danger-color">删除</el-button>
@@ -143,7 +143,8 @@ export default {
 			num: 10,
 			veri: ['goodsName', 'barCode', 'secBarCode'], //用于验证筛选条件
 			sinSle: [],
-			show: true
+			show: true,
+			tableHeight:700,
 		};
 	},
 	/*
@@ -152,6 +153,10 @@ export default {
 	 */
 	props: ['sleCommodity', 'wid', 'addBtn', 'dstShopId', 'srcShopId', 'shopId'],
 	methods: {
+		cutTable(){
+			this.show = !this.show;
+			this.tableHeight = this.show?700:120;
+		},
 		async init() {
 			let data = await http.whGetInventoryGoodsList({
 				data: {
