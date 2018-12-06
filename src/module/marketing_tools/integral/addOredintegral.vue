@@ -490,10 +490,14 @@ export default {
 			this.showCoupon = true;
 		},
 		winEvent(obj) { //选择优惠券弹窗回掉
-			this.showCoupon = false;
 			if (obj.status == 'ok') {
+				if (obj.data.select.length > 5) {
+					this.errorShow('最多选择5种优惠券类型');
+					return false;
+				}
 				this.selectCoupon = obj.data.select;
 			}
+			this.showCoupon = false;
 		},
 		//修改商品
 		async ActivityGoodsedit(data) {
