@@ -29,8 +29,8 @@
 				<el-table-column label="成本价" min-width="150px" prop="cost"></el-table-column>
 				<el-table-column label="批盘消耗" min-width="150px">
 					<template slot-scope="scope">
-						<span class="arrow" :class="{'arrow-up':scope.row.balanceAmount>0,'arrow-down':scope.row.balanceAmount<0}"></span>
-						{{scope.row.balanceAmount}}
+						<span class="arrow" :class="{'arrow-up':scope.row.wastageChange>0,'arrow-down':scope.row.wastageChange<0}"></span>
+						{{scope.row.wastageChange}}
 					</template>
 				</el-table-column>
 			</el-table>
@@ -53,8 +53,8 @@
 				<el-table-column label="成本金额" min-width="150px" prop="cost"></el-table-column>
 				<el-table-column label="批盘消耗" min-width="150px">
 					<template slot-scope="scope">
-						<span class="arrow" :class="{'arrow-up':scope.row.balanceAmount>0,'arrow-down':scope.row.balanceAmount<0}"></span>
-						{{scope.row.balanceAmount}}
+						<span class="arrow" :class="{'arrow-up':scope.row.wastageChange>0,'arrow-down':scope.row.wastageChange<0}"></span>
+						{{scope.row.wastageChange}}
 					</template>
 				</el-table-column>
 			</el-table>

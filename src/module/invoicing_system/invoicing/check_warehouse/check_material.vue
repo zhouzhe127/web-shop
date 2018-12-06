@@ -405,7 +405,7 @@ export default{
 			let data = await http.GoodsinventoryBatchSetMaterialInventory({data:{
 				type:1,
 				data:this.checkList,
-				isUpdateZero:this.selObj.isUpdateZero,
+				isUpdateZero:Number(this.selObj.isUpdateZero),
 			}});
 			if(data.result){
 				this.$message({message: '物料盘库成功！',type: 'success'});

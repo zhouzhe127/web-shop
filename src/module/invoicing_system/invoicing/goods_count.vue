@@ -542,7 +542,7 @@ export default {
 				let retData = await this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
 					data:obj.new,
 					type:0,
-					isUpdateZero:this.stateStore.addGoods.isUpdateZero,
+					isUpdateZero:Number(this.stateStore.addGoods.isUpdateZero),
 				});
 				if(retData.result){
 					this.$message({message: '盘库成功',type: 'success'});

@@ -6,7 +6,7 @@
 		</div>
 		<div>
 			<div class="table-select">
-				<div class="select-title">
+				<div class="select-title select-ban">
 					货品信息
 					<span class="circle"></span> 共
 					<span class="select-num">{{sleList.length}}</span> 个条目

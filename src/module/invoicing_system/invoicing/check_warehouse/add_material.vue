@@ -300,7 +300,7 @@
 				let data = await http.GoodsinventoryBatchSetMaterialInventory({data:{
 					type:1,
 					data:'',
-					isUpdateZero:this.isUpdateZero,
+					isUpdateZero:Number(this.isUpdateZero),
 				}});
 				if(data.result){
 					this.$message({message: '物料盘库成功！',type: 'success'});
