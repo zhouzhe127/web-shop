@@ -58,7 +58,9 @@
 					</el-tooltip>
 				</div>
 			</div>
-			<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+			<el-table :data="list" stripe border style="width:100%" 
+				:header-cell-style="{'background-color':'#f5f7fa'}"
+				@row-click="rowClick">
 				<el-table-column width="180" fixed="left">
 					<template slot="header" slot-scope="scope">
 						<el-checkbox v-model="storeAll" @change="radioAll('store')">全选</el-checkbox>
@@ -226,6 +228,13 @@
 			}
 		},
 		methods: {
+			//表格单击事件-点击单行都可以选择checkbox
+			rowClick(res){
+				if(!this.storeAll){
+					res.selected = !res.selected;
+					this.listHandle(res);
+				}
+			},
 			indexMethod(index){
 				return this.pageShow*(this.page-1)+index+1;
 			},
@@ -261,13 +270,16 @@
 				this.$store.commit('setPageTools', arr);
 			},
 			veriConfirmClick(){
-				if(this.isUpdateZero){
-					this.$confirm('未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量', '提示', {
+				this.selList = this.selectItem.map((res)=>{
+					return res.item;
+				});
+				if(this.isUpdateZero && !this.selList.length && !this.storeAll){
+					this.$confirm('未选中的商品库存将消耗至0，减少量日志记录为批盘消耗量', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
-						this.confirmClick();
+						this.checkGoodsSubmit();
 					}).catch(()=>{
 						//
 					});
@@ -279,12 +291,8 @@
 				this.selList = this.selectItem.map((res)=>{
 					return res.item;
 				});
-				if(this.isUpdateZero && !this.selList.length && !this.storeAll){
-					this.checkMatSubmit();
-					return;
-				}
 				if(!this.isUpdateZero && !this.selList.length && !this.storeAll){
-					this.myAlert('请选择商品');
+					this.myAlert('请选择物料');
 					return;
 				}
 				let obj={
@@ -736,6 +744,8 @@
 				}
 				.check-div{
 					float: right;
+					height: 49px;
+					line-height: 49px;
 					.check-icon{
 						margin-left: 10px;
 						color: #666;
