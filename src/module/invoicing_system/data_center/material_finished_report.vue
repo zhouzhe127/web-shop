@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-23 18:16:01
+ * @Last Modified time: 2018-12-07 16:34:52
  */
 
 <template>
@@ -202,16 +202,17 @@ export default {
 				async ()=>{
 					let retObj = await this.getHttp('materialreportGetMaterialReportList',subObj);
 					this.pageObj.total = Number(retObj.count) | 0;
-					if(Array.isArray(retObj.data)){
-						this.tableData = this.mapListAttr(retObj.data);
+					let data = retObj.list;
+					if(Array.isArray(data)){
+						this.tableData = this.mapListAttr(data);
 						this.matchSelectList(this.tableData,this.selectList);
 						this.selectAll = this.isSelectCurrentPage(this.tableData);
 						if(this.isSelectCurrentPage(this.tableData,{val:this.statusMap.resolve,attr:'status'})){
 							this.clearTaskTimer('rList');
 						}
 					}
-					if(!retObj.data || (Array.isArray(retObj.data) && retObj.data.length == 0) ){
-							this.clearTaskTimer('rList');						
+					if(!data || (Array.isArray(data) && data.length == 0) ){
+						this.clearTaskTimer('rList');						
 					}
 				},
 				15000,
