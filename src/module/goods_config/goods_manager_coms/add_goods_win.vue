@@ -20,17 +20,17 @@
 								<el-form-item required label="类型" prop="type">
 									<template v-if="!editGoodsId">
 										<el-radio-group v-model="good.type" @change="toggleGoodType">
-											<el-radio-button label="0">普通菜品</el-radio-button>
-											<el-radio-button label="1">称重菜品</el-radio-button>
-											<el-radio-button label="2">自定义菜品</el-radio-button>
+											<el-radio-button label="0">普通商品</el-radio-button>
+											<el-radio-button label="1">称重商品</el-radio-button>
+											<el-radio-button label="2">自定义商品</el-radio-button>
 										</el-radio-group>
 									</template>
 									<template v-if="editGoodsId">
 										<el-radio-group v-model="good.type">
 											<el-radio-button :label="good.type">
-												<span v-if="good.type==0">普通菜品</span>
-												<span v-if="good.type==1">称重菜品</span>
-												<span v-if="good.type==2">自定义菜品</span>
+												<span v-if="good.type==0">普通商品</span>
+												<span v-if="good.type==1">称重商品</span>
+												<span v-if="good.type==2">自定义商品</span>
 											</el-radio-button>
 										</el-radio-group>
 									</template>
@@ -244,7 +244,7 @@
 								<el-switch v-model="good.isStock" active-value="1" inactive-value="0" @change="toggleIsStock" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 							</el-form-item>
 							<el-form-item label="时价菜" style="width:200px;">
-								<el-switch v-model="good.isSeasonal" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+								<el-switch v-model="good.isSeasonal" @change="changeSeasonal" active-value="1" inactive-value="0" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
 							</el-form-item>
 							<el-form-item label="参与会员 " style="min-width:200px;">
 								<el-switch v-model="isVipShow" @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
@@ -462,8 +462,22 @@ export default {
 				this.good.isVip = '0';
 			}
 		},
-		//特价开通关闭
+		//时价菜开启关闭 不能和特价兼容
+		changeSeasonal(res){
+			if(this.isSpecial && res == '1'){
+				this.alertWin('特价开启，不能开启时价菜!');
+				this.good.isSeasonal = '0';
+				return false;
+			}
+			this.good.isSeasonal = res;
+		},
+		//特价开通关闭 不能和时价菜兼容
 		openSpecialRadio(res) {
+			if(this.good.isSeasonal == '1' && res){
+				this.alertWin('时价菜开启，不能开启特价!');
+				this.isSpecial = false;
+				return false;
+			}
 			this.isSpecial = res;
 		},
 		//切换商品的类型

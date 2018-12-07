@@ -29,23 +29,13 @@
 					<el-select v-model="conType" @change="selectType" placeholder="请选择类型" style="width:150px;">
 						<el-option v-for="item in conTypeList" :key="item.type" :label="item.name" :value="item.type"></el-option>
 					</el-select>
-					<el-time-picker
-						v-model="timelate[0]"
-						v-if="conType == '2'"
-						@change="statimechange"
-						:picker-options="{
+					<el-time-picker style="width:130px;" v-model="timelate[0]" v-if="conType == '2'" @change="statimechange" :picker-options="{
 						selectableRange: '00:00:00 - 23:59:59'
-						}"
-						placeholder="任意时间点">
+						}" placeholder="任意时间点">
 					</el-time-picker>
-					<el-time-picker
-						v-if="conType == '2'"
-						v-model="timelate[1]"
-						@change="endtimechange"
-						:picker-options="{
+					<el-time-picker style="width:130px;" v-if="conType == '2'" v-model="timelate[1]" @change="endtimechange" :picker-options="{
 						selectableRange: '00:00:00 - 23:59:59'
-						}"
-						placeholder="任意时间点">
+						}" placeholder="任意时间点">
 					</el-time-picker>
 					<!-- <el-time-picker
 						v-if="conType == '2'"
@@ -282,7 +272,10 @@ export default {
 			isBrand: '', //品牌判断
 			startTime: new Date().setHours(0, 0, 0, 0), //日期组件的开始时间
 			endTime: new Date().setHours(23, 59, 59, 999), //日期组件的结束时间
-			timelate: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)],//时间组件
+			timelate: [
+				new Date().setHours(0, 0, 0, 0),
+				new Date().setHours(23, 59, 59, 999)
+			], //时间组件
 			allDayPage: {
 				page: 1,
 				num: 10,
@@ -304,17 +297,24 @@ export default {
 			// startObj: {},
 			// endObj: {},
 			paymentList: [{ num: 0, paymentName: '' }],
-			conType:'0',//按日别或交接班
-			conSize:'1',//营业时间和自然日
-			conShifts:'0',//班次
-			conTypeList:[{type:'0',name:'按日别'},{type:'1',name:'按交接班'},{type:'2',name:'时间段'}],
-			conTypeSize:[{type:'1',name:'按营业时间'},{type:'0',name:'按自然日'}],
-			shiftList:[],//交接班次列表
-			baseDetial:{},//店铺的基本信息
+			conType: '0', //按日别或交接班
+			conSize: '1', //营业时间和自然日
+			conShifts: '0', //班次
+			conTypeList: [
+				{ type: '0', name: '按日别' },
+				{ type: '1', name: '按交接班' },
+				{ type: '2', name: '时间段' }
+			],
+			conTypeSize: [
+				{ type: '1', name: '按营业时间' },
+				{ type: '0', name: '按自然日' }
+			],
+			shiftList: [], //交接班次列表
+			baseDetial: {} //店铺的基本信息
 		};
 	},
 	methods: {
-		renderHeader(h, { column}) {
+		renderHeader(h, { column }) {
 			let titleName = '';
 			let label = column.label;
 			let property = column.property;
@@ -388,44 +388,49 @@ export default {
 		},
 		//可以做统一，但为了后期增加需求，暂时分开
 		//按类型筛选
-		selectType(){
-			if(this.conType == '0'){
+		selectType() {
+			if (this.conType == '0') {
 				this.selectTypeTwo();
-			}else if(this.conType == '1'){
+			} else if (this.conType == '1') {
 				this.conShifts = '';
-			}else{
+			} else {
 				this.selectTypeTwo();
 			}
 		},
 		//开始时间
-		statimechange(e){
+		statimechange(e) {
 			let startTime = new Date(this.startTime).getTime();
 			let startY = utils.format(startTime, 'yyyy');
-			let startM = utils.format(startTime, 'MM')-1;
+			let startM = utils.format(startTime, 'MM') - 1;
 			let startD = utils.format(startTime, 'dd');
-			
+
 			let timearr1 = new Date(e).getTime();
 			let startH = utils.format(timearr1, 'hh');
 			let startm = utils.format(timearr1, 'mm');
 			let startS = utils.format(timearr1, 'ss');
-			this.startTime = new Date(startY, startM, startD, startH, startm,startS);
+			this.startTime = new Date(
+				startY,
+				startM,
+				startD,
+				startH,
+				startm,
+				startS
+			);
 			this.getOrderListInDays();
-
 		},
 		//开始时间
-		endtimechange(e){
+		endtimechange(e) {
 			let endTime = new Date(this.endTime).getTime();
 			let endY = utils.format(endTime, 'yyyy');
-			let endM = utils.format(endTime, 'MM')-1;
+			let endM = utils.format(endTime, 'MM') - 1;
 			let endD = utils.format(endTime, 'dd');
-			
+
 			let timearr2 = new Date(e).getTime();
 			let endH = utils.format(timearr2, 'hh');
 			let endm = utils.format(timearr2, 'mm');
 			let endS = utils.format(timearr2, 'ss');
-			this.endTime = new Date(endY, endM, endD, endH, endm,endS);
+			this.endTime = new Date(endY, endM, endD, endH, endm, endS);
 			this.getOrderListInDays();
-
 		},
 		//时间组件
 		// timechange(e){
@@ -451,11 +456,11 @@ export default {
 		// 	this.getOrderListInDays();
 		// },
 		//按日别筛选-自然日-营业时间
-		selectTypeTwo(){
+		selectTypeTwo() {
 			this.getOrderListInDays();
 		},
 		//按交接班筛选，
-		selectTypeBan(){
+		selectTypeBan() {
 			this.getOrderListInDays();
 		},
 		//获取交接班班次信息
@@ -481,21 +486,24 @@ export default {
 				arr = [
 					{
 						name: '返回',
-						type: 4,className: 'info',
+						type: 4,
+						className: 'info',
 						fn: () => {
 							this.returnBrand();
 						}
 					},
 					{
 						name: '打印',
-						type: 4,className: 'plain',
+						type: 4,
+						className: 'plain',
 						fn: () => {
 							this.printOrder();
 						}
 					},
 					{
 						name: '导出',
-						type: 4,className: 'primary',
+						type: 4,
+						className: 'primary',
 						fn: () => {
 							this.exportOrder();
 						}
@@ -627,7 +635,7 @@ export default {
 				conType: this.conType,
 				conSize: this.conSize,
 				conShifts: this.conShifts,
-				timelate:this.timelate,
+				timelate: this.timelate
 			};
 			storage.session('orderDetial', res);
 			this.$router.push({
@@ -636,34 +644,41 @@ export default {
 			});
 		},
 		//开始时间为当天的最后一秒，组件为开始
-		getstaTime(e){
+		getstaTime(e) {
 			// console.log(e);
 			let startTime = new Date(e).getTime();
 			let startY = utils.format(startTime, 'yyyy');
-			let startM = utils.format(startTime, 'MM')-1;
+			let startM = utils.format(startTime, 'MM') - 1;
 			let startD = utils.format(startTime, 'dd');
-			
+
 			let timearr1 = new Date(this.timelate[0]).getTime();
 			let startH = utils.format(timearr1, 'hh');
 			let startm = utils.format(timearr1, 'mm');
 			let startS = utils.format(timearr1, 'ss');
-			this.startTime = new Date(startY, startM, startD, startH, startm,startS);
+			this.startTime = new Date(
+				startY,
+				startM,
+				startD,
+				startH,
+				startm,
+				startS
+			);
 			// this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
 			// console.log(this.startTime);
 		},
 		//结束时间为当天
-		getendTime(e){
+		getendTime(e) {
 			// this.endTime = new Date(re).getTime()
 			// console.log(e);
 			let endTime = new Date(e).getTime();
 			let endY = utils.format(endTime, 'yyyy');
-			let endM = utils.format(endTime, 'MM')-1;
+			let endM = utils.format(endTime, 'MM') - 1;
 			let endD = utils.format(endTime, 'dd');
 			let timearr2 = new Date(this.timelate[1]).getTime();
 			let endH = utils.format(timearr2, 'hh');
 			let endm = utils.format(timearr2, 'mm');
 			let endS = utils.format(timearr2, 'ss');
-			this.endTime = new Date(endY, endM, endD, endH, endm,endS);
+			this.endTime = new Date(endY, endM, endD, endH, endm, endS);
 			// this.endTime = new Date(re).getTime()+ (24 * 60 * 60 * 1000 -1000);
 			// console.log(this.endTime);
 		},
@@ -694,11 +709,13 @@ export default {
 						: this.shopId,
 					startTime: parseInt(startTime / 1000),
 					endTime: parseInt(endTime / 1000),
-					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
+					isOpenTime: Number(
+						this.conType == '0' ? this.conSize : '0'
+					),
 					page: this.allDayPage.page,
 					num: this.allDayPage.num,
-					type:this.conType,//0代表按自然日，1代表按交接班
-					typeId:this.conType == '0'?this.conSize:this.conShifts//对应type的id，type为1的时候，该字段为班次id
+					type: this.conType, //0代表按自然日，1代表按交接班
+					typeId: this.conType == '0' ? this.conSize : this.conShifts //对应type的id，type为1的时候，该字段为班次id
 				}
 			});
 			let ArrNoZero = [];
@@ -801,7 +818,7 @@ export default {
 						conType: this.conType,
 						conSize: this.conSize,
 						conShifts: this.conShifts,
-						timelate:this.timelate,
+						timelate: this.timelate
 					};
 					storage.session('orderOne', detial);
 					this.$router.push({
@@ -846,8 +863,10 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
-					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
+					isOpenTime: Number(
+						this.conType == '0' ? this.conSize : '0'
+					),
+					type: this.conType //0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
 			this.$store.commit('setWin', {
@@ -912,8 +931,10 @@ export default {
 						: this.shopId,
 					startTime: parseInt(this.startTime / 1000),
 					endTime: parseInt(this.endTime / 1000),
-					isOpenTime: Number(this.conType == '0' ? this.conSize : '0'),
-					type:this.conType,//0代表按自然日，1代表按交接班,2代表按时间段
+					isOpenTime: Number(
+						this.conType == '0' ? this.conSize : '0'
+					),
+					type: this.conType //0代表按自然日，1代表按交接班,2代表按时间段
 				}
 			});
 		},
@@ -943,7 +964,7 @@ export default {
 				conType: this.conType,
 				conSize: this.conSize,
 				conShifts: this.conShifts,
-				timelate:this.timelate,
+				timelate: this.timelate
 			};
 			this.$route.query.arear = 1;
 			storage.session('orderOne', detial);
@@ -1002,10 +1023,12 @@ export default {
 			endTime = orderMore.endTime;
 			isOpenTime = orderMore.isOpenTime;
 			allDayPage = orderMore.allDayPage;
-			this.conType = orderMore.conType?orderMore.conType:'0';//交接班--日别
-			this.conSize = orderMore.conSize?orderMore.conSize:'0';//交接班下标
-			this.conShifts = orderMore.conShifts?orderMore.conShifts:'0';//日别下标
-			this.timelate = orderMore.timelate?orderMore.timelate:this.timelate;//日别下标
+			this.conType = orderMore.conType ? orderMore.conType : '0'; //交接班--日别
+			this.conSize = orderMore.conSize ? orderMore.conSize : '0'; //交接班下标
+			this.conShifts = orderMore.conShifts ? orderMore.conShifts : '0'; //日别下标
+			this.timelate = orderMore.timelate
+				? orderMore.timelate
+				: this.timelate; //日别下标
 			console.log(this.timelate);
 			// this.timechange(this.timelate);
 		} else if (dataDetial) {

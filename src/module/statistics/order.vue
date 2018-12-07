@@ -33,11 +33,11 @@
 					</el-select>
 					<el-time-picker v-model="timelate[0]" v-if="conType == '2'" @change="statimechange" :picker-options="{
 						selectableRange: '00:00:00 - 23:59:59'
-						}" placeholder="任意时间点">
+						}" placeholder="任意时间点" style="width:130px;">
 					</el-time-picker>
 					<el-time-picker v-if="conType == '2'" v-model="timelate[1]" @change="endtimechange" :picker-options="{
 						selectableRange: '00:00:00 - 23:59:59'
-						}" placeholder="任意时间点">
+						}" placeholder="任意时间点" style="width:130px;">
 					</el-time-picker>
 					<!-- <el-time-picker
 						v-if="conType == '2'"
