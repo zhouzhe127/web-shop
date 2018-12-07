@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="online-box clearfix">
-				<span class="online-sub fl required">支付金额</span>
+				<span class="online-sub fl required">赠送金额</span>
 				<div class="rightHalf">
 					<el-input placeholder="请输入金额" v-model="payment" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('payment')">
 						<template slot="suffix">元</template>

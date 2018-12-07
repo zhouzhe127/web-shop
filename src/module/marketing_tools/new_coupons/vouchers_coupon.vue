@@ -21,7 +21,6 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<!-- <input class="inp" v-model="couponName" maxlength="20" placeholder="请输入优惠券名称" /> -->
 					<el-input v-model="couponName" placeholder="请输入优惠券名称" maxlength="20"></el-input>
 				</div>
 			</div>
@@ -34,9 +33,6 @@
 				</div>
 				<div class="right">
 					<div class="fl">
-						<!-- <div class="buttons" @click="openShopWin">
-							<img src="../../../res/images/add.png" /> 选择门店
-						</div> -->
 						<el-button class="fl" type="primary" icon="el-icon-plus" @click="openShopWin">选择门店</el-button>
 						<div class="associated">
 							共关联{{getArrLength('selectShops')}}家门店
@@ -52,7 +48,6 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<!-- <input class="input denomination" maxlength="6" placeholder="请输入面额" v-model.trim.number="denomination" /> 元 -->
 					<el-input placeholder="请输入面额" v-model="denomination" maxlength="6">
 						<template slot="suffix">元</template>
 					</el-input>
@@ -66,7 +61,6 @@
 			</div>
 			<div class="right">
 				<div class="fl ">
-					<!-- <input maxlength="6" class="input denomination" placeholder="0" v-model.trim.number="netAmount" /> 元 -->
 					<el-input placeholder="请输入金额" v-model="netAmount" maxlength="6">
 						<template slot="suffix">元</template>
 					</el-input>
@@ -80,7 +74,6 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<!-- <input maxlength="6" class="input denomination" placeholder="0" v-model.trim.number="setAmount" /> 元 -->
 					<el-input placeholder="请输入金额" v-model="setAmount" maxlength="6">
 						<template slot="suffix">元</template>
 					</el-input>
@@ -93,9 +86,6 @@
 				</div>
 			</div>
 			<div class="right">
-				<!-- <section class="fl reduce" v-for="(item,index) in compulsoryCreditsList" :key="index">
-					<span :class="{'sign' : compulsoryCredits == index}" v-on:click="changecompulsoryCredits(item,index)">{{item.name}}</span>
-				</section> -->
 				<el-radio-group v-model="compulsoryName" class="fl">
 					<el-radio style="width:112px;" v-for="(item,index) in compulsoryCreditsList" :key="index" :label="item.name" border @change.native="changecompulsoryCredits(item)"></el-radio>
 				</el-radio-group>
@@ -107,9 +97,6 @@
 				</div>
 			</div>
 			<div class="right">
-				<!-- <section class="fl reduce" v-for="(item,index) in validList" :key="index">
-					<span :class="{'sign' : validType.index == index}" v-on:click="changevalidType(item,index)">{{item.name}}</span>
-				</section> -->
 				<el-radio-group v-model="validName" class="fl">
 					<el-radio v-for="(item,index) in validList" :key="index" :label="item.name" border @change.native="clicktheRadio(item)"></el-radio>
 				</el-radio-group>
@@ -120,23 +107,10 @@
 			<div class="right" v-if="validType.index == 0">
 				<div class="line" style="text-align:left;">
 					领券后
-					<!-- <input class="input couponinp" maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" /> --> <el-input maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input> 日内有效
+					<el-input maxlength="3" v-model="validType.time" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:60px;"></el-input> 日内有效
 				</div>
 			</div>
 			<div class="right" v-if="validType.index == 1" style="padding-left: 10px;">
-				<!-- <div class="cleander">
-					<div class="cleander_o" @click="showCalendar">
-						<div class="cleander_t">{{transformDate(validType.startTime)}}</div>
-						<div class="cleander_f">
-							至
-						</div>
-						<div class="cleander_s">{{transformDate(validType.endTime)}}</div>
-					</div>
-					<can-multi @closeCan="()=>{isShowCa=false}" v-if="isShowCa" :sideStart="validType.startTime" :sideEnd="validType.endTime" @castTime="getAddAlltime"></can-multi>
-				</div>
-				<div class="triangle" @click="showCalendar">
-					<img src="../../../res/icon/q2x.png" />
-				</div> -->
 				<el-date-picker class="fl" v-model="validType.valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false" :editable="false">
 				</el-date-picker>
 				<div class="foday">
@@ -150,7 +124,6 @@
 				</div>
 			</div>
 			<div class="right" style="text-align:left;padding-left:10px;">
-				<!-- <select-btn :name='validTime' :sorts="validTimeList.map(v=>v.name)" :width="190" @selOn="selexpirationTime"></select-btn> -->
 				<el-select v-model="validTime" @change="selData" style="color:#c0c4cc">
 					<el-option v-for="item in validTimeList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
@@ -172,9 +145,6 @@
 				</div>
 			</div>
 			<div class="right">
-				<!-- <section class="fl reduce" v-for="(item,index) in useThresholdList" :key="index">
-					<span :class="{'sign' : useThresholdId == index}" v-on:click="changeuseThreshold(item,index)">{{item.name}}</span>
-				</section> -->
 				<el-radio-group v-model="useThresholdName" class="fl">
 					<el-radio v-for="(item,index) in useThresholdList" :key="index" :label="item.name" border @change.native="changeuseThreshold(item)"></el-radio>
 				</el-radio-group>
@@ -185,10 +155,6 @@
 				</div>
 				<div class="right">
 					<div class="fl">
-						<!-- <input class="input reduceamount" placeholder="请输入金额" v-model.trim.number="threshold" maxlength="6" />
-						<div class="yuan">
-							元
-						</div> -->
 						<el-input style="width:194px;" placeholder="请输入金额" v-model="threshold" maxlength="6">
 							<template slot="suffix">元</template>
 						</el-input>
@@ -203,10 +169,6 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<!-- <input class="input reduceamount" placeholder="请输入最大使用上限" v-model.trim.number="maxCeiling" maxlength="6" />
-					<div class="yuan">
-						张
-					</div> -->
 					<el-input style="width:194px;" placeholder="请输入最大使用上限" v-model="maxCeiling" maxlength="3" onkeyup="value=value.replace(/[^\d]/g,'')">
 						<template slot="suffix">张</template>
 					</el-input>
@@ -219,31 +181,21 @@
 				</div>
 			</div>
 			<div class="right" style="text-align:left;padding-left:10px;">
-				<!-- <select-btn :name='isSharing' :sorts="isSharingList.map(v=>v.name)" :width="190" @selOn="getSharing"></select-btn> -->
 				<el-select v-model="isSharing" @change="getSharing" style="color:#c0c4cc">
 					<el-option v-for="item in isSharingList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 				<div class="and" v-if="isSharingId == 1">
 					<span> 且</span>
-					<!-- <select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn> -->
 					<el-select v-model="concessionSharing" @change="getconcession" style="color:#c0c4cc">
 						<el-option v-for="item in concessionSharingList" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
 					</el-select>
 				</div>
-				<!-- <div class="icon" @click="showText()">
-					<div class="detDiv" v-if="hiddenText">
-						<i class="detI triright"></i>
-						<h3 class="detH3">
-                            “与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用 “不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受 “不可与其他优惠共享”则也包含“不与会员卡优惠共用”。
-                        </h3>
-					</div>
-				</div> -->
 				<el-tooltip placement="right">
 					<div slot="content">与会员卡优惠共用”代表该券在买单时可以叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣共同使用
-						<br/>不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受
-						<br/>“不可与其他优惠共享”则也包含“不与会员卡优惠共用”</div>
+						<br />不与会员卡优惠共用”则代表该券在买单时不可叠加会员卡折扣/会员价，积分抵扣，满减活动，店内折扣。但积分赠送依旧享受
+						<br />“不可与其他优惠共享”则也包含“不与会员卡优惠共用”</div>
 					<i class="el-icon-question" style="font-size:24px;"></i>
 				</el-tooltip>
 			</div>
@@ -262,7 +214,6 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<!-- <input class="input" placeholder="20字" maxlength="20" v-model="annotation" /> -->
 					<el-input style="width:300px;" v-model="annotation" placeholder="20字" maxlength="20"></el-input>
 				</div>
 			</div>
@@ -274,30 +225,34 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<!-- <textarea class="describe" maxlength="150" v-model="useKnow"></textarea> -->
 					<el-input type="textarea" :autosize="{ minRows: 8, maxRows: 8}" placeholder="请输入内容" v-model="useKnow" maxlength="150">
 					</el-input>
 					<div class="fl describetip">
 						<div class="fl tips">
 							<img src="../../../res/icon/alert.jpg" />
 						</div>
-						<div class="fl">
-							限制150字
+							<div class="fl">
+								限制150字
+							</div>
 						</div>
 					</div>
 				</div>
+				<!-- 保存 -->
+				<div class="left ">
+					<div class="text" style="margin-right: 10px;">
+					</div>
+				</div>
+				<div class="right">
+					<div class="fl">
+						<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+					</div>
+				</div>
+				<!-- 选择门店的弹窗 -->
+				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
 			</div>
-			<!-- 保存 -->
-			<div class="save-coupon">
-				<!-- <a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="getSendInfo">保存</a> -->
-				<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
-			</div>
-			<!-- 选择门店的弹窗 -->
-			<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
-		</div>
 	</section>
 </template>
-<script>
+<script type="text/javascript">
 import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
@@ -314,25 +269,25 @@ export default {
 			isShowCa: false, // 是否展示时间选择组件
 			selectShops: [], //选中的商铺
 			compulsoryCreditsList: [{
-				'compulsoryCredits': '0',
-				'name': '否'
-			},
-			{
-				'compulsoryCredits': '1',
-				'name': '是'
-			}
+					'compulsoryCredits': '0',
+					'name': '否'
+				},
+				{
+					'compulsoryCredits': '1',
+					'name': '是'
+				}
 			],
 			compulsoryName: '否',
 			compulsoryCredits: '0', //是否强制减免
 			validName: '相对时间',
 			validList: [{
-				'validType': '0',
-				'name': '相对时间'
-			},
-			{
-				'validType': '1',
-				'name': '指定时间'
-			}
+					'validType': '0',
+					'name': '相对时间'
+				},
+				{
+					'validType': '1',
+					'name': '指定时间'
+				}
 			],
 			validType: {
 				'index': 0, //0指定时间 1相对时间
@@ -342,32 +297,32 @@ export default {
 				'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 			}, //券有效期 
 			validTimeList: [{ //过期时间
-				name: '领取后即刻生效',
-				id: 0
-			}, {
-				name: '领取1小时后生效',
-				id: 1
-			},
-			{
-				name: '领取2小时后生效',
-				id: 2
-			},
-			{
-				name: '领取3小时后生效',
-				id: 3
-			},
-			{
-				name: '领取6小时后生效',
-				id: 6
-			},
-			{
-				name: '领取12小时后生效',
-				id: 12
-			},
-			{
-				name: '领取24小时后生效',
-				id: 24
-			}
+					name: '领取后即刻生效',
+					id: 0
+				}, {
+					name: '领取1小时后生效',
+					id: 1
+				},
+				{
+					name: '领取2小时后生效',
+					id: 2
+				},
+				{
+					name: '领取3小时后生效',
+					id: 3
+				},
+				{
+					name: '领取6小时后生效',
+					id: 6
+				},
+				{
+					name: '领取12小时后生效',
+					id: 12
+				},
+				{
+					name: '领取24小时后生效',
+					id: 24
+				}
 			],
 			validTimeId: '0', //领取后选定时间内生效
 			validTime: '领取后即刻生效', //状态 
@@ -379,13 +334,13 @@ export default {
 				'show': false
 			}, //使用时段 
 			useThresholdList: [{ //指定门槛
-				name: '不设限制',
-				id: 0
-			},
-			{
-				name: '指定门槛',
-				id: 1
-			},
+					name: '不设限制',
+					id: 0
+				},
+				{
+					name: '指定门槛',
+					id: 1
+				},
 			],
 			useThresholdName: '不设限制',
 			useThresholdId: '0',
@@ -401,24 +356,24 @@ export default {
 			isSharingId: 0,
 			isSharing: '不与其它优惠共享',
 			isSharingList: [{ //是否优惠共享
-				name: '不与其它优惠共享',
-				id: 0
-			},
-			{
-				name: '可与其他优惠共享',
-				id: 1
-			}
+					name: '不与其它优惠共享',
+					id: 0
+				},
+				{
+					name: '可与其他优惠共享',
+					id: 1
+				}
 			],
 			concessionSharingId: 0,
 			concessionSharing: '不与会员卡优惠共用',
 			concessionSharingList: [{ //优惠共享
-				name: '不与会员卡优惠共用',
-				id: 0
-			},
-			{
-				name: '可与会员卡优惠共用',
-				id: 1
-			}
+					name: '不与会员卡优惠共用',
+					id: 0
+				},
+				{
+					name: '可与会员卡优惠共用',
+					id: 1
+				}
 			],
 			sharingStatus: '',
 		};
@@ -437,7 +392,7 @@ export default {
 				this.selectShops = couponDetail.shopIds.split(',');
 			} //选中的店铺
 			this.compulsoryCredits = couponDetail.isDiscount; //是否强制减免
-			if(this.compulsoryCredits == '1'){
+			if (this.compulsoryCredits == '1') {
 				this.compulsoryName = '是';
 			}
 			this.denomination = couponDetail.param; //面额
@@ -499,15 +454,15 @@ export default {
 	},
 	components: {
 		'can-multi': () =>
-			import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+			import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
 		'coupon-shop-win': () =>
-			import ( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
+			import( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
 		selectBtn: () =>
-			import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+			import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 		'use-time': () =>
-			import ( /* webpackChunkName:'use_time' */ './use_time'),
+			import( /* webpackChunkName:'use_time' */ './use_time'),
 		goodListWin: () =>
-			import ( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
+			import( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
 	},
 	methods: {
 		showText() {
@@ -629,11 +584,11 @@ export default {
 			let reg = /^[0-9]*$/;
 			let reg2 = /^\d+(\.\d+)?$/;
 			if (!global.checkData({
-				couponName: {
-					cond: `$$.trim() !== '' && $$.length<=20`,
-					pro: '优惠券名称不能为空且不能超过20个字'
-				},
-			}, this)) {
+					couponName: {
+						cond: `$$.trim() !== '' && $$.length<=20`,
+						pro: '优惠券名称不能为空且不能超过20个字'
+					},
+				}, this)) {
 				return false;
 			}
 			if (this.ischain == '3') {
@@ -711,7 +666,7 @@ export default {
 				if (this.validType.time == 0) {
 					this.valiData('券有效期不能为0');
 					return false;
-				}						
+				}
 			}
 			let arr = [];
 			let alertText = '';
@@ -972,7 +927,7 @@ export default {
 
 #breakCoupon .left,
 #breakCoupon .right {
-	height: 40px;
+	min-height: 40px;
 	float: left;
 	margin-bottom: 15px;
 }

@@ -1,33 +1,11 @@
-<!--活动统计-->
+<!--卖手消费统计查看单店详情-->
 <template>
 	<div id="sell_hand">
 		<template v-if="type == 'index'">
 			<div class="search_box">
-				<!-- 时间控件 -->
-				<div class="fl box_child clearfix">
-					<span class="fl">消费时间</span>
-					<el-date-picker class="fl" v-model="valueTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" :clearable="false" @change="chooseTime">
-					</el-date-picker>
-				</div>
-				<!-- 按天/按详情 -->
-				<div class="fl box_child clearfix">
-					<el-select class="fl" v-model="viewName" placeholder="请选择" @change="selData" style="color:#c0c4cc">
-						<el-option v-for="item in viewList" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</div>
-				<!-- 筛选 -->
-				<div class="fr box_child clearfix">
-					<el-button type="primary" @click="searchDate" style="width:100px;">筛选</el-button>
-					<el-button type="info" @click="resetFun" style="width:100px;">重置</el-button>
-					<el-button type="warning" @click="openModify">查看修改记录</el-button>
-				</div>
+				<span style="font-size: 16px;">选择店铺：{{oneShopName}}  |  选择时间：{{formatTime(valueTime[0])}} - {{formatTime(valueTime[1])}}</span>
 			</div>
 			<div class="search_box">
-				<div class="fl box_child clearfix">
-					<span class="fl">选择门店</span>
-					<elShopList @chooseShop="getSelectShopList" :shopIds="transmitId"></elShopList>
-				</div>
 				<div class="fl box_child clearfix">
 					<span class="fl">经手人</span>
 					<el-input class="fl" v-model="handlers" placeholder="请输入内容" style="width:179px;"></el-input>
@@ -36,9 +14,11 @@
 					<span class="fl">核准人</span>
 					<el-input class="fl" v-model="approvedPerson" placeholder="请输入内容" style="width:179px;"></el-input>
 				</div>
-			</div>
-			<div class="search_box">
-				<span style="font-size: 16px;line-height:1.5;">选择门店:{{selectName}}</span>
+				<!-- 筛选 -->
+				<div class="fl box_child clearfix">
+					<el-button type="primary" @click="searchDate" style="width:100px;">筛选</el-button>
+					<el-button type="info" @click="resetFun" style="width:100px;">重置</el-button>
+				</div>
 			</div>
 			<div class="list_box">
 				<el-table :data="statistics" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
@@ -66,25 +46,10 @@
 					<div class="list_title_r fr">
 					</div>
 				</div>
-				<el-table v-show="childType == 'day'" :data="proList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
-					<el-table-column fixed prop="fromId" label="店铺名称" align="center">
+				<el-table :data="proList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
+					<el-table-column fixed prop="fromId" label="店铺名称" align="center" width="150">
 						<template slot-scope="scope">
-							<el-button size="medium" type="text" @click="openOneshop(scope.row.fromId)">{{getShopName(scope.row.fromId)}}</el-button>
-						</template>
-					</el-table-column>
-					<el-table-column label="订单数量" prop="orderCount" align="center">
-					</el-table-column>
-					<el-table-column prop="cash" label="总消费金额" align="center">
-					</el-table-column>
-					<el-table-column prop="point" label="总获得积分" align="center">
-					</el-table-column>
-					<el-table-column prop="coins" label="总获得金币" align="center">
-					</el-table-column>
-				</el-table>
-				<el-table v-show="childType == 'detail'" :data="proList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
-					<el-table-column fixed prop="fromId" label="店铺名称" align="center">
-						<template slot-scope="scope">
-							<span>{{getShopName(scope.row.fromId)}}</span>
+							<el-button size="medium" type="text">{{oneShopName}}</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="用户昵称" prop="day" align="center">
@@ -113,7 +78,7 @@
 							<span>{{getPersonName(scope.row.updateUid)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="coins" label="消费税时间" align="center">
+					<el-table-column prop="coins" label="消费时间" align="center">
 					</el-table-column>
 					<el-table-column prop="coins" label="操作" align="center" width="200">
 						<template slot-scope="scope">
@@ -138,8 +103,6 @@
 			<!-- 退回弹窗 -->
 			<back-win v-if="showBackWin" @getBackAppliedWin='getBackResult' :sellHandId="sellHandId"></back-win>
 		</template>
-		<!-- 具体的某一家店的数据 -->
-		<sell-hand-oneshop v-if="type == 'oneshop'" :oneShopId="oneShopId" @throwWinResult="getDetailShow" :valueTime="valueTime" :oneShopName="oneShopName"></sell-hand-oneshop>
 		<!-- 调整记录 -->
 		<modify-record v-if="type == 'modify'" @getModify='getModifyResult' :id="modifyId"></modify-record>
 	</div>
@@ -158,44 +121,28 @@ export default {
 			num: 10,
 			count: 0, //条数
 			allTotal: 1,
-			valueTime: [new Date().setDate(1) -
-				(new Date().getTime() - new Date().setHours(0, 0, 0, 0)), new Date().setHours(23, 59, 59, 999)
-			], //时间控件
-			viewList: [{
-				name: '按天数',
-				id: 0
-			}, {
-				name: '按详情',
-				id: 1
-			}],
-			viewName: '按天数',
-			viewId: 0,
-			transmitId: [], //传递给选择店铺页面的id 
-			shopIds: null, //选择查看的店铺的id
-			selectName: null,
+			ischain: '',
 			handlers: '', //经手人
 			approvedPerson: '', //核准人
 			proList: [], //卖手消费统计数据
 			statistics: [], //总数据
-			returnInt: 1, //相差天数
-			type: 'index',
-			oneShopId: '', //单店的shopId
-			oneShopName: '', //单店的店铺名称
-			childType: 'day',
-			userData: '',
-			// staffList: Object,
+			userData: Object, //用户信息
 			showWin: false,
 			beforeAmount: '', //原来的金额价格
 			sellHandId: '',
 			showBackWin: false,
-			modifyId: '' //修改记录的某一条id
+			type: 'index',
+			modifyId: ''
 		};
+	},
+	props: {
+		oneShopId: String, //店铺名id
+		valueTime: Array, //时间
+		oneShopName: String, //店铺的名称
 	},
 	components: {
 		elShopList: () =>
 			import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
-		'sell-hand-oneshop': () =>
-			import( /*webpackChunkName: "sell_hand_statisticsOneshop"*/ './sell_hand_statisticsOneshop'),
 		'sell-hand-modify': () =>
 			import( /*webpackChunkName: "sell_hand_modifywin"*/ './sell_hand_modifywin'),
 		'back-win': () =>
@@ -203,29 +150,20 @@ export default {
 		'modify-record': () =>
 			import( /*webpackChunkName: "modify_the_record"*/ './modify_the_record')
 	},
-	// created() {
-	// 	this.ischain = storage.session('userShop').currentShop.ischain;
-	// },
 	mounted() {
-		this.getshopIdorshopName();
-		this.getAssistantstaff(); //获取工作人员
-		this.getConsumeStatistics(); //获取数据
+		this.setTitle();
+		this.getAssistantstaff();
+		this.getConsumeStatistics();
 	},
 	methods: {
-		chooseTime: function(time) { //获取时间
-			this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
-		},
-		selData: function(value) { //选择按天还是按详情
-			this.viewId = value;
-		},
 		// 获取数据
 		async getConsumeStatistics() {
 			let res = await http.getConsumeStatistics({
 				data: {
 					'startTime': parseInt(this.valueTime[0] / 1000), //开始时间
 					'endTime': parseInt(this.valueTime[1] / 1000), //结束时间
-					'shopIds': this.shopIds, //选择门店
-					'type': this.viewId, //查看类型
+					'shopIds': this.oneShopId, //选择门店
+					'type': 1, //查看类型
 					'page': this.page,
 					'num': this.num,
 					'brokerage': this.handlers, //经手人
@@ -237,11 +175,8 @@ export default {
 					this.count = res.count;
 					this.allTotal = res.total;
 				}
-				this.proList = [];
 				this.proList = res.list; //底部数据
-				if (res.userData) {
-					this.userData = res.userData;
-				}
+				this.userData = res.userData;
 				if (res.Statistics != '') {
 					this.statistics = [];
 					let statistics = res.Statistics;
@@ -251,28 +186,8 @@ export default {
 				}
 			}
 		},
-		getSelectShopList: function(res) {
-			this.transmitId = res;
-			let selectNameStr = '';
-			for (let i = 0; i < this.postSelectShopList.length; i++) {
-				if (this.transmitId.includes(this.postSelectShopList[i].id)) {
-					this.postSelectShopList[i].selected = true;
-					selectNameStr = selectNameStr + this.postSelectShopList[i].name + ',';
-				} else {
-					this.postSelectShopList[i].selected = false;
-				}
-			}
-			this.shopIds = res.join(',');
-			this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
-		},
 		searchDate: function() { //搜索查询数据
 			this.page = 1;
-			if (this.viewId == '1') {
-				this.childType = 'detail';
-			} else {
-				this.childType = 'day';
-			}
-			//console.log(this.childType)
 			this.getConsumeStatistics();
 		},
 		resetFun: function() { //重置方法
@@ -288,22 +203,32 @@ export default {
 		},
 		timeChange: function() {
 			//相差天数计算
-			this.returnInt = Math.ceil(
+			let returnInt = Math.ceil(
 				(new Date(this.valueTime[1]).getTime() -
 					new Date(this.valueTime[0]).getTime()) /
 				(1000 * 60 * 60 * 24)
 			);
-			return this.returnInt;
+			return returnInt;
 		},
-		getDetailShow: function(res) { //单店查看某时间段的详情回调
-			this.type = res;
+		setTitle: function() {
+			this.$store.commit('setPageTools', [{
+				name: '返回',
+				className: 'el-btn-blue',
+				fn: () => {
+					this.returnStore();
+				}
+			}]);
 		},
-		openOneshop: function(shopId) { //查看某天的数据
-			this.oneShopId = shopId;
-			this.oneShopName = this.getShopName(shopId);
-			this.type = 'oneshop';
+		returnStore: function() {
+			this.$store.commit('setPageTools', {});
+			this.$emit('throwDetailResult', 'allDate');
+		},
+		searchDate: function() { //搜索查询数据
+			this.page = 1;
+			this.getConsumeStatistics();
 		},
 		getUserInfo: function(id, type) { //获取用户信息
+			//console.log(this.userData)
 			let info = '--';
 			for (let key in this.userData) {
 				if (id == key) {
@@ -317,22 +242,6 @@ export default {
 			}
 			return info;
 		},
-		getPersonName: function(id) {
-			let name = '--';
-			for (let key in this.staffList) {
-				if (id == key) {
-					name = this.staffList[key].staffName;
-					break;
-				}
-			}
-			return name;
-		},
-		// async getAssistantstaff() { //获取工作人员
-		// 	let res = await http.getAssistantstaff();
-		// 	if (res) {
-		// 		this.staffList = res;
-		// 	}
-		// },
 		getResult: function(res) { //修改弹窗回调
 			if (res == 'ok') {
 				this.getConsumeStatistics();
@@ -347,7 +256,7 @@ export default {
 		},
 		getBackResult: function(res) { //退回的弹窗
 			if (res == 'ok') {
-				this.getConsumeStatistics();
+				this.consumeVerifyModify();
 			}
 			this.showBackWin = false;
 		},
@@ -356,12 +265,11 @@ export default {
 			this.showBackWin = true;
 		},
 		getModifyResult: function(res) { //从调整记录回来
+			this.setTitle();
 			this.type = res;
 		},
-		openModify: function(item) { //打开
-			if (item) {
-				this.modifyId = item.id;
-			}
+		openModify: function(item) { //打开调整记录
+			this.modifyId = item.id;
 			this.type = 'modify';
 		}
 	}
@@ -377,6 +285,7 @@ export default {
 	width: 100%;
 	height: 40px;
 	margin-bottom: 20px;
+	line-height: 40px;
 }
 
 #sell_hand .search_box .box_child {

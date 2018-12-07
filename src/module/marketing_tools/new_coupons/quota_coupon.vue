@@ -62,7 +62,7 @@
 			</div>
 			<div class="right">
 				<div class="fl">
-					<el-input class="fl" placeholder="请输入定额券金额" v-model="param" maxlength="6" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;">
+					<el-input class="fl" placeholder="请输入定额券金额" v-model="param" maxlength="7" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width:179px;">
 						<template slot="suffix">元</template>
 					</el-input>
 					<div class="fl handle-tips">
@@ -214,8 +214,14 @@
 					</div>
 				</div>
 				<!-- 保存 -->
-				<div class="save-coupon">
-					<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+				<div class="left ">
+					<div class="text" style="margin-right: 10px;">
+					</div>
+				</div>
+				<div class="right">
+					<div class="fl">
+						<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+					</div>
 				</div>
 				<!-- 选择门店的弹窗 -->
 				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
@@ -577,6 +583,7 @@ export default {
 		checkData() {
 			let reg = /^[0-9]*$/;
 			let reg2 = /^\d+(\.\d+)?$/;
+			let reg3 = /^[0-9]+.?[0-9]*$/;
 			if (!global.checkData({
 					couponName: {
 						cond: `$$.trim() !== '' && $$.length<=20`,
@@ -597,6 +604,10 @@ export default {
 			}
 			if (this.param == '') {
 				this.valiData('请填写定额券金额');
+				return false;
+			}
+			if (this.param < 1 || this.param > 10000 || !reg3.test(this.param)) {
+				this.valiData('定额券金额取值区间1-10000');
 				return false;
 			}
 			//领券多长时间有效的限制
@@ -878,7 +889,7 @@ export default {
 
 #breakCoupon .left,
 #breakCoupon .right {
-	height: 40px;
+	min-height: 40px;
 	float: left;
 	margin-bottom: 15px;
 }

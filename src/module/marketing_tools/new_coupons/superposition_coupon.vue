@@ -235,8 +235,14 @@
 					</div>
 				</div>
 				<!-- 保存 -->
-				<div class="save-coupon">
-					<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+				<div class="left ">
+					<div class="text" style="margin-right: 10px;">
+					</div>
+				</div>
+				<div class="right">
+					<div class="fl">
+						<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+					</div>
 				</div>
 				<!-- 选择门店的弹窗 -->
 				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
@@ -437,11 +443,15 @@ export default {
 			if (this.secondId == 1) {
 				this.discount = couponDetail.param;
 			} else {
-				this.discount = couponDetail.param;
+				this.disamount = couponDetail.param;
 			}
 			//第二件商品套餐选中
-			this.selectGoodsSec = couponDetail.giveGids.split(',');
-			this.selectPackagesSec = couponDetail.givePids.split(',');
+			if (couponDetail.giveGids) {
+				this.selectGoodsSec = couponDetail.giveGids.split(',');
+			}
+			if (couponDetail.givePids) {
+				this.selectPackagesSec = couponDetail.givePids.split(',');
+			}
 			this.compulsoryCredits = couponDetail.tastePrice; //是否包含口味
 			if (this.compulsoryCredits == '1') {
 				this.compulsoryName = '是';
@@ -989,7 +999,7 @@ export default {
 
 #breakCoupon .left,
 #breakCoupon .right {
-	height: 40px;
+	min-height: 40px;
 	float: left;
 	margin-bottom: 15px;
 }
