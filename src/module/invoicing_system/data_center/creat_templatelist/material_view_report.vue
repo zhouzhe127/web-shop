@@ -42,13 +42,13 @@
 	</div>
 </template>
 <script>
-	// import http from 'src/manager/http';
+	import http from 'src/manager/http';
 	// import exportFile from 'src/verdor/exportFile';
 	export default {
 		data() {
 			return {
 				reportName: '--',
-				reportId: '', //报表id
+				reportId: 3, //报表id
 				condition: {},
 				tableData: [],
 				page: 1,
@@ -61,24 +61,24 @@
 				if (sym == 'reset') {
 					this.initCondition();
 				}
-				// this.getDetail();
+				this.getDetail();
 			},
 			initCondition() {
 				this.condition = {
-					name: '',
-					code: ''
+					name: 1,
+					code: '000005'
 				};
 			},
 			//获取报表详情
 			async getDetail() {
-				let condition = this.condition;
+				// let condition = this.condition;
 				let subObj = {
-					id: this.reportId,
-					name: condition.name,
-					barCode: condition.code
+					reportId: this.reportId,
+					page:1,
+					size:10
 				};
-				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
-
+				let res = await this.getHttp('materialreportGetScopeList', subObj);
+				console.log(res);
 				this.tableData = res;
 
 			},
@@ -88,12 +88,19 @@
 			sizeChange(num) {
 				this.num = num;
 			},
+			async getHttp(url, obj = {}, err = false) {
+				let res = await http[url]({
+					data: obj
+				}, err);
+				return res;
+			},
 		},
 		mounted() {
 			let query = this.$route.query;
 			if (Number(query.id)) {
 				this.reportId = Number(query.id);
 			}
+			this.filterReset();
 		},
 		// components: {},
 		// computed: {},

@@ -176,7 +176,6 @@
 						return false;
 					}
 					let backData = await this.sendData();
-					console.log(backData);
 					this.$emit('change', backData);
 				} else {
 					this.$emit('change', false);
@@ -349,7 +348,7 @@
 		async mounted() {
 			await this.init();
 			this.recursiveGetMaterialList();
-			if (this.editData.id) {
+			if (this.editData&&this.editData.id) {
 				this.setEdit(this.editData);
 			}
 

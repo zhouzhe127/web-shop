@@ -355,14 +355,14 @@
 				let arr = [];
 				for (let item of this.tableData) {
 					let obj = {};
-					if (item.pScope.length > 0) {
-						obj.type = 3; //物料范围
-						obj.mid = item.pScope;
-					} else {
-						obj.type = 4; //统计范围
-						obj.id = item.pCollection.id;
-						// obj.name = item.pCollection.name;
-					}
+					// if (item.pScope.length > 0) {
+					// 	obj.type = 3; //物料范围
+					// 	obj.mid = item.pScope;
+					// } else {
+					obj.type = item.pCollection.type; //统计范围
+					obj.id = item.pCollection.id;
+					// obj.name = item.pCollection.name;
+					// }
 					arr.push(obj);
 				}
 				return arr;
@@ -529,14 +529,46 @@
 				if (data) {
 					this.pCollection = '';
 					this.pScope = [];
-					if (data.pScope.length > 0) {
-						this.pShowMaterial = false;
-						data.strTitle = `物料范围（${data.pScope.length}）`;
-					} else {
-						data.strTitle = `${data.pCollection.name}（${data.pCollection.mid.length}种，单位：${data.pCollection.unit.name}）`;
-					}
+					// console.log(data);
+					// if (data.pScope.length > 0) {
+					// 	this.pShowMaterial = false;
+					// 	data.strTitle = `物料范围（${data.pScope.length}）`;
+					// } else {
+					data.strTitle = `${data.pCollection.name}（${this.getExplain(data.pCollection)}种）`;
 					this.sortList(this.tableData, data, 'pSortObj');
 				}
+			},
+			getExplain(data){//生成说明
+				let str = '';
+				let text = '';
+				if(data.type!=6)str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`;
+				switch(data.type){
+					// case 3:
+					// 	str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`
+					// 	break;
+					case 4:
+						text = `物料单位：${data.unit.name}；`;
+						str = text+str;
+						break;
+					case 5:
+						text = `供应商数量：${data.supplier.split(',').length}；`;
+						str = text+str;
+						break;
+					case 6:
+						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplier.split(',').length}`;
+						break;		
+				}
+				return str;
+			},
+			getMateralName(id){
+				let sele = '';
+				for(let item of this.materialList){
+					if(id == item.id){
+						sele = item;
+						break;
+					}
+				}
+				return sele;
 			},
 			async getneedData() {
 				let res = await http.All([{

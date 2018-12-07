@@ -193,12 +193,14 @@
 				});
 				this.tableYData = data.statisticScope;
 				this.tableYData.map(v => {
-					if (v.type == 4) {
-						v.strName =
-							`${v.setInfo.name}(物料：${v.setInfo.mid.length}，单位：${v.setInfo.unit.name})`;
-					} else {
-						v.strName = `物料范围(${v.mid.length})`;
-					}
+					// v=this.getGatherList(v.id);
+					// v.strName =`${v.name}(${this.getExplain(v)})`;
+					// if (v.type == 4) {
+					// 	v.strName =
+					// 		`${v.setInfo.name}(物料：${v.setInfo.mid.length}，单位：${v.setInfo.unit.name})`;
+					// } else {
+					v.strName = `${v.setInfo.name}(${this.getExplain(v.setInfo)})`;
+					// }
 				});
 			},
 			async getneedData() {
@@ -208,9 +210,33 @@
 					httpId: 'warehouseList'
 				}, {
 					httpId: 'materialreportGetStatisticItemFormulaList'
-				}]); //获取统计项数据
+				},]); //获取统计项数据
 				this.reportData = [...res[0].data, ...res[2].data.list];
 				this.wareList = res[1].data;
+				console.log(res);
+			},
+			//获取所有物料
+			async recursiveGetMaterialList() {
+				let subObj = {
+					name: '',
+					cid: '',
+					type: -1,
+					num: 50
+				};
+
+				let page = 1;
+				let arr = [];
+
+				for (let i = 0; i < page; i += 1) {
+					subObj.page = i + 1;
+					let retObj = await http.getMaterialList({
+						data: subObj
+					});
+					page = Number(retObj.total);
+					arr.push(...retObj.list);
+				}
+				this.materialList = arr;
+				// return arr;
 			},
 			getlistName(...agurs) {
 				let [list, id, keyId, KeyName] = agurs;
@@ -250,7 +276,8 @@
 					return;
 				}
 				let x = this.setXData();
-				let y = this.setYData();
+				let y = JSON.stringify(this.setYData());
+				// let y = this.tableYData;
 				let data = await http.materialreportAddReportTask({
 					data: {
 						templateId: this.id,
@@ -268,6 +295,11 @@
 					this.$message({
 						message: '生成报表成功!',
 						type: 'success'
+					});
+				}else{
+					this.$message({
+						message: '报表生成有误',
+						type: 'warning'
 					});
 				}
 			},
@@ -292,16 +324,16 @@
 						}).end / 1000),
 						shopId: item.sendShop
 					});
-					if (item.type == 2) {
-						Object.assign(obj, {
-							isPercent: item.staticInfo.isPercent,
-							reserveRule: item.staticInfo.reserveRule,
-							carryRule: item.staticInfo.carryRule,
-							baseParam: item.staticInfo.baseParam,
-							formula: item.staticInfo.formula,
-							formulaArray: item.staticInfo.formulaArray
-						});
-					}
+					// if (item.type == 2) {
+					// 	Object.assign(obj, {
+					// 		isPercent: item.staticInfo.isPercent,
+					// 		reserveRule: item.staticInfo.reserveRule,
+					// 		carryRule: item.staticInfo.carryRule,
+					// 		baseParam: item.staticInfo.baseParam,
+					// 		formula: item.staticInfo.formula,
+					// 		formulaArray: item.staticInfo.formulaArray
+					// 	});
+					// }
 					arr.push(obj);
 				}
 				return arr;
@@ -309,22 +341,24 @@
 			setYData() {
 				let arr = [];
 				for (let item of this.tableYData) {
-					let obj = {};
-					obj.type = item.type;
-					if (item.type == 4) {
-						Object.assign(obj, {
-							id: item.id,
-							mid: item.setInfo.mid,
-							unit: item.setInfo.unit.id,
-							name: item.setInfo.name
-						});
-					} else {
-						obj.mid = item.mid;
-					}
-					arr.push(obj);
+					// let obj = {};
+					// obj.type = item.type;
+					// obj.id = item.id;
+					// if (item.type == 4) {
+					// 	Object.assign(obj, {
+					// 		id: item.id,
+					// 		mid: item.setInfo.mid,
+					// 		unit: item.setInfo.unit.id,
+					// 		name: item.setInfo.name
+					// 	});
+					// } else {
+					// 	obj.mid = item.mid;
+					// }
+					arr.push(item.id);
 				}
 				return arr;
 			},
+
 			searchReset() {
 				this.applytimeAll = [utils.getTime({
 					time: new Date() - global.timeConst.ONEMONTH
@@ -332,12 +366,45 @@
 					time: new Date()
 				}).end];
 				this.moldeName = this.$route.query.name;
-			}
+			},
+			getExplain(data){//生成说明
+				let str = '';
+				let text = '';
+				if(data.type!=6)str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`;
+				switch(data.type){
+					// case 3:
+					// 	str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`
+					// 	break;
+					case 4:
+						text = `物料单位：${data.unit.name}；`;
+						str = text+str;
+						break;
+					case 5:
+						text = `供应商数量：${data.supplier.split(',').length}；`;
+						str = text+str;
+						break;
+					case 6:
+						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplier.split(',').length}`;
+						break;		
+				}
+				return str;
+			},
+			getMateralName(id){
+				let sele = '';
+				for(let item of this.materialList){
+					if(id == item.id){
+						sele = item;
+						break;
+					}
+				}
+				return sele;
+			},
 		},
 		async mounted() {
 			this.crageBtn();
 			this.id = this.$route.query.id;
 			this.moldeName = this.$route.query.name;
+			this.recursiveGetMaterialList();
 			await this.getneedData();
 			this.init();
 		},
