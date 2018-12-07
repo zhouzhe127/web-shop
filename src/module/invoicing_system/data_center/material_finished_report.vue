@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 16:34:52
+ * @Last Modified time: 2018-12-07 16:38:38
  */
 
 <template>
@@ -291,7 +291,7 @@ export default {
 
 				let temp = {
 					id : ele.id,                                    //报表id
-					name : ele.objName,                             //报表名称
+					name : ele.name,                             	//报表名称
 					createTime : ele.createTime,                    //生成时间
 					scope : ele.beginTime+' 至 '+ele.endTime,        //数据时间范围
 					createUName : ele.createUName,                  //生成人   
