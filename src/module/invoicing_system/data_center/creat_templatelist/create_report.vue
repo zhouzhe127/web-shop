@@ -251,6 +251,7 @@
 				}
 				let x = this.setXData();
 				let y = this.setYData();
+				// let y = this.tableYData;
 				let data = await http.materialreportAddReportTask({
 					data: {
 						templateId: this.id,
@@ -268,6 +269,11 @@
 					this.$message({
 						message: '生成报表成功!',
 						type: 'success'
+					});
+				}else{
+					this.$message({
+						message: '报表生成有误',
+						type: 'warning'
 					});
 				}
 			},
@@ -292,16 +298,16 @@
 						}).end / 1000),
 						shopId: item.sendShop
 					});
-					if (item.type == 2) {
-						Object.assign(obj, {
-							isPercent: item.staticInfo.isPercent,
-							reserveRule: item.staticInfo.reserveRule,
-							carryRule: item.staticInfo.carryRule,
-							baseParam: item.staticInfo.baseParam,
-							formula: item.staticInfo.formula,
-							formulaArray: item.staticInfo.formulaArray
-						});
-					}
+					// if (item.type == 2) {
+					// 	Object.assign(obj, {
+					// 		isPercent: item.staticInfo.isPercent,
+					// 		reserveRule: item.staticInfo.reserveRule,
+					// 		carryRule: item.staticInfo.carryRule,
+					// 		baseParam: item.staticInfo.baseParam,
+					// 		formula: item.staticInfo.formula,
+					// 		formulaArray: item.staticInfo.formulaArray
+					// 	});
+					// }
 					arr.push(obj);
 				}
 				return arr;
@@ -311,16 +317,17 @@
 				for (let item of this.tableYData) {
 					let obj = {};
 					obj.type = item.type;
-					if (item.type == 4) {
-						Object.assign(obj, {
-							id: item.id,
-							mid: item.setInfo.mid,
-							unit: item.setInfo.unit.id,
-							name: item.setInfo.name
-						});
-					} else {
-						obj.mid = item.mid;
-					}
+					obj.id = item.mid;
+					// if (item.type == 4) {
+					// 	Object.assign(obj, {
+					// 		id: item.id,
+					// 		mid: item.setInfo.mid,
+					// 		unit: item.setInfo.unit.id,
+					// 		name: item.setInfo.name
+					// 	});
+					// } else {
+					// 	obj.mid = item.mid;
+					// }
 					arr.push(obj);
 				}
 				return arr;
