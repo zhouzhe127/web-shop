@@ -5,9 +5,23 @@
 	 -->
 	<div id="goods-count-history">
 		<div class="content-body" v-if="!showAddGoodsCom">
-			<div class="main">
+			<div class="main" v-loading="loading">
 				<div class="head">
 					盘库商品列表 · 共<em>{{pageObj.listNum}}</em>个条目
+					<div class="check-div">
+					<el-checkbox v-model="stateStore.addGoods.isUpdateZero">未选中的商品库存消耗至0</el-checkbox>
+						<el-tooltip 
+							class="item" 
+							effect="dark" 
+							placement="bottom">
+							<div slot="content"><i class="el-icon-warning"> 说明</i>
+							<br/><br/>
+							该条目被勾选后，所有未选中的商品，库存统一变更为0
+							<br/>
+							操作日志及进销存统计中记录类型为批盘消耗。</div>
+							<i class="check-icon el-icon-info"></i>
+						</el-tooltip>
+					</div>
 				</div>
 				<el-table :data="nowList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column width="180" fixed="left">
@@ -82,6 +96,7 @@
 */	
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
+import Timer from 'src/verdor/timer';
 export default {
 	data () {
 		return {
@@ -112,15 +127,13 @@ export default {
 			pageObj: {
 				page: 1,
 				total: 0,				//总页数
-				num: 4, 				//每页显示多少条
+				num: 10, 				//每页显示多少条
 				listNum:0,				//总记录数
 				flag:true,				//前端分页,false,后端分页
 			},
 			toggle:true,               	//tab切换
-
 			showCom:'',
 			comObj:{},
-
 			showAddGoodsCom:false,		//展示添加商品组件
 			stateStore:{
 				addGoods:{
@@ -128,11 +141,11 @@ export default {
 					search:{}
 				}						//添加商品
 			},	
-
 			stateCountNum:[],			//保存填写的商品总数量	
 			batchListNum:[],			//保存填写的每个批次数量	
-
 			opearItem:{},				//当前操作的商品
+			timerId:'',
+			loading:false,
 		};
 	},
 	mounted(){
@@ -145,6 +158,9 @@ export default {
 		}else{
 			this.showAddGoodsCom = true;
 		}
+	},
+	destroyed(){
+		this.stopRepeat();
 	},
 	methods: {
 		getTime(flag,res){
@@ -238,9 +254,9 @@ export default {
 				return;	
 			}
 
-			let {list=[],search={},storeAll,name=''} = res;
-			this.stateStore.addGoods = {search,list,storeAll,name};
-
+			let {list=[],search={},storeAll,name='',isUpdateZero=false,} = res;
+			this.stateStore.addGoods = {search,list,storeAll,name,isUpdateZero};
+			console.log(this.stateStore.addGoods);
 			if(list.length == 0){
 				this.pageObj.flag = false;
 			}else{
@@ -313,7 +329,7 @@ export default {
 				temp = list.filter((ele)=>{
 					let flag = true;
 					for(let e of nowList){
-						if(ele.id == e.id){
+						if(ele.id == e.id && ele.wid == e.wid && ele.areaId == e.areaId){
 							flag = false;
 							break;
 						}
@@ -327,7 +343,7 @@ export default {
 			let temp = [];
 			this.stateCountNum = this.delStateCountNum(this.stateCountNum,this.nowList);
 			temp = this.getHasNumItem(this.nowList);
-			this.stateCountNum.push(...temp);			
+			this.stateCountNum.push(...temp);	
 		},
 		delBatchCountNum(list=[]){
 			//根据商品id,区域id,区域id,仓库id清除批次,之后再添加批次
@@ -483,7 +499,6 @@ export default {
 			//获取提交的数据
 			let temp = {
 				new:[],
-				old:[],
 			};
 			
 			for(let ele of list){
@@ -518,7 +533,6 @@ export default {
 
 			sum = [...this.stateCountNum];
 			sum.push(...this.batchListNum);
-
 			temp = this.formatData(sum);
 			return temp;
 		},
@@ -528,30 +542,55 @@ export default {
 			this.addStateCountNum();
 			this.delSameList();
 			obj = this.mergeList();
-			obj.new.push(...obj.old);
 			if(obj.new.length == 0){
 				this.$message({message: '请先填写盘库数量',type: 'error'});
 				return;
 			}
-			this.$confirm('确认盘库?', '提示', {
+			let tips='是否确认盘库?';
+			if(this.stateStore.addGoods.isUpdateZero){
+				tips = '是否确认盘库? 注意：未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量';
+			}
+			this.$confirm(tips, '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning'
-			}).then(async () => {
-				let retData = await this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
+			}).then(() => {
+				this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
 					data:obj.new,
-					type:0
+					type:0,
+					isUpdateZero:Number(this.stateStore.addGoods.isUpdateZero),
+				}).then(data => {
+					let taskId = data;
+					this.loading = true; //开始加载动画
+					//轮询请求taskId
+					this.timerId = Timer.add(() => {
+						http.taskInfo({data: {taskId:taskId}})
+							.then(data => {
+								if (data.status == 3) {
+									//轮询完成
+									this.stopRepeat();
+									
+									this.$message({message: '商品盘库成功！',type: 'success'});
+									delete this.$route.query.id;
+									this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
+								} else if (data.status == 2) {
+									//失败
+									this.stopRepeat();
+									this.$message({message: `请求失败，请重试！`,type: 'error'});
+								}
+							});
+					},1000,600,false,() => {
+						this.stopRepeat();
+						this.$message({message: `请求超时，请重试！`,type: 'error'});
+					});
 				});
-				if(retData.result){
-					this.$message({message: '盘库成功',type: 'success'});
-					delete this.$route.query.id;
-					this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
-				}else{
-					this.$message({message: '盘库失败',type: 'error'});
-				}
 			}).catch(()=>{
 				//
 			});
+		},
+		stopRepeat(){//停止轮询
+			Timer.clear(this.timerId);
+			this.loading = false; //停止加载动画
 		},
 		initBtn(){
 			this.$store.commit('setPageTools',[
@@ -622,9 +661,18 @@ export default {
 			padding-top: 10px;
 			.main{
 				.head{
-					height: 45px;line-height: 45px;padding: 0 10px;font-size: 14px;
+					height: 50px;line-height: 50px;padding: 0 10px;font-size: 14px;
 					border: 1px solid #ebeef5;border-bottom: 0;
 					em{color: #ff3c04;padding: 0 2px;}
+					.check-div{
+						float: right;
+						height: 49px;
+						line-height: 49px;
+						.check-icon{
+							margin-left: 10px;
+							color: #666;
+						}
+					}
 				}
 			}
 			.page-box{padding: 20px 0;}

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import storage from 'src/verdor/storage';
 
 //批次详情默认跳转页

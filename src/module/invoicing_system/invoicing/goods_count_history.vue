@@ -32,6 +32,10 @@
 					<el-button @click="clickBtn('filter')" type="primary">筛选</el-button>
 					<el-button @click="clickBtn('reset')" type="info">重置</el-button>
 				</div>
+				<div class="posi-block">
+					<el-button @click="checkLog('add')" type="danger">查看盘盈单</el-button>
+					<el-button @click="checkLog('reduce')" type="success">查看盘亏单</el-button>
+				</div>
 			</div>
 
 			<div class="content-body">
@@ -125,6 +129,25 @@ export default {
 		this.clickBtn('reset');
 	},
 	methods: {
+		//查看盘盈/盘亏日志
+		checkLog(type){
+			let obj = {
+				ms_sTime: parseInt(Date.parse(this.timeDate[0])/1000),
+				ms_eTime: parseInt(Date.parse(this.timeDate[1])/1000),
+			};
+			let path = '';
+			if(this.tab==1){//商品
+				path = '/admin/totalLog';
+			}else if(this.tab==2){//物料
+				path = '/admin/totalLog/materialTotalLog';
+			}
+			if(type=='add'){//盘盈
+				obj.ms_operationType = this.tab==1?23:24;
+			}else if(type=='reduce'){//盘亏
+				obj.ms_operationType = this.tab==1?24:23;
+			}
+			this.$router.push({path:path,query:obj});
+		},
 		indexMethod(index){
 			return this.pageObj.num*(this.pageObj.page-1)+index+1;
 		},
@@ -389,6 +412,8 @@ export default {
 	@import url('../warehouse_manage/z_less.less');
 	#goods-count-history{
 		.search-div{
+			position: relative;
+			padding-right: 240px;
 			.submit-time{
 				.lfc(#333,40px,14px);
 				display: inline-block;
@@ -412,6 +437,11 @@ export default {
 					font-size:14px;
 
 				}
+			}
+			.posi-block{
+				position: absolute;
+				right: 0;
+				top: 0;
 			}
 		}
 		.content-body{
