@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 14:29:10
+ * @Last Modified time: 2018-12-07 16:13:47
  */
 <template>  
 	<div>
@@ -141,6 +141,7 @@ export default {
 					pSortObj : this.sortObj,
 					pCollection : this.collection,
 				};
+				console.log(obj);
 				this.throwData( utils.deepCopy(obj));  
 			}
 		},
@@ -153,6 +154,7 @@ export default {
 			}
 			switch(this.showCom){
 				case winType.createCollection:  //新建集合,抛出新建的集合
+					Object.assign(obj,{...obj.content});
 					this.collectionList.unshift(obj);
 					this.getSelectCollection(obj);
 					break;

@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 16:33:33 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 14:16:37
+ * @Last Modified time: 2018-12-07 16:11:15
  * @file:选择集合下拉框
  */
 <template>
