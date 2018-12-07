@@ -9,7 +9,9 @@
 	<div id="create-bom">
 		<div class="scroll-box">
 			<template v-if="!addWlShow">
-				<div class="create">修改BOM单</div>
+				<div class="line-title">
+					修改BOM单<p></p>
+				</div>
 				<div class="store-content">
 					<div class="store-list">
 						<label class="store-name required">创建人</label>
@@ -17,14 +19,16 @@
 					</div>
 					<div class="store-list">
 						<label class="store-name required">BOM单类型</label>
-						<div class="tab-box" @click="tabClick">
-							<span :class="{active:isPublic == 1}" data-index="1">公开</span>
-							<span :class="{active:isPublic == -1}" data-index="-1">私密</span>
+						<div class="tab-box">
+							<el-radio-group v-model="isPublic">
+								<el-radio-button label="1">公开</el-radio-button>
+								<el-radio-button label="-1">私密</el-radio-button>
+    						</el-radio-group>
 						</div>
 					</div>
 					<div class="store-list">
 						<label class="store-name">BOM单编号</label>
-						<input type="text" placeholder="请输入BOM单编号" maxlength="20" class="store-input" v-model="bomNum" @input="codeInput" @propertychange="codeInput">
+						<el-input v-model="bomNum" placeholder="请输入BOM单编号" maxlength="20" class="store-input"></el-input>
 						<span class="font-limit">
 							<em></em>限20字以内,数字/字母
 						</span>
@@ -38,85 +42,87 @@
 					<div class="store-list">
 						<label class="store-name required">自动消耗</label>
 						<div class="shared-box">
-							<on-off :status="isAutoBool" @statusChange="getAuto"></on-off>
+							<el-switch
+								v-model="isAutoBool"
+								active-color="#E1BB4A"
+								inactive-color="#909399"
+								style="width:80px;height:40px;">
+							</el-switch>
 						</div>
 					</div>
 					<div class="store-list">
 						<label class="store-name required">库存可以为负数</label>
 						<div class="shared-box">
-							<on-off :status="isOversoldBool" @statusChange="getOversold"></on-off>
+							<el-switch
+								v-model="isOversoldBool"
+								active-color="#E1BB4A"
+								inactive-color="#909399"
+								style="width:80px;height:40px;">
+							</el-switch>
 						</div>
 					</div>
 					<div class="store-list">
 						<label class="store-name">备注</label>
-						<textarea class="text-area" placeholder="请输入备注信息" v-model="remark" maxlength="40"></textarea>
+						<el-input type="textarea" v-model="remark" rows="3"
+						placeholder="请输入备注信息" maxlength="40" class="store-input"></el-input>
 						<span class="font-limit">
 							<em></em>限40字以内
 						</span>
 					</div>
 					<div class="store-list">
 						<label class="store-name required">物料消耗</label>
-						<div class="add-blong" @click="addWlClick">
-							<em class="img-span"></em>添加物料
-						</div>
+						<el-button type="primary" class="add-blong" 
+							icon="el-icon-plus" @click="addWlClick">添加物料</el-button>
 					</div>
 				</div>
 				<div class="consume-list" v-if="wlListEach.length">
 					<div class="head">物料消耗列表 · 共
 						<em>{{wlListEach.length}}</em> 个条目</div>
-					<div class="list">
-						<div class="title">
-							<span>操作</span>
-							<span>物料名称</span>
-							<span>消耗单位</span>
-							<span class="wide">毛料</span>
-							<span>出成率</span>
-							<span>已选仓库数</span>
-						</div>
-						<div class="item" v-for="(item,index) in wlListEach" :key="index" @click="listHandle" :data-index="index">
-							<div class="unit select-ban">
-								<em v-if="item.id" class="handle-btn delete deletePre" :class="{ban:wlListEach.length<=1}" :data-id="item.id">删除</em>
-								<em v-if="!item.id" class="handle-btn delete" :class="{ban:wlListEach.length<=1}" :data-mid="item.mid">删除</em>
-								<em class="handle-btn sort">仓库消耗排序</em>
-							</div>
-							<div class="unit pad">
-								{{item.name}}
-							</div>
-							<div class="unit">
-								<select-btn @emit="selectUnit" :sorts="item.unitName" :index="item.unitIndex" :width="90" class="select-btn"></select-btn>
-							</div>
-							<div class="unit wide">
-								<template v-if="item.def">
+					<el-table :data="wlListEach" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+						<el-table-column label="操作" fixed="left" width="160">
+							<template slot-scope="scope" >
+								<el-button v-if="scope.row.id" type="text" style='color:#666' @click="listHandle(scope.row,'delete',true)">删除</el-button>
+								<el-button v-else type="text" style='color:#D34A2B' @click="listHandle(scope.row,'delete')">删除</el-button>
+								<el-button type="text" @click="listHandle(scope.row,'sort')">仓库消耗排序</el-button>
+							</template>
+						</el-table-column>
+						<el-table-column prop="name" label="物料名称" min-width="200">
+						</el-table-column>
+						<el-table-column label="单位选择" width="150">
+							<template slot-scope="scope">
+								<el-select v-model="scope.row.defId" placeholder="请选择仓库" @change="(res)=>{selectUnit(scope.row,res)}">
+									<el-option
+										v-for="item in scope.row.unitArr"
+										:key="item.value"
+										:label="item.label"
+										:value="item.value">
+									</el-option>
+								</el-select>
+							</template>
+						</el-table-column>
+						<el-table-column label="盘库数量" width="320" align="center">
+							<template slot-scope="scope">
+								<template v-if="scope.row.def">
 									<div class="input-box">
-										<input type="text" placeholder="输入数字" v-model="item.defNum" maxlength="10" />
-										<em :title="item.def">{{item.def}}</em>
+										<input type="text" v-model="scope.row.defNum" maxlength="10" placeholder="请输入数量"/>
+										<div class="word">{{scope.row.def}}</div>
 									</div>
+									+
 								</template>
-								<span v-if="item.def && item.min"> + </span>
-								<template v-if="item.min">
-									<div class="input-box">
-										<input type="text" placeholder="输入数字" v-model="item.minNum" maxlength="10" />
-										<em :title="item.min">{{item.min}}</em>
-									</div>
-								</template>
-							</div>
-							<div class="unit">
 								<div class="input-box">
-									<input type="text" placeholder="输入数字" v-model="item.yield" />
-									<em>%</em>
+									<input type="text" v-model="scope.row.minNum" maxlength="10" placeholder="请输入数量"/>
+									<div class="word">{{scope.row.min}}</div>
 								</div>
-							</div>
-							<div class="unit pad">
-								{{item.wids.length}}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="store-content">
-					<div class="bottom-btn">
-						<div class="gray cancel-btn" @click="cancel">取消</div>
-						<div class="yellow ok-btn" @click="confirm">确定</div>
-					</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="出成率" min-width="150">
+							<template slot-scope="scope">
+								<el-input placeholder="输入数字" v-model="scope.row.yield" ></el-input>
+							</template>
+						</el-table-column>
+						<el-table-column prop="wids.length" label="已选仓库数" width="100">
+						</el-table-column>
+					</el-table>
 				</div>
 				<component :winOpen="sortSend" :pGoodsList="sortSend" :is="showWin" @emit="getSortArr" @throwGoodListWin="getSelectGoods"></component>
 			</template>
@@ -161,14 +167,12 @@
 				ownerName: '', //仓库所属-名称
 				isBrand: 0, //1为品牌 0为非品牌
 				isPublic: 1, //是否公开 1公开 -1私密
-				isAuto: 1, //自动消耗
 				isAutoBool: true, //
-				isOversold: 1, //库存可以为负数
 				isOversoldBool: true, //库存可以为负数
 				booleanShared: true,
 				isShared: 1, //是否共享
 				addWlShow: false, //添加物料显示
-				index: 0, //正在操作的物料index
+				currentItem: 0, //正在操作的物料
 				wlList: [], //选中的物料列表
 				wlListEach: [], //选中的物料列表-列表遍历
 				wlListEachPrev: [], //原有的物料列表
@@ -180,7 +184,6 @@
 				isClick: false, //是否已经点击提交，防止重复点击
 				isGoBack:false,//修改成功以后，是否原路返回
 				shopId:'',
-				isBrand:'',
 			};
 		},
 		created() {
@@ -196,6 +199,7 @@
 			}
 		},
 		mounted() {
+			this.initBtn();
 			this.initData(); //初始化数据
 			this.getWarehouseList(); //获取仓库列表
 		},
@@ -211,6 +215,21 @@
 				import ( /*webpackChunkName: 'good_package_win'*/ 'src/module/goods_config/common/good_package_win'),
 		},
 		methods: {
+			initBtn(){
+				let arr = [
+					{name: '取消',className: 'info',type:1,
+						fn: () => {
+							this.cancel();
+						}
+					},
+					{name: '确定',className: 'primary',type:1,
+						fn: () => {
+							this.confirm();
+						}
+					},
+				];
+				this.$store.commit('setFixButton',arr);
+			},
 			initData() {
 				this.shopId = this.userData.currentShop.id;
 				this.isBrand = this.userData.currentShop.ischain == '3' ? true : false; //是否为品牌
@@ -278,11 +297,9 @@
 					} else if (i == 'gName') {
 						this.goodsName = data[i];
 					} else if (i == 'isAuto') {
-						this.isAuto = data[i];
-						this.isAutoBool = this.isAuto == 1 ? true : false;
+						this.isAutoBool = this.isAuto == 1;
 					} else if (i == 'isOversold') {
-						this.isOversold = data[i];
-						this.isOversoldBool = this.isOversold == 1 ? true : false;
+						this.isOversoldBool = this.isOversold == 1;
 					} else {
 						this[i] = data[i];
 					}
@@ -311,24 +328,21 @@
 			editUnit(obj) { //修改仓库 单位计算
 				let min = '',
 					def = '',
-					value = 1,
-					index = 0;
-				let unitName = [];
+					value = 1;
+				let unitArr = [];
 				for (let i in obj.unit) {
 					let item = obj.unit[i];
-					unitName.push(item.name);
+					unitArr.push({value:item.muId,label:item.name});
 					if (obj.minUnit == obj.consumeUnit && obj.minUnit == item.muId) {
 						min = item.name;
 						def = item.name;
 						value = item.value;
-						index = i;
 					}
 					if (obj.minUnit != obj.consumeUnit) {
 						if (obj.minUnit == item.muId) min = item.name;
 						if (obj.consumeUnit == item.muId) {
 							def = item.name;
 							value = item.value;
-							index = i;
 						}
 					}
 				}
@@ -345,10 +359,9 @@
 					defNum: defNum,
 					min: min,
 					def: def,
-					unitName: unitName,
+					unitArr: unitArr,
 					value: value,
 					consumeNum: obj.consumeNum, //总量
-					unitIndex: index,
 				};
 			},
 			cancel() {
@@ -370,14 +383,6 @@
 					return false;
 				}
 				this.bomEdit(obj);
-			},
-			getAuto(res) { //是否自动消耗
-				this.isAutoBool = res;
-				this.isAuto = res ? 1 : 0;
-			},
-			getOversold(res) { //库存是否可以为负数
-				this.isOversoldBool = res;
-				this.isOversold = res ? 1 : 0;
 			},
 			openGoods() { //选择商品-点击 打开商品选择弹框
 				this.$store.commit('setWin', {
@@ -402,18 +407,11 @@
 					this.showWin = null;
 				}
 			},
-			setGoodsList() { //设置商品数据 用于商品选择-弹框组件使用
-				let arr = utils.deepCopy(this.goodsList);
-				for (let item of arr) {
-					item.id = item.id;
-					item.goodsName = item.goodsName;
-					item.cids = item.cids;
-				}
-				return arr;
-			},
-			selectUnit(index) { //物料列表-选中单位
-				let thisList = this.wlListEach[this.index];
-				let unit = thisList.unit[index];
+			selectUnit(item,unitId) { //物料列表-选中单位
+				let thisList = item;
+				let unit = item.unit.filter((res)=>{
+					return res.muId==unitId;
+				})[0];
 				let min = thisList.min,
 					def = thisList.def;
 				if (unit.isMin == 1) {
@@ -451,6 +449,7 @@
 					};
 					arr.push(obj);
 				}
+				this.$store.commit('setFixButton',[]);
 				this.sleSupplies = arr.concat(...this.wlList);
 				this.addWlShow = true;
 			},
@@ -458,6 +457,7 @@
 				if (res) {
 					this.wlList = res; //新增的物料列表
 					this.setWlList();
+					this.initBtn();
 				}
 				this.addWlShow = false;
 			},
@@ -483,8 +483,7 @@
 				this.wlListEach = this.wlListEachPrev.concat(...wlListArr);
 			},
 			unitConv(item) { //单位换算
-				let unitName = [],
-					index = 0,
+				let unitArr = [],
 					def = '',
 					min = '',
 					minId = '',
@@ -492,29 +491,26 @@
 					value = 1;
 				for (let i in item.unit) {
 					let unit = item.unit[i];
-					unitName.push(unit.name);
+					unitArr.push({value:unit.muId,label:unit.name});
 					if (unit.isMin == 1) {
 						min = unit.name;
 						minId = unit.muId;
 						if (unit.isDefault == 1) {
 							defId = unit.muId;
-							index = i;
 						}
 					} else if (unit.isDefault == 1) {
 						def = unit.name; //默认消耗单位名称
 						defId = unit.muId; //默认消耗单位id
 						value = unit.value; //比例
-						index = i;
 					}
 				}
 				let obj = {
-					unitName: unitName,
+					unitArr: unitArr,
 					min: min, //最小单位名称
 					minId: minId, //最小单位id
 					def: def, //消耗单位名称
 					defId: defId, //消耗单位id-必须
 					value: value, //最小单位跟默认单位的换算比例
-					uninIndex: index, //默认选中的单位
 					id: 0,
 				};
 				return obj;
@@ -541,20 +537,13 @@
 				}
 				return JSON.stringify(arr);
 			},
-			listHandle(event) { //列表操作 删除-仓库消耗排序
-				let target = event.target;
-				this.index = event.currentTarget.getAttribute('data-index');
-
-				let classNam = target.className;
-				if (classNam.includes('delete')) { //删除
+			listHandle(item,type,isPre) { //列表操作 删除-仓库消耗排序
+				if (type=='delete') { //删除
 					if (this.wlListEach.length <= 1) {
-						this.$store.commit('setWin', {
-							title: '提示信息',
-							content: '物料消耗不能为空'
-						});
+						this.$message({message: '物料消耗不能为空',type: 'error'});
 					} else {
-						if (classNam.includes('deletePre')) { //删除之前的物料
-							let id = target.getAttribute('data-id');
+						if (isPre) { //删除之前的物料
+							let id = item.id;
 							for (let item of this.wlListEach) {
 								if (item.id == id) { //因为新添加的物料 不存在id字段，所以不用考虑bids重复的问题
 									this.bidArr.push(item.id);
@@ -562,20 +551,21 @@
 								}
 							}
 						} else { //删除新加物料
-							let mid = target.getAttribute('data-mid');
+							let mid = item.mid;
 							this.deleteList(this.wlListEach, mid, 'mid');
 							this.deleteList(this.wlListEachPrev, mid, 'mid');
 							this.deleteList(this.wlList, mid, 'id');
 						}
 					}
-				} else if (classNam.includes('sort')) { //排序
+				} else if (type=='sort') { //排序
 					this.showWin = 'warehouseSort';
 					this.sortSend = {
 						list: this.warehouse,
-						widList: this.wlListEach[this.index].wids,
+						widList: item.wids,
 						shopId:this.shopId,
 						isBrand:this.isBrand,
 					};
+					this.currentItem = item;
 				}
 			},
 			deletePrevList(id) { //删除原有物料
@@ -590,44 +580,26 @@
 			},
 			getSortArr(res) { //仓库排序-弹框确认后-获取排序后的数组
 				if (res) {
-					this.wlListEach[this.index].wids = res;
+					this.currentItem.wids = res;
 				}
 				this.showWin = null;
 			},
-			tabClick(event) {
-				let target = event.target;
-				if (target.tagName.toLocaleLowerCase() == 'span') {
-					let index = target.getAttribute('data-index');
-					this.isPublic = index;
-				}
-			},
-			codeInput(event) { //限制文本框输入 只能输入数字和字母
-				let num = event.target.value;
-				num = num.replace(/[^A-Za-z0-9]/g, '');
-				if (num.length > 20) {
-					num = num.substr(0, 20);
-				}
-				this.bomNum = num;
-				event.target.value = num;
-			},
 			//校验表单
 			checkForm() {
+				if(/[^a-zA-z0-9]/.test(this.bomNum)){
+					this.$message({message: 'bom单编号只能输入字母/数字',type: 'error'});
+					return false;
+				}
 				for (let i in this.tips) {
 					this.param[i] = this.param[i].trim();
 					if (this.param[i].length == 0) {
 						let content = this.tips[i];
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							content: content
-						});
+						this.$message({message: content,type: 'error'});
 						return false;
 					}
 				}
 				if (!this.wlListEach.length) {
-					this.$store.commit('setWin', {
-						title: '温馨提示',
-						content: '请选择物料消耗'
-					});
+					this.$message({message: '请选择物料消耗',type: 'error'});
 					return false;
 				}
 				for (let i in this.wlListEach) {
@@ -669,8 +641,8 @@
 					createUid: this.createUid,
 					isPublic: this.isPublic,
 					gid: this.param.gid,
-					isAuto: this.isAuto,
-					isOversold: this.isOversold,
+					isAuto: Number(this.isAutoBool),
+					isOversold: Number(this.isOversoldBool),
 					type: this.goodsType,
 					bomNum: this.bomNum,
 					remark: this.remark,
@@ -686,135 +658,46 @@
 </script>
 <style lang="less" scoped>
 	#create-bom {
-		overflow: auto;
-		.scroll-box {
-			min-width: 1200px;
-		}
 		padding-bottom: 40px;
 		padding-top: 10px;
 		.vertical-line {
 			line-height: 40px;
 			height: 40px;
 		}
-		.create {
-			text-indent: 15px;
-			border-left: 2px solid #20a7dc;
-			margin-bottom: 30px;
-			font-size: 16px;
-			color: #333;
-		}
-		.create:after {
-			content: '';
-			width: 479px;
-			display: inline-block;
-			margin-left: 40px;
-			border-bottom: 2px dashed #ddd;
-			top: -4px;
-			position: relative;
+		.line-title{
+			height: 20px;line-height: 20px;border-left: 3px solid #E1BB4A;position: relative;overflow: hidden;
+			padding-left: 10px;font-size: 16px;
+			p{position: absolute;height: 12px;border-bottom: 2px dashed #ddd;left: 110px;top: 0;width: 100%;}
 		}
 		.consume-list {
 			width: 100%;
-			border: 1px solid #ccc;
 			.head {
-				height: 45px;
-				line-height: 45px;
+				height: 50px;
+				line-height: 50px;
 				padding: 0 20px;
-				font-size: 16px;
+				font-size: 14px;
+				border: 1px solid #ebeef5;
+				border-bottom: 0;
 				em {
 					color: #ff3a05;
 				}
 			}
-			.list {
-				.title {
-					background: #f2f2f2;
-					overflow: hidden;
-					span {
-						width: 14%;
-						height: 40px;
-						line-height: 40px;
-						text-align: center;
-						float: left;
-					}
-					.wide {
-						width: 30%;
-					}
+			.input-box{
+				display: inline-block;vertical-align: middle;overflow: hidden;
+				input,.word{
+					height: 40px;line-height: 38px;border: 1px solid #dcdfe6;float: left;background: #fff;
 				}
-				.item {
-					text-align: center;
-					border-bottom: 2px solid #f7f7f7;
-					width: 100%;
-					.unit {
-						float: left;
-						height: 70px;
-						line-height: 70px;
-						width: 14%;
-						.handle-btn {
-							display: inline-block;
-							height: 18px;
-							vertical-align: middle;
-							line-height: normal;
-							padding: 0 10px;
-							cursor: pointer;
-						}
-						.delete {
-							border-right: 1px solid #ccc;
-							color: #ff3a05;
-						}
-						.ban {
-							color: #999;
-						}
-						.sort {
-							color: #29a8df;
-						}
-						span {
-							display: inline-block;
-							vertical-align: middle;
-						}
-						.input-box {
-							vertical-align: middle;
-							line-height: normal;
-							height: 40px;
-							border: 1px solid #ccc;
-							overflow: hidden;
-							display: inline-block;
-							input {
-								height: 38px;
-								line-height: 38px;
-								width: 80px;
-								float: left;
-								border: 0;
-								padding: 0 5px;
-								&:focus {
-									outline: none;
-								}
-							}
-							em {
-								width: 40px;
-								height: 38px;
-								line-height: 38px;
-								text-align: center;
-								border-left: 1px solid #ccc;
-								float: left;
-								color: #333;
-							}
-						}
-					}
-					.wide {
-						width: 30%;
-					}
-					.pad {
-						padding: 0 10px;
-						color: #555;
-					}
-					&:after {
-						zoom: 1;
-						display: block;
-						content: '';
-						clear: both;
-					}
-					&:last-child {
-						border-bottom: 0;
-					}
+				input{
+					width: 85px;padding: 0 5px;
+					border-top-left-radius: 4px;
+					border-bottom-left-radius: 4px;
+					&:focus{outline: none;}
+				}
+				.word{
+					width:50px;border-left: 0;text-align: center;
+					border-top-right-radius: 4px;
+					border-bottom-right-radius: 4px;
+					background: #f5f7fa;
 				}
 			}
 		}
@@ -863,14 +746,7 @@
 					color: #333;
 				}
 				.store-input {
-					height: 40px;
 					width: 210px;
-					border: 1px solid #d2d2d2;
-					display: inline-block;
-					padding: 0 10px;
-					outline: none;
-					font-size: 14px;
-					vertical-align: top;
 				}
 				.area-input {
 					margin-left: 0;
@@ -881,29 +757,7 @@
 					color: #707077;
 				}
 				.add-blong {
-					background: #29a8e0;
 					width: 210px;
-					border: 1px solid #29a8e0;
-					display: inline-block;
-					font-size: 14px;
-					text-align: center;
-					color: #ffffff;
-					cursor: pointer;
-					.vertical-line;
-					em {
-						vertical-align: middle;
-						width: 18px;
-						height: 18px;
-						text-align: center;
-						display: inline-block;
-						margin-top: -3px;
-						margin-right: 10px;
-						background: url(../../../res/images/add.png) center no-repeat;
-					}
-					&.ban {
-						background: #ccc;
-						border: 1px solid #ccc;
-					}
 				}
 				.active {
 					border: 1px solid #eb9e60;
@@ -943,11 +797,6 @@
 						margin-right: 10px;
 					}
 				}
-				.address-box {
-					display: inline-block;
-					vertical-align: top;
-					margin-bottom: 20px;
-				}
 				.opera-img {
 					vertical-align: middle;
 					display: inline-block;
@@ -965,33 +814,6 @@
 					&.add {
 						background: url(../../../res/images/gray-add.png) center no-repeat;
 					}
-				}
-				.area-name {
-					width: 110px;
-					display: inline-block;
-					color: #333;
-					font-size: 14px;
-					color: #333;
-					text-align: right;
-					position: absolute;
-					top: 0;
-					left: 0;
-					.vertical-line;
-				}
-			}
-			.bottom-btn {
-				padding-left: 130px;
-				padding-top: 40px;
-				padding-bottom: 40px;
-				div {
-					width: 210px;
-					height: 50px;
-					line-height: 50px;
-					text-align: center;
-					margin-right: 10px;
-					display: inline-block;
-					color: #f1f1f1;
-					font-size: 16px;
 				}
 			}
 		}

@@ -306,20 +306,20 @@ export default {
 	async mounted() {
 		if(this.sleCommodity) this.sleList = utils.deepCopy(this.sleCommodity);
 		let arr = [
-			{name: '取消',className: 'info',type:1,
+			{name: '确定',className: 'primary',type:4,
 				fn: () => {
-					this.$store.commit('setFixButton',[]);
-					this.$emit('select', false);
-				}
-			},
-			{name: '确定',className: 'primary',type:1,
-				fn: () => {
-					this.$store.commit('setFixButton',[]);
+					this.$store.commit('setPageTools',[]);
 					this.$emit('select', this.sleList);
 				}
 			},
+			{name: '取消',className: 'info',type:4,
+				fn: () => {
+					this.$store.commit('setPageTools',[]);
+					this.$emit('select', false);
+				}
+			},
 		];
-		this.$store.commit('setFixButton',arr);
+		this.$store.commit('setPageTools',arr);
 		this.init();
 		await this.checkIn();
 	},
