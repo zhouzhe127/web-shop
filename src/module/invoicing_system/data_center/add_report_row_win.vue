@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 14:13:02
+ * @Last Modified time: 2018-12-07 14:29:10
  */
 <template>  
 	<div>
@@ -48,7 +48,7 @@
 		<component
 			:is="showCom"
 			:show="true"
-			:pList="pList"
+			:materialList="pList"
 			:pSelects="scope"
 			@change="closeWin"
 		>
