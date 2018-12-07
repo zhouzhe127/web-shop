@@ -74,12 +74,10 @@
 				// let condition = this.condition;
 				let subObj = {
 					reportId: this.reportId,
-					scopeId: 1,
-					barCode: '',
 					page:1,
 					size:10
 				};
-				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
+				let res = await this.getHttp('materialreportGetScopeList', subObj);
 				console.log(res);
 				this.tableData = res;
 
