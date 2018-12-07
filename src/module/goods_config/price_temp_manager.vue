@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-07 09:27:55
+ * @LastEditTime: 2018-12-07 18:30:07
  * @LastEditors: Please set LastEditors
  -->
 
@@ -34,7 +34,7 @@
 		</div>
 		<!-- 价格模板列表 -->
 		<div class="price_temp_table">
-			<div class="table_title">商品列表·共{{goodsList.length}}个条目</div>
+			<!-- <div class="table_title">商品列表·共{{goodsList.length}}个条目</div> -->
 			<!-- 显示会员价列表 -->
 			<div class="table-box">
 				<el-table ref="multipleTable" style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
@@ -131,7 +131,9 @@
 											</div>
 										</template>
 										<template v-else>
-											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+											<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+												isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+											</el-button>
 										</template>
 										
 									</div>
@@ -176,7 +178,9 @@
 										</div>
 									</template>
 									<template v-else>
-										isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										</el-button>
 									</template>
 								</template>
 							</el-table-column>
@@ -219,7 +223,9 @@
 										</div>
 									</template>
 									<template v-else>
-										isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										</el-button>
 									</template>	
 								</template>
 							</el-table-column>
@@ -312,6 +318,20 @@ export default {
 		this.initPageTools();
 	},
 	methods: {
+		existClick(item){
+
+			console.log(item,'item')
+			http.createPricetemplate({
+					data: {
+						itemId:item.itemId,
+						titleId:item.titleId
+					}
+				})
+				.then(res => {
+					console.log(res,'909909909999')
+					// this.getPricetemplateData(this.goodIds);
+				});
+		},
 		/* eslint-disable */
 		async handleVipShowChange(index, sindex) {
 			let price = this.tableTemplate.priceTemplate[index].list[sindex];
