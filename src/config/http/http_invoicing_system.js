@@ -1093,7 +1093,7 @@ export default {
 		method: 'get'
 	},
 	"materialreportGetStatisticScopeCategoryList": {
-		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
+		url: b + "materialreport/getStatisticScopeList", //获取集合列表
 		method: 'get'
 	},
 	"materialreportDeleteMaterialByIds": {

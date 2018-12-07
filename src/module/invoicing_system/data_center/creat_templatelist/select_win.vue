@@ -57,6 +57,10 @@
 			showKey: {
 				type: String,
 				default: 'name'
+			},
+			keys: {
+				type: String,
+				default: 'id'
 			}
 		},
 		methods: {
@@ -70,11 +74,29 @@
 			},
 			changeAll(news) {
 				news ? this.sleArr = this.unitsArr : this.sleArr = [];
+			},
+			getSelect() {
+				let key = this.keys;
+				for (let item of this.unitsArr) {
+					if (this.isSingle) {
+						if (item[key] == this.selectArr[key]) {
+							this.sleArr = item;
+							break;
+						}
+					}else{
+						this.selectArr.forEach(v => {
+							if(v[key] == item[key]){
+								this.sleArr.push(item);
+							}
+						});
+					}
+
+				}
 			}
 		},
 		mounted() {
 			this.unitsArr = this.list;
-			this.sleArr = this.selectArr;
+			this.getSelect();
 		},
 		watch: {
 			sleArr() {

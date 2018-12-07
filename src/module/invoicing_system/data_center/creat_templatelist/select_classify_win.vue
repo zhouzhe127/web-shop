@@ -75,6 +75,26 @@
 				}
 				console.log(arr);
 				this.cateList = arr;
+				if(this.select.length>0) this.setSelect();
+			},
+			setSelect(){
+				this.select.forEach(v=>{
+					for(let item of this.cateList){
+						if(item.id == v){
+							item.selectAll = true;
+							item.selectChildren = item.children;
+							break;
+						}else{
+							for(let child of item.children){
+								if(child.id==v){
+									item.selectChildren.push(child);
+									break;
+								}
+							}
+							if(item.selectChildren.length==item.children.length) item.selectAll = true;
+						}
+					}
+				});
 			},
 			sendClose(str) {
 				if (str != 'ok') {
@@ -99,11 +119,7 @@
 			}
 		},
 		mounted() {
-			if (this.select.length > 0) {
-				this.cateList = this.select;
-			} else {
-				this.init();
-			}
+			this.init();
 		},
 		watch: {
 

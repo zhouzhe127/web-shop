@@ -17,6 +17,10 @@ module.exports = {
             url: 'src/module/invoicing_system/data_center/material_view_report' //已生成报表
         },
         {
+            path: 'test',
+            url: 'src/module/invoicing_system/data_center/creat_templatelist/material_view_report' //已生成报表
+        },
+        {
             path: 'creatTempMain',
             url: 'src/module/invoicing_system/data_center/creat_templatelist/temp_main' //新建报表模板
         },

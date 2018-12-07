@@ -15,7 +15,7 @@
 				</div>
 				<div>
 					<div class="inpStyle">
-						<el-radio-group v-model="sleType" @change="tabChange">
+						<el-radio-group v-model="sleType">
 							<el-radio-button v-for="(item,index) in typeArr" :key="index" :label="index" border>{{item}}</el-radio-button>
 						</el-radio-group>
 					</div>
@@ -91,7 +91,7 @@
 		 :isSingle="true"></selectWin>
 		<selectWin v-if="suppierWin" @positionEvent="getSuppier" :title="'选择供应商'" :list="suppierList" :selectArr="selectSuppier"
 		 :isSingle="false"></selectWin>
-		<selectClassifyWin v-if="classify" :select="selectClassify" @positionEvent="getClassify"></selectClassifyWin>
+		<selectClassifyWin v-if="classify" :select="selectClassifyId" :key="'id'" @positionEvent="getClassify"></selectClassifyWin>
 		<selectMaterialWin v-if="showMaterWin" :unitName="selectUnit.name" :pSelects="selectMater" :isSingle="materisSingle"
 		 :pList="sendMaterial" @change="getMaterial"></selectMaterialWin>
 	</div>
@@ -115,13 +115,14 @@
 				selectSuppier: [], //选择的供应商
 				suppierWin: false,
 				showMaterWin: false, //显示选择物料弹窗
-				materialList: [], //所有物料
 				sendMaterial: [],
 				selectMater: [], //选中的物料
 				classify: false, //分类弹窗
-				selectClassify: [], //选中的分类
+				// selectClassify: [], //选中的分类
 				selectClassifyId: [], //选中的分类id
 				materisSingle: false, //物料弹窗是否为单选
+				classifyData: [], //物料分类数据
+				cache: {} //缓存数据
 			};
 		},
 		props: {
@@ -130,7 +131,8 @@
 				type: [String],
 				default: '新建集合'
 			},
-			editData:Object
+			materialList: Array,
+			editData: Object
 		},
 		methods: {
 			async init() {
@@ -138,10 +140,13 @@
 					httpId: 'MaterialGetUnitList'
 				}, {
 					httpId: 'suppierList'
+				}, {
+					httpId: 'invoiv_getCategoryList'
 				}]);
 				console.log(res);
 				this.unitsArr = res[0].data;
 				this.suppierList = res[1].data;
+				this.classifyData = res[2].data;
 			},
 			showWin(type) {
 				switch (type) {
@@ -161,42 +166,13 @@
 				}
 			},
 			//获取所有物料
-			async recursiveGetMaterialList() {
-				let subObj = {
-					name: '',
-					cid: '',
-					type: -1,
-					num: 50
-				};
-
-				let page = 1;
-				let arr = [];
-
-				for (let i = 0; i < page; i += 1) {
-					subObj.page = i + 1;
-					let retObj = await http.getMaterialList({
-						data: subObj
-					});
-					page = Number(retObj.total);
-					arr.push(...retObj.list);
-				}
-				this.materialList = arr;
-				this.sendMaterial = utils.deepCopy(arr);
-				// return arr;
-			},
-			tabChange() {
-				this.chooseCate = false;
-				this.materisSingle = false;
-				this.selectUnit = {};
-				this.selectMater = [];
-				this.selectClassify = [];
-				this.selectClassifyId = [];
-				this.selectSuppier = [];
+			recursiveGetMaterialList() {
 				this.sendMaterial = utils.deepCopy(this.materialList);
+				// return arr;
 			},
 			handleClose(done) {
 				if (done == 'ok') {
-					if(!this.checkData()){
+					if (!this.checkData()) {
 						return false;
 					}
 					this.sendData();
@@ -206,31 +182,31 @@
 				}
 
 			},
-			sendWarning(type,str){
+			sendWarning(type, str) {
 				this.$message({
 					type: type,
 					message: str,
 				});
 				return false;
 			},
-			checkData(){
+			checkData() {
 				let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/;
-				if(!reg.test(this.gatherName)) return this.sendWarning('warning','请输入正确的集合名称！');
-				if(this.chooseCate){
-					if(this.selectClassifyId.join(',')==''){
-						return this.sendWarning('warning','请选择分类！');
+				if (!reg.test(this.gatherName)) return this.sendWarning('warning', '请输入正确的集合名称！');
+				if (this.chooseCate) {
+					if (this.selectClassifyId.join(',') == '') {
+						return this.sendWarning('warning', '请选择分类！');
 					}
-				}else{
-					if(Array.from([this.selectMater].flat(), x => x.id).join(',')==''){
-						return this.sendWarning('warning','请选择物料！');
+				} else {
+					if (Array.from([this.selectMater].flat(), x => x.id).join(',') == '') {
+						return this.sendWarning('warning', '请选择物料！');
 					}
 				}
-				if(this.sleType==1&&!this.selectUnit.id){
-					return this.sendWarning('warning','请选择单位！');
+				if (this.sleType == 1 && !this.selectUnit.id) {
+					return this.sendWarning('warning', '请选择单位！');
 				}
-				if(this.sleType==2||this.sleType==3){
-					if(Array.from(this.selectSuppier, x => x.id).join(',')==''){
-						return this.sendWarning('warning','请选择供应商！');
+				if (this.sleType == 2 || this.sleType == 3) {
+					if (Array.from(this.selectSuppier, x => x.id).join(',') == '') {
+						return this.sendWarning('warning', '请选择供应商！');
 					}
 				}
 				return true;
@@ -241,7 +217,7 @@
 					id: this.id,
 					name: this.gatherName,
 				};
-				
+
 				if (this.sleType != 3) {
 					obj.isCategory = this.chooseCate ? 1 : 0;
 					this.chooseCate ? obj.cid = this.selectClassifyId.join(',') : obj.mid = Array.from(this.selectMater, x => x.id).join(
@@ -258,12 +234,14 @@
 					case 2:
 						url = 'materialReportSetStatisticScopeSupplierMaterial';
 						obj.supplierId = Array.from(this.selectSuppier, x => x.id).join(',');
+						obj.supplierName = Array.from(this.selectSuppier, x => x.name).join(',');
 						break;
 					case 3:
 						url = 'materialReportSetStatisticScopeMaterialSupplier';
 						Object.assign(obj, {
 							mid: this.selectMater.id,
 							supplierId: Array.from(this.selectSuppier, x => x.id).join(','),
+							supplierName: Array.from(this.selectSuppier, x => x.name).join(','),
 						});
 						break;
 				}
@@ -274,21 +252,21 @@
 				// 	type: 'success',
 				// 	message: `${this.id?'修改':'添加'}成功!`
 				// });
-				this.sendWarning('success',`${this.id?'修改':'添加'}成功!`);
+				this.sendWarning('success', `${this.id?'修改':'添加'}成功!`);
 				console.log(data);
 			},
 			getMaterial(data) {
 				console.log(data);
 				if (data) {
-					if(data.length>500){
-						return this.sendWarning('warning','一个集合中物料的最大数量为500');
+					if (data.length > 500) {
+						return this.sendWarning('warning', '一个集合中物料的最大数量为500');
 					}
+					this.cache = {};
 					this.selectMater = data;
 				}
 				this.showMaterWin = false;
 			},
 			getClassify(data) {
-				console.log(data);
 				if (data) {
 					let arr = [];
 					data.forEach(v => {
@@ -298,10 +276,11 @@
 							arr.push(v.id);
 						}
 					});
-					if(data.length>100){
-						return this.sendWarning('warning','一个集合中物料分类的最大数量为100');
+					if (data.length > 100) {
+						return this.sendWarning('warning', '一个集合中物料分类的最大数量为100');
 					}
-					this.selectClassify = data;
+					// this.selectClassify = data;
+					this.cache = {};
 					this.selectClassifyId = arr.flat();
 				}
 				this.classify = false;
@@ -318,26 +297,61 @@
 							}
 						});
 					});
+					this.cache = {};
 					this.sendMaterial = arr;
 				}
 			},
 			getSuppier(data) {
 				if (data) {
-					if(data.length>100){
-						return this.sendWarning('warning','一个集合中供应商的数量最大数量为100');
+					if (data.length > 100) {
+						return this.sendWarning('warning', '一个集合中供应商的数量最大数量为100');
 					}
+					this.cache = {};
 					this.selectSuppier = data;
 				}
 				this.suppierWin = false;
+			},
+			setEdit(data) {
+				this.id = data.id;
+				this.gatherName = data.name;
+				if (data.type != 6) {
+					this.chooseCate = data.isCategory == 0 ? false : true;
+					if (data.isCategory == 0) {
+						this.selectMater = this.getSelectArr(data.mid, this.sendMaterial, 'id');
+					} else {
+						this.selectClassifyId = data.cid;
+					}
+				}
+				this.sleType = data.type - 3;
+				if (data.type == 4) this.selectUnit = data.unit;
+				if (data.type > 4) {
+					this.selectSuppier = this.getSelectArr(data.supplier.split(','), this.suppierList, 'name');
+					if (data.type == 6) {
+						this.selectMater = this.$parent.getMateralName(data.mid);
+					}
+				}
+			},
+			getSelectArr(data, list, key) {
+				let arr = [];
+				data.forEach(v => {
+					for (let item of list) {
+						if (item[key] == v) {
+							arr.push(item);
+							break;
+						}
+					}
+				});
+				return arr;
 			}
+
 		},
-		mounted() {
-			this.init();
-			if(this.editData.id){
-				this.id = this.editData.id;
-				this.sleType = this.editData.type;
-			}
+		async mounted() {
+			await this.init();
 			this.recursiveGetMaterialList();
+			if (this.editData.id) {
+				this.setEdit(this.editData);
+			}
+
 		},
 		components: {
 			selectWin: () =>
@@ -361,6 +375,38 @@
 					str = '一个集合中物料分类的最大数量为100';
 				}
 				return str;
+			}
+		},
+		watch: {
+			sleType(news, old) {
+				console.log(news, old);
+				this.cache[old] = {
+					chooseCate: this.chooseCate,
+					materisSingle: this.materisSingle,
+					selectUnit: this.selectUnit,
+					selectMater: this.selectMater,
+					selectClassifyId: this.selectClassifyId,
+					selectSuppier: this.selectSuppier,
+				};
+				if (this.cache[news]) {
+					let newsCache = this.cache[news];
+					this.chooseCate = newsCache.chooseCate;
+					this.materisSingle = newsCache.materisSingle;
+					this.selectUnit = newsCache.selectUnit;
+					this.selectMater = newsCache.selectMater;
+					this.selectClassifyId = newsCache.selectClassifyId;
+					this.selectSuppier = newsCache.selectSuppier;
+					this.sendMaterial = newsCache.sendMaterial;
+				} else {
+					// this.chooseCate = false;
+					this.materisSingle = false;
+					this.selectUnit = {};
+					this.selectMater = [];
+					this.selectClassifyId = [];
+					this.selectSuppier = [];
+				}
+
+				this.sendMaterial = utils.deepCopy(this.materialList);
 			}
 		}
 	};
