@@ -2,7 +2,16 @@
 	<win :align="'center'" :width="width" :height="height" @winEvent="closeSelfWin" :ok="btnOk">
 		<span slot="title">{{title}}</span>
 		<div slot="content" id="unit-brand-win">
-			<span :style="{'width':eleWidth}" :class="{'single':item.isSelect && radio,'mul-radio':item.isSelect && (!radio)}" @click="funSelectItem(item,index)" v-for="(item,index) in list" :key="index">{{item.name}}</span>
+			<template v-if="radio">
+				<span class="radio-box" v-for="item in list" :key="item.id">
+					<el-radio v-model="idList" :label="item.id" border>{{item.name}}</el-radio>
+				</span>
+			</template>
+			<template v-if="!radio">
+				<span class="radio-box" v-for="item in list" :key="item.id">
+					<el-checkbox v-model="idList" :label="item.id" border>{{item.name}}</el-checkbox>
+				</span>
+			</template>
 			<div class="none-tips" v-if="list.length==0">
 				{{tips}}
 			</div>
@@ -14,15 +23,17 @@
 	export default {
 		data() {
 			return {
-				btnOk: {},
-				btnCancel: {},
+				btnOk: {
+					content: '确定',
+				},
 				width: 570,
 				height: 220,
 				title: '添加单位',
 				eleWidth: 'auto', //元素的宽
 				list: [], //所有的元素
 				radio: false, //多选
-				selectlist: [1], //选中的元素id
+				selectlist: [], //选中的元素id
+				idList:[],//选中的id列表
 				tips: '没有该数据信息!',
 			};
 		},
@@ -44,51 +55,22 @@
 		methods: {
 			closeSelfWin(res) {
 				let arr = [];
-				arr = this.list.filter((ele) => {
-					return ele.isSelect;
-				});
+				if(this.radio){
+					arr = this.list.filter((ele) => {
+						return ele.id==this.idList;
+					});
+				}else{
+					for(let item of this.idList){
+						for(let res of this.list){
+							if(item==res.id){
+								arr.push(res);
+								break;
+							}
+						}
+					}
+				}
 				arr = utils.deepCopy(arr);
 				this.$emit('throwCommonWin', arr, res);
-			},
-			//选择元素
-			funSelectItem(item, index) {
-				if(this.radio) {
-					let arr = [];
-					if(!item.isSelect) {
-						arr.push(item.id);
-					}
-					this.list = this.initSelectList(this.list, arr);
-				} else {
-					//多选
-					item.isSelect = !item.isSelect;
-					this.list.splice(index, 1, item);
-				}
-			},
-			//获取选中的元素id
-			getSelectList(arr) {
-				let ids = [];
-				if(typeof arr[0] == 'object') {
-					ids = arr.map((ele) => {
-						return ele.id;
-					});
-				} else {
-					if(arr) ids = arr;
-				}
-				return ids;
-			},
-			//初始化list选中的元素
-			initSelectList(list, selectlist) {
-				let arr = list.map((ele) => {
-					let flag = selectlist.some((id) => {
-						if(ele.id == id) {
-							ele.isSelect = true;
-							return true;
-						}
-					});
-					if(!flag) ele.isSelect = false;
-					return ele;
-				});
-				return arr;
 			},
 			initData() {
 				if(typeof this.pObj == 'object') {
@@ -97,22 +79,18 @@
 							this[attr] = this.pObj[attr];
 						}
 					}
-				} else {
-					throw new Error('参数错误');
 				}
-				this.selectlist = this.getSelectList(this.selectlist);
-				this.list = this.initSelectList(this.list, this.selectlist);
-			},
-			initBtn() {
-				this.btnOk = {
-					style: 'background-color:#f8941f',
-					content: '确定'
-				};
+				if(this.radio){
+					this.idList = this.selectlist.id;
+				}else{
+					this.idList = this.selectlist.map((res)=>{
+						return res.id;
+					});
+				}
 			},
 		},
 		mounted() {
 			this.initData();
-			this.initBtn();
 		},
 		watch: {
 			pObj: {
@@ -124,13 +102,13 @@
 		},
 		components: {
 			win: () =>
-				import( /*webpackChunkName:'win'*/ 'src/components/win'),
+				import( /*webpackChunkName:'win'*/ 'src/components/win_element'),
 		}
 	};
 </script>
 <style lang='less' scoped>
 	#unit-brand-win {
-		padding: 20px 55px;
+		padding: 20px;
 		.none-tips {
 			color: #f7ab53;
 			font-size: 20px;
@@ -140,28 +118,7 @@
 		span {
 			margin-right: 10px;
 			margin-bottom: 10px;
-			height: 40px;
-			min-width: 100px;
-			padding: 0 15px;
-			float: left;
-			text-align: center;
-			line-height: 40px;
-			vertical-align: middle;
-			border: 1px solid #d2d2d2;
-			color: #333;
-			font-size: 14px;
-			cursor: pointer;
-		}
-		.single {
-			border: 1px solid transparent;
-			border: 1px solid #f8931f;
-			color: #f8931f;
-		}
-		.mul-radio {
-			border: 1px solid transparent;
-			border: 1px solid #f8931f;
-			color: #f8931f;
-			background: url('../../../res/images/sign.png') right bottom no-repeat
+			display: inline-block;
 		}
 	}
 </style>

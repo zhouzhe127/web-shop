@@ -51,15 +51,14 @@
 					<span class="el-icon-circle-plus-outline"></span>
 					添加品牌
 				</div>
-				<span class="tips" v-show="selectBrand.length > 0">
-                    (已选择:
-                        <i v-for="(item,index) in selectBrand" :key="index">{{item.name}}</i>
-                    )
+				<span class="tips" v-show="selectBrand.id">
+                    已选择品牌：{{selectBrand.name}}
                 </span>
 			</div>
 			<div class="label-content">
 				<label class="required label">保质期</label>
-				<el-input placeholder="请输入保质期" v-model="validityObj.time" @change="(res)=>{typeRatio(validityObj,'time','validate')}" class="el-in" maxlength="3">
+				<el-input placeholder="请输入保质期" v-model="validityObj.time" @change="(res)=>{typeRatio(validityObj,'time','validate')}" 
+					class="el-in" maxlength="3">
 					<el-select v-model="validityObj.type" slot="append" placeholder="请选择" class="el-append">
 						<el-option
 							v-for="item in validityTypeArr"
@@ -128,7 +127,7 @@
 				<div class="inline-box">
 					<label class="required-no label">{{list.name}}</label>
 					<div class="input-box">
-						<el-input v-model="list.value" placeholder="请输入价格" @change="(res)=>{typeRatio(list,'value','distribute')}"></el-input>
+						<el-input v-model="list.value" placeholder="请输入价格" class="el-in" @change="(res)=>{typeRatio(list,'value','distribute')}"></el-input>
 					</div>
 				</div>
 				<div class="inline-box">
@@ -208,9 +207,9 @@ export default {
 			selectCategory: {			//选择的分类
 				id:'',
 				name:'',
-			}, 		
+			},	
 
-			selectBrand: [], 			//选择的品牌
+			selectBrand: {}, 			//选择的品牌
 			brandList: [], 				//品牌列表
 
 			units: [], 					//单位列表
@@ -242,7 +241,7 @@ export default {
 					this.selectCategory = arr;
 					break;
 				case winName.brand:
-					this.selectBrand = arr;
+					this.selectBrand = arr[0];
 					break;
 				case winName.unit:
 					if(arr.length > 5) {
@@ -347,8 +346,8 @@ export default {
 				obj = {};							//最终提交的数据
 
 			//品牌
-			if(this.selectBrand[0]) {
-				brandId = this.selectBrand[0].id;
+			if(this.selectBrand) {
+				brandId = this.selectBrand.id;
 			}
 
 			//换率
@@ -490,7 +489,7 @@ export default {
 			this.selectUnit = []; 			//选中的单位
 			this.typeValue = '';			//物料类型
 			this.selectCategory = [];		//选择中的分类
-			this.selectBrand = [];			//选择的品牌
+			this.selectBrand = {};			//选择的品牌
 			this.validityObj = {			//保质期
 				time: '',
 				type: 1,
@@ -647,7 +646,7 @@ export default {
 	}
 	
 	.el-in{
-		width:240px;
+		width:210px;
 	}
 	.el-append{
 		width:70px;

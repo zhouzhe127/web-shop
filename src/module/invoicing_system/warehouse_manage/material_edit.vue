@@ -8,58 +8,59 @@
 			修改物料
 		</div>
 		<div>
-			<div class="label-content">
+			<div class="label-content pt-20">
 				<label class="required label">物料名称</label>
-				<input type="text" v-model="materialName" class="input" maxlength="20" placeholder="请输入物料名称">
+				<el-input clearable v-model="materialName" maxlength="20" class="el-in" placeholder="请输入物料名称"></el-input>
 			</div>
 			<div class="label-content">
-				<label class="require label">物料编码</label>
-				<input type="text" v-model="materialCode" class="input" maxlength="6" placeholder="请输入物料编码">
+				<label class="required label">物料编码</label>
+				<el-input clearable v-model="materialCode"  maxlength="6" class="el-in" placeholder="请输入物料编码"></el-input>
+				<el-button type="text" class="auto-code" @click="autoBarCode">生成编码</el-button>
 			</div>
 			<div class="label-content">
 				<label class="required label">物料类型</label>
 				<div style="width:210px;display:inline-block;">
-					<el-select v-model="typeValue" placeholder="全部类型">
+					<el-select v-model="typeValue" placeholder="全部类型" class="el-in">
 						<el-option v-for="item in typeCate" :key="item.value" :label="item.label" :value="item.value"></el-option>
 					</el-select>
 				</div>
 			</div>
 			<div class="label-content">
 				<label class="required label">物料分类</label>
-				<div class="img-div" @click="openCategoryWin('category')">
-					<img src="../../../res/images/add.png" alt="添加">添加分类
+				<div class="icon-div" @click="openCategoryWin(winName.category)">
+					<span class="el-icon-circle-plus-outline"></span>
+					添加物料分类
 				</div>
-				<span class="tips" v-show="selectCategory.length>0">
-					(已选择:
-					<i v-for="(item,index) in selectCategory" :key="index">{{item.name}}
-						<template v-if="index!=selectCategory.length-1">
-							,
-						</template>
-					</i>
-					)
+				<span class="tips" v-if="selectCategory.id && categoryName.length<=1">
+                    已选择分类：{{selectCategory.name}}
+                </span>
+				<span class="tips" v-if="categoryName.length>1">
+					已选择分类：{{categoryName.join(',')}}
 				</span>
 			</div>
 			<div class="label-content">
 				<label class="label">品牌</label>
-				<div class="img-div" @click="openAddBrand('brand')">
-					<img src="../../../res/images/add.png" alt="添加">添加品牌
+				<div class="icon-div" @click="openAddBrand(winName.brand)">
+					<span class="el-icon-circle-plus-outline"></span>
+					添加品牌
 				</div>
-				<span class="tips" v-show="selectBrand.length>0">
-					(已选择:
-					<i v-for="(item,index) in selectBrand" :key="index">{{item.name}}</i>
-					)
-				</span>
+				<span class="tips" v-show="selectBrand.id">
+                    已选择品牌：{{selectBrand.name}}
+                </span>
 			</div>
 			<div class="label-content">
 				<label class="required label">保质期</label>
-				<input type="text" class="input validity-input" maxlength="3" v-model="validityObj.time">
-				<div class="validity" @click="hideUnitSelect">
-					<span class="validity-num">{{validityObj.type}}</span>
-					<span class="validity-trangle"></span>
-					<ul class="validity-ul" v-show="validityObj.show">
-						<li v-for="(item,index) in validityTypeArr" :key="index" @click="getValidity(item)">{{item.name}}</li>
-					</ul>
-				</div>
+				<el-input placeholder="请输入保质期" v-model="validityObj.time"
+					class="el-in" maxlength="3">
+					<el-select v-model="validityObj.type" slot="append" placeholder="请选择" class="el-append">
+						<el-option
+							v-for="item in validityTypeArr"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"
+						></el-option>
+					</el-select>
+				</el-input>
 			</div>
 		</div>
 		<div class="split-title" v-if="isBrand">
@@ -69,21 +70,17 @@
 			<div class="inline-box">
 				<label class="require label">{{list.name}}</label>
 				<div class="input-box">
-					<el-input v-model="list.value" placeholder="请输入价格"></el-input>
+					<el-input v-model="list.value" placeholder="请输入价格" class="el-in"></el-input>
 				</div>
 			</div>
 			<div class="inline-box">
 				<label class="require label">单位</label>
-				<el-select v-model="list.unitId" placeholder="请选择单位">
+				<el-select v-model="list.unitId" placeholder="请选择单位" class="el-in">
 					<el-option v-for="item in selectUnit" :key="item.muId" :label="item.name" :value="item.muId"></el-option>
 				</el-select>
 			</div>
 		</div>
-		<div class="bottom">
-			<div class="gray-btn gray" @click="clickBtn('cancel')">取消</div>
-			<div class="yellow-btn yellow" @click="clickBtn('ok')">确定</div>
-		</div>
-		<component :is="showCom" :pObj="comObj" :list="comObj.category" :selectList="comObj.selectCategory" :title="comObj.title"
+		<component :is="showCom" :pObj="comObj" :selectList="comObj.selectCategory" :title="comObj.title"
 		 :radio="comObj.radio" :tips="comObj.tips" :showTips="false" @throwCommonWin="closeCommonWin"></component>
 	</div>
 </template>
@@ -94,34 +91,33 @@
 	export default {
 		data() {
 			return {
-				validityTypeArr: [{
-					id: 0,
-					name: '月'
-				},
-				{
-					id: 1,
-					name: '日'
-				},
-				{
-					id: 2,
-					name: '年'
-				}],
+				validityTypeArr: [
+					{id: 0,name: '月'},
+					{id: 1,name: '日'},
+					{id: 2,name: '年'},
+				],
 				validityObj: {
 					time: '',
-					type: '日',
-					id: '',
-					show: false
-				}, //保质期
+					type: 1,
+				},
+				winName:{					//弹窗名
+					category:'category',
+					brand:'brand',
+				},
 				isBrand: '',
 				flag: '', //当前打开的弹窗
 				materialName: '', //物料名称
 				materialCode: '', //物料简码
 				materialId: '', //物料id
 
-				category: [], //物料分类
-				selectCategory: [], //选择的分类
+				category: [], //原物料分类
+				categoryName:[],//原物料名称
+				selectCategory: {			//选择的分类
+					id:'',
+					name:'',
+				},
 
-				selectBrand: [], //选择的品牌
+				selectBrand: {}, //选择的品牌
 				brandList: [], //品牌列表
 
 				showCom: '',
@@ -144,6 +140,31 @@
 			};
 		},
 		methods: {
+			//自动生成物料编码
+			async autoBarCode(){
+				let data = await http.materialCreateMaterialBarCode();
+				this.materialCode = data;
+			},
+			initBtn(){
+				this.$store.commit('setFixButton',[
+					{
+						name: '取消',
+						type:'1',
+						className:'info',
+						fn:()=>{
+							this.clickBtn('cancel');
+						}
+					},
+					{
+						name: '确定',
+						type:'1',
+						className:'primary',
+						fn:()=>{
+							this.clickBtn('ok');
+						}
+					},
+				]);
+			},
 			clickBtn(flag) {
 				switch (flag) {
 					case 'ok':
@@ -174,7 +195,7 @@
 						this.selectCategory = arr;
 						break;
 					case 'brand':
-						this.selectBrand = arr;
+						this.selectBrand = arr[0];
 						break;
 				}
 				this.flag = '';
@@ -184,12 +205,7 @@
 				this.showCom = 'addCategory';
 				this.flag = flag;
 				this.comObj = {
-					category: this.category,
-					title: '选择分类',
-					selectCategory: this.selectCategory,
-					radio: true,
-					tips: '请先配置分类!'
-
+					id:this.selectCategory.id,
 				};
 			},
 			openAddBrand(flag) {
@@ -203,37 +219,13 @@
 					tips: '请先配置品牌'
 				};
 			},
-			//组织分类数据
-			organizeCategory(cate) {
-				let temp = cate;
-				let arr = [];
-				cate.forEach((ele) => {
-					ele.child = [];
-					ele.showAdd = false;
-					if (ele.pid == 0) {
-						for (let i = 0, len = temp.length; i < len; i++) {
-							if (ele.id == temp[i].pid && ele.id != temp[i].id) {
-								ele.child.push(temp[i]);
-							}
-						}
-						arr.push(ele);
-					}
-				});
-				return arr;
-			},
 			//------------event-----------
-			//获取保质期
-			getValidity(item) {
-				this.validityObj.type = item.name;
-				this.validityObj.id = item.id;
-			},
-			//隐藏下拉框
-			hideUnitSelect(event) {
-				this.validityObj.show = !this.validityObj.show;
-				event.cancelBubble = true;
-			},
 			//返回true表示合格
 			checkform() {
+				if(this.category.length>1){
+					this.$message.error('只能选择一个分类！请重新选择分类');
+					return false;
+				}
 				if (!global.checkData({
 					materialName: {
 						cond: '$$.length>0 && $$.length<=20',
@@ -244,21 +236,21 @@
 						pro: '编码由英文,数字组成!'
 					},
 
-				}, this)) return;
+				}, this)) return false;
 
 				if (!global.checkData({
 					time: {
 						reg: /[1-9]\d{0,2}/,
 						pro: '保质期由1-3位数字组成!'
 					}
-				}, this.validityObj)) return;
+				}, this.validityObj)) return false;
 
 				if (this.selectCategory.length == 0) {
 					this.$store.commit('setWin', {
 						content: '请选择分类!',
 						title: '温馨提示'
 					});
-					return;
+					return false;
 				}
 				let check = true;
 				if (this.isBrand) {
@@ -286,32 +278,24 @@
 			formatData() {
 				//品牌
 				let brandId = null;
-				if (this.selectBrand[0]) {
-					brandId = this.selectBrand[0].id;
+				if (this.selectBrand.id) {
+					brandId = this.selectBrand.id;
 				}
 
-				//分类id
-				let arr = [];
-				this.selectCategory.forEach((ele) => {
-					arr.push(ele.id);
-				});
 				let obj = {
 					mid: this.materialId,
 					name: this.materialName,
 					barCode: this.materialCode,
 					brandId: brandId,
 					validity: this.validityObj.time,
-					validityType: this.validityObj.id,
-					cids: arr.join(','),
+					validityType: this.validityObj.type,
+					cid: this.selectCategory.id,
 					type: this.typeValue
 				};
 				if (this.isBrand) {
 					obj.distributionData = this.updateArr;
 				}
 				return obj;
-			},
-			domEvent() {
-				this.validityObj.show = false;
 			},
 			//获取分类列表
 			async MaterialGetCategoryList() {
@@ -348,44 +332,29 @@
 				this.selectUnit = material.unit;
 				this.typeValue = Number(material.type);
 				this.olddis = material.distributionRela;
-				let type = null;
-				this.validityTypeArr.some((ele) => {
-					if (ele.id == material.validityType) {
-						type = ele.name;
-						return true;
-					}
-				});
 				this.validityObj = {
 					time: material.validity,
-					show: false,
-					id: material.validityType,
-					type: type
+					type: Number(material.validityType),
 				};
-
-				let category = await this.MaterialGetCategoryList();
-				this.category = this.organizeCategory(category);
 				material.cate || (material.cate = []);
-				this.selectCategory = material.cate.map((ele) => {
-					for (let i = 0, len = category.length; i < len; i++) {
-						if (ele.cid == category[i].id) {
-							return category[i];
-						}
-					}
+				this.category = material.cate.map((ele) => {
+					return {id:ele.cid,name:ele.name};
 				});
-
+				this.categoryName = material.cate.map((ele) => {
+					return ele.name;
+				});
+				if(this.category.length<=1){
+					this.selectCategory = this.category[0];
+				}
 				this.brandList = await this.InvoicingBrandList();
-				this.brandList.some((ele) => {
-					if (ele.id == material.brandId) {
-						this.selectBrand.push(ele);
-						return true;
-					}
+				this.selectBrand = this.brandList.filter((res)=>{
+					return material.brandId==res.id; 
 				});
 			},
 			initData() {
 				this.materialId = this.$route.query.id;
 				let userData = storage.session('userShop');
 				this.isBrand = userData.currentShop.ischain == '3' ? true : false;
-				console.log(this.isBrand);
 			},
 			//获取分销价
 			async getDistr() {
@@ -409,20 +378,16 @@
 			},
 		},
 		async mounted() {
+			this.initBtn();
 			this.initData();
 			await this.syncRequest();
 			this.getDistr();
-			document.addEventListener('click', this.domEvent);
-
 		},
 		components: {
 			unitBrand: () =>
 				import( /*webpackChunkName:'unit_brand_win'*/ './unit_brand_win'),
 			addCategory: () =>
-				import( /*webpackChunkName:'add_category_com'*/ 'src/components/add_category_com'),
-		},
-		beforeDestroy() {
-			document.removeEventListener('click', this.domEvent);
+				import( /*webpackChunkName:'add_category_com'*/ './material_create_cate'),
 		},
 	};
 </script>
@@ -435,7 +400,12 @@
 			font-size: @size;
 		}
 
-		;
+		.el-in{
+			width:210px;
+		}
+		.el-append{
+			width:70px;
+		}
 
 		.inline {
 			margin-left: -3px;
@@ -461,7 +431,6 @@
 		}
 
 		.label-content {
-			// border:1px solid #ff0000;
 			padding-bottom: 20px;
 
 			.inline-box {
@@ -483,7 +452,15 @@
 				padding-right: 20px;
 				vertical-align: middle;
 			}
+			.icon-div{
+				height: 40px;
+				width: 210px;
+				line-height: 40px;
+				.inline;	
+				cursor: pointer;
+				color: #E1BB4A;
 
+			}
 			.input {
 				.mixin(#333, 40px, 14px);
 				display: inline-block;
@@ -495,7 +472,7 @@
 			}
 
 			.tips {
-				margin-left: 10px;
+				color: #666;
 			}
 
 			.img-div {
