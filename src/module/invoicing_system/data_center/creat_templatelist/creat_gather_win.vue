@@ -170,13 +170,14 @@
 				this.sendMaterial = utils.deepCopy(this.materialList);
 				// return arr;
 			},
-			handleClose(done) {
+			async handleClose(done) {
 				if (done == 'ok') {
 					if (!this.checkData()) {
 						return false;
 					}
-					this.sendData();
-					this.$emit('change', true);
+					let backData = await this.sendData();
+					console.log(backData);
+					this.$emit('change', backData);
 				} else {
 					this.$emit('change', false);
 				}
@@ -253,7 +254,7 @@
 				// 	message: `${this.id?'修改':'添加'}成功!`
 				// });
 				this.sendWarning('success', `${this.id?'修改':'添加'}成功!`);
-				console.log(data);
+				return data.new;
 			},
 			getMaterial(data) {
 				console.log(data);
