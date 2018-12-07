@@ -1,6 +1,7 @@
 let need = {
 	setIcon: {
 		概况: -172,
+		// 指派: -343,
 		商品配置: -218,
 		店铺配置: -266,
 		统计管理: -105,
@@ -473,6 +474,9 @@ let need = {
 		},
 		priceTemplate:{     //价格模板
 			name:'priceTemplate'
+		},
+		AssignGoodsConcise:{  // 商品指派
+			name:'AssignGoodsConcise'
 		}
 	}
 };

@@ -193,6 +193,9 @@ const ticket_config = {
 	"131": "ticket_config/ticketed_point_list",
 	"132": "ticket_config/sales_party"
 };
+const goods_assign = {
+	'141':'goods_assign/goods_assign_cont'
+}
 let modelArr = [goods_config, shop_config,statistics]; //开发环境下需要打包的模块
 let config = {
 	useId: [], //需要用到的路由id
@@ -201,7 +204,7 @@ let config = {
 if (process.argv[2] == '--dev' && modelArr.length > 0) {
 	Object.assign(config.configs, ...modelArr);
 } else {
-	Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config);
+	Object.assign(config.configs, home_page, goods_config, outfood, marketing_tools, shop_config, brand_configuration, public_number_configuration, invoicing_system, statistics, cashier, member_system, seller_assistant, ticket_config,goods_assign);
 }
 module.exports = config;
 /*
