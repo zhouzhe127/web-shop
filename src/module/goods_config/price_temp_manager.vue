@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-07 14:25:30
+ * @LastEditTime: 2018-12-07 18:30:07
  * @LastEditors: Please set LastEditors
  -->
 
@@ -131,7 +131,9 @@
 											</div>
 										</template>
 										<template v-else>
-											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+											<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+												isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+											</el-button>
 										</template>
 										
 									</div>
@@ -176,7 +178,9 @@
 										</div>
 									</template>
 									<template v-else>
-										isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										</el-button>
 									</template>
 								</template>
 							</el-table-column>
@@ -219,7 +223,9 @@
 										</div>
 									</template>
 									<template v-else>
-										isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										</el-button>
 									</template>	
 								</template>
 							</el-table-column>
@@ -312,6 +318,20 @@ export default {
 		this.initPageTools();
 	},
 	methods: {
+		existClick(item){
+
+			console.log(item,'item')
+			http.createPricetemplate({
+					data: {
+						itemId:item.itemId,
+						titleId:item.titleId
+					}
+				})
+				.then(res => {
+					console.log(res,'909909909999')
+					// this.getPricetemplateData(this.goodIds);
+				});
+		},
 		/* eslint-disable */
 		async handleVipShowChange(index, sindex) {
 			let price = this.tableTemplate.priceTemplate[index].list[sindex];
