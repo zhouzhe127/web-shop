@@ -47,7 +47,7 @@ export const mixin = {
 		getPersonName: function(id) {
 			let name = '--';
 			for (let key in this.staffList) {
-				if (id == key) {
+				if (id == this.staffList[key].staffId) {
 					name = this.staffList[key].staffName;
 					break;
 				}

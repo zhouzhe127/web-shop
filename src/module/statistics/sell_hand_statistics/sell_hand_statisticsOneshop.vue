@@ -145,14 +145,9 @@ export default {
 			this.getConsumeStatistics();
 		},
 		resetFun: function() { //重置方法
-			this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]; //时间控件
-			this.viewName = '按天数';
-			this.viewId = 0;
-			this.getshopIdorshopName();
 			this.handlers = '';
 			this.approvedPerson = '';
 			this.page = 1;
-			this.num = 10;
 			this.getConsumeStatistics();
 		},
 		formatTime: function(time) {

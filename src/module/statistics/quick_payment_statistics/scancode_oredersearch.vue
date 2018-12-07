@@ -3,13 +3,9 @@
 	<div id="membercard">
 		<!-- 筛选 -->
 		<div class="search">
-			<!-- <span>订单查询</span>
-			<input type="text" placeholder="请输入订单号" v-model="goodsName"> -->
-			<!-- <a href="javascript:;" class="blue" @click="getcommodity">筛选</a> -->
-			<el-input class="fl" placeholder="请输入订单号" v-model="goodsName" style="width:auto;">
-				<i slot="suffix" class="el-input__icon el-icon-search" @click="getcommodity"></i>
+			<el-input placeholder="请输入订单号" v-model="goodsName" class="fl input-with-select" style="width:220px;">
+				<el-button slot="append" icon="el-icon-search" @click="getcommodity"></el-button>
 			</el-input>
-			<!-- <a href="javascript:;" class="gray" @click="reset">重置</a> -->
 			<div class="paymentbox fl" @click="openPaycode">
 				<el-input placeholder="请选择收款码" v-model="paymentCode" :disabled="true" suffix-icon="el-icon-plus">
 				</el-input>
@@ -42,14 +38,6 @@
 			</div>
 		</div>
 		<section style="margin-bottom:20px;">
-			<!-- <com-table @tableEvent="tableEvent" :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
-				<div slot="con-0" slot-scope="props">
-					1
-				</div>
-				<div slot="con-4" slot-scope="props">
-					{{props.data.totalVouchersPain}}({{props.data.totalVouchersNum}}张)
-				</div>
-			</com-table> -->
 			<el-table :data="staticLists" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}" style="width: 1436px;">
 				<el-table-column fixed prop="days" label="天数" align="center">
 					<template slot-scope="scope">

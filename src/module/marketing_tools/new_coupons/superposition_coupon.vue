@@ -562,6 +562,7 @@ export default {
 					this.selectGoodsSec = item.goodArr;
 					this.selectPackagesSec = item.packArr;
 				}
+				this.valiData('关联成功', '提示信息');
 				this.goodsWin = false;
 			}
 			this.goodsWin = false;

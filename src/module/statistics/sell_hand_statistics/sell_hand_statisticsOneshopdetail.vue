@@ -177,8 +177,8 @@ export default {
 				}
 				this.proList = res.list; //底部数据
 				this.userData = res.userData;
+				this.statistics = [];
 				if (res.Statistics != '') {
-					this.statistics = [];
 					let statistics = res.Statistics;
 					statistics.days = this.timeChange();
 					//console.log(statistics)
@@ -191,14 +191,9 @@ export default {
 			this.getConsumeStatistics();
 		},
 		resetFun: function() { //重置方法
-			this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]; //时间控件
-			this.viewName = '按天数';
-			this.viewId = 0;
-			this.getshopIdorshopName();
+			this.page = 1;
 			this.handlers = '';
 			this.approvedPerson = '';
-			this.page = 1;
-			this.num = 10;
 			this.getConsumeStatistics();
 		},
 		timeChange: function() {
