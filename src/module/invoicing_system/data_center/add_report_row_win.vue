@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-04 14:25:38
+ * @Last Modified time: 2018-12-07 14:29:10
  */
 <template>  
 	<div>
@@ -17,15 +17,8 @@
 				</div>
 
 				<div class="pad-bottom">
-					<template v-if="pShowMaterial">
-						<div class="add-matrial" @click="openWin(winType.selectMaterial)">
-							<span>选择物料</span>
-							<i class="el-icon-plus plus"></i>
-						</div>
-						/
-					</template>
 
-					<select-collection-com :selectId="collection.id"  @change="getSelectCollection" :list="collectionList"></select-collection-com>
+					<select-collection-com :pMaterialList="pList" :selectId="collection.id"  @change="getSelectCollection" :list="collectionList"></select-collection-com>
 
 					<div class="add-matrial add-collection" @click="openWin(winType.createCollection)">
 						<i class="el-icon-plus plus" style="margin-right:10px;"></i>
@@ -33,12 +26,10 @@
 					</div>
 				</div>
 
+				<!-- 展示选择的集合 -->
 				<div class="textarea">
-					<div v-if="scope.length > 0">
-						物料范围( {{scope.length}} )                    
-					</div>
 					<div v-if="collection.id">
-						{{collection.name}} ( {{collection.mid.length}} 种 , 单位 : {{collection.unit.name}} )
+						{{collection.name}} ( {{collection.mid && collection.mid.length}} 种)
 					</div>
 				</div>
 
@@ -57,7 +48,7 @@
 		<component
 			:is="showCom"
 			:show="true"
-			:pList="pList"
+			:materialList="pList"
 			:pSelects="scope"
 			@change="closeWin"
 		>
@@ -68,29 +59,12 @@
 <script>
 /*
 	接口:
-		获取集合列表:getStatisticScopeCategoryList
-		添加或更新分类统计范围:setStatisticScopeCategory
-
-
-
-
-	组件:
-		抛出值:
-			pSortObj : 		Object				排序值
-			pScope : 		Array				物料范围:选择的物料id	
-			pCollection : 	Object				选择的集合对象
-
-		接受值:
-			pSortObj : 		Object				排序值
-			pScope : 		Array				物料范围:选择的物料id	
-			pCollection : 	Number				选择的集合id
-		
-		抛出事件:change			
+		获取集合列表:materialreportGetStatisticScopeCategoryList
+		添加或更新分类统计范围:setStatisticScopeCategory	
 
 */
 
 let winType = {
-	selectMaterial : 'selectMaterialCom',                    //选择物料
 	createCollection : 'createCollectionCom'               //新建集合
 };
 import utils from 'src/verdor/utils';
@@ -102,7 +76,6 @@ export default {
 			winType: winType,                   //弹窗名
 
 			showCom:'',                         //当前展示的弹窗
-			comObj:{},                          
 
 			collectionList:[],                  //集合列表       
 
@@ -114,9 +87,6 @@ export default {
 				mid:[],
 				unit:{}
 			},                            //选择的集合
-
-
-			
 		};
 	},
 	props:{
@@ -138,15 +108,10 @@ export default {
 				return [];
 			}
 		},
-		//选择的集合
+		//选择的集合id
 		pCollection:{
 			type:[Number,String],
 			default:''
-		},
-		//是否展示选择物料的弹窗
-		pShowMaterial:{
-			type:[Boolean],
-			default:true
 		},
 		//物料列表
 		pList:{
@@ -163,7 +128,7 @@ export default {
 		//弹窗的宽
 		width:{
 			type:[String],
-			default:'570px'
+			default:'700px'
 		},
 	},
 	methods: {
@@ -175,31 +140,18 @@ export default {
 				obj = {
 					pSortObj : this.sortObj,
 					pCollection : this.collection,
-					pScope : this.scope
 				};
-				if(obj.pScope.length == 0 && !obj.pCollection.id){
-					this.$message('请从物料范围或集合中选择一个!');
-					return;
-				}
 				this.throwData( utils.deepCopy(obj));  
 			}
 		},
 
+		//关闭弹窗
 		closeWin(obj){
 			if(!obj){
 				this.showCom = '';
 				return;
 			}
-			
 			switch(this.showCom){
-				case winType.selectMaterial:    //选择物料
-					if(obj.length == 0){
-						this.$message('请选择物料!');
-						return;
-					}
-					this.scope = obj.map( ele => ele.id);
-					this.collection = {};
-					break;
 				case winType.createCollection:  //新建集合,抛出新建的集合
 					this.collectionList.unshift(obj);
 					this.getSelectCollection(obj);
@@ -209,21 +161,10 @@ export default {
 		},
 		//获取选择的集合
 		getSelectCollection(row){
-			this.collection = row;
-			this.scope = [];
+			if(row){
+				this.collection = row;
+			}
 		},
-
-
-
-
-		throwData(data){
-			this.$emit('change',data);
-		},
-		//打开弹窗
-		openWin(sym){
-			this.showCom = sym;
-		},
-
 
 
 		initDataByProps(){
@@ -234,22 +175,21 @@ export default {
 			};
 			//排序值
 			this.sortObj =  Object.assign(def, utils.deepCopy(this.pSortObj));      
-			//选择的物料范围
-			this.scope =  utils.deepCopy(this.pScope);
 			//集合
 			this.collection = {id:this.pCollection,unit:{},mid:[]};
-			
-			if(this.collection.id && this.scope.length > 0 ){
-				this.scope = [];
-			}
-			//template creator's bad meeting
-			if(this.scope.length > 0){
-				this.pSortObj.num = 1;
-			}
+		},
+
+
+		//打开弹窗
+		openWin(sym){
+			this.showCom = sym;
+		},
+		throwData(data){
+			this.$emit('change',data);
 		},
 		//获取集合列表,选中的集合对象
 		async getCollectionList(id){
-			let retData = await this.getHttp('getStatisticScopeCategoryList');
+			let retData = await this.getHttp('materialreportGetStatisticScopeCategoryList');
 			let collection = null;
 			if(Array.isArray(retData.list)){
 				collection = this.getEle(retData.list,'id',id);				
@@ -276,7 +216,6 @@ export default {
 	components:{
 		selectCollectionCom:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
 		selectMaterialCom:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
-		// createCollectionCom:() => import(/* webpackChunkName:"report_add_collection_win"*/'./report_add_collection_win'),
 		createCollectionCom:()=>import( /*webpackChunkName: 'creat_gather_win'*/ 'src/module/invoicing_system/data_center/creat_templatelist/creat_gather_win.vue'), //新建集合
 		
 	}

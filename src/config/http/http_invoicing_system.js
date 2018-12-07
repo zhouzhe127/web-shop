@@ -1068,10 +1068,6 @@ export default {
 		url: b + "materialreport/getMaterialReportList", //获取物料报表列表
 		method: 'get'
 	},
-	"getStatisticScopeCategoryList": {
-		url: b + "materialreport/getStatisticScopeCategoryList", //获取统计范围（分类集合列表）
-		method: 'get'
-	},
 	"setStatisticScopeCategory": {
 		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
 		method: 'post'
