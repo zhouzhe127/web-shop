@@ -29,11 +29,11 @@
 					<el-select v-model="conType" @change="selectType" placeholder="请选择类型" style="width:150px;">
 						<el-option v-for="item in conTypeList" :key="item.type" :label="item.name" :value="item.type"></el-option>
 					</el-select>
-					<el-time-picker style="width:130px;" v-model="timelate[0]" v-if="conType == '2'" @change="statimechange" :picker-options="{
+					<el-time-picker style="width:130px;" v-model="timelate[0]" v-if="conType == '2'" @change="statimechange" :clearable="false" :picker-options="{
 						selectableRange: '00:00:00 - 23:59:59'
 						}" placeholder="任意时间点">
 					</el-time-picker>
-					<el-time-picker style="width:130px;" v-if="conType == '2'" v-model="timelate[1]" @change="endtimechange" :picker-options="{
+					<el-time-picker style="width:130px;" v-if="conType == '2'" v-model="timelate[1]" @change="endtimechange" :clearable="false" :picker-options="{
 						selectableRange: '00:00:00 - 23:59:59'
 						}" placeholder="任意时间点">
 					</el-time-picker>

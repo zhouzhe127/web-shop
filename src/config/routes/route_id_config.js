@@ -196,7 +196,7 @@ const ticket_config = {
 const goods_assign = {
 	'141':'goods_assign/goods_assign_cont'
 }
-let modelArr = [goods_config, shop_config,statistics]; //开发环境下需要打包的模块
+let modelArr = [goods_config, shop_config,statistics,brand_configuration]; //开发环境下需要打包的模块
 let config = {
 	useId: [], //需要用到的路由id
 	configs: {} //需要插入的路由模块

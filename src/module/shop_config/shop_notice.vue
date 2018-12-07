@@ -1,6 +1,10 @@
 <template>
 	<div>
 		<section v-if="!showWin" style="margin-top:20px;">
+			<el-radio-group v-model="type" style="margin:10px 0;">
+				<el-radio-button label="0">上架通知</el-radio-button>
+				<el-radio-button label="1">下架通知</el-radio-button>
+			</el-radio-group>
 			<el-table
 				stripe border :header-cell-style = "{'background-color':'#f5f7fa'}"
 				:data="noticeList"
@@ -16,7 +20,7 @@
 				<el-table-column show-overflow-tooltip min-width="150" align="center" prop="title" label="标题" ></el-table-column>
 			</el-table>
 		</section>
-		<shopNoticeWin v-if="showWin" @openTwo="winResult" :redDetial="redDetial" :isAdd="isAdd"></shopNoticeWin>
+		<shopNoticeWin v-if="showWin" @openTwo="winResult" :redDetial="redDetial" :isAdd="isAdd" :jobList="jobList"></shopNoticeWin>
 	</div>
 </template>
 <script>
@@ -33,6 +37,8 @@ export default {
 			isAdd: true,
 			redDetial: { title: '', time: parseInt(new Date().getTime()/1000),content:''}, //详情
 			isTy: false,//草稿箱或列表默认列表
+			type:'0',//上架，下架通知
+			jobList:[],//职位列表
 		};
 	},
 	components: {
@@ -100,12 +106,14 @@ export default {
 				rools = [
 					{
 						name: '草稿箱',
-						className: ['wearhouse', 'create'],
+						type:4,
+						className: '',
 						fn: this.getdraft
 					},
 					{
 						name: '新建内容',
-						className: ['addStaff', 'export-btn'],
+						type:4,
+						className: 'primary',
 						fn: this.add
 					}
 				];
@@ -113,7 +121,8 @@ export default {
 				rools = [
 					{
 						name: '返回',
-						className: ['wearhouse', 'create'],
+						type:4,
+						className: 'info',
 						fn: this.init
 					}
 				];
@@ -130,6 +139,7 @@ export default {
 		//获取通知列表
 		async getList(){
 			this.copyNoticeList = await http.getNoticeList({ data: {} });
+			this.jobList = await http.newGetJobInfoList();
 			for (let i = 0; i < this.copyNoticeList.length; i++) {
 				let item = this.copyNoticeList[i];
 				item.time = utils.format(new Date(item.time*1000), 'yyyy-MM-dd hh:mm:ss');
