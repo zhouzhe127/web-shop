@@ -58,7 +58,7 @@
 		data() {
 			return {
 				reportName: '--',
-				reportId: 3, //报表id
+				reportId: '', //报表id
 				condition: {},
 				mainData:{},
 				tableData: [],
@@ -90,15 +90,17 @@
 			async getDetail() {
 				// let condition = this.condition;
 				let subObj = {
-					reportId: 3,
+					name:this.condition.name||'',
+					barCode:this.condition.code||'',
+					reportId: this.reportId,
 					page: this.page,
-					size: this.num
+					size: this.num,
 				};
 				let res = await this.getHttp('materialreportGetScopeList', subObj);
 				console.log(res);
 				this.mainData = res;
 				this.tableData = res.list;
-
+				this.allTotal = res.list.length;
 			},
 			pageChange(e) {
 				this.page = e;
@@ -115,13 +117,13 @@
 			toDetail(data){
 				let obj ={
 					id:this.reportId,
-					reportName:this.reportName,
+					name:this.reportName,
 					scopeId:data.id,
 					scopeType : this.gatherType[data.type],
 					scopeName:data.scopeName
 				};
 				this.$router.push({
-					path: 'materialReport/reportDetail',
+					path: 'reportDetail',
 					query: obj,
 				});
 			},
@@ -182,7 +184,7 @@
 			let query = this.$route.query;
 			if (Number(query.id)) {
 				this.reportId = Number(query.id);
-				this.reportName = Number(query.name);
+				this.reportName = query.name;
 			}
 			this.initBtn();
 			this.filterReset();

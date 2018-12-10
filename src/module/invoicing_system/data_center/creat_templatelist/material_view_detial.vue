@@ -84,18 +84,19 @@
 					scopeId: this.scopeId,
 					page: this.page,
 					size: this.num,
-					name:this.condition.name,
-					barCode:this.condition.barCode,
+					name:this.condition.name||'',
+					barCode:this.condition.barCode||'',
 				};
 				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
 				console.log(res);
 				this.tableData = res.report;
+				this.allTotal = res.report.length;
 				res.report.push({
 					itemInfo:{
 						'name': '总计',
 						'barCode':'--',
 					},
-					reportInfo:this.mainData.reportCount
+					reportInfo:res.reportCount
 				});
 				this.mainData = res;
 			},
