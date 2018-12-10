@@ -572,18 +572,20 @@ export default {
 
 <style lang='less' scoped>
 	.warehouse-detail{padding-bottom: 100px;padding-top: 10px;
-		.detail-box{border: 1px solid #dcdfe6;
+		.detail-box{border: 1px solid #ebeef5;
 			.title{height: 40px;line-height: 40px;padding: 0 20px;font-size: 16px;background: #f5f7fa;}
 			.word{overflow: hidden;
+				padding-bottom: 10px;
 				.block{overflow: hidden;width: 100%;}
-				.item{width: 33.33%;float: left;padding: 15px 20px;min-height: 54px;font-size: 16px;color: #333;position: relative;
-					padding-left: 100px;line-height: 1.5;
-					em{position: absolute;left: 20px;top: 15px;font-size: 16px;}
+				.item{width: 33.33%;float: left;padding: 0 20px;padding-left: 100px;padding-top:20px;
+				min-height: 40px;font-size: 16px;color: #333;position: relative;
+					line-height: 1.5;
+					em{position: absolute;left: 20px;top: 20px;font-size: 16px;}
 					&:nth-child(1){width: 30%;}
 					&:nth-child(2){width: 30%;}
 					&:nth-child(3){width: 40%;}
 				}
-				.handle{text-align: right;width: 100%;padding-left: 0;line-height: normal;padding-top: 0;}
+				.handle{text-align: right;width: 100%;padding-left: 0;padding-right: 10px;line-height: normal;padding-top: 0;}
 			}
 		}
 		.tab-box{overflow: hidden;padding-top: 20px;
