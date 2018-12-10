@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-07 15:43:43
+ * @LastEditTime: 2018-12-10 18:28:03
  * @LastEditors: Please set LastEditors
  -->
 
@@ -56,16 +56,17 @@
 				</el-table>
 			</div>
 			<!-- 任务分页 -->
-			<div class="task-pagination">
+			<div class="task-pagination" >
 				<el-pagination 
-				background 
-				@size-change="sizeChange" 
-				@current-change="pageClick" 
-				:current-page="Number(currentPage)" 
-				:page-count="Number(totalNum)" 
-				:page-size="Number(pageSize)" 
-				layout="sizes, prev, pager, next, jumper" 
-				:page-sizes="[10,20,30,50]"></el-pagination>
+					background 
+					@size-change="sizeChange" 
+					@current-change="pageClick" 
+					:current-page="Number(currentPage)" 
+					:page-count="Number(totalNum)" 
+					:page-size="Number(pageSize)" 
+					layout="sizes, prev, pager, next, jumper" 
+					:page-sizes="[10,20,30,50]">
+				</el-pagination>
 			</div>
 		</template>
 		<!-- 添加新任务部分 -->
@@ -183,5 +184,8 @@
 			}
 		}
 	}
+}
+.task-pagination{
+	margin-top: 30px;
 }
 </style>

@@ -12,7 +12,7 @@ import member from './http_member';
 import cashier from './http_cashier';
 import sellerAssents from './http_seller_assents';
 import ticket from './http_ticket';
-
+import assigntask from './http_assigntask'
 let httpConfig = {
 	Login: {
 		url: s + 'entrance/login', //登录
@@ -90,7 +90,8 @@ let objConfig = [
 	member,
 	cashier,
 	sellerAssents,
-	ticket
+	ticket,
+	assigntask
 ];
 
 for (let item of objConfig) {
