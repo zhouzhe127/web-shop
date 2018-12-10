@@ -18,21 +18,31 @@
 		</div>
 		<div class="listBox">
 			<div class="tableHeard">
-				<span>调度审核列表&nbsp;·&nbsp;共个条目</span>
+				<span>{{reportName}}--列表</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
-				<el-table-column prop="date" label="集合名称">
+				<el-table-column prop="scopeName" label="集合名称">
+					<template slot-scope="scope">
+						<el-button type="text" @click="toDetail(scope.row)">{{scope.row.scopeName}}</el-button>
+					</template>
 				</el-table-column>
 				<el-table-column prop="code" label="集合类型">
+					<template slot-scope="scope">
+						<div>{{gatherType[scope.row.type]}}</div>
+					</template>
 				</el-table-column>
-				<el-table-column label="普通入库量" prop="code"></el-table-column>
-				<el-table-column prop="createUser" label="申请店铺/品牌">
+				<el-table-column v-for="(item,index) in mainData.statisticItem" :key="index" :label="item.scopeName" prop="code">
+					<template slot-scope="scope">
+						<div>{{scope.row.content.count[index].value}}{{scope.row.content.count[index].unitName}}</div>
+					</template>
+				</el-table-column>
+				<!-- <el-table-column prop="createUser" label="申请店铺/品牌">
 					<template slot-scope="scope">
 						<div></div>
 					</template>
 				</el-table-column>
 				<el-table-column label="普通入库成本总额">
-				</el-table-column>
+				</el-table-column> -->
 			</el-table>
 		</div>
 		<div class="page-box">
@@ -43,17 +53,24 @@
 </template>
 <script>
 	import http from 'src/manager/http';
-	// import exportFile from 'src/verdor/exportFile';
+	import exportFile from 'src/verdor/exportFile';
 	export default {
 		data() {
 			return {
 				reportName: '--',
 				reportId: 3, //报表id
 				condition: {},
+				mainData:{},
 				tableData: [],
 				page: 1,
 				allTotal: 0,
 				num: 10, //每页显示多少条
+				gatherType:{
+					3:'物料',
+					4:'单位-物料集合',
+					5:'供应商-物料集合',
+					6:'物料-供应商集合',
+				}
 			};
 		},
 		methods: {
@@ -65,21 +82,22 @@
 			},
 			initCondition() {
 				this.condition = {
-					name: 1,
-					code: '000005'
+					name: '',
+					code: ''
 				};
 			},
 			//获取报表详情
 			async getDetail() {
 				// let condition = this.condition;
 				let subObj = {
-					reportId: this.reportId,
-					page:1,
-					size:10
+					reportId: 3,
+					page: this.page,
+					size: this.num
 				};
 				let res = await this.getHttp('materialreportGetScopeList', subObj);
 				console.log(res);
-				this.tableData = res;
+				this.mainData = res;
+				this.tableData = res.list;
 
 			},
 			pageChange(e) {
@@ -94,12 +112,79 @@
 				}, err);
 				return res;
 			},
+			toDetail(data){
+				let obj ={
+					id:this.reportId,
+					reportName:this.reportName,
+					scopeId:data.id,
+					scopeType : this.gatherType[data.type],
+					scopeName:data.scopeName
+				};
+				this.$router.push({
+					path: 'materialReport/reportDetail',
+					query: obj,
+				});
+			},
+			initBtn() {
+				this.$store.commit('setPageTools', [{
+					name: '返回',
+					type: '4',
+					className: 'plain',
+					fn: () => {
+						this.$router.go(-1);
+					}
+				},
+				{
+					name: '删除',
+					type: '4',
+					className: 'danger',
+					fn: () => {
+						this.delTemplate('确定要删除当前报表吗?', this.reportId);
+					}
+				},
+				{
+					name: '导出',
+					type: '4',
+					className: 'primary',
+					fn: async () => {
+						let res = await this.getHttp('materialreportExportMaterialReportExcel', {
+							id: this.reportId
+						});
+						exportFile({
+							url: res,
+						});
+					}
+				},]);
+			},
+			//删除报表
+			delTemplate(tips, ids) {
+				this.$confirm(tips, '操作提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					this.getHttp('materialreportDeleteMaterialByIds', {
+						ids: ids
+					}).then((res) => {
+						if (res) {
+							this.$message('删除成功!');
+							this.$router.go(-1);
+						} else {
+							this.$message('删除失败!');
+						}
+					});
+				}).catch(() => {
+					console.log('取消');
+				});
+			},
 		},
 		mounted() {
 			let query = this.$route.query;
 			if (Number(query.id)) {
 				this.reportId = Number(query.id);
+				this.reportName = Number(query.name);
 			}
+			this.initBtn();
 			this.filterReset();
 		},
 		// components: {},

@@ -14,11 +14,15 @@ module.exports = {
         },
         {
             path: 'viewReport',
-            url: 'src/module/invoicing_system/data_center/material_view_report' //已生成报表
+            url: 'src/module/invoicing_system/data_center/creat_templatelist/material_view_report' //已生成报表
         },
         {
             path: 'test',
-            url: 'src/module/invoicing_system/data_center/creat_templatelist/material_view_report' //已生成报表
+            url: 'src/module/invoicing_system/data_center/material_view_report' //已生成报表
+        },
+        {
+            path: 'reportDetail',
+            url: 'src/module/invoicing_system/data_center/creat_templatelist/material_view_detial' //已生成报表
         },
         {
             path: 'creatTempMain',

@@ -213,7 +213,6 @@
 				},]); //获取统计项数据
 				this.reportData = [...res[0].data, ...res[2].data.list];
 				this.wareList = res[1].data;
-				console.log(res);
 			},
 			//获取所有物料
 			async recursiveGetMaterialList() {

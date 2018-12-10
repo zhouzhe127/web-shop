@@ -98,6 +98,7 @@ export default {
 			this.formulaData.base = this.baseList;
 			//获取公式项数据
 			let data = await http.materialreportGetStatisticItemFormulaList();
+			console.log(data);
 			for(let item of data.list){
 				item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
 					for(let base of this.baseList){

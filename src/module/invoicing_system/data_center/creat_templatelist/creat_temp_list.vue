@@ -418,6 +418,7 @@
 				data.forEach(v=>{
 					if(v.shopId==shopId)this.roleList.push(v);
 				});
+				console.log(this.roleList);
 			},
 			delColumn(index, type,item) { //type:1是行，2是列
 				let str = type == 1 ? '行' : '列';
@@ -486,15 +487,12 @@
 				this.editIndex = index;
 				this.columnShow = true;
 				this.isEdit = true;
-				console.log(item);
 				Object.assign(this.columnListData, item);
 			},
 			editRow(item, index) {
 				this.editIndex = index;
 				this.isEdit = true;
 				this.rowShow = true;
-				console.log(item);
-				this.pShowMaterial = item.pScope.length>0? true:false;
 				this.pSortObj = item.pSortObj;
 				this.pScope = item.pScope;
 				this.pCollection = item.pCollection.id;
