@@ -90,7 +90,7 @@
 				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
 				console.log(res);
 				this.tableData = res.report;
-				this.allTotal = res.report.length;
+				this.allTotal = res.count;
 				res.report.push({
 					itemInfo:{
 						'name': '总计',
@@ -102,6 +102,7 @@
 			},
 			pageChange(e) {
 				this.page = e;
+				this.getDetail();
 			},
 			sizeChange(num) {
 				this.num = num;

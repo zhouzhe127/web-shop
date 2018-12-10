@@ -100,10 +100,11 @@
 				console.log(res);
 				this.mainData = res;
 				this.tableData = res.list;
-				this.allTotal = res.list.length;
+				this.allTotal = res.count;
 			},
 			pageChange(e) {
 				this.page = e;
+				this.getDetail();
 			},
 			sizeChange(num) {
 				this.num = num;
