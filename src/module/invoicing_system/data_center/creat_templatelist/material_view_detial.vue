@@ -106,6 +106,16 @@
 			sizeChange(num) {
 				this.num = num;
 			},
+			initBtn() {
+				this.$store.commit('setPageTools', [{
+					name: '返回',
+					type: '4',
+					className: 'plain',
+					fn: () => {
+						this.$router.go(-1);
+					}
+				}]);
+			},
 			async getHttp(url, obj = {}, err = false) {
 				let res = await http[url]({
 					data: obj
@@ -122,6 +132,7 @@
 				this.scopeName = query.scopeName;
 				this.scopeType = query.scopeType;
 			}
+			this.initBtn();
 			this.filterReset();
 		},
 		// components: {},
