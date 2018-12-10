@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-10 10:26:22
+ * @Last Modified time: 2018-12-10 10:36:46
  */
 <template>  
 	<div>
@@ -201,7 +201,7 @@ export default {
 				let obj = this.getEle(types,'id',ele.type);
 				if(obj){
 					ele.typeName = obj.name;
-					ele.instruction = this.getExplain(ele);
+					ele.instruction = this.getExplain(ele,this.pList);
 				}
 			}
 		},
