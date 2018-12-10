@@ -12,37 +12,30 @@
 				<el-input clearable v-model="condition.code" placeholder="物料编码" maxlength="50" style="width:224px"></el-input>
 			</div>
 			<div class="in-block" style="padding-left:10px;">
-				<el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
-				<el-button type="info" @click="filterReset('reset',null)">重置</el-button>
+				<el-button type="primary" @click="filterReset('ok',null)">筛选</el-button>
+				<el-button type="info" @click="filterReset('filter',null)">重置</el-button>
 			</div>
 		</div>
 		<div class="listBox">
 			<div class="tableHeard">
-				<span>{{reportName}}--列表</span>
+				<span>集合名称：{{scopeName}} 集合类型：{{scopeType}}</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
-				<el-table-column prop="scopeName" label="集合名称">
+				<el-table-column prop="date" label="物料名称">
 					<template slot-scope="scope">
-						<el-button type="text" @click="toDetail(scope.row)">{{scope.row.scopeName}}</el-button>
+						<div>{{scope.row.itemInfo.name}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="code" label="集合类型">
+				<el-table-column prop="code" label="物料编码">
 					<template slot-scope="scope">
-						<div>{{gatherType[scope.row.type]}}</div>
+						<div>{{scope.row.itemInfo.barCode}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column v-for="(item,index) in mainData.statisticItem" :key="index" :label="item.scopeName" prop="code">
+				<el-table-column v-for="(item,index) in mainData.customItem" :key="index" :label="item" prop="code">
 					<template slot-scope="scope">
-						<div>{{scope.row.content.count[index].value}}{{scope.row.content.count[index].unitName}}</div>
+						<div>{{scope.row.reportInfo[index].value}}{{scope.row.reportInfo[index].unitName}}</div>
 					</template>
 				</el-table-column>
-				<!-- <el-table-column prop="createUser" label="申请店铺/品牌">
-					<template slot-scope="scope">
-						<div></div>
-					</template>
-				</el-table-column>
-				<el-table-column label="普通入库成本总额">
-				</el-table-column> -->
 			</el-table>
 		</div>
 		<div class="page-box">
@@ -53,24 +46,21 @@
 </template>
 <script>
 	import http from 'src/manager/http';
-	import exportFile from 'src/verdor/exportFile';
+	// import exportFile from 'src/verdor/exportFile';
 	export default {
 		data() {
 			return {
 				reportName: '--',
 				reportId: '', //报表id
+				scopeId:'',
+				mainData:{},//总数据
 				condition: {},
-				mainData:{},
 				tableData: [],
 				page: 1,
 				allTotal: 0,
 				num: 10, //每页显示多少条
-				gatherType:{
-					3:'物料',
-					4:'单位-物料集合',
-					5:'供应商-物料集合',
-					6:'物料-供应商集合',
-				}
+				scopeName:'',
+				scopeType:''
 			};
 		},
 		methods: {
@@ -90,42 +80,31 @@
 			async getDetail() {
 				// let condition = this.condition;
 				let subObj = {
-					name:this.condition.name||'',
-					barCode:this.condition.code||'',
 					reportId: this.reportId,
+					scopeId: this.scopeId,
 					page: this.page,
 					size: this.num,
+					name:this.condition.name||'',
+					barCode:this.condition.barCode||'',
 				};
-				let res = await this.getHttp('materialreportGetScopeList', subObj);
+				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
 				console.log(res);
+				this.tableData = res.report;
+				this.allTotal = res.report.length;
+				res.report.push({
+					itemInfo:{
+						'name': '总计',
+						'barCode':'--',
+					},
+					reportInfo:res.reportCount
+				});
 				this.mainData = res;
-				this.tableData = res.list;
-				this.allTotal = res.list.length;
 			},
 			pageChange(e) {
 				this.page = e;
 			},
 			sizeChange(num) {
 				this.num = num;
-			},
-			async getHttp(url, obj = {}, err = false) {
-				let res = await http[url]({
-					data: obj
-				}, err);
-				return res;
-			},
-			toDetail(data){
-				let obj ={
-					id:this.reportId,
-					name:this.reportName,
-					scopeId:data.id,
-					scopeType : this.gatherType[data.type],
-					scopeName:data.scopeName
-				};
-				this.$router.push({
-					path: 'reportDetail',
-					query: obj,
-				});
 			},
 			initBtn() {
 				this.$store.commit('setPageTools', [{
@@ -135,56 +114,23 @@
 					fn: () => {
 						this.$router.go(-1);
 					}
-				},
-				{
-					name: '删除',
-					type: '4',
-					className: 'danger',
-					fn: () => {
-						this.delTemplate('确定要删除当前报表吗?', this.reportId);
-					}
-				},
-				{
-					name: '导出',
-					type: '4',
-					className: 'primary',
-					fn: async () => {
-						let res = await this.getHttp('materialreportExportMaterialReportExcel', {
-							id: this.reportId
-						});
-						exportFile({
-							url: res,
-						});
-					}
-				},]);
+				}]);
 			},
-			//删除报表
-			delTemplate(tips, ids) {
-				this.$confirm(tips, '操作提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					this.getHttp('materialreportDeleteMaterialByIds', {
-						ids: ids
-					}).then((res) => {
-						if (res) {
-							this.$message('删除成功!');
-							this.$router.go(-1);
-						} else {
-							this.$message('删除失败!');
-						}
-					});
-				}).catch(() => {
-					console.log('取消');
-				});
+			async getHttp(url, obj = {}, err = false) {
+				let res = await http[url]({
+					data: obj
+				}, err);
+				return res;
 			},
 		},
 		mounted() {
 			let query = this.$route.query;
 			if (Number(query.id)) {
 				this.reportId = Number(query.id);
-				this.reportName = query.name;
+				this.reportName = query.name||'--';
+				this.scopeId = Number(query.scopeId);
+				this.scopeName = query.scopeName;
+				this.scopeType = query.scopeType;
 			}
 			this.initBtn();
 			this.filterReset();

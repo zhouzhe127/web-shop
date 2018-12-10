@@ -322,7 +322,6 @@
 						this.selectClassifyId = data.cid;
 					}
 				}
-				this.sleType = data.type - 3;
 				if (data.type == 4) this.selectUnit = data.unit;
 				if (data.type > 4) {
 					this.selectSuppier = this.getSelectArr(data.supplier.split(','), this.suppierList, 'name');
@@ -349,7 +348,10 @@
 			await this.init();
 			this.recursiveGetMaterialList();
 			if (this.editData&&this.editData.id) {
-				this.setEdit(this.editData);
+				this.sleType = this.editData.type - 3;
+				this.$nextTick(()=>{
+					this.setEdit(this.editData);
+				});
 			}
 
 		},
@@ -398,7 +400,7 @@
 					this.selectSuppier = newsCache.selectSuppier;
 					this.sendMaterial = newsCache.sendMaterial;
 				} else {
-					// this.chooseCate = false;
+					this.chooseCate = false;
 					this.materisSingle = false;
 					this.selectUnit = {};
 					this.selectMater = [];

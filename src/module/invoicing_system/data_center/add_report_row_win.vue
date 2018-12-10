@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 16:13:47
+ * @Last Modified time: 2018-12-10 10:36:46
  */
 <template>  
 	<div>
@@ -29,7 +29,7 @@
 				<!-- 展示选择的集合 -->
 				<div class="textarea">
 					<div v-if="collection.id">
-						{{collection.name}} ( {{collection.mid && collection.mid.length}} 种)
+						{{collection.instruction}}
 					</div>
 				</div>
 
@@ -63,7 +63,25 @@
 		添加或更新分类统计范围:setStatisticScopeCategory	
 
 */
-
+//是否是分类 0否(物料) 1是(分类)
+let types = [
+	{
+		id:3,
+		name:'物料',
+	},
+	{
+		id:4,
+		name:'单位-物料集合',
+	},
+	{
+		id:5,
+		name:'供应商-物料集合',
+	},
+	{
+		id:6,
+		name:'物料-供应商集合',
+	},
+];
 let winType = {
 	createCollection : 'createCollectionCom'               //新建集合
 };
@@ -83,10 +101,7 @@ export default {
 			sortObj:{},                         //排序值,
 			scope:[],                           //物料范围
 			
-			collection:{
-				mid:[],
-				unit:{}
-			},                            //选择的集合
+			collection:{},                     //选择的集合
 		};
 	},
 	props:{
@@ -141,7 +156,6 @@ export default {
 					pSortObj : this.sortObj,
 					pCollection : this.collection,
 				};
-				console.log(obj);
 				this.throwData( utils.deepCopy(obj));  
 			}
 		},
@@ -155,6 +169,8 @@ export default {
 			switch(this.showCom){
 				case winType.createCollection:  //新建集合,抛出新建的集合
 					Object.assign(obj,{...obj.content});
+
+					this.initCollection([obj]);
 					this.collectionList.unshift(obj);
 					this.getSelectCollection(obj);
 					break;
@@ -178,26 +194,71 @@ export default {
 			//排序值
 			this.sortObj =  Object.assign(def, utils.deepCopy(this.pSortObj));      
 			//集合
-			this.collection = {id:this.pCollection,unit:{},mid:[]};
+			this.collection = {id:this.pCollection};
+		},
+		initCollection(list){
+			for(let ele of list){
+				let obj = this.getEle(types,'id',ele.type);
+				if(obj){
+					ele.typeName = obj.name;
+					ele.instruction = this.getExplain(ele,this.pList);
+				}
+			}
+		},
+		//获取集合列表,选中的集合对象
+		async getCollectionList(id){
+			let retData = await this.getHttp('materialreportGetStatisticScopeCategoryList');
+			let collection = null;
+			let collectionList = retData.list;
+
+			if(Array.isArray(collectionList)){
+				this.initCollection(collectionList);
+				collection = this.getEle(collectionList,'id',id);				
+				if(collection) this.collection = collection;
+				this.collectionList = collectionList;				
+			}
 		},
 
 
+		//获取集合说明
+		getExplain(data,list){//生成说明
+			let str = '';
+			let text = '';
+			if(data.type!=6)str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`;
+			switch(data.type){
+				// case 3:
+				// 	str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`
+				// 	break;
+				case 4:
+					text = `物料单位：${data.unit.name}；`;
+					str = text+str;
+					break;
+				case 5:
+					text = `供应商数量：${data.supplier.split(',').length}；`;
+					str = text+str;
+					break;
+				case 6:
+					str = `物料名称：${this.getMateralName(data.mid,list).name}；供应商数量：${data.supplier.split(',').length}`;
+					break;		
+			}
+			return str;
+		},
+		getMateralName(id,list){
+			let sele = '';
+			for(let item of list){
+				if(id == item.id){
+					sele = item;
+					break;
+				}
+			}
+			return sele;
+		},
 		//打开弹窗
 		openWin(sym){
 			this.showCom = sym;
 		},
 		throwData(data){
 			this.$emit('change',data);
-		},
-		//获取集合列表,选中的集合对象
-		async getCollectionList(id){
-			let retData = await this.getHttp('materialreportGetStatisticScopeCategoryList');
-			let collection = null;
-			if(Array.isArray(retData.list)){
-				collection = this.getEle(retData.list,'id',id);				
-				if(collection) this.collection = collection;
-				this.collectionList = retData.list;				
-			}
 		},
 		async getHttp(url,obj={},err=false){
 			let res = await http[url]({data:obj},err);
