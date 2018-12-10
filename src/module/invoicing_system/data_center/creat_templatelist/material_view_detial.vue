@@ -18,7 +18,7 @@
 		</div>
 		<div class="listBox">
 			<div class="tableHeard">
-				<span>集合名称：{{scopeName}} 集合类型：{{scopeType}}</span>
+				<span>集合名称：{{scopeName}}&nbsp;&nbsp;&nbsp; 集合类型：{{scopeType}}</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
 				<el-table-column prop="date" label="物料名称">
@@ -33,7 +33,7 @@
 				</el-table-column>
 				<el-table-column v-for="(item,index) in mainData.customItem" :key="index" :label="item" prop="code">
 					<template slot-scope="scope">
-						<div>{{scope.row.reportInfo[index].value}}{{scope.row.reportInfo[index].unitName}}</div>
+						<div>{{scope.row.reportInfo[index].value}}{{scope.row.reportInfo[index].value&&scope.row.reportInfo[index].value!='--'?scope.row.reportInfo[index].unitName:''}}</div>
 					</template>
 				</el-table-column>
 			</el-table>

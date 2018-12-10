@@ -33,7 +33,7 @@
 				</el-table-column>
 				<el-table-column v-for="(item,index) in mainData.statisticItem" :key="index" :label="item.scopeName" prop="code">
 					<template slot-scope="scope">
-						<div>{{scope.row.content.count[index].value}}{{scope.row.content.count[index].unitName}}</div>
+						<div>{{scope.row.content.count[index].value}}{{scope.row.content.count[index].value&&scope.row.content.count[index].value!='--'?scope.row.content.count[index].unitName:''}}</div>
 					</template>
 				</el-table-column>
 				<!-- <el-table-column prop="createUser" label="申请店铺/品牌">
