@@ -49,7 +49,7 @@
 				<el-table :data="proList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
 					<el-table-column fixed prop="fromId" label="店铺名称" align="center" width="150">
 						<template slot-scope="scope">
-							<el-button size="medium" type="text">{{oneShopName}}</el-button>
+							<span>{{oneShopName}}</span>
 						</template>
 					</el-table-column>
 					<el-table-column label="用户昵称" prop="day" align="center">

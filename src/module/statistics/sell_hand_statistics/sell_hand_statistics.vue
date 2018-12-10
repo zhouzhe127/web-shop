@@ -24,7 +24,7 @@
 				</div>
 			</div>
 			<div class="search_box">
-				<div class="fl box_child clearfix">
+				<div class="fl box_child clearfix" v-if="ischain == '3'">
 					<span class="fl">选择门店</span>
 					<elShopList @chooseShop="getSelectShopList" :shopIds="transmitId"></elShopList>
 				</div>
@@ -37,8 +37,15 @@
 					<el-input class="fl" v-model="approvedPerson" placeholder="请输入内容" style="width:179px;"></el-input>
 				</div>
 			</div>
-			<div class="search_box">
+			<!-- <div class="search_box" v-if="ischain == '3'">
 				<span style="font-size: 16px;line-height:1.5;">选择门店:{{selectName}}</span>
+			</div> -->
+			<div class="store-show" :style="{'height':storeShowH}" v-if="ischain == '3'">
+				<i>已选择店铺：</i>
+				<div class="store-block">
+					<em @click='openStore' class="select-ban">{{isShowStore?'收起':'展开'}}</em>
+					<div>{{selectName}}</div>
+				</div>
 			</div>
 			<div class="list_box">
 				<el-table :data="statistics" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
@@ -188,7 +195,9 @@ export default {
 			beforeAmount: '', //原来的金额价格
 			sellHandId: '',
 			showBackWin: false,
-			modifyId: '' //修改记录的某一条id
+			modifyId: '', //修改记录的某一条id
+			storeShowH: '20px',
+			isShowStore: false, //已选中店铺列表 是否展开
 		};
 	},
 	components: {
@@ -212,6 +221,14 @@ export default {
 		this.getConsumeStatistics(); //获取数据
 	},
 	methods: {
+		openStore() { //展开收起-已选中店铺列表
+			if (this.isShowStore == true) { //展开时点击
+				this.storeShowH = '20px';
+			} else {
+				this.storeShowH = 'auto';
+			}
+			this.isShowStore = !this.isShowStore;
+		},
 		chooseTime: function(time) { //获取时间
 			this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
 		},
@@ -394,5 +411,41 @@ export default {
 
 #sell_hand .list_top {
 	margin-bottom: 20px;
+}
+
+#sell_hand .store-show {
+	width: 100%;
+	margin-bottom: 20px;
+	display: block;
+	overflow: hidden;
+	line-height: 20px;
+	position: relative;
+}
+
+#sell_hand .store-show i {
+	float: left;
+	position: absolute;
+	left: 0;
+	top: 0;
+
+}
+
+#sell_hand .store-show .store-block {
+	overflow: hidden;
+	width: 100%;
+	padding-left: 84px;
+}
+
+#sell_hand .store-show .store-block em {
+	float: left;
+	color: #09f;
+	margin-right: 5px;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+#sell_hand .store-show .store-block span {
+	float: left;
+	color: #333;
 }
 </style>
