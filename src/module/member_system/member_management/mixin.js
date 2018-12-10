@@ -74,6 +74,15 @@ export const mixin = {
 			}, {
 				name: '升级获得积分',
 				id: 33
+			}, {
+				name: '有赞获得积分',
+				id: 34
+			}, {
+				name: '有赞减少积分',
+				id: 35
+			}, {
+				name: '修改确认消费操作的积分',
+				id: 36
 			}],
 		};
 	},
@@ -87,9 +96,16 @@ export const mixin = {
 			} else {
 				operate = '+';
 			}
-
+			// 36: "修改确认消费操作的积分" status 0 减 status 1 加
+			if (item.type == '36') {
+				if (item.status == '0') {
+					operate = '-';
+				} else {
+					operate = '+';
+				}
+			}
 			if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
-				'10' || item.type == '11' || item.type == '33') {
+				'10' || item.type == '11' || item.type == '33' || item.type == '36') {
 				return operate + item.operatePoint;
 			} else {
 				if (item.type == '1' || item.type == '6') {
