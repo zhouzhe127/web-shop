@@ -4,7 +4,7 @@
 */
 <template>
 	<div>
-		<el-dialog :visible.sync="dialogVisible" width="70%" @close="sendClose('close')">
+		<el-dialog :visible.sync="dialogVisible" width="60%" @close="sendClose('close')">
 			<span slot="title" class="winTitle">{{title}}</span>
 			<div class="content">
 				<div class="chooseAll">

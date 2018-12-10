@@ -90,6 +90,13 @@
 				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
 				console.log(res);
 				this.tableData = res.report;
+				res.report.push({
+					itemInfo:{
+						'name': '总计',
+						'barCode':'--',
+					},
+					reportInfo:this.mainData.reportCount
+				});
 				this.mainData = res;
 			},
 			pageChange(e) {

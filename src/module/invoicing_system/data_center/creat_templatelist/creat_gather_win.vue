@@ -398,7 +398,7 @@
 					this.selectSuppier = newsCache.selectSuppier;
 					this.sendMaterial = newsCache.sendMaterial;
 				} else {
-					// this.chooseCate = false;
+					this.chooseCate = false;
 					this.materisSingle = false;
 					this.selectUnit = {};
 					this.selectMater = [];
