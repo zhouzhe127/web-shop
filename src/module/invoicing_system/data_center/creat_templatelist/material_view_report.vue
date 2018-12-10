@@ -18,7 +18,7 @@
 		</div>
 		<div class="listBox">
 			<div class="tableHeard">
-				<span>{{reportName}}--列表</span>
+				<span>{{reportName}} - 列表</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
 				<el-table-column prop="scopeName" label="集合名称">
