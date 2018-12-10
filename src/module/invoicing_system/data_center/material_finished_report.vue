@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 16:38:38
+ * @Last Modified time: 2018-12-07 18:59:33
  */
 
 <template>
@@ -92,11 +92,11 @@ export default {
 		return {
 			loading:false,
 			statusMap : {
-				reject : 13,		//报表生成失败
+				reject : 0,		//报表生成失败
 				rejectName:'失败',
-				resolve : 0,		//报表生成成功
+				resolve : 2,		//报表生成成功
 				resolveName:'成功',
-				opending : 12		//报表生成中
+				opending : 1		//报表生成中
 			},						//报表的最终状态
 			tableData:[],
 			template:{},                        //模板
@@ -148,7 +148,7 @@ export default {
 					if(item.status == statusMap.reject){
 						this.$message('报表生成失败!');
 					}else if(item.status == statusMap.resolve){
-						this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id}});
+						this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id,name:item.name}});
 					}else{
 						this.$message('报表正在生成中,请稍后...');
 					}
