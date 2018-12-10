@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-07 18:30:07
+ * @LastEditTime: 2018-12-10 11:36:29
  * @LastEditors: Please set LastEditors
  -->
 
@@ -131,8 +131,8 @@
 											</div>
 										</template>
 										<template v-else>
-											<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
-												isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+											<el-button type="warning" @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+												点击添加模板价格
 											</el-button>
 										</template>
 										
@@ -178,8 +178,8 @@
 										</div>
 									</template>
 									<template v-else>
-										<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
-											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										<el-button type="warning" @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											点击添加模板价格
 										</el-button>
 									</template>
 								</template>
@@ -223,8 +223,8 @@
 										</div>
 									</template>
 									<template v-else>
-										<el-button @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
-											isExist:{{tableTemplate.priceTemplate[index].list[scope.$index].isExist}}
+										<el-button type="warning" @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											点击添加模板价格
 										</el-button>
 									</template>	
 								</template>
@@ -329,7 +329,7 @@ export default {
 				})
 				.then(res => {
 					console.log(res,'909909909999')
-					// this.getPricetemplateData(this.goodIds);
+					this.getPricetemplateData(this.goodIds);
 				});
 		},
 		/* eslint-disable */

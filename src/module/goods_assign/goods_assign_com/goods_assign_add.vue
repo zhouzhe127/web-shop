@@ -26,31 +26,44 @@
             <span class="title-name">指派规则</span>
             <span class="title-line"></span>
         </div>
-        <div class="opare-block temp-form-block">
-           <!-- 模板切换 -->
-            <el-tabs v-model="tabValue" closable @tab-remove="removeTab" style="max-width:500px;">
-                <el-tab-pane v-for="(item, index) in tabsCont" :key="index" :label="item.title" :name="item.name">
-                    
-                </el-tab-pane>
-            </el-tabs>
-            <!-- 添加模板 -->
-             <div class="add-temp-form">
-                 <!-- 编辑模板 -->
-               <span class="eidt-input" v-if="tabAddShow">
-                   <el-input style="width:100px;" v-model="tabAddModel"></el-input>
-                   <!-- 保存按钮 -->
-					<span class="edit-btn" @click.stop="successAddTab">
-							<i class="el-icon-success" style="color:#E0BA4F"></i>
-					</span>
-						<!-- 取消按钮 -->
-					<span class="edit-btn" @click.stop="cancelAddTab">
-						<i class="el-icon-error" style="color:#666;"></i>
-					</span>
-               </span>
-               <!-- 新增模板按钮 -->
-               <span class="eidt-add" v-else @click="handleTabAdd">
-                   <i class="el-icon-circle-plus-outline" style="color:#E0BA4F"></i>新增模板
-               </span>
+        <div class="opare-block">
+            <div class="temp-form-block">
+                 <!-- 模板切换 -->
+                <el-tabs v-model="tabIndex" closable @tab-click="handleClick" @tab-remove="removeTab" style="max-width:500px;">
+                    <el-tab-pane v-for="(item, index) in tabsCont" :key="index" :label="item.title" :name="item.name"></el-tab-pane>
+                </el-tabs>
+                <!-- 添加模板 -->
+                <div class="add-temp-form">
+                    <!-- 编辑模板 -->
+                <span class="eidt-input" v-if="tabAddShow">
+                    <el-input style="width:100px;" v-model="tabAddModelName"></el-input>
+                    <!-- 保存按钮 -->
+                        <span class="edit-btn" @click.stop="successAddTab">
+                                <i class="el-icon-success" style="color:#E0BA4F"></i>
+                        </span>
+                            <!-- 取消按钮 -->
+                        <span class="edit-btn" @click.stop="cancelAddTab">
+                            <i class="el-icon-error" style="color:#666;"></i>
+                        </span>
+                </span>
+                <!-- 新增模板按钮 -->
+                <span class="eidt-add" v-else @click="handleTabAdd">
+                    <i class="el-icon-circle-plus-outline" style="color:#E0BA4F"></i>新增模板
+                </span>
+                </div>
+            </div>
+            <!-- 模板数据 -->
+            <div class="temp-data-form" v-for="(item,index) in tabsCont" :key="index">
+                <template v-if="tabIndex == index">
+                    <el-form label-width="80px">
+                        <el-form-item label="名称">
+                            <el-input></el-input>
+                        </el-form-item>
+                        <el-form-item label="数量">
+                            <el-input></el-input>
+                        </el-form-item>
+                    </el-form>
+                </template>
             </div>
         </div>
     </el-form> 
@@ -69,13 +82,12 @@ export default {
     return {
         taskName:'', // 任务名称
         activeName:'',
-        tabAddModel:'', // 新增模板名称
+        tabAddModelName:'', // 新增模板名称
         tabAddShow:false,
 
-
-        tabValue: '1',
         tabsCont: [{title: '模板1',name: '1'}],
-        tabIndex: 1
+        tabIndex: '1', // 模板index
+        tabValue:1
     }
   },
   mounted() {
@@ -119,8 +131,9 @@ export default {
 			return;
         }
         this.tabAddShow = true;
-        let num = this.tabsCont.length;
-        this.tabAddModel = `模板${++num}`;
+        let num = this.tabValue + 1;
+        this.tabAddModelName = `模板${num}`;
+
     },
     // 取消新增模板
     cancelAddTab(){
@@ -128,7 +141,7 @@ export default {
     },
     // 成功添加模板 
     successAddTab() {
-        if(this.tabAddModel == ''){
+        if(this.tabAddModelName == ''){
             this.$store.commit('setWin', {
 				title: '温馨提示',
 				content: '模板名称不能为空',
@@ -137,31 +150,44 @@ export default {
 			return;
         }
         this.tabAddShow = false;
-        let num = this.tabsCont.length;
-        let newTabName = ++num + '';
+        let newTabName = ++this.tabValue + '';
+
         let obj = {
-            title: this.tabAddModel,
+            title: this.tabAddModelName,
             name: newTabName,
         }
         
         this.tabsCont.push(obj);
-        console.log(this.tabsCont)
-        this.tabValue = newTabName;
+        this.tabIndex = newTabName;
       },
     // 删除模板
     removeTab(targetName) {
+        console.log(targetName,'targetName')
         let tabs = this.tabsCont;
-        let activeVal = this.tabValue;
-         tabs.forEach((tab, index) => {
-             let nextTab = tabs[index + 1] || tabs[index - 1];
-              console.log(nextTab,'next')
-              if (nextTab) {
-                activeVal = nextTab.name;
-              }
-          });
+        this.$store.commit('setWin', {
+				winType: 'confirm',
+				content: '确定删除此模板吗？',
+				callback: delRes => {
+					if (delRes == 'ok') {
+						this.tabsCont.splice(targetName * 1, 1);
+					}
+				}
+			});
+        // let activeVal = this.tabIndex;
+        //  tabs.forEach((tab, index) => {
+        //      let nextTab = tabs[index + 1] || tabs[index - 1];
+        //       console.log(nextTab,'next')
+        //       if (nextTab) {
+        //         activeVal = nextTab.name;
+        //       }
+        //   });
         
-        this.tabValue = activeVal;
-        this.tabsCont = tabs.filter(tab => tab.name !== targetName);
+        // this.tabIndex = activeVal;
+        // this.tabsCont = tabs.filter(tab => tab.name !== targetName);
+    },
+    handleClick(tab, event){
+        console.log(this.tabIndex)
+        console.log(tab, event);
     }
   }
 };
