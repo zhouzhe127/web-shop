@@ -81,7 +81,7 @@ export const mixin = {
 			}
 		},
 		formatTime: function(time) {
-			if (time.length == 10) {
+			if (time && time.length == 10) {
 				time *= 1000;
 			}
 			return utils.format(new Date(time), 'yyyy-MM-dd');

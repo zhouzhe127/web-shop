@@ -59,7 +59,7 @@ import http from 'src/manager/http';
 export default {
 	data() {
 		return {
-			overdueStatus: false, //优惠券过期提醒状态
+			overdueStatus: true, //优惠券过期提醒状态
 			pushdateNum: '1', //推送日期
 			pushdateList: [{ //推送日期
 				name: '1'
@@ -158,11 +158,12 @@ export default {
 			let res = await http.getPointConfig({});
 			if (res) {
 				let list = res.list;
-				if (list.advanceTime != '0') {
+				if(list.expireCouponDay != '0' && list.expireCouponHour != '0'){
+					this.pushdateNum = list.expireCouponDay;
+					this.pushNum = list.expireCouponHour;
 					this.overdueStatus = true;
-					let newadvanceTime = list.advanceTime.split(',');
-					this.pushdateNum = newadvanceTime[0];
-					this.pushNum = newadvanceTime[1];
+				}else{
+					this.overdueStatus = false;
 				}
 			}
 		}

@@ -120,7 +120,10 @@
 							<span>{{getPersonName(scope.row.updateUid)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="coins" label="消费税时间" align="center">
+					<el-table-column prop="createTime" label="消费时间" align="center">
+						<template slot-scope="scope">
+							<span>{{formatTime(scope.row.createTime)}}</span>
+						</template>
 					</el-table-column>
 					<el-table-column prop="coins" label="操作" align="center" width="200">
 						<template slot-scope="scope">
@@ -334,22 +337,6 @@ export default {
 			}
 			return info;
 		},
-		getPersonName: function(id) {
-			let name = '--';
-			for (let key in this.staffList) {
-				if (id == key) {
-					name = this.staffList[key].staffName;
-					break;
-				}
-			}
-			return name;
-		},
-		// async getAssistantstaff() { //获取工作人员
-		// 	let res = await http.getAssistantstaff();
-		// 	if (res) {
-		// 		this.staffList = res;
-		// 	}
-		// },
 		getResult: function(res) { //修改弹窗回调
 			if (res == 'ok') {
 				this.getConsumeStatistics();
