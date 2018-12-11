@@ -79,6 +79,7 @@
 			<el-button @click="setTimeIssue(true)" type="primary" plain>定时发布</el-button>
 			<el-button @click="addNotice(true)" plain>保存草稿箱</el-button>
 			<el-button @click="goToback" type="info" plain>上一步</el-button>
+			<h3 v-if="redDetial.sendType=='1'" style="padding: 20px;margin-left: 86px;color: #e1bb4a;">已设置：{{redDetial.newTime}}发布</h3>
 
 		</section>
 		<shopNoticeTwo v-if="isOpenjob" @selectBack="radioBack" :jobList="jobList" :jobIds="jobIds" :jobtype="jobtype"></shopNoticeTwo>
@@ -101,6 +102,7 @@
 // import ( /* webpackChunkName:'wang_editor' */ 'src/components/wang_editor.js');
 import http from 'src/manager/http';
 import global from 'src/manager/global';
+import utils from 'src/verdor/utils';
 import storage from 'src/verdor/storage';
 export default {
 	data() {
@@ -162,8 +164,8 @@ export default {
 			let userData = storage.session('userShop');
 			this.ischain = userData.currentShop.ischain;
 			this.redDetial.time = this.redDetial.time * 1000;
+			this.redDetial.newTime = utils.format(new Date(this.redDetial.time), 'yyyy-MM-dd hh:mm:ss');
 			this.detial.time = this.redDetial.time;
-			console.log(this.detial.time);
 			this.staTime = this.redDetial.time;
 			this.$store.commit('setPageTools', []);
 			let token = storage.session('token'); //token
