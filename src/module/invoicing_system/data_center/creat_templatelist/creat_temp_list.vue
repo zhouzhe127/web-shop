@@ -543,11 +543,11 @@
 						str = text+str;
 						break;
 					case 5:
-						text = `供应商数量：${data.supplier.split(',').length}；`;
+						text = `供应商数量：${data.supplierName.split(',').length}；`;
 						str = text+str;
 						break;
 					case 6:
-						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplier.split(',').length}`;
+						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplierName.split(',').length}`;
 						break;		
 				}
 				return str;
