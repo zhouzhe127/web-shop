@@ -55,21 +55,24 @@
 				</el-table-column>
 				<el-table-column prop="originalCash" label="原消费金额" align="center">
 				</el-table-column>
-				<el-table-column prop="point" label="修改后消费金额" align="center">
+				<el-table-column prop="cash" label="修改后消费金额" align="center">
 				</el-table-column>
 				<el-table-column prop="point" label="用户调整积分" align="center">
+					<template slot-scope="scope">
+						<span>{{formatting(scope.row)}}{{scope.row.point}}</span>
+					</template>
 				</el-table-column>
 				<el-table-column prop="coins" label="导购调整金币" align="center">
-					<!-- <template slot-scope="scope">
-						<span>{{getPersonName(scope.row.createUid)}}</span>
-					</template> -->
+					<template slot-scope="scope">
+						<span>{{formatting(scope.row)}}{{scope.row.coins}}</span>
+					</template>
 				</el-table-column>
-				<el-table-column prop="coins" label="修改人" align="center">
+				<el-table-column label="修改人" align="center">
 					<template slot-scope="scope">
 						<span>{{getUserName(scope.row.createUid)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="coins" label="修改时间" align="center">
+				<el-table-column label="修改时间" align="center">
 					<template slot-scope="scope">
 						<span>{{formatTime(scope.row.createTime)}}</span>
 					</template>
@@ -99,7 +102,7 @@ export default {
 			count: 0, //条数
 			allTotal: 1,
 			userData: Object, //用户信息
-			userList: [] //员工列表
+			userList: [], //员工列表
 		};
 	},
 	props: {
@@ -192,8 +195,14 @@ export default {
 					userName = item.userName;
 				}
 			}
-			console.log(userName)
 			return userName;
+		},
+		formatting: function(item) {
+			if (item.status == '0') {
+				return '-';
+			} else {
+				return '+';
+			}
 		}
 	},
 	mounted() {

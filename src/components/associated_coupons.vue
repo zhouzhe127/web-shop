@@ -21,19 +21,6 @@
 						</section>
 					</el-tab-pane>
 				</el-tabs>
-				<!-- <div class="top" style="border-bottom: 1px dashed #ccc;padding-bottom: 20px;">
-					<span class="sel" v-for="(item,index) in CountList" :key='index' v-bind:class="{'on':flag2 == index}" @click="showCount(index)">{{item.name}}</span>
-				</div>
-				<div style="padding-top: 10px;position: relative;">
-					<span style="font-size: 14px; color: #999999;">选择优惠券：</span>
-					<section class="fr" style="width: 100%;height: auto;margin-bottom: 10px;">
-						<a href="javascript:void(0)" class="unselect fr" v-on:click="wholeOffCom">全部取消</a> -->
-				<!--<a href="javascript:void(0)" class="check fr"  v-on:click="wholeOnCom" style="margin-right: 1px;">全部选择</a>-->
-				<!-- </section>
-					<section class="comList">
-						<coupon :list='goodsCom' :selects='selects' :max-num="5" :name='"name"' :keyName='"id"' @select='select' :isShowaddAndSubtract='isShowaddAndSubtract'></coupon>
-					</section>
-				</div> -->
 			</section>
 		</Win>
 	</section>
@@ -54,6 +41,10 @@ export default {
 		isShowaddAndSubtract: {
 			type: Boolean,
 			default: true
+		},
+		isToHeavy: { //是否去重
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -118,6 +109,26 @@ export default {
 		wholeOffCom: function() {
 			this.selects = [];
 		},
+		arrayfilter: function(array, array2) { //两个数组中过滤不同的元素
+			let result = [];
+			for (let i = 0; i < array.length; i++) {
+				let obj = array[i];
+				let id = obj.id;
+				let isExist = false;
+				for (let j = 0; j < array2.length; j++) {
+					let aj = array2[j];
+					let n = aj.id;
+					if (n == id) {
+						isExist = true;
+						break;
+					}
+				}
+				if (!isExist) {
+					result.push(obj);
+				}
+			}
+			return result;
+		},
 		async getCouponList() { //获取所有的优惠券
 			let data = await http.getGetCouponCondition({});
 			let coupons = [];
@@ -127,7 +138,12 @@ export default {
 					coupons.push(item);
 				}
 			}
+
 			this.couponList = coupons;
+			if (this.isToHeavy) {
+				this.couponList = this.arrayfilter(this.couponList, this.selectCoupon);
+				this.wholeOffCom();
+			}
 			this.goodsCom = this.couponList; //默认展示全部
 		},
 		handleClick(tab, event) {
