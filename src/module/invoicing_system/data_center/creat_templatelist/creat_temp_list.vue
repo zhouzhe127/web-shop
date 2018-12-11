@@ -575,6 +575,7 @@
 			}
 		},
 		async activated() {
+			this.recursiveGetMaterialList();
 			await this.getRoleList();
 			if (this.$route.query.id) {
 				this.id = this.$route.query.id;
@@ -582,7 +583,6 @@
 				this.init();
 			}
 			this.crageBtn();
-			this.recursiveGetMaterialList();
 		},
 		deactivated() {
 			this.$store.commit('setFixButton', []);
