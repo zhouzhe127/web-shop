@@ -84,7 +84,7 @@ export const mixin = {
 			if (time && time.length == 10) {
 				time *= 1000;
 			}
-			return utils.format(new Date(time), 'yyyy-MM-dd');
+			return utils.format(new Date(time), 'yyyy-MM-dd hh:mm');
 		},
 	}
 };

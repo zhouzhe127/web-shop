@@ -55,7 +55,7 @@
 				</el-table-column>
 				<el-table-column prop="originalCash" label="原消费金额" align="center">
 				</el-table-column>
-				<el-table-column prop="point" label="现消费金额" align="center">
+				<el-table-column prop="point" label="修改后消费金额" align="center">
 				</el-table-column>
 				<el-table-column prop="point" label="用户调整积分" align="center">
 				</el-table-column>
@@ -66,7 +66,7 @@
 				</el-table-column>
 				<el-table-column prop="coins" label="修改人" align="center">
 					<template slot-scope="scope">
-						<span>{{getPersonName(scope.row.fansId)}}</span>
+						<span>{{getUserName(scope.row.createUid)}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop="coins" label="修改时间" align="center">
@@ -99,6 +99,7 @@ export default {
 			count: 0, //条数
 			allTotal: 1,
 			userData: Object, //用户信息
+			userList: [] //员工列表
 		};
 	},
 	props: {
@@ -177,10 +178,27 @@ export default {
 			this.page = 1;
 			this.num = 10;
 			this.getModifyRecode();
+		},
+		async getUserList() {
+			let res = await http.getUserList({});
+			if (res) {
+				this.userList = res;
+			}
+		},
+		getUserName: function(id) {
+			let userName = '--';
+			for (let item of this.userList) {
+				if (id == item.userId) {
+					userName = item.userName;
+				}
+			}
+			console.log(userName)
+			return userName;
 		}
 	},
 	mounted() {
 		this.setTitle();
+		this.getUserList();
 		this.getAssistantstaff();
 		this.getshopIdorshopName();
 		this.searchData();

@@ -120,7 +120,7 @@
 							<span>{{getPersonName(scope.row.updateUid)}}</span>
 						</template>
 					</el-table-column>
-					<el-table-column prop="createTime" label="消费时间" align="center">
+					<el-table-column prop="createTime" label="消费时间" align="center" width="180">
 						<template slot-scope="scope">
 							<span>{{formatTime(scope.row.createTime)}}</span>
 						</template>
