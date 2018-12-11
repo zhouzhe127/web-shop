@@ -2,14 +2,14 @@
   <div class="assign-add">
       <!-- 标题名称 -->
     <div class="title-block">
-        <span class="title-name">任务详情</span>
+        <span class="title-name">任务信息</span>
         <span class="title-line"></span>
     </div>
     <el-form ref="form" label-width="80px">
         <!-- 任务名称输入 -->
         <div class="opare-block">
              <el-form-item label="任务名称" required>
-                <el-input v-model="taskName" style="width:240px;"></el-input>
+                <el-input maxlength="10" v-model="taskName" style="width:240px;"></el-input>
             </el-form-item>
         </div>
         <!-- 选择商品 -->
@@ -26,10 +26,10 @@
 				<span style="margin-left:50px;" v-if="selectGoods.length>0">
 					已选择商品：<span style="color:#E0BA4F">{{selectGoods.length}}</span>个
 				</span>
-				<!--  -->
-				<span style="margin-left:50px;" v-if="selectPackages.length>0">
+				<!-- 套餐暂时不做 -->
+				<!-- <span style="margin-left:50px;" v-if="selectPackages.length>0">
 					已选择套餐：<span style="color:#E0BA4F">{{selectPackages.length}}</span>个
-				</span>
+				</span> -->
         </div>
         <!-- 指派规则 -->
         <div class="title-block">
@@ -108,9 +108,9 @@
 										<el-checkbox label="3" border>商品特价</el-checkbox>
 									</el-checkbox-group>
 								</div>
-								<div class="data-form__item">
+								<div class="data-form__item template-item">
 									<el-radio-group v-model="item.templateId">
-										<el-radio :label="0" border>原始价格</el-radio>
+										<el-radio label="0" border>原始价格</el-radio>
 										<el-radio :label="item.id" border v-for="(item,index) in tempTitleList" :key="index">{{item.name}}</el-radio>
 									</el-radio-group>
 								</div>
@@ -147,7 +147,7 @@ export default {
         tabAddModelName:'', // 新增模板名称
         tabAddShow:false,
 
-        tabsCont: [{title:'模板1',id:'1',shopIds:[],checkedComp:false,checkGoodsType:[],isCoerce:true,priceType:[],templateId:0}],
+        tabsCont: [{title:'模板1',id:'1',shopIds:[],checkedComp:false,checkGoodsType:[],isCoerce:true,priceType:[],templateId:'0'}],
         tabIndex: '1', // 模板index
 		tabValue:1,
 		activeVal:'1',
@@ -187,22 +187,6 @@ export default {
     },
     // 保存
     async handelSave(){
-		console.log(this.tabsCont,'this.tabsCont');
-		console.log(this.selectGoods.join(','),'selectGoods')
-		console.log(this.selectPackages.join(','),'selectPackages');
-	
-		let arr = [];
-		this.tabsCont.forEach(item=>{
-			let obj = {
-						type:item.checkGoodsType.join(','),
-						shopIds:item.shopIds.join(','),
-						priceType:item.priceType.join(','),
-						templateId:item.templateId,
-						isCoerce:item.isCoerce == true ? '1' : 0
-					}
-			arr.push(obj)
-		});
-	
 		if(this.taskName.length <=0){
 			this.$store.commit('setWin', {
 				title: '温馨提示',
@@ -211,7 +195,7 @@ export default {
 			});
 			return;
 		}
-		if(this.selectGoods.length <=0 || this.selectPackages.length <=0){
+		if(this.selectGoods.length <=0){
 			this.$store.commit('setWin', {
 				title: '温馨提示',
 				content: '请选择商品！',
@@ -219,35 +203,46 @@ export default {
 			});
 			return;
 		}
-		if(item.checkGoodsType.length <=0){
-			this.$store.commit('setWin', {
-				title: '温馨提示',
-				content: '商品信息不能为空！',
-				winType: 'alert',
-			});
-			return;
-		}
-		if(item.shopIds.length <=0){
-			this.$store.commit('setWin', {
-				title: '温馨提示',
-				content: '请选择门店！',
-				winType: 'alert',
-			});
-			return;
-		}
-		
+		let arr = [];
+		let data = null;
 
-		console.log(arr,'arr')
-		let data = await http.AssigntaskAdd({
-				data:{
-					type:1,
-					name:this.taskName,
-					assginIds:this.selectGoods && this.selectGoods.join(','),
-					otherIds:this.selectPackages && this.selectPackages.join(','),
-					conditions:arr
+		for(let i =0;i<this.tabsCont.length;i++){
+			let item = this.tabsCont[i];
+			if(this.saveChecked(item)){
+					let obj = {
+					type:item.checkGoodsType.join(','),
+					shopIds:item.shopIds.join(','),
+					priceType:item.priceType.join(','),
+					templateId:item.templateId,
+					isCoerce:item.isCoerce == true ? '1' : 0
 				}
-			})
+				arr.push(obj)
+			}
+		}
+		if(arr.length > 0){
+			// if(arr.length >=2){
+			// 	for(let i=0;i<arr.length;i++){
+			// 		// console.log(arr[i].shopIds,'arr[i].shopIds');
+			// 		for(let j = 0; j < arr.length - 1; j++){// 访问序列为arr[0:length -i]
+			// 			this.getTheSame(arr[i].shopIds,arr[j].shopIds)
+			// 		}
+					
+			// 	}
+			// }
 
+
+
+
+			data = await http.AssigntaskAdd({
+					data:{
+						type:1,
+						name:this.taskName,
+						assignIds:this.selectGoods && this.selectGoods.join(','),
+						otherIds:this.selectPackages && this.selectPackages.join(','),
+						conditions:arr
+					}
+			})
+		}
 		
 		if(data){
 			this.$store.commit('setWin', {
@@ -260,10 +255,70 @@ export default {
 					}
 				}
 			});
-		}
+			this.addGoBack('save');
+			let sessionObj = {
+				name:this.tabsCont,
+				selectGoods:this.selectGoods,
+				selectPackages:this.selectPackages,
+				tabsCont:this.tabsCont
+			}
+			storage.session('taskTempInfo',sessionObj);
 
-        // this.addGoBack('save');
-    },
+		}
+	},
+	saveChecked(item){
+		if(item.shopIds.length <=0){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '请选择门店！',
+					winType: 'alert',
+				});
+				return false;
+			}
+		if(item.checkGoodsType.length <=0){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '商品信息不能为空！',
+					winType: 'alert',
+				});
+				return false;
+			}
+			
+		if(item.priceType.length <= ''){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '请选择商品价格类型！',
+					winType: 'alert',
+				});
+				return false;
+			}
+		if(item.templateId == ''){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '请选择价格模板！',
+					winType: 'alert',
+				});
+				return false;
+			}
+		return true;
+	},
+	 getTheSame(arr1,arr2) {
+		 console.log(arr1,'arr1',arr2,'arr2')
+//         let result = new Array();
+//         let c = arr2.toString();
+//         for (var i = 0; i < arr1.length; i++) {
+//             if (c.indexOf(arr1[i].toString()) > -1) {
+//                 for (var j = 0; j < arr2.length; j++) {
+//                     if (arr1[i] == arr2[j]) {
+//                         result.push(arr1[i]);
+//                         break;
+//                     }
+//                 }
+//             }
+//         }
+//        console.log(result);
+//         return result;
+    },
     // 指派
     handleAssign(){
         this.addGoBack('assign');
@@ -308,7 +363,7 @@ export default {
 			checkGoodsType:[],
 			isCoerce:true,
 			priceType:[],
-			templateId:0
+			templateId:'0'
         }
 		this.activeVal = newTabId;
 		this.tabIndex = newTabId;
@@ -367,7 +422,7 @@ export default {
 	closeGoodWin(res, item) { //  关闭商品弹框
 		if (res == 'ok') {
 			this.selectGoods = item.goodArr;
-			this.selectPackages = item.packArr;
+			// this.selectPackages = item.packArr; 套餐暂时不做
 		}
 		this.goodsWinShow = false;
 	},
@@ -448,6 +503,11 @@ export default {
 	}
 	&.line-item{
 		border-bottom: 1px solid #dcdfe6;
+	}
+	&.template-item{
+		.el-radio.is-bordered{
+			margin-bottom: 20px;
+		}
 	}
 }
 
