@@ -20,7 +20,7 @@
 				<el-button @click="reset" type="info">重置</el-button>
 			</div>
 		</div>
-		<el-table :data="allList" stripe border style="width: 100%">
+		<el-table :data="allList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 			<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 			</el-table-column>
 			<el-table-column prop="name" label="物料名称" min-width="200">

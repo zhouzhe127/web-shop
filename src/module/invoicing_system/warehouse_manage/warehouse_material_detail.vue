@@ -132,7 +132,7 @@
 			if(this.shopId){
 				this.dataObj.shopId = this.shopId;
 			}
-			this.$store.commit('setPageTools', [{name: '返回',className: 'info',type:4,
+			this.$store.commit('setPageTools', [{name: '返回',className: '',type:4,
 				fn: () => {
 					storage.session('warehouseDetailDestroy', true);
 					window.history.go(-1);

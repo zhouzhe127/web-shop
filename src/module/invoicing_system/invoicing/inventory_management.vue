@@ -42,8 +42,8 @@
 					</div>
 				</div>
 			</section>
-			<el-table :data="goodsdetail" stripe border style="width: 100%">
-				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+			<el-table :data="goodsdetail" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column type="index" :index="indexMethod" label="序号" width="100" >
 		   	 	</el-table-column>
 				<el-table-column prop="goodsName" label="商品名" min-width="200">
 				</el-table-column>

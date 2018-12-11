@@ -23,7 +23,7 @@
         <div>
             <div class="block-box" >
             	<div class="inline-box" >
-	            	<el-select v-model="dynamic" placeholder="请选择调度状态" @change="getStatus">
+	            	<el-select v-model="dynamic" placeholder="请选择调度状态" @change="getStatus" class="fixed-width">
 					    <el-option
 							v-for="item in allStatus"
 							:key="item.value"
@@ -33,16 +33,17 @@
 					</el-select>
 				</div>
 				<div class="inline-box" >
-					<el-input v-model="receiptNumber" placeholder="请输入调度单号"></el-input>
+					<el-input v-model="receiptNumber" placeholder="请输入调度单号" class="fixed-width"></el-input>
 				</div>
                 <div class="inline-box" >
-                	<el-input v-model="createName" placeholder="请输入操作人"></el-input>
+                	<el-input v-model="createName" placeholder="请输入操作人" class="fixed-width"></el-input>
                 </div>
             </div>
             <div class="block-box" >
-	            <div class="inline-box" >
+	            <div class="inline-box multiple-select" >
 	            	<span>出货仓库：</span>
-                    <el-select v-model="outWarehouse" placeholder="请选择仓库" @change="getOutId" multiple collapse-tags>
+                    <el-select v-model="outWarehouse" placeholder="请选择仓库" 
+						@change="setMulSelWidth" multiple collapse-tags class="fixed-width">
 					    <el-option
 							v-for="item in allWarehouse"
 							:key="item.value"
@@ -51,9 +52,10 @@
 					    </el-option>
 					</el-select>
 	            </div>
-	            <div class="inline-box">
+	            <div class="inline-box multiple-select">
 	            	<span>入货仓库：</span>
-                    <el-select v-model="intoWarehouse" placeholder="请选择仓库" @change="getIntoId" multiple collapse-tags>
+                    <el-select v-model="intoWarehouse" placeholder="请选择仓库" 
+						@change="setMulSelWidth" multiple collapse-tags class="fixed-width">
 					    <el-option
 							v-for="item in allWarehouse"
 							:key="item.value"
@@ -210,11 +212,17 @@ export default {
 		getStatus(res) {
 			this.dynamic = res;
 		},
-		getOutId(res) { //获取出货仓库id
-			this.outWarehouse = res;
-		},
-		getIntoId(arr) { //获取出货仓库id
-			this.intoWarehouse = res;
+		setMulSelWidth(){
+			let span = document.querySelector('.multiple-select .el-select__tags-text');
+			if(span){
+				span.style.cssText = 
+					`max-width: 90px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					display: inline-block;
+					vertical-align: top;`;
+			}
 		},
 		//获取仓库
 		async getWarehouse() {

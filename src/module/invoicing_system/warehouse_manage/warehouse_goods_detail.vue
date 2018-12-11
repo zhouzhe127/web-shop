@@ -104,7 +104,7 @@ export default {
 		}
 		this.$store.commit('setPageTools', [{
 			name: '返回',
-			className: 'info',
+			className: '',
 			type:4,
 			fn: () => {
 				storage.session('warehouseDetailDestroy', true);

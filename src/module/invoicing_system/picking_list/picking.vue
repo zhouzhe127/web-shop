@@ -172,28 +172,28 @@
 			initBtn(){//初始化按钮 
 				let arr = [
 					{
-						name: '确定',
-						className: 'primary',type:4,
+						name: '取消',
+						className: 'info',type:1,
 						fn: () => {
-							this.enter();
+							this.cancel(); 
 						}
 					},
 					{
 						name: '继续添加',
-						className: 'primary',type:5,
+						className: '',type:1,
 						fn: () => {
 							this.again();
 						}
 					},
 					{
-						name: '取消',
-						className: 'info',type:4,
+						name: '确定',
+						className: 'primary',type:1,
 						fn: () => {
-							this.cancel(); 
+							this.enter();
 						}
-					}
+					},
 				];
-				this.$store.commit('setPageTools', arr);
+				this.$store.commit('setFixButton', arr);
 			},
 			//获取领料人
 			async getPicker(){

@@ -6,19 +6,19 @@
 		<div class="warehouse-lists" v-if="tabactive==0">
 			<div class="asideone">
 				<div class="sleType">
-					<el-input v-model="goodsName" placeholder="请输入商品名"></el-input>
+					<el-input v-model="goodsName" placeholder="请输入商品名" class="fixed-width"></el-input>
 				</div>
 				<div class="sleType">
-					<el-input v-model="goodsCode" placeholder="请输入条形码"></el-input>
+					<el-input v-model="goodsCode" placeholder="请输入条形码" class="fixed-width"></el-input>
 				</div>
 				<div class="sleType">
-					<el-select v-model="selType" placeholder="全部类型">
+					<el-select v-model="selType" placeholder="全部类型" class="fixed-width">
 						<el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"></el-option>
 					</el-select>
 				</div>
 				<div class="timebox multiple-select">
 					<span>仓库所属：</span>
-					<el-select multiple collapse-tags v-model="selWare" placeholder="请选择店铺" @change="setMulSelWidth">
+					<el-select multiple collapse-tags v-model="selWare" placeholder="请选择店铺" @change="setMulSelWidth" class="fixed-width">
 						<el-option v-for="item in wareList" :key="item.shopId" :label="item.shopName" :value="item.shopId"></el-option>
 					</el-select>
 				</div>
@@ -227,6 +227,7 @@
 			margin-top: 10px;
 		}
 	}
+	.fixed-width{width: 210px;}
 	.warehouse-lists {
 		.topstyle {
 			&::before {

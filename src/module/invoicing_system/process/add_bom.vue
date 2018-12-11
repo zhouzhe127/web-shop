@@ -34,7 +34,7 @@
 				</div>
 			</div>
 		</div>
-		<com-table :listName="'物料列表'" :titleData="titleList" :allTotal="listLength" :introData="list" :listHeight="70" :listWidth="1200">
+		<com-table :listName="'bom单列表'" :titleData="titleList" :allTotal="listLength" :introData="list" :listHeight="70" :listWidth="1200">
 			<div slot="title-0" slot-scope="props" class="select-all select-ban">
 				<span @click="radioAll('store')">{{storeAll?'取消全选':'全选'}}</span>
 				<i>|</i>

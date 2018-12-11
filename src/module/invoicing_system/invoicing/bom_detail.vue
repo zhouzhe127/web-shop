@@ -120,14 +120,15 @@
 		},
 		methods: {
 			showRow(res,row){
-				this.showRowList = row;
 				this.showDetail = row.length >= this.bomDetail.length;
 			},
 			showDetailClick(){
 				this.showDetail = !this.showDetail;
 				this.$nextTick(()=>{
+					let isShow = this.showDetail;//这里不能直接用 this.showDetail 因为showRow()方法改变其值 导致展开不全
 					for(let item of this.bomDetail){
-						this.$refs.myTable.toggleRowExpansion(item,this.showDetail);
+						console.log(item);
+						this.$refs.myTable.toggleRowExpansion(item,isShow);
 					}
 				});
 			},
