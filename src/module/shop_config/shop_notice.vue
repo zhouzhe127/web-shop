@@ -21,7 +21,7 @@
 				<el-table-column min-width="200" align="center" prop="time" label="发布时间"></el-table-column>
 				<el-table-column min-width="200" align="center" prop="sendToSource" label="发布渠道">
 					<template slot-scope="scope">
-						<span style="">sendToSource</span>
+						<span style="">{{scope.row.sendToSourceName}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column show-overflow-tooltip min-width="150" align="center" prop="title" label="标题" ></el-table-column>
@@ -180,6 +180,16 @@ export default {
 			for (let i = 0; i < this.copyNoticeList.length; i++) {
 				let item = this.copyNoticeList[i];
 				item.time = utils.format(new Date(item.time*1000), 'yyyy-MM-dd hh:mm:ss');
+				let sendToSource = item.sendToSource;
+				if(sendToSource=='0'){
+					item.sendToSourceName = '闪店云';
+				}else if(sendToSource=='1'){
+					item.sendToSourceName = '闪店商家';
+				}else if(sendToSource=='0,1'){
+					item.sendToSourceName = '闪店云,闪店商家';
+				}else{
+					item.sendToSourceName = '无渠道';
+				}
 			}
 			this.init();
 		},
