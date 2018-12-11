@@ -33,7 +33,7 @@
 				</el-table-column>
 				<el-table-column v-for="(item,index) in mainData.customItem" :key="index" :label="item" prop="code">
 					<template slot-scope="scope">
-						<div>{{scope.row.reportInfo[index].value}}{{scope.row.reportInfo[index].value&&scope.row.reportInfo[index].value!='--'?scope.row.reportInfo[index].unitName:''}}</div>
+						<div v-if="scope.row.reportInfo[index]">{{scope.row.reportInfo[index].value}}{{scope.row.reportInfo[index].value&&scope.row.reportInfo[index].value!='--'?scope.row.reportInfo[index].unitName:''}}</div>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -89,7 +89,6 @@
 				};
 				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
 				console.log(res);
-				this.tableData = res.report;
 				this.allTotal = res.count;
 				res.report.push({
 					itemInfo:{
@@ -98,6 +97,7 @@
 					},
 					reportInfo:res.reportCount
 				});
+				this.tableData = res.report;
 				this.mainData = res;
 			},
 			pageChange(e) {
