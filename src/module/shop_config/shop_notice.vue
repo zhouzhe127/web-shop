@@ -199,12 +199,6 @@ export default {
 		},
 	},
 	mounted() {
-		// this.copyNoticeList = [
-		// 	{ title: '啊wgewgwgwewgwegwe', time: 1527816360, type: 0,content:'<p>围观围观<img src="https://cdn.ishandian.com.cn/upload/10010/8/bc3d2234d867b9f057d138bd6c8aa495.jpg" style="max-width: 100%;">围观围观围观围观</p>'},
-		// 	{ title: 'wgewgwgwegwegwe', time: 1527816360, type: 0 },
-		// 	{ title: '围观围观围观', time: 1531411199, type: 1 },
-		// 	{ title: '噩噩噩噩噩噩噩噩噩噩噩', time: 1531411199, type: 1 }
-		// ];
 		this.getList();
 		this.ischain = storage.session('userShop').currentShop.ischain;
 		this.isTatle();

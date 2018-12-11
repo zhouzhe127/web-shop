@@ -156,7 +156,7 @@ export default {
 		}else{
 			obj = JSON.parse(this.redDetial.sendConfig);
 		}
-		this.jobIds.brand = obj.roleIds;
+		this.jobIds.brand =  obj.roleIds.split(',');
 		this.caseList = obj.shopConfig;
 	},
 	methods: {
@@ -205,14 +205,6 @@ export default {
 			if(type){
 				this.timeWinShow = true;
 			}else{
-				// this.Detail.sendToSource = this.shopUrl.toString();
-				// this.Detail.sendType = this.isNow?'1':'0';
-				// let caseList = this.caseList;
-				// let aaa = {};
-				// aaa.roleIds = this.jobIds.brand.toString();
-				// aaa.shopConfig = caseList;
-				// this.Detail.sendConfig = aaa;
-				// this.Detail.type = this.redDetial.type;
 				this.addNotice(false);
 				console.log(this.Detail);
 			}
@@ -385,7 +377,7 @@ export default {
 			item.sendType = this.isNow?'1':'0';
 			let caseList = this.caseList;
 			let aaa = {};
-			aaa.roleIds = this.jobIds.brand;
+			aaa.roleIds = this.jobIds.brand.toString();
 			aaa.shopConfig = caseList;
 			item.sendConfig = aaa;
 			console.log(item);
@@ -412,9 +404,15 @@ export default {
 				//如果是保存草稿箱
 				let res = await http.editNoticeOne({ data: item });
 				if (res) {
+					let content = '';
+					if(this.redDetial.type === '0'){
+						content= '此修改只有标题，正文，定时发送时间有效';
+					}else{
+						content= '修改成功';
+					}
 					this.$store.commit('setWin', {
 						winType: 'alert',
-						content: '修改成功'
+						content: content
 					});
 				}
 				

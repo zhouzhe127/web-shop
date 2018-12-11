@@ -93,6 +93,8 @@ export default {
 					this.showJobList.push(this.jobList[i]);
 				}
 			}
+			let item = {id: '0',name:'超级管理员'};
+			this.showJobList.unshift(item);
 			// this.isAll(this.showJobList) ? this.allJob = true : this.allJob = false;
 		},
 		selallJob(type,bel){
@@ -106,22 +108,12 @@ export default {
 				}else{
 					this.jobIds.brand = arr;
 				}
-				// if(this.jobIds.brand.length == this.showJobList.length){
-				// 	this.jobIds.brand = [];
-				// }else{
-				//	this.jobIds.brand = arr;
-				// }
 			}else{
 				if(bel){
-					this.jobIds.brand = [];
+					this.jobIds.shop = [];
 				}else{
-					this.jobIds.brand = arr;
+					this.jobIds.shop = arr;
 				}
-				// if(this.jobIds.shop.length == this.showJobList.length){
-				// 	this.jobIds.shop = [];
-				// }else{
-				//	this.jobIds.shop = arr;
-				// }
 			}
 		},
 		//职位/门店选择确定
