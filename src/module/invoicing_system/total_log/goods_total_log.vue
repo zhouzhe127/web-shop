@@ -346,19 +346,21 @@ export default {
 			}
 
 			if(operationType){
+				operationType += '';
 				operationType = operationType.split(',');
 				this.condition.operationType = operationType.map( ele => Number(ele));
 			}
 
-			sTime =  new Date(sTime * 1000);
-			eTime =  new Date(eTime * 1000);                
-			
-			if(sTime.toString() == inValid || eTime.toString() == inValid){
-				this.condition.time = [];
-			}else{
-				this.condition.time = [sTime,eTime];
+			if(sTime && eTime){
+				sTime =  new Date(sTime * 1000);
+				eTime =  new Date(eTime * 1000);                
+				
+				if(sTime.toString() == inValid || eTime.toString() == inValid){
+					this.condition.time = [];
+				}else{
+					this.condition.time = [sTime,eTime];
+				}
 			}
-
 		},
 
 		//获取分类
@@ -391,6 +393,15 @@ export default {
 		this.getCategoryList();
 		this.getWarehouseList();
 		this.filterReset('filter',this.pageObj.currentPage);
+	},
+	beforeRouteLeave(to,from,next){
+		let query = 'ms_name,ms_operationType,ms_sTime,ms_eTime'.split(',');
+		for(let key of query){
+			if(to.query[key] != undefined){
+				delete to.query[key];
+			}
+		}
+		next();
 	}
 };
 </script>

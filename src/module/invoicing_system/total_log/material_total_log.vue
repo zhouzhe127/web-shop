@@ -374,17 +374,20 @@ export default {
 			}
 
 			if(operationType){
+				operationType += '';
 				operationType = operationType.split(',');
 				this.condition.operationType = operationType.map( ele => Number(ele));
 			}
 
-			sTime =  new Date(sTime * 1000);
-			eTime =  new Date(eTime * 1000);                
-			
-			if(sTime.toString() == inValid || eTime.toString() == inValid){
-				this.condition.time = [];
-			}else{
-				this.condition.time = [sTime,eTime];
+			if(sTime && eTime){
+				sTime =  new Date(sTime * 1000);
+				eTime =  new Date(eTime * 1000);                
+				
+				if(sTime.toString() == inValid || eTime.toString() == inValid){
+					this.condition.time = [];
+				}else{
+					this.condition.time = [sTime,eTime];
+				}
 			}
 
 		},
