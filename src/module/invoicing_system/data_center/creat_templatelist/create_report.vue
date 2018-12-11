@@ -272,10 +272,17 @@
 				let rgx = /^[A-Za-z0-9_\u4e00-\u9fa5]+$/;
 				if (!rgx.test(this.moldeName)) {
 					this.$message.error('报表名称输入错误');
-					return;
+					return false;
 				}
 				let x = this.setXData();
 				let y = JSON.stringify(this.setYData());
+				if(!x||!y){
+					this.$message({
+						message: '报表数据有误!',
+						type: 'warning'
+					});
+					return false;
+				}
 				// let y = this.tableYData;
 				let data = await http.materialreportAddReportTask({
 					data: {
@@ -297,7 +304,7 @@
 					});
 				}else{
 					this.$message({
-						message: '报表生成有误',
+						message: '报表生成有误!',
 						type: 'warning'
 					});
 				}
@@ -379,11 +386,11 @@
 						str = text+str;
 						break;
 					case 5:
-						text = `供应商数量：${data.supplier.split(',').length}；`;
+						text = `供应商数量：${data.supplierName.split(',').length}；`;
 						str = text+str;
 						break;
 					case 6:
-						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplier.split(',').length}`;
+						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplierName.split(',').length}`;
 						break;		
 				}
 				return str;

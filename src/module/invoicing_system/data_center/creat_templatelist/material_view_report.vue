@@ -181,7 +181,7 @@
 				});
 			},
 		},
-		mounted() {
+		activated() {
 			let query = this.$route.query;
 			if (Number(query.id)) {
 				this.reportId = Number(query.id);
