@@ -12,10 +12,10 @@
 				<el-form-item label="通知标题" prop="title">
 					<el-input v-model="redDetial.title" maxlength="20" placeholder="请输入通知标题" style="width:250px;"></el-input>
 				</el-form-item>
-				<el-form-item label="发布时间">
+				<!-- <el-form-item label="发布时间">
 					<el-date-picker v-model="staTime" type="datetime" placeholder="选择日期">
 					</el-date-picker>
-				</el-form-item>
+				</el-form-item> -->
 			</el-form>
 			<div class="noticeWin" style="height:380px;">
 				<h2 class="tag">正文</h2>
@@ -26,7 +26,7 @@
 			<div class="noticeWin">
 				<h2 class="tag"></h2>
 				<!-- <a href="javascript:void(0);" @click="addNotice(false)" class="blue" style=" width: 100px;height:40px;line-height:40px;float:left;">提交</a> -->
-				<el-button @click="addNotice(false)" type="primary" style="width:100px;float:left;">下一步</el-button>
+				<el-button @click="nextNum" type="primary" style="width:100px;float:left;">下一步</el-button>
 				<a href="javascript:void(0);" @click="addNotice(true)" class="wearhouse" style="margin:0px 10px;">保存草稿</a>
 				<a href="javascript:void(0);" @click="back" class="wearhouse create" style="color:#b3b3b3;border-color:#b3b3b3;">返回</a>
 			</div>
@@ -49,7 +49,7 @@
 			<el-form :inline="true">
 				<el-form-item required label="">
 					<el-tabs v-model="caseActive" @tab-click="handleClick" @tab-remove="removeMuban" value="index" closable style="max-width:500px;">
-						<el-tab-pane v-for="(item,index) in caseList" :key="index" :label="item.name" :name="index+''">
+						<el-tab-pane v-for="(item,index) in caseList" :key="index" :label="'模板' + (index+1)" :name="index+''">
 							<!-- <span>选择门店</span>
 							<el-button @click="openJob('shop')" type="primary">选择门店</el-button> -->
 
@@ -57,16 +57,7 @@
 					</el-tabs>
 				</el-form-item>
 				<el-form-item label="">
-					<span v-if="isaddmuban">
-						<el-input v-model="mubanName" maxlength="10" style="width:150px;"></el-input>
-						<span @click="addMubanBtn">
-							<i class="el-icon-success" style="color:#E0BA4F;margin-right:5px;font-size:20px;cursor:pointer"></i>
-						</span>
-						<span @click="cancelMban">
-							<i class="el-icon-error" style="color:#666;font-size:20px;cursor:pointer"></i>
-						</span>
-					</span>
-					<span v-if="!isaddmuban" @click="addMuban" class="addIcon">
+					<span @click="addMuban" class="addIcon">
 						<i class="el-icon-circle-plus-outline"></i>
 						<span>新建模板</span>
 					</span>
@@ -80,13 +71,13 @@
 					</el-form-item>
 					<el-form-item label="选择职位">
 						<el-button @click="openShopJob('shop',index)" type="primary">选择职位</el-button>
-						<span class="spanCom" style="margin-right:15px;" v-if="item.jobIds.length>0">已选择门店职位 {{item.jobIds.length}}个</span>
+						<span class="spanCom" style="margin-right:15px;" v-if="item.roleIds.length>0">已选择门店职位 {{item.roleIds.length}}个</span>
 					</el-form-item>
 				</template>
 			</el-form>
-			<el-button type="primary">立刻发布</el-button>
-			<el-button @click="setTimeIssue" type="primary" plain>定时发布</el-button>
-			<el-button @click="goToback" plain>保存草稿箱</el-button>
+			<el-button @click="setTimeIssue(false)" type="primary">立刻发布</el-button>
+			<el-button @click="setTimeIssue(true)" type="primary" plain>定时发布</el-button>
+			<el-button @click="addNotice(true)" plain>保存草稿箱</el-button>
 			<el-button @click="goToback" type="info" plain>上一步</el-button>
 
 		</section>
@@ -134,24 +125,18 @@ export default {
 			jobsLength: null, //职位
 			jobIds: { brand: [], shop: [] },
 			jobtype: '', //品牌或者店铺，brand  shop
-			caseList: [
-				{
-					id: '0',
-					name: '模板1',
-					shopIds: ['10329'],
-					jobIds: ['100031']
-				},
-				{ id: '2', name: 'hhhhhhh', shopIds: ['10329'], jobIds: [] }
-			], //模板列表
-			caseActive: 0, //模版下标
+			caseList: [{shopIds: [],roleIds: []}], //模板列表
+			caseActive: '0', //模版下标
 			shopList: [], //店铺列表
 			titDetail: {},
 			showShop: false,
 			shopIds: [],
-			isaddmuban: false,
+			// isaddmuban: false,
 			mubanName: '模板',
 			timeWinShow: false, //定时弹窗
-			staTime: new Date().getTime()
+			staTime: new Date().getTime(),
+			isNow:false,
+			detial:{},//通知详情
 		};
 	},
 	props: {
@@ -161,12 +146,24 @@ export default {
 	},
 	mounted() {
 		this.info();
+		this.shopUrl = this.redDetial.sendToSource.split(',');
+		let obj = {};
+		if(!this.redDetial.sendConfig || this.redDetial.sendConfig == ''){
+			obj.roleIds = [];
+			obj.shopConfig = [{shopIds: [],roleIds: []}];
+		}else{
+			obj = JSON.parse(this.redDetial.sendConfig);
+		}
+		this.jobIds.brand = obj.roleIds;
+		this.caseList = obj.shopConfig;
 	},
 	methods: {
 		async info() {
 			let userData = storage.session('userShop');
 			this.ischain = userData.currentShop.ischain;
 			this.redDetial.time = this.redDetial.time * 1000;
+			this.detial.time = this.redDetial.time;
+			console.log(this.detial.time);
 			this.staTime = this.redDetial.time;
 			this.$store.commit('setPageTools', []);
 			let token = storage.session('token'); //token
@@ -197,12 +194,31 @@ export default {
 				wangEditor.txt.html(this.redDetial.content);
 			}
 		},
-		setTimeIssue() {
-			this.timeWinShow = true;
+		nextNum(){
+			this.isNext = true;
+		},
+		//type=false:立刻发布，true定时发布
+		setTimeIssue(type) {
+			this.isNow = type;
+			if(type){
+				this.timeWinShow = true;
+			}else{
+				// this.Detail.sendToSource = this.shopUrl.toString();
+				// this.Detail.sendType = this.isNow?'1':'0';
+				// let caseList = this.caseList;
+				// let aaa = {};
+				// aaa.roleIds = this.jobIds.brand.toString();
+				// aaa.shopConfig = caseList;
+				// this.Detail.sendConfig = aaa;
+				// this.Detail.type = this.redDetial.type;
+				this.addNotice(false);
+				console.log(this.Detail);
+			}
 		},
 		timeBack(res) {
 			if (res == 'ok') {
-				this.redDetial.time = this.staTime;
+				this.detial.time = this.staTime;
+				this.addNotice(false);
 			}
 			console.log(res);
 			console.log(this.staTime);
@@ -214,12 +230,26 @@ export default {
 		},
 		//移除模板
 		removeMuban(res) {
+			console.log(res);
+			if(this.caseList.length==1){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '至少要有一个模板！'
+				});
+				return false;
+			}
 			this.$store.commit('setWin', {
 				winType: 'confirm',
 				content: '确定删除此模板吗？',
 				callback: delRes => {
 					if (delRes == 'ok') {
 						this.caseList.splice(res * 1, 1);
+						if(res == '0'){
+							this.caseActive = '0';
+						}else{
+							this.caseActive = res * 1 -1 +'';
+						}
+						
 					}
 				}
 			});
@@ -233,28 +263,19 @@ export default {
 				});
 				return false;
 			}
-			this.mubanName = '模板' + (this.caseList.length + 1);
-			this.isaddmuban = true;
-		},
-		//添加模板保存按钮
-		addMubanBtn() {
-			if (this.mubanName.trim().length == 0) {
-				this.$store.commit('setWin', {
-					winType: 'alert',
-					content: '模板名不能为空'
-				});
-				return false;
-			}
-			let item = {};
-			item.name = this.mubanName;
-			item.shopIds = [];
-			item.jobIds = [];
-			this.caseList.push(item);
-			this.isaddmuban = false;
-		},
-		//取消模板按钮
-		cancelMban() {
-			this.isaddmuban = false;
+			this.$store.commit('setWin', {
+				winType: 'confirm',
+				content: '确定新增模板吗？',
+				callback: delRes => {
+					if (delRes == 'ok') {
+						let item = {};
+						item.shopIds = [];
+						item.roleIds = [];
+						this.caseList.push(item);
+						this.caseActive = this.caseList.length -1+'';
+					}
+				}
+			});
 		},
 		//选择门店点击
 		seachShop(index) {
@@ -263,15 +284,13 @@ export default {
 		},
 		//选择门店返回
 		getShopResult(res, item) {
-			console.log(res);
-			console.log(item);
 			this.caseList[this.caseActive].shopIds = item;
 			this.showShop = false;
 		},
 		//打开门店职位弹窗
 		openShopJob(type, index) {
 			this.jobtype = type;
-			this.jobIds.shop = this.caseList[index].jobIds;
+			this.jobIds.shop = this.caseList[index].roleIds;
 			this.isOpenjob = true;
 		},
 		//打开品牌职位弹窗
@@ -287,9 +306,8 @@ export default {
 				if (this.jobtype == 'brand') {
 					this.jobIds = item;
 				} else if (this.jobtype == 'shop') {
-					this.caseList[this.caseActive].jobIds = item.shop;
+					this.caseList[this.caseActive].roleIds = item.shop;
 				}
-				console.log(item);
 				// this.setMainTerminal(item);
 			}
 			this.isOpenjob = false;
@@ -310,9 +328,19 @@ export default {
 		random: function(lower, upper) {
 			return Math.floor(Math.random() * (upper - lower)) + lower;
 		},
+		//添加接口
 		async addNotice(ble) {
+			//ble  true:保存草稿箱，false:发送
 			let item = {};
-			item.time = this.redDetial.time / 1000;
+			//如果是定时发送，保存草稿箱时
+			if(this.redDetial.type ==='0'&&ble){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '已发送或定时发送，不能保存草稿箱！'
+				});
+				return false;
+			}
+			item.time = this.detial.time / 1000;
 			item.title = this.redDetial.title;
 			item.content = this.redDetial.content;
 
@@ -351,6 +379,16 @@ export default {
 				// });
 				// return false;
 			}
+			item.sendToSource = this.shopUrl.toString();
+			item.sendType = this.isNow?'1':'0';
+			let caseList = this.caseList;
+			let aaa = {};
+			aaa.roleIds = this.jobIds.brand;
+			aaa.shopConfig = caseList;
+			item.sendConfig = aaa;
+			console.log(item);
+			item.type = this.redDetial.type;
+			this.Detail = item;
 			// if(item.type==1&&this.redDetial.type == '0'){
 			// 	this.$store.commit('setWin', {
 			// 		winType: 'alert',
@@ -359,41 +397,27 @@ export default {
 			// 	return false;
 			// }
 			if (this.isAdd) {
-				item.type = Number(ble);
-				if (ble) {
-					let res = await http.addNotice({ data: item });
-					if(res){
-						this.$store.commit('setWin', {
-							winType: 'alert',
-							content: '已保存至草稿箱'
-						});
-						return;
-					}
-				} else if (!ble) {
-					this.isNext = true;
-					// this.$store.commit('setWin', {
-					// 	winType: 'alert',
-					// 	content: '添加成功'
-					// });
+				let res = await http.addNotice({ data: item });
+				if(res){
+					this.$store.commit('setWin', {
+						winType: 'alert',
+						content: '已保存至草稿箱'
+					});
 				}
 			} else {
-				item.type = Number(ble);
 				item.newType = Number(ble);
 				item.id = this.redDetial.id;
 				//如果是保存草稿箱
-				if (ble) {
-					let res = await http.editNoticeOne({ data: item });
-					if (res) {
-						this.$store.commit('setWin', {
-							winType: 'alert',
-							content: '修改成功'
-						});
-					}
-				} else {
-					this.isNext = true;
+				let res = await http.editNoticeOne({ data: item });
+				if (res) {
+					this.$store.commit('setWin', {
+						winType: 'alert',
+						content: '修改成功'
+					});
 				}
+				
 			}
-			// this.$emit('openTwo', 'add');
+			this.$emit('openTwo', 'add');
 		},
 		back() {
 			this.$emit('openTwo', 'back');

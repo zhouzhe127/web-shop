@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<section v-if="!showWin" style="margin-top:20px;">
-			<el-radio-group v-model="type" style="margin:10px 0;">
+			<el-radio-group v-if="!isTy" v-model="active" @change="actypeType" style="margin:10px 0;">
 				<el-radio-button label="0">上架通知</el-radio-button>
 				<el-radio-button label="1">下架通知</el-radio-button>
 			</el-radio-group>
@@ -13,10 +13,17 @@
 					<template slot-scope="scope">
 						<span style="color: #FE8D2C;cursor:pointer" @click="editElm(scope.row)">编辑</span>
 						<span style="padding:0 20px;color: #D2D2D2">|</span>
+						<span v-if="!isTy" style="color: #2ea7e0;cursor:pointer" @click="updownWin(scope.row)">{{scope.row.status=='1'?'上架':'下架'}}</span>
+						<span v-if="!isTy" style="padding:0 20px;color: #D2D2D2">|</span>
 						<span style="color: #FD3F1F;cursor:pointer" @click="delElm(scope.row,scope.$index)">删除</span>
 					</template>
 				</el-table-column>
-				<el-table-column min-width="200" align="center" prop="time" label="时间"></el-table-column>
+				<el-table-column min-width="200" align="center" prop="time" label="发布时间"></el-table-column>
+				<el-table-column min-width="200" align="center" prop="sendToSource" label="发布渠道">
+					<template slot-scope="scope">
+						<span style="">sendToSource</span>
+					</template>
+				</el-table-column>
 				<el-table-column show-overflow-tooltip min-width="150" align="center" prop="title" label="标题" ></el-table-column>
 			</el-table>
 		</section>
@@ -37,7 +44,7 @@ export default {
 			isAdd: true,
 			redDetial: { title: '', time: parseInt(new Date().getTime()/1000),content:''}, //详情
 			isTy: false,//草稿箱或列表默认列表
-			type:'0',//上架，下架通知
+			active:'0',//上架，下架通知
 			jobList:[],//职位列表
 		};
 	},
@@ -50,12 +57,23 @@ export default {
 		
 	},
 	methods: {
+		actypeType(){
+			this.init();
+			// this.active = re;
+			// let arr = [];
+			// for(let i=0;i<this.copyNoticeList.length;i++){
+			// 	if(this.copyNoticeList[i].status == re){
+			// 		arr.push(this.copyNoticeList[i]);
+			// 	}
+			// }
+			// this.noticeList = arr;
+		},
 		init() {
 			this.isTy = false;
 			this.noticeList = [];
 			for (let i = 0; i < this.copyNoticeList.length; i++) {
 				let item = this.copyNoticeList[i];
-				if (this.copyNoticeList[i].type == '0') {
+				if (this.copyNoticeList[i].type == '0' && this.copyNoticeList[i].status == this.active) {
 					this.noticeList.push(item);
 				}
 			}
@@ -96,6 +114,25 @@ export default {
 						this.delNoticeOne(item);
 						this.noticeList.splice(index,1);
 						// this.isStopman(detial, index);
+					}
+				}
+			});
+		},
+		async updownNotice(item) {
+			await http.updownNotice({ data: {id:item.id,status:item.status=='1'?'0':'1' }});
+			// this.getdraft();
+			// this.init();
+		},
+		//下架通知
+		updownWin(item){
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				winType: 'confirm',
+				content: '确定'+item.status=='1'?'上架':'下架'+'此通知吗？',
+				callback: delRes => {
+					if (delRes == 'ok') {
+						this.updownNotice(item);
+						this.getList();
 					}
 				}
 			});
