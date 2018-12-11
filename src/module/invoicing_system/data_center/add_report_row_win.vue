@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-10 10:36:46
+ * @Last Modified time: 2018-12-11 16:01:13
  */
 <template>  
 	<div>
@@ -234,11 +234,11 @@ export default {
 					str = text+str;
 					break;
 				case 5:
-					text = `供应商数量：${data.supplier.split(',').length}；`;
+					text = `供应商数量：${data.supplierName.split(',').length}；`;
 					str = text+str;
 					break;
 				case 6:
-					str = `物料名称：${this.getMateralName(data.mid,list).name}；供应商数量：${data.supplier.split(',').length}`;
+					str = `物料名称：${this.getMateralName(data.mid,list).name}；供应商数量：${data.supplierName.split(',').length}`;
 					break;		
 			}
 			return str;

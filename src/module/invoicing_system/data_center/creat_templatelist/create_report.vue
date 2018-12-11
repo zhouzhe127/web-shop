@@ -272,10 +272,17 @@
 				let rgx = /^[A-Za-z0-9_\u4e00-\u9fa5]+$/;
 				if (!rgx.test(this.moldeName)) {
 					this.$message.error('报表名称输入错误');
-					return;
+					return false;
 				}
 				let x = this.setXData();
 				let y = JSON.stringify(this.setYData());
+				if(!x||!y){
+					this.$message({
+						message: '报表数据有误!',
+						type: 'warning'
+					});
+					return false;
+				}
 				// let y = this.tableYData;
 				let data = await http.materialreportAddReportTask({
 					data: {
@@ -297,7 +304,7 @@
 					});
 				}else{
 					this.$message({
-						message: '报表生成有误',
+						message: '报表生成有误!',
 						type: 'warning'
 					});
 				}
