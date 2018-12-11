@@ -13,7 +13,8 @@
 				</el-select>
 			</div>
 			<div class="sleType">
-				<el-cascader :options="cataList" expand-trigger="hover" :placeholder="'请选择分类'" v-model="sleCate" @change="getDrop" change-on-select></el-cascader>
+				<el-cascader :options="cataList" :placeholder="'请选择分类'" 
+				v-model="sleCate" @change="getDrop" change-on-select></el-cascader>
 			</div>
 			<div class="sleType">
 				<el-button @click="search" type="primary">筛选</el-button>

@@ -11,16 +11,6 @@
 		<!--列表数据-->
 		<section v-show="tabactive==0">
 			<section class="statisticsList" style="vertical-align: middle;margin-bottom: 20px;">
-				<!-- <section class="filter">
-					<input v-model="searchName" type="text" placeholder="请输入商品名" />
-					<input v-model="searchCode" type="text" placeholder="请输入条形码" />
-					<input v-model="secBarCode" type="text" placeholder="请输入副条形码" />
-					<div class="selBox">
-						<select-btn :sorts="goodsList" :name="allGoods" @selOn="selectList" ref="select"></select-btn>
-						<a @click="searchList" href="javascript:void(0);" class="blue" style="width: 100px;height: 40px;line-height: 40px;margin-right: 8px;">筛选</a>
-						<a @click="searchReset" href="javascript:void(0);" class="gray" style="width: 100px;height: 40px;line-height: 40px;">重置</a>
-					</div>
-				</section> -->
 				<div class="asideone">
 					<div class="sleType">
 						<el-input v-model="searchName" placeholder="请输入商品名"></el-input>
