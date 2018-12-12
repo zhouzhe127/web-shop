@@ -387,11 +387,16 @@
 				this.list = [...this.pList];
 				this.changeListAttrVal(this.list, 'checked', false);
 				this.selectList = this.pSelects;
-				this.changeListAttrVal([this.selectList].flat(), 'checked', true);
-				this.addDelSelectList([this.selectList].flat(), false, this.list);
+				console.log(this.selectList);
+				let setArr = this.selectList;
+				if(!Array.isArray(this.selectList)){
+					setArr = [this.selectList];
+				}
+				this.changeListAttrVal(setArr, 'checked', true);
+				this.addDelSelectList(setArr, false, this.list);
 
 				arr = [...this.list];
-				arr.push(...[this.selectList].flat());
+				arr.push(...setArr);
 				this.list = arr.reverse();
 			},
 			initPageObj() {
