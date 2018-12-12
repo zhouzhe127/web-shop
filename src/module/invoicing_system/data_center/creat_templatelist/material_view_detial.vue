@@ -13,7 +13,7 @@
 			</div>
 			<div class="in-block" style="padding-left:10px;">
 				<el-button type="primary" @click="filterReset">筛选</el-button>
-				<el-button type="info" @click="filterReset('filter')">重置</el-button>
+				<el-button type="info" @click="filterReset('reset')">重置</el-button>
 			</div>
 		</div>
 		<div class="listBox">
