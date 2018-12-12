@@ -49,8 +49,6 @@ export default {
 		};
 	},
 	components: {
-		comTable: () =>
-			import(/*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 		shopNoticeWin: () =>
 			import(/*webpackChunkName: "shop_notice_win"*/ './shop_notice_win'),
 		
@@ -92,7 +90,7 @@ export default {
 		add() {
 			this.isAdd = true;
 			this.showWin = true;
-			this.redDetial = { title: '', time: new Date().getTime()/1000,content:''};
+			this.redDetial = { title: '', time: new Date().getTime()/1000,content:'',sendToSource:'',sendConfig:null};
 			this.$store.commit('setPageTools', []);
 		},
 		async editElm(item) {
@@ -176,7 +174,7 @@ export default {
 		//获取通知列表
 		async getList(){
 			this.copyNoticeList = await http.getNoticeList({ data: {} });
-			this.jobList = await http.newGetJobInfoList();
+			this.jobList = await http.getUserRoleList();
 			for (let i = 0; i < this.copyNoticeList.length; i++) {
 				let item = this.copyNoticeList[i];
 				item.time = utils.format(new Date(item.time*1000), 'yyyy-MM-dd hh:mm:ss');

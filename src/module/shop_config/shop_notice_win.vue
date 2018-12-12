@@ -82,7 +82,7 @@
 			<h3 v-if="redDetial.sendType=='1'" style="padding: 20px;margin-left: 86px;color: #e1bb4a;">已设置：{{redDetial.newTime}}发布</h3>
 
 		</section>
-		<shopNoticeTwo v-if="isOpenjob" @selectBack="radioBack" :jobList="jobList" :jobIds="jobIds" :jobtype="jobtype"></shopNoticeTwo>
+		<shopNoticeTwo v-if="isOpenjob" @selectBack="radioBack" :jobList="jobList" :jobIds="jobIds" :jobtype="jobtype" :shopIds="shopIds"></shopNoticeTwo>
 		<elShopListWin :shopIds="shopIds" @chooseShop="getShopResult" v-if="showShop"></elShopListWin>
 		<!-- 添加时间弹窗 -->
 		<win v-if="timeWinShow" width="360" height="150" @winEvent="timeBack" :align="'center'">
@@ -155,8 +155,8 @@ export default {
 			obj.shopConfig = [{shopIds: [],roleIds: []}];
 		}else{
 			obj = JSON.parse(this.redDetial.sendConfig);
+			this.jobIds.brand =  obj.roleIds.split(',');
 		}
-		this.jobIds.brand =  obj.roleIds.split(',');
 		this.caseList = obj.shopConfig;
 	},
 	methods: {
@@ -219,6 +219,7 @@ export default {
 			this.timeWinShow = false;
 		},
 		handleClick(tab, event) {
+			this.shopIds = this.caseList[this.caseActive].shopIds;
 			console.log(this.caseActive);
 			console.log(tab, event);
 		},
@@ -279,12 +280,20 @@ export default {
 		//选择门店返回
 		getShopResult(res, item) {
 			this.caseList[this.caseActive].shopIds = item;
+			this.shopIds = item;
 			this.showShop = false;
 		},
 		//打开门店职位弹窗
 		openShopJob(type, index) {
 			this.jobtype = type;
 			this.jobIds.shop = this.caseList[index].roleIds;
+			if(this.caseList[index].shopIds.length==0){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '请先选择门店'
+				});
+				return false;
+			}
 			this.isOpenjob = true;
 		},
 		//打开品牌职位弹窗
