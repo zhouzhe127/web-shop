@@ -156,12 +156,14 @@ export default {
 		}else{
 			obj = JSON.parse(this.redDetial.sendConfig);
 			for(let i=0;i<obj.shopConfig.length;i++){
-				obj.shopConfig[i].shopIds = obj.shopConfig[i].shopIds.split(',');
-				obj.shopConfig[i].roleIds = obj.shopConfig[i].roleIds.split(',');
+				obj.shopConfig[i].shopIds = obj.shopConfig[i].shopIds.split(',').filter(d=>d);
+				obj.shopConfig[i].roleIds = obj.shopConfig[i].roleIds.split(',').filter(d=>d);
 			}
-			this.jobIds.brand =  obj.roleIds.split(',');
+			this.jobIds.brand =  obj.roleIds.split(',').filter(d=>d);
 		}
 		this.caseList = obj.shopConfig;
+		console.log(this.caseList);
+		console.log(this.jobIds.brand);
 	},
 	methods: {
 		async info() {
@@ -396,12 +398,14 @@ export default {
 				return false;
 			}
 			item.sendToSource = this.shopUrl.toString();
-			if(item.sendToSource == ''){
-				this.$store.commit('setWin', {
-					winType: 'alert',
-					content: '每个模板的选择渠道为必选，请选择！'
-				});
-				return false;
+			if(this.isNext&&!ble){
+				if(item.sendToSource == ''){
+					this.$store.commit('setWin', {
+						winType: 'alert',
+						content: '每个模板的选择渠道为必选，请选择！'
+					});
+					return false;
+				}
 			}
 			item.sendType = this.isNow?'1':'0';
 			let caseList = this.caseList;
@@ -410,26 +414,28 @@ export default {
 			for(let i=0;i<caseList.length;i++){
 				caseList[i].shopIds = caseList[i].shopIds.toString();
 				caseList[i].roleIds = caseList[i].roleIds.toString();
-				
-				if(caseList[i].shopIds==''){
-					this.$store.commit('setWin', {
-						winType: 'alert',
-						content: '请选择要发布的门店！'
-					});
-					return false;
-				}
-				if(caseList[i].roleIds==''){
-					this.$store.commit('setWin', {
-						winType: 'alert',
-						content: '请选择要发布的职位！'
-					});
-					return false;
+				if(this.isNext&&!ble){
+					if(caseList[i].shopIds==''){
+						this.$store.commit('setWin', {
+							winType: 'alert',
+							content: '请选择要发布的门店！'
+						});
+						return false;
+					}
+					if(caseList[i].roleIds==''){
+						this.$store.commit('setWin', {
+							winType: 'alert',
+							content: '请选择要发布的职位！'
+						});
+						return false;
+					}
 				}
 			}
 			aaa.shopConfig = caseList;
 			item.sendConfig = aaa;
 			item.time = this.detial.time / 1000;
 			console.log(item);
+			item.type = Number(ble);
 			this.Detail = item;
 			// if(item.type==1&&this.redDetial.type == '0'){
 			// 	this.$store.commit('setWin', {
@@ -447,7 +453,6 @@ export default {
 				// 	});
 				// }
 			} else {
-				item.type = this.redDetial.type;
 				item.newType = Number(ble);
 				item.id = this.redDetial.id;
 				//如果是保存草稿箱
