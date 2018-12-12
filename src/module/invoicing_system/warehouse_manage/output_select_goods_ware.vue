@@ -20,7 +20,7 @@
 							<el-button type="text" @click="delList(scope.row,scope.$index)" class="danger-color">删除</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="gName" label="商品名称" min-width="200">
+					<el-table-column prop="goodsName" label="商品名称" min-width="200">
 					</el-table-column>
 					<el-table-column prop="barCode" label="条形码" min-width="200">
 					</el-table-column>
@@ -82,7 +82,7 @@
 							:disabled="scope.row.surplus<=0">添加</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="gName" label="商品名称" min-width="200">
+					<el-table-column prop="goodsName" label="商品名称" min-width="200">
 					</el-table-column>
 					<el-table-column prop="barCode" label="条形码" min-width="200">
 					</el-table-column>
