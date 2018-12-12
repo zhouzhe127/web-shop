@@ -23,7 +23,7 @@
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
 				<el-table-column prop="date" label="物料名称">
 					<template slot-scope="scope">
-						<div>{{scope.row.itemInfo.name}}({{scope.row.supplierName}})</div>
+						<div>{{scope.row.itemInfo.name}}<span v-if="scope.row.supplierName">({{scope.row.supplierName}})</span></div>
 					</template>
 				</el-table-column>
 				<el-table-column prop="code" label="物料编码">
