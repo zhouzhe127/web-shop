@@ -18,12 +18,12 @@
 		</div>
 		<div class="listBox">
 			<div class="tableHeard">
-				<span>集合名称：{{scopeName}}&nbsp;&nbsp;&nbsp; 集合类型：{{scopeType}}</span>
+				<span>集合名称：{{scopeName}}&nbsp;&nbsp;&nbsp; 集合类型：{{gatherType[scopeType]}}</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
-				<el-table-column prop="date" fixed="left" label="物料名称">
+				<el-table-column prop="date" min-width='100px' fixed="left" label="物料名称">
 					<template slot-scope="scope">
-						<div>{{scope.row.itemInfo.name}}<span v-if="scope.row.supplierName">({{scope.row.supplierName}})</span></div>
+						<div>{{scope.row.itemInfo.name}}<span v-if="scope.row.supplierName&&scopeType==6">({{scope.row.supplierName}})</span></div>
 					</template>
 				</el-table-column>
 				<el-table-column prop="code" label="物料编码">
@@ -70,7 +70,13 @@
 				allTotal: 0,
 				num: 10, //每页显示多少条
 				scopeName:'',
-				scopeType:''
+				scopeType:'',
+				gatherType:{
+					3:'物料',
+					4:'单位-物料集合',
+					5:'供应商-物料集合',
+					6:'物料-供应商集合',
+				}
 			};
 		},
 		methods: {
