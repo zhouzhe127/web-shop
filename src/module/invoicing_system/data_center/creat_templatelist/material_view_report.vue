@@ -4,7 +4,7 @@
 			<span>报表名称 : {{reportName}}</span>
 			<!-- <div></div> -->
 		</div>
-		<div class="search-header">
+		<!-- <div class="search-header">
 			<div class="in-block" style="margin-right:10px;">
 				<el-input clearable v-model="condition.name" placeholder="物料名称" maxlength="100" style="width:224px"></el-input>
 			</div>
@@ -15,7 +15,7 @@
 				<el-button type="primary" @click="filterReset('filter',null)">筛选</el-button>
 				<el-button type="info" @click="filterReset('reset',null)">重置</el-button>
 			</div>
-		</div>
+		</div> -->
 		<div class="listBox">
 			<div class="tableHeard">
 				<span>{{reportName}} - 列表</span>
@@ -59,7 +59,7 @@
 			return {
 				reportName: '--',
 				reportId: '', //报表id
-				condition: {},
+				// condition: {},
 				mainData:{},
 				tableData: [],
 				page: 1,
@@ -74,24 +74,24 @@
 			};
 		},
 		methods: {
-			filterReset(sym) {
-				if (sym == 'reset') {
-					this.initCondition();
-				}
-				this.getDetail();
-			},
-			initCondition() {
-				this.condition = {
-					name: '',
-					code: ''
-				};
-			},
+			// filterReset(sym) {
+			// 	if (sym == 'reset') {
+			// 		this.initCondition();
+			// 	}
+			// 	this.getDetail();
+			// },
+			// initCondition() {
+			// 	this.condition = {
+			// 		name: '',
+			// 		code: ''
+			// 	};
+			// },
 			//获取报表详情
 			async getDetail() {
 				// let condition = this.condition;
 				let subObj = {
-					name:this.condition.name||'',
-					barCode:this.condition.code||'',
+					// name:this.condition.name||'',
+					// barCode:this.condition.code||'',
 					reportId: this.reportId,
 					page: this.page,
 					size: this.num,
@@ -188,7 +188,7 @@
 				this.reportName = query.name;
 			}
 			this.initBtn();
-			this.filterReset();
+			this.getDetail();
 		},
 		// components: {},
 		// computed: {},
@@ -198,7 +198,12 @@
 	.pad-bottom {
 		padding-bottom: 20px;
 	}
-
+	.head{
+		span{
+			font-size: 16px;
+		}
+		margin-bottom: 20px;
+	}
 	.tableHeard {
 		border: 1px #ebeef5 solid;
 		border-bottom: none;
