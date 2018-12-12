@@ -1109,7 +1109,7 @@ export default {
 		method: 'post'
 	},
 	"materialreportDeleteStatisticScopeCategory": {
-		url: b + "materialreport/deleteStatisticScopeCategory", //删除分类集合
+		url: b + "materialreport/deleteStatisticScope", //删除分类集合
 		method: 'post'
 	},
 	"templateDeleteReportTemplate": {

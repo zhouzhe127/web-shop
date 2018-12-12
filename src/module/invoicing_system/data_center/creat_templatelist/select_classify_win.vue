@@ -8,7 +8,7 @@
 			<span slot="title" class="winTitle">{{title}}</span>
 			<div class="content">
 				<div class="chooseAll">
-					<el-checkbox-button v-model="chooseAll" @change="changeAll" size="small" border>全部选择</el-checkbox-button>
+					<el-checkbox-button v-model="chooseAll" @change="changeAll" size="small" border>{{chooseAll?'全部取消':'全部选择'}}</el-checkbox-button>
 				</div>
 				<div class="plogan" v-for="(item,index) in cateList" :key="index">
 					<div class="checkBtn" :class="{'borBotoom':item.children}">
