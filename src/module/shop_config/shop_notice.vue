@@ -9,12 +9,12 @@
 				stripe border :header-cell-style = "{'background-color':'#f5f7fa'}"
 				:data="noticeList"
 				style="width: 100%">
-				<el-table-column min-width="160" align="center" label="操作">
+				<el-table-column min-width="180" align="center" label="操作">
 					<template slot-scope="scope">
 						<span style="color: #FE8D2C;cursor:pointer" @click="editElm(scope.row)">编辑</span>
-						<span style="padding:0 20px;color: #D2D2D2">|</span>
+						<span style="padding:0 10px;color: #D2D2D2">|</span>
 						<span v-if="!isTy" style="color: #2ea7e0;cursor:pointer" @click="updownWin(scope.row)">{{scope.row.status=='1'?'上架':'下架'}}</span>
-						<span v-if="!isTy" style="padding:0 20px;color: #D2D2D2">|</span>
+						<span v-if="!isTy" style="padding:0 10px;color: #D2D2D2">|</span>
 						<span style="color: #FD3F1F;cursor:pointer" @click="delElm(scope.row,scope.$index)">删除</span>
 					</template>
 				</el-table-column>
@@ -90,7 +90,7 @@ export default {
 		add() {
 			this.isAdd = true;
 			this.showWin = true;
-			this.redDetial = { title: '', time: new Date().getTime()/1000,content:'',sendToSource:'',sendConfig:null};
+			this.redDetial = { title: '', time: new Date().getTime()/1000,content:'',sendConfig:null};
 			this.$store.commit('setPageTools', []);
 		},
 		async editElm(item) {
@@ -183,7 +183,7 @@ export default {
 					item.sendToSourceName = '闪店云';
 				}else if(sendToSource=='1'){
 					item.sendToSourceName = '闪店商家';
-				}else if(sendToSource=='0,1'){
+				}else if(sendToSource=='0,1'||sendToSource=='1,0'){
 					item.sendToSourceName = '闪店云,闪店商家';
 				}else{
 					item.sendToSourceName = '无渠道';

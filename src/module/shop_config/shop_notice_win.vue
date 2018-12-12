@@ -148,7 +148,7 @@ export default {
 	},
 	mounted() {
 		this.info();
-		this.shopUrl = this.redDetial.sendToSource.split(',');
+		this.shopUrl = this.redDetial.sendToSource?this.redDetial.sendToSource.split(','):[];
 		let obj = {};
 		if(!this.redDetial.sendConfig || this.redDetial.sendConfig == ''){
 			obj.roleIds = [];
@@ -167,10 +167,9 @@ export default {
 		async info() {
 			let userData = storage.session('userShop');
 			this.ischain = userData.currentShop.ischain;
-			this.redDetial.time = this.redDetial.time * 1000;
-			this.redDetial.newTime = utils.format(new Date(this.redDetial.time), 'yyyy-MM-dd hh:mm:ss');
-			this.detial.time = this.redDetial.time;
-			this.staTime = this.redDetial.time;
+			this.detial.time = this.redDetial.time * 1000;
+			this.redDetial.newTime = utils.format(new Date(this.detial.time), 'yyyy-MM-dd hh:mm:ss');
+			this.staTime = this.detial.time;
 			this.$store.commit('setPageTools', []);
 			let token = storage.session('token'); //token
 			let shopId = storage.session('shopId'); //shopId
@@ -385,6 +384,14 @@ export default {
 				// 	content: '请输入通知内容！'
 				// });
 				// return false;
+			}
+			// console.log(item.content.trim())
+			if(item.content.trim().length==0){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '请输入正文'
+				});
+				return false;
 			}
 			item.sendToSource = this.shopUrl.toString();
 			item.sendType = this.isNow?'1':'0';
