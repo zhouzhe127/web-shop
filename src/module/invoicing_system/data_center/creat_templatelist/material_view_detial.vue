@@ -12,8 +12,8 @@
 				<el-input clearable v-model="condition.code" placeholder="物料编码" maxlength="50" style="width:224px"></el-input>
 			</div>
 			<div class="in-block" style="padding-left:10px;">
-				<el-button type="primary" @click="filterReset('ok',null)">筛选</el-button>
-				<el-button type="info" @click="filterReset('filter',null)">重置</el-button>
+				<el-button type="primary" @click="filterReset">筛选</el-button>
+				<el-button type="info" @click="filterReset('filter')">重置</el-button>
 			</div>
 		</div>
 		<div class="listBox">
@@ -79,13 +79,14 @@
 			//获取报表详情
 			async getDetail() {
 				// let condition = this.condition;
+				console.log(this.condition);
 				let subObj = {
 					reportId: this.reportId,
 					scopeId: this.scopeId,
 					page: this.page,
 					size: this.num,
 					name:this.condition.name||'',
-					barCode:this.condition.barCode||'',
+					barCode:this.condition.code||'',
 				};
 				let res = await this.getHttp('materialreportGetMaterialReportDetail', subObj);
 				console.log(res);
