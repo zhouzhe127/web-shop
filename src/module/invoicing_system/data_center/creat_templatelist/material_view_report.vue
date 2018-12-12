@@ -131,7 +131,7 @@
 					id:this.reportId,
 					name:this.reportName,
 					scopeId:data.id,
-					scopeType : this.gatherType[data.type],
+					scopeType : data.type,
 					scopeName:data.scopeName
 				};
 				this.$router.push({
