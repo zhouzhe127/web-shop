@@ -69,7 +69,7 @@
 				</el-table-column>
 				<el-table-column label="修改人" align="center">
 					<template slot-scope="scope">
-						<span>{{getUserName(scope.row.createUid)}}</span>
+						<span>{{getPersonName(scope.row.createUid)}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="修改时间" align="center">
@@ -182,21 +182,21 @@ export default {
 			this.num = 10;
 			this.getModifyRecode();
 		},
-		async getUserList() {
-			let res = await http.getUserList({});
-			if (res) {
-				this.userList = res;
-			}
-		},
-		getUserName: function(id) {
-			let userName = '--';
-			for (let item of this.userList) {
-				if (id == item.userId) {
-					userName = item.userName;
-				}
-			}
-			return userName;
-		},
+		// async getUserList() {
+		// 	let res = await http.getUserList({});
+		// 	if (res) {
+		// 		this.userList = res;
+		// 	}
+		// },
+		// getUserName: function(id) {
+		// 	let userName = '--';
+		// 	for (let item of this.userList) {
+		// 		if (id == item.userId) {
+		// 			userName = item.userName;
+		// 		}
+		// 	}
+		// 	return userName;
+		// },
 		formatting: function(item) {
 			if (item.status == '0') {
 				return '-';
@@ -207,7 +207,7 @@ export default {
 	},
 	mounted() {
 		this.setTitle();
-		this.getUserList();
+		this.getAssistantstaff(); //获取工作人员
 		this.getAssistantstaff();
 		this.getshopIdorshopName();
 		this.searchData();

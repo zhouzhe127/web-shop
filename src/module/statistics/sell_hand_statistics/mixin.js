@@ -5,7 +5,7 @@ export const mixin = {
 	data() {
 		return {
 			ischain: storage.session('userShop').currentShop.ischain,
-			staffList: Object, //工作人员
+			staffList: [], //工作人员
 			postSelectShopList: [], //所有的店铺列表
 		};
 	},
@@ -28,8 +28,8 @@ export const mixin = {
 				content: content
 			});
 		},
-		async getAssistantstaff() { //获取工作人员
-			let res = await http.getAssistantstaff();
+		async getAssistantstaff() { //获取工作人员 店铺内的工作人员
+			let res = await http.getUserList();
 			if (res) {
 				this.staffList = res;
 			}
@@ -46,10 +46,9 @@ export const mixin = {
 		},
 		getPersonName: function(id) {
 			let name = '--';
-			for (let key in this.staffList) {
-				if (id == this.staffList[key].staffId) {
-					name = this.staffList[key].staffName;
-					break;
+			for (let item of this.staffList) {
+				if (id == item.userId) {
+					name = item.userName;
 				}
 			}
 			return name;

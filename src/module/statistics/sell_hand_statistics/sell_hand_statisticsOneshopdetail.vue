@@ -92,7 +92,7 @@
 							</template>
 							<el-button size="medium" type="text" style="color: #909399;"  v-else>已退回</el-button>
 							<span style="padding:0 5px;color: #D2D2D2">|</span>
-							<el-button size="medium" type="text" style="color:#e1bb4a;" @click="openModify(scope.row)">调整记录</el-button>
+							<el-button size="medium" type="text" style="color:#e1bb4a;" @click="openModify(scope.row)" v-if="scope.row.originalCash != scope.row.cash">调整记录</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -254,7 +254,7 @@ export default {
 		},
 		getBackResult: function(res) { //退回的弹窗
 			if (res == 'ok') {
-				this.consumeVerifyModify();
+				this.getConsumeStatistics();
 			}
 			this.showBackWin = false;
 		},

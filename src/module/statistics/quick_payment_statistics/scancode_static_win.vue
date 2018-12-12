@@ -37,7 +37,7 @@
 						<li>-</li>
 						<li>优惠券抵扣:{{detail.couponCash}}元</li>
 					</template>
-				<!-- 	<template v-if="detail.shopDiscountCash > 0">
+					<!-- 	<template v-if="detail.shopDiscountCash > 0">
 						<li>-</li>
 						<li>优惠金额:{{detail.shopDiscountCash}}元</li>
 					</template> -->
@@ -74,20 +74,22 @@
 						<li style="width:25%;">积分抵扣金额:{{detail.pointCash}}元</li>
 					</template>
 				</ul>
-				<ul class="orderDate clearfix">
-					<li style="width:25%;">支付方式:{{getpayment(detail)}}</li>
-				</ul>
-				<ul class="orderDate clearfix" v-if="detail.memberConsumption > 0 || detail.weChatPain > 0 || detail.aliPayPain > 0">
-					<template v-if="detail.memberConsumption > 0">
-						<li style="width:25%;">会员支付:{{detail.memberConsumption}}元</li>
-					</template>
-					<template v-if="detail.weChatPain > 0">
-						<li style="width:25%;">微信支付:{{detail.weChatPain}}元</li>
-					</template>
-					<template v-if="detail.aliPayPain > 0">
-						<li style="width:25%;">支付宝支付:{{detail.aliPayPain}}元</li>
-					</template>
-				</ul>
+				<template v-if="detail.memberConsumption > 0 || detail.weChatPain > 0 || detail.aliPayPain > 0">
+					<ul class="orderDate clearfix">
+						<li style="width:25%;">支付方式:{{getpayment(detail)}}</li>
+					</ul>
+					<ul class="orderDate clearfix">
+						<template v-if="detail.memberConsumption > 0">
+							<li style="width:25%;">会员支付:{{detail.memberConsumption}}元</li>
+						</template>
+						<template v-if="detail.weChatPain > 0">
+							<li style="width:25%;">微信支付:{{detail.weChatPain}}元</li>
+						</template>
+						<template v-if="detail.aliPayPain > 0">
+							<li style="width:25%;">支付宝支付:{{detail.aliPayPain}}元</li>
+						</template>
+					</ul>
+				</template>
 				<ul class="orderDate clearfix">
 					<template v-if="detail.couponCash > 0">
 						<li style="width:25%;">使用优惠券:{{detail.couponCash}}元</li>

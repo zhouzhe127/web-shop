@@ -37,7 +37,7 @@
 					<span class="online-sub fl required">用户</span>
 					<div class="rightHalf">
 						<span class="add subtract">{{subtracted}}</span>
-						<el-input class="fl" placeholder="请输入内容" v-model="point" :disabled="true" style="width:100px;margin-right: 10px;">
+						<el-input class="fl" placeholder="请输入内容" v-model="point" :disabled="false" style="width:100px;margin-right: 10px;">
 						</el-input>
 						<span class="add">积分</span>
 					</div>
@@ -47,7 +47,7 @@
 					<span class="online-sub fl required">导购</span>
 					<div class="rightHalf">
 						<span class="add subtract">{{subtracted}}</span>
-						<el-input class="fl" placeholder="请输入内容" v-model="cash" :disabled="true" style="width:100px;margin-right: 10px;">
+						<el-input class="fl" placeholder="请输入内容" v-model="cash" :disabled="false" style="width:100px;margin-right: 10px;">
 						</el-input>
 						<span class="add">金币</span>
 					</div>
@@ -70,7 +70,8 @@ export default {
 			amount: '', //金额
 			point: '',
 			cash: '',
-			subtracted: '增加'
+			subtracted: '增加',
+			httpStatus: false
 		};
 	},
 	props: {
@@ -89,6 +90,10 @@ export default {
 	methods: {
 		async getAppliedWin(res) {
 			if (res == 'ok') {
+				if (this.httpStatus) {
+					this.errorShow(`请勿重复点击!`);
+					return false;
+				}
 				await this.consumeVerifyModify();
 			}
 			this.$emit('getAppliedWin', res);
@@ -109,16 +114,25 @@ export default {
 			this.consumeVerifyCalculation();
 		},
 		async consumeVerifyModify() { //确认修改
-			let res = await http.consumeVerifyModify({
-				data: {
-					id: this.sellHandId,
-					modifyPrice: this.amount, //修改后的金额
-					point: this.point, //修改后的积分
-					coins: this.cash, //修改后的金币
-					return: 0
-				}
-			})
+			this.httpStatus = true;
+			let res = null;
+			try {
+				await http.consumeVerifyModify({
+					data: {
+						id: this.sellHandId,
+						modifyPrice: this.amount, //修改后的金额
+						point: this.point, //修改后的积分
+						coins: this.cash, //修改后的金币
+						return: 0
+					}
+				},true)
+			} catch (e) {
+				this.httpStatus = false;
+				this.errorShow(e.error.message);
+				return false;
+			}
 			if (res) {
+				this.httpStatus = false;
 				this.errorShow(`该记录已经调整至${this.amount}元,用户积分与导购金币已同步调整,望知晓!`);
 			}
 		}
