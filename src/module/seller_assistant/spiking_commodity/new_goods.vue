@@ -119,19 +119,18 @@
 				<!-- 商品卖价 -->
 				<div class="online-box clearfix">
 					<span class="online-sub fl required">商品卖价</span>
-					<el-input type="text" name="" class="txtinp" v-model="price" maxlength="6" placeholder="请输入数字" v-on:blur="changeCount('1')" />
+					<el-input type="text" name="" class="txtinp" v-model="price" maxlength="6" placeholder="请输入数字" onkeyup="value=value.replace(/[^\d\.]/g,'')" v-on:blur="changeCount('1')" />
 					</el-input>
 				</div>
 				<!-- 商品原价 -->
 				<div class="online-box clearfix">
 					<span class="online-sub fl required">商品原价</span>
-					<el-input type="text" class="txtinp" name="" placeholder="请输入数字" v-model="originalPrice" maxlength="6" v-on:blur="changeCount('2')" />
+					<el-input type="text" class="txtinp" name="" placeholder="请输入数字" v-model="originalPrice" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" v-on:blur="changeCount('2')" />
 					</el-input>
 				</div>
 				<!-- 商品库存 -->
 				<div class="online-box clearfix" style="margin-bottom: 25px;">
 					<span class="online-sub fl required">商品库存</span>
-					<!-- <a href="javascript:void(0);" class="addclassify fl" style="width:210px;" @click="openStore()">增加门店库存</a>  -->
 					<el-button type="primary" icon="el-icon-plus" style="width:210px;" @click="openStore()">增加门店库存</el-button>
 				</div>
 				<!-- 商品库存显示 -->
@@ -436,14 +435,14 @@ export default {
 						cond: '$$.length > 0',
 						pro: '请上传商品轮播图'
 					},
-					'price': {
-						cond: '$$.length>0 && ((/^([0-9])+([.][0-9]{1}[1-9]+)?$/).test($$))',
-						pro: '请输入商品卖价且只能是大于0的非负数'
-					},
-					'originalPrice': {
-						cond: '$$.length>0 && ((/^([0-9])+([.][0-9]{1}[1-9]+)?$/).test($$))',
-						pro: '请输入商品原价且只能是大于0的非负数'
-					},
+					// 'price': {
+					// 	cond: '$$.length>0 && ((/^([0-9])+([.][0-9]{1}[1-9]+)?$/).test($$))',
+					// 	pro: '请输入商品卖价且只能是大于0的非负数'
+					// },
+					// 'originalPrice': {
+					// 	cond: '$$.length>0 && ((/^([0-9])+([.][0-9]{1}[1-9]+)?$/).test($$))',
+					// 	pro: '请输入商品原价且只能是大于0的非负数'
+					// },
 					'shopStock': {
 						cond: 'Object.keys($$).length > 0',
 						pro: '请增加门店库存'
@@ -457,6 +456,22 @@ export default {
 						pro: '请输入限购上限，且只能是1~99之间'
 					}
 				}, this)) return false;
+			if (this.price == '') {
+				this.$store.commit('setWin', {
+					content: '请输入商品卖价且只能是大于0的非负数',
+					winType: 'alert',
+					title: '操作提示',
+				});
+				return false;
+			}
+			if (this.originalPrice == '') {
+				this.$store.commit('setWin', {
+					content: '请输入商品原价且只能是大于0的非负数',
+					winType: 'alert',
+					title: '操作提示',
+				});
+				return false;
+			}
 			return true;
 		},
 		getShopname: function(shopId) {
