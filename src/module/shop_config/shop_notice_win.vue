@@ -34,7 +34,7 @@
 		<section v-show="isNext">
 			<h3 style="height: 40px;line-height: 40px; font-size: 18px;color: #706c6c;">发布渠道：</h3>
 			<el-form label-width="100px">
-				<el-form-item label="选择渠道">
+				<el-form-item label="选择渠道" required>
 					<el-checkbox-group v-model="shopUrl" @change="changeshop">
 						<el-checkbox label="0" border>闪店云</el-checkbox>
 						<el-checkbox label="1" border>闪店商家</el-checkbox>
@@ -65,11 +65,11 @@
 			</el-form>
 			<el-form v-for="(item,index) in caseList" :key="index" label-width="100px">
 				<template v-if="caseActive == index">
-					<el-form-item v-if="ischain=='3'" label="选择门店">
+					<el-form-item v-if="ischain=='3'" label="选择门店" required>
 						<el-button @click="seachShop(caseActive)" type="primary">选择门店</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.shopIds.length>0">已选择选择门店 {{item.shopIds.length}}个</span>
 					</el-form-item>
-					<el-form-item label="选择职位">
+					<el-form-item label="选择职位" required>
 						<el-button @click="openShopJob('shop',index)" type="primary">选择职位</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.roleIds.length>0">已选择门店职位 {{item.roleIds.length}}个</span>
 					</el-form-item>
