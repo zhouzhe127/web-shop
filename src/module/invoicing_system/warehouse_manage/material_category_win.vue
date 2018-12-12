@@ -61,7 +61,7 @@ export default {
 	},
 	mounted() {
 		this.initData();
-		if(!this.pObj.barCode){
+		if(!this.pObj.categoryName){
 			this.autoCateCode();
 		}
 	},

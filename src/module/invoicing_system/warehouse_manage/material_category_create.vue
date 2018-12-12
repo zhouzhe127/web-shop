@@ -6,10 +6,7 @@
 <template>
 	<div id="material-category">
 		<section class="brand">
-			<div class="openOneCategoryWin" @click="openOneCategoryAdd">
-				<img src="../../../res/images/add.png" alt="添加" />
-				<h3>添加一级分类</h3>
-			</div>
+			<el-button type="primary" icon="el-icon-plus" @click="openOneCategoryAdd">添加一级分类</el-button>
 		</section>
 		<div class="cList" v-for="(item,index) in category" :key="index">
 			<div class="borderTop"></div>
@@ -20,38 +17,27 @@
 					<span>
 						<span  v-bind:title = "item.name">{{item.name}}</span>
 					</span>
-					<div class="openoperation operation">
-						<img src="../../../res/icon/iconchange.png" @click="openOnecategoryEdit(item,index)" />
-						<img style="margin-left:5px;" @click="deleteOneCategory(item,index)" src="../../../res/icon/icondelete.png" />
+					<div class="icon-box">
+						<i class="el-icon-edit-outline" @click="openOnecategoryEdit(item,index)"></i>
+						<i class="el-icon-delete icon-red" @click="deleteOneCategory(item,index)"></i>
 					</div>
-
 				</div>
 			</section>
-
 			<ul class="oUl">
 				<template v-for="(itemChild,chindex) in item.child">
 					<li class="oLi" :key="chindex">
 						<span>
 							<span style="word-wrap:break-word" v-bind:title = "itemChild.name" >{{itemChild.name}}</span>
 						</span>
-						<div class="openoperation" style="margin-top:-35px ;">
-							<img src="../../../res/icon/change.png" @click="openTwoCategoryEdit(itemChild,item)" />
-							<img style="margin-left:5px;" @click="deleteTwoCategory(itemChild,chindex)" src="../../../res/icon/delete.png" />
+						<div class="icon-box box-posi">
+							<i class="el-icon-edit-outline" @click="openTwoCategoryEdit(itemChild,item)"></i>
+							<i class="el-icon-delete icon-red" @click="deleteTwoCategory(itemChild,chindex)"></i>
 						</div>
 					</li>
 				</template>
 
-				<li class="oLi" style="line-height: 30px;">
-					<!--
-					<div class="addinput" v-if="item.showAdd">
-						<input type="text" class="input second" v-model="childObj.name" maxlength="20" placeholder="输入二级分类" v-cloak/>
-						<div class="oDiv" style="border:1px solid #ff00000;" @click="addTwoCategory(item,index)">
-							<div class="img_mask"></div>
-							<img src="../../../res/icon/iconright.png" alt="" />
-						</div>
-					</div>
-					-->
-					<img class="addTwo" src="../../../res/images/adds.png" @click="openTwoCategoryAdd(item)" alt="add" />
+				<li class="oLi">
+					<i class="el-icon-plus addTwo" @click="openTwoCategoryAdd(item)"></i>
 				</li>
 			</ul>
 		</div>
@@ -107,10 +93,10 @@ export default {
 						this.alert('分类名重名!');
 						return;
 					}
-					if(this.checkSame(this.originCategory,'barCode', obj.barCode)) {
-						this.alert('分类编码重复!');
-						return;
-					}
+					// if(this.checkSame(this.originCategory,'barCode', obj.barCode)) {
+					// 	this.alert('分类编码重复!');
+					// 	return;
+					// }
 					temp = {
 						name: obj.categoryName,
 						pid: this.flag.pid,
@@ -131,15 +117,16 @@ export default {
 						this.alert('分类名重名!');
 						return;
 					}
-					if(this.checkSame(this.originCategory,'barCode', obj.barCode,this.flag.id)) {
-						this.alert('分类编码重复!');
-						return;
-					}
+					// if(this.checkSame(this.originCategory,'barCode', obj.barCode,this.flag.id)) {
+					// 	this.alert('分类编码重复!');
+					// 	return;
+					// }
 					temp = {
 						name: obj.categoryName,
 						cid: this.flag.id,
 						sort: obj.sort,
-						barCode:obj.barCode						
+						barCode:obj.barCode,
+						pid: this.flag.pid,			
 					};
 					if(this.flag.name != obj.categoryName || this.flag.sort != obj.sort || this.flag.barCode != obj.barCode) {
 						result = await this.MaterialEditCategory(temp);
@@ -415,9 +402,7 @@ export default {
 				width: 100%;
 				height: 60px;
 				margin-top: 40px;
-				cursor: pointer;
 				.opeartion {
-					background: url(../../../res/icon/icon-hover-bg.png) no-repeat;
 					margin: 5px 10px;
 					padding-top: 12px;
 					width: 80px;
@@ -437,9 +422,9 @@ export default {
 				line-height: 65px;
 				float: left;
 				text-align: center;
-				padding: 0 10px;
 				color: #555555;
-				cursor: pointer;
+				
+				position: relative;
 				.addinput {
 					width: 165px;
 					height: 34px;
@@ -455,10 +440,12 @@ export default {
 					}
 				}
 				.addTwo {
-					width: 20px;
-					height: 20px;
-					margin-top: 22px;
-					margin-left: 20px;
+					width: 40px;
+					height: 40px;
+					line-height: 40px;
+					text-align: center;
+					font-size: 20px;
+					cursor: pointer;
 				}
 				.oDiv {
 					width: 34px;
@@ -476,13 +463,31 @@ export default {
 				}
 			}
 		}
-		.openoperation {
+		.icon-box {
 			display: none;
+			text-align: center;
+			i{
+				font-size: 20px;
+				cursor: pointer;
+				width: 28px;
+				height: 30px;
+				line-height: 30px;
+				text-align: center;
+			}
+			i.icon-red{
+				color: #ff0000;
+			}
 		}
-		.title:hover .openoperation {
+		.box-posi{
+			position: absolute;
+			line-height: normal;
+			width: 100%;
+			bottom: -10px;
+		}
+		.title:hover .icon-box {
 			display: block;
 		}
-		.oLi:hover .openoperation {
+		.oLi:hover .icon-box {
 			display: block;
 		}
 		.openOneCategoryWin {
