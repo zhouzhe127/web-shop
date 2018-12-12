@@ -69,7 +69,7 @@
 						<el-button @click="seachShop(caseActive)" type="primary">选择门店</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.shopIds.length>0">已选择选择门店 {{item.shopIds.length}}个</span>
 					</el-form-item>
-					<el-form-item label="选择职位">
+					<el-form-item v-if="item.shopIds.length==1" label="选择职位">
 						<el-button @click="openShopJob('shop',index)" type="primary">选择职位</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.roleIds.length>0">已选择门店职位 {{item.roleIds.length}}个</span>
 					</el-form-item>
@@ -346,7 +346,6 @@ export default {
 				});
 				return false;
 			}
-			item.time = this.detial.time / 1000;
 			item.title = this.redDetial.title;
 			item.content = this.redDetial.content;
 
@@ -394,6 +393,13 @@ export default {
 				return false;
 			}
 			item.sendToSource = this.shopUrl.toString();
+			if(item.sendToSource == ''){
+				this.$store.commit('setWin', {
+					winType: 'alert',
+					content: '每个模板的选择渠道为必选，请选择！'
+				});
+				return false;
+			}
 			item.sendType = this.isNow?'1':'0';
 			let caseList = this.caseList;
 			let aaa = {};
@@ -401,9 +407,18 @@ export default {
 			for(let i=0;i<caseList.length;i++){
 				caseList[i].shopIds = caseList[i].shopIds.toString();
 				caseList[i].roleIds = caseList[i].roleIds.toString();
+				
+				if(caseList[i].shopIds==''){
+					this.$store.commit('setWin', {
+						winType: 'alert',
+						content: '请选择要发布的门店！'
+					});
+					return false;
+				}
 			}
 			aaa.shopConfig = caseList;
 			item.sendConfig = aaa;
+			item.time = this.detial.time / 1000;
 			console.log(item);
 			this.Detail = item;
 			// if(item.type==1&&this.redDetial.type == '0'){
