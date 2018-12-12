@@ -197,7 +197,11 @@
 						return this.sendWarning('warning', '请选择分类！');
 					}
 				} else {
-					if (Array.from([this.selectMater].flat(), x => x.id).join(',') == '') {
+					let setArr = this.selectMater;
+					if(!Array.isArray(this.selectMater)){
+						setArr = [this.selectMater];
+					}
+					if (Array.from(setArr, x => x.id).join(',') == '') {
 						return this.sendWarning('warning', '请选择物料！');
 					}
 				}

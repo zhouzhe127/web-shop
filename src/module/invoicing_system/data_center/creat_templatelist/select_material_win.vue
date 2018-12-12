@@ -302,8 +302,6 @@
 
 			//根据条件筛选物料
 			getMaterialList(subObj) {
-				console.log('aaaaa');
-				console.log(this.condition.category);
 				if (!subObj) subObj = this.getCondition();
 				let arr = this.filterListByCid(this.list, subObj.cid);
 				// console.log(arr)
