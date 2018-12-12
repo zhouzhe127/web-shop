@@ -32,6 +32,16 @@
 					</template>
 				</el-table-column>
 				<el-table-column v-for="(item,index) in mainData.customItem" :key="index" :label="item" prop="code">
+					<template slot="header" slot-scope="scope">
+						<div>
+							<div class="heartitle">
+								{{item}}
+							</div>
+							<div class="heartitle">
+								{{mainData.timeAxis[index].beginDate}}至{{mainData.timeAxis[index].endDate}}
+							</div>
+						</div>	
+					</template>
 					<template slot-scope="scope">
 						<div v-if="scope.row.reportInfo[index]">{{scope.row.reportInfo[index].value}}{{scope.row.reportInfo[index].value&&scope.row.reportInfo[index].value!='--'?scope.row.reportInfo[index].unitName:''}}</div>
 					</template>
@@ -151,7 +161,10 @@
 		border-bottom: none;
 		padding: 15px;
 	}
-
+	.heartitle{
+		display: block;
+		line-height: 20px;
+	}
 	.in-block {
 		margin-bottom: 20px;
 		display: inline-block;

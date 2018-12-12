@@ -32,6 +32,16 @@
 					</template>
 				</el-table-column>
 				<el-table-column v-for="(item,index) in mainData.statisticItem" :key="index" :label="item.scopeName" prop="code">
+					<template slot="header" slot-scope="scope">
+						<div>
+							<div class="heartitle">
+								{{item.scopeName}}
+							</div>
+							<div class="heartitle">
+								{{item.content.beginDate}}至{{item.content.endDate}}
+							</div>
+						</div>	
+					</template>
 					<template slot-scope="scope">
 						<div v-if="scope.row.content.count">{{scope.row.content.count[index].value}}{{scope.row.content.count[index].value&&scope.row.content.count[index].value!='--'?scope.row.content.count[index].unitName:''}}</div>
 					</template>
@@ -54,6 +64,7 @@
 <script>
 	import http from 'src/manager/http';
 	import exportFile from 'src/verdor/exportFile';
+	// import utils from 'src/verdor/utils';
 	export default {
 		data() {
 			return {
@@ -180,6 +191,11 @@
 					console.log('取消');
 				});
 			},
+			// getTime(time) {
+			// 	time = Number(time);
+			// 	if(!time) return '--';
+			// 	return utils.format(parseInt(time) * 1000, 'yyyy-MM-dd hh:mm');
+			// },
 		},
 		activated() {
 			let query = this.$route.query;
@@ -209,7 +225,10 @@
 		border-bottom: none;
 		padding: 15px;
 	}
-
+	.heartitle{
+		display: block;
+		line-height: 20px;
+	}
 	.in-block {
 		margin-bottom: 20px;
 		display: inline-block;
