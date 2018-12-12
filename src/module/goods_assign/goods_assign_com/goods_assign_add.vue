@@ -68,7 +68,7 @@
 					<div class="data-form__item line-item">
 						<el-form-item label="选择门店">
 							<!-- 选择门店按钮 -->
-							<span class="eidt-add" style="cursor:pointer;" @click="chooseShopWin">
+							<span class="eidt-add" style="cursor:pointer;" @click="chooseShopWin(index)">
 								<i class="el-icon-circle-plus-outline" style="color:#E0BA4F"></i>选择门店
 							</span>
 							<!-- 已选择门店数量 -->
@@ -130,14 +130,14 @@
 	<goodListWin v-if="goodsWinShow" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :packages="selectPackages" :isGoods="true" ></goodListWin>
 
 	<!-- 选择门店弹窗 -->
-	<elShopListWin v-if="chooseShopShow" :shopIds="shopIds" @chooseShop="getShopResult"></elShopListWin>
+	<elShopListWin v-if="chooseShopShow" :delShopId="delShopId" :shopIds="shopIds" @chooseShop="getShopResult"></elShopListWin>
   </div>
 </template>
 
 <script>
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
-
+import utils from  'src/verdor/utils'; 
 export default {
   name: "assign-add",
   data: function() {
@@ -160,10 +160,14 @@ export default {
 		selectPackages:[],
 		selectGoods:[],
 
-		tempTitleList:[], // 价格模板列表
-
-		
+		tempTitleList:[], // 价格模板列表	
+		delShopId:[],
+		allShop:[]	
     }
+  },
+  props:{
+	  editData:{},
+	  openType:''
   },
   methods: {
     // 初始化添加按钮
@@ -205,34 +209,23 @@ export default {
 		}
 		let arr = [];
 		let data = null;
-
 		for(let i =0;i<this.tabsCont.length;i++){
 			let item = this.tabsCont[i];
-			if(this.saveChecked(item)){
-					let obj = {
+			
+			if(this.saveChecked(item) && this.saveCheckedShopIds()){
+				let obj = {
 					type:item.checkGoodsType.join(','),
 					shopIds:item.shopIds.join(','),
 					priceType:item.priceType.join(','),
-					templateId:item.templateId,
+					templateId:Number(item.templateId),
 					isCoerce:item.isCoerce == true ? '1' : 0
 				}
 				arr.push(obj)
 			}
 		}
-		if(arr.length > 0){
-			// if(arr.length >=2){
-			// 	for(let i=0;i<arr.length;i++){
-			// 		// console.log(arr[i].shopIds,'arr[i].shopIds');
-			// 		for(let j = 0; j < arr.length - 1; j++){// 访问序列为arr[0:length -i]
-			// 			this.getTheSame(arr[i].shopIds,arr[j].shopIds)
-			// 		}
-					
-			// 	}
-			// }
-
-
-
-
+		// 添加任务
+		if(arr.length > 0 && this.openType == 'add'){
+		
 			data = await http.AssigntaskAdd({
 					data:{
 						type:1,
@@ -242,29 +235,47 @@ export default {
 						conditions:arr
 					}
 			})
-		}
-		
-		if(data){
-			this.$store.commit('setWin', {
-				title: '温馨提示',
-				content: '任务添加成功！',
-				winType: 'alert',
-				callback: res => {
-					if (res == 'ok') {
-						this.addGoBack('save');
+			if(data){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '任务添加成功！',
+					winType: 'alert',
+					callback: res => {
+						if (res == 'ok') {
+							this.addGoBack('save');
+						}
 					}
-				}
-			});
-			this.addGoBack('save');
-			let sessionObj = {
-				name:this.tabsCont,
-				selectGoods:this.selectGoods,
-				selectPackages:this.selectPackages,
-				tabsCont:this.tabsCont
+				});
+				// this.addGoBack('save');
 			}
-			storage.session('taskTempInfo',sessionObj);
-
 		}
+		// 修改任务
+		if(arr.length>0 && this.openType == 'edit'){
+			console.log(arr,'arrEidt');
+			data = await http.AssigntaskUpdate({
+					data:{
+						id:Number(this.editData.id),
+						type:1,
+						name:this.taskName,
+						assignIds:this.selectGoods && this.selectGoods.join(','),
+						otherIds:this.selectPackages && this.selectPackages.join(','),
+						conditions:arr
+					}
+			})
+			if(data){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '任务修改成功！',
+					winType: 'alert',
+					callback: res => {
+						if (res == 'ok') {
+							this.addGoBack('save');
+						}
+					}
+				});
+				// this.addGoBack('save');
+			}
+		}		
 	},
 	saveChecked(item){
 		if(item.shopIds.length <=0){
@@ -293,32 +304,44 @@ export default {
 				return false;
 			}
 		if(item.templateId == ''){
-				this.$store.commit('setWin', {
-					title: '温馨提示',
-					content: '请选择价格模板！',
-					winType: 'alert',
-				});
-				return false;
-			}
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				content: '请选择价格模板！',
+				winType: 'alert',
+			});
+			return false;
+		}
 		return true;
 	},
-	 getTheSame(arr1,arr2) {
-		 console.log(arr1,'arr1',arr2,'arr2')
-//         let result = new Array();
-//         let c = arr2.toString();
-//         for (var i = 0; i < arr1.length; i++) {
-//             if (c.indexOf(arr1[i].toString()) > -1) {
-//                 for (var j = 0; j < arr2.length; j++) {
-//                     if (arr1[i] == arr2[j]) {
-//                         result.push(arr1[i]);
-//                         break;
-//                     }
-//                 }
-//             }
-//         }
-//        console.log(result);
-//         return result;
-    },
+	saveCheckedShopIds(){
+		let arr = [];
+		let result = true;
+		this.tabsCont.map((item, index) => {
+			item.shopIds.map(el => {
+				arr.push(el);
+			});
+		});
+		console.log(arr,'arr')
+		for (let i = 0; i < arr.length; i++) {
+			for (let j = i + 1; j < arr.length; j++) {
+				if (arr[i] == arr[j]) {
+					console.log(arr[i], arr[j])
+					result =  false;
+				}
+			}
+		}
+		console.log(result,'resssss')
+		if(!result){
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				content: '模板店铺选择重复，请重新选择',
+				winType: 'alert',
+			});
+			return false;
+		}else{
+			return true;
+		}
+	},
     // 指派
     handleAssign(){
         this.addGoBack('assign');
@@ -368,7 +391,6 @@ export default {
 		this.activeVal = newTabId;
 		this.tabIndex = newTabId;
         this.tabsCont.push(obj);
-       
       },
     // 删除模板
     removeTab(targetId) {
@@ -401,8 +423,12 @@ export default {
 	// 切换模板
     handleClick(tab, event){
 		this.activeVal = tab.name || tab.paneName;
+		let item = this.tabsCont.find(v=>v.id == this.activeVal);
+		console.log(item,'itemitem	')
+		this.shopIds = item.shopIds;
 	},
-	chooseShopWin(){
+	chooseShopWin(index){
+		this.getDelShopId(index);
 		this.chooseShopShow = true;
 	},
 	// 选择门店返回
@@ -421,6 +447,7 @@ export default {
 	// 选择商品
 	closeGoodWin(res, item) { //  关闭商品弹框
 		if (res == 'ok') {
+			console.log(item,'item')
 			this.selectGoods = item.goodArr;
 			// this.selectPackages = item.packArr; 套餐暂时不做
 		}
@@ -444,11 +471,66 @@ export default {
 			console.log(data,'模板')
 			this.tempTitleList = data;
 		}
+	},
+	// 编辑修改数据
+	handleEditAssiData(){
+		console.log(this.editData,'editData ssss');
+
+			this.tabsCont = [];
+			let obj = utils.deepCopy(this.editData);
+			this.taskName = obj.name; // 任务名称；
+			this.selectGoods = obj.assignIds.split(',') // 商品信息
+			this.tabValue = Number(obj.conditions.length);
+			obj.conditions.map((item,index)=>{
+				let tabObj = {checkGoodsType: [],checkedComp: false,id: "",isCoerce: true,priceType: [],shopIds: [],templateId: "",title: ""};
+				
+				tabObj = {
+					shopIds:item.shopIds.split(','),
+					priceType :item.priceType.split(','),
+					checkGoodsType : item.type.split(','),
+					templateId :item.templateId,
+					isCoerce : item.isCoerce == '1' ? true : false,
+					title : `模板${index+1}`,
+					id : `${index+1}`,
+					checkedComp : item.type.split(',').length == 5 ? true : false,
+				}
+
+				this.tabsCont.push(tabObj)
+			})
+
+
+			if(this.activeVal == '1'){
+				this.shopIds = this.tabsCont[0].shopIds;
+			}
+
+			console.log(this.tabsCont,'this.tabsCont')
+	},
+	// 过滤后的店铺
+	getDelShopId(index){
+		let residueShop = utils.deepCopy(this.allShop);
+		let arr = [];
+		this.tabsCont.map((item, i) => {
+			if(index != i){
+				arr = arr.concat(item.shopIds);
+			}
+		});
+		arr = Array.from(new Set(arr));
+		arr.map(el=>{
+			let iv = residueShop.findIndex(v=>{
+				return v.id == el;
+			})
+			residueShop.splice(iv,1)
+		})
+		this.delShopId = residueShop;
 	}
   },
-  mounted(){
+  async mounted(){
 	  this.getTempModel();
 	  this.initBackTools();
+	  this.allShop = await http.getShopList();
+	  if(this.openType == 'edit'){
+		   this.handleEditAssiData()
+	  }
   },
   components:{
 	  goodListWin: () =>
@@ -494,7 +576,6 @@ export default {
         }
     }
 }
-
 .data-form__item{
 	padding: 5px 0;
 	margin-bottom: 20px;
@@ -510,5 +591,4 @@ export default {
 		}
 	}
 }
-
 </style>
