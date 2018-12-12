@@ -402,7 +402,7 @@ export default {
 		// 删除详情中的图片
 		delImage(i) {
 			if(i==undefined)return;
-			this.form.imgList.splice(i,1)
+			this.form.imgList.splice(i,1);
 		},
 		// 1.商品；2.套餐；3.轮播图；4.营业执照/商标；5.活动商品；6.活动素材；7.会员等级；8.店铺logo；9.卖手聊天图片；10召集令图片
 		async uploadImg (formId){
@@ -413,7 +413,7 @@ export default {
 				},
 				formId
 			});
-			return url
+			return url;
 		},
 		// 编辑图片
 		async updateImg(index){
@@ -435,8 +435,8 @@ export default {
 			if(isdown && i == this.form.imgList.length-1 || !isdown && i==0)return;
 			let tagetIndex = isdown?i+1:i-1;
 			let taget = this.form.imgList[tagetIndex];
-			this.form.imgList.splice(tagetIndex,1,v)
-			this.form.imgList.splice(i,1,taget)
+			this.form.imgList.splice(tagetIndex,1,v);
+			this.form.imgList.splice(i,1,taget);
 		}
 	},
 	computed: {
