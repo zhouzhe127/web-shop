@@ -69,7 +69,7 @@
 						<el-button @click="seachShop(caseActive)" type="primary">选择门店</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.shopIds.length>0">已选择选择门店 {{item.shopIds.length}}个</span>
 					</el-form-item>
-					<el-form-item v-if="item.shopIds.length==1" label="选择职位">
+					<el-form-item label="选择职位">
 						<el-button @click="openShopJob('shop',index)" type="primary">选择职位</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.roleIds.length>0">已选择门店职位 {{item.roleIds.length}}个</span>
 					</el-form-item>
@@ -282,8 +282,11 @@ export default {
 		},
 		//选择门店返回
 		getShopResult(res, item) {
-			this.caseList[this.caseActive].shopIds = item;
-			this.shopIds = item;
+			if(res=='ok'){
+				this.caseList[this.caseActive].shopIds = item;
+				this.caseList[this.caseActive].roleIds = [];
+				this.shopIds = item;
+			}
 			this.showShop = false;
 		},
 		//打开门店职位弹窗
@@ -412,6 +415,13 @@ export default {
 					this.$store.commit('setWin', {
 						winType: 'alert',
 						content: '请选择要发布的门店！'
+					});
+					return false;
+				}
+				if(caseList[i].roleIds==''){
+					this.$store.commit('setWin', {
+						winType: 'alert',
+						content: '请选择要发布的职位！'
 					});
 					return false;
 				}
