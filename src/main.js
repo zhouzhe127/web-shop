@@ -1,7 +1,6 @@
 /* eslint-disable */
-import babelPolyfill from '@babel/polyfill';
+import '@babel/polyfill';
 import Vue from 'vue';
-import Vuex from 'vuex';
 import routerConfig from './config/routes'
 import App from './app';
 import VueRouter from 'vue-router';
@@ -13,24 +12,18 @@ import {
     store
 } from 'src/manager/store';
 import ajax from 'src/verdor/ajax';
-import directive from 'src/manager/directive';
-// import DataBase from 'src/verdor/database';
-import storgae from 'src/verdor/storage'
-import utils from 'src/verdor/utils'
-import elementCss from 'src/components/index.css';
+import InitState from 'src/initstate/main';
+import 'src/components/index.css';
 import ElementUI from 'src/components/element-ui.common';
 import http from 'src/manager/http';
-
 
 if(process.env.NODE_ENV === 'development'){
 	Vue.use(ElementUI);
 }
 
-
 if (module.hot) {
     module.hot.accept();
 }
-
 
 class Main {
 
@@ -78,15 +71,13 @@ class Main {
                     path: '/'
                 });
             }
-
-
-			
-
         })
 
-        router.afterEach((to, from) => {
+        router.afterEach((to) => {
             store.dispatch('debugCont', to.path + ' 切换完成');
         })
+
+		new InitState(Vue);
 
         document.addEventListener('error', function (e) {
             let elem = e.target;
