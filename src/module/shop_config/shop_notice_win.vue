@@ -83,7 +83,7 @@
 
 		</section>
 		<shopNoticeTwo v-if="isOpenjob" @selectBack="radioBack" :jobList="jobList" :jobIds="jobIds" :jobtype="jobtype" :shopIds="shopIds"></shopNoticeTwo>
-		<elShopListWin :shopIds="shopIds" @chooseShop="getShopResult" v-if="showShop"></elShopListWin>
+		<elShopListWin :shopIds="shopIds" @chooseShop="getShopResult" v-if="showShop" :delShopId="delShopId"></elShopListWin>
 		<!-- 添加时间弹窗 -->
 		<win v-if="timeWinShow" width="360" height="150" @winEvent="timeBack" :align="'center'">
 			<div slot="content" style="margin-top:60px;">
@@ -139,6 +139,8 @@ export default {
 			staTime: new Date().getTime(),
 			isNow:false,
 			detial:{},//通知详情
+			allShop:[],//所有的店铺
+			delShopId:[],//筛选后的
 		};
 	},
 	props: {
@@ -162,8 +164,7 @@ export default {
 			this.jobIds.brand =  obj.roleIds.split(',').filter(d=>d);
 		}
 		this.caseList = obj.shopConfig;
-		console.log(this.caseList);
-		console.log(this.jobIds.brand);
+		this.getShopList();
 	},
 	methods: {
 		async info() {
@@ -280,6 +281,20 @@ export default {
 		//选择门店点击
 		seachShop(index) {
 			this.shopIds = this.caseList[index].shopIds;
+			let arr = [];
+			for(let i=0;i<this.caseList.length;i++){
+				if(index!=i){
+					arr = arr.concat(this.caseList[i].shopIds);
+				}
+			}
+			let shoparr=utils.deepCopy(this.allShop);
+			arr.map(el=>{
+				let index = shoparr.findIndex(v=>{
+					return v.id == el;
+				});
+				shoparr.splice(index,1);
+			});
+			this.delShopId = shoparr;
 			this.showShop = true;
 		},
 		//选择门店返回
@@ -453,7 +468,7 @@ export default {
 				// 	});
 				// }
 			} else {
-				item.newType = Number(ble);
+				item.newType = Number(this.redDetial.type);
 				item.id = this.redDetial.id;
 				//如果是保存草稿箱
 				let res = await http.editNoticeOne({ data: item });
@@ -475,6 +490,10 @@ export default {
 		},
 		back() {
 			this.$emit('openTwo', 'back');
+		},
+		//获取店铺列表
+		async getShopList() {
+			this.allShop = await http.getShopList({data: {}});
 		},
 		isOk(detial) {
 			if (detial.title.length == 0) {
