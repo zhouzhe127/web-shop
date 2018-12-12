@@ -136,8 +136,9 @@ export default {
 			});
 			if (data) {
 				data.forEach(v => {
-					v.discountRatio =
-						~~((v.discount / v.orderPrice) * 10000) / 100 + '%';
+					v.discountRatio = +v.orderPrice == 0
+						? '100%'
+						: ~~((v.discount / v.orderPrice) * 10000) / 100 + '%';
 				});
 				this.goodsList = data;
 				this.isBegin = this.selectedActivity.isBegin;
