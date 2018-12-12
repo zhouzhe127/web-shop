@@ -66,10 +66,6 @@ export default {
 		};
 	},
 	props: {
-		// jobIds: {
-		// 	brand: [],
-		// 	shop: []
-		// }, //选中的品牌/门店职位id
 		jobtype: String, ////品牌/门店 'shop'、'brand'
 		jobList: Array,
 		jobIds: Object, //详情
@@ -78,10 +74,15 @@ export default {
 	mounted() {
 		let userData = storage.session('userShop');
 		this.ischain = userData.currentShop.ischain;
+		let shopid = userData.currentShop.id;
 		this.brandType = this.jobtype;
 		this.chooseJob(this.brandType);
-		if (this.jobtype == 'shop' && this.shopIds.length == 1) {
-			this.getShopJobList(this.shopIds[0]);
+		if(this.ischain=='3'){
+			if (this.jobtype == 'shop' && this.shopIds.length == 1) {
+				this.getShopJobList(this.shopIds[0]);
+			}
+		}else{
+			this.getShopJobList(shopid);
 		}
 	},
 	methods: {
@@ -108,13 +109,6 @@ export default {
 					this.showJobList = [{ id: '99999999', name: '全部' }];
 				}
 			}
-
-			// if(this.isSelf =='0'){
-
-			// 	this.chooseJob(this.brandType);
-			// }else{
-			// 	this.showJobList = this.shopJobList;
-			// }
 		},
 		//职位切换
 		chooseJob(type) {

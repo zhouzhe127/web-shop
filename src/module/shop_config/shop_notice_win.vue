@@ -65,7 +65,7 @@
 			</el-form>
 			<el-form v-for="(item,index) in caseList" :key="index" label-width="100px">
 				<template v-if="caseActive == index">
-					<el-form-item label="选择门店">
+					<el-form-item v-if="ischain=='3'" label="选择门店">
 						<el-button @click="seachShop(caseActive)" type="primary">选择门店</el-button>
 						<span class="spanCom" style="margin-right:15px;" v-if="item.shopIds.length>0">已选择选择门店 {{item.shopIds.length}}个</span>
 					</el-form-item>
@@ -155,6 +155,10 @@ export default {
 			obj.shopConfig = [{shopIds: [],roleIds: []}];
 		}else{
 			obj = JSON.parse(this.redDetial.sendConfig);
+			for(let i=0;i<obj.shopConfig.length;i++){
+				obj.shopConfig[i].shopIds = obj.shopConfig[i].shopIds.split(',');
+				obj.shopConfig[i].roleIds = obj.shopConfig[i].roleIds.split(',');
+			}
 			this.jobIds.brand =  obj.roleIds.split(',');
 		}
 		this.caseList = obj.shopConfig;
@@ -287,7 +291,7 @@ export default {
 		openShopJob(type, index) {
 			this.jobtype = type;
 			this.jobIds.shop = this.caseList[index].roleIds;
-			if(this.caseList[index].shopIds.length==0){
+			if(this.caseList[index].shopIds.length==0 && this.ischain == '3'){
 				this.$store.commit('setWin', {
 					winType: 'alert',
 					content: '请先选择门店'
@@ -387,10 +391,13 @@ export default {
 			let caseList = this.caseList;
 			let aaa = {};
 			aaa.roleIds = this.jobIds.brand.toString();
+			for(let i=0;i<caseList.length;i++){
+				caseList[i].shopIds = caseList[i].shopIds.toString();
+				caseList[i].roleIds = caseList[i].roleIds.toString();
+			}
 			aaa.shopConfig = caseList;
 			item.sendConfig = aaa;
 			console.log(item);
-			item.type = this.redDetial.type;
 			this.Detail = item;
 			// if(item.type==1&&this.redDetial.type == '0'){
 			// 	this.$store.commit('setWin', {
@@ -400,14 +407,15 @@ export default {
 			// 	return false;
 			// }
 			if (this.isAdd) {
-				let res = await http.addNotice({ data: item });
-				if(res){
-					this.$store.commit('setWin', {
-						winType: 'alert',
-						content: '已保存至草稿箱'
-					});
-				}
+				await http.addNotice({ data: item });
+				// if(res){
+				// 	this.$store.commit('setWin', {
+				// 		winType: 'alert',
+				// 		content: '已保存至草稿箱'
+				// 	});
+				// }
 			} else {
+				item.type = this.redDetial.type;
 				item.newType = Number(ble);
 				item.id = this.redDetial.id;
 				//如果是保存草稿箱
