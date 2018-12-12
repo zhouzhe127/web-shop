@@ -12,6 +12,7 @@ const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });//共�
 
 let jsName = 'js/[name].js';
 let publicPath = configs.devServerPath;
+const cssExport = require('./export.css.js');
 
 
 //后期等vue-loader 15.1之后重新支持了happyPack后再来
@@ -67,8 +68,8 @@ module.exports = {
                         loader: 'vue-loader',
                         options: {
                             loaders: {
-                                css: [MiniCssExtractPlugin.loader,'css-loader'],
-                                less: [MiniCssExtractPlugin.loader,'css-loader', 'less-loader']
+                                css: cssExport({},false).css,
+								less: cssExport({},false).less
                             },
                             postcss: [autoprefixer] //工具,autoprefixer插件:CSS补全浏览器前缀
                         }
@@ -80,36 +81,17 @@ module.exports = {
                 // use: ['babel-loader', 'eslint-loader']
                 use:['happypack/loader?id=babel']
             },
-            {
-                test: /\.css(\?.*)?$/,
-                // use: [MiniCssExtractPlugin.loader,'happypack/loader?id=css']
-                use:[
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            plugins: [autoprefixer]
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.less(\?.*)?$/,
-                // use: [MiniCssExtractPlugin.loader,'happypack/loader?id=less']
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            plugins: [autoprefixer]
-                        }
-                    },
-                    'less-loader'
-                ]
-                
-            },
+			{
+				test: /\.css(\?.*)?$/,
+				// use: [MiniCssExtractPlugin.loader,'happypack/loader?id=css']
+				use: cssExport().css
+			},
+			{
+				test: /\.less(\?.*)?$/,
+				// use: [MiniCssExtractPlugin.loader,'happypack/loader?id=less']
+				use: cssExport().less
+
+			},
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
                 loader: 'url-loader',

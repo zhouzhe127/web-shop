@@ -6,7 +6,7 @@
 	"scripts": {
 		"profile":"webpack --config config/webpack.prod.conf.js --profile --json > compilation-stats.json",
 		"prestart": "node cmd/genhook.js & node cmd/generate_route_config.js --dev",
-		"start": "webpack-dev-server --config config/webpack.dev.conf.js",
+		"start": "cross-env NODE_ENV=dev webpack-dev-server --config config/webpack.dev.conf.js",
 		"build": "webpack -p --config config/webpack.prod.conf.js",
 		"buildDev": "webpack -p --config config/webpack.prod.conf.js",
 		"prebuild": "node cmd/generate_route_config.js --pro",
