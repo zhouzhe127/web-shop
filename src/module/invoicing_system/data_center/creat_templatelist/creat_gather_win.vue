@@ -324,7 +324,7 @@
 				}
 				if (data.type == 4) this.selectUnit = data.unit;
 				if (data.type > 4) {
-					this.selectSuppier = this.getSelectArr(data.supplier.split(','), this.suppierList, 'name');
+					this.selectSuppier = this.getSelectArr(data.supplierName.split(','), this.suppierList, 'name');
 					if (data.type == 6) {
 						this.selectMater = this.$parent.getMateralName(data.mid);
 					}
