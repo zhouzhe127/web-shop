@@ -73,7 +73,8 @@
 		"webpack-dev-middleware": "^3.4.0",
 		"webpack-dev-server": "^3.1.10",
 		"webpack-merge": "^4.1.4",
-		"webpack-parallel-uglify-plugin": "^1.1.0"
+		"webpack-parallel-uglify-plugin": "^1.1.0",
+		"style-loader": "^0.23.1"
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.0.0",
