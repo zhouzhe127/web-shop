@@ -2,56 +2,72 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-10 18:28:03
+ * @LastEditTime: 2018-12-11 18:34:37
  * @LastEditors: Please set LastEditors
  -->
 
 <template>
 	<div class="gooods_assign">
 		<!-- 数据展示部分 -->
-		<template v-if="!assignAddShow">
+		<template v-if="!assignAddShow && !assignDoingShow && !assignDetailShow">
 			<!-- 搜索任务 -->
 			<div class="task-search">
 				<el-input style="width:240px;" v-model="taskSearchKeyWords" suffix-icon="el-icon-search" placeholder="输入任务名称"></el-input>
 			</div>
 			<!-- 任务状态切换查看 -->
 			<div class="task-status">
-				<span class="status-btn" v-for="(item,index) in taskCheckList" @click="checkTaskStatus(item)" :key="index" :class="{'active':taskCheck == item.check}" :data-status="item.status">
+				<span class="status-btn" 
+					v-for="(item,index) in taskCheckList" 
+					@click="checkTaskStatus(item)" 
+					:key="index" 
+					:class="{'active':assignStatus == item.status}" 
+					:data-status="item.status">
 					{{item.name}}
 				</span>
 			</div>
 			<!-- 任务table -->
 			<div class="task-table">
-				<el-table :data="assignTaskList" :header-cell-style="{'background-color':'#f5f7fa'}" border stripe>
+				<!-- {{assignTaskCopyList}} -->
+				<el-table  :data="assignTaskCopyList" :header-cell-style="{'background-color':'#f5f7fa'}" border stripe>
 					<!-- 序号 -->
-					<el-table-column label="序号">
+					<el-table-column label="序号" align="center">
 						<template slot-scope="scope">
 							{{scope.$index}}
 						</template>
 					</el-table-column>
 					<!-- 时间 -->
-					<el-table-column label="时间">
-
+					<el-table-column label="时间" align="center">
+						<template slot-scope="scope">
+							{{scope.row.createTime | formatCreateTime('yyyy-qq-MM dd:hh:mm')}}
+						</template>
 					</el-table-column>
 					<!-- 名称 -->
-					<el-table-column label="名称">
-
+					<el-table-column label="名称" align="center">
+						<template slot-scope="scope">
+							{{scope.row.name}}
+						</template>
 					</el-table-column>
 					<!-- 创建人 -->
-					<el-table-column label="创建人">
+					<el-table-column label="创建人" align="center">
 
 					</el-table-column>
 					<!-- 发布人 -->
-					<el-table-column label="发布人">
+					<el-table-column label="发布人" align="center">
 
 					</el-table-column>
 					<!-- 状态 -->
-					<el-table-column label="状态">
+					<el-table-column label="状态" align="center">
 
 					</el-table-column>
 					<!-- 操作 -->
-					<el-table-column label="操作">
-
+					<el-table-column label="操作" align="center">
+						<template slot-scope="scope">
+							<template v-if="scope.row.status != '0'">
+								<el-button type="text">发布</el-button>
+								<el-button type="text">编辑</el-button>
+							</template>
+							<el-button type="text" @click="lookAssignDetail(scope.row)" v-else>查看详情</el-button>
+						</template>
 					</el-table-column>
 				</el-table>
 			</div>
@@ -65,17 +81,23 @@
 					:page-count="Number(totalNum)" 
 					:page-size="Number(pageSize)" 
 					layout="sizes, prev, pager, next, jumper" 
-					:page-sizes="[10,20,30,50]">
+					:page-sizes="[5,10,15,20]">
 				</el-pagination>
 			</div>
 		</template>
-		<!-- 添加新任务部分 -->
+		<!-- 添加新任务 -->
 		<assignAdd v-if="assignAddShow" @addGoBack="assignAddBack"></assignAdd>
-		<!--  -->
+		<!-- 指派中的详情 -->
+		<doingDetail v-if="assignDetailShow" @addGoBack="assignAddBack"></doingDetail>
+		<!-- 全部详情 -->
+		<assignDetail v-if="assignDoingShow" @addGoBack="assignAddBack"></assignDetail>
 	</div>
 </template>
 
 <script>
+	import storage from 'src/verdor/storage';
+	import http from 'src/manager/http';
+	import utils from  'src/verdor/utils'; //全局提示框
 	export default {
 		name: 'goods_assign_cont',
 		data() {
@@ -83,31 +105,53 @@
 				taskSearchKeyWords:'', // 任务搜索字段
 				taskCheckList:[
 					{
-						check:0,
+						id:0,
+						status:-1,
 						name:"全部"
 					},
 					{
-						check:1,
+						id:1,
+						status:2,
 						name:"已完成"
 					},
 					{
-						check:2,
+						id:2,
+						status:0,
 						name:"未指派"
 					},
 				],
 				taskCheck:0, // 任务切换状态
 				assignTaskList:[], // 指派任务列表
+				assignType:1,
+				assignStatus:-1,
 
 				assignAddShow:false,// 添加模板页面
-				
+				assignDetailShow:false,
+				assignDoingShow:false,
 				
 				currentPage:1,
-				totalNum:10,
-				pageSize:10,
+				pageSize:5,
 			};
 		},
 		created(){
 			this.initToolsBtn();
+		},
+		computed:{
+			totalNum(){
+				let num = 	Math.ceil(this.assignTaskList.length / this.pageSize);
+				if (num == 0) {
+					//如果数组为空，总页数为0，则将总数置为1，
+					num = 1;
+				}
+				if (num < this.currentPage) {
+					//如果总页数小于当前页码数，
+					this.currentPage = num;
+				}
+				return num;
+			},
+			assignTaskCopyList(){
+				return this.pagination(this.currentPage,this.pageSize,this.assignTaskList);
+			}	
 		},
 		methods:{
 			// 初始化添加按钮
@@ -132,24 +176,75 @@
 			// 添加模板返回
 			assignAddBack(res){
 				console.log(res,'res')
+				if(res == 'save'){
+					this.getAssignTaskList();
+					this.assignAddShow = false;
+					this.initToolsBtn();
+				}
 				this.assignAddShow = false;
+				this.assignDetailShow =false;
+				this.assignDoingShow = false;
 				this.initToolsBtn();
+				
 			},
 			// 切换模板状态
 			checkTaskStatus(item){
-				this.taskCheck = item.check
+				this.assignStatus = item.status;
+				this.assignTaskList = [];
+				this.getAssignTaskList();
 			},
+			// 获取任务列表数据
+			async getAssignTaskList(){
+				let data = await http.AssignGetlist({
+					data:{
+						type:this.assignType || 1,
+						status:this.assignStatus || -1
+					}
+				})
+				let list = utils.deepCopy(data);
+				list.map(item => {
+					item.conditions = JSON.parse(item.conditions)
+				});
+
+				this.assignTaskList = list;
+			},
+				
+			// 查看详情
+			lookAssignDetail(row){
+				let status = row.status;
+				this.assignDetailShow = true
+			},
+
 			// -------------分页-----
-			sizeChange(){
-
+		 	pagination(pageNo, pageSize, array) {
+				var offset = (pageNo - 1) * pageSize;
+				return (offset + pageSize >= array.length) ? array.slice(offset, array.length) : array.slice(offset, offset + pageSize);
 			},
-			pageClick(){
-
+			sizeChange(num){
+				this.pageSize = num;
+				this.currentPage = 1;
+			},
+			pageClick(page){
+				this.currentPage = page;
 			},
 		},
+		filters:{
+			formatCreateTime(time,format){
+				if(time != '0'){
+					return utils.format(time,format)
+				}else{
+					return '--';
+				}
+			},
+		},
+		mounted(){
+			this.getAssignTaskList(	)
+		},
 		components:{
-        assignAdd: () => import(/* webpackChunkName:'goods_assign_add' */ './goods_assign_com/goods_assign_add')
-    }
+			assignAdd: () => import(/* webpackChunkName:'goods_assign_add' */ './goods_assign_com/goods_assign_add'),
+			assignDetail: () => import(/* webpackChunkName:'goods_assign_detail' */ './goods_assign_com/goods_assign_detail'),
+			doingDetail: () => import(/* webpackChunkName:'goods_assign_doing_detail' */ './goods_assign_com/goods_assign_doing_detail'),
+    	}
 	};
 </script>
 
