@@ -68,7 +68,7 @@
 		<!-- 编码配置 -->
 		<template v-if="ischain == 3 || ischain == 0">
 			<div class="head" >
-				<span>编码配置</span>
+				<span>物料编码配置</span>
 				<div></div>
 			</div>
 			<div class="content" >
@@ -86,7 +86,7 @@
 					</span>
 				</p>
 				<p>
-					物料编码 : 
+					物料编码配置 : 
 					<span v-for="(item,index) in mCode" :key="index" v-if="item.id == condition.wholeBarCode">
 						{{item.name}}
 					</span>
@@ -690,14 +690,14 @@ p{
 			height:23px;
 			line-height: 23px;
 			font-size: 16px; 
-			border-left:2px solid @ey;
+			border-left: 3px solid @ey;
 			padding-left:10px;
 			padding-right:5px;
 			flex-grow: 0;			
 		}
 		div{
 			flex-grow: 1;
-			border-bottom:2px dashed #ddd;
+			border-bottom: 1px dashed #ddd;
 			height:13px;
 		}
 	}
