@@ -2,7 +2,7 @@
 	<div id="ActiityGoods">
 		<el-form ref="formDm" :model="form" :rules="validateRules" label-width="160px">
 			<el-form-item label="商品名称" prop="name">
-				<el-input v-model="form.name" class="w217" maxlength="20"></el-input> <span class="textTip">限20字</span>
+				<el-input v-model="form.name" class="w217" maxlength="20" placeholder="请输入商品名称"></el-input> <span class="textTip">限20字</span>
 			</el-form-item>
 			<el-form-item label="商品券" required>
 				<el-button type="primary" @click="showCouponListHandle">关联券</el-button>
@@ -25,11 +25,11 @@
 				</section> -->
 			</el-form-item>
 			<el-form-item label="商品描述" prop="remark">
-				<el-input v-model="form.remark" class="w217" maxlength="20"></el-input>
+				<el-input v-model="form.remark" class="w217" maxlength="20" placeholder="请输入商品描述"></el-input>
 				<span class="textTip">限20字</span>
 			</el-form-item>
 			<el-form-item label="商品原价/起砍价" prop="originalPrice">
-				<el-input v-model.number="form.originalPrice" class="w217"></el-input>
+				<el-input v-model.number="form.originalPrice" class="w217" placeholder="请输入起砍价"></el-input>
 				<span class="unit">元</span>
 				<span class="textTip">商品起始砍价金额</span>
 			</el-form-item>
@@ -40,7 +40,7 @@
 				<span class="textTip">参与人数达到填写人数完成砍价，包含发起人</span>
 			</el-form-item>
 			<el-form-item label="底价" prop="floorPrice">
-				<el-input v-model.number="form.floorPrice" class="w217"></el-input><span class="unit">元</span>
+				<el-input v-model.number="form.floorPrice" class="w217" placeholder="请输入底价"></el-input><span class="unit">元</span>
 				<div class="alertWrap lh20">
 					<el-alert v-if="qualifiedFloorPrice.message" :title="qualifiedFloorPrice.message" :type="qualifiedFloorPrice.isOk?'success':'error'" :closable="false" show-icon>
 					</el-alert>
@@ -52,7 +52,7 @@
 					<el-radio-button label="2" type="primary">按比例</el-radio-button>
 				</el-radio-group>
 				<div class="planValueWrap">
-					<el-input v-model="form.planValue" class="w217" :disabled="!qualifiedFloorPrice.isOk"></el-input>
+					<el-input v-model="form.planValue" placeholder="请输入返利信息" class="w217" :disabled="!qualifiedFloorPrice.isOk"></el-input>
 					<span class="unit">{{form.planType==1?'元':'%'}}</span>
 					<span class="textTip">{{form.planType==1?'请输入数字，只保留小数点后两位。输入金额不能低于1元，也不能超过底价':`请输入比例，区间${minPlanValue}%~100%`}}</span>
 				</div>
@@ -64,6 +64,58 @@
 					<el-option :label="v+'小时'" :value="v" v-for="(v,i) in 24" :key="i"></el-option>
 				</el-select>
 			</el-form-item>
+			<el-form-item label="人均砍价次数" prop="peopleLimit">
+        <el-select v-model="form.peopleLimit" placeholder="请选择砍价次数">
+          <el-option :label="k +'次'" :value="k" v-for="k in 5" :key="k"></el-option>
+          <el-option label="无限制" :value="0" ></el-option>
+        </el-select>
+        <span class="textTip">该商品最多可发起砍价次数/人</span>
+      </el-form-item>
+      <el-form-item label="商品发起砍价总次数" prop="upperLimit">
+        <el-input v-model="form.upperLimit" class="w217" placeholder="请输入次数" ></el-input>
+        <span class="textTip">该商品最多可发起砍价总次数，0为无上限</span>
+      </el-form-item>
+      <el-form-item label="商品详情" prop="lifeCycle">
+				<div>
+					
+					<el-switch
+						v-model="imgListCollapse"
+						active-text="收起篇幅"
+						inactive-text="展开篇幅">
+					</el-switch>
+        	<span class="textTip">规格750*X(最多十张)</span>
+				</div>
+				<div class="img-list" :class="{collapse: imgListCollapse}">
+					<div class="imgBox" :key="i" v-for="(v,i) in form.imgList">
+						<div class="img-content">
+							<div class="floatLayer">
+								<el-button type="info" icon="el-icon-upload2" circle @click="sortChange(0,v,i)"></el-button>
+								<div class="btns">
+									<el-button @click="delImage(i)" type="danger" class="delBtn">删除</el-button>
+									<form enctype="multipart/form-data" :id="'detailImgForm_' + i">
+										<el-button type="primary" class="editBtn">编辑</el-button>
+										<input @change="updateImg(i)" ref="detailImgEdit" type="file" class="editInput" accept="image/jpeg,image/png,image/gif,image/tiff"
+												name="image" />
+									</form>
+								</div>
+								<el-button type="info" icon="el-icon-download" circle @click="sortChange(1,v,i)"></el-button>
+							</div>
+							<img :src="uploadUrl  + v" />
+						</div>
+						<!-- <div class="sortBox">
+							<el-input-number :value="i" @change="sortChange" :min="1" :max="10"></el-input-number>
+						</div> -->
+					</div>
+					<div class="imgBox add" v-if="form.imgList.length < 10">
+						<el-button type="primary" icon="el-icon-plus">添加</el-button>
+						<form enctype="multipart/form-data" id="detailImgAdd">
+							<input @change="updateImg()" ref="detailImgAdd"  type="file"  accept="image/jpeg,image/png,image/gif,image/tiff" name="image"
+							/>
+						</form>
+					</div>
+
+				</div>
+      </el-form-item>
 			<el-form-item>
 				<el-button @click="cancel(0)">取消</el-button>
 				<el-button type="primary" @click="submit(false)">保存</el-button>
@@ -156,6 +208,12 @@ const validateRules = {
 	],
 	planValue: [
 		{ required: true, message: '请填写完整返利方案', trigger: 'blur' }
+	],
+	upperLimit: [
+		{ required: true, message: '请填写商品最大砍价次数，如不限制，请填0', trigger: 'blur' }
+	],
+	peopleLimit: [
+		{ required: true, message: '请选择人均砍价次数', trigger: 'blur' }
 	]
 };
 export default {
@@ -175,7 +233,10 @@ export default {
 				needPeople: '', // 砍价人数
 				planType: 1, // 返利方案类型 1：固定金额；2按比例
 				planValue: '', // 返利值。如果planType=1，则表示返利金额；如果planType=2，则表示返利百分比；
-				lifeCycle: '' // 砍价生存时间 （按小时计）
+				lifeCycle: '', // 砍价生存时间 （按小时计）
+				upperLimit: '', // 商品发起砍价次数
+				peopleLimit: '', //人均砍价次数
+				imgList: [], // 商品详情图片列表
 			},
 			couponType: '0',
 			validateRules: validateRules,
@@ -183,7 +244,8 @@ export default {
 			showAddCoupon: false, // 显示新建的优惠券
 			couponList: [], // 优惠券列表
 			selectedCoupon: '', // 选中的优惠券
-			selectedCouponTemp: '' // 选中的优惠券 临时存
+			selectedCouponTemp: '', // 选中的优惠券 临时存
+			imgListCollapse: false, // 图片详情是否展开
 		};
 	},
 	props: {
@@ -247,11 +309,12 @@ export default {
 			prarm.actId = this.selectedActivity.id;
 			prarm.startPrice = prarm.originalPrice;
 			prarm.couponId = this.selectedCoupon.id;
+			prarm.detail = JSON.stringify(prarm.imgList);
+			delete prarm.imgList;
 			// 新建商品 | 编辑商品有name说明改过了
 			if (!this.selectedGoods || this.selectedCoupon.name) {
 				prarm.coupon = JSON.stringify(this.selectedCoupon);
 			}
-			// prarm.imgUrl =  prarm.imgUrl.indexOf('http')>-1?prarm.imgUrl: this.uploadUrl+prarm.imgUrl;
 			if (this.selectedGoods) {
 				prarm.id = this.selectedGoods.id;
 				await this.editGoods(prarm);
@@ -288,7 +351,10 @@ export default {
 			this.$refs.formDm.resetFields();
 			this.form.planValue = '';
 			this.form.needPeople = '';
+			this.form.upperLimit = '';
+			this.form.peopleLimit = '';
 			this.form.imgUrl = '';
+			this.form.imgList = [];
 			this.selectedCoupon = '';
 			this.$refs.imgForm && this.$refs.imgForm.reset(); //
 		},
@@ -302,7 +368,8 @@ export default {
 			selectedGoods.planValue -= 0;
 			selectedGoods.floorPrice -= 0;
 			selectedGoods.originalPrice = +selectedGoods.startPrice;
-
+			selectedGoods.imgList =selectedGoods.detail ? selectedGoods.detail : [];
+			delete selectedGoods.detail;
 			this.form = selectedGoods;
 			this.selectedCoupon = { id: selectedGoods.couponId };
 		},
@@ -331,6 +398,45 @@ export default {
 		},
 		couponCb() {
 			this.showAddCoupon = false;
+		},
+		// 删除详情中的图片
+		delImage(i) {
+			if(i==undefined)return;
+			this.form.imgList.splice(i,1);
+		},
+		// 1.商品；2.套餐；3.轮播图；4.营业执照/商标；5.活动商品；6.活动素材；7.会员等级；8.店铺logo；9.卖手聊天图片；10召集令图片
+		async uploadImg (formId){
+			let url = await http.uploadImg({
+				data: {
+					type: 6,
+					shopId: shopId
+				},
+				formId
+			});
+			return url;
+		},
+		// 编辑图片
+		async updateImg(index){
+			if(index == undefined){
+				// 添加
+				let files = this.$refs.detailImgAdd.files;
+				if(files.length == 0)return;
+				let url = await this.uploadImg('detailImgAdd');
+				this.form.imgList.push(url);
+			}else{
+				// 编辑
+				let files = this.$refs.detailImgEdit[index].files;
+				if(files.length == 0)return;
+				let url = await this.uploadImg('detailImgForm_' + index);
+				this.form.imgList.splice(index,1,url);
+			}
+		},
+		sortChange(isdown,v,i){
+			if(isdown && i == this.form.imgList.length-1 || !isdown && i==0)return;
+			let tagetIndex = isdown?i+1:i-1;
+			let taget = this.form.imgList[tagetIndex];
+			this.form.imgList.splice(tagetIndex,1,v);
+			this.form.imgList.splice(i,1,taget);
 		}
 	},
 	computed: {
@@ -549,4 +655,82 @@ export default {
 	left: 0;
 	background-color: #fff;
 }
+// 详情
+	.img-list{
+		width: 350px;
+		&.collapse{
+			max-height: 700px;
+		}
+		border: 1px solid rgba(225, 187, 74,.8);
+		overflow-y: auto;
+		overflow-x: hidden;
+		.imgBox{
+			width: 350px;
+		}
+		.img-content{
+			width: 100%;
+			position: relative;
+			&:hover .floatLayer{
+				opacity: 1;
+			}
+		}
+		.floatLayer{
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			transition: all 0.3s;
+			background-color: rgba(0,0,0,.35);
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: flex;
+			flex-direction:column;
+			align-items: center;
+			justify-content: center;
+			.btns{
+				height: 60px;
+				line-height: 60px;
+				position: relative;
+				width: 100%;
+				input{
+					position: absolute;
+					opacity: 0;
+    			cursor: pointer;
+					width: 70px;
+					height: 40px;
+				}
+				.delBtn,
+				.editBtn,
+				.editInput{
+					position: absolute;
+					top: 10px;
+				}
+				.delBtn{
+					left: 80px;
+				}
+				.editBtn,.editInput{
+					left: 200px;
+				}
+				
+			}
+		}
+		img{
+			width: 350px;
+			vertical-align: top;
+		}
+		.add{
+			padding: 20px 0;
+			text-align: center;
+			position: relative;
+			input{
+				position: absolute;
+				width: 90px;
+				height: 40px;
+				cursor: pointer;
+				opacity: 0;
+				top: 20px;
+				left: 130px;
+			}
+		}
+	}
 </style>
