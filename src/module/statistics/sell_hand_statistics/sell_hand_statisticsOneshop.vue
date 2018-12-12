@@ -49,7 +49,7 @@
 				<el-table :data="proList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
 					<el-table-column fixed prop="fromId" label="操作" align="center">
 						<template slot-scope="scope">
-							<el-button size="medium" type="text" @click="getDetail">查看详情</el-button>
+							<el-button size="medium" type="text" @click="getDetail(scope.row)">查看详情</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column label="日期" prop="day" align="center">
@@ -70,7 +70,7 @@
 			</div>
 		</template>
 		<!-- 单店单天详情 -->
-		<oneShopDetail v-if="type == 'oneDetail'" @throwDetailResult="getoneDetailShow" :oneShopId="oneShopId" :valueTime="valueTime" :oneShopName="oneShopName"></oneShopDetail>
+		<oneShopDetail v-if="type == 'oneDetail'" @throwDetailResult="getoneDetailShow" :oneShopId="oneShopId" :oneDate="oneDate" :oneShopName="oneShopName"></oneShopDetail>
 	</div>
 </template>
 <script type="text/javascript">
@@ -92,7 +92,8 @@ export default {
 			approvedPerson: '', //核准人
 			proList: [], //卖手消费统计数据
 			statistics: [], //总数据
-			type: 'allDate'
+			type: 'allDate',
+			oneDate:'' //查看一天的时间
 		};
 	},
 	props: {
@@ -135,7 +136,7 @@ export default {
 					this.statistics = [];
 					let statistics = res.Statistics;
 					statistics.days = this.timeChange();
-					console.log(statistics)
+					//console.log(statistics)
 					this.statistics.push(statistics);
 				}
 			}
@@ -182,7 +183,8 @@ export default {
 			this.type = res;
 			this.setTitle();
 		},
-		getDetail: function() { //查看详情
+		getDetail: function(item) { //查看详情
+			this.oneDate = item.day;
 			this.type = 'oneDetail';
 		},
 		searchDate: function() { //搜索查询数据

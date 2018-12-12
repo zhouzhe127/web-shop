@@ -3,7 +3,7 @@
 	<div id="sell_hand">
 		<template v-if="type == 'index'">
 			<div class="search_box">
-				<span style="font-size: 16px;">选择店铺：{{oneShopName}}  |  选择时间：{{formatTime(valueTime[0])}} - {{formatTime(valueTime[1])}}</span>
+				<span style="font-size: 16px;">选择店铺：{{oneShopName}}  |  选择时间：{{oneDate}} -- {{oneDate}}</span>
 			</div>
 			<div class="search_box">
 				<div class="fl box_child clearfix">
@@ -90,9 +90,11 @@
 								<span style="padding:0 5px;color: #D2D2D2">|</span>
 								<el-button size="medium" type="text" style="color: #fd3f1f;" @click="backRecod(scope.row)">退回</el-button>
 							</template>
-							<el-button size="medium" type="text" style="color: #909399;"  v-else>已退回</el-button>
-							<span style="padding:0 5px;color: #D2D2D2">|</span>
-							<el-button size="medium" type="text" style="color:#e1bb4a;" @click="openModify(scope.row)" v-if="scope.row.originalCash != scope.row.cash">调整记录</el-button>
+							<el-button size="medium" type="text" style="color: #909399;" v-else>已退回</el-button>
+							<template v-if="scope.row.originalCash != scope.row.cash">
+								<span style="padding:0 5px;color: #D2D2D2">|</span>
+								<el-button size="medium" type="text" style="color:#e1bb4a;" @click="openModify(scope.row)">调整记录</el-button>
+							</template>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -140,7 +142,7 @@ export default {
 	},
 	props: {
 		oneShopId: String, //店铺名id
-		valueTime: Array, //时间
+		oneDate: String, //时间
 		oneShopName: String, //店铺的名称
 	},
 	components: {
@@ -163,8 +165,8 @@ export default {
 		async getConsumeStatistics() {
 			let res = await http.getConsumeStatistics({
 				data: {
-					'startTime': parseInt(this.valueTime[0] / 1000), //开始时间
-					'endTime': parseInt(this.valueTime[1] / 1000), //结束时间
+					'startTime': parseInt(new Date(this.oneDate).setHours(0, 0, 0, 0) / 1000), //开始时间
+					'endTime': parseInt(new Date(this.oneDate).setHours(23, 59, 59, 999) / 1000), //结束时间
 					'shopIds': this.oneShopId, //选择门店
 					'type': 1, //查看类型
 					'page': this.page,
@@ -183,7 +185,7 @@ export default {
 				this.statistics = [];
 				if (res.Statistics != '') {
 					let statistics = res.Statistics;
-					statistics.days = this.timeChange();
+					statistics.days = 1;
 					//console.log(statistics)
 					this.statistics.push(statistics);
 				}
@@ -199,15 +201,15 @@ export default {
 			this.approvedPerson = '';
 			this.getConsumeStatistics();
 		},
-		timeChange: function() {
-			//相差天数计算
-			let returnInt = Math.ceil(
-				(new Date(this.valueTime[1]).getTime() -
-					new Date(this.valueTime[0]).getTime()) /
-				(1000 * 60 * 60 * 24)
-			);
-			return returnInt;
-		},
+		// timeChange: function() {
+		// 	//相差天数计算
+		// 	let returnInt = Math.ceil(
+		// 		(new Date(this.valueTime[1]).getTime() -
+		// 			new Date(this.valueTime[0]).getTime()) /
+		// 		(1000 * 60 * 60 * 24)
+		// 	);
+		// 	return returnInt;
+		// },
 		setTitle: function() {
 			this.$store.commit('setPageTools', [{
 				name: '返回',
