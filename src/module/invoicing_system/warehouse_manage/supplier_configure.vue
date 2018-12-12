@@ -690,14 +690,14 @@ p{
 			height:23px;
 			line-height: 23px;
 			font-size: 16px; 
-			border-left:2px solid @ey;
+			border-left: 3px solid @ey;
 			padding-left:10px;
 			padding-right:5px;
 			flex-grow: 0;			
 		}
 		div{
 			flex-grow: 1;
-			border-bottom:2px dashed #ddd;
+			border-bottom: 1px dashed #ddd;
 			height:13px;
 		}
 	}
