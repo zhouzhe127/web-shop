@@ -456,7 +456,7 @@ export default {
 						pro: '请输入限购上限，且只能是1~99之间'
 					}
 				}, this)) return false;
-			if (this.price == '') {
+			if (this.price == '' || this.price == 0) {
 				this.$store.commit('setWin', {
 					content: '请输入商品卖价且只能是大于0的非负数',
 					winType: 'alert',
@@ -464,7 +464,7 @@ export default {
 				});
 				return false;
 			}
-			if (this.originalPrice == '') {
+			if (this.originalPrice == '' || this.originalPrice == 0) {
 				this.$store.commit('setWin', {
 					content: '请输入商品原价且只能是大于0的非负数',
 					winType: 'alert',
