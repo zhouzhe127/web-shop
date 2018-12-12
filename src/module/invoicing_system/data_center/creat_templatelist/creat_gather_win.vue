@@ -464,7 +464,5 @@
 				}
 			}
 		}
-
-		.dialog-footer {}
 	}
 </style>
