@@ -72,7 +72,7 @@
         <span class="textTip">该商品最多可发起砍价次数/人</span>
       </el-form-item>
       <el-form-item label="商品发起砍价总次数" prop="upperLimit">
-        <el-input v-model="form.upperLimit" class="w217" placeholder="请输入次数" ></el-input>
+        <el-input v-model="form.upperLimit" class="w217" placeholder="请输入次数" maxlength="6"></el-input>
         <span class="textTip">该商品最多可发起砍价总次数，0为无上限</span>
       </el-form-item>
       <el-form-item label="商品详情" prop="lifeCycle">
@@ -157,14 +157,14 @@ import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 let userShop = storage.session('userShop');
 const shopId = userShop.currentShop.id;
-function validateOriginalPrice(rule, value, cb) {
+function intNumber(rule, value, cb) {
 	if (/\D+/g.test(value + '')) {
 		cb(new Error('必须输入正整数,请按照正确格式填写'));
 	} else {
 		cb();
 	}
 }
-function validateRequired(r, v, cb) {
+function notEmptyString(r, v, cb) {
 	if (v.trim() == '') {
 		cb(new Error('该信息为必填项不能为空'));
 	} else {
@@ -181,16 +181,16 @@ function validateName(r, v, cb) {
 const validateRules = {
 	name: [
 		{ required: true, message: '请输入商品名称', trigger: 'blur' },
-		{ validator: validateRequired, trigger: 'blur' },
+		{ validator: notEmptyString, trigger: 'blur' },
 		{ validator: validateName, trigger: 'blur' }
 	],
 	remark: [
 		{ required: true, message: '请输入活动描述', trigger: 'blur' },
-		{ validator: validateRequired, trigger: 'blur' }
+		{ validator: notEmptyString, trigger: 'blur' }
 	],
 	originalPrice: [
 		{ required: true, message: '请输入原价(起砍价)', trigger: 'blur' },
-		{ validator: validateOriginalPrice, trigger: 'blur' }
+		{ validator: intNumber, trigger: 'blur' }
 	],
 	needPeople: [
 		{ required: true, message: '请选择砍价人数', trigger: 'change' }
@@ -210,7 +210,8 @@ const validateRules = {
 		{ required: true, message: '请填写完整返利方案', trigger: 'blur' }
 	],
 	upperLimit: [
-		{ required: true, message: '请填写商品最大砍价次数，如不限制，请填0', trigger: 'blur' }
+		{ required: true, message: '请填写商品最大砍价次数，如不限制，请填0', trigger: 'blur' },
+		{ validator: intNumber, trigger: 'blur' }
 	],
 	peopleLimit: [
 		{ required: true, message: '请选择人均砍价次数', trigger: 'blur' }
