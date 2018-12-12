@@ -1,5 +1,5 @@
 <template>
-	<div class="winContainer" :style="{'z-index':1000+win_id}">
+	<div class="winContainer" :style="{'z-index':5000+win_id}">
 		<div class='win center' :style="{'width': width +'px','height': 'auto','z-index':1000+win_id,'transform':align=='center'?'translate(-50%,-50%)':null,'left':(align == 'left'?'0':(align == 'center'?'50%':null)),'right':align=='right'?'0':null}">
 			<div class='win-head'>
 				<span class='win-head-logo noselect'></span>

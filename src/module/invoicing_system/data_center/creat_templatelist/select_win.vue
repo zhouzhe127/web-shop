@@ -8,7 +8,7 @@
 			<span slot="title" class="winTitle">{{title}}</span>
 			<div class="content">
 				<div class="chooseAll" v-if="!isSingle">
-					<el-checkbox v-model="chooseAll" @change="changeAll" size="small" border>全部选择</el-checkbox>
+					<el-checkbox v-model="chooseAll" @change="changeAll" size="small" border>{{chooseAll?'全部取消':'全部选择'}}</el-checkbox>
 				</div>
 				<el-radio-group v-model="sleArr" v-if="isSingle">
 					<el-radio v-for="(item,i) in unitsArr" :class="{'setStyle':i==0}" :key="i" :label="item" style="margin-top:10px"
