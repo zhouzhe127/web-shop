@@ -575,7 +575,7 @@
 			}
 		},
 		async activated() {
-			this.recursiveGetMaterialList();
+			await this.recursiveGetMaterialList();
 			await this.getRoleList();
 			if (this.$route.query.id) {
 				this.id = this.$route.query.id;

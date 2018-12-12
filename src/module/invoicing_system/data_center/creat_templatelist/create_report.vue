@@ -410,7 +410,7 @@
 			this.crageBtn();
 			this.id = this.$route.query.id;
 			this.moldeName = this.$route.query.name;
-			this.recursiveGetMaterialList();
+			await this.recursiveGetMaterialList();
 			await this.getneedData();
 			this.init();
 		},
