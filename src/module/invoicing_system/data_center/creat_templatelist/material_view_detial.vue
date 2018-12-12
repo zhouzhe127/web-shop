@@ -21,7 +21,7 @@
 				<span>集合名称：{{scopeName}}&nbsp;&nbsp;&nbsp; 集合类型：{{scopeType}}</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
-				<el-table-column prop="date" label="物料名称">
+				<el-table-column prop="date" fixed="left" label="物料名称">
 					<template slot-scope="scope">
 						<div>{{scope.row.itemInfo.name}}<span v-if="scope.row.supplierName">({{scope.row.supplierName}})</span></div>
 					</template>
@@ -31,7 +31,7 @@
 						<div>{{scope.row.itemInfo.barCode}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column v-for="(item,index) in mainData.customItem" :key="index" :label="item" prop="code">
+				<el-table-column v-for="(item,index) in mainData.customItem" min-width='230px' :key="index" :label="item" prop="code">
 					<template slot="header" slot-scope="scope">
 						<div>
 							<div class="heartitle">

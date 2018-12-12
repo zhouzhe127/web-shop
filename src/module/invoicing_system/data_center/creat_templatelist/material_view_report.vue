@@ -21,7 +21,7 @@
 				<span>{{reportName}} - 列表</span>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
-				<el-table-column prop="scopeName" label="集合名称">
+				<el-table-column prop="scopeName" min-width='150px' fixed="left" label="集合名称">
 					<template slot-scope="scope">
 						<el-button type="text" @click="toDetail(scope.row)">{{scope.row.scopeName}}</el-button>
 					</template>
@@ -31,7 +31,7 @@
 						<div>{{gatherType[scope.row.type]}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column v-for="(item,index) in mainData.statisticItem" :key="index" :label="item.scopeName" prop="code">
+				<el-table-column v-for="(item,index) in mainData.statisticItem" min-width='230px' :key="index" :label="item.scopeName" prop="code">
 					<template slot="header" slot-scope="scope">
 						<div>
 							<div class="heartitle">
