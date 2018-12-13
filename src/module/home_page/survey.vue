@@ -96,9 +96,9 @@
 				<div class="content">
 					<section v-for="(item,index) in noticeList" :key="index">
 						<div>{{item.time}}
-							<span style="background:#E6A23C;border-radius: 20px;padding: 0 8px;color: #fefefe;">{{item.isadmin=='1'?'闪店':'品牌'}}</span>
+							<span style="background:#E6A23C;border-radius: 20px;padding: 0 8px;color: #fefefe;">{{item.source=='1'?'闪店':'品牌'}}</span>
 						</div>
-						<div :class="{'title ':item.isContent}" style="margin-bottom: 15px" @click="toContent(item)">{{item.title}}</div>
+						<div class="title" style="margin-bottom: 15px" @click="toContent(item)">{{item.title}}</div>
 					</section>
 				</div>
 			</section>
@@ -254,24 +254,13 @@ export default {
 			if (data) {
 				let arr=[];
 				if(data.brandNotice&&data.adminNotice){
-					data.brandNotice.map(re =>{
-						re.time=re.time*1;
-						re.isadmin = '0';
-						re.isContent = true;
-					});
-					data.adminNotice.map(re =>{
-						re.time=re.time*1;
-						re.isadmin = '1';
-						re.isContent = true;
-					});
-					arr = data.brandNotice.concat(data.adminNotice);
+					arr = data.adminNotice.concat(data.brandNotice);
 					arr = utils.sortByAll(arr,'time',false);
-					console.log(arr);
 					this.noticeList = arr.map(v => {
 						v.time = utils.format(v.time, 'yyyy-MM-dd');
-						if (v.isContent) {
-							v.title = v.title + '>>';
-						}
+						// if (v.isContent) {
+						v.title = v.title + '>>';
+						// }
 						return v;
 					});
 				}
@@ -279,12 +268,13 @@ export default {
 		},
 		//跳转到内容中心
 		async toContent(v) {
-			if (!v.isContent) {
-				return;
-			}
+			// if (!v.isContent) {
+			// 	return;
+			// }
 			let res = await http.noticeSurveyGetOne({
 				data: {
-					id: v.id
+					id: v.id,
+					source:v.source
 					//                    shopId:this.brandId
 				}
 			});

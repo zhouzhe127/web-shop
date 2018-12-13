@@ -94,7 +94,7 @@ export default {
 			this.$store.commit('setPageTools', []);
 		},
 		async editElm(item) {
-			this.redDetial = await http.getNoticeOne({ data: {id:item.id} });
+			this.redDetial = await http.getNoticeOne({ data: {id:item.id,source:item.source} });
 			this.isAdd = false;
 			this.showWin = true;
 		},
@@ -190,10 +190,6 @@ export default {
 				}
 			}
 			this.init();
-		},
-		//获取一条通知详情
-		async getOne(){
-			this.copyNoticeList = await http.getNoticeOne({ data: {id:this.id} });
 		},
 	},
 	mounted() {
