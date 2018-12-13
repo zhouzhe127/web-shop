@@ -127,7 +127,7 @@
         <el-button @click="handleAssign" type="primary">指派</el-button>
     </div>
 	<!-- 选择商品弹窗 -->
-	<goodListWin v-if="goodsWinShow" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :packages="selectPackages" :isGoods="true" goInName="isChild" ></goodListWin>
+	<goodListWin v-if="goodsWinShow" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :packages="selectPackages" :isGoods="true" goInName="isMain" ></goodListWin>
 
 	<!-- 选择门店弹窗 -->
 	<elShopListWin v-if="chooseShopShow" :delShopId="delShopId" :shopIds="shopIds" @chooseShop="getShopResult"></elShopListWin>

@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-13 15:14:09
+ * @LastEditTime: 2018-12-13 18:45:08
  * @LastEditors: Please set LastEditors
  -->
 
@@ -79,8 +79,9 @@
 								<el-button type="text" @click="handlePublishTask(scope.row)">发布</el-button>
 								<el-button type="text" @click="handleEditAssing(scope.row)">编辑</el-button>
 							</template>
-							<el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
-							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">完成的查看详情</el-button>
+							<el-button type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
+							<!-- <el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
+							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">完成的查看详情</el-button> -->
 						</template>
 					</el-table-column>
 				</el-table>
@@ -102,13 +103,14 @@
 		<!-- 添加新任务 -->
 		<assignAdd v-if="assignAddShow" @addGoBack="assignAddBack" :editData="editData" :openType="addOenType"></assignAdd>
 		<!-- 指派中的详情 -->
-		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack"></doingDetail>
+		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList='tempTitleList'></doingDetail>
 		<!-- 全部详情 -->
-		<assignDetail v-if="assignDetailShow" @addGoBack="assignAddBack" :detailData="detailData"></assignDetail>
+		<assignDetail v-if="assignDetailShow" @addGoBack="assignAddBack" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList="tempTitleList"></assignDetail>
 	</div>
 </template>
 
 <script>
+	import storage from 'src/verdor/storage'; 
 	import http from 'src/manager/http';
 	import utils from  'src/verdor/utils'; //全局提示框
 	export default {
@@ -148,7 +150,14 @@
 				editData:{}, // 编辑修改的数据
 				addOenType:'add',
 
-				detailData:{}
+				detailData:{},
+
+				goodList:[],
+				shopId:'',
+				allShop:[],
+				version:'',
+
+				tempTitleList:[]
 			};
 		},
 		created(){
@@ -231,13 +240,15 @@
 			},
 			// 查看详情
 			lookAssignDetail(row){
-				this.detailData = row;
+				let data = utils.deepCopy(row)
+				this.detailData = data;
 				let status = row.status;
-				if(status == '1'){
-					this.assignDoingShow = true;
-				}else if(status == '2'){
-					this.assignDetailShow = true;
-				}
+				this.assignDoingShow = true;
+				// if(status == '1'){
+				// 	this.assignDoingShow = true;
+				// }else if(status == '2'){
+				// 	this.assignDetailShow = true;
+				// }
 				
 			},	
 			// 编辑任务
@@ -284,6 +295,49 @@
 			pageClick(page){
 				this.currentPage = page;
 			},
+			//------------------
+			  // 获取商品列表
+			async getShopAllList(){
+				let goodLists = storage.session('goodList');
+						let version = storage.session('httpGoodVersion');
+						let res = false;
+						this.version = await this.ShopGetExtra();
+						if (version && this.version.goodsConfigVer == version.goodsConfigVer) {
+							res = true;
+						} else {
+							res = false;
+								storage.session('httpGoodVersion', this.version);
+					}
+				//如果存在保存的商品数据
+						if (goodLists && res) {
+							this.goodList = goodLists;
+						} else {
+							//如果不存在保存的商品数据
+								let good = await http.getGoodsList({
+							data: {
+							shopId: this.shopId,
+							page: 1,
+							num: 9999,
+							specification: 1
+							}
+						});
+							storage.session('goodList', good.list);
+							this.goodList = good.list;
+				}
+			},
+			// 获取价格模板
+			async getTempModel(){
+				let data = await http.getPriceTemplateTitle();
+				if(data){
+					console.log(data,'模板')
+					this.tempTitleList = data;
+				}
+			},
+		//获取版本号
+			async ShopGetExtra() {
+				let res = await http.ShopGetExtra({ data: {} });
+				return res;
+			},
 		},
 		filters:{
 			formatCreateTime(time,format){
@@ -294,8 +348,13 @@
 				}
 			},
 		},
-		mounted(){
-			this.getAssignTaskList(	)
+		async mounted(){
+			this.getAssignTaskList();
+			this.allShop = await http.getShopList();
+			let userData = storage.session('userShop');
+			this.shopId = userData.currentShop.id;
+			this.getShopAllList();
+			this.getTempModel()
 		},
 		components:{
 			assignAdd: () => import(/* webpackChunkName:'goods_assign_add' */ './goods_assign_com/goods_assign_add'),
