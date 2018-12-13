@@ -95,7 +95,9 @@
 				<div class="head">通知</div>
 				<div class="content">
 					<section v-for="(item,index) in noticeList" :key="index">
-						<div>{{item.time}}</div>
+						<div>{{item.time}}
+							<span style="background:#E6A23C;border-radius: 20px;padding: 0 8px;color: #fefefe;">{{item.isadmin=='1'?'闪店':'品牌'}}</span>
+						</div>
 						<div :class="{'title ':item.isContent}" style="margin-bottom: 15px" @click="toContent(item)">{{item.title}}</div>
 					</section>
 				</div>
@@ -250,13 +252,29 @@ export default {
 				}
 			});
 			if (data) {
-				this.noticeList = data.map(v => {
-					v.time = utils.format(v.time, 'yyyy-MM-dd');
-					if (v.isContent) {
-						v.title = v.title + '>>';
-					}
-					return v;
-				});
+				let arr=[];
+				if(data.brandNotice&&data.adminNotice){
+					data.brandNotice.map(re =>{
+						re.time=re.time*1;
+						re.isadmin = '0';
+						re.isContent = true;
+					});
+					data.adminNotice.map(re =>{
+						re.time=re.time*1;
+						re.isadmin = '1';
+						re.isContent = true;
+					});
+					arr = data.brandNotice.concat(data.adminNotice);
+					arr = utils.sortByAll(arr,'time',false);
+					console.log(arr);
+					this.noticeList = arr.map(v => {
+						v.time = utils.format(v.time, 'yyyy-MM-dd');
+						if (v.isContent) {
+							v.title = v.title + '>>';
+						}
+						return v;
+					});
+				}
 			}
 		},
 		//跳转到内容中心
