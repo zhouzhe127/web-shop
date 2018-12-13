@@ -451,7 +451,6 @@ export default {
 			item.sendConfig = aaa;
 			item.time = this.detial.time / 1000;
 			console.log(item);
-			item.type = Number(this.redDetial.type);
 			this.Detail = item;
 			// if(item.type==1&&this.redDetial.type == '0'){
 			// 	this.$store.commit('setWin', {
@@ -469,6 +468,7 @@ export default {
 				// 	});
 				// }
 			} else {
+				item.type = this.redDetial.type;
 				item.newType = Number(ble);
 				item.id = this.redDetial.id;
 				//如果是保存草稿箱
