@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-11 18:34:37
+ * @LastEditTime: 2018-12-12 18:33:47
  * @LastEditors: Please set LastEditors
  -->
 
@@ -12,7 +12,7 @@
 		<template v-if="!assignAddShow && !assignDoingShow && !assignDetailShow">
 			<!-- 搜索任务 -->
 			<div class="task-search">
-				<el-input style="width:240px;" v-model="taskSearchKeyWords" suffix-icon="el-icon-search" placeholder="输入任务名称"></el-input>
+				<el-input style="width:240px;" v-model="taskSearchKeyWords" @input="handleTaskSearch" suffix-icon="el-icon-search" placeholder="输入任务名称"></el-input>
 			</div>
 			<!-- 任务状态切换查看 -->
 			<div class="task-status">
@@ -49,24 +49,38 @@
 					</el-table-column>
 					<!-- 创建人 -->
 					<el-table-column label="创建人" align="center">
-
+						<template slot-scope="scope">
+							{{scope.row.createUser}}
+						</template>
 					</el-table-column>
 					<!-- 发布人 -->
 					<el-table-column label="发布人" align="center">
-
+						<template slot-scope="scope">
+							<span v-if="scope.row.status !== '0'">
+								{{scope.row.publishUser ? scope.row.publishUser : '--'}}
+							</span>
+							<span v-else>
+								--
+							</span>
+						</template>
 					</el-table-column>
 					<!-- 状态 -->
 					<el-table-column label="状态" align="center">
-
+						<template slot-scope="scope">
+							<span v-if="scope.row.status == '0'" style="color:#f56c6c;">未指派</span>
+							<span v-else-if="scope.row.status == '1'" style="color:#409eff;">指派中</span>
+							<span v-else-if="scope.row.status == '2'" style="color:#67c23a;">已指派</span>
+						</template>
 					</el-table-column>
 					<!-- 操作 -->
 					<el-table-column label="操作" align="center">
 						<template slot-scope="scope">
-							<template v-if="scope.row.status != '0'">
+							<template v-if="scope.row.status == '0'">
 								<el-button type="text">发布</el-button>
-								<el-button type="text">编辑</el-button>
+								<el-button type="text" @click="handleEditAssing(scope.row)">编辑</el-button>
 							</template>
-							<el-button type="text" @click="lookAssignDetail(scope.row)" v-else>查看详情</el-button>
+							<el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
+							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">完成的查看详情</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -86,11 +100,11 @@
 			</div>
 		</template>
 		<!-- 添加新任务 -->
-		<assignAdd v-if="assignAddShow" @addGoBack="assignAddBack"></assignAdd>
+		<assignAdd v-if="assignAddShow" @addGoBack="assignAddBack" :editData="editData" :openType="addOenType"></assignAdd>
 		<!-- 指派中的详情 -->
-		<doingDetail v-if="assignDetailShow" @addGoBack="assignAddBack"></doingDetail>
+		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack"></doingDetail>
 		<!-- 全部详情 -->
-		<assignDetail v-if="assignDoingShow" @addGoBack="assignAddBack"></assignDetail>
+		<assignDetail v-if="assignDetailShow" @addGoBack="assignAddBack"></assignDetail>
 	</div>
 </template>
 
@@ -103,6 +117,7 @@
 		data() {
 			return {
 				taskSearchKeyWords:'', // 任务搜索字段
+				searchList:[],
 				taskCheckList:[
 					{
 						id:0,
@@ -120,7 +135,6 @@
 						name:"未指派"
 					},
 				],
-				taskCheck:0, // 任务切换状态
 				assignTaskList:[], // 指派任务列表
 				assignType:1,
 				assignStatus:-1,
@@ -131,6 +145,9 @@
 				
 				currentPage:1,
 				pageSize:5,
+
+				editData:{}, // 编辑修改的数据
+				addOenType:'add'
 			};
 		},
 		created(){
@@ -138,7 +155,7 @@
 		},
 		computed:{
 			totalNum(){
-				let num = 	Math.ceil(this.assignTaskList.length / this.pageSize);
+				let num = this.searchList.length > 0 ? Math.ceil(this.searchList.length / this.pageSize) : Math.ceil(this.assignTaskList.length / this.pageSize);
 				if (num == 0) {
 					//如果数组为空，总页数为0，则将总数置为1，
 					num = 1;
@@ -150,7 +167,7 @@
 				return num;
 			},
 			assignTaskCopyList(){
-				return this.pagination(this.currentPage,this.pageSize,this.assignTaskList);
+				return this.searchList.length > 0 ? this.pagination(this.currentPage,this.pageSize,this.searchList) :this.pagination(this.currentPage,this.pageSize,this.assignTaskList);
 			}	
 		},
 		methods:{
@@ -171,7 +188,8 @@
 			},
 			// 添加模板
 			addNewAssignTask(){
-				this.assignAddShow = true
+				this.assignAddShow = true;
+				this.addOenType = 'add'
 			},
 			// 添加模板返回
 			assignAddBack(res){
@@ -191,6 +209,8 @@
 			checkTaskStatus(item){
 				this.assignStatus = item.status;
 				this.assignTaskList = [];
+				this.searchList = [];
+				this.taskSearchKeyWords = '';
 				this.getAssignTaskList();
 			},
 			// 获取任务列表数据
@@ -208,11 +228,27 @@
 
 				this.assignTaskList = list;
 			},
-				
 			// 查看详情
 			lookAssignDetail(row){
 				let status = row.status;
-				this.assignDetailShow = true
+				this.assignDetailShow = true;
+			},	
+			// 编辑任务
+			handleEditAssing(row){
+				let data = utils.deepCopy(row);
+				this.editData = data;
+				this.assignAddShow = true;	
+				this.addOenType = 'edit'		
+			},
+			// 搜索
+			handleTaskSearch(){
+				let arr = [];
+				this.assignTaskList.forEach(item=>{
+					if(item.name.indexOf(this.taskSearchKeyWords) != -1){
+						arr.push(item);
+					}
+				})
+				this.searchList= arr;
 			},
 
 			// -------------分页-----

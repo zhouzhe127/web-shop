@@ -14,6 +14,10 @@ export default {
     AssignGetlist:{
         url: s+ 'Assigntask/getList',
         method:'get'
+    },
+    AssigntaskUpdate:{
+        url: s+'Assigntask/update',
+        method:'post'
     }
 
 }

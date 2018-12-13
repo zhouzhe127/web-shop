@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-10 11:36:29
+ * @LastEditTime: 2018-12-12 10:36:15
  * @LastEditors: Please set LastEditors
  -->
 
@@ -105,7 +105,7 @@
 							</div>
 						</template>
 							<!-- 基础价 -->
-							<el-table-column min-width="180" label="基础价" align="center">
+							<el-table-column min-width="220" label="基础价" align="center">
 								<template slot-scope="scope">
 									<div class="cell-block">
 										<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isExist != 0">
@@ -140,7 +140,7 @@
 								</template>
 							</el-table-column>
 							<!-- 会员价 -->
-							<el-table-column v-if="vipPriceOpen" min-width="180" label="会员价" align="center">
+							<el-table-column v-if="vipPriceOpen" min-width="220" label="会员价" align="center">
 								<template slot-scope="scope">
 									<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isExist != 0">
 											<div class="cell-block" :class="{'grey':!tableTemplate.priceTemplate[index].list[scope.$index].isVip}">
@@ -185,7 +185,7 @@
 								</template>
 							</el-table-column>
 							<!-- 特价 -->
-							<el-table-column v-if="specialPriceOpen" min-width="180" label="特价" align="center">
+							<el-table-column v-if="specialPriceOpen" min-width="220" label="特价" align="center">
 								<template slot-scope="scope">
 									<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isExist != 0">
 										<div class="cell-block" :class="{'grey':!tableTemplate.priceTemplate[index].list[scope.$index].isSpecial}">
@@ -400,10 +400,10 @@ export default {
 
 			if (dir == 'left') {
 				if (afterSort == 1) return;
-				afterSort = item.sort - 1;
+				afterSort = (item.sort*1) - 1;
 			} else if (dir == 'right') {
 				if (afterSort == 10) return;
-				afterSort = item.sort + 1;
+				afterSort = (item.sort*1) + 1;
 			}
 
 			console.log('before:' + beforeSort, 'after:' + afterSort);
@@ -1254,6 +1254,7 @@ export default {
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		min-width: 35px;
 	}
 	.edit-block-box{
 		display: none;
