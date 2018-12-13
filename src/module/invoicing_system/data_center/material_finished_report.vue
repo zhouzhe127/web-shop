@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-13 14:44:49
+ * @Last Modified time: 2018-12-13 17:27:03
  */
 
 <template>
@@ -359,7 +359,7 @@ export default {
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
-				pageSize:2,			//每页显示的记录数
+				pageSize:10,			//每页显示的记录数
 				pagerCount:11,			//每页显示的按钮数
 				currentPage:1,          //当前页
 			};
