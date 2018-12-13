@@ -3,8 +3,7 @@ import {
 	s,
 	w,
 	b,
-	p,
-	a
+	p
 } from 'src/config/host_var';
 
 export default {
@@ -35,10 +34,6 @@ export default {
     },
     "noticeSurveyGetOne": {
         url: s + "Notice/getOne", //通知内容
-        method: "get",
-	},
-	"adminNoticeSurveyGetOne": {
-        url: a + "Notice/getOne", //通知内容--admin
         method: "get",
     },
     "TurnoverGetDiscountDataOne": {
