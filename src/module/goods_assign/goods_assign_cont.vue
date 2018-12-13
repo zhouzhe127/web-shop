@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-12 18:33:47
+ * @LastEditTime: 2018-12-13 15:14:09
  * @LastEditors: Please set LastEditors
  -->
 
@@ -76,7 +76,7 @@
 					<el-table-column label="操作" align="center">
 						<template slot-scope="scope">
 							<template v-if="scope.row.status == '0'">
-								<el-button type="text">发布</el-button>
+								<el-button type="text" @click="handlePublishTask(scope.row)">发布</el-button>
 								<el-button type="text" @click="handleEditAssing(scope.row)">编辑</el-button>
 							</template>
 							<el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
@@ -104,12 +104,11 @@
 		<!-- 指派中的详情 -->
 		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack"></doingDetail>
 		<!-- 全部详情 -->
-		<assignDetail v-if="assignDetailShow" @addGoBack="assignAddBack"></assignDetail>
+		<assignDetail v-if="assignDetailShow" @addGoBack="assignAddBack" :detailData="detailData"></assignDetail>
 	</div>
 </template>
 
 <script>
-	import storage from 'src/verdor/storage';
 	import http from 'src/manager/http';
 	import utils from  'src/verdor/utils'; //全局提示框
 	export default {
@@ -147,7 +146,9 @@
 				pageSize:5,
 
 				editData:{}, // 编辑修改的数据
-				addOenType:'add'
+				addOenType:'add',
+
+				detailData:{}
 			};
 		},
 		created(){
@@ -230,8 +231,14 @@
 			},
 			// 查看详情
 			lookAssignDetail(row){
+				this.detailData = row;
 				let status = row.status;
-				this.assignDetailShow = true;
+				if(status == '1'){
+					this.assignDoingShow = true;
+				}else if(status == '2'){
+					this.assignDetailShow = true;
+				}
+				
 			},	
 			// 编辑任务
 			handleEditAssing(row){
@@ -239,6 +246,20 @@
 				this.editData = data;
 				this.assignAddShow = true;	
 				this.addOenType = 'edit'		
+			},
+			// 发布任务
+			async handlePublishTask(row){
+				console.log(row,'row')
+				let data = await http.AssigntaskPublish({
+					data:{
+						id:Number(row.id),
+						type:Number(row.type)
+					}
+				})
+				if(data){
+					this.getAssignTaskList()
+				}
+				console.log(data,'dataPublish')
 			},
 			// 搜索
 			handleTaskSearch(){
