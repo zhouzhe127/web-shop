@@ -413,6 +413,7 @@ export default {
 				return false;
 			}
 			item.sendToSource = this.shopUrl.toString();
+			console.log(typeof item.sendToSource);
 			if(this.isNext&&!ble){
 				if(item.sendToSource == ''){
 					this.$store.commit('setWin', {
@@ -450,7 +451,7 @@ export default {
 			item.sendConfig = aaa;
 			item.time = this.detial.time / 1000;
 			console.log(item);
-			item.type = Number(ble);
+			item.type = Number(this.redDetial.type);
 			this.Detail = item;
 			// if(item.type==1&&this.redDetial.type == '0'){
 			// 	this.$store.commit('setWin', {
@@ -468,7 +469,7 @@ export default {
 				// 	});
 				// }
 			} else {
-				item.newType = Number(this.redDetial.type);
+				item.newType = Number(ble);
 				item.id = this.redDetial.id;
 				//如果是保存草稿箱
 				let res = await http.editNoticeOne({ data: item });
