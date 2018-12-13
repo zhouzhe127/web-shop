@@ -3,39 +3,81 @@
      <div class="opare-block">
         <el-tabs v-model="tabIndex"  @tab-click="handleClick">
         	<el-tab-pane label="全部" name="1"></el-tab-pane>
-            <el-tab-pane label="仅显示失败信息" name="2"></el-tab-pane>
+          <el-tab-pane label="仅显示失败信息" name="2"></el-tab-pane>
         </el-tabs>
      </div>
      <!-- 详情 -->
      <div class="opare-block">
-		<div class="data-form__item line-item">
-			<div class="div-box">
-				<span class="box-span">任务名称：xxxxx</span>
-				<span class="box-span">发布时间：2018-2-18 10:18</span>
-				<span class="box-span">创建人：xxxx</span>
-				<span class="box-span">发布人：xxxx</span>
-			</div>
-			<div class="div-box">
-				<span class="box-span other-span" style="color:#A5A5A5">本次指派任务共指派<span style="color:#E8C148;">150</span>个商品</span>
-				<span class="box-span other-span" style="color:#9FB485;">140个商品指派成功</span>
-				<span class="box-span other-span" style="color:#F5535C;">10个商品指派失败</span>
-			</div>
-		</div>
+      <div class="data-form__item line-item">
+        <div class="div-box">
+          <span class="box-span">任务名称：{{taskBaseData.name}}</span>
+          <span class="box-span">发布时间：{{taskBaseData.publishTime | formatTime}}</span>
+          <span class="box-span">创建人：{{taskBaseData.createUser}}</span>
+          <span class="box-span">发布人：{{taskBaseData.publishUser}}</span>
+        </div>
+        <div class="div-box">
+          <span class="box-span other-span" style="color:#A5A5A5">本次指派任务共指派<span style="color:#E8C148;">{{totalTaskGoodsNum}}</span>个商品</span>
+          <span class="box-span other-span" style="color:#9FB485;">{{successGoodsNum}}个商品指派成功</span>
+          <span class="box-span other-span" style="color:#F5535C;">{{filedGoodsNum}}个商品指派失败</span>
+        </div>
+      </div>
      </div>
-	 <!--  -->
-	 <div class="opare-block">
-		 
-	 </div>
+    <!-- 全部 -->
+    <div class="opare-block" v-if="tabIndex == '1'">
+      111{{ detailInfo }}
+    </div>
+    <!-- 失败 -->
+    <div class="opare-block" v-if="tabIndex == '2'">
+      222
+    </div>
   </div>
 </template>
 
 <script>
+import storage from 'src/verdor/storage'; 
+import http from 'src/manager/http';
+import utils from  'src/verdor/utils'; 
 export default {
   name: "goods_assign_detail",
   data: function() {
     return {
       tabIndex:'1',
+      taskDataList:[],
+      detailInfo:[],
+      successGoodsNum:0,
+      filedGoodsNum:0,
+      allShop:[],
+      version:null,
+      shopId:'',
+      goodList:[]
     };
+  },
+  props:{
+    detailData:{
+      type:Object,
+      default:()=>{}
+    }
+  },
+  computed:{
+    // 任务基本信息
+    taskBaseData(){
+      let data = {}
+      let obj = utils.deepCopy(this.detailData);
+			data.name  = obj.name; // 任务名称；
+      data.selectGoods = obj.assignIds.split(',') // 商品信息
+      data.publishTime = obj.publishTime;
+      data.createUser  = obj.createUser;
+      data.publishUser = obj.publishUser;
+      return data;
+    },
+    // 任务总商品数量
+    totalTaskGoodsNum(){
+      let num = 0;
+      if(this.taskBaseData){
+        num = this.taskBaseData.selectGoods.length;
+      }
+      return num;
+    },
   },
   created(){
       this.initBtnTools()
@@ -72,7 +114,104 @@ export default {
     // tab切换
     handleClick(res){
       let currentTab = this.tabIndex;
-    }
+      console.log(this.tabIndex)
+    },
+    // 获取详情
+    async getTaskDetail(){
+      let data = await http.AssigntaskGetDetail({
+        data:{
+          id:Number(this.detailData.id),
+          type:this.detailData.type
+        }
+      })
+      if(data){
+        this.detailInfo = data;
+        let filedArr = [];
+        this.detailInfo.log.map(item=>{
+          if(item.assignIds == ''){
+              this.successGoodsNum = this.detailInfo.assignIds.split(',').length;
+          }
+          if(item.assignIds !== ''){
+            filedArr.push(item);
+            this.filedGoodsNum = this.detailInfo.assignIds.split(',').length - filedArr.length;
+          }
+        })
+      }
+    },
+    // 任务信息处理
+    handleTaskData(){
+      
+        // obj.conditions.map((item,index)=>{
+        // 	let taskObj = {checkGoodsType: [],checkedComp: false,id: "",isCoerce: true,priceType: [],shopIds: [],templateId: "",title: ""};
+          
+        // 	taskObj = {
+        // 		shopIds:item.shopIds.split(','),
+        // 		priceType :item.priceType.split(','),
+        // 		checkGoodsType : item.type.split(','),
+        // 		templateId :item.templateId,
+        // 		isCoerce : item.isCoerce == '1' ? true : false,
+        // 		title : `模板${index+1}`,
+        // 		id : `${index+1}`,
+        // 		checkedComp : item.type.split(',').length == 5 ? true : false,
+        // 	}
+
+        // 	this.taskData.push(taskObj)
+        // })
+        
+
+        // console.log(this.tabtaskDatasCont,'this.tabsCont')
+    },
+    // 获取商品列表
+    async getShopAllList(){
+      let goodLists = storage.session('goodList');
+			let version = storage.session('httpGoodVersion');
+			let res = false;
+			this.version = await this.ShopGetExtra();
+			if (version && this.version.goodsConfigVer == version.goodsConfigVer) {
+				res = true;
+			} else {
+				res = false;
+				storage.session('httpGoodVersion', this.version);
+      }
+      //如果存在保存的商品数据
+			if (goodLists && res) {
+        this.goodList = goodLists;
+			} else {
+				//如果不存在保存的商品数据
+				let good = await http.getGoodsList({
+            data: {
+              shopId: this.shopId,
+              page: 1,
+              num: 9999,
+              specification: 1
+            }
+          });
+				storage.session('goodList', good.list);
+				 this.goodList = good.list;
+      }
+    },
+    //获取版本号
+		async ShopGetExtra() {
+			let res = await http.ShopGetExtra({ data: {} });
+			return res;
+		},
+  },
+  filters:{
+			formatTime(time,format){
+        format = format || 'yyyy-qq-MM dd:hh:mm';
+				if(time != '0'){
+					return utils.format(time,format)
+				}else{
+					return '--';
+				}
+			},
+		},
+  async mounted(){
+    this.getTaskDetail();
+    // this.allShop = await http.getShopList();
+    let userData = storage.session('userShop');
+    this.shopId = userData.currentShop.id;
+    this.getShopAllList();
   }
 };
 </script>
