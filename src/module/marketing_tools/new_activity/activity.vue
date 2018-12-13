@@ -168,7 +168,7 @@ export default {
 				'name': '短信',
 				'id': '2'
 			}], //消息推送渠道
-			valueTime: [0, 0], //时间控件
+			valueTime: [], //时间控件
 			activityList: [], //活动列表
 			num: 10, //一版页码处理多少数据
 			pageTotal: 1, //总页数
@@ -360,8 +360,8 @@ export default {
 			if (this.flag == 4) tabstatus = -2;
 			let data = await http.newgetActivityList({
 				data: {
-					fromDate: parseInt(this.valueTime[0] / 1000), //开始日期
-					toDate: parseInt(this.valueTime[1] / 1000), //结束日期
+					fromDate: this.valueTime == '' ? '' : parseInt(this.valueTime[0] / 1000), //开始日期
+					toDate: this.valueTime == '' ? '' : parseInt(this.valueTime[1] / 1000), //结束日期
 					page: this.page, //页数
 					num: this.num,
 					status: tabstatus,
