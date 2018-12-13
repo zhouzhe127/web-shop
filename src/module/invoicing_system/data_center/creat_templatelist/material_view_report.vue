@@ -20,7 +20,7 @@
 			<div class="tableHeard">
 				<span>{{reportName}} - 列表</span>
 			</div>
-			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
+			<el-table :data="tableData" v-if="reset" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
 				<el-table-column prop="scopeName" min-width='150px' fixed="left" label="集合名称">
 					<template slot-scope="scope">
 						<el-button type="text" @click="toDetail(scope.row)">{{scope.row.scopeName}}</el-button>
@@ -81,7 +81,8 @@
 					4:'单位-物料集合',
 					5:'供应商-物料集合',
 					6:'物料-供应商集合',
-				}
+				},
+				reset: true
 			};
 		},
 		methods: {
@@ -108,10 +109,18 @@
 					size: this.num,
 				};
 				let res = await this.getHttp('materialreportGetScopeList', subObj);
+				this.resetColumn();
 				console.log(res);
 				this.mainData = res;
 				this.tableData = res.list;
 				this.allTotal = res.count;
+			},
+			resetColumn(item) { //刷新列表方法
+				this.reset = false;
+				if(item) this.checkTime(item.itemData);
+				this.$nextTick(() => {
+					this.reset = true;
+				});
 			},
 			pageChange(e) {
 				this.page = e;
