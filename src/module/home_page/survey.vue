@@ -266,7 +266,6 @@ export default {
 					});
 					arr = data.brandNotice.concat(data.adminNotice);
 					arr = utils.sortByAll(arr,'time',false);
-					console.log(arr);
 					this.noticeList = arr.map(v => {
 						v.time = utils.format(v.time, 'yyyy-MM-dd');
 						if (v.isContent) {
@@ -282,12 +281,16 @@ export default {
 			if (!v.isContent) {
 				return;
 			}
-			let res = await http.noticeSurveyGetOne({
-				data: {
-					id: v.id
-					//                    shopId:this.brandId
-				}
-			});
+			let res = false;
+			if(v.isadmin == '1'){
+				res = await http.adminNoticeSurveyGetOne({
+					data: {id: v.id}
+				});
+			}else{
+				res = await http.noticeSurveyGetOne({
+					data: {id: v.id}
+				});
+			}
 			if (res) {
 				this.isContent = true;
 				res.time = utils.format(res.time, 'yyyy-MM-dd');

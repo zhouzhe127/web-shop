@@ -1,8 +1,10 @@
+/* eslint-disable */
 import {
 	s,
 	w,
 	b,
-	p
+	p,
+	a
 } from 'src/config/host_var';
 
 export default {
@@ -33,6 +35,10 @@ export default {
     },
     "noticeSurveyGetOne": {
         url: s + "Notice/getOne", //通知内容
+        method: "get",
+	},
+	"adminNoticeSurveyGetOne": {
+        url: a + "Notice/getOne", //通知内容--admin
         method: "get",
     },
     "TurnoverGetDiscountDataOne": {
