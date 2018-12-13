@@ -460,6 +460,7 @@ export default {
 			// 	return false;
 			// }
 			if (this.isAdd) {
+				item.type = Number(ble);
 				await http.addNotice({ data: item });
 				// if(res){
 				// 	this.$store.commit('setWin', {
