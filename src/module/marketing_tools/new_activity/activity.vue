@@ -168,7 +168,7 @@ export default {
 				'name': '短信',
 				'id': '2'
 			}], //消息推送渠道
-			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+			valueTime: [0, 0], //时间控件
 			activityList: [], //活动列表
 			num: 10, //一版页码处理多少数据
 			pageTotal: 1, //总页数
