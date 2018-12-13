@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-13 15:15:25
+ * @Last Modified time: 2018-12-13 15:18:02
  */
 <template>  
 	<div>
@@ -168,7 +168,6 @@ export default {
 			}
 			switch(this.showCom){
 				case winType.createCollection:  //新建集合,抛出新建的集合
-					console.log(obj);
 					await this.getCollectionList(obj.id);
 					this.getSelectCollection(this.collection);
 					break;
@@ -229,7 +228,6 @@ export default {
 				// 	break;
 				case 4:
 					text = `物料单位：${data.unit.name}；`;
-					console.log(data.unit.name);
 					str = text+str;
 					break;
 				case 5:
