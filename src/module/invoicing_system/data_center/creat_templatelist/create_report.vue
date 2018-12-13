@@ -5,7 +5,7 @@
 <template>
 	<div id="createReport">
 		<div class="split-title">
-			报表模板名称：{{moldeName}}
+			报表模板名称：{{titleName}}
 		</div>
 		<div class="inpStyle">
 			<span class="required label">报表名称</span>
@@ -82,6 +82,7 @@
 			return {
 				id: '480', //模板id
 				moldeName: '',
+				titleName:'',
 				tableYData: [],
 				tableXData: [], //列数据
 				applytimeAll: [utils.getTime({
@@ -410,6 +411,7 @@
 			this.crageBtn();
 			this.id = this.$route.query.id;
 			this.moldeName = this.$route.query.name;
+			this.titleName = this.$route.query.name;
 			await this.recursiveGetMaterialList();
 			await this.getneedData();
 			this.init();
