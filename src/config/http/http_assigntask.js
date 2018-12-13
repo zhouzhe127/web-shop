@@ -18,6 +18,14 @@ export default {
     AssigntaskUpdate:{
         url: s+'Assigntask/update',
         method:'post'
+    },
+    AssigntaskPublish:{
+        url: s +'Assigntask/publish',
+        method:'get'
+    },
+    AssigntaskGetDetail:{
+        url:s +'Assigntask/get',
+        method:'get'
     }
 
 }
