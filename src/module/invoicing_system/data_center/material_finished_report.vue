@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-07 18:59:33
+ * @Last Modified time: 2018-12-13 14:44:49
  */
 
 <template>
@@ -160,10 +160,6 @@ export default {
 						this.getHttp('materialreportExportMaterialReportExcel',{id:item.id}).then((res)=>{
 							exportFile({
 								url:res,
-								// data:{
-								// 	token:this.token,
-								// 	shopId:this.shopId
-								// }
 							});
 						});
 					}else{
@@ -256,10 +252,12 @@ export default {
 							if(this.tableData.length == 0){
 								if(this.pageObj.currentPage > 1){
 									this.pageObj.currentPage -= 1;
-									this.funGetPage('current-change',this.pageObj.currentPage);
 								}else{
-									this.pageObj.total = 0;
+									this.pageObj.currentPage = 1;
 								}
+								this.funGetPage('current-change',this.pageObj.currentPage);								
+							}else{
+								this.pageObj.total -= ids.length;
 							}
 						}else{
 							this.$message('删除失败!');  
@@ -361,7 +359,7 @@ export default {
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
-				pageSize:10,			//每页显示的记录数
+				pageSize:2,			//每页显示的记录数
 				pagerCount:11,			//每页显示的按钮数
 				currentPage:1,          //当前页
 			};
