@@ -206,7 +206,8 @@
 				<div class="online-box clearfix" v-if="detials.type !='7'">
 					<span class="online-sub fl">领取生效:</span>
 					<div class="rightHalf">
-						<span>领取{{detials.delayHours}}小时后生效</span>
+						<span v-if="detials.delayHours == '0'">领取后立即生效</span>
+						<span v-else>领取{{detials.delayHours}}小时后生效</span>
 					</div>
 				</div>
 				<!-- 使用门槛 -->

@@ -77,10 +77,7 @@
 				</el-table-column>
 				<el-table-column label="对象" align="center">
 					<template slot-scope="scope">
-						<span v-if="scope.row.type == '1' && scope.row.objectType == '0'">
-							店内
-						</span>
-						<span v-else>会员</span>
+						<span>{{getObject(scope.row)}}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" align="center" width="250" v-if="ischain == '0' || ischain== '3'">
@@ -221,51 +218,6 @@ export default {
 		},
 	},
 	methods: {
-		// winEvent(obj) { //两个入口 1:通过新怎活动跳转路由 2:通过编辑活动跳转路由
-		// 	let {
-		// 		module: m,
-		// 		status,
-		// 		type
-		// 	} = obj;
-		// 	this.showAdd = false;
-		// 	let name = obj.type == undefined ? m.name : m.children[type].name;
-		// 	if (status == 'ok') {
-		// 		switch (name) {
-		// 			case '新会员开卡礼':
-		// 				this.$router.push('/admin/activity/agift');
-		// 				break;
-		// 			case '消费额激励':
-		// 				this.$router.push('/admin/activity/encourage');
-		// 				break;
-		// 			case '自定义活动':
-		// 				this.$router.push('/admin/activity/custom');
-		// 				break;
-		// 			case '生日活动':
-		// 				this.$router.push('/admin/activity/birth');
-		// 				break;
-		// 			case '裂变活动':
-		// 				this.$router.push('/admin/activity/fission');
-		// 				break;
-		// 			case '会员日':
-		// 				this.$router.push('/admin/activity/member');
-		// 				break;
-		// 			case '满减活动':
-		// 				this.$router.push('/admin/activity/fullreduce');
-		// 				break;
-		// 			default:
-		// 				break;
-		// 		}
-		// 	}
-		// },
-		// castTime(obj) {
-		// 	let {
-		// 		startTime,
-		// 		endTime
-		// 	} = obj;
-		// 	this.atime1 = startTime;
-		// 	this.btime1 = endTime;
-		// 	this.showCanMulti = false;
-		// },
 		setEndTime: function(startTime, endTime) {
 			// 设置活动结束时间
 			startTime = utils.format(startTime, 'yyyy,MM,dd'); //获取开始时间年月日 
@@ -391,31 +343,6 @@ export default {
 			});
 
 		},
-		// //活动弹框按钮切换
-		// async light(index) {
-		// 	this.flag = index;
-		// 	//按钮发生变化 翻页始终从第一页开始
-		// 	if (this.change != this.flag) {
-		// 		this.change = this.flag;
-		// 		this.page = 1;
-		// 	}
-		// 	if (index == 3) index = -1;
-		// 	if (index == 4) index = -2;
-
-		// 	let data = await http.getActivityList({
-		// 		data: {
-		// 			page: this.page,
-		// 			num: this.pageNum,
-		// 			fromDate: parseInt(this.atime1 / 1000),
-		// 			toDate: parseInt(this.btime1 / 1000),
-		// 			status: index,
-		// 		}
-		// 	});
-		// 	this.activityList = data.list;
-		// 	this.allTotal = this.activityList.length;
-		// 	this.pageTotal = data.total;
-		// 	this.pageCount = data.list.length;
-		// },
 		searchlist: function() { //根据日期查找活动列表
 			this.page = 1;
 			this.newgetActivityList();
@@ -446,29 +373,6 @@ export default {
 			this.pageTotal = data.total;
 			this.count = data.count;
 		},
-		// getCouponId(arr, type) {
-		// 	let i;
-		// 	let arr1 = [];
-		// 	arr = (type != 1) ? JSON.parse(arr) : arr;
-		// 	for (i = 0; i < arr.length; i++) {
-		// 		arr1.push(arr[i].id);
-		// 	}
-		// 	return arr1;
-		// },
-		// async getShopList() {
-		// 	let data = await http.couGetShopList({
-		// 		data: {
-
-		// 		}
-		// 	});
-		// 	if (this.brandId == '3') {
-		// 		this.shopList = this.getCouponId(data, '1');
-		// 		console.log(JSON.stringify(this.shopList))
-		// 	} else {
-		// 		this.shopList.push(storage.session('shopId'));
-		// 	}
-
-		// },
 		modfycoupons(item, type) { //编辑活动
 			if (type == '2') {
 				//点击查看详情的状态
@@ -541,7 +445,6 @@ export default {
 					idArr.push(item.id);
 				}
 			});
-			//this.listObj.belongToShop = idArr.join(',');
 		},
 		getShopList: function() {
 			// 获取卡属门店店铺列表
@@ -566,6 +469,43 @@ export default {
 			this.page = p;
 			this.newgetActivityList();
 		},
+		getObject: function(item) {
+			// 生日活动 新会员开卡礼 裂变活动 会员日 消费券返券 '全体会员'
+			// 满减活动 消费满次 唤醒营销 '所有人'
+			// 自定义活动 店内 线上=> 会员和粉丝
+			// 消费额激励 会员 和 粉丝
+			let objName = '--';
+			let allMember = ['0', '2', '4', '5', '9'];
+			let allPeople = ['6', '8', '10'];
+			if (allMember.indexOf(item.type) != -1) {
+				objName = '全体会员';
+			}
+			if (allPeople.indexOf(item.type) != -1) {
+				objName = '所有人';
+			}
+			//个例
+			if (item.type == '1' || item.type == '3') {
+				if (item.objectType == '0' && item.type == '1') {
+					objName = '店内';
+				} else {
+					let memberName = '';
+					let fansName = '';
+					let member = item.sendProgress.split(',')[0]; //会员的筛选数量
+					if (member > 0) {
+						memberName = '会员';
+					}
+					if (item.selectFans && item.selectFans == 1) {
+						fansName = '粉丝'
+					}
+					if (memberName != '' && fansName != '') {
+						objName = memberName + '+' + fansName;
+					} else {
+						objName = memberName + fansName;
+					}
+				}
+			}
+			return objName;
+		}
 	},
 	components: {
 		page: () =>
