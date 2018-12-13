@@ -275,7 +275,7 @@
 					let arr = [];
 					data.forEach(v => {
 						if (v.selectChildren.length > 0) {
-							arr.push(Array.from(v.selectChildren, x => x.id));
+							arr = arr.concat(Array.from(v.selectChildren, x => x.id));
 						} else if (v.selectAll) {
 							arr.push(v.id);
 						}
@@ -285,7 +285,7 @@
 					}
 					// this.selectClassify = data;
 					this.cache = {};
-					this.selectClassifyId = arr.flat();
+					this.selectClassifyId = arr;
 				}
 				this.classify = false;
 			},

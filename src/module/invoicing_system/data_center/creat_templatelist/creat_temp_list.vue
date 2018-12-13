@@ -409,6 +409,7 @@
 			},
 			async getRoleList() {
 				let data = await http.getUserRoleList();
+				this.roleList = [];
 				data.forEach(v=>{
 					if(v.shopId==shopId)this.roleList.push(v);
 				});

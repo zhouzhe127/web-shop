@@ -84,7 +84,7 @@
 							item.selectAll = true;
 							item.selectChildren = item.children;
 							break;
-						}else{
+						}else if(item.children){
 							for(let child of item.children){
 								if(child.id==v){
 									item.selectChildren.push(child);
