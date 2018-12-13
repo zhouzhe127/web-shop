@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-11 16:01:13
+ * @Last Modified time: 2018-12-13 15:15:25
  */
 <template>  
 	<div>
@@ -161,18 +161,16 @@ export default {
 		},
 
 		//关闭弹窗
-		closeWin(obj){
+		async closeWin(obj){
 			if(!obj){
 				this.showCom = '';
 				return;
 			}
 			switch(this.showCom){
 				case winType.createCollection:  //新建集合,抛出新建的集合
-					Object.assign(obj,{...obj.content});
-
-					this.initCollection([obj]);
-					this.collectionList.unshift(obj);
-					this.getSelectCollection(obj);
+					console.log(obj);
+					await this.getCollectionList(obj.id);
+					this.getSelectCollection(this.collection);
 					break;
 			}
 			this.showCom = '';
@@ -231,6 +229,7 @@ export default {
 				// 	break;
 				case 4:
 					text = `物料单位：${data.unit.name}；`;
+					console.log(data.unit.name);
 					str = text+str;
 					break;
 				case 5:
