@@ -132,8 +132,8 @@ export default {
 					this.allTotal = res.total;
 				}
 				this.proList = res.list; //底部数据
+				this.statistics = [];
 				if (res.Statistics != '') {
-					this.statistics = [];
 					let statistics = res.Statistics;
 					statistics.days = this.timeChange();
 					//console.log(statistics)

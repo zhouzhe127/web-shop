@@ -392,7 +392,7 @@ export default {
 			disamount: '', //第二件商品立减
 			secNameList: [{
 				name: '折扣力度为',
-				discribe: '折,第二件可优惠商品有'
+				discribe: '%,第二件可优惠商品有'
 			}, {
 				name: '立减金额为',
 				discribe: '元,第二件可优惠商品有'

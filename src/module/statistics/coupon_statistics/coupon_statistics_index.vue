@@ -7,7 +7,7 @@
 					<el-date-picker class="fl" v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false">
 					</el-date-picker>
 					<span class="fl line">--</span>
-					<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false">
+					<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false" @change="selectEndTime">
 					</el-date-picker>
 					<el-button class="fl" style="margin-right: 20px;" type="primary" icon="el-icon-search" @click="searchInDate"></el-button>
 				</div>
@@ -225,6 +225,9 @@ export default {
 		};
 	},
 	methods: {
+		selectEndTime: function(time) { //选择日期
+			this.endTime = new Date(time).setHours(23, 59, 59, 999);
+		},
 		selallcoupon: function() { //选择优惠券 全选
 			let arr = [];
 			for (let item of this.card) {

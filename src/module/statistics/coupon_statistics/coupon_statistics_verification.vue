@@ -11,7 +11,7 @@
 				</div>
 				<span class="line"> - </span>
 				<div class="inp-box inp-start fl">
-					<el-date-picker v-model="couponEndTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp">
+					<el-date-picker v-model="couponEndTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" @change="selectEndTime">
 					</el-date-picker>
 				</div>
 				<el-button type="primary" icon="el-icon-search"></el-button>
@@ -102,208 +102,211 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-	export default {
-		data() {
-			return {
-				page: 1,
-				num: 10,
-				showshop: false, //选择门店
-				selectedCoupon: '请选择门店',
-				showCard: [], //选中的门店
-				shopList: [], //门店数组
-				currentList: [],
-				currentTotal: '',
-				formList: [], //展示的数据
-				endTotal: 1,
-				allFormList: [], //所有的数据
-				isBrand: false, //判断是否品牌
-				couponStartTime:'',//开始时间
-				couponEndTime:''//结束时间
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+export default {
+	data() {
+		return {
+			page: 1,
+			num: 10,
+			showshop: false, //选择门店
+			selectedCoupon: '请选择门店',
+			showCard: [], //选中的门店
+			shopList: [], //门店数组
+			currentList: [],
+			currentTotal: '',
+			formList: [], //展示的数据
+			endTotal: 1,
+			allFormList: [], //所有的数据
+			isBrand: false, //判断是否品牌
+			couponStartTime: '', //开始时间
+			couponEndTime: '' //结束时间
 
-			};
+		};
+	},
+	props: {
+		startTime: Number, //开始时间
+		endTime: Number, //结束时间
+		couponName: String, //优惠券名称
+		couponId: String, //优惠券的id
+	},
+	methods: {
+		selectEndTime: function(time) { //选择日期
+			this.couponEndTime = new Date(time).setHours(23, 59, 59, 999);
 		},
-		props: {
-			startTime: Number, //开始时间
-			endTime: Number, //结束时间
-			couponName: String, //优惠券名称
-			couponId: String, //优惠券的id
-		},
-		methods: {
-			ensure: function() {
-				this.showshop = false;
-				this.selectedCoupon = '';
-				let selArr = [];
-				for (let item of this.shopList) {
-					if (this.showCard.indexOf(item.id) != -1) {
-						selArr.push(item.shopName);
-					}
+		ensure: function() {
+			this.showshop = false;
+			this.selectedCoupon = '';
+			let selArr = [];
+			for (let item of this.shopList) {
+				if (this.showCard.indexOf(item.id) != -1) {
+					selArr.push(item.shopName);
 				}
-				this.selectedCoupon = selArr.join(',');
-				if (!this.selectedCoupon) {
-					this.selectedCoupon = '请选择门店';
-				}
-			},
-			selallcoupon: function() { //选择优惠券 全选
-				let arr = [];
-				for (let item of this.shopList) {
-					arr.push(item.id);
-				}
-				if (this.showCard.length == this.shopList.length) {
-					this.showCard = [];
-				} else {
-					this.showCard = arr;
-				}
-			},
-			checkForm: function() {
-				if (this.couponEndTime - this.couponStartTime < 0) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '开始日期不能大于结束日期',
-						winType: 'alert'
-					});
-					return false;
-				}
-				if (this.showCard.length == 0) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '请选择门店类型',
-						winType: 'alert'
-					});
-					return false;
-				}
-				return true;
-			},
-			async getOneCoupon() {
-				if(!this.checkForm()) return;
-				let res = await http.getOneCoupon({
-					data: {
-						startTime: this.couponStartTime / 1000, //开始时间
-						endTime: this.couponEndTime / 1000, //结束时间
-						couponId: this.couponId,
-						shopIds: this.showCard.join(','),
-						ischain: this.ischain,
-						brandId: ''
-					}
-				});
-				// this.currentList = res;
-				this.currentTotal = res.length;
-				this.allFormList = res; //身体的数据
-				this.$nextTick(() => {
-					this.setPage();
-				});
-			},
-			returnStore: function() {
-				this.$emit('throwWinResult', true);
-			},
-			setPage: function() {
-				this.endTotal = Math.ceil((this.allFormList.length) / (this.num));
-				let pageStart = (this.page - 1) * (this.num);
-				let pageEnd = (this.page) * (this.num);
-				let pageContent = this.allFormList.slice(pageStart, pageEnd);
-				this.formList = pageContent;
-			},
-			handleSizeChange(p) {
-				this.page = 1;
-				this.num = p;
-				this.setPage();
-			},
-			//页码跳转
-			pageChange(p) {
-				this.page = p;
-				this.setPage();
-			},
-			resetFun: function() {
-				this.couponStartTime = this.startTime;
-				this.couponEndTime = this.endTime;
-				let arr = [];
-				let selbrr = [];
-				if (this.isBrand) {
-					this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
-				} else {
-					this.shopList = [];
-					this.shopList.push(this.userData.currentShop);
-				}
-				for (let item of this.shopList) {
-					arr.push(item.id);
-					selbrr.push(item.shopName || item.name);
-				}
-				this.showCard = arr;
-				this.selectedCoupon = selbrr.join(',');
-				this.getOneCoupon();
-			},
-		},
-		mounted() {
-			this.$store.commit('setPageTools', [{
-				name: '返回',
-				fn: () => {
-					this.returnStore();
-				},
-				className: 'el-btn-blue'
-			}]);
-			this.userData = storage.session('userShop');
-			this.ischain = this.userData.currentShop.ischain;
-			if (this.userData.currentShop && this.ischain == 3) {
-				//ischain状态为3 说明是品牌下面的店铺
-				this.isBrand = true; //更改品牌店的状态
-			} else {
-				this.isBrand = false;
 			}
+			this.selectedCoupon = selArr.join(',');
+			if (!this.selectedCoupon) {
+				this.selectedCoupon = '请选择门店';
+			}
+		},
+		selallcoupon: function() { //选择优惠券 全选
+			let arr = [];
+			for (let item of this.shopList) {
+				arr.push(item.id);
+			}
+			if (this.showCard.length == this.shopList.length) {
+				this.showCard = [];
+			} else {
+				this.showCard = arr;
+			}
+		},
+		checkForm: function() {
+			if (this.couponEndTime - this.couponStartTime < 0) {
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					content: '开始日期不能大于结束日期',
+					winType: 'alert'
+				});
+				return false;
+			}
+			if (this.showCard.length == 0) {
+				this.$store.commit('setWin', {
+					title: '提示信息',
+					content: '请选择门店类型',
+					winType: 'alert'
+				});
+				return false;
+			}
+			return true;
+		},
+		async getOneCoupon() {
+			if (!this.checkForm()) return;
+			let res = await http.getOneCoupon({
+				data: {
+					startTime: this.couponStartTime / 1000, //开始时间
+					endTime: this.couponEndTime / 1000, //结束时间
+					couponId: this.couponId,
+					shopIds: this.showCard.join(','),
+					ischain: this.ischain,
+					brandId: ''
+				}
+			});
+			// this.currentList = res;
+			this.currentTotal = res.length;
+			this.allFormList = res; //身体的数据
+			this.$nextTick(() => {
+				this.setPage();
+			});
+		},
+		returnStore: function() {
+			this.$emit('throwWinResult', true);
+		},
+		setPage: function() {
+			this.endTotal = Math.ceil((this.allFormList.length) / (this.num));
+			let pageStart = (this.page - 1) * (this.num);
+			let pageEnd = (this.page) * (this.num);
+			let pageContent = this.allFormList.slice(pageStart, pageEnd);
+			this.formList = pageContent;
+		},
+		handleSizeChange(p) {
+			this.page = 1;
+			this.num = p;
+			this.setPage();
+		},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.setPage();
+		},
+		resetFun: function() {
 			this.couponStartTime = this.startTime;
 			this.couponEndTime = this.endTime;
-			this.resetFun();
+			let arr = [];
+			let selbrr = [];
+			if (this.isBrand) {
+				this.shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
+			} else {
+				this.shopList = [];
+				this.shopList.push(this.userData.currentShop);
+			}
+			for (let item of this.shopList) {
+				arr.push(item.id);
+				selbrr.push(item.shopName || item.name);
+			}
+			this.showCard = arr;
+			this.selectedCoupon = selbrr.join(',');
+			this.getOneCoupon();
 		},
-	};
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '返回',
+			fn: () => {
+				this.returnStore();
+			},
+			className: 'el-btn-blue'
+		}]);
+		this.userData = storage.session('userShop');
+		this.ischain = this.userData.currentShop.ischain;
+		if (this.userData.currentShop && this.ischain == 3) {
+			//ischain状态为3 说明是品牌下面的店铺
+			this.isBrand = true; //更改品牌店的状态
+		} else {
+			this.isBrand = false;
+		}
+		this.couponStartTime = this.startTime;
+		this.couponEndTime = this.endTime;
+		this.resetFun();
+	},
+};
 </script>
 <style scoped>
-	.verification {
-		width: 100%;
-		height: auto;
-	}
+.verification {
+	width: 100%;
+	height: auto;
+}
 
-	.verification .timeSearch .selectDate {
-		margin-right: 21px;
-		float: left;
-		margin-bottom: 10px;
-	}
+.verification .timeSearch .selectDate {
+	margin-right: 21px;
+	float: left;
+	margin-bottom: 10px;
+}
 
-	.verification .activation {
-		height: 40px;
-		line-height: 40px;
-		margin-right: 10px;
-		font-size: 16px;
-		color: #333;
-	}
+.verification .activation {
+	height: 40px;
+	line-height: 40px;
+	margin-right: 10px;
+	font-size: 16px;
+	color: #333;
+}
 
-	.verification .line {
-		display: block;
-		float: left;
-		width: 14px;
-		height: 40px;
-		line-height: 40px;
-		text-align: center;
-	}
+.verification .line {
+	display: block;
+	float: left;
+	width: 14px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+}
 
-	.verification .couponName {
-		height: 40px;
-		line-height: 40px;
-		font-size: 14px;
-	}
+.verification .couponName {
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+}
 
-	.el-labItem {
-		margin-bottom: 5px;
-		margin-left: 0 !important;
-		margin-right: 10px;
-		float: left;
-	}
+.el-labItem {
+	margin-bottom: 5px;
+	margin-left: 0 !important;
+	margin-right: 10px;
+	float: left;
+}
 
-	.el-reference {
-		width: 200px;
-		overflow: hidden;
-		position: relative;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		padding-right: 30px;
-	}
+.el-reference {
+	width: 200px;
+	overflow: hidden;
+	position: relative;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-right: 30px;
+}
 </style>

@@ -222,7 +222,7 @@ export default {
             isDefault: false,
             isDefaultVip: false,
             fileName: '',
-            imgHosts: '',
+            imgHost: '',
             gradeWin: false, // 是否显示等级弹框
             index: [-1],
             gradeList: [], //等级的列表

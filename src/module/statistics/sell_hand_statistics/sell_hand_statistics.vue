@@ -264,8 +264,8 @@ export default {
 				if (res.userData) {
 					this.userData = res.userData;
 				}
+				this.statistics = [];
 				if (res.Statistics != '') {
-					this.statistics = [];
 					let statistics = res.Statistics;
 					statistics.days = this.timeChange();
 					//console.log(statistics)
