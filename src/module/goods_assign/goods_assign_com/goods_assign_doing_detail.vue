@@ -83,7 +83,8 @@ export default {
         tabsCont:[],
         taskName:'',
         selectGoods:[],
-        tabIndex:'1'
+        tabIndex:'1',
+        taskTimer:null
     };
   },
   props:{
@@ -253,10 +254,25 @@ export default {
         }
         return {id,name};
         
+    },
+    // 轮训任务进度
+    getTaskProgress(){
+        this.taskTimer = setInterval(()=>{
+            http.taskInfo({
+                data:{taskId:this.detailData.taskId}
+            }).then(res=>{
+                console.log(res,'timer')
+            })
+        },1000)
+        
     }      
   },
   mounted(){
       this.handleDetailData();
+    //   this.getTaskProgress();
+  },
+  beforeDestroy(){
+    this.taskTimer && clearInterval(this.taskTimer);
   }
 };
 </script>

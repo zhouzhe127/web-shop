@@ -26,6 +26,10 @@ export default {
     AssigntaskGetDetail:{
         url:s +'Assigntask/get',
         method:'get'
+    },
+    getAssignError:{
+        url:s +'/Assigntask/getAssignError',
+        method:'get'
     }
 
 }

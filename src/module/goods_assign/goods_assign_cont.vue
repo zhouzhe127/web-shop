@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-13 18:45:08
+ * @LastEditTime: 2018-12-14 17:54:00
  * @LastEditors: Please set LastEditors
  -->
 
@@ -79,9 +79,8 @@
 								<el-button type="text" @click="handlePublishTask(scope.row)">发布</el-button>
 								<el-button type="text" @click="handleEditAssing(scope.row)">编辑</el-button>
 							</template>
-							<el-button type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
-							<!-- <el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
-							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">完成的查看详情</el-button> -->
+							<el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
+							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">完成的查看详情</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -105,7 +104,7 @@
 		<!-- 指派中的详情 -->
 		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList='tempTitleList'></doingDetail>
 		<!-- 全部详情 -->
-		<assignDetail v-if="assignDetailShow" @addGoBack="assignAddBack" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList="tempTitleList"></assignDetail>
+		<assignDetail v-if="assignDetailShow && detailInfoLen>0" @addGoBack="assignAddBack" :filedMsg="filedMsg" :detailInfo="detailInfo" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList="tempTitleList"></assignDetail>
 	</div>
 </template>
 
@@ -157,11 +156,20 @@
 				allShop:[],
 				version:'',
 
-				tempTitleList:[]
+				tempTitleList:[],
+				detailInfo:{},
+				detailInfoLen:'',
+				filedMsg:[]
 			};
 		},
 		created(){
 			this.initToolsBtn();
+		},
+		watch:{
+			detailInfo(n,o){
+				console.log(n,'n')
+				console.log(o,'o')
+			}
 		},
 		computed:{
 			totalNum(){
@@ -204,16 +212,13 @@
 			// 添加模板返回
 			assignAddBack(res){
 				console.log(res,'res')
-				if(res == 'save'){
-					this.getAssignTaskList();
-					this.assignAddShow = false;
-					this.initToolsBtn();
-				}
 				this.assignAddShow = false;
 				this.assignDetailShow =false;
 				this.assignDoingShow = false;
+				this.detailInfo={};
+				this.detailInfoLen = '';
 				this.initToolsBtn();
-				
+				this.getAssignTaskList();
 			},
 			// 切换模板状态
 			checkTaskStatus(item){
@@ -240,15 +245,16 @@
 			},
 			// 查看详情
 			lookAssignDetail(row){
+				this.detailData = [];
 				let data = utils.deepCopy(row)
 				this.detailData = data;
 				let status = row.status;
-				this.assignDoingShow = true;
-				// if(status == '1'){
-				// 	this.assignDoingShow = true;
-				// }else if(status == '2'){
-				// 	this.assignDetailShow = true;
-				// }
+				if(status == '1'){
+					this.assignDoingShow = true;
+				}else if(status == '2'){
+					this.assignDetailShow = true;
+					this.getTaskDetail(data)
+				}
 				
 			},	
 			// 编辑任务
@@ -338,6 +344,24 @@
 				let res = await http.ShopGetExtra({ data: {} });
 				return res;
 			},
+			async getTaskDetail(row){
+				let data = await http.AssigntaskGetDetail({data:{id:Number(row.id),type:row.type }})
+				if(data){
+					this.detailInfo = data;
+					let arr = Object.keys(this.detailInfo)
+					this.detailInfoLen = arr.length
+					console.log(this.detailInfoLen	,'detailInfoLen')
+				}
+			},
+			// 获取错误信息
+			async handelGetAssignError(){
+			let data = await http.getAssignError({
+				data:{type:1}
+			})
+			if(data){
+			this.filedMsg = data
+			}
+			}
 		},
 		filters:{
 			formatCreateTime(time,format){
@@ -355,6 +379,7 @@
 			this.shopId = userData.currentShop.id;
 			this.getShopAllList();
 			this.getTempModel()
+			this.handelGetAssignError()
 		},
 		components:{
 			assignAdd: () => import(/* webpackChunkName:'goods_assign_add' */ './goods_assign_com/goods_assign_add'),
