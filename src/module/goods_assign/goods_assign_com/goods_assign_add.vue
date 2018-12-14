@@ -123,8 +123,8 @@
     </el-form> 
     <!-- 按钮组 -->
     <div class="opare-block" style="margin-top:80px;">
-        <el-button @click="handelSave">保存</el-button>
-        <el-button @click="handleAssign" type="primary">指派</el-button>
+        <el-button @click="handelSave(type = 0)">保存</el-button>
+        <el-button @click="handelSave(type = 1)" type="primary">指派</el-button>
     </div>
 	<!-- 选择商品弹窗 -->
 	<goodListWin v-if="goodsWinShow" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :packages="selectPackages" :isGoods="true" goInName="isMain" ></goodListWin>
@@ -189,7 +189,7 @@ export default {
       this.$emit("addGoBack",res);
     },
     // 保存
-    async handelSave(){
+    async handelSave(type){
 		if(this.taskName.length <=0){
 			this.$store.commit('setWin', {
 				title: '温馨提示',
@@ -223,7 +223,7 @@ export default {
 			}
 		}
 		// 添加任务
-		if(arr.length > 0 && this.openType == 'add'){
+		if(arr.length > 0 && this.openType == 'add' && type == 0){
 		
 			data = await http.AssigntaskAdd({
 					data:{
@@ -231,7 +231,8 @@ export default {
 						name:this.taskName,
 						assignIds:this.selectGoods && this.selectGoods.join(','),
 						otherIds:this.selectPackages && this.selectPackages.join(','),
-						conditions:arr
+						conditions:arr,
+						status:type
 					}
 			})
 			if(data){
@@ -245,12 +246,10 @@ export default {
 						}
 					}
 				});
-				// this.addGoBack('save');
 			}
 		}
 		// 修改任务
-		if(arr.length>0 && this.openType == 'edit'){
-			console.log(arr,'arrEidt');
+		if(arr.length>0 && this.openType == 'edit' && type == 0){
 			data = await http.AssigntaskUpdate({
 					data:{
 						id:Number(this.editData.id),
@@ -258,7 +257,8 @@ export default {
 						name:this.taskName,
 						assignIds:this.selectGoods && this.selectGoods.join(','),
 						otherIds:this.selectPackages && this.selectPackages.join(','),
-						conditions:arr
+						conditions:arr,
+						status:type
 					}
 			})
 			if(data){
@@ -273,6 +273,31 @@ export default {
 					}
 				});
 				// this.addGoBack('save');
+			}
+		}
+		// 直接发布
+		if(arr.length>0 && type == 1){
+			data = await http.AssigntaskAdd({
+					data:{
+						type:1,
+						name:this.taskName,
+						assignIds:this.selectGoods && this.selectGoods.join(','),
+						otherIds:this.selectPackages && this.selectPackages.join(','),
+						conditions:arr,
+						status:type
+					}
+			})
+			if(data){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '任务指派成功！',
+					winType: 'alert',
+					callback: res => {
+						if (res == 'ok') {
+							this.addGoBack('save');
+						}
+					}
+				});
 			}
 		}		
 	},

@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-14 17:54:00
+ * @LastEditTime: 2018-12-14 18:16:55
  * @LastEditors: Please set LastEditors
  -->
 
@@ -223,6 +223,7 @@
 			// 切换模板状态
 			checkTaskStatus(item){
 				this.assignStatus = item.status;
+				console.log(item.status,'item.status')
 				this.assignTaskList = [];
 				this.searchList = [];
 				this.taskSearchKeyWords = '';
@@ -230,10 +231,11 @@
 			},
 			// 获取任务列表数据
 			async getAssignTaskList(){
+				console.log(this.assignStatus,'assignStatus')
 				let data = await http.AssignGetlist({
 					data:{
 						type:this.assignType || 1,
-						status:this.assignStatus || -1
+						status:Number(this.assignStatus)
 					}
 				})
 				let list = utils.deepCopy(data);
