@@ -404,7 +404,7 @@ export default {
 				// });
 				// return false;
 			}
-			// console.log(item.content.trim())
+			console.log(item.content);
 			if(item.content.trim().length==0){
 				this.$store.commit('setWin', {
 					winType: 'alert',
@@ -424,7 +424,8 @@ export default {
 				}
 			}
 			item.sendType = this.isNow?'1':'0';
-			let caseList = this.caseList;
+			// let caseList = this.caseList;
+			let caseList = utils.deepCopy(this.caseList);
 			let aaa = {};
 			aaa.roleIds = this.jobIds.brand.toString();
 			for(let i=0;i<caseList.length;i++){
