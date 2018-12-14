@@ -36,7 +36,7 @@
                 </span>
 				<span class="tips" v-else>
 					已选择分类：{{categoryName.join(', ')}}
-					<em>(只允许选择一个物料单位，请重新选择！)</em>
+					<em>(只允许选择一个物料分类，请重新选择！)</em>
 				</span>
 			</div>
 			<div class="label-content">
