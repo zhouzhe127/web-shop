@@ -44,18 +44,35 @@ export default {
       tabIndex:'1',
       taskDataList:[],
       detailInfo:[],
+
+      allTaskGoods:[], // 指派的所有商品
+      sucssTaskGoods:[], // 指派成功的商品
+      failedTaskGoods:[], // 指派失败的商品
       successGoodsNum:0,
       filedGoodsNum:0,
-      allShop:[],
+
       version:null,
       shopId:'',
-      goodList:[]
+
+      taskLog:[]
     };
   },
   props:{
     detailData:{
       type:Object,
       default:()=>{}
+    },
+    goodList:{
+      type:Array,
+      default:[]
+    },
+    allShop:{
+      type:Array,
+      default:[]
+    },
+    tempTitleList:{
+      type:Array,
+      default:[]
     }
   },
   computed:{
@@ -127,6 +144,7 @@ export default {
       if(data){
         this.detailInfo = data;
         let filedArr = [];
+        this.taskLog = this.detailInfo.log;
         this.detailInfo.log.map(item=>{
           if(item.assignIds == ''){
               this.successGoodsNum = this.detailInfo.assignIds.split(',').length;
@@ -135,12 +153,16 @@ export default {
             filedArr.push(item);
             this.filedGoodsNum = this.detailInfo.assignIds.split(',').length - filedArr.length;
           }
+          if(item.logData == '' ||  null ==item.logData){
+            this.allTaskGoods = this.detailInfo.assignIds.split(',');
+            this.sucssTaskGoods = this.allTaskGoods;
+          }
         })
       }
     },
     // 任务信息处理
     handleTaskData(){
-      
+      console.log(this.goodList,'godd')
         // obj.conditions.map((item,index)=>{
         // 	let taskObj = {checkGoodsType: [],checkedComp: false,id: "",isCoerce: true,priceType: [],shopIds: [],templateId: "",title: ""};
           
@@ -161,40 +183,7 @@ export default {
 
         // console.log(this.tabtaskDatasCont,'this.tabsCont')
     },
-    // 获取商品列表
-    async getShopAllList(){
-      let goodLists = storage.session('goodList');
-			let version = storage.session('httpGoodVersion');
-			let res = false;
-			this.version = await this.ShopGetExtra();
-			if (version && this.version.goodsConfigVer == version.goodsConfigVer) {
-				res = true;
-			} else {
-				res = false;
-				storage.session('httpGoodVersion', this.version);
-      }
-      //如果存在保存的商品数据
-			if (goodLists && res) {
-        this.goodList = goodLists;
-			} else {
-				//如果不存在保存的商品数据
-				let good = await http.getGoodsList({
-            data: {
-              shopId: this.shopId,
-              page: 1,
-              num: 9999,
-              specification: 1
-            }
-          });
-				storage.session('goodList', good.list);
-				 this.goodList = good.list;
-      }
-    },
-    //获取版本号
-		async ShopGetExtra() {
-			let res = await http.ShopGetExtra({ data: {} });
-			return res;
-		},
+  
   },
   filters:{
 			formatTime(time,format){
@@ -208,10 +197,7 @@ export default {
 		},
   async mounted(){
     this.getTaskDetail();
-    // this.allShop = await http.getShopList();
-    let userData = storage.session('userShop');
-    this.shopId = userData.currentShop.id;
-    this.getShopAllList();
+    this.handleTaskData()
   }
 };
 </script>
