@@ -495,7 +495,8 @@ export default {
 			this.oneArea = {
 				id: item.id,
 				name: item.name,
-				show: false
+				show: false,
+				child:item.child
 			};
 			this.child = item.child;
 			this.child || (this.child = []);
@@ -508,7 +509,6 @@ export default {
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
 			}
-
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 				this.pageGoods = this.changeNav(
