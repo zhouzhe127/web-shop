@@ -31,11 +31,12 @@
 					<span class="el-icon-circle-plus-outline"></span>
 					添加物料分类
 				</div>
-				<span class="tips" v-if="selectCategory.id && categoryName.length<=1">
+				<span class="tips" v-if="selectCategory.id">
                     已选择分类：{{selectCategory.name}}
                 </span>
-				<span class="tips" v-if="categoryName.length>1">
-					已选择分类：{{categoryName.join(',')}}
+				<span class="tips" v-else>
+					已选择分类：{{categoryName.join(', ')}}
+					<em>(只允许选择一个物料分类，请重新选择！)</em>
 				</span>
 			</div>
 			<div class="label-content">
@@ -222,10 +223,6 @@
 			//------------event-----------
 			//返回true表示合格
 			checkform() {
-				if(this.category.length>1){
-					this.$message.error('只能选择一个分类！请重新选择分类');
-					return false;
-				}
 				if (!global.checkData({
 					materialName: {
 						cond: '$$.length>0 && $$.length<=20',
@@ -245,11 +242,8 @@
 					}
 				}, this.validityObj)) return false;
 
-				if (this.selectCategory.length == 0) {
-					this.$store.commit('setWin', {
-						content: '请选择分类!',
-						title: '温馨提示'
-					});
+				if (!this.selectCategory.id) {
+					this.$message.error('请选择分类！');
 					return false;
 				}
 				let check = true;
@@ -340,11 +334,12 @@
 				this.category = material.cate.map((ele) => {
 					return {id:ele.cid,name:ele.name};
 				});
-				this.categoryName = material.cate.map((ele) => {
-					return ele.name;
-				});
-				if(this.category.length<=1){
+				if(this.category.length<=1){//只有一个单位
 					this.selectCategory = this.category[0];
+				}else{//存在多个单位-老数据
+					this.categoryName = material.cate.map((ele) => {
+						return ele.name;
+					});
 				}
 				this.brandList = await this.InvoicingBrandList();
 				this.selectBrand = this.brandList.filter((res)=>{
@@ -473,6 +468,10 @@
 
 			.tips {
 				color: #666;
+				em{
+					color: red;
+					padding-left: 10px;
+				}
 			}
 
 			.img-div {
