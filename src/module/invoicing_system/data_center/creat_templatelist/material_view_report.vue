@@ -110,7 +110,6 @@
 				};
 				let res = await this.getHttp('materialreportGetScopeList', subObj);
 				this.resetColumn();
-				console.log(res);
 				this.mainData = res;
 				this.tableData = res.list;
 				this.allTotal = res.count;

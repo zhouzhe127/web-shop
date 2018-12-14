@@ -82,7 +82,7 @@
 					for(let item of this.cateList){
 						if(item.id == v){
 							item.selectAll = true;
-							item.selectChildren = item.children;
+							if(item.children)item.selectChildren = item.children;
 							break;
 						}else if(item.children){
 							for(let child of item.children){
@@ -107,12 +107,11 @@
 			changeAll(news) {
 				this.cateList.forEach(v => {
 					v.selectAll = news ? true : false;
-					v.selectChildren = news ? v.children : [];
+					v.selectChildren = news ? v.children||[] : [];
 				});
 			},
 			chooseAllSecond(item) {
-				console.log(item);
-				item.selectChildren = item.selectAll ? item.children : [];
+				item.selectChildren = item.selectAll ? item.children||[] : [];
 			},
 			chooseSecond(item) {
 				item.selectAll = item.selectChildren.length == item.children.length ? true : false;
