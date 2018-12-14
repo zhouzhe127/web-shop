@@ -69,7 +69,7 @@
                   <span style="margin: 5px 5px 0;display:inline-block;" v-for="(fed,fei) in item.filedArr" :key="fei">{{fed.name}},</span>
                 </div>
               </div>
-              <div style="color:#F5535C;">
+              <div style="color:#F5535C;margin-top:10px;">
                 <span>失败原因：</span>
                 <span >{{item.filedRes}}</span>
               </div>
@@ -102,7 +102,7 @@
                   <span style="margin: 5px 5px 0;display:inline-block;" v-for="(fed,fei) in item.filedArr" :key="fei">{{fed.name}},</span>
                 </div>
               </div>
-              <div style="color:#F5535C;">
+              <div style="color:#F5535C;margin-top:10px;">
                 <span>失败原因：</span>
                 <span >{{item.filedRes}}</span>
               </div>
@@ -111,7 +111,9 @@
         </template>
       </div>
       <div v-if="onlyFiledLog.length <=0">
-        没有失败的信息
+        <div style="padding:20px 0;text-align:center;">
+          暂无失败信息
+        </div>
       </div>
     </div>
   </div>
