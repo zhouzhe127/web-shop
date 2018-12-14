@@ -99,7 +99,7 @@ export default {
 			index: null,
 			pageNum: 10, //一版页码处理多少数据
 			pageCount: 0, //总条数
-			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+			valueTime: [], //时间控件
 			days: 0, //一共的天数
 			indexOn: 0,
 			bannerList: [{
@@ -193,8 +193,8 @@ export default {
 					page: this.page,
 					num: this.pageNum,
 					status: this.indexOn,
-					fromDate: parseInt(this.valueTime[0] / 1000),
-					toDate: parseInt(this.valueTime[1] / 1000)
+					fromDate: this.valueTime == '' ? '' : parseInt(this.valueTime[0] / 1000),
+					toDate: this.valueTime == '' ? '' : parseInt(this.valueTime[1] / 1000)
 				}
 			});
 			this.couponList = res.list;
