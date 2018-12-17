@@ -44,7 +44,7 @@
                     <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">价格模板：</span>
                     <div style="flex:1;">
-                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | {{item.priceType}},</span>
+                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | <span style="margin-right:5px;" v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> </span>
                     </div>
                   </div>
                   <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
@@ -71,7 +71,7 @@
                    <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">价格模板：</span>
                     <div style="flex:1;">
-                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | {{item.priceType}},</span>
+                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | <span style="margin-right:5px;" v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> </span>
                     </div>
                   </div>
                   <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
@@ -110,7 +110,7 @@
               <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">价格模板：</span>
                     <div style="flex:1;">
-                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | {{item.priceType}},</span>
+                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | <span style="margin-right:5px;"  v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> </span>
                     </div>
                 </div>
               <div style="display:flex;width:100%;align-items: baseline;">
@@ -285,7 +285,7 @@ export default {
         obj.shopId = item.shopId;
         obj.name = this.getShopName(item.shopId);
         obj.goods = this.getSelectGoods(item.assignIds.split(','));
-        obj.priceType = this.getPriceType(item.conditions.priceType).join(',');
+        obj.priceType = this.getPriceType(item.conditions.priceType);
         obj.templateId = this.getTempName(item.conditions.templateId)
         obj.fieldsType = this.getGoodsType(item.conditions.fieldsType)
         obj.succArr = this.getSelectGoods(item.succArr);
