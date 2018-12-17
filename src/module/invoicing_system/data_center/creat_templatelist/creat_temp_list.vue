@@ -14,8 +14,7 @@
 		<div class="inpStyle">
 			<span class="required label">查看权限</span>
 			<div class="btnbox">
-				<el-tag v-for="(tag,i) in sleRoleArr" style="margin:0 0 15px 15px;" :key="i" @close='handleClose(i)'
-				 closable>
+				<el-tag v-for="(tag,i) in sleRoleArr" style="margin:0 0 15px 15px;" :key="i" @close='handleClose(i)' closable>
 					{{tag.name}}
 				</el-tag>
 				<div class="addBtn">
@@ -73,10 +72,10 @@
 								</el-popover>
 
 							</div>
-								<div class="editbtn">
-									<el-button type="text" @click="editColumn(item,index)" icon="el-icon-edit"></el-button>
-									<el-button type="text" @click="delColumn(index,2)" icon="el-icon-delete"></el-button>
-								</div>
+							<div class="editbtn">
+								<el-button type="text" @click="editColumn(item,index)" icon="el-icon-edit"></el-button>
+								<el-button type="text" @click="delColumn(index,2)" icon="el-icon-delete"></el-button>
+							</div>
 						</template>
 					</el-table-column>
 				</el-table-column>
@@ -84,7 +83,8 @@
 		</div>
 		<add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin" @positionEvent="positionEvent"></add-position>
 		<add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>
-		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pShowMaterial="pShowMaterial" :pList="materialList" :pSortObj="pSortObj" :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
+		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pShowMaterial="pShowMaterial" :pList="materialList" :pSortObj="pSortObj"
+		 :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
 	</div>
 </template>
 <script>
@@ -143,29 +143,31 @@
 					},
 				],
 				id: '',
-				materialList:[],				//物料列表
-				pShowMaterial:true //添加行是否展示选择物料的弹窗
+				materialList: [], //物料列表
+				pShowMaterial: true //添加行是否展示选择物料的弹窗
 			};
 		},
 		methods: {
 			//获取所有物料
-			async recursiveGetMaterialList(){
+			async recursiveGetMaterialList() {
 				let subObj = {
-					name : '',
-					cid : '',
-					type : -1,
-					num : 50
+					name: '',
+					cid: '',
+					type: -1,
+					num: 50
 				};
 
 				let page = 1;
 				let arr = [];
-				
-				for(let i = 0;i < page; i += 1){
+
+				for (let i = 0; i < page; i += 1) {
 					subObj.page = i + 1;
-					let retObj = await http.getMaterialList({data:subObj});
+					let retObj = await http.getMaterialList({
+						data: subObj
+					});
 					page = Number(retObj.total);
 					arr.push(...retObj.list);
-				}   
+				}
 				this.materialList = arr;
 				// return arr;
 			},
@@ -410,12 +412,12 @@
 			async getRoleList() {
 				let data = await http.getUserRoleList();
 				this.roleList = [];
-				data.forEach(v=>{
-					if(v.shopId==shopId)this.roleList.push(v);
+				data.forEach(v => {
+					if (v.shopId == shopId) this.roleList.push(v);
 				});
 				console.log(this.roleList);
 			},
-			delColumn(index, type,item) { //type:1是行，2是列
+			delColumn(index, type, item) { //type:1是行，2是列
 				let str = type == 1 ? '行' : '列';
 				let data = type == 1 ? this.tableData : this.columnData;
 				this.$confirm(`是否删除第${index+1}${str}`, '提示', {
@@ -424,7 +426,7 @@
 					type: 'warning'
 				}).then(() => {
 					data.splice(index, 1);
-					if(item.pScope.length>0) this.pShowMaterial = true;
+					if (item.pScope.length > 0) this.pShowMaterial = true;
 					this.resetColumn();
 					this.$message({
 						type: 'success',
@@ -528,35 +530,51 @@
 					// 	data.strTitle = `物料范围（${data.pScope.length}）`;
 					// } else {
 					data.strTitle = `${data.pCollection.name}（${this.getExplain(data.pCollection)}种）`;
-					this.sortList(this.tableData, data, 'pSortObj');
+					let checkSome = false;
+					for (let list of this.tableData) {
+						if (list.pCollection.id == data.pCollection.id) {
+							checkSome = true;
+							break;
+						}
+					}
+
+					if (!checkSome) {
+						this.sortList(this.tableData, data, 'pSortObj');
+					} else {
+						this.$message({
+							type: 'info',
+							message: '该集合已存在，请重新选择！'
+						});
+						this.rowShow = true;
+					}
 				}
 			},
-			getExplain(data){//生成说明
+			getExplain(data) { //生成说明
 				let str = '';
 				let text = '';
-				if(data.type!=6)str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`;
-				switch(data.type){
+				if (data.type != 6) str = data.isCategory == 0 ? `物料数量：${data.mid.length}` : `物料分类数量：${data.cid.length}`;
+				switch (data.type) {
 					// case 3:
 					// 	str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`
 					// 	break;
 					case 4:
 						text = `物料单位：${data.unit.name}；`;
-						str = text+str;
+						str = text + str;
 						break;
 					case 5:
 						text = `供应商数量：${data.supplierName.split(',').length}；`;
-						str = text+str;
+						str = text + str;
 						break;
 					case 6:
 						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplierName.split(',').length}`;
-						break;		
+						break;
 				}
 				return str;
 			},
-			getMateralName(id){
+			getMateralName(id) {
 				let sele = '';
-				for(let item of this.materialList){
-					if(id == item.id){
+				for (let item of this.materialList) {
+					if (id == item.id) {
 						sele = item;
 						break;
 					}
@@ -634,9 +652,11 @@
 				vertical-align: middle;
 				word-break: break-all;
 			}
-			.detailsBtn{
+
+			.detailsBtn {
 				vertical-align: middle;
 			}
+
 			.editbtn {
 				display: inline-block;
 				vertical-align: middle;
