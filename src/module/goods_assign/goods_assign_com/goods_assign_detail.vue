@@ -25,58 +25,69 @@
     <!-- 全部 -->
     <div class="opare-block" v-if="tabIndex == '1'">
       <div class="data-form__item line-item" v-for="(item,index) in taskLog" :key="index">
-        <template v-if="item.succArr.length>0">
-          <div class="t-name" style="margin-bottom:10px;">{{item.name}}</div>
-          <!-- 成功的 -->
-          <div class="t-info">
-            <span @click="handleOpenD(item)" style="cursor:pointer;color:#8DAF57;margin-bottom: 10px;display: block;">{{item.succArr.length}}个商品成功<i class="el-icon-arrow-down" :class="{'el-icon-arrow-up':item.opened}"></i></span>
-            <template v-if="item.opened">
-                <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
-                  <span style="100px;">
-                    指派属性：
-                  </span>
-                  <div style="flex:1;">
-                    <span style="margin: 5px 5px 0;display:inline-block;" v-for="(ft,fi) in item.fieldsType" :key="fi">{{ft}}</span>
-                  </div>
-                </div>
-                <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
-                  <span style="100px;">指派商品：</span>
-                  <div style="flex:1;">
-                    <span style="margin: 5px 5px 0;display:inline-block;" v-for="(sd,si) in item.succArr" :key="si">{{sd.name}},</span>
-                  </div>
-                </div>
-            </template>
-            
-          </div>
-        </template>
-        <template v-if="item.filedArr.length>0">
-          <div class="t-name" style="margin-bottom:10px;">{{item.name}}</div>
-          <!-- 失败的 -->
-          <div class="t-info" >
-            <span @click="handleOpenD(item)"  style="cursor:pointer;color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down":class="{'el-icon-arrow-up':item.opened}"></i></span>
-            <template v-if="item.opened">
-              <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
-                <span style="100px;">
-                  指派属性：
-                </span>
-                <div style="flex:1;">
-                  <span style="margin: 5px 5px 0;display:inline-block;" v-for="(ft,fi) in item.fieldsType" :key="fi">{{ft}}</span>
-                </div>
-              </div>
-              <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
-                <span style="100px;">指派商品：</span>
-                <div style="flex:1;">
-                  <span style="margin: 5px 5px 0;display:inline-block;" v-for="(fed,fei) in item.filedArr" :key="fei">{{fed.name}},</span>
-                </div>
-              </div>
-              <div style="color:#F5535C;margin-top:10px;">
-                <span>失败原因：</span>
-                <span >{{item.filedRes}}</span>
-              </div>
-            </template> 
-          </div>
-        </template>
         
+          <div class="t-name" style="margin-bottom:10px;">{{item.name}}</div>
+         
+          <div class="t-info">
+            <!-- 成功的 --> 
+            <template v-if="item.succArr.length>0">
+              <span @click="handleOpenD(item)" style="cursor:pointer;color:#8DAF57;margin-bottom: 10px;display: block;">{{item.succArr.length}}个商品成功<i class="el-icon-arrow-down" :class="{'el-icon-arrow-up':item.opened}"></i></span>
+              <template v-if="item.opened">
+                  <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">
+                      指派属性：
+                    </span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;" v-for="(ft,fi) in item.fieldsType" :key="fi">{{ft}}</span>
+                    </div>
+                  </div>
+                    <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">价格模板：</span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | {{item.priceType}},</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">指派商品：</span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;" v-for="(sd,si) in item.succArr" :key="si">{{sd.name}},</span>
+                    </div>
+                  </div>
+             
+              </template>
+             </template>
+            <!-- 失败的 -->
+             <template v-if="item.filedArr.length>0">
+                <span @click="handleOpenD(item)"  style="cursor:pointer;color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down":class="{'el-icon-arrow-up':item.opened}"></i></span>
+                <template v-if="item.opened">
+                  <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">
+                      指派属性：
+                    </span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;" v-for="(ft,fi) in item.fieldsType" :key="fi">{{ft}}</span>
+                    </div>
+                  </div>
+                   <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">价格模板：</span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | {{item.priceType}},</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">指派商品：</span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;" v-for="(fed,fei) in item.filedArr" :key="fei">{{fed.name}},</span>
+                    </div>
+                  </div>
+                 
+                  <div style="color:#F5535C;margin-top:10px;">
+                    <span>失败原因：</span>
+                    <span >{{item.filedRes}}</span>
+                  </div>
+                </template> 
+             </template>
+          </div>  
       </div>
     </div>
     <!-- 失败 -->
@@ -96,12 +107,19 @@
                   <span style="margin: 5px 5px 0;display:inline-block;" v-for="(ft,fi) in item.fieldsType" :key="fi">{{ft}}</span>
                 </div>
               </div>
+              <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
+                    <span style="100px;">价格模板：</span>
+                    <div style="flex:1;">
+                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | {{item.priceType}},</span>
+                    </div>
+                </div>
               <div style="display:flex;width:100%;align-items: baseline;">
                 <span style="100px;">指派商品：</span>
                 <div style="flex:1;">
                   <span style="margin: 5px 5px 0;display:inline-block;" v-for="(fed,fei) in item.filedArr" :key="fei">{{fed.name}},</span>
                 </div>
               </div>
+              
               <div style="color:#F5535C;margin-top:10px;">
                 <span>失败原因：</span>
                 <span >{{item.filedRes}}</span>
@@ -267,7 +285,7 @@ export default {
         
         obj.name = this.getShopName(item.shopId);
         obj.goods = this.getSelectGoods(item.assignIds.split(','))
-        obj.priceType = this.getPriceType(item.conditions.priceType)
+        obj.priceType = this.getPriceType(item.conditions.priceType).join(',')
         obj.templateId = this.getTempName(item.conditions.templateId)
         obj.fieldsType = this.getGoodsType(item.conditions.fieldsType)
         obj.succArr = this.getSelectGoods(item.succArr);
@@ -283,6 +301,7 @@ export default {
         })
 
         this.taskLog = logArr;
+        console.log( this.taskLog,' this.taskLog  ')
       })
      
     },

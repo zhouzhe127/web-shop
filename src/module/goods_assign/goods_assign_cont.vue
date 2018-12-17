@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-14 18:16:55
+ * @LastEditTime: 2018-12-17 10:24:06
  * @LastEditors: Please set LastEditors
  -->
 
@@ -102,7 +102,7 @@
 		<!-- 添加新任务 -->
 		<assignAdd v-if="assignAddShow" @addGoBack="assignAddBack" :editData="editData" :openType="addOenType"></assignAdd>
 		<!-- 指派中的详情 -->
-		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList='tempTitleList'></doingDetail>
+		<doingDetail v-if="assignDoingShow" @addGoBack="assignAddBack" @goFinish="goFinish" :detailData="detailData"  :goodList="goodList" :allShop="allShop" :tempTitleList='tempTitleList'></doingDetail>
 		<!-- 全部详情 -->
 		<assignDetail v-if="assignDetailShow && detailInfoLen>0" @addGoBack="assignAddBack" :filedMsg="filedMsg" :detailInfo="detailInfo" :detailData="detailData" :goodList="goodList" :allShop="allShop" :tempTitleList="tempTitleList"></assignDetail>
 	</div>
@@ -165,12 +165,6 @@
 		created(){
 			this.initToolsBtn();
 		},
-		watch:{
-			detailInfo(n,o){
-				console.log(n,'n')
-				console.log(o,'o')
-			}
-		},
 		computed:{
 			totalNum(){
 				let num = this.searchList.length > 0 ? Math.ceil(this.searchList.length / this.pageSize) : Math.ceil(this.assignTaskList.length / this.pageSize);
@@ -211,7 +205,6 @@
 			},
 			// 添加模板返回
 			assignAddBack(res){
-				console.log(res,'res')
 				this.assignAddShow = false;
 				this.assignDetailShow =false;
 				this.assignDoingShow = false;
@@ -258,6 +251,12 @@
 					this.getTaskDetail(data)
 				}
 				
+			},
+			goFinish(){
+				this.assignDoingShow =false;
+				this.assignDetailShow =true;
+				this.getTaskDetail(this.detailData);
+				this.getAssignTaskList()
 			},	
 			// 编辑任务
 			handleEditAssing(row){

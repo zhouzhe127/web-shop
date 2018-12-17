@@ -1,5 +1,5 @@
 <template>
-  <div class="doing-detail">
+  <div class="doing-detail" ref="doingDetail">
      <!-- 标题名称 -->
     <div class="title-block">
         <span class="title-name">任务详情</span>
@@ -8,7 +8,7 @@
     <!-- 任务进度 -->
     <div class="opare-block">
         <span>任务名称：{{taskName}}</span>
-        <span style="margin-left:40px;">指派进度：<el-progress :percentage="99" style="width:450px;display:inline-block;" color="#E0BA4E"></el-progress></span>
+        <span style="margin-left:40px;">指派进度：<el-progress :percentage="taskProgress" style="width:450px;display:inline-block;" color="#E0BA4E"></el-progress></span>
     </div>
     <!-- 选择商品 -->
     <div class="title-block">
@@ -61,7 +61,7 @@
                     <!-- 选择的价格模板 -->
                     <div class="data-form__item line-item">
                          <el-form-item label-width="100px" label="选择价格梯队:">
-                            <div class="info-block">{{item.templateId.name}} | {{item.priceType}}</div>
+                            <div class="info-block">{{item.templateId.name}} | {{item.priceType}}</div> 
                         </el-form-item>
                     </div>
                 </el-form>
@@ -84,7 +84,9 @@ export default {
         taskName:'',
         selectGoods:[],
         tabIndex:'1',
-        taskTimer:null
+        taskTimer:null,
+        taskCount:0,
+        taskProgress:0
     };
   },
   props:{
@@ -107,6 +109,16 @@ export default {
   },
   created() {
     this.initBackTools();
+  },
+  watch:{
+      taskProgress(n){
+          if(n == 100){
+            setTimeout(()=>{
+                this.$emit('goFinish')   
+            },1000)
+           
+          }
+      }
   },
   methods: {
     // 初始化添加按钮
@@ -135,7 +147,8 @@ export default {
     handleDetailData(){
 		this.tabsCont = [];
         let obj = utils.deepCopy(this.detailData);
-        console.log(this.detailData)
+        console.log(this.detailData);
+        this.taskCount = Number(this.detailData.taskCount)
         this.taskName = obj.name; // 任务名称；
        
         this.selectGoods = this.getSelectGoods(obj.assignIds.split(',')); // 商品信息
@@ -261,15 +274,24 @@ export default {
             http.taskInfo({
                 data:{taskId:this.detailData.taskId}
             }).then(res=>{
-                console.log(res,'timer')
+                console.log(res,'timer');
+                let cont = null;
+                if(res.taskCount != false){
+                    cont = Number(res.taskCount);
+                    this.taskProgress = Math.floor(((this.taskCount-cont)/this.taskCount) * 100);
+                }else{
+                    cont = this.taskCount;
+                    this.taskProgress = 100;
+                    this.taskTimer && clearInterval(this.taskTimer);
+                }
             })
-        },1000)
+        },500)
         
     }      
   },
   mounted(){
       this.handleDetailData();
-    //   this.getTaskProgress();
+      this.getTaskProgress();   
   },
   beforeDestroy(){
     this.taskTimer && clearInterval(this.taskTimer);
