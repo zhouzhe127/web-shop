@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-12 10:36:15
+ * @LastEditTime: 2018-12-17 15:52:30
  * @LastEditors: Please set LastEditors
  -->
 
@@ -328,7 +328,6 @@ export default {
 					}
 				})
 				.then(res => {
-					console.log(res,'909909909999')
 					this.getPricetemplateData(this.goodIds);
 				});
 		},
@@ -527,7 +526,7 @@ export default {
 			if(type == 'vip' && Number(this.tempEditVipPrice) > Number(price.itemPrice)){
 				this.$store.commit('setWin', {
 					title: '温馨提示',
-					content: '会员价不得高于原始价',
+					content: '会员价不能高于基础价',
 					winType: 'alert'
 				});
 				return;
@@ -535,12 +534,11 @@ export default {
 			if(type == 'special' && Number(this.tempEditSpecialPrice) > Number(price.itemPrice)){
 				this.$store.commit('setWin', {
 					title: '温馨提示',
-					content: '会员价不得高于特价',
+					content: '特价不能高于基础价',
 					winType: 'alert'
 				});
 				return;
 			}
-
 
 			if (type == 'vip') {
 				data = await http.editPricetemplate({
