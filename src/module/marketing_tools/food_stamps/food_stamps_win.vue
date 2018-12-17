@@ -35,12 +35,18 @@
 					<div class="fl uploadImgs clearfix">
 						<el-button type="primary" icon="el-icon-plus" style="width:179px;">上传图片
 						</el-button>
-						<form enctype="multipart/form-data" id="comForm">
+						<form enctype="multipart/form-data" id="comForms">
 							<input @change="fileNameChange" type="file" id="file_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" />
 						</form>
 					</div>
-					<div class="fl handle-tips">
+					<div class="fl handle-tips" v-if="fileName == '' && !isUpload">
 						<i></i> 推荐尺寸:大小1M
+					</div>
+					<div class="fl sucesess-tips" v-if="fileName != ''">
+						<i></i> {{uploadTip}}
+					</div>
+					<div class="fl warning-tips" v-if="isUpload">
+						<i></i> 未上传图片
 					</div>
 				</div>
 			</div>
@@ -49,6 +55,7 @@
 </template>
 <script type="text/javascript">
 import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
 
 export default {
 	data() {
@@ -66,23 +73,39 @@ export default {
 			imageName: '', //图片名称
 			typeList: [{
 				name: '环境',
-				id: 0
+				id: 0,
+				key: 'H'
 			}, {
 				name: '商品',
-				id: 1
+				id: 1,
+				key: 'G'
 			}],
 			typeId: 0,
+			keyName: 'H',
 			typeName: '环境',
-			fileName: '' //上传的图片的名称
+			fileName: '', //上传的图片的名称
+			isUpload: false,
+			Hnum: '', //环境图片的数量
+			Gnum: '', //商品图片的数量
+			uploadTip: '已上传'
 		};
 	},
 	props: {
 		type: String, //状态
+		detail: Object,
+		allProList: Array
 	},
 	methods: {
-		getAppliedWin(res) {
+		valiData: function(content, title, winType) { //弹窗提示格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		async getAppliedWin(res) {
 			if (res == 'ok') {
-
+				await this.foodUpdate();
 			}
 			this.$emit('getAppliedWin', res);
 		},
@@ -90,21 +113,80 @@ export default {
 		chooseReduction: function(item) {
 			let id = item.id;
 			this.typeId = id;
+			this.keyName = item.key;
 		},
 		jtrim: function(s) {
 			return s.replace(/(^\s*)|(\s*$)/g, ''); //            /(^\s*)|(\s*$)/g    ，其中开头为任意多个空，或者最后为多个空
 		},
+		checkForm: function() {
+			if (this.imageName == '') {
+				this.valiData('请填写图片名称');
+				return false;
+			}
+			if (this.fileName == '') {
+				this.isUpload = true;
+				return false;
+			}
+			return true;
+		},
 		async fileNameChange() {
 			//  上传图片
+			this.uploadTip = '正在上传...';
 			let res = await http.fileUpload({
 				data: {
 					type: 8,
 					shopId: storage.session('shopId')
 				},
-				formId: 'comForm'
+				formId: 'comForms'
 			});
+			this.uploadTip = '上传成功';
 			this.fileName = res;
+			this.isUpload = false;
 		},
+		async foodUpdate() { //更新配置 上传菜品图
+			if (!this.checkForm()) return;
+			let key = '';
+			if (this.type == 'add') {
+				if (this.typeId == 0) {
+					key = this.keyName + (this.Hnum + 1);
+				} else {
+					key = this.keyName + (this.Gnum + 1);
+				}
+			} else {
+				key = this.detail.id;
+			}
+			let obj = {
+				[key]: {
+					url: this.fileName,
+					type: this.typeId,
+					name: this.imageName
+				}
+			};
+			let date = await http.foodUpdate({
+				data: {
+					name: '', //品牌名称
+					topImg: '',
+					img: obj
+				}
+			});
+			if (date) {
+				this.valiData('上传成功!');
+			}
+		},
+		getNum: function() {
+			let Hnum = 0;
+			let Gnum = 0;
+			for (let item of this.allProList) {
+				if (item.id.indexOf('H') != -1) {
+					Hnum++;
+				}
+				if (item.id.indexOf('G') != -1) {
+					Gnum++;
+				}
+			}
+			this.Hnum = Hnum;
+			this.Gnum = Gnum;
+		}
 	},
 	components: {
 		Win: () =>
@@ -112,9 +194,10 @@ export default {
 	},
 	mounted() {
 		if (this.type == 'edi') {
-			// this.name = this.labeldetail.name;
-			// this.payType = Number(this.labeldetail.type);
-			// this.validName = this.payWays[this.labeldetail.type].name;
+			this.imageName = this.detail.name; //图片名称
+			this.typeId = this.detail.type;
+			this.typeName = this.typeList[this.typeId].name;
+			this.fileName = this.detail.url;
 			this.title = '编辑图片';
 			this.okStyle = {
 				content: '保存',
@@ -147,6 +230,7 @@ export default {
 				}
 			};
 		}
+		this.getNum();
 	}
 };
 </script>

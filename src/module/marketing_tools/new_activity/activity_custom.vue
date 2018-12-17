@@ -170,13 +170,13 @@ export default {
 			editId: '', //编辑id
 			//发放数量
 			total: [{
-					text: '不设限制',
-					value: '0'
-				},
-				{
-					text: '设定总数',
-					value: '1'
-				}
+				text: '不设限制',
+				value: '0'
+			},
+			{
+				text: '设定总数',
+				value: '1'
+			}
 			],
 			num: true, //店内活动 数量限制显示
 			customName: '', //自定义活动名称
@@ -187,21 +187,17 @@ export default {
 			fans: 0, //粉丝关联的人数
 			memfilter: '',
 			customList: [{
-					name: '店内'
-				},
-				{
-					name: '会员'
-				}
+				name: '店内'
+			},
+			{
+				name: '会员'
+			}
 			],
 			indexCustom: '1', //活动对象选中的
 			goodsType: [{
-					'name': '微信',
-					'id': '1'
-				},
-				// {
-				// 	'name': '短信',
-				// 	'id': '2'
-				// }
+				'name': '微信',
+				'id': '1'
+			}
 			], //消息推送渠道
 			customSelect: [], //自定义活动选择的
 			msmStatus: false, //短信开关状态
@@ -213,21 +209,21 @@ export default {
 			brandId: null, //3为品牌 0为单店
 			customActivity: '', //自定义活动
 			customParameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				},
-				{
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				},
-				{
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				},
-				{
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				}
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			},
+			{
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			},
+			{
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			},
+			{
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			}
 			],
 			showCoupon: false,
 			couponList: [], //优惠券列表
@@ -275,7 +271,7 @@ export default {
 		},
 		'selectCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.selectCoupon);
 			}
 		}
@@ -418,17 +414,17 @@ export default {
 		//自定义活动保存
 		checkForm: function() {
 			if (!global.checkData({
-					isclick: {
-						cond: '$$!==true',
-						pro: '请勿重复保存'
-					},
-					customName: '活动名称未设置',
-					selectCoupon: {
-						cond: '$$.length!=0',
-						pro: '请关联优惠券'
-					},
+				isclick: {
+					cond: '$$!==true',
+					pro: '请勿重复保存'
+				},
+				customName: '活动名称未设置',
+				selectCoupon: {
+					cond: '$$.length!=0',
+					pro: '请关联优惠券'
+				},
 
-				}, this)) return false;
+			}, this)) return false;
 			if (this.indexCustom == 2 && !this.checkedMember && !this.checkedFans) {
 				this.valiData('请关联活动对象!');
 				return false;

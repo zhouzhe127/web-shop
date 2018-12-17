@@ -209,8 +209,8 @@
 		<rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
 	</div>
 </template>
-<script>
-	import http from 'src/manager/http';
+<script type="text/javascript">
+import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
 import storage from 'src/verdor/storage';
 
@@ -234,7 +234,7 @@ export default {
 				name: '是',
 				id: 1
 			}],
-			compulsoryName:'否',//是否与会员折扣同享
+			compulsoryName: '否', //是否与会员折扣同享
 			isMemberShare: 0, //会员折扣共享
 			isItemShare: 0, //单品优惠券共享
 			isWholeShare: 0, //整单优惠券共享
@@ -271,17 +271,17 @@ export default {
 				'3': false
 			},
 			activityDetail: true, //是否查看详情
-			activityScene:[{
+			activityScene: [{
 				name: '微店',
 				id: 1
 			}, {
 				name: '快捷支付',
 				id: 2
 			}],
-			activitySceneName:'微店',
+			activitySceneName: '微店',
 			activitySceneId: 1,
-			compulsoryCreditsName:'否',//强制减免
-			compulsoryCreditsId: 0//强制减免id
+			compulsoryCreditsName: '否', //强制减免
+			compulsoryCreditsId: 0 //强制减免id
 		};
 	},
 	methods: {
@@ -445,7 +445,7 @@ export default {
 			let arr = [];
 			let obj = {
 				couponIds: {
-					isCompel: this.compulsoryCreditsId,//强制减免
+					isCompel: this.compulsoryCreditsId, //强制减免
 					isMemberShare: this.isMemberShare, //会员折扣共享
 					isItemShare: this.isItemShare, //单品优惠券共享
 					isWholeShare: this.isWholeShare, //整单优惠券共享
@@ -473,7 +473,7 @@ export default {
 					type: 6, //活动类别
 					shopIds: this.ischain == '3' ? this.selectsList.join(',') : this.shopId,
 					mouldType: 0, //长期活动模板
-					scene:this.activitySceneId,//活动场景
+					scene: this.activitySceneId, //活动场景
 					name: this.activityName, //活动名
 					objectType: 2, //活动对象
 					startTime: parseInt(this.startTime / 1000), //开始时间
@@ -496,13 +496,13 @@ export default {
 			activityDetail.startTime = parseInt(this.startTime / 1000);
 			activityDetail.endTime = parseInt(this.endTime / 1000);
 			activityDetail.isAuto = type;
-			activityDetail.scene = this.activitySceneId;//活动场景
+			activityDetail.scene = this.activitySceneId; //活动场景
 			activityDetail.rule = [];
 			let arr = [];
 			let obj = {
 				id: this.ruleId,
 				couponIds: {
-					isCompel: this.compulsoryCreditsId,//强制减免
+					isCompel: this.compulsoryCreditsId, //强制减免
 					isMemberShare: this.isMemberShare, //会员折扣共享
 					isItemShare: this.isItemShare, //单品优惠券共享
 					isWholeShare: this.isWholeShare, //整单优惠券共享
@@ -556,7 +556,7 @@ export default {
 				this.isMemberShare = data.rule[0].couponIds.isMemberShare;
 				this.compulsoryName = this.list[this.isMemberShare].name;
 				this.isWholeShare = data.rule[0].couponIds.isWholeShare;
-				this.compulsoryCreditsId = data.rule[0].couponIds.isCompel;//强制减免
+				this.compulsoryCreditsId = data.rule[0].couponIds.isCompel; //强制减免
 				this.compulsoryCreditsName = this.list[this.compulsoryCreditsId].name;
 				this.payDiscount = Boolean(Number(data.rule[0].couponIds.otherRule.status));
 				this.cash = data.rule[0].couponIds.otherRule.orderPrice;
@@ -574,30 +574,30 @@ export default {
 						reduceerrorMessage: ''
 					};
 					this.formList.push(obj);
-				};
-				this.activitySceneId = data.scene;//活动场景
+				}
+				this.activitySceneId = data.scene; //活动场景
 				this.activitySceneName = this.activityScene[this.activitySceneId - 1].name;
 			}
 		},
-		selectScene:function(item){
+		selectScene: function(item) {
 			this.activitySceneId = item.id;
 			//console.log(this.activitySceneId)
 		},
-		chooseReduction:function(index){
+		chooseReduction: function(index) {
 			this.compulsoryCreditsId = index;
 		}
 	},
 	components: {
 		calendar: () =>
-			import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
+			import( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 		rang: () =>
-			import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+			import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
 		'singleSelect': () =>
-			import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+			import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 		onOff: () =>
-			import ( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
+			import( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
 		comTable: () =>
-			import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+			import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 	},
 	mounted() {
 		this.shopList = storage.session('shopList'); //获取品牌下面的店铺列表

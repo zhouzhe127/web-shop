@@ -142,13 +142,13 @@ export default {
 			}],
 			selects: [], //选中的状态
 			durationList: [{ //活动期限
-					name: '无',
-					id: 0
-				},
-				{
-					name: '电子优惠劵',
-					id: 1
-				}
+				name: '无',
+				id: 0
+			},
+			{
+				name: '电子优惠劵',
+				id: 1
+			}
 			],
 			durationId: 0,
 			durationName: '无', //状态
@@ -159,25 +159,25 @@ export default {
 			activityDetail: {},
 			memberContent: '', //内容设置
 			parameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				},
-				{
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				},
-				{
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				},
-				{
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				},
-				{
-					'name': '【注册时间】',
-					'id': '{registerTime}'
-				}
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			},
+			{
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			},
+			{
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			},
+			{
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			},
+			{
+				'name': '【注册时间】',
+				'id': '{registerTime}'
+			}
 			],
 			showRang: false,
 			showCoupon: false,
@@ -377,7 +377,7 @@ export default {
 		},
 		'selectCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.selectCoupon);
 			}
 		}

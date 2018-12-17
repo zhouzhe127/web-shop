@@ -87,7 +87,6 @@
 </template>
 <script type="text/javascript">
 import http from 'src/manager/http';
-import storage from 'src/verdor/storage';
 import { mixin } from './mixin.js';
 
 export default {

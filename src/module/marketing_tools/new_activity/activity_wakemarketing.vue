@@ -184,7 +184,7 @@ export default {
 		'endObj.time': 'timeChange',
 		'selectCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.selectCoupon);
 			}
 		}

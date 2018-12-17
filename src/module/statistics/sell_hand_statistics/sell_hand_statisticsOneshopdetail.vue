@@ -113,8 +113,6 @@
 	</div>
 </template>
 <script type="text/javascript">
-import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
 import http from 'src/manager/http';
 import { mixin } from './mixin.js';
 
@@ -174,7 +172,7 @@ export default {
 					'brokerage': this.handlers, //经手人
 					'authorize': this.approvedPerson //核准人
 				}
-			})
+			});
 			if (res) {
 				if (this.page == '1') {
 					this.count = res.count;
@@ -222,10 +220,6 @@ export default {
 		returnStore: function() {
 			this.$store.commit('setPageTools', {});
 			this.$emit('throwDetailResult', 'allDate');
-		},
-		searchDate: function() { //搜索查询数据
-			this.page = 1;
-			this.getConsumeStatistics();
 		},
 		getUserInfo: function(id, type) { //获取用户信息
 			//console.log(this.userData)

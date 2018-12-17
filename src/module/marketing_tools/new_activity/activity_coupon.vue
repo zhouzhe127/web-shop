@@ -150,43 +150,35 @@ export default {
 			},
 			ruleIndex: 0, //点中的第几个  
 			couponLists: [], //券列表
-			//integralTime: '无上限', //券总量  
-			//integralId: 0,
 			integralList: [{
-					name: '无上限',
-					id: 0
-				},
-				{
-					name: '自定义',
-					id: 1
-				}
+				name: '无上限',
+				id: 0
+			},
+			{
+				name: '自定义',
+				id: 1
+			}
 			],
-			// voucheramount: '', //券总分量填写的数量
-			// purchasevoucher: '', //购券填写的数量
-			// collection: '', //人均领取的次数
 			expirationTimeList: [{
-					//过期时间
-					name: '不参与',
-					id: 0
-				},
-				{
-					name: '参与',
-					id: 1
-				}
+				name: '不参与',
+				id: 0
+			},
+			{
+				name: '参与',
+				id: 1
+			}
 			],
 			couponState: [{
-					id: 1,
-					status: '正常',
-					option: '下架优惠券'
-				},
-				{
-					id: 0,
-					status: '已下架',
-					option: '上架优惠券'
-				}
+				id: 1,
+				status: '正常',
+				option: '下架优惠券'
+			},
+			{
+				id: 0,
+				status: '已下架',
+				option: '上架优惠券'
+			}
 			],
-			//expirationTimeId: 0,
-			//expirationTime: '不参与', //状态
 			couponList: [], //优惠券列表
 			showCoupon: false, //打开优惠券的弹窗  
 			editId: '', //活动编辑的id

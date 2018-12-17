@@ -128,48 +128,46 @@ export default {
 			page: 1, // 当前页码
 			listLen: 0, // 数据量
 			pageTotal: 0, //页码总数
-			card: [
-				//  优惠券类型
-				{
-					name: '单品减免',
-					id: 1
-				},
-				{
-					name: '整单减免',
-					id: 2
-				},
-				{
-					name: '单品折扣',
-					id: 3
-				},
-				{
-					name: '整单折扣',
-					id: 4
-				},
-				{
-					name: '赠品',
-					id: 5
-				},
-				{
-					name: '代金券',
-					id: 6
-				},
-				{
-					name: '随机减免券',
-					id: 8
-				},
-				{
-					name: '第二件商品券',
-					id: 9
-				},
-				{
-					name: '买送券',
-					id: 10
-				},
-				{
-					name: '定额券',
-					id: 11
-				}
+			card: [{
+				name: '单品减免',
+				id: 1
+			},
+			{
+				name: '整单减免',
+				id: 2
+			},
+			{
+				name: '单品折扣',
+				id: 3
+			},
+			{
+				name: '整单折扣',
+				id: 4
+			},
+			{
+				name: '赠品',
+				id: 5
+			},
+			{
+				name: '代金券',
+				id: 6
+			},
+			{
+				name: '随机减免券',
+				id: 8
+			},
+			{
+				name: '第二件商品券',
+				id: 9
+			},
+			{
+				name: '买送券',
+				id: 10
+			},
+			{
+				name: '定额券',
+				id: 11
+			}
 			],
 			selectName: {
 				'1': '单品减免',
@@ -208,17 +206,17 @@ export default {
 			showCard: [], //优惠券类型选中的id
 			selectedCoupon: '全部优惠券', //显示选中的优惠券
 			storeList: [{
-					name: '全部'
-				},
-				{
-					name: '已关联'
-				},
-				{
-					name: '未关联'
-				},
-				{
-					name: '已过期'
-				}
+				name: '全部'
+			},
+			{
+				name: '已关联'
+			},
+			{
+				name: '未关联'
+			},
+			{
+				name: '已过期'
+			}
 			],
 			indexOn: 0,
 			num: 10
@@ -319,7 +317,7 @@ export default {
 		searchInDate() {
 			this.getCouponData();
 		},
-		handleToCount(couponId, name, send) {
+		handleToCount(couponId, name) {
 			//  页面跳转
 			// if (send == 0) {
 			// 	this.$store.commit('setWin', {

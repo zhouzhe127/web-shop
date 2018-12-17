@@ -183,13 +183,13 @@ export default {
 		'endObj.time': 'timeChange',
 		'vouchersCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.vouchersCoupon);
 			}
 		},
 		'giftCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.giftCoupon);
 			}
 		}

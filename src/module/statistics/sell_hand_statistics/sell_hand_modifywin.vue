@@ -125,7 +125,7 @@ export default {
 						coins: this.cash, //修改后的金币
 						return: 0
 					}
-				},true)
+				},true);
 			} catch (e) {
 				this.httpStatus = false;
 				this.errorShow(e.error.message);

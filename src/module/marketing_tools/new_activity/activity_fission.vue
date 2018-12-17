@@ -133,13 +133,13 @@ export default {
 		'endObj.time': 'timeChange',
 		'promotersCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.promotersCoupon);
 			}
 		},
 		'followersCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.followersCoupon);
 			}
 		}

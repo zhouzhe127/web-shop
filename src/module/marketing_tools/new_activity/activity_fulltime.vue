@@ -146,25 +146,25 @@ export default {
 			shopList: [],
 			contentSetting: '', //生日活动内容设置
 			parameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				}, {
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				}, {
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				}, {
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				}, {
-					'name': '【消费次数】',
-					'id': '{consumeNum}'
-				},
-				{
-					'name': '【送券时间】',
-					'id': '{giveTime}'
-				},
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			}, {
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			}, {
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			}, {
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			}, {
+				'name': '【消费次数】',
+				'id': '{consumeNum}'
+			},
+			{
+				'name': '【送券时间】',
+				'id': '{giveTime}'
+			},
 			],
 			showBirthCoupon: false,
 			couponList: [], //优惠券列表
@@ -196,7 +196,7 @@ export default {
 		'endObj.time': 'timeChange',
 		'selectCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.selectCoupon);
 			}
 		}

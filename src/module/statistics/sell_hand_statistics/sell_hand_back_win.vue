@@ -46,7 +46,7 @@ export default {
 					id: this.sellHandId,
 					return: 1
 				}
-			})
+			});
 			if (res) {
 				this.errorShow('该消费已退回，用户积分与导购金币已同步调整,望知晓!');
 			}

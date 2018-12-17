@@ -206,24 +206,24 @@ export default {
 			selects: [],
 			msmStatus: false,
 			interestList: [{ //会员权益
-					name: '无',
-					id: 0
-				},
-				{
-					name: '电子优惠券',
-					id: 1
-				}
+				name: '无',
+				id: 0
+			},
+			{
+				name: '电子优惠券',
+				id: 1
+			}
 			],
 			interestName: '无',
 			interestId: 0,
 			durationList: [{ //活动期限
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定额度',
-					id: 1
-				}
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定额度',
+				id: 1
+			}
 			],
 			durationId: 0,
 			durationName: '不设限制', //状态
@@ -269,35 +269,35 @@ export default {
 			activityDetail: {},
 			explain: '', //内容设置
 			parameter: [{
-					name: '【会员姓名】',
-					id: '{memberName}'
-				},
-				{
-					name: '【优惠券名称】',
-					id: '{couponName}'
-				},
-				{
-					name: '【优惠券数量】',
-					id: '{couponNum}'
-				},
-				{
-					name: '【活动名称】',
-					id: '{activityName}'
-				},
-				{
-					name: '【消费日期】',
-					id: '{salesTime}'
-				}
+				name: '【会员姓名】',
+				id: '{memberName}'
+			},
+			{
+				name: '【优惠券名称】',
+				id: '{couponName}'
+			},
+			{
+				name: '【优惠券数量】',
+				id: '{couponNum}'
+			},
+			{
+				name: '【活动名称】',
+				id: '{activityName}'
+			},
+			{
+				name: '【消费日期】',
+				id: '{salesTime}'
+			}
 			],
 			showRang: false,
 			showCoupon: false,
 			selectsList: [],
 			integralList: [{
-					name: '默认全部'
-				},
-				{
-					name: '会员筛选'
-				}
+				name: '默认全部'
+			},
+			{
+				name: '会员筛选'
+			}
 			],
 			integralOn: 0, //活动对象的选择
 			indexCustom: 0, //活动对象选中的
@@ -694,7 +694,7 @@ export default {
 		},
 		'selectCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.ruleList[this.ruleIndex].couponIds);
 			}
 		}
