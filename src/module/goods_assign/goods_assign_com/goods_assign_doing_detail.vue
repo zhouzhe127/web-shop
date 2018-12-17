@@ -274,7 +274,6 @@ export default {
             http.taskInfo({
                 data:{taskId:this.detailData.taskId}
             }).then(res=>{
-                console.log(res,'timer');
                 let cont = null;
                 if(res.taskCount != false){
                     cont = Number(res.taskCount);
