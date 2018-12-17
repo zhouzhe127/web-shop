@@ -5,86 +5,94 @@
 				<div class="top">
 					<h3>会员信息</h3>
 					<img class="img" @click='modifyMember' src='../../../res/icon/iconchange.png' />
-				 </div>
-					<div class="memberMsg">
-						<ul class="message">
-							<li>
-								<span class="belongshop">姓名：{{memberInfo.name}}</span>
-							</li>
-							<li>
-								<span> 绑定手机：{{memberInfo.mobile}}</span>
-							</li>
-							<li>
-								<span>会员余额：{{memberInfo.totalAmount}}</span>
-								<a href="javascript:void(0)" class="operation fl" @click="balance('0')">余额操作</a>
-							</li>
-							<li>
-								<span>会员积分：{{memberInfo.point}}</span>
-								<a href="javascript:void(0)" class="operation fl" @click="balance('1')">积分操作</a>
-							</li>
-						</ul>
-						<ul class="message">
-							<li>
-								<span style="position: relative;">卡号：暂无
-								<detailsDes :title="'该功能暂未开放'" :height="40" :width="150"></detailsDes>
+				</div>
+				<div class="memberMsg">
+					<ul class="message">
+						<li>
+							<span class="belongshop">姓名：{{memberInfo.name}}</span>
+						</li>
+						<li>
+							<span> 绑定手机：{{memberInfo.mobile}}</span>
+						</li>
+						<li>
+							<span>会员余额：{{memberInfo.totalAmount}}</span>
+							<el-button type="primary" style="width:100px;" @click="balance('0')" v-if="brandId == '0' || brandId == '3'">余额操作</el-button>
+						</li>
+						<li>
+							<span>会员积分：{{memberInfo.point}}</span>
+							<el-button type="primary" style="width:100px;" @click="balance('1')" v-if="brandId == '0' || brandId == '3'">积分操作</el-button>
+						</li>
+					</ul>
+					<ul class="message">
+						<li>
+							<span style="position: relative;">卡号：暂无
+								<el-tooltip placement="right">
+									<div slot="content">该功能暂未开放</div>
+									<i class="el-icon-question" style="font-size:24px;"></i>
+								</el-tooltip>
 							</span>
-							</li>
-							<li>
-								<span style="position: relative;min-width: 120px;">会员渠道:暂无
-								<detailsDes :title="'该功能暂未开放'" :height="40" :width="150"></detailsDes>
+						</li>
+						<li>
+							<span style="position: relative;min-width: 120px;">会员渠道:暂无
+								<!-- <detailsDes :title="'该功能暂未开放'" :height="40" :width="150"></detailsDes> -->
+								<el-tooltip placement="right">
+									<div slot="content">该功能暂未开放</div>
+									<i class="el-icon-question" style="font-size:24px;"></i>
+								</el-tooltip>
 							</span>
-							</li>
-							<li>
-								<span v-if="memberInfo.openId != ''">微信账户: 已关联</span>
-								<span v-if="memberInfo.openId == ''">微信账户: 未关联</span>
-								<a href="javascript:void(0)" class="operation fl" @click="unbundling" v-if="memberInfo.openId != ''">解绑</a>
-							</li>
-							<li>
-								<!-- <span class="belongshop">卡属门店:{{getshopName(memberInfo.rechargeShopId)}}</span>
-							<a href="javascript:void(0)" class="operation fl" @click="openStore" v-if="brandId == '0' || brandId == '3'">修改</a> -->
-								<span>生日：{{memberInfo.birthday}}</span>
-							</li>
-						</ul>
-						<ul class="message">
-							<li>
-								<span>年龄：{{memberInfo.age}}</span>
-							</li>
-							<li>
-								<span>性别：{{genderList[memberInfo.gender]}}</span>
-							</li>
-							<li>
-								<span>会员等级：{{memberInfo.levelName}}</span>
-							</li>
-							<li>
-							</li>
-						</ul>
-						<div class="memberInfo" style="width: 1400px;padding-right: 38px;height: auto;min-height: 56px;line-height: 56px;font-size:16px;">
-							会员标签：
-							<span v-for="(item,str) in memberInfo.tagData" :key='str' class="tagItem" style="margin-bottom: 10px;display: inline-block;">{{item.name}}</span>
-						</div>
+						</li>
+						<li>
+							<span v-if="memberInfo.openId != ''">微信账户: 已关联</span>
+							<span v-if="memberInfo.openId == ''">微信账户: 未关联</span>
+							<!-- <a href="javascript:void(0)" class="operation fl" @click="unbundling" v-if="memberInfo.openId != ''">解绑</a> -->
+							<el-button type="primary" style="width:100px;" @click="unbundling" v-if="memberInfo.openId != '' && (brandId == '0' || brandId == '3')">解绑</el-button>
+						</li>
+						<li>
+							<!-- <span class="belongshop">卡属门店:{{getshopName(memberInfo.rechargeShopId)}}</span>
+									<a href="javascript:void(0)" class="operation fl" @click="openStore" v-if="brandId == '0' || brandId == '3'">修改</a> -->
+							<span>生日：{{memberInfo.birthday}}</span>
+						</li>
+					</ul>
+					<ul class="message">
+						<li>
+							<span>年龄：{{memberInfo.age}}</span>
+						</li>
+						<li>
+							<span>性别：{{genderList[memberInfo.gender]}}</span>
+						</li>
+						<li>
+							<span>会员等级：{{memberInfo.levelName}}</span>
+						</li>
+						<li>
+						</li>
+					</ul>
+					<div class="memberInfo" style="width: 1400px;padding-right: 38px;height: auto;min-height: 56px;line-height: 56px;font-size:16px;">
+						会员标签：
+						<span v-for="(item,str) in memberInfo.tagData" :key='str' class="tagItem" style="margin-bottom: 10px;display: inline-block;">{{item.name}}</span>
 					</div>
 				</div>
-				<div class="banner clearfix">
-					<el-radio-group v-model="commoditySlect">
-						<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="selType(index)"></el-radio-button>
-					</el-radio-group>
-				</div>
-				<!-- 历史记录 -->
-				<historical-record v-if="bannerIndex == 0" :mid='mid' :shopsId='shopsId' @eventrecord="getEvent"></historical-record>
-				<!-- 更改记录 -->
-				<change-record v-if="bannerIndex == 1" :mid='mid' :shopsId='shopsId'></change-record>
-				<!-- 积分变动 -->
-				<integral-change v-if="bannerIndex == 2" :mid='mid' :shopsId='shopsId'></integral-change>
-				<!-- 余额变动 -->
-				<change-balance v-if="bannerIndex == 3" :mid='mid' :shopsId='shopsId'></change-balance>
 			</div>
-			<!-- 订单详情 -->
-			<orderDetail :detail="detail" :isDelete="false" v-if="isShow == 'order'" @detailShow="getDetailShow"></orderDetail>
-			<component :is="showCon" :gid='gid' :shopId='shopId' @winEvent='winEvent' :memberInfo='memberInfo' :type='showType'></component>
-			<!-- 选择门店的弹窗 -->
-			<component v-if="showWin" :is="isPopupwindow" @getAppliedWin='getResult' :shopList='list' :memberInfo="memberInfo"></component>
-			<!-- 修改会员信息的弹窗 -->
-			<modify-member v-if='modifyStatus' @modifyBack='modifyBack' :memberInfo='memberInfo' :bussiness='bussiness'></modify-member>
+			<div class="banner clearfix">
+				<el-radio-group v-model="commoditySlect">
+					<el-radio-button v-for="(item,index) in bannerList" :key="index" :label="item.name" @change.native="selType(index)"></el-radio-button>
+				</el-radio-group>
+			</div>
+			<!-- 历史记录 -->
+			<historical-record v-if="bannerIndex == 0" :mid='mid' :shopsId='shopsId' @eventrecord="getEvent"></historical-record>
+			<!-- 更改记录 -->
+			<change-record v-if="bannerIndex == 1" :mid='mid' :shopsId='shopsId'></change-record>
+			<!-- 积分变动 -->
+			<integral-change v-if="bannerIndex == 2" :mid='mid' :shopsId='shopsId'></integral-change>
+			<!-- 余额变动 -->
+			<change-balance v-if="bannerIndex == 3" :mid='mid' :shopsId='shopsId'></change-balance>
+		</div>
+		<!-- 订单详情 -->
+		<orderDetail :detail="detail" :isDelete="false" v-if="isShow == 'order'" @detailShow="getDetailShow"></orderDetail>
+		<component :is="showCon" :gid='gid' :shopId='shopId' @winEvent='winEvent' :memberInfo='memberInfo' :type='showType'></component>
+		<!-- 选择门店的弹窗 -->
+		<component v-if="showWin" :is="isPopupwindow" @getAppliedWin='getResult' :shopList='list' :memberInfo="memberInfo"></component>
+		<!-- 修改会员信息的弹窗 -->
+		<modify-member v-if='modifyStatus' @modifyBack='modifyBack' :memberInfo='memberInfo' :bussiness='bussiness'></modify-member>
 	</section>
 </template>
 <script type="text/javascript">
@@ -97,22 +105,23 @@
 		data() {
 			return {
 				commoditySlect: '历史纪录',
-				bannerList: [{
-					name: '历史纪录',
-					type: 0
-				},
-				{
-					name: '更改记录',
-					type: 1
-				},
-				{
-					name: '积分变动',
-					type: 2
-				},
-				{
-					name: '余额变动',
-					type: 3
-				}
+				bannerList: [
+					{
+						name: '历史纪录',
+						type: 0
+					},
+					{
+						name: '更改记录',
+						type: 1
+					},
+					{
+						name: '积分变动',
+						type: 2
+					},
+					{
+						name: '余额变动',
+						type: 3
+					}
 				], //
 				index: null,
 				indexOn: 0, //判断是进行中的活动还是已结束的活动，默认进行中
@@ -168,9 +177,10 @@
 				this.shopId = this.shopsId == undefined ? storage.session('userShop').currentShop.id : this.shopsId;
 				this.showCon = 'balance';
 			},
+			//修改会员余额弹窗的回调
 			winEvent() {
 				this.showCon = '';
-				//this.getRecordList(this.bannerIndex);
+				this.bannerIndex = 0;
 			},
 			recharge(gid, shopId) {
 				this.showCon = 'recharge';
@@ -227,23 +237,6 @@
 				this.listName = this.bannerList[index].name;
 				//this.getRecordList(type);
 			},
-			// async getRecordList(type) {
-			// 	let data = await http.getRecordList({
-			// 		data: {
-			// 			page: this.page,
-			// 			mid: this.mid,
-			// 			num: this.num,
-			// 			type: type == undefined ? 0 : type
-			// 		}
-			// 	});
-			// 	this.listInfo = data;
-			// 	if (data.typeInfo) {
-			// 		this.obj = data.typeInfo;
-			// 	}
-			// 	this.count = (this.page == 1) ? data.count : this.count;
-			// 	this.total = (this.page == 1) ? data.total : this.total;
-
-			// },
 			judgeType: function(item) {
 				// 判断操作类型 是否加还是减
 				let operate;
@@ -285,7 +278,6 @@
 							});
 							this.memberInfo.openId = '';
 						}
-
 					}
 				});
 			},
@@ -371,8 +363,6 @@
 			}
 		},
 		mounted() {
-			// this.mid = storage.session('memberObj').memberId;
-			// this.shopsId = storage.session('memberObj').shopId;
 			this.setTitle();
 			this.getshopList();
 			this.getMemberDetail();
@@ -380,30 +370,28 @@
 		},
 		components: {
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 			page: () =>
-				import ( /* webpackChunkName :'page_element'*/ 'src/components/page_element'),
+				import( /* webpackChunkName :'page_element'*/ 'src/components/page_element'),
 			recharge: () =>
-				import ( /*webpackChunkName: 'recharge'*/ './member_recharge'),
+				import( /*webpackChunkName: 'recharge'*/ './member_recharge'),
 			balance: () =>
-				import ( /*webpackChunkName: 'member_detail_balance'*/ './member_detail_balance'),
+				import( /*webpackChunkName: 'member_detail_balance'*/ './member_detail_balance'),
 			getAppliedWin,
-			detailsDes: () =>
-				import ( /*webpackChunkName: 'details_des'*/ 'src/components/details_des'),
 			pageElement: () =>
-				import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
 			'modify-member': () =>
-				import ( /*webpackChunkName:'new_member_modify'*/ './new_member_modify'),
+				import( /*webpackChunkName:'new_member_modify'*/ './new_member_modify'),
 			'historical-record': () =>
-				import ( /*webpackChunkName:'historical_record'*/ './historical_record'),
+				import( /*webpackChunkName:'historical_record'*/ './historical_record'),
 			'change-record': () =>
-				import ( /*webpackChunkName:'change_the_record'*/ './change_the_record'),
+				import( /*webpackChunkName:'change_the_record'*/ './change_the_record'),
 			'integral-change': () =>
-				import ( /*webpackChunkName:'integral_change'*/ './integral_change'),
+				import( /*webpackChunkName:'integral_change'*/ './integral_change'),
 			'change-balance': () =>
-				import ( /*webpackChunkName:'change_the_balance'*/ './change_the_balance'),
+				import( /*webpackChunkName:'change_the_balance'*/ './change_the_balance'),
 			orderDetail: () =>
-				import ( /*webpackChunkName: 'delete_detail'*/ './../../statistics/delete_detail'),
+				import( /*webpackChunkName: 'delete_detail'*/ './../../statistics/delete_detail'),
 		}
 	};
 </script>

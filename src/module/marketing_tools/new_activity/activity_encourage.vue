@@ -123,8 +123,8 @@
 					<div class="online-box clearfix" v-if="item.interestId == '1'">
 						<span class="online-sub fl">关联优惠券</span>
 						<div class="rightHalf">
-							<el-button type="primary" icon="el-icon-plus" @click="addCoupon(item)" style="width:179px;">选择关联优惠券</el-button>
-							<span v-if="item.couponIds.length >= 1">(已关联{{item.couponIds.length}}张)</span>
+							<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon(item)" style="width:179px;">选择关联优惠券</el-button>
+							<span class="coupon_name" v-if="item.couponIds.length >= 1">(已关联:{{getCouponName(item.couponIds)}})</span>
 						</div>
 					</div>
 					<!-- 消息推送渠道 -->
@@ -205,25 +205,27 @@
 				}],
 				selects: [],
 				msmStatus: false,
-				interestList: [{ //会员权益
-					name: '无',
-					id: 0
-				},
-				{
-					name: '电子优惠券',
-					id: 1
-				}
+				interestList: [
+					{ //会员权益
+						name: '无',
+						id: 0
+					},
+					{
+						name: '电子优惠券',
+						id: 1
+					}
 				],
 				interestName: '无',
 				interestId: 0,
-				durationList: [{ //活动期限
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定额度',
-					id: 1
-				}
+				durationList: [
+					{ //活动期限
+						name: '不设限制',
+						id: 0
+					},
+					{
+						name: '指定额度',
+						id: 1
+					}
 				],
 				durationId: 0,
 				durationName: '不设限制', //状态
@@ -237,18 +239,20 @@
 				minConsume: -1,
 				isLoops: false,
 				Loops: '',
-				ruleList: [{
-					durationName: '不设限制', //最低消费
-					durationId: 0,
-					minConsumess: '', //最低消费的金额
-					maxConsumes: '', //最高消费的金额
-					isLoop: false, //是否循环
-					interestName: '无', //会员权益
-					interestId: 0,
-					couponIds: [], //优惠券
-					pushChannel: [], //消息推送渠道
-					msgContent: '' //内容设置
-				}],
+				ruleList: [
+					{
+						durationName: '不设限制', //最低消费
+						durationId: 0,
+						minConsumess: '', //最低消费的金额
+						maxConsumes: '', //最高消费的金额
+						isLoop: false, //是否循环
+						interestName: '无', //会员权益
+						interestId: 0,
+						couponIds: [], //优惠券
+						pushChannel: [], //消息推送渠道
+						msgContent: '' //内容设置
+					}
+				],
 				ischain: 0, //3为品牌 0为单店
 				title: '', //标题
 				maxConsume: '', //最高消费
@@ -268,36 +272,38 @@
 				edit: false,
 				activityDetail: {},
 				explain: '', //内容设置
-				parameter: [{
-					name: '【会员姓名】',
-					id: '{memberName}'
-				},
-				{
-					name: '【优惠券名称】',
-					id: '{couponName}'
-				},
-				{
-					name: '【优惠券数量】',
-					id: '{couponNum}'
-				},
-				{
-					name: '【活动名称】',
-					id: '{activityName}'
-				},
-				{
-					name: '【消费日期】',
-					id: '{salesTime}'
-				}
+				parameter: [
+					{
+						name: '【会员姓名】',
+						id: '{memberName}'
+					},
+					{
+						name: '【优惠券名称】',
+						id: '{couponName}'
+					},
+					{
+						name: '【优惠券数量】',
+						id: '{couponNum}'
+					},
+					{
+						name: '【活动名称】',
+						id: '{activityName}'
+					},
+					{
+						name: '【消费日期】',
+						id: '{salesTime}'
+					}
 				],
 				showRang: false,
 				showCoupon: false,
 				selectsList: [],
-				integralList: [{
-					name: '默认全部'
-				},
-				{
-					name: '会员筛选'
-				}
+				integralList: [
+					{
+						name: '默认全部'
+					},
+					{
+						name: '会员筛选'
+					}
 				],
 				integralOn: 0, //活动对象的选择
 				indexCustom: 0, //活动对象选中的
@@ -332,12 +338,12 @@
 				});
 			},
 			selexpirationTime: function(i) { //最低消费
-				//this.ruleList[showIndex].durationName = this.durationList[i].name; //点击对应的名字
+				//点击对应的名字
 				this.ruleList[this.ruleIndex].durationId = i; //点击对应的id
 				if (this.ruleList[this.ruleIndex].durationId == 0) {
 					this.ruleList[this.ruleIndex].isLoop = false;
 				}
-				console.log(this.ruleList[this.ruleIndex].durationId);
+				//console.log(this.ruleList[this.ruleIndex].durationId);
 			},
 			selinterest: function(i) { //会员权益
 				//this.ruleList[showIndex].interestName = this.interestList[i].name; //点击对应的名字
@@ -353,17 +359,7 @@
 					//console.log(JSON.stringify(this.selectsList))
 				}
 				this.showRang = false;
-				// if (obj.selects) {
-				// 	console.log(JSON.stringify(obj.selects))
-				// 	this.selectsList = utils.unique(obj.selects);
-				// }
 			},
-			// couponEvent(obj) {
-			// 	this.showCoupon = false;
-			// 	if (obj.data.select && obj.status == 'ok') {
-			// 		this.ruleList[this.ruleIndex].couponIds = obj.data.select;
-			// 	}
-			// },
 			winEvent(obj) { //选择优惠券弹窗回掉
 				this.showCoupon = false;
 				if (obj.status == 'ok') {
@@ -398,16 +394,6 @@
 				} else {
 					this.valiData('请选择并填写最低消费金额');
 				}
-				// if (this.minConsume == 1) {
-				// 	//            this.Loops = !this.Loops;
-				// 	//            this.isLoops = Number(this.Loops);
-				// 	this.ruleObj.isLoop = !this.ruleObj.isLoop;
-				// } else {
-				// 	this.$store.commit('setWin', {
-				// 		content: '请输入最低消费金额',
-				// 		timerPowerOff: 3000
-				// 	});
-				// }
 			},
 			formatValue: function(item, type) {
 				switch (type) {
@@ -419,23 +405,6 @@
 						break;
 				}
 			},
-			// getCouponList: function(arr1, arr2) {
-			// 	// 获取保存优惠劵数据
-			// 	let arr = [];
-			// 	for (let i = 0; i < arr1.length; i++) {
-			// 		for (let j = 0; j < arr2.length; j++) {
-			// 			if (arr1[i] == arr2[j].id) {
-			// 				arr.push({
-			// 					id: arr2[j].id,
-			// 					name: arr2[j].name,
-			// 					micNum: '',
-			// 					micLimit: ''
-			// 				});
-			// 			}
-			// 		}
-			// 	}
-			// 	return arr;
-			// },
 			addRule: function() { //新增规则
 				let obj = {
 					durationName: '不设限制', //最低消费
@@ -450,134 +419,18 @@
 					msgContent: '' //内容设置
 				};
 				this.ruleList.push(obj);
-				// if (this.minConsume == '1' && this.ruleObj.minConsume < 1) {
-				// 	this.$store.commit('setWin', {
-				// 		content: '请输入最低消费金额',
-				// 		timerPowerOff: 1000
-				// 	});
-				// 	return false;
-				// }
-				// if (
-				// 	this.memberRights == '0' &&
-				// 	utils.isEmptyObject(this.ruleObj.couponIds)
-				// ) {
-				// 	this.$store.commit('setWin', {
-				// 		content: '请选择优惠劵',
-				// 		timerPowerOff: 1000
-				// 	});
-				// 	return false;
-				// }
-
-				// if (this.ruleList.length == 5) {
-				// 	this.$store.commit('setWin', {
-				// 		content: '最多只能添加5条规则',
-				// 		timerPowerOff: 1000
-				// 	});
-				// 	return false;
-				// }
-
-				// // 监听最低消费 and 最高消费
-				// if (
-				// 	Number(this.maxConsume) >= 1 &&
-				// 	this.minConsumes > Number(this.maxConsume)
-				// ) {
-				// 	this.$store.commit('setWin', {
-				// 		content: '最低消费不能大于最高消费',
-				// 		timerPowerOff: 1000
-				// 	});
-				// 	this.minConsumes = 0;
-				// 	this.ruleObj.minConsume = this.minConsumes;
-				// 	return false;
-				// }
-				// if (
-				// 	Number(this.maxConsume) >= 1 &&
-				// 	Number(this.maxConsume) < Number(this.minConsumes)
-				// ) {
-				// 	this.$store.commit('setWin', {
-				// 		content: '最高消费不能小于最低消费',
-				// 		timerPowerOff: 1000
-				// 	});
-				// 	this.maxConsume = 0;
-				// 	this.ruleObj.maxConsume = this.maxConsume;
-				// 	return false;
-				// }
-
-				// this.ruleObj.memberRights = Number(!(this.memberRights));
-				// if (this.ruleIndex == 0 && this.ruleLists.length == 0) {
-				// 	this.ruleLists.push(this.ruleObj);
-				// }
-
-				// this.ruleList.push({
-				// 	name: '规则' + (this.ruleList.length + 1)
-				// });
-
-				// //          // 重置
-				// this.minConsume = 0;
-				// this.memberRights = 0;
-				// this.minConsumes = '';
-				// this.maxConsume = '';
-				// this.onListName = '电子优惠券';
-				// //this.explain = ''; //活动说明
-
-				// this.ruleObj = {
-				// 	minConsume: '',
-				// 	maxConsume: '',
-				// 	isLoop: false,
-				// 	memberRights: 1,
-				// 	couponIds: [],
-				// 	pushChannel: [],
-				// 	msgContent: ''
-				// };
-				// this.ruleLists.push(this.ruleObj);
-				// this.ruleIndex = this.ruleLists.length - 1;
 			},
 			deleteRule: function(index) {
 				// 删除规则
-				// if (this.edit) {
-				// 	if (this.ruleLists[index].id) {
-				// 		this.activityDetail.deleteRule.push(this.ruleLists[index].id);
-				// 	}
-				// }
-				//console.log(this.ruleIndex)
 				if (this.ruleIndex >= index) {
 					this.ruleIndex = 0;
 				}
-				// if(this.ruleList.length <= 1){
-				// 	this.valiData('请至少保留一条规则!');
-				// 	return false;
-				// }
-				//console.log(index);
 				this.ruleList.splice(index, 1);
-				// for (let i = 0; i < this.ruleList.length; i++) {
-				// 	this.ruleList[i].name = '规则' + (i + 1);
-				// }
-				// this.ruleLists.splice(index, 1);
-				// this.ruleIndex = this.ruleLists.length - 1;
-				// this.ruleObj = this.ruleLists[this.ruleIndex];
 			},
 			getDetails: function(index) {
 				// 获取规则详情
 				this.ruleIndex = index;
-				// this.ruleObj = this.ruleLists[index];
-				// this.ruleIndex = index;
-				// this.maxConsume = this.ruleObj.maxConsume;
-				// this.minConsume =
-				// 	this.ruleObj.minConsume != '' && this.ruleObj.minConsume >= 1 ? 1 : 0;
-				// this.memberRights = Number(!(Number(this.ruleObj.memberRights)));
-				// this.onListName = this.memberRights == 0 ? '电子优惠券' : '无';
-				// if (Number(this.maxConsume) > 0 && Number(this.minConsume) > 0) {
-				// 	//this.consumeName = '指定额度';
-				// }
 			},
-			// getCouponId: function(arr, type) {
-			// 	let i;
-			// 	let arr1 = [];
-			// 	arr = type != 1 && !utils.isEmptyObject(arr) ? JSON.parse(arr) : arr;
-			// 	for (i = 0; i < arr.length; i++) {
-			// 		arr1.push(arr[i].id);
-			// 	}
-			// 	return arr1;
-			// },
 			checkForm: function() { //验证表单
 				if (this.title == '') {
 					this.valiData('请填写活动标题');
@@ -642,8 +495,6 @@
 					this.activityDetail.isAuto = type;
 					this.activityDetail.rule = rule;
 					this.activityDetail.selectFans = Number(this.checkedFans); //选择粉丝
-					// console.log(JSON.stringify(this.activityDetail))
-					// return false;
 					this.activityDetail.memberIds = this.memfilter;
 					await http.fissionActivity({
 						data: {
@@ -694,8 +545,6 @@
 				});
 				let activityDetail = data;
 				this.activityDetail = utils.deepCopy(activityDetail);
-				//this.activityDetail.deleteRule = [];
-
 				this.title = activityDetail.name; //标题名称
 				this.explain = activityDetail.explain; //活动说明
 				this.selectsList = activityDetail.shopIds.split(','); //活动范围
@@ -705,7 +554,6 @@
 				this.endObj.time = Number(Math.round(activityDetail.endTime * 1000)); //结束时间
 				this.ruleList = [];
 				let rule = activityDetail.rule; //规则设置
-				//this.ruleObj = utils.deepCopy(activityDetail.rule[0]);
 				for (let item of rule) {
 					let durationName = '';
 					let interestName = '';
@@ -741,19 +589,6 @@
 					};
 					this.ruleList.push(obj);
 				}
-				// this.ruleObj.pushChannel = String(this.ruleObj.pushChannel).split('');
-				// this.ruleObj.isLoop = (Number(this.ruleObj.isLoop));
-				// this.minthiss = this.ruleObj.minthis;
-				// this.minthis = Number((Number(this.minthiss)));
-				// this.maxthis = this.ruleObj.maxthis;
-				// this.memberRights = Number(!(Number(this.ruleObj.memberRights)));
-				// this.onListName = this.memberRights == 0 ? '电子优惠劵' : '无';
-				// if (activityDetail.objectType == '1') {
-				// 	this.checkedMember = true;
-				// 	this.memberStatus = false;
-				// } else {
-				// 	this.integralOn = activityDetail.objectType == '2' ? 0 : activityDetail.objectType; //活动群体
-				// }
 				this.memfilter = activityDetail.memberIds; //筛选条件
 				this.member = activityDetail.sendProgress.split(',')[0]; //会员人数
 				if (this.member && Number(this.member) > 0) {
@@ -764,32 +599,6 @@
 					this.checkedFans = true;
 				}
 				this.edit = true;
-				// this.ruleList = [];
-				// for (let i = 0; i < activityDetail.rule.length; i++) {
-				// 	this.ruleLists.push({
-				// 		id: activityDetail.rule[i].id,
-				// 		isLoop: Number(activityDetail.rule[i].isLoop),
-				// 		maxthis: activityDetail.rule[i].maxthis,
-				// 		memberRights: activityDetail.rule[i].memberRights,
-				// 		minthis: activityDetail.rule[i].minthis,
-				// 		msgContent: activityDetail.rule[i].msgContent,
-				// 		pushChannel: String(activityDetail.rule[i].pushChannel).split(''),
-				// 		couponIds: JSON.parse(activityDetail.rule[i].couponIds),
-				// 		maxConsume: activityDetail.rule[i].maxConsume,
-				// 		mixConsume: activityDetail.rule[i].mixConsume
-				// 	});
-
-				// 	this.ruleList.push({
-				// 		name: '规则' + (i + 1)
-				// 	});
-				// }
-				//this.getNoLimitCoupon();
-
-				// setTimeout(() => {
-				// 	this.$refs.startCal.initData();
-				// 	this.$refs.endCal.initData();
-				// }, 200);
-				//this.getDetails(0);
 			},
 			async getShopList() {
 				let data = await http.couGetShopList({
@@ -848,6 +657,16 @@
 				} else {
 					this.fans = 0;
 				}
+			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
 			}
 		},
 		computed: {
@@ -858,36 +677,11 @@
 				set: function(newValue) {
 					this.title = newValue;
 				}
-			},
-			// maxConsumes: {
-			// 	get: function() {
-			// 		return this.maxConsume;
-			// 	},
-			// 	set: function(newValue) {
-			// 		this.maxConsume = newValue.replace(intReg, '');
-			// 		this.ruleObj.maxConsume = this.maxConsume;
-			// 	}
-			// },
-			// minConsumess: {
-			// 	get: function() {
-			// 		return this.minConsumes;
-			// 	},
-			// 	set: function(newValue) {
-			// 		this.minConsumes = newValue.replace(intReg, '');
-			// 		this.ruleObj.minConsume = this.minConsumes;
-			// 	}
-			// }
+			}
 		},
 		watch: {
 			'startObj.time': 'timeChange',
 			'endObj.time': 'timeChange',
-			// 'ruleObj.pushChannel': function() {
-			// 	if (this.ruleObj.pushChannel.indexOf('2') != -1) {
-			// 		this.msmStatus = true;
-			// 	} else {
-			// 		this.msmStatus = false;
-			// 	}
-			// },
 			'ruleObj.msgContent': function() {
 				if (this.ruleObj.msgContent.length >= 150) {
 					this.$store.commit('setWin', {
@@ -904,34 +698,28 @@
 					this.explain = this.explain.substr(0, 150);
 				}
 			},
-			// checkedMember: function(Value, oldValue, ) {
-			// 	if (this.checkedMember && this.memberStatus) {
-			// 		this.addVip();
-			// 	}
-			// },
-			// checkedFans:function(){
-			// 	if(this.checkedFans){
-			// 		this.getSubscribeFansCount();
-			// 	}else{
-			// 		this.fans = 0;
-			// 	}
-			// }
+			'selectCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.ruleList[this.ruleIndex].couponIds);
+				}
+			}
 		},
 		components: {
 			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 			mulSelect: () =>
-				import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+				import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 			rang: () =>
-				import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+				import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			'memberScreening': () =>
-				import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
+				import( /* webpackChunkName:'activity_screening' */ './activity_screening'),
 			'singleSelect': () =>
-				import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+				import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+				import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -1032,6 +820,16 @@
 
 
 	/*活动名称的输入框*/
+	.member-agift .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 250px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 
 	.member-agift .online-box .rightHalf .name {
 		width: 280px;

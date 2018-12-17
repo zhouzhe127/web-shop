@@ -49,7 +49,7 @@
 				</div>
 			</div>
 			<div class="online-box clearfix">
-				<span class="online-sub fl required">支付金额</span>
+				<span class="online-sub fl required">赠送金额</span>
 				<div class="rightHalf">
 					<el-input placeholder="请输入金额" v-model="payment" maxlength="6" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width:179px;" @blur="formatValue('payment')">
 						<template slot="suffix">元</template>
@@ -126,8 +126,8 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">赠送优惠券</span>
 				<div class="rightHalf">
-					<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">添加关联优惠券</el-button>
-					<span style="color: #A5A5A5;" v-if="couponIds.length >= 1">已关联{{couponIds.length}}张优惠券</span>
+					<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">添加关联优惠券</el-button>
+					<span class="coupon_name" style="color: #A5A5A5;" v-if="couponIds.length >= 1">(已关联:{{getCouponName(couponIds)}})</span>
 				</div>
 			</div>
 			<div class="online-box clearfix">
@@ -151,8 +151,7 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">赠送金额</span>
 				<div class="rightHalf">
-					<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in presentList" v-bind:class="{'presentActive':presentOn == index }"
-						    @click="choosePresent(index)">{{item.name}}</span>
+					<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in presentList" v-bind:class="{'presentActive':presentOn == index }" @click="choosePresent(index)">{{item.name}}</span>
 				</div>
 			</div>
 			<div class="online-box clearfix" v-if="presentOn == 0">
@@ -177,8 +176,7 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">赠送积分</span>
 				<div class="rightHalf">
-					<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in integralList" v-bind:class="{'presentActive':integralOn == index }"
-						    @click="chooseIntegral(index)">{{item.name}}</span>
+					<span class="freeFix" style="margin-right: 14px;" :key='index' v-for="(item,index) in integralList" v-bind:class="{'presentActive':integralOn == index }" @click="chooseIntegral(index)">{{item.name}}</span>
 				</div>
 			</div>
 			<div class="online-box clearfix" v-if="integralOn == 0">
@@ -207,9 +205,8 @@
 				<el-button type="primary" style="width: 200px;" @click="creatStore">保存</el-button>
 			</div>
 		</div>
-		<!-- <coupon @compareArr='ca' v-if='show' @couponChange='couponChange' @winEvent='winEvent' :couponIds='couponIds'></coupon> -->
 		<!-- 关联优惠券的弹窗 -->
-		<addCoupon v-if='showCoupon' :selectCoupon='couponIds' @winEvent='winEvent'></addCoupon>		
+		<addCoupon v-if='showCoupon' :selectCoupon='couponIds' @winEvent='winEvent'></addCoupon>
 		<!-- 选择工作门店 -->
 		<select-work-shop-win :slectsShopIds="slectsShopIds" :isEdit="isEdit" @closeWin="closeShopWin" v-if="isShowShopWin"></select-work-shop-win>
 	</div>
@@ -224,69 +221,75 @@
 		data() {
 			return {
 				ischain: '',
-				bannerList: [{
-					name: '固定方案'
-				},
-				{
-					name: '自定义方案'
-				}
+				bannerList: [
+					{
+						name: '固定方案'
+					},
+					{
+						name: '自定义方案'
+					}
 				], //固定还是自定义方案，数组
 				//          bannerOn: '',//判断是固定方案还是自定义方案，默认固定
 				indexOn: 0, //默认固定
 				isFlag: true, //编辑方案是固定和自定义是否可以切换
 				num: 1, //排序输入框默认值
 				defNum: 1, //自定义排序输入框默认值
-				presentList: [{
-					name: '赠送固定储值金额'
-				},
-				{
-					name: '按比例赠送储值金额'
-				}
+				presentList: [
+					{
+						name: '赠送固定储值金额'
+					},
+					{
+						name: '按比例赠送储值金额'
+					}
 				],
 				presentOn: '-1',
-				integralList: [{
-					name: '赠送固定积分'
-				},
-				{
-					name: '按比例赠送积分'
-				}
+				integralList: [
+					{
+						name: '赠送固定积分'
+					},
+					{
+						name: '按比例赠送积分'
+					}
 				],
 				integralOn: '-1',
-				conditionList: [{
-					name: '满足储值区间可赠送',
-					id: 0
-				},
-				{
-					name: '满足储值条件可赠送',
-					id: 1
-				}
+				conditionList: [
+					{
+						name: '满足储值区间可赠送',
+						id: 0
+					},
+					{
+						name: '满足储值条件可赠送',
+						id: 1
+					}
 				],
 				conditionOn: 0,
 				typeName: '满足储值区间可赠送',
 				willShow: false, //活动类型框是否显示
-				ditchList: [{
-					id: 1,
-					name: '微信'
-				},
-				{
-					id: 2,
-					name: 'POS收银'
-				}
+				ditchList: [
+					{
+						id: 1,
+						name: '微信'
+					},
+					{
+						id: 2,
+						name: 'POS收银'
+					}
 				],
 				ditchOn: '-1',
 				selects: [],
-				rangeList: [{
-					name: '等于',
-					id: '1'
-				},
-				{
-					name: '大于等于',
-					id: '3'
-				},
-				{
-					name: '小于等于',
-					id: '4'
-				}
+				rangeList: [
+					{
+						name: '等于',
+						id: '1'
+					},
+					{
+						name: '大于等于',
+						id: '3'
+					},
+					{
+						name: '小于等于',
+						id: '4'
+					}
 				],
 				rangeShow: false,
 				rangeName: '等于',
@@ -330,17 +333,23 @@
 						break;
 					}
 				}
+			},
+			'couponIds': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.couponIds);
+				}
 			}
 		},
 		components: {
 			subadd: () =>
-				import ( /* webpackChunkName:'subadd' */ 'src/components/subadd'),
+				import( /* webpackChunkName:'subadd' */ 'src/components/subadd'),
 			mulSelect: () =>
-				import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+				import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			'select-work-shop-win': () =>
-				import ( /* webpackChunkName: 'select_work_shop_win' */ './../../seller_assistant/staff/select_work_shop_win'),
+				import( /* webpackChunkName: 'select_work_shop_win' */ './../../seller_assistant/staff/select_work_shop_win'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -349,7 +358,7 @@
 					this.backList();
 				},
 				className: 'el-btn-blue'
-			}]);			
+			}]);
 			this.ischain = storage.session('userShop').currentShop.ischain;
 			this.editdetail = storage.session('editdetail');
 			if (this.editdetail) {
@@ -394,9 +403,6 @@
 			changeDef(num) {
 				this.defNum = num;
 			},
-			// change(num) {
-			// 	this.num = num;
-			// },
 			//选择固定或者自定义方案
 			chooseBanner: function(index) {
 				this.indexOn = index;
@@ -480,19 +486,20 @@
 					this.giftPointRule = '';
 					this.depositRule = '';
 					this.slectsShopIds = this.flag ? this.fixedslectsShopIds : []; //固定方案的id
-					if (!global.checkData({
-						name: '请填写方案名',
-						channel: '请选择显示渠道',
-						deposit: {
-							cond: `$$!=''&&!isNaN($$)`,
-							pro: '请正确填写储值金额'
-						},
-						payment: {
-							cond: `$$!=''&&!isNaN($$)`,
-							pro: '请正确填写支付金额'
-						},
+					if (!global.checkData(
+						{
+							name: '请填写方案名',
+							channel: '请选择显示渠道',
+							deposit: {
+								cond: `$$!=''&&!isNaN($$)`,
+								pro: '请正确填写储值金额'
+							},
+							payment: {
+								cond: `$$!=''&&!isNaN($$)`,
+								pro: '请正确填写支付金额'
+							},
 
-					}, this)) return false;
+						}, this)) return false;
 				}
 				//判断必填项是否填写完整
 				if (this.type == 2) {
@@ -521,16 +528,17 @@
 					}
 					if (this.conditionOn == 0) {
 						this.depositRule = 2;
-						if (!global.checkData({
-							defDeposit: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写自定义赠送条件起始金额'
-							},
-							defPayment: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写自定义赠送条件结束金额'
-							},
-						}, this)) return false;
+						if (!global.checkData(
+							{
+								defDeposit: {
+									cond: `$$!=''&&!isNaN($$)`,
+									pro: '请正确填写自定义赠送条件起始金额'
+								},
+								defPayment: {
+									cond: `$$!=''&&!isNaN($$)`,
+									pro: '请正确填写自定义赠送条件结束金额'
+								},
+							}, this)) return false;
 						//判断储值金额区间
 						if (this.depositRule == 2) {
 							if ((Number(this.defDeposit) - Number(this.defPayment)) > 0) {
@@ -542,12 +550,13 @@
 						}
 					}
 					if (this.conditionOn == 1) {
-						if (!global.checkData({
-							defDeposit: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写自定义赠送条件起始金额'
-							},
-						}, this)) return false;
+						if (!global.checkData(
+							{
+								defDeposit: {
+									cond: `$$!=''&&!isNaN($$)`,
+									pro: '请正确填写自定义赠送条件起始金额'
+								},
+							}, this)) return false;
 					}
 				}
 				//判断赠送金额条件
@@ -711,10 +720,18 @@
 				this.num = value;
 			},
 			selexpirationTime: function(val) { //活动期限
-				//this.durationName = this.durationList[i].name; //点击对应的名字
 				this.conditionOn = val; //点击对应的id
-				//console.log(this.durationId)
 			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
+			}
 		}
 	};
 </script>
@@ -771,6 +788,17 @@
 		height: auto;
 		float: left;
 		line-height: 40px;
+	}
+
+	#solutionStore .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 600px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	#solutionStore .solution {

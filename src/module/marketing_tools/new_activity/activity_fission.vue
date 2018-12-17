@@ -10,7 +10,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='activityName' /> -->
 				<el-input v-model="activityName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
@@ -44,8 +43,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">推广者获礼</span>
 			<div class="rightHalf">
-				<el-button type="primary" icon="el-icon-plus" @click="addCoupon('1')" style="width:179px;">选择关联优惠券</el-button>
-				<span v-if="promotersCoupon.length > 0">(已关联{{promotersCoupon.length}}张)</span>
+				<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon('1')" style="width:179px;">选择关联优惠券</el-button>
+				<span class="coupon_name" v-if="promotersCoupon.length > 0">(已关联{{getCouponName(promotersCoupon)}})</span>
 			</div>
 		</div>
 		<!-- 推广者获的积分 -->
@@ -62,10 +61,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">获券上限</span>
 			<div class="rightHalf">
-				<!-- <section>
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="promotersNum" onkeyup="value=value.replace(/[^\d]/g,'')" />
-					<span>次</span>
-				</section> -->
 				<el-input placeholder="请输入正整数" v-model="promotersNum" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
 					<template slot="suffix">次</template>
 				</el-input>
@@ -75,19 +70,14 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">关注者获礼</span>
 			<div class="rightHalf">
-				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCount('2')">选择关联优惠券</a> -->
-				<el-button type="primary" icon="el-icon-plus" @click="addCoupon('2')" style="width:179px;">选择关联优惠券</el-button>
-				<span v-if="followersCoupon.length > 0">(已关联{{followersCoupon.length}}张)</span>
+				<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon('2')" style="width:179px;">选择关联优惠券</el-button>
+				<span class="coupon_name" v-if="followersCoupon.length > 0">(已关联{{getCouponName(followersCoupon)}})</span>
 			</div>
 		</div>
 		<!-- 关注者获的积分 -->
 		<div class="online-box clearfix">
 			<span class="online-sub fl">关注者获得积分</span>
 			<div class="rightHalf">
-				<!-- <section>
-					<input type="text" class="cumulative" placeholder="请输入正整数" maxlength="6" v-model="promotersPoint" onkeyup="value=value.replace(/[^\d]/g,'')" />
-					<span>分</span>
-				</section> -->
 				<el-input placeholder="请输入正整数" v-model="promotersPoint" maxlength="6" onkeyup="value=value.replace(/[^\d]/g,'')" style="width:179px;">
 					<template slot="suffix">分</template>
 				</el-input>
@@ -96,9 +86,6 @@
 		</div>
 		<!-- 取消保存 -->
 		<div class="online-box clearfix" style="padding-left:60px;">
-			<!-- <a href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;background-color: #a7a7a7;" @click='closePage'>取消</a> -->
-			<!--  <a v-if='isactivityDetail' href="javascript:void(0);" class="gray fl" style="width: 200px;margin-right:10px;" @click="saveConfig('0')">保存</a>
-			<a v-if="editId == ''" href="javascript:void(0);" class="yellow fl" style="width: 200px;" @click="saveConfig('1')">发布</a> -->
 			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
 			<el-button v-if='isactivityDetail' type="info" style="margin-right: 10px;width:190px;" @click="saveConfig('0')">保存</el-button>
 			<el-button v-if="editId == ''" type="primary" style="margin-right: 10px;width:190px;" @click="saveConfig('1')">发布</el-button>
@@ -107,7 +94,7 @@
 		<addCoupon v-if='showCoupon' :selectCoupon='selectCoupon' @winEvent='winEvent'></addCoupon>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 	import http from 'src/manager/http';
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
@@ -144,6 +131,18 @@
 		watch: {
 			'startObj.time': 'timeChange',
 			'endObj.time': 'timeChange',
+			'promotersCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.promotersCoupon);
+				}
+			},
+			'followersCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.followersCoupon);
+				}
+			}
 		},
 		methods: {
 			closePage: function() {
@@ -174,16 +173,6 @@
 					winType: winType
 				});
 			},
-			// winEvent(obj) {
-			// 	this.showBirthCoupon = false;
-			// 	if (obj.status == 'ok') {
-			// 		if (this.couponType == '1') {
-			// 			this.promotersCoupon = obj.data.select;
-			// 		} else if (this.couponType == '2') {
-			// 			this.followersCoupon = obj.data.select;
-			// 		}
-			// 	}
-			// },
 			winEvent(obj) { //选择优惠券弹窗回掉
 				this.showCoupon = false;
 				if (obj.status == 'ok') {
@@ -194,27 +183,6 @@
 					}
 				}
 			},
-			//关联优惠券弹窗
-			// async addCount(type) {
-			// 	let data = await http.getGetCouponCondition({});
-			// 	let coupons = [];
-			// 	for (let item of data) {
-			// 		if (item.type != 7) { //type7是积分卡券
-			// 			coupons.push(item);
-			// 		}
-			// 	}
-			// 	this.couponList = coupons;
-			// 	this.couponList.forEach(function(item) {
-			// 		item.num = 1;
-			// 	});
-			// 	this.couponType = type;
-			// 	if (this.couponType == '1') {
-			// 		this.selectCoupon = this.promotersCoupon;
-			// 	} else if (this.couponType == '2') {
-			// 		this.selectCoupon = this.followersCoupon;
-			// 	}
-			// 	this.showBirthCoupon = true;
-			// },
 			addCoupon: function(type) { //添加优惠券
 				this.showCoupon = true;
 				this.couponType = type;
@@ -282,7 +250,6 @@
 				activityDetail.endTime = parseInt(this.endObj.time / 1000);
 				activityDetail.isAuto = type;
 				activityDetail.rule = [];
-				//let arr = [];
 				let obj = {
 					id: this.ruleId,
 					couponIds: {
@@ -326,15 +293,25 @@
 					this.followersCoupon = data.rule[0].couponIds.fans; //关注者优惠券
 					this.ruleId = data.rule[0].id; //规则id
 				}
+			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
 			}
 		},
 		components: {
 			'can-multi': () =>
-				import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+				import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -413,6 +390,17 @@
 		height: auto;
 		float: left;
 		line-height: 40px;
+	}
+
+	#fissoin .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 600px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	#fissoin .online-box .rightHalf .obj {

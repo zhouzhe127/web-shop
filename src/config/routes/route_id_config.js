@@ -149,7 +149,8 @@ const statistics = {
 	'0923': 'statistics/scancode_statistics',
 	'0924': 'statistics/reverse_statics',
 	'0925': 'statistics/balance_record',
-	'0926': 'statistics/custom_package_statistics'
+	'0926': 'statistics/custom_package_statistics',
+	'0927': 'statistics/sell_hand_statistics'
 };
 const cashier = {
 	"101": "cashier/cashier_config",

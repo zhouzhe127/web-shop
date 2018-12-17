@@ -3,24 +3,11 @@
 		<header class="user_group_header">
 			<div class="select_keywords">
 				<i>关键字</i>
-				<!-- <input v-model="keyWords" type="text" placeholder="请输入分组名称"> -->
 				<el-input style="width:179px;margin-right: 10px;" v-model="keyWords" maxlength="10" placeholder="请输入分组名称"></el-input>
 				<el-button type="primary" style="margin-right: 10px;width:100px;" @click="selectGroup">筛选</el-button>
 				<el-button type="info" style="margin-right: 10px;width:100px;" @click="resertGroup">重置</el-button>
-				<!-- <button @click="selectGroup" class="btn blue">筛选</button>
-				<button @click="resertGroup" class="btn gray">重置</button> -->
 			</div>
 		</header>
-		<!-- <com-table class="table_width" :listHeight='80' :listName="'用户分组'" :key="index" :showTitle='1' :introData="userList" :listWidth="1437"
-		    :titleData="titleList" :allTotal="allUserList.length" :widthType='true'>
-			<div slot="con-0" slot-scope="props" class="operate_user">
-				<span @click="exportUser(scope.row.id)" class="export_user">导出用户</span>
-				<span @click="checkDetails(scope.row.id)" class="show_detail">查看详情</span>
-				<span @click="editUserInfo(scope.row,props.index)" class="edit_user">编辑</span>
-				<span @click="deleteUser(scope.row.id,props.index)" class="delete_user">删除</span>
-			</div>
-			<div slot="con-1" slot-scope="props">{{num*(page -1) + props.index + 1}}</div>
-		</com-table> -->
 		<div class="tips">
 			<div class="handle-tips">
 				<i></i> 关联职位后，当前职位工作人员会更新至当前分组，变动用户菜单。请知悉！
@@ -69,7 +56,6 @@
 		</div>
 		<!-- 翻页 -->
 		<section class="turn-page">
-			<!-- <pageElement @pageNum="pageChange" :page="Number(page)" :total="Number(pageNum)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="pageNum" :page-sizes="[10, 20, 30]"></el-pagination>
 		</section>
 		<!-- 新建和编辑 -->
@@ -79,8 +65,7 @@
 				<div class="new_user" slot="content">
 					<div class="group_name">
 						<span class="required">分组名称</span>
-						<!-- <input v-model.trim="groupName" maxlength="20" type="text" placeholder="请输入名称"> -->
-						<el-input v-model="groupName" maxlength="20" placeholder="请输入分组名称" style="width:250px;"></el-input>
+						<el-input v-model="groupName" maxlength="10" placeholder="请输入分组名称" style="width:250px;"></el-input>
 					</div>
 				</div>
 			</win>

@@ -21,8 +21,8 @@
 		<div class="online-box clearfix" v-if="durationId == 1 && indexOn == 0">
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
-				<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
-				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
+				<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
+				<span class="coupon_name" v-if="selectCoupon.length > 0">(已关联:{{getCouponName(selectCoupon)}})</span>
 			</div>
 		</div>
 		<!-- 商品名称 -->
@@ -83,7 +83,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">商品排序</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入商品排序(1-255)" v-model='sort' maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" /> -->
 				<el-input class="fl" v-model="sort" placeholder="请输入商品排序(1-255)" maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
@@ -91,7 +90,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">是否上架</span>
 			<div class="rightHalf" style="line-height: 40px;">
-				<!-- <onoff @statusChange="getOnoff" :status="status"></onoff> -->
 				<el-switch v-model="status" active-color="#E1BB4A" inactive-color="#dcdfe6">
 				</el-switch>
 			</div>
@@ -100,7 +98,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">购买次数</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" v-model='limit' onkeyup="this.value=this.value.replace(/[^\d]/g,'')" maxlength="3" placeholder="请输入购买次数" /> -->
 				<el-input class="fl" v-model="limit" placeholder="请输入购买次数" maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
@@ -108,7 +105,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">过期时间</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" v-model="expire" onkeyup="this.value=this.value.replace(/[^\d]/g,'')" maxlength="3" placeholder="请输入过期时间" /> -->
 				<el-input class="fl" v-model="expire" placeholder="请输入过期时间(天)" maxlength="3" onkeyup="this.value=this.value.replace(/[^\d]/g,'')"></el-input>
 			</div>
 		</div>
@@ -116,7 +112,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">商品描述</span>
 			<div class="rightHalf">
-				<!-- <textarea class="tarea" placeholder="请输入商品描述" v-model="description"></textarea> -->
 				<el-input type="textarea" :autosize="{ minRows: 6, maxRows: 6}" placeholder="请输入商品描述" v-model="description">
 				</el-input>
 			</div>
@@ -155,9 +150,7 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl"></span>
 			<div class="rightHalf">
-				<!-- <a href="javascript:void(0);" class="gray fl" style="margin-right: 15px;width:190px;" @click="cancelFun">取消</a> -->
 				<el-button type="info" style="margin-right: 15px;width:190px;" @click="cancelFun">取消</el-button>
-				<!-- <a href="javascript:void(0);" class="yellow fl" @click="okFun" style="width:190px;">保存</a> -->
 				<el-button type="primary" style="margin-right: 15px;width:190px;" @click="okFun">保存</el-button>
 			</div>
 		</div>
@@ -176,26 +169,28 @@
 	export default {
 		data() {
 			return {
-				bannerList: [{
-					name: '品牌商品',
-					id: 0
-				},
-				{
-					name: '门店商品',
-					id: 1
-				}
+				bannerList: [
+					{
+						name: '品牌商品',
+						id: 0
+					},
+					{
+						name: '门店商品',
+						id: 1
+					}
 				], //固定还是自定义方案，数组
 				isFlag: true,
 				indexOn: 0, //默认固定
 				commoditySlect: '品牌商品',
-				durationList: [{ //活动期限
-					name: '积分商品',
-					id: 0
-				},
-				{
-					name: '优惠券',
-					id: 1
-				}
+				durationList: [
+					{ //活动期限
+						name: '积分商品',
+						id: 0
+					},
+					{
+						name: '优惠券',
+						id: 1
+					}
 				],
 				durationId: 0,
 				durationName: '积分商品', //状态
@@ -225,6 +220,14 @@
 				showWin: false,
 			};
 		},
+		watch: {
+			'selectCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.selectCoupon);
+				}
+			}
+		},
 		mounted() {
 			let userData = storage.session('userShop');
 			this.shopId = userData.currentShop.id;
@@ -247,10 +250,6 @@
 			if (this.editInfos) {
 				this.title = '编辑积分商品';
 				this.isFlag = !this.isFlag;
-				// if (this.editInfos.coupons && this.editInfos.coupons != '') {
-				//  console.log(this.editInfos.coupons)
-				//   this.selectCoupon = JSON.parse(this.editInfos.coupons);
-				// }
 				for (let key in this.editInfos) {
 					this[key] = this.editInfos[key];
 					if (key == 'status')
@@ -306,23 +305,11 @@
 					this.errorShow('请先填写所需兑换积分！');
 					return false;
 				}
-				// if (isNaN(Number(this.price))) {
-				// 	this.errorShow('兑换积分必须为数字！');
-				// 	return false;
-				// }
-				// if (Number(this.price) < 0) {
-				// 	this.errorShow('兑换积分必须为大于等于0！');
-				// 	return false;
-				// }
 				if (this.indexOn == 0) {
 					if (this.inventory == '') {
 						this.errorShow('请先填写商品库存！');
 						return false;
 					}
-					// if (isNaN(Number(this.inventory))) {
-					// 	this.errorShow('商品库存必须为数字！');
-					// 	return false;
-					// }
 				}
 				this.mergeObject(); //合并对象
 				if (this.indexOn == 1 && Object.keys(this.shopStock).length <= 0) {
@@ -333,10 +320,6 @@
 					this.errorShow('排序不能为空！');
 					return false;
 				}
-				// if (isNaN(this.sort)) {
-				// 	this.errorShow('排序必须为数字！');
-				// 	return false;
-				// }
 				if (this.sort > 255 || this.sort <= 0) {
 					this.errorShow('排序不能小于0大于255！');
 					return false;
@@ -383,8 +366,6 @@
 				} else {
 					this.ActivityGoodsadd(data);
 				}
-				//this.$emit('winEvent', 'ok', data);
-				//console.log(data, 'data');
 			},
 			cancelFun() {
 				// this.$emit('winEvent', 'cancel');
@@ -393,9 +374,6 @@
 			closeFun() {
 				this.$emit('winEvent', 'close');
 			},
-			// getOnoff(res) {
-			// 	this.status = res;
-			// },
 			//详情图片上传
 			async fileNameChange() {
 				let res = await http.fileUpload({
@@ -514,10 +492,14 @@
 				this.showCoupon = true;
 			},
 			winEvent(obj) { //选择优惠券弹窗回掉
-				this.showCoupon = false;
 				if (obj.status == 'ok') {
+					if (obj.data.select.length > 5) {
+						this.errorShow('最多选择5种优惠券类型');
+						return false;
+					}
 					this.selectCoupon = obj.data.select;
 				}
+				this.showCoupon = false;
 			},
 			//修改商品
 			async ActivityGoodsedit(data) {
@@ -537,7 +519,6 @@
 				if (res) {
 					this.$router.push('/admin/integralMall');
 				}
-				//this.getActivityGoodsList();
 			},
 			selType(item) { //选择品牌商品或门店商品
 				this.indexOn = item.id;
@@ -545,15 +526,25 @@
 			selData: function(value) { //选择商品类型返回的
 				this.durationId = value;
 			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
+			}
 		},
 		components: {
 			getAppliedWin,
 			onoff: () =>
-				import ( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
+				import( /*webpackChunkName: 'on_off'*/ 'src/components/on_off'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+				import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 		},
 		destroyed() {
 			this.$store.commit('setPageTools', {});
@@ -588,6 +579,17 @@
 		max-width: 900px;
 		height: auto;
 		float: left;
+	}
+
+	#user .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 600px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	#user .online-box .rightHalf .name {

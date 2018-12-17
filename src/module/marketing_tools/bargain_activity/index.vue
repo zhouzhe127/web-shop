@@ -63,17 +63,18 @@
 <script>
 import EditActivity from './edit_activity';
 import ActivityDetail from './activity_detail';
-import store from './store';
+import {activityStore} from './store';
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 import utils from 'src/verdor/utils';
+import { store } from 'src/manager/store';
 
 let qureyTemp = {
 	qureyTime: '',
 	keyword: ''
 };
 export default {
-	store, // 很可惜，没有找到 vue-devtools 调试的地方
+	// store, // 很可惜，没有找到 vue-devtools 调试的地方
 	data: () => {
 		return {
 			isBrand: true,
@@ -162,12 +163,10 @@ export default {
 		// 下载二维码
 		downQrCode() {
 			http.getMiniProQR();
-			console.log('你有一条二维码请接收');
 		},
 		comeBack(isRefresh) {
 			this.scene = '';
-			console.log(this.$store.state.activityListChange);
-			if (isRefresh || this.$store.state.activityListChange) {
+			if (isRefresh || this.$store.state.activity.activityListChange) {
 				this.getActivityList();
 				this.$store.commit('changeActivityList', false);
 			}
@@ -181,20 +180,10 @@ export default {
 				this.selectGoods = data;
 				this.activityList.push(data);
 			}
-			// this.showEditGoods = true;
 		},
 		createGoods() {
 			this.selectGoods = null;
-			// this.showEditGoods = true;
 		}
-		// closeEditGoods(type,data) {
-		// 	if (data == 'editGoods') {
-		// 		// this.selectGoods = data;
-		// 	}else if(data == 'createGoods'){
-
-		// 	}
-		// 	// this.showEditGoods = false;
-		// }
 	},
 	computed: {
 		selectedActivity() {
@@ -206,6 +195,7 @@ export default {
 		ActivityDetail
 	},
 	created() {
+		store.registerModule('activity', activityStore);
 		let currentShop = storage.session('userShop').currentShop;
 		this.isBrand = currentShop.ischain == 3 ? true : false; //单店 0 直营1 加盟2 品牌3
 		this.brandId =
@@ -213,7 +203,9 @@ export default {
 				? currentShop.id
 				: currentShop.brandId;
 		this.getActivityList();
-		console.log(this.selectedActivity);
+	},
+	destroyed() {
+		store.unregisterModule('activity');
 	}
 };
 </script>

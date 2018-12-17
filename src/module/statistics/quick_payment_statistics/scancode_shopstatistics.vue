@@ -85,7 +85,7 @@
 						<span>快捷支付统计</span>
 						<span></span>
 						<span>共
-								<a href="javascript:;">{{allFormList.length}}</a>个条目</span>
+							<a href="javascript:;">{{allFormList.length}}</a>个条目</span>
 					</div>
 					<div class="list_title_r fr">
 					</div>
@@ -97,7 +97,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column label="日期" prop="day" align="center">
-					</el-table-column>					
+					</el-table-column>
 					<el-table-column label="支付次数" prop="payTimes" align="center">
 					</el-table-column>
 					<el-table-column prop="totalConsumption" label="消费总额" align="center">
@@ -180,21 +180,22 @@
 			},
 			getscanorder: function(res) {
 				this.showType = res;
-				this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: ['fd-blue'],
-					fn: () => {
-						this.returnStore();
-					}
-				},
-				{
-					name: '导出',
-					className: ['fd-blue'],
-					fn: () => {
-						this.Exportcodes();
-					}
-				}
-				]);
+				this.setTitle();
+				// this.$store.commit('setPageTools', [{
+				// 		name: '返回',
+				// 		className: ['fd-blue'],
+				// 		fn: () => {
+				// 			this.returnStore();
+				// 		}
+				// 	},
+				// 	{
+				// 		name: '导出',
+				// 		className: ['fd-blue'],
+				// 		fn: () => {
+				// 			this.Exportcodes();
+				// 		}
+				// 	}
+				// ]);
 			},
 			formatTime(time) {
 				if (time.length == 10) {
@@ -324,58 +325,44 @@
 					}
 				});
 			},
-			Exportcodes:function(){
-				if(this.codes && this.codes != ''){
+			Exportcodes: function() {
+				if (this.codes && this.codes != '') {
 					this.codesExport();
-				}else{
+				} else {
 					this.Export();
 				}
-			}			
+			},
+			setTitle: function() {
+				this.$store.commit('setPageTools', [
+					{
+						name: '返回',
+						className: 'el-btn-blue',
+						fn: () => {
+							this.returnStore();
+						}
+					},
+					{
+						name: '导出',
+						className: 'el-btn-yellow',
+						fn: () => {
+							this.Exportcodes();
+						}
+					}
+				]);
+			}
 		},
 		components: {
 			pageElement: () =>
-				import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+				import( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 			comTable: () =>
-				import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+				import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 			'scancode-order': () =>
-				import ( /*webpackChunkName: "scancode_oredersearch"*/ './scancode_oredersearch'),
+				import( /*webpackChunkName: "scancode_oredersearch"*/ './scancode_oredersearch'),
 			paymentCode: () =>
-				import ( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')
+				import( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')
 		},
-		// created() {
-		// 	let obj1 = {
-		// 		titleStyle: {
-		// 			fontSize: 16 + 'px'
-		// 		}
-		// 	};
-		// 	let obj2 = {
-		// 		conStyle: {
-		// 			color: '#ff9800'
-		// 		}
-		// 	};
-		// 	for (let item of this.titleList) {
-		// 		Object.assign(item, obj1, obj2);
-		// 	}
-		// 	for (let item of this.shoptitleList) {
-		// 		Object.assign(item, obj1);
-		// 	}
-		// },
 		mounted() {
-			this.$store.commit('setPageTools', [{
-				name: '返回',
-				className: ['fd-blue'],
-				fn: () => {
-					this.returnStore();
-				}
-			},
-			{
-				name: '导出',
-				className: ['fd-blue'],
-				fn: () => {
-					this.Exportcodes();
-				}
-			}
-			]);
+			this.setTitle();
 			this.getScanPayData();
 		},
 		destroyed() {

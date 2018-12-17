@@ -9,7 +9,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='customName' maxlength="10" /> -->
 				<el-input v-model="customName" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
@@ -43,9 +42,8 @@
 			<span class="online-sub fl required">关联优惠券</span>
 			<div class="rightHalf">
 				<section class="clearfix">
-					<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="addCustom">选择关联优惠券</a> -->
-					<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
-					<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
+					<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
+					<span class="coupon_name" v-if="selectCoupon.length > 0">(已关联{{getCouponName(selectCoupon)}})</span>
 				</section>
 				<!-- 活动对象为店内的时候显示 -->
 				<div v-for="(item,index) in miCount" :key='index' style="display: inline-block;" class="mic" v-show="num">
@@ -85,11 +83,9 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
 					</el-date-picker>
 					<span class="fl lines">-</span>
-					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
 					</el-date-picker>
 				</div>
@@ -137,16 +133,12 @@
 			</div>
 		</div>
 		<div class="box" style="margin-top: 100px;padding-left: 70px;">
-			<!--  <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="returnAct">取消</a> -->
 			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="returnAct">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="activitySave('0')">保存</a> -->
 				<el-button type="info" style="margin-right: 10px;width:190px;" @click="activitySave('0')">保存</el-button>
-				<!-- <a v-if="editId == ''" href="javascript:void(0);" class="yellow" style="width: 200px;" @click="activitySave('1')">发布</a> -->
 				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="activitySave('1')">发布</el-button>
 			</template>
 		</div>
-		<!-- <vip v-if='showVip' @selectVip='selectVipEvent'></vip> -->
 		<addCoupon v-if='showCoupon' :selectCoupon='selectCoupon' @winEvent='winEvent'></addCoupon>
 	</section>
 	<!-- 会员筛选 -->
@@ -177,14 +169,15 @@
 				edit: false, //是否为编辑
 				editId: '', //编辑id
 				//发放数量
-				total: [{
-					text: '不设限制',
-					value: '0'
-				},
-				{
-					text: '设定总数',
-					value: '1'
-				}
+				total: [
+					{
+						text: '不设限制',
+						value: '0'
+					},
+					{
+						text: '设定总数',
+						value: '1'
+					}
 				],
 				num: true, //店内活动 数量限制显示
 				customName: '', //自定义活动名称
@@ -194,22 +187,20 @@
 				member: 0, //会员关联的人数
 				fans: 0, //粉丝关联的人数
 				memfilter: '',
-				customList: [{
-					name: '店内'
-				},
-				{
-					name: '会员'
-				}
+				customList: [
+					{
+						name: '店内'
+					},
+					{
+						name: '会员'
+					}
 				],
 				indexCustom: '1', //活动对象选中的
-				goodsType: [{
-					'name': '微信',
-					'id': '1'
-				},
-					// {
-					// 	'name': '短信',
-					// 	'id': '2'
-					// }
+				goodsType: [
+					{
+						'name': '微信',
+						'id': '1'
+					}
 				], //消息推送渠道
 				customSelect: [], //自定义活动选择的
 				msmStatus: false, //短信开关状态
@@ -220,22 +211,23 @@
 				activityDetail: {}, //详情
 				brandId: null, //3为品牌 0为单店
 				customActivity: '', //自定义活动
-				customParameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				},
-				{
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				},
-				{
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				},
-				{
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				}
+				customParameter: [
+					{
+						'name': '【会员姓名】',
+						'id': '{memberName}'
+					},
+					{
+						'name': '【优惠券名称】',
+						'id': '{couponName}'
+					},
+					{
+						'name': '【优惠券数量】',
+						'id': '{couponNum}'
+					},
+					{
+						'name': '【活动名称】',
+						'id': '{activityName}'
+					}
 				],
 				showCoupon: false,
 				couponList: [], //优惠券列表
@@ -281,23 +273,12 @@
 				}
 				//this.abc();
 			},
-			// checkedMember: function(Value, oldValue, ) { //选择会员
-			// 	if (this.checkedMember) {
-			// 		if (this.memberStatus) {
-			// 			this.addVip();
-			// 		}
-			// 	} else {
-			// 		this.member = 0; //会员选中的人数
-			// 		this.memfilter = ''; //会员筛选的条件
-			// 	}
-			// },
-			// checkedFans: function() { //选择粉丝
-			// 	if (this.checkedFans) {
-			// 		this.getSubscribeFansCount();
-			// 	} else {
-			// 		this.fans = 0;
-			// 	}
-			// }
+			'selectCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.selectCoupon);
+				}
+			}
 		},
 		methods: {
 			valiData: function(content, title, winType) { //弹窗提示格式化
@@ -366,22 +347,6 @@
 			addParameter: function(index) { //添加参数
 				this.customActivity += this.customParameter[index].id;
 			},
-			// winEventCoupon(obj) { //选择优惠券的回调
-			// 	this.showCoupon = false;
-			// 	if (obj.status == 'ok') {
-			// 		this.selectCoupon = obj.data.select;
-			// 		this.couponList = obj.data.list;
-			// 		if (this.indexCustom == 1) {
-			// 			this.miCount = obj.data.select;
-			// 			for (let i = 0; i < this.miCount.length; i++) {
-			// 				this.$set(this.micsel, i, 0);
-			// 				this.$set(this.micselimit, i, 0);
-			// 			}
-			// 		} else if (this.indexCustom == 2) {
-			// 			this.memberCoupon = obj.data.select;
-			// 		}
-			// 	}
-			// },
 			winEvent(obj) { //选择优惠券弹窗回掉
 				this.showCoupon = false;
 				if (obj.status == 'ok') {
@@ -450,38 +415,21 @@
 					this.selectCoupon = this.memberCoupon;
 				}
 			},
-			//关联优惠券弹窗
-			// async addCustom() {
-			// 	let data = await http.getGetCouponCondition({});
-			// 	let coupons = [];
-			// 	for (let item of data) {
-			// 		item.num = 1;
-			// 		if (item.type != 7) {
-			// 			coupons.push(item);
-			// 		}
-			// 	}
-			// 	this.couponList = coupons;
-			// 	if (this.indexCustom == 1) {
-			// 		this.selectCoupon = this.miCount;
-			// 	} else if (this.indexCustom == 2) {
-			// 		this.selectCoupon = this.memberCoupon;
-			// 	}
-			// 	this.showCoupon = true;
-			// },
 			//自定义活动保存
 			checkForm: function() {
-				if (!global.checkData({
-					isclick: {
-						cond: '$$!==true',
-						pro: '请勿重复保存'
-					},
-					customName: '活动名称未设置',
-					selectCoupon: {
-						cond: '$$.length!=0',
-						pro: '请关联优惠券'
-					},
+				if (!global.checkData(
+					{
+						isclick: {
+							cond: '$$!==true',
+							pro: '请勿重复保存'
+						},
+						customName: '活动名称未设置',
+						selectCoupon: {
+							cond: '$$.length!=0',
+							pro: '请关联优惠券'
+						},
 
-				}, this)) return false;
+					}, this)) return false;
 				if (this.indexCustom == 2 && !this.checkedMember && !this.checkedFans) {
 					this.valiData('请关联活动对象!');
 					return false;
@@ -620,11 +568,6 @@
 				if (this.member && Number(this.member) > 0) {
 					this.checkedMember = true;
 				}
-				// if (this.activityDetail.objectType == '0') {
-				// 	this.customIds = this.activityDetail.rule[0].couponIds;
-				// } else {
-				// 	this.customIds1 = this.activityDetail.rule[0].couponIds;
-				// }
 				this.$nextTick(() => {
 					setTimeout(() => {
 						let list = this.$refs.autoDay;
@@ -676,6 +619,16 @@
 				} else {
 					this.fans = 0;
 				}
+			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
 			}
 		},
 		beforeCreate() {
@@ -683,15 +636,15 @@
 		},
 		components: {
 			'mulSelect': () =>
-				import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+				import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			'memberScreening': () =>
-				import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
+				import( /* webpackChunkName:'activity_screening' */ './activity_screening'),
 			'singleSelect': () =>
-				import ( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+				import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
 			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -781,35 +734,17 @@
 		float: left;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/*活动名称的输入框*/
+	.custom .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 600px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 
 	.custom .online-box .rightHalf .name {
 		width: 280px;

@@ -471,6 +471,9 @@ let need = {
 		ActiveConf: { //活跃值配置
 			name: 'ActiveConf'
 		},
+		sellingConsumptionStatistics: { //卖手消费统计
+			name: 'sellingConsumptionStatistics'
+		},
 		priceTemplate:{     //价格模板
 			name:'priceTemplate'
 		}

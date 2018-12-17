@@ -3,13 +3,9 @@
 	<div id="membercard">
 		<!-- 筛选 -->
 		<div class="search">
-			<!-- <span>订单查询</span>
-			<input type="text" placeholder="请输入订单号" v-model="goodsName"> -->
-			<!-- <a href="javascript:;" class="blue" @click="getcommodity">筛选</a> -->
-			<el-input class="fl" placeholder="请输入订单号" v-model="goodsName" style="width:auto;">
-				<i slot="suffix" class="el-input__icon el-icon-search" @click="getcommodity"></i>
+			<el-input placeholder="请输入订单号" v-model="goodsName" class="fl input-with-select" style="width:220px;">
+				<el-button slot="append" icon="el-icon-search" @click="getcommodity"></el-button>
 			</el-input>
-			<!-- <a href="javascript:;" class="gray" @click="reset">重置</a> -->
 			<div class="paymentbox fl" @click="openPaycode">
 				<el-input placeholder="请选择收款码" v-model="paymentCode" :disabled="true" suffix-icon="el-icon-plus">
 				</el-input>
@@ -42,14 +38,6 @@
 			</div>
 		</div>
 		<section style="margin-bottom:20px;">
-			<!-- <com-table @tableEvent="tableEvent" :listHeight='80' :listWidth="1400" :showHand="false" :titleData="titleList" :introData="staticLists">
-				<div slot="con-0" slot-scope="props">
-					1
-				</div>
-				<div slot="con-4" slot-scope="props">
-					{{props.data.totalVouchersPain}}({{props.data.totalVouchersNum}}张)
-				</div>
-			</com-table> -->
 			<el-table :data="staticLists" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}" style="width: 1436px;">
 				<el-table-column fixed prop="days" label="天数" align="center">
 					<template slot-scope="scope">
@@ -79,19 +67,6 @@
 				</el-table-column>
 			</el-table>
 		</section>
-		<!-- <section>
-			<com-table @tableEvent="tableEvent" :listHeight='80' :listWidth="1400" :showHand="false" :titleData="shoptitleList" :introData="formList">
-				<div slot="con-0" slot-scope="props" @click="openStore(props.data)">
-					查看详情
-				</div>
-				<div slot="con-5" slot-scope="props">
-					{{props.data.vouchersPain}}({{props.data.vouchersNum}}张)
-				</div>
-				<div slot="con-11" slot-scope="props">
-					{{getStaffname(props.data.staffId)}}
-				</div>
-			</com-table>
-		</section> -->
 		<!-- 下面的表格 -->
 		<div class="list_box" style="width:100%;">
 			<div class="list_title">
@@ -99,43 +74,43 @@
 					<span>快捷支付统计</span>
 					<span></span>
 					<span>共
-								<a href="javascript:;">{{allFormList.length}}</a>个条目</span>
+						<a href="javascript:;">{{allFormList.length}}</a>个条目</span>
 				</div>
 				<div class="list_title_r fr">
 				</div>
 			</div>
 			<el-table :data="formList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
-				<el-table-column fixed label="结账时间" prop="createTime" align="center" width="200">
+				<el-table-column fixed prop="shopId" label="操作" align="center" width="100">
+					<template slot-scope="scope">
+						<span @click="openStore(scope.row)" style="color:#e1bb4a;">查看详情</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="结账时间" prop="createTime" align="center" width="200">
 				</el-table-column>
 				<el-table-column prop="oid" label="支付订单" align="center" width="200">
 				</el-table-column>
-				<el-table-column label="消费总额" prop="consumption" align="center">
+				<el-table-column label="消费总额" prop="consumption" align="center" width="100">
 				</el-table-column>
-				<el-table-column label="优惠总额" prop="discount" align="center">
+				<el-table-column label="优惠总额" prop="discount" align="center" width="100">
 				</el-table-column>
-				<el-table-column label="代金券" align="center">
+				<el-table-column label="代金券" align="center" width="100">
 					<template slot-scope="scope">
 						<span>{{scope.row.vouchersPain}}({{scope.row.vouchersNum}}张)</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="实收总额" prop="pain" align="center">
+				<el-table-column label="实收总额" prop="pain" align="center" width="100">
 				</el-table-column>
-				<el-table-column label="积分抵扣总额" prop="pointCash" align="center">
+				<el-table-column label="积分抵扣总额" prop="pointCash" align="center" width="130">
 				</el-table-column>
-				<el-table-column label="会员消费总额" prop="memberConsumption" align="center">
+				<el-table-column label="会员消费总额" prop="memberConsumption" align="center" width="130">
 				</el-table-column>
-				<el-table-column label="微信支付总额" prop="weChatPain" align="center">
+				<el-table-column label="微信支付总额" prop="weChatPain" align="center" width="130">
 				</el-table-column>
-				<el-table-column label="支付宝支付总额" prop="aliPayPain" align="center">
+				<el-table-column label="支付宝支付总额" prop="aliPayPain" align="center" width="130">
 				</el-table-column>
-				<el-table-column label="收款码" prop="staffId" align="center">
+				<el-table-column label="收款码" prop="staffId" align="center" width="130">
 					<template slot-scope="scope">
 						<span>{{getStaffname(scope.row.staffId)}}</span>
-					</template>
-				</el-table-column>
-				<el-table-column prop="shopId" label="操作" align="center">
-					<template slot-scope="scope">
-						<span  @click="openStore(scope.row)" style="color:#e1bb4a;">查看详情</span>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -143,9 +118,6 @@
 		<!-- 员工码弹窗 -->
 		<paymentCode v-if="showCode" :shopIds="dynamicTags" :constructionsName='constructionsName' :constructionsId="constructionsId" @chooseShop="backShopId"></paymentCode>
 		<!-- 翻页 -->
-		<!-- <section class="turn-page">
-			<pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(endTotal)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement>
-		</section> -->
 		<div class="pageWrap">
 			<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="endTotal" :page-sizes="[10, 20, 30]"></el-pagination>
 		</div>
@@ -348,22 +320,6 @@
 				}
 				this.codesd = codes;
 				this.getScanPayOrderByCodes(this.codesd);
-				// let data = await http.getScanPayOrderByCodes({
-				// 	data: {
-				// 		showShopId: this.constructionsId,
-				// 		codes: this.codes.join(','),
-				// 		taskId: this.taskId,
-				// 		showDay: ''
-				// 	}
-				// });
-				// if (data) {
-				// 	this.staticLists = [];
-				// 	this.staticLists.push(data.total); //头部的数据
-				// 	this.allFormList = data.list; //身体的数据
-				// 	this.$nextTick(() => {
-				// 		this.setPage();
-				// 	});
-				// }
 			},
 			//选择店铺弹窗返回
 			backShopId(res, item) {
@@ -411,53 +367,36 @@
 		},
 		components: {
 			pageElement: () =>
-				import ( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+				import( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
 			comTable: () =>
-				import ( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+				import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
 			getAppliedWin,
 			paymentCode: () =>
-				import ( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')
+				import( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')
 		},
 		created() {
-			// let obj1 = {
-			// 	titleStyle: {
-			// 		fontSize: 16 + 'px'
-			// 	}
-			// };
-			// let obj2 = {
-			// 	conStyle: {
-			// 		color: '#ff9800'
-			// 	}
-			// };
-			// for (let item of this.titleList) {
-			// 	Object.assign(item, obj1, obj2);
-			// }
-			// for (let item of this.shoptitleList) {
-			// 	if (item.dataName != 'oid' && item.dataName != 'createTime') {
-			// 		Object.assign(item, obj1);
-			// 	}
-			// }
 			this.getShopList();
 		},
 		mounted() {
-			this.$store.commit('setPageTools', [{
-				name: '返回',
-				className: ['fd-blue'],
-				fn: () => {
-					this.returnShopstatic();
-				}
-			},
-			{
-				name: '导出',
-				className: ['fd-blue'],
-				fn: () => {
-					if (this.codes && this.codes != '') {
-						this.codesExport(this.codes);
-					}else{
-						this.Export();
+			this.$store.commit('setPageTools', [
+				{
+					name: '返回',
+					className: 'el-btn-blue',
+					fn: () => {
+						this.returnShopstatic();
+					}
+				},
+				{
+					name: '导出',
+					className: 'el-btn-yellow',
+					fn: () => {
+						if (this.codes && this.codes != '') {
+							this.codesExport(this.codes);
+						} else {
+							this.Export();
+						}
 					}
 				}
-			}
 			]);
 			if (this.codes && this.codes != '') {
 				this.getScanPayOrderByCodes(this.codes);

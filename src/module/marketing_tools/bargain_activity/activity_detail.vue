@@ -3,7 +3,7 @@
 		<div class="navigation clearFix">
 			<div class="startText">统计范围</div>
 			<div>
-				<el-date-picker v-model="qureyTime" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']" >
+				<el-date-picker v-model="qureyTime" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" :default-time="['00:00:00', '23:59:59']">
 				</el-date-picker>
 			</div>
 			<div>
@@ -70,7 +70,7 @@ export default {
 	},
 	methods: {
 		goodsClose(needRefresh) {
-			if (needRefresh || this.$store.state.selectedActivityChange) {
+			if (needRefresh || this.$store.state.activity.selectedActivityChange) {
 				this.getDetail();
 				this.$store.commit('changeActivity', false);
 			}
@@ -136,8 +136,9 @@ export default {
 			});
 			if (data) {
 				data.forEach(v => {
-					v.discountRatio =
-						~~((v.discount / v.orderPrice) * 10000) / 100 + '%';
+					v.discountRatio = +v.orderPrice == 0
+						? '100%'
+						: ~~((v.discount / v.orderPrice) * 10000) / 100 + '%';
 				});
 				this.goodsList = data;
 				this.isBegin = this.selectedActivity.isBegin;

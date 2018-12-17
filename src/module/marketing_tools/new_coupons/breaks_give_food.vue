@@ -206,7 +206,6 @@
 				</el-select>
 				<div class="and" v-if="isSharingId == 1">
 					<span> 且</span>
-					<!-- <select-btn :name='concessionSharing' :sorts="concessionSharingList.map(v=>v.name)" :width="190" @selOn="getconcession"></select-btn> -->
 					<el-select v-model="concessionSharing" @change="getconcession" style="color:#c0c4cc">
 						<el-option v-for="item in concessionSharingList" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
@@ -250,22 +249,31 @@
 						<div class="fl tips">
 							<img src="../../../res/icon/alert.jpg" />
 						</div>
-							<div class="fl">
-								限制150字
-							</div>
+						<div class="fl">
+							限制150字
 						</div>
 					</div>
 				</div>
-				<!-- 保存 -->
-				<div class="save-coupon">
-					<el-button style="width: 200px;" @click="cancel">取消</el-button>
+			</div>
+			<!-- 保存 -->
+			<div class="left ">
+				<div class="text" style="margin-right: 10px;">
+				</div>
+			</div>
+			<div class="right">
+				<div class="fl">
 					<el-button type="primary" style="width: 200px;" @click="getSendInfo">保存</el-button>
 				</div>
-				<!-- 选择门店的弹窗 -->
-				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
-				<!-- 关联商品的弹窗 -->
-				<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :isGoods="true" :packages="selectPackages" :goInName="'isCoupon'"></goodListWin>
 			</div>
+			<!-- 	<div class="save-coupon">
+					<el-button style="width: 200px;" @click="cancel">取消</el-button>
+					<el-button type="primary" style="width: 200px;" @click="getSendInfo">保存</el-button>
+				</div> -->
+			<!-- 选择门店的弹窗 -->
+			<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
+			<!-- 关联商品的弹窗 -->
+			<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="selectGoods" :isGoods="true" :packages="selectPackages" :goInName="'isCoupon'"></goodListWin>
+		</div>
 	</section>
 </template>
 <script type="text/javascript">
@@ -280,14 +288,15 @@
 				editCoupon: false,
 				hiddenText: false,
 				ischain: '', //0 单店 3 品牌
-				goodlist: [{
-					typeId: 1,
-					name: '满减优惠券'
-				},
-				{
-					typeId: 2,
-					name: '赠菜优惠券'
-				}
+				goodlist: [
+					{
+						typeId: 1,
+						name: '满减优惠券'
+					},
+					{
+						typeId: 2,
+						name: '赠菜优惠券'
+					}
 				],
 				commoditySlect: '满减优惠券',
 				typeId: 1, //默认单品减免
@@ -298,35 +307,40 @@
 				selectShops: [], //选中的商铺
 				selectGoods: [], //选中的商品
 				selectPackages: [], //选中的套餐
-				compulsoryCreditsList: [{
-					compulsoryCredits: '0',
-					name: '否'
-				},
-				{
-					compulsoryCredits: '1',
-					name: '是'
-				}
+				compulsoryCreditsList: [
+					{
+						compulsoryCredits: '0',
+						name: '否'
+					},
+					{
+						compulsoryCredits: '1',
+						name: '是'
+					}
 				],
 				compulsoryName: '否',
 				compulsoryCredits: '0', //是否强制减免
-				tastePriceList: [{
-					id: '0',
-					name: '否'
-				}, {
-					id: '1',
-					name: '是'
-				}],
+				tastePriceList: [
+					{
+						id: '0',
+						name: '否'
+					}, 
+					{
+						id: '1',
+						name: '是'
+					}
+				],
 				tastePriceName: '否',
 				tastePriceId: '0',
 				deratePrice: '', //减免金额
-				validList: [{
-					validType: '0',
-					name: '相对时间'
-				},
-				{
-					validType: '1',
-					name: '指定时间'
-				}
+				validList: [
+					{
+						validType: '0',
+						name: '相对时间'
+					},
+					{
+						validType: '1',
+						name: '指定时间'
+					}
 				],
 				validName: '相对时间',
 				validType: {
@@ -339,35 +353,36 @@
 						new Date().setHours(23, 59, 59, 999)
 					] //时间控件
 				}, //券有效期
-				validTimeList: [{
-					//过期时间
-					name: '领取后即刻生效',
-					id: 0
-				},
-				{
-					name: '领取1小时后生效',
-					id: 1
-				},
-				{
-					name: '领取2小时后生效',
-					id: 2
-				},
-				{
-					name: '领取3小时后生效',
-					id: 3
-				},
-				{
-					name: '领取6小时后生效',
-					id: 6
-				},
-				{
-					name: '领取12小时后生效',
-					id: 12
-				},
-				{
-					name: '领取24小时后生效',
-					id: 24
-				}
+				validTimeList: [
+					{
+						//过期时间
+						name: '领取后即刻生效',
+						id: 0
+					},
+					{
+						name: '领取1小时后生效',
+						id: 1
+					},
+					{
+						name: '领取2小时后生效',
+						id: 2
+					},
+					{
+						name: '领取3小时后生效',
+						id: 3
+					},
+					{
+						name: '领取6小时后生效',
+						id: 6
+					},
+					{
+						name: '领取12小时后生效',
+						id: 12
+					},
+					{
+						name: '领取24小时后生效',
+						id: 24
+					}
 				],
 				validTimeId: 0, //领取后选定时间内生效
 				validTime: '领取后即刻生效', //状态
@@ -382,15 +397,16 @@
 					month: [], //月
 					show: false
 				}, //使用时段
-				useThresholdList: [{
-					//指定门槛
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定门槛',
-					id: 1
-				}
+				useThresholdList: [
+					{
+						//指定门槛
+						name: '不设限制',
+						id: 0
+					},
+					{
+						name: '指定门槛',
+						id: 1
+					}
 				],
 				useThresholdId: 0,
 				useThresholdName: '不设限制',
@@ -401,25 +417,27 @@
 				shopList: [], //店铺
 				isSharingId: 0,
 				isSharing: '不与其它优惠共享',
-				isSharingList: [{
-					name: '不与其它优惠共享',
-					id: 0
-				},
-				{
-					name: '可与其他优惠共享',
-					id: 1
-				}
+				isSharingList: [
+					{
+						name: '不与其它优惠共享',
+						id: 0
+					},
+					{
+						name: '可与其他优惠共享',
+						id: 1
+					}
 				],
 				concessionSharingId: 0,
 				concessionSharing: '不与会员卡优惠共用',
-				concessionSharingList: [{
-					name: '不与会员卡优惠共用',
-					id: 0
-				},
-				{
-					name: '可与会员卡优惠共用',
-					id: 1
-				}
+				concessionSharingList: [
+					{
+						name: '不与会员卡优惠共用',
+						id: 0
+					},
+					{
+						name: '可与会员卡优惠共用',
+						id: 1
+					}
 				],
 				sharingStatus: '',
 				couponType: {
@@ -431,7 +449,6 @@
 			};
 		},
 		props: {
-			// couponDetail: Object, //详情
 			isBargain: {
 				type: Boolean,
 				default: true
@@ -444,80 +461,6 @@
 			this.ischain = storage.session('userShop').currentShop.ischain;
 			this.shopList = storage.session('shopList');
 			this.couponStatus = storage.session('couponStatus');
-			// if (!utils.isEmptyObject(this.couponDetail)) {
-			// 	let couponDetail = this.couponDetail;
-			// 	this.editCoupon = true;
-			// 	this.accessType(couponDetail.type);
-			// 	this.couponName = couponDetail.name; //优惠券名称
-			// 	if (couponDetail.shopIds && couponDetail.shopIds.length > 0) {
-			// 		this.selectShops = couponDetail.shopIds.split(',');
-			// 	} //选中的店铺
-			// 	if (couponDetail.gids && couponDetail.gids.length > 0 && couponDetail.gids != null && couponDetail.gids != 0) {
-			// 		this.selectGoods = couponDetail.gids.split(',');
-			// 	} //关联商品
-			// 	if (couponDetail.pids && couponDetail.pids.length > 0 && couponDetail.pids != null && couponDetail.pids != 0) {
-			// 		this.selectPackages = couponDetail.pids.split(',');
-			// 	} //关联套餐
-			// 	this.deratePrice = couponDetail.param; //减免金额
-			// 	this.compulsoryCredits = couponDetail.isDiscount; //强制减免
-			// 	if (this.compulsoryCredits == '1') {
-			// 		this.compulsoryName = '是';
-			// 	}
-			// 	this.validType.index = couponDetail.validityType; //相对时间 绝对时间
-			// 	if (this.validType.index == '1') {
-			// 		this.validName = '指定时间';
-			// 	}
-			// 	if (couponDetail.validityType == 0) {
-			// 		this.validType.time = couponDetail.relativeTime;
-			// 	} else if (couponDetail.validityType == 1) {
-			// 		this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
-			// 		this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
-			// 	}
-			// 	this.useDate.index = couponDetail.periodSel;
-			// 	if (couponDetail.periodSel == 1) {
-			// 		if (couponDetail.useTime && couponDetail.useTime.list) {
-			// 			this.useDate.week = this.changeArrToNeed(couponDetail.useTime.list, 'w');
-			// 		}
-			// 	}
-			// 	if (couponDetail.periodSel == 2) {
-			// 		if (couponDetail.useTime && couponDetail.useTime.list) {
-			// 			this.useDate.month = this.changeArrToNeed(couponDetail.useTime.list, 'm');
-			// 		}
-			// 	}
-			// 	this.validTimeId = couponDetail.delayHours; //领取生效
-			// 	for (let item of this.validTimeList) {
-			// 		if (item.id == this.validTimeId) {
-			// 			this.validTime = item.name;
-			// 		}
-			// 	} //领取后多久生效的名称
-			// 	if (couponDetail.lowestConsume != 0) { //使用门槛
-			// 		this.useThresholdId = 1;
-			// 		this.useThresholdName = '指定门槛';
-			// 		this.threshold = couponDetail.lowestConsume; //指定门槛的金额
-			// 	}
-			// 	//判断优惠共享更改的状态
-			// 	this.maxCeiling = couponDetail.useLimit; //最大使用上限
-			// 	if (couponDetail.sharingStatus == 0) {
-			// 		this.isSharingId = 0;
-			// 		this.isSharing = '不与其它优惠共享';
-			// 	} else if (couponDetail.sharingStatus == 2) {
-			// 		this.isSharingId = 1;
-			// 		this.concessionSharingId = 0;
-			// 		this.isSharing = '可与其他优惠共享';
-			// 		this.concessionSharing = '不与会员卡优惠共用';
-			// 	} else if (couponDetail.sharingStatus == 1) {
-			// 		this.isSharingId = 1;
-			// 		this.concessionSharingId = 1;
-			// 		this.isSharing = '可与其他优惠共享';
-			// 		this.concessionSharing = '可与会员卡优惠共用';
-			// 	}
-			// 	this.billPrice = couponDetail.billPrice; //随机立减最低
-			// 	this.reckoningPrice = couponDetail.reckoningPrice; //随机立减最高
-			// 	this.randomId = couponDetail.priceRule; //取整规则
-			// 	this.randomName = this.randomAmountList[this.randomId].name; //取整规则
-			// 	this.annotation = couponDetail.annotation; //备注
-			// 	this.useKnow = couponDetail.useKnow; //使用须知
-			// }
 		},
 		components: {
 			'can-multi': () =>
@@ -692,13 +635,14 @@
 				let reg = /^[0-9]*$/;
 				let reg2 = /^\d+(\.\d+)?$/;
 				if (
-					!global.checkData({
-						couponName: {
-							cond: `$$.trim() !== '' && $$.length<=20`,
-							pro: '优惠券名称不能为空且不能超过20个字'
-						}
-					},
-					this
+					!global.checkData(
+						{
+							couponName: {
+								cond: `$$.trim() !== '' && $$.length<=20`,
+								pro: '优惠券名称不能为空且不能超过20个字'
+							}
+						},
+						this
 					)
 				) {
 					return false;
@@ -1073,7 +1017,7 @@
 
 	#breakCoupon .left,
 	#breakCoupon .right {
-		height: 40px;
+		min-height: 40px;
 		float: left;
 		margin-bottom: 15px;
 	}

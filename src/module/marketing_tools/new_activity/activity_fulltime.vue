@@ -60,8 +60,8 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">返券</span>
 			<div class="rightHalf">
-				<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
-				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
+				<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
+				<span class="coupon_name" v-if="selectCoupon.length > 0">(已关联{{getCouponName(selectCoupon)}})</span>
 			</div>
 		</div>
 		<!-- 消息推送渠道 -->
@@ -145,26 +145,31 @@
 				activityDetail: {}, //详情
 				shopList: [],
 				contentSetting: '', //生日活动内容设置
-				parameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				}, {
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				}, {
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				}, {
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				}, {
-					'name': '【消费次数】',
-					'id': '{consumeNum}'
-				},
-				{
-					'name': '【送券时间】',
-					'id': '{giveTime}'
-				},
+				parameter: [
+					{
+						'name': '【会员姓名】',
+						'id': '{memberName}'
+					}, 
+					{
+						'name': '【优惠券名称】',
+						'id': '{couponName}'
+					}, 
+					{
+						'name': '【优惠券数量】',
+						'id': '{couponNum}'
+					}, 
+					{
+						'name': '【活动名称】',
+						'id': '{activityName}'
+					}, 
+					{
+						'name': '【消费次数】',
+						'id': '{consumeNum}'
+					},
+					{
+						'name': '【送券时间】',
+						'id': '{giveTime}'
+					}
 				],
 				showBirthCoupon: false,
 				couponList: [], //优惠券列表
@@ -194,6 +199,12 @@
 			},
 			'startObj.time': 'timeChange',
 			'endObj.time': 'timeChange',
+			'selectCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.selectCoupon);
+				}
+			}
 		},
 		methods: {
 			valiData: function(content, title, winType) { //弹窗提示格式化
@@ -251,9 +262,9 @@
 					this.valiData('开始时间不能小于当前时间');
 					return false;
 				}
-				if(this.startTime - this.endTime > 0){
+				if (this.startTime - this.endTime > 0) {
 					this.valiData('开始时间不能大于结束时间');
-					return false;					
+					return false;
 				}
 				if (this.member < 0) {
 					this.valiData('请关联活动对象');
@@ -353,16 +364,26 @@
 					(1000 * 60 * 60 * 24)
 				);
 			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
+			}
 		},
 		components: {
 			'mulSelect': () =>
-				import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+				import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+				import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 			'memberScreening': () =>
-				import ( /* webpackChunkName:'activity_screening' */ './activity_screening'),
+				import( /* webpackChunkName:'activity_screening' */ './activity_screening'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -440,6 +461,17 @@
 		height: auto;
 		float: left;
 		line-height: 40px;
+	}
+
+	.birth_act .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 600px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.birth_act .online-box .rightHalf .returnInt {

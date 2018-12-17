@@ -429,5 +429,22 @@ export default {
 	BusinessGetStatByShopIds: {
 		url: b + 'Business/getStatByShopIds', //品牌按店查询店铺统计数据
 		method: 'get'
-	}
+	},
+	getConsumeStatistics: {
+		url: w + 'Assistant/consumeStatistics', //卖手消费统计
+		method: 'get'
+	},
+	consumeVerifyCalculation: {
+		url: w + 'Assistant/consumeVerifyCalculation', //动态计算金币积分
+		method: 'get'
+	},
+	consumeVerifyModify: {
+		url: w + 'Assistant/consumeVerifyModify', //确认计算
+		method: 'get'
+	},
+	getModifyRecode: {
+		url: w + 'Assistant/getModifyRecode', //查看调整记录
+		method: 'get'
+	},
+
 };

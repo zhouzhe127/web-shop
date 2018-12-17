@@ -2,37 +2,31 @@
 	<div id="online-configuration">
 		<section v-if="changePage">
 			<div class="cupon-time-select clearfix">
-				<span class="fl cupon-type">时间选择</span>
-				<!-- <calendar class="fl" :pObj="startTime" @throwTime="getStartTime"></calendar> -->
-				<el-date-picker class="fl" v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false">
-				</el-date-picker>
-				<span class="fl line">--</span>
-				<!-- <calendar class="fl" :pObj="endTime" @throwTime="getEndTime"></calendar> -->
-				<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false">
-				</el-date-picker>
-				<!-- <span class="fl order-order-searchA" v-on:click="searchInDate">
-					<span class="order-order-search"></span>
-				</span> -->
-				<el-button class="fl" style="margin-right: 20px;" type="primary" icon="el-icon-search" @click="searchInDate"></el-button>
-				<span class="fl cupon-type">优惠券类型</span>
-				<!-- <section class="staList fl detLi">
-					<select-store ref="selectStore" :sorts="card" @emit="selectCouponType" :tipName="'请选择优惠券类型'"></select-store>
-				</section> -->
-				<el-popover class="fl" placement="bottom" width="400" v-model="showJob" trigger="click" @hide="ensure">
-					<section>
-						<div class="clearfix">
-							<el-button border size="mini" class="el-labItem" style="height:28px;" @click="selallcoupon">全部</el-button>
-							<el-checkbox v-model="showCard" v-for="item in card" class="el-labItem" :key="item.id" :label="item.id" border size="mini">{{item.name}}</el-checkbox>
-						</div>
-					</section>
-					<el-button slot="reference" plain class="el-reference">
-						<span>{{selectedCoupon}}</span>
-						<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
-					</el-button>
-				</el-popover>
-				<div class="fl buttonbox">
-					<!-- <button @click="handleSearchInDate" class="fl cupon-scret">筛选</button>
-					<button @click="initResert" class="fl cupon-reset cupon-reset-btn">重置</button> -->
+				<div class="screenBox clearfix">
+					<span class="fl cupon-type">时间选择</span>
+					<el-date-picker class="fl" v-model="startTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false">
+					</el-date-picker>
+					<span class="fl line">--</span>
+					<el-date-picker class="fl" v-model="endTime" type="date" format="yyyy 年 MM 月 dd 日" placeholder="选择日期" value-format="timestamp" :editable="false" :clearable="false" @change="selectEndTime">
+					</el-date-picker>
+					<el-button class="fl" style="margin-right: 20px;" type="primary" icon="el-icon-search" @click="searchInDate"></el-button>
+				</div>
+				<div class="screenBox clearfix">
+					<span class="fl cupon-type">优惠券类型</span>
+					<el-popover class="fl" placement="bottom" width="400" v-model="showJob" trigger="click" @hide="ensure">
+						<section>
+							<div class="clearfix">
+								<el-button border size="mini" class="el-labItem" style="height:28px;" @click="selallcoupon">全部</el-button>
+								<el-checkbox v-model="showCard" v-for="item in card" class="el-labItem" :key="item.id" :label="item.id" border size="mini">{{item.name}}</el-checkbox>
+							</div>
+						</section>
+						<el-button slot="reference" plain class="el-reference">
+							<span>{{selectedCoupon}}</span>
+							<i class="el-icon-arrow-down" style="position: absolute;right: 0px;width: 37px;"></i>
+						</el-button>
+					</el-popover>
+				</div>
+				<div class="screenBox clearfix">
 					<el-button type="primary" style="width:100px;" @click="handleSearchInDate">筛选</el-button>
 					<el-button type="info" style="width:100px;" @click="initResert">重置</el-button>
 				</div>
@@ -130,13 +124,6 @@
 				endTime: utils.getTime({
 					time: new Date()
 				}).end, //日期组件的结束时间
-				//
-				// currstartTime: {
-				// 	time: ''
-				// }, //核销量日期组件的开始时间
-				// currendTime: {
-				// 	time: ''
-				// }, //核销量日期组件的结束时间
 				list: [], // coupon 数据
 				page: 1, // 当前页码
 				listLen: 0, // 数据量
@@ -170,6 +157,18 @@
 					{
 						name: '随机减免券',
 						id: 8
+					},
+					{
+						name: '第二件商品券',
+						id: 9
+					},
+					{
+						name: '买送券',
+						id: 10
+					},
+					{
+						name: '定额券',
+						id: 11
 					}
 				],
 				selectName: {
@@ -179,10 +178,12 @@
 					'4': '整单折扣',
 					'5': '赠品',
 					'6': '代金券',
-					'8': '随机减免券'
+					'8': '随机减免券',
+					'9': '第二件商品券',
+					'10': '买送券',
+					'11': '定额券',
 				}, // 默认优惠券
 				shopListBtn: false, // 是否展示优惠券列表
-				//fiterCards: [1, 2, 3, 4, 5, 6], //  优惠券多选
 				fiterId: [],
 				changePage: true,
 				couponType: 0,
@@ -206,7 +207,8 @@
 				showJob: false,
 				showCard: [], //优惠券类型选中的id
 				selectedCoupon: '全部优惠券', //显示选中的优惠券
-				storeList: [{
+				storeList: [
+					{
 						name: '全部'
 					},
 					{
@@ -224,6 +226,9 @@
 			};
 		},
 		methods: {
+			selectEndTime: function(time) { //选择日期
+				this.endTime = new Date(time).setHours(23, 59, 59, 999);
+			},
 			selallcoupon: function() { //选择优惠券 全选
 				let arr = [];
 				for (let item of this.card) {
@@ -248,17 +253,6 @@
 				this.selectedCoupon = selArr.join(',');
 				if (!this.selectedCoupon) {
 					this.selectedCoupon = '请选择优惠券类型';
-				}
-			},
-			selectShopType(val) {
-				this.FilterName = val;
-				this.currentName = [];
-				this.fiterId = [];
-				for (let i of this.FilterName) {
-					if (i.selected) {
-						this.currentName.push(i.name);
-						this.fiterId.push(i.id);
-					}
 				}
 			},
 			checkForm: function() { //验证表单
@@ -295,54 +289,13 @@
 					}
 				});
 				if (res) {
-					if (res.list) {
-						this.list = utils.sortByAll(res.list, 'createTime');
-					}
+					// if (res.list) {
+					this.list = utils.sortByAll(res.list, 'createTime');
+					// }
 					this.listLen = res.count;
 					this.pageTotal = res.total;
 				}
 			},
-			// async getOneCoupon(start, end, id) {
-			// 	// 获取核销量方法
-			// 	start = start.time || start;
-			// 	end = end.time || end;
-			// 	if (!id) {
-			// 		this.$store.commit('setWin', {
-			// 			title: '提示信息',
-			// 			content: '请选择门店类型',
-			// 			winType: 'alert'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	if (end - start < 0) {
-			// 		this.$store.commit('setWin', {
-			// 			title: '提示信息',
-			// 			content: '开始日期不能大于结束日期',
-			// 			winType: 'alert'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	if (end - start >= 7776000000) {
-			// 		this.$store.commit('setWin', {
-			// 			title: '提示信息',
-			// 			content: '时间间隔不能大于三个月',
-			// 			winType: 'alert'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	let res = await http.getOneCoupon({
-			// 		data: {
-			// 			startTime: (start / 1000) | 0,
-			// 			endTime: (end / 1000) | 0,
-			// 			couponId: this.couponId,
-			// 			shopIds: id,
-			// 			ischain: this.ischain,
-			// 			brandId: ''
-			// 		}
-			// 	});
-			// 	this.currentList = res;
-			// 	this.currentTotal = res.length;
-			// },
 			async getToOut() {
 				if (this.list.length <= 0) {
 					this.$store.commit('setWin', {
@@ -365,213 +318,54 @@
 				});
 			},
 			searchInDate() {
-				// this.isClick = true;
-				// let stime = this.startTime.time || this.startTime;
-				// let etime = this.endTime.time || this.endTime;
-				// this.page = 1;
-				// let obj = {
-				// 	start: stime,
-				// 	end: etime,
-				// 	type: '1,2,3,4,5,6',
-				// 	status: 0,
-				// 	page: this.page
-				// };
 				this.getCouponData();
 			},
-			// getSelect(val) {
-			// 	if (!this.isClick) {
-			// 		return false;
-			// 	}
-			// 	if (val === 0) {
-			// 		this.isShow0 = false;
-			// 		this.isShow1 = this.isShow2 = this.isShow3 = true;
-			// 	} else if (val === 1) {
-			// 		this.isShow1 = false;
-			// 		this.isShow0 = this.isShow2 = this.isShow3 = true;
-			// 	} else if (val === 2) {
-			// 		this.isShow2 = false;
-			// 		this.isShow0 = this.isShow1 = this.isShow3 = true;
-			// 	} else {
-			// 		this.isShow3 = false;
-			// 		this.isShow0 = this.isShow1 = this.isShow2 = true;
-			// 	}
-			// 	this.couponStatus = val;
-			// 	this.page = 1;
-			// 	let obj = {
-			// 		start: this.startTime,
-			// 		end: this.endTime,
-			// 		type: this.fiterCards.join(),
-			// 		status: val,
-			// 		page: this.page
-			// 	};
-			// 	this.getCouponData(obj); // 选择关联商品
-			// },
-			handleToCount(couponId, name, send) {
+			handleToCount(couponId, name) {
 				//  页面跳转
-				if (send == 0) {
-					this.$store.commit('setWin', {
-						title: '提示信息',
-						content: '该优惠券暂未领券',
-						winType: 'alert'
-					});
-					return false;
-				}
-				// this.$store.commit('setPageTools', {
-				// 	back: () => {
-				// 		this.handleToBack();
-				// 	}
-				// });
-				//this.currentName = [];
+				// if (send == 0) {
+				// 	this.$store.commit('setWin', {
+				// 		title: '提示信息',
+				// 		content: '该优惠券暂未领券',
+				// 		winType: 'alert'
+				// 	});
+				// 	return false;
+				// }
 				this.couponId = couponId;
 				this.couponName = name;
-				//this.shopListBtn = false;
 				this.changePage = !this.changePage;
-				// this.currentList = [];
-				// this.currentTotal = 0;
-				// if (!this.isBrand) {
-				// 	//  判断是品牌还是无门店品牌
-				// 	this.currentName.push(this.userData.currentShop.name);
-				// } else if (this.isBrand) {
-				// 	this.currentName = [];
-				// 	this.fiterId = [];
-				// 	for (let i = 0; i < this.shopList.length; i++) {
-				// 		this.FilterName.push({
-				// 			name: this.shopList[i].name,
-				// 			selected: true,
-				// 			id: this.shopList[i].id
-				// 		}); // 选择展示的核销量name
-				// 		this.currentName.push(this.shopList[i].name);
-				// 		this.fiterId.push(this.shopList[i].id);
-				// 	}
-				// }
-				// this.currstartTime.time = this.startTime.time || this.startTime;
-				// this.currendTime.time = this.endTime.time || this.endTime;
-
-				// let start = this.currstartTime.time || this.currstartTime;
-				// let end = this.currendTime.time || this.currendTime;
-				// if (!this.isBrand) {
-				// 	this.getOneCoupon(start, end, this.userData.currentShop.id);
-				// } else if (this.isBrand) {
-				// 	this.getOneCoupon(start, end, this.fiterId.join());
-				// }
 			},
-			// handleToBack() {
-			// 	this.$store.commit('setPageTools', {
-			// 		getToOut: () => {
-			// 			this.getToOut();
-			// 		}
-			// 	});
-			// 	this.changePage = !this.changePage;
-			// 	this.FilterName = [];
-			// },
 			handleSearchInDate() {
 				//  筛选优惠券类型
-				// this.isClick = true;
-				// let obj = {
-				// 	start: this.startTime,
-				// 	end: this.endTime,
-				// 	type: this.fiterCards.join(),
-				// 	status: this.couponStatus,
-				// 	page: 1
-				// };
 				this.getCouponData();
 			},
-			initResert() {
+			initResert: function() {
 				// 过滤优惠券类型
-				this.startTime = {
-					time: utils.getTime({
-						time: new Date(),
-						type: true
-					}).start
-				}; //日期组件的开始时间
-				this.endTime = {
-					time: utils.getTime({
-						time: new Date(),
-						type: true
-					}).end
-				}; //日期组件的结束时间
-				this.list = [];
-				this.page = 1;
-				this.shopListBtn = false;
-				this.selectName = ['请选择优惠券类型'];
-				//this.fiterCards = [];
-				this.listLen = 0;
-				this.pageTotal = 0;
-				this.isShow0 = false; // 判断优惠券状态添加class
-				this.isShow1 = this.isShow2 = this.isShow3 = true;
-				this.couponStatus = 0;
-				this.isClick = false;
-				for (let i = 0; i < this.card.length; i++) {
-					this.card[i].selected = false;
+				this.startTime = utils.getTime({
+					time: new Date().setDate(1)
+				}).start;
+				//日期组件的开始时间
+				this.endTime = utils.getTime({
+					time: new Date()
+				}).end; //日期组件的结束时间
+				let arr = [];
+				let selbrr = [];
+				for (let item of this.card) {
+					arr.push(item.id);
+					selbrr.push(item.name);
 				}
-				this.$refs.selectStore.init();
+				this.showCard = arr;
+				this.selectedCoupon = selbrr.join(',');
+				this.searchInDate();
 			},
-			// onSelectNuclearSales() {
-			// 	// 核销量选择
+			// searchCurrentDate() {
 			// 	let start = this.currstartTime.time || this.currstartTime;
 			// 	let end = this.currendTime.time || this.currendTime;
 			// 	if (!this.isBrand) {
 			// 		this.getOneCoupon(start, end, this.userData.currentShop.id);
 			// 	} else {
-			// 		if (this.fiterId.length == 0) {
-			// 			this.$store.commit('setWin', {
-			// 				title: '提示信息',
-			// 				content: '请选择门店类型',
-			// 				winType: 'alert'
-			// 			});
-			// 			return false;
-			// 		}
 			// 		this.getOneCoupon(start, end, this.fiterId.join());
 			// 	}
 			// },
-			searchCurrentDate() {
-				let start = this.currstartTime.time || this.currstartTime;
-				let end = this.currendTime.time || this.currendTime;
-				if (!this.isBrand) {
-					this.getOneCoupon(start, end, this.userData.currentShop.id);
-				} else {
-					this.getOneCoupon(start, end, this.fiterId.join());
-				}
-			},
-			handleToResert() {
-				//  重置核销量
-				this.currstartTime = {
-					time: utils.getTime({
-						time: new Date(),
-						type: true
-					}).start
-				}; //日期组件的开始时间
-				this.currendTime = {
-					time: utils.getTime({
-						time: new Date(),
-						type: true
-					}).end
-				}; //日期组件的结束时间
-				this.currentList = [];
-				this.currentName = [];
-				this.fiterId = [];
-				this.FilterName = [];
-				this.currentTotal = 0;
-				if (!this.isBrand) {
-					this.currentName.push(this.userData.currentShop.name);
-				} else {
-					for (let i = 0; i < this.shopList.length; i++) {
-						this.FilterName.push({
-							name: this.shopList[i].name,
-							selected: false,
-							id: this.shopList[i].id
-						});
-					}
-					this.$refs.selectStore1.init();
-				}
-				this.$refs.selectStore1.init();
-			},
-			handleClose() {
-				this.shopListBtn = false;
-			},
-			selecToOut() {
-				this.getToOut();
-			},
 			//方案列表点击选择方案
 			chooseStore: function(index) {
 				this.page = 1;
@@ -649,6 +443,12 @@
 	#online-configuration {
 		min-width: 780px;
 		position: relative;
+	}
+
+	#online-configuration .screenBox {
+		float: left;
+		margin-right: 20px;
+		margin-bottom: 10px;
 	}
 
 	.cricle-point {

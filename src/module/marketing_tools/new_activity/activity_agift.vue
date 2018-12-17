@@ -9,7 +9,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动名称</span>
 			<div class="rightHalf">
-				<!-- <input type="text" class="name" placeholder="请输入活动标题" v-model='title' maxlength="10" /> -->
 				<el-input v-model="title" maxlength="10" placeholder="请输入活动标题"></el-input>
 			</div>
 		</div>
@@ -18,11 +17,9 @@
 			<span class="online-sub fl">活动时间</span>
 			<div class="rightHalf">
 				<div class="fl" style="cursor: pointer;">
-					<!-- <calendar ref='startCal' :pObj='startObj' @throwTime="getStartTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="startObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" @change="getStartTime" value-format="timestamp">
 					</el-date-picker>
 					<span class="fl lines">-</span>
-					<!-- <calendar ref='endCal' :pObj='endObj' @throwTime="getEndTime" class="fl"></calendar> -->
 					<el-date-picker class="fl" v-model="endObj.time" type="datetime" placeholder="选择日期时间" :clearable="false" value-format="timestamp" @change="getEndTime">
 					</el-date-picker>
 				</div>
@@ -33,7 +30,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl required">活动范围</span>
 			<div class="rightHalf" v-if="ischain == '3'">
-				<!-- <a href="javascript:void(0);" class="addclassify" @click="openActivityWin">关联门店</a> -->
 				<el-button type="primary" icon="el-icon-plus" @click="openActivityWin" style="width:179px;">关联门店</el-button>
 				<span v-if="selectsList.length >= 1">(已选择{{selectsList.length}}家店铺)</span>
 			</div>
@@ -57,7 +53,6 @@
 		<div class="online-box clearfix">
 			<span class="online-sub fl">会员权益</span>
 			<div class="rightHalf">
-				<!-- <select-btn :name='durationName' :sorts="durationList.map(v=>v.name)" :width="200" @selOn="selexpirationTime"></select-btn> -->
 				<el-select v-model="durationName" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
 					<el-option v-for="item in durationList" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
@@ -68,9 +63,8 @@
 		<div class="online-box clearfix" v-if="durationId == '1'">
 			<span class="online-sub fl">关联优惠券</span>
 			<div class="rightHalf">
-				<!-- <a href="javascript:void(0);" class="addclassify" style="width:200px;" @click="openCouponWin">选择关联优惠券</a> -->
-				<el-button type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
-				<span v-if="selectCoupon.length > 0">(已关联{{selectCoupon.length}}张)</span>
+				<el-button class="fl" type="primary" icon="el-icon-plus" @click="addCoupon" style="width:179px;">选择关联优惠券</el-button>
+				<span class="coupon_name" v-if="selectCoupon.length > 0">(已关联:{{getCouponName(selectCoupon)}})</span>
 			</div>
 		</div>
 		<!-- 消息推送渠道 -->
@@ -108,69 +102,15 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="agift-content" style="overflow: inherit;height: 40px;">
-				<span class="fl">会员权益</span>
-				<div class="fl selectList" @click="openSelect">
-					{{onListName}}
-					<ul v-if="isList">
-						<li v-for="(item,index) in lists" :key='index' @click="getListDetail(item,index)">{{item.name}}</li>
-					</ul>
-				</div>
-				<span class="fl moreBtn" @click="openSelect" style="border: 1px solid #CCCCCC;border-left: none;cursor: pointer;">
-					<i></i>
-				</span>
-			</div> -->
-		<!-- <div class="agift-content" v-if="memberRights == 0">
-				<span class="fl"></span>
-				<div class="btn-concent" @click="openCouponWin">
-					<button class="fl increase" style="width: 150px;">选择优惠劵</button>
-				</div>
-				<span class="fl" v-if="couponLists.length >= 1">已选择{{couponLists.length}}张</span>
-			</div> -->
-		<!-- <div class="agift-content">
-				<span class="fl">消息推送渠道</span>
-				<mulSelect :styles="{backgroundColor:'rgb(247,247,247)'}" :list='list' @selOn='selOnSend' :selects="selects" :name='"name"' :keyName='"id"'></mulSelect>
-				<span class="fl" style="width: auto;color: #666666;padding-left:20px">活动发布后将通过该渠道触发会员</span>
-			</div> -->
-		<!-- 内容设置 -->
-		<!-- <div class="agift-content">
-				<label>
-					<span class="required required-none" style="vertical-align: top;padding-top: 10px;">内容设置</span>
-					<textarea placeholder="内容设置" style="width: 350px;height: 100px;" v-model="memberContent" maxlength="151"></textarea>
-				</label>
-				<div class="limit">
-					<p class="fl" style="margin-right: 102px;">
-						<img class="icon-i" src="../../../res/images/handle-tips.png" />限150字以内</p>
-					<p class="fl" v-if="msmStatus">您已输入{{memberContent.length}}个字,目前发送{{Math.ceil(memberContent.length / 60)}}条短信</p>
-				</div>
-				<div class="limit">
-					<p>引用参数:
-						<a style="color:#FF9200;" :key='index' v-for="(item,index) in parameter" @click="addParameter(index,1)">{{item.name}}</a>
-					</p>
-				</div>
-			</div> -->
-		<!-- <div class="agift-content">
-				<label>
-					<span class="required required-none" style="vertical-align: top;padding-top: 10px;">活动说明</span>
-					<textarea placeholder="请输入活动说明" style="width: 350px;height: 100px;" v-model="explain" maxlength="151"></textarea>
-				</label>
-				<p class="limit">
-					<img class="icon-i" src="../../../res/images/handle-tips.png" />限150字以内</p>
-				</div> -->
 		<div class="agift-content" style="padding-left: 60px;">
-			<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;" @click="closePage">取消</a> -->
 			<el-button type="info" plain style="margin-right: 10px;width:190px;" @click="closePage">取消</el-button>
 			<template v-if='isactivityDetail'>
-				<!-- <a href="javascript:void(0);" class="gray" style="width: 200px;background: #858585;" @click="addActivity('0')">保存</a>
-				<a href="javascript:void(0);" class="yellow" style="width: 200px;" @click="addActivity('1')" v-if="edit == false">发布</a> -->
 				<el-button type="info" style="margin-right: 10px;width:190px;" @click="addActivity('0')">保存</el-button>
 				<el-button type="primary" style="margin-right: 10px;width:190px;" @click="addActivity('1')" v-if="edit == false">发布</el-button>
 			</template>
 		</div>
 		<!-- 活动关联门店 -->
 		<rang @winEvent='rangEvent' :activityList='shopList' v-if='showRang' :selectsList="selectsList"></rang>
-		<!-- 优惠券弹窗 -->
-		<!-- <coupon @winEvent='couponEvent' :selectCoupon='couponLists' v-if='showCoupon'></coupon> -->
 		<!-- 关联优惠券的弹窗 -->
 		<addCoupon v-if='showCoupon' :selectCoupon='selectCoupon' @winEvent='winEvent'></addCoupon>
 	</div>
@@ -196,19 +136,22 @@
 					}).end
 				},
 				returnInt: 1, //相差天数
-				list: [{
-					'name': '微信',
-					'id': '1'
-				}],
+				list: [
+					{
+						'name': '微信',
+						'id': '1'
+					}
+				],
 				selects: [], //选中的状态
-				durationList: [{ //活动期限
-					name: '无',
-					id: 0
-				},
-				{
-					name: '电子优惠劵',
-					id: 1
-				}
+				durationList: [
+					{ //活动期限
+						name: '无',
+						id: 0
+					},
+					{
+						name: '电子优惠劵',
+						id: 1
+					}
 				],
 				durationId: 0,
 				durationName: '无', //状态
@@ -218,26 +161,27 @@
 				edit: false,
 				activityDetail: {},
 				memberContent: '', //内容设置
-				parameter: [{
-					'name': '【会员姓名】',
-					'id': '{memberName}'
-				},
-				{
-					'name': '【优惠券名称】',
-					'id': '{couponName}'
-				},
-				{
-					'name': '【优惠券数量】',
-					'id': '{couponNum}'
-				},
-				{
-					'name': '【活动名称】',
-					'id': '{activityName}'
-				},
-				{
-					'name': '【注册时间】',
-					'id': '{registerTime}'
-				}
+				parameter: [
+					{
+						'name': '【会员姓名】',
+						'id': '{memberName}'
+					},
+					{
+						'name': '【优惠券名称】',
+						'id': '{couponName}'
+					},
+					{
+						'name': '【优惠券数量】',
+						'id': '{couponNum}'
+					},
+					{
+						'name': '【活动名称】',
+						'id': '{activityName}'
+					},
+					{
+						'name': '【注册时间】',
+						'id': '{registerTime}'
+					}
 				],
 				showRang: false,
 				showCoupon: false,
@@ -277,29 +221,13 @@
 				//相差天数计算
 				this.returnInt = Math.ceil((new Date(this.endObj.time).getTime() - new Date(this.startObj.time).getTime()) / (1000 * 60 * 60 * 24));
 			},
-			// getListDetail: function(item, index) {
-			// 	// 获取设置list详情
-			// 	this.onListName = item.name;
-			// 	this.memberRights = index;
-
-			// 	if (this.memberRights != 0) {
-			// 		this.couponLists = [];
-			// 	}
-			// },
 			openActivityWin: function() {
 				//设置活动范围
 				this.showRang = true;
 			},
-			// rangEvent(obj) {
-			// 	this.showRang = false;
-			// 	if (obj.selects) {
-			// 		this.activityList = utils.unique(obj.selects);
-			// 	}
-			// },
 			rangEvent(obj) { //关联弹窗的回掉
 				if (obj.status == 'ok') {
 					this.selectsList = obj.select;
-					//console.log(JSON.stringify(this.selectsList))
 				}
 				this.showRang = false;
 			},
@@ -420,6 +348,16 @@
 				}
 				this.activityDetail = utils.deepCopy(activityDetail);
 				this.edit = true;
+			},
+			getCouponName: function(arr) { //获取优惠券名称
+				let couponName = '';
+				let couponArr = [];
+				for (let item of arr) {
+					let oneCoupon = item.name + '*' + item.num;
+					couponArr.push(oneCoupon);
+				}
+				couponName = couponArr.join(';');
+				return couponName;
 			}
 		},
 		watch: {
@@ -441,20 +379,26 @@
 					this.explain = this.explain.substr(0, 150);
 				}
 			},
+			'selectCoupon': {
+				deep: true,
+				handler: function() {
+					this.getCouponName(this.selectCoupon);
+				}
+			}
 		},
 		components: {
 			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+				import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
 			'canMulti': () =>
-				import ( /* webpackChunkName:'can_multi' */ 'src/components/can_multi'),
+				import( /* webpackChunkName:'can_multi' */ 'src/components/can_multi'),
 			'mulSelect': () =>
-				import ( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+				import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
 			'rang': () =>
-				import ( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+				import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
 			'addCoupon': () =>
-				import ( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
 			selectBtn: () =>
-				import ( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+				import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{
@@ -542,6 +486,16 @@
 
 
 	/*活动名称的输入框*/
+	#member-agift .online-box .rightHalf .coupon_name {
+		float: left;
+		display: block;
+		width: 600px;
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 
 	#member-agift .online-box .rightHalf .name {
 		width: 280px;
