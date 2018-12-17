@@ -61,7 +61,15 @@
                     <!-- 选择的价格模板 -->
                     <div class="data-form__item line-item">
                          <el-form-item label-width="100px" label="选择价格梯队:">
-                            <div class="info-block">{{item.templateId.name}} | {{item.priceType}}</div> 
+                            <div class="info-block">
+                                <template v-if="item.templateId.name != ''">
+                                    {{item.templateId.name}} 
+                                </template>
+                                <template v-else>
+                                    <span style="color:#F5535C;">价格模板不存在</span>
+                                </template> 
+                                | {{item.priceType}}
+                            </div> 
                         </el-form-item>
                     </div>
                 </el-form>
@@ -258,15 +266,18 @@ export default {
     getTempName(id){
         let name = '';
         if(id == '0'){
-            name = '原始价格'
+                name = '原始价格'
         }else{
             let item = this.tempTitleList.find(v=>{
                 return id == v.id
             })
-            name = item.name
+            if(item== '' || item == undefined){
+                return {id,name:''}
+            }else{
+                name = item.name
+            }
         }
-        return {id,name};
-        
+        return {id,name}; 
     },
     // 轮训任务进度
     getTaskProgress(){

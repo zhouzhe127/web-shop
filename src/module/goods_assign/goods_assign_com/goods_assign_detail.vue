@@ -44,7 +44,15 @@
                     <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">价格模板：</span>
                     <div style="flex:1;">
-                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | <span style="margin-right:5px;" v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> </span>
+                      <span style="margin: 5px 5px 0;display:inline-block;">
+                          <template v-if="item.templateId.name != ''">
+                            {{item.templateId.name}} 
+                          </template>
+                          <template v-else>
+                            <span style="color:#F5535C;">价格模板不存在</span>
+                          </template>
+                        | <span style="margin-right:5px;" v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> 
+                        </span>
                     </div>
                   </div>
                   <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
@@ -71,7 +79,15 @@
                    <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">价格模板：</span>
                     <div style="flex:1;">
-                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | <span style="margin-right:5px;" v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> </span>
+                      <span style="margin: 5px 5px 0;display:inline-block;">
+                        <template v-if="item.templateId.name != ''">
+                            {{item.templateId.name}} 
+                          </template>
+                          <template v-else>
+                            <span style="color:#F5535C;">价格模板不存在</span>
+                          </template>
+                        | <span style="margin-right:5px;" v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> 
+                        </span>
                     </div>
                   </div>
                   <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
@@ -110,7 +126,15 @@
               <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">价格模板：</span>
                     <div style="flex:1;">
-                      <span style="margin: 5px 5px 0;display:inline-block;">{{item.templateId.name}} | <span style="margin-right:5px;"  v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> </span>
+                      <span style="margin: 5px 5px 0;display:inline-block;">
+                        <template v-if="item.templateId.name != ''">
+                            {{item.templateId.name}} 
+                          </template>
+                          <template v-else>
+                            <span style="color:#F5535C;">价格模板不存在</span>
+                          </template>
+                        | <span style="margin-right:5px;"  v-for="(pt,pi) in item.priceType" :key="pi">{{pt}}</span> 
+                        </span>
                     </div>
                 </div>
               <div style="display:flex;width:100%;align-items: baseline;">
@@ -251,6 +275,7 @@ export default {
       let succArr = [];
       let filedArr = [];
       let logArr =[];
+      let logFiledArr = []
 
       this.totalTaskGoodsNum = infoObj.assignIds.split(',').length * infoObj.log.length;
       this.taskLog = [];
@@ -278,9 +303,10 @@ export default {
           arr.push(obj);        
       });
 
-    // console.log(arr,'arrarr') 
+    console.log(arr,'arrarr') 
     
       arr.map((item,index)=>{
+        console.log(item.conditions,'item.conditions')
         let obj = {};
         obj.shopId = item.shopId;
         obj.name = this.getShopName(item.shopId);
@@ -296,11 +322,12 @@ export default {
 
         logArr.forEach(item=>{
           if(item.filedArr.length>0){
-            this.onlyFiledLog.push(item)
+            logFiledArr.push(item)
+           this.onlyFiledLog = this.combineObjectInList(logFiledArr,'shopId') 
           }
         })
         this.taskLog = this.combineObjectInList(logArr,'shopId');
-        // console.log( this.taskLog,' this.taskLog')
+        console.log( this.taskLog,' this.taskLog')
       })
      
     },
@@ -381,22 +408,32 @@ export default {
         return arr; 
     },
     getTempName(id){
-        let name = '';
-        if(id == '0'){
-            name = '原始价格'
+      let name = '';
+      if(id == '0'){
+          name = '原始价格'
         }else{
-            let item = this.tempTitleList.find(v=>{
-                return id == v.id
-            })
+          let item = this.tempTitleList.find(v=>{
+              return id == v.id
+          })
+          if(item== '' || item == undefined){
+            return {id,name:''}
+          }else{
             name = item.name
+          }
         }
-        return {id,name};
-        
+      return {id,name}; 
     },
     handleOpenD(item){
-      let els = this.taskLog.find(v=>{
-        return v.name == item.name
-      })
+      let els = null;
+      if(this.tabIndex == 2 && this.filedGoodsNum != 0){
+        els = this.onlyFiledLog.find(v=>{
+          return v.name == item.name
+        })
+      }else{
+        els = this.taskLog.find(v=>{
+          return v.name == item.name
+        })
+      }
       els.opened = !els.opened
     },
     combineObjectInList(arr, item) {

@@ -110,8 +110,7 @@
 								</div>
 								<div class="data-form__item template-item">
 									<el-radio-group v-model="item.templateId">
-										<el-radio label="0" border>原始价格</el-radio>
-										<el-radio :label="item.id" border v-for="(item,index) in tempTitleList" :key="index">{{item.name}}</el-radio>
+										<el-radio :label="tp.id" border v-for="(tp,index) in tempTitleList" :key="index">{{tp.name}}</el-radio>
 									</el-radio-group>
 								</div>
 							</el-form-item>
@@ -493,7 +492,10 @@ export default {
 		let data = await http.getPriceTemplateTitle();
 		if(data){
 			console.log(data,'模板')
-			this.tempTitleList = data;
+			let obj = {id:'0',name:"原始价格",type:'1'};
+			let tempData = utils.deepCopy(data)
+			tempData.unshift(obj);
+			this.tempTitleList = tempData;
 		}
 	},
 	// 编辑修改数据
@@ -512,7 +514,7 @@ export default {
 					shopIds:item.shopIds.split(','),
 					priceType :item.priceType.split(','),
 					checkGoodsType : item.type.split(','),
-					templateId :item.templateId,
+					templateId :String(item.templateId),
 					isCoerce : item.isCoerce == '1' ? true : false,
 					title : `模板${index+1}`,
 					id : `${index+1}`,
@@ -521,13 +523,10 @@ export default {
 
 				this.tabsCont.push(tabObj)
 			})
-
-
 			if(this.activeVal == '1'){
 				this.shopIds = this.tabsCont[0].shopIds;
 			}
-
-			console.log(this.tabsCont,'this.tabsCont')
+			// console.log(this.tabsCont,'this.tabsCont')
 	},
 	// 过滤后的店铺
 	getDelShopId(index){

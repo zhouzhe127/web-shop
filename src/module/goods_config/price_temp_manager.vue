@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-12 10:36:15
+ * @LastEditTime: 2018-12-17 16:59:19
  * @LastEditors: Please set LastEditors
  -->
 
@@ -53,12 +53,26 @@
 							<template slot-scope="scope">{{scope.row.price}}</template>
 						</el-table-column>
 						<!--会员价-->
-						<el-table-column v-if="vipPriceOpen" min-width="75" label="会员价">
-							<template slot-scope="scope">{{scope.row.vipPrice}}</template>
+						<el-table-column v-if="vipPriceOpen" min-width="75"  align="center" label="会员价">
+							<template slot-scope="scope">
+								<template v-if="scope.row.isVip == '1'">
+									{{scope.row.vipPrice}}
+								</template>
+								<template v-else>
+									--
+								</template>
+							</template>
 						</el-table-column>
 						<!--特价-->
-						<el-table-column v-if="specialPriceOpen" min-width="75" label="特价">
-							<template slot-scope="scope">{{scope.row.specialPrice}}</template>
+						<el-table-column v-if="specialPriceOpen" min-width="75" align="center" label="特价">
+							<template slot-scope="scope">
+								<template v-if="scope.row.isSpecial == '1'">
+									{{scope.row.specialPrice}}
+								</template>
+								<template v-else>
+									--
+								</template>
+							</template>
 						</el-table-column>
 					</el-table-column>
 					<el-table-column min-width="360" width="400" v-if="tableTemplate.templateTitle.length > 0" align="center" v-for="(item,index) in
@@ -328,7 +342,6 @@ export default {
 					}
 				})
 				.then(res => {
-					console.log(res,'909909909999')
 					this.getPricetemplateData(this.goodIds);
 				});
 		},
@@ -527,7 +540,7 @@ export default {
 			if(type == 'vip' && Number(this.tempEditVipPrice) > Number(price.itemPrice)){
 				this.$store.commit('setWin', {
 					title: '温馨提示',
-					content: '会员价不得高于原始价',
+					content: '会员价不能高于基础价',
 					winType: 'alert'
 				});
 				return;
@@ -535,12 +548,11 @@ export default {
 			if(type == 'special' && Number(this.tempEditSpecialPrice) > Number(price.itemPrice)){
 				this.$store.commit('setWin', {
 					title: '温馨提示',
-					content: '会员价不得高于特价',
+					content: '特价不能高于基础价',
 					winType: 'alert'
 				});
 				return;
 			}
-
 
 			if (type == 'vip') {
 				data = await http.editPricetemplate({
@@ -1097,6 +1109,7 @@ export default {
 			let endIndex = this.currentPage * this.pageSize;
 
 			this.nowGoods = arr.slice(startIndex, endIndex);
+			console.log(this.nowGoods,'this.nowGoods')
 
 			if (this.nowGoods.length > 0) {
 				let ids = [];

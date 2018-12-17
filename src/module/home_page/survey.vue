@@ -95,7 +95,7 @@
 				<div class="head">通知</div>
 				<div class="content">
 					<section v-for="(item,index) in noticeList" :key="index">
-						<div>{{item.time}}
+						<div style="padding: 5px 0;">{{item.time}}
 							<span style="background:#E6A23C;border-radius: 20px;padding: 0 8px;color: #fefefe;">{{item.source=='1'?'闪店':'品牌'}}</span>
 						</div>
 						<div class="title" style="margin-bottom: 15px" @click="toContent(item)">{{item.title}}</div>
