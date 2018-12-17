@@ -297,9 +297,9 @@
 					} else if (i == 'gName') {
 						this.goodsName = data[i];
 					} else if (i == 'isAuto') {
-						this.isAutoBool = this.isAuto == 1;
+						this.isAutoBool = data.isAuto == 1;
 					} else if (i == 'isOversold') {
-						this.isOversoldBool = this.isOversold == 1;
+						this.isOversoldBool = data.isOversold == 1;
 					} else {
 						this[i] = data[i];
 					}
