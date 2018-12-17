@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-17 10:24:06
+ * @LastEditTime: 2018-12-17 11:45:30
  * @LastEditors: Please set LastEditors
  -->
 
@@ -38,7 +38,7 @@
 					<!-- 时间 -->
 					<el-table-column label="时间" align="center">
 						<template slot-scope="scope">
-							{{scope.row.createTime | formatCreateTime('yyyy-qq-MM dd:hh:mm')}}
+							{{scope.row.createTime | formatCreateTime('yyyy-MM-dd hh:mm:ss')}}
 						</template>
 					</el-table-column>
 					<!-- 名称 -->

@@ -190,21 +190,21 @@ let global = {
 	win_num: 0,
 
 	// 本地时的请求接口地址
-	host: {
-		shop: 'http://v5.ishandian.com.cn/shop/',
-		bc: 'http://bc.api.ishandian.com.cn/Api/',
-		wx: 'http://zishi.ishandian.com.cn/api/',
-		pos: 'http://v5.ishandian.com.cn/pos/',
-		fs: 'http://fs.ishandian.com.cn/api/'
-	},
-	// qa
 	// host: {
-	// 	shop: 'http://v5.qa.ishandian.com.cn/shop/',
-	// 	bc: 'http://bc.api.qa.ishandian.com.cn/api/',
-	// 	wx: 'http://wx.qa.ishandian.com.cn/api/',
-	// 	pos: 'http://v5.qa.ishandian.com.cn/pos/',
-	// 	fs: 'http://fs.qa.ishandian.com.cn/api/'
+	// 	shop: 'http://v5.ishandian.com.cn/shop/',
+	// 	bc: 'http://bc.api.ishandian.com.cn/Api/',
+	// 	wx: 'http://zishi.ishandian.com.cn/api/',
+	// 	pos: 'http://v5.ishandian.com.cn/pos/',
+	// 	fs: 'http://fs.ishandian.com.cn/api/'
 	// },
+	// qa
+	host: {
+		shop: 'http://v5.qa.ishandian.com.cn/shop/',
+		bc: 'http://bc.api.qa.ishandian.com.cn/api/',
+		wx: 'http://wx.qa.ishandian.com.cn/api/',
+		pos: 'http://v5.qa.ishandian.com.cn/pos/',
+		fs: 'http://fs.qa.ishandian.com.cn/api/'
+	},
 	// pre
 	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "https://fspre.ishandian.net/api/"},
 	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "https://fs.i-shandian.com/api/"},

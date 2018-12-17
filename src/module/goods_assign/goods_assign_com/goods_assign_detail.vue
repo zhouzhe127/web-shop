@@ -234,7 +234,7 @@ export default {
     // tab切换
     handleClick(res){
       let currentTab = this.tabIndex;
-      console.log(this.tabIndex)
+      // console.log(this.tabIndex)
     },
     // 获取详情
     getTaskDetail(){
@@ -242,7 +242,7 @@ export default {
     },
     // 任务信息处理
     handleTaskData(){
-      console.log(this.detailInfo,'detailInfo') // 请求的详情信息
+      // console.log(this.detailInfo,'detailInfo') // 请求的详情信息
       // console.log(this.detailData,'detailData') // 请求的任务信息
       let dataObj = utils.deepCopy(this.detailData);
 
@@ -278,14 +278,14 @@ export default {
           arr.push(obj);        
       });
 
-    console.log(arr,'arrarr')
+    // console.log(arr,'arrarr') 
     
       arr.map((item,index)=>{
         let obj = {};
-        
+        obj.shopId = item.shopId;
         obj.name = this.getShopName(item.shopId);
-        obj.goods = this.getSelectGoods(item.assignIds.split(','))
-        obj.priceType = this.getPriceType(item.conditions.priceType).join(',')
+        obj.goods = this.getSelectGoods(item.assignIds.split(','));
+        obj.priceType = this.getPriceType(item.conditions.priceType).join(',');
         obj.templateId = this.getTempName(item.conditions.templateId)
         obj.fieldsType = this.getGoodsType(item.conditions.fieldsType)
         obj.succArr = this.getSelectGoods(item.succArr);
@@ -299,9 +299,8 @@ export default {
             this.onlyFiledLog.push(item)
           }
         })
-
-        this.taskLog = logArr;
-        console.log( this.taskLog,' this.taskLog  ')
+        this.taskLog = this.combineObjectInList(logArr,'shopId');
+        // console.log( this.taskLog,' this.taskLog')
       })
      
     },
@@ -400,12 +399,42 @@ export default {
       })
       els.opened = !els.opened
     },
+    combineObjectInList(arr, item) {
+			//数组去除重复，item为重复判定项，list为重复记录需要累加的值的数组
+			let obj = {};
+			let a = [];
+			for (let i in arr) {
+				if (!obj[arr[i][item]]) {
+					obj[arr[i][item]] = this.copyObj(arr[i]); //数组克隆
+				}
+			}
+			for (let k in obj) {
+				a.push(obj[k]);
+			}
+			return a;
+		},
+		copyObj(obj) {
+			//obj arr 对象的克隆（区分于指针赋值）
+			if (obj.constructor == Array) {
+				let a = [];
+				for (let i in obj) {
+					a.push(obj[i]);
+				}
+				return a;
+			} else {
+				let o = {};
+				for (let i in obj) {
+					o[i] = obj[i];
+				}
+				return o;
+			}
+		},
     
   
   },
   filters:{
 			formatTime(time,format){
-        format = format || 'yyyy-qq-MM dd:hh:mm';
+        format = format || 'yyyy-MM-dd hh:mm:ss';
 				if(time != '0'){
 					return utils.format(time,format)
 				}else{
