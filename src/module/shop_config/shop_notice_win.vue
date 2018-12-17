@@ -478,7 +478,7 @@ export default {
 				if (res) {
 					let content = '';
 					if(this.redDetial.type === '0'){
-						content= '此修改只有标题，正文，定时发送时间有效';
+						content= '通知发布的渠道、品牌、门店及职位不可修改！';
 					}else{
 						content= '修改成功';
 					}
