@@ -31,19 +31,24 @@
 				</div>
 			</div>
 			<el-table :data="activityList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'60px'}">
-				<el-table-column fixed label="活动类型" align="center">
+				<el-table-column fixed label="活动类型" align="center" width="120">
 					<template slot-scope="scope">
 						{{setType(scope.row.type)}}
 					</template>
 				</el-table-column>
-				<el-table-column label="活动名称" prop="name" align="center">
+				<el-table-column label="活动名称" prop="name" align="center" width="200">
 				</el-table-column>
-				<el-table-column label="创建时间" align="center">
+				<el-table-column label="创建时间" align="center" width="150">
 					<template slot-scope="scope">
-						<span>{{transFormData(scope.row.createTime)}}</span>
+						<span>{{transFormData(scope.row.createTime,'')}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="活动期限" align="center">
+				<el-table-column label="活动时间" align="center" v-if="activityType == '6'" width="260">
+					<template slot-scope="scope">
+						<span>{{transFormData(scope.row.startTime,1)}}至{{transFormData(scope.row.endTime,1)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="活动期限" align="center" width="150">
 					<template slot-scope="scope">
 						<span v-if="scope.row.type == '0'">{{timeLimit[scope.row.limit].name}}</span>
 						<span v-else>{{setEndTime(scope.row.startTime,scope.row.endTime)}}</span>
@@ -63,13 +68,13 @@
 						</template>
 					</el-table-column>
 				</template>
-				<el-table-column label="券发放数量" align="center">
+				<el-table-column label="券发放数量" align="center" width="120">
 					<template slot-scope="scope">
 						<span v-if="scope.row.giveNum == '0'">无限制</span>
 						<span v-else>{{scope.row.giveNum}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="每日发放上限" align="center">
+				<el-table-column label="每日发放上限" align="center" width="130">
 					<template slot-scope="scope">
 						<span v-if="scope.row.dayGiveNum == '0'">无限制</span>
 						<span v-else>{{scope.row.giveNum}}</span>
@@ -155,11 +160,11 @@ export default {
 				value: '0'
 			}, ],
 			customList: [{
-				'name': '店内'
-			},
-			{
-				'name': '会员'
-			}
+					'name': '店内'
+				},
+				{
+					'name': '会员'
+				}
 			],
 			goodsType: [{
 				'name': '微信',
@@ -241,9 +246,18 @@ export default {
 			return iDays + 1;
 		},
 
-		transFormData: function(t) {
+		transFormData: function(time, type) {
 			// 转换时间
-			return utils.format(t, 'yyyy-MM-dd');
+			if (time && time.length == 10) {
+				time *= 1000;
+			}
+			let str = '';
+			if (type == 1) {
+				str = 'yyyy-MM-dd hh:mm';
+			} else {
+				str = 'yyyy-MM-dd';
+			}
+			return utils.format(new Date(time), str);
 		},
 		setType: function(type) {
 			// 设置活动类型
@@ -385,19 +399,19 @@ export default {
 		},
 		setTitle: function() { //设置标题
 			this.$store.commit('setPageTools', [{
-				name: '返回',
-				className: 'el-btn-blue',
-				fn: () => {
-					this.returnActivity();
+					name: '返回',
+					className: 'el-btn-blue',
+					fn: () => {
+						this.returnActivity();
+					}
+				},
+				{
+					name: '新建活动',
+					className: 'el-btn-yellow',
+					fn: () => {
+						this.addActivity();
+					}
 				}
-			},
-			{
-				name: '新建活动',
-				className: 'el-btn-yellow',
-				fn: () => {
-					this.addActivity();
-				}
-			}
 			]);
 		},
 		returnActivity: function() { //返回活动首页
