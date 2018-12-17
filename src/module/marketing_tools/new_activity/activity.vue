@@ -160,11 +160,11 @@ export default {
 				value: '0'
 			}, ],
 			customList: [{
-					'name': '店内'
-				},
-				{
-					'name': '会员'
-				}
+				'name': '店内'
+			},
+			{
+				'name': '会员'
+			}
 			],
 			goodsType: [{
 				'name': '微信',
@@ -399,19 +399,19 @@ export default {
 		},
 		setTitle: function() { //设置标题
 			this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: 'el-btn-blue',
-					fn: () => {
-						this.returnActivity();
-					}
-				},
-				{
-					name: '新建活动',
-					className: 'el-btn-yellow',
-					fn: () => {
-						this.addActivity();
-					}
+				name: '返回',
+				className: 'el-btn-blue',
+				fn: () => {
+					this.returnActivity();
 				}
+			},
+			{
+				name: '新建活动',
+				className: 'el-btn-yellow',
+				fn: () => {
+					this.addActivity();
+				}
+			}
 			]);
 		},
 		returnActivity: function() { //返回活动首页
