@@ -471,6 +471,9 @@ let need = {
 		sellingConsumptionStatistics: { //卖手消费统计
 			name: 'sellingConsumptionStatistics'
 		},
+		renovation: { //粮票集装修
+			name: 'renovation'
+		},
 	}
 };
 export default need;

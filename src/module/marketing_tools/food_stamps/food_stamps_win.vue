@@ -63,24 +63,17 @@ export default {
 			title: '',
 			okStyle: null,
 			cancelStyle: null,
-			payWays: [{
-				id: 0,
-				name: '用户'
-			}, {
-				id: 1,
-				name: '工作人员'
-			}], //类型
 			imageName: '', //图片名称
 			typeList: [{
 				name: '环境',
-				id: 0,
+				id: 1,
 				key: 'H'
 			}, {
 				name: '商品',
-				id: 1,
+				id: 2,
 				key: 'G'
 			}],
-			typeId: 0,
+			typeId: 1,
 			keyName: 'H',
 			typeName: '环境',
 			fileName: '', //上传的图片的名称
@@ -147,7 +140,7 @@ export default {
 			if (!this.checkForm()) return;
 			let key = '';
 			if (this.type == 'add') {
-				if (this.typeId == 0) {
+				if (this.typeId == 1) {
 					key = this.keyName + (this.Hnum + 1);
 				} else {
 					key = this.keyName + (this.Gnum + 1);
@@ -196,7 +189,7 @@ export default {
 		if (this.type == 'edi') {
 			this.imageName = this.detail.name; //图片名称
 			this.typeId = this.detail.type;
-			this.typeName = this.typeList[this.typeId].name;
+			this.typeName = this.typeList[this.typeId - 1].name;
 			this.fileName = this.detail.url;
 			this.title = '编辑图片';
 			this.okStyle = {

@@ -135,8 +135,8 @@ export default {
 			proList: [], //图片列表
 			showWin: false,
 			imgType: {
-				0: '环境',
-				1: '商品'
+				1: '环境',
+				2: '商品'
 			},
 			type: 'add', //新增或编辑
 			detail: {} //某个详情
