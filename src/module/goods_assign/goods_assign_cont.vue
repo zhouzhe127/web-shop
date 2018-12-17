@@ -2,7 +2,7 @@
  * @Description: 商品指派
  * @Author: han
  * @Date: 2018-12-06 15:41:13
- * @LastEditTime: 2018-12-17 11:45:30
+ * @LastEditTime: 2018-12-17 14:12:57
  * @LastEditors: Please set LastEditors
  -->
 
@@ -79,8 +79,8 @@
 								<el-button type="text" @click="handlePublishTask(scope.row)">发布</el-button>
 								<el-button type="text" @click="handleEditAssing(scope.row)">编辑</el-button>
 							</template>
-							<el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">指派中查看详情</el-button>
-							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">完成的查看详情</el-button>
+							<el-button v-else-if="scope.row.status == '1'" type="text" @click="lookAssignDetail(scope.row)">查看指派中详情</el-button>
+							<el-button v-else-if="scope.row.status == '2'" type="text" @click="lookAssignDetail(scope.row)">查看详情</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
