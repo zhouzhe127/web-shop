@@ -26,7 +26,7 @@
     <div class="opare-block" v-if="tabIndex == '1'">
       <div class="data-form__item line-item" v-for="(item,index) in taskLog" :key="index">
         
-          <div class="t-name" style="margin-bottom:10px;">{{item.name}}</div>
+          <div class="t-name" style="margin-bottom:10px;">店铺：{{item.name}}</div>
          
           <div class="t-info">
             <!-- 成功的 --> 
@@ -94,7 +94,7 @@
     <div class="opare-block" v-if="tabIndex == '2' && filedGoodsNum !=0 ">
       <div class="data-form__item line-item" v-for="(item,index) in onlyFiledLog" :key="index">
         <template v-if="item.filedArr.length>0">
-          <div class="t-name" style="margin-bottom:10px;">{{item.name}}</div>
+          <div class="t-name" style="margin-bottom:10px;">店铺：{{item.name}}</div>
           <!-- 失败的 -->
           <div class="t-info" >
             <span @click="handleOpenD(item)"  style="cursor:pointer; color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down":class="{'el-icon-arrow-up':item.opened}"></i></span>
