@@ -495,19 +495,20 @@ export default {
 			this.oneArea = {
 				id: item.id,
 				name: item.name,
-				show: false
+				show: false,
+				child:item.child
 			};
 			this.child = item.child;
 			this.child || (this.child = []);
 
 			this.tempGoods = this.pageGoods = this.filterGoodsByCategoryByPid(
 				this.goodsList,
-				this.oneArea.id
+				this.oneArea.id,
+				item.child
 			);
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
 			}
-
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 				this.pageGoods = this.changeNav(
@@ -579,7 +580,7 @@ export default {
 			this.initPage(this.pageGoods);
 		},
 		//根据所提供的商品和分类,将商品分类
-		filterGoodsByCategoryByPid(goods, id) {
+		filterGoodsByCategoryByPid(goods, id,child) {
 			if (id == -1) return goods;
 			let arr = [];
 			goods.forEach(ele => {
@@ -589,9 +590,51 @@ export default {
 						arr.push(ele);
 						return true;
 					}
+					if (child) {
+						for (let i = 0; i < child.length; i++) {
+							ele.cids.some(v => {
+								if (v == child[i].id) {
+									arr.push(ele);
+									return true;
+								}
+							});
+						}
+					}
 				});
 			});
+			// 根据id去重
+			arr = this.combineObjectInList(arr, 'id');
 			return arr;
+		},
+		combineObjectInList(arr, item) {
+			//数组去除重复，item为重复判定项，list为重复记录需要累加的值的数组
+			let obj = {};
+			let a = [];
+			for (let i in arr) {
+				if (!obj[arr[i][item]]) {
+					obj[arr[i][item]] = this.copyObj(arr[i]); //数组克隆
+				}
+			}
+			for (let k in obj) {
+				a.push(obj[k]);
+			}
+			return a;
+		},
+		copyObj(obj) {
+			//obj arr 对象的克隆（区分于指针赋值）
+			if (obj.constructor == Array) {
+				let a = [];
+				for (let i in obj) {
+					a.push(obj[i]);
+				}
+				return a;
+			} else {
+				let o = {};
+				for (let i in obj) {
+					o[i] = obj[i];
+				}
+				return o;
+			}
 		},
 		//根据商品导航筛选商品
 		filterGoodsByNav(id) {

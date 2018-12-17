@@ -388,8 +388,14 @@ export default {
 		url: s + '/Pricetemplate/delete',
 		method:'get'
 	},
+	// 移动模板
 	moveSortPricetemplate:{
 		url: s+ 'Pricetemplate/moveSort',
+		method:'get'
+	},
+	// 获取模板头部信息
+	getPriceTemplateTitle:{
+		url: s+ 'Pricetemplate/getTemplateTitle',
 		method:'get'
 	}
 };

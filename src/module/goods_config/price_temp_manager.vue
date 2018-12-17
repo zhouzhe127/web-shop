@@ -2,7 +2,7 @@
  * @Description: 价格模板管理
  * @Author: han
  * @Date: 2018-11-22 15:02:48
- * @LastEditTime: 2018-12-03 16:33:30
+ * @LastEditTime: 2018-12-12 10:36:15
  * @LastEditors: Please set LastEditors
  -->
 
@@ -24,106 +24,20 @@
 					<el-button slot="append" icon="el-icon-search" @click="funSearchkeyUp"></el-button>
 				</el-input>
 			</div>
-
-			<!-- <el-button type="primary" @click="getClearPricetemplate">清除缓存</el-button> -->
 		</div>
 		<hr style="border:0;background-color:#ebeef5;height:1px;margin:20px 0;">
-		<!-- 是否开启会员价 -->
-		<el-checkbox v-model="vipPriceOpen">开启会员价</el-checkbox>
+		<div>
+			<!-- 是否开启会员价 -->
+			<el-checkbox v-model="vipPriceOpen">开启会员价</el-checkbox>
+			<!--开启特价-->
+			<el-checkbox v-model="specialPriceOpen">开启特价</el-checkbox>
+		</div>
 		<!-- 价格模板列表 -->
 		<div class="price_temp_table">
-			<div class="table_title">商品列表·共{{goodsList.length}}个条目</div>
-
-			<!-- 默认不显示会员价列表 -->
-			<div class="table-box" v-show="!vipPriceOpen">
-				<el-table style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
-					<el-table-column min-width="100" type="index" fixed label="序号" align="center"></el-table-column>
-					<el-table-column min-width="100" fixed label="商品名称" align="center">
-						<template slot-scope="scope">{{scope.row.goodsName}}</template>
-					</el-table-column>
-					<el-table-column min-width="100" fixed label="编码" align="center">
-						<template slot-scope="scope">
-							<span v-if="scope.row.categoryCode!==''&&scope.row.goodsCode!==''&&scope.row.id*1<10000">{{scope.row.categoryCode}}-{{scope.row.goodsCode}}</span>
-							<span v-else>-</span>
-						</template>
-					</el-table-column>
-					<el-table-column min-width="100" label="原始价格" align="center">
-						<template slot-scope="scope">{{scope.row.price}}</template>
-					</el-table-column>
-					<el-table-column min-width="240" width="300" v-if="tableTemplate.templateTitle.length > 0" v-for="(item,index) in 
-								tableTemplate.templateTitle" class-name="edithead" :key="index">
-						<!-- 自定义表头 -->
-						<template slot="header" slot-scope="scope">
-							<div class="cell-block" style="justify-content:space-between;">
-								<template v-if="thEditer && thEditerIndex == index">
-									<el-input v-model="thEditerName" ref="editHeadSucessRef" maxlength="10" @blur="editHeadSucess(tableTemplate.templateTitle[index],index)" style="width:150px;padding:0"></el-input>
-									<div>
-										<!-- 保存按钮 -->
-										<span class="edit-btn" @click.stop="editHeadSucess(tableTemplate.templateTitle[index],index)">
-											<i class="el-icon-success" style="color:#E0BA4F"></i>
-										</span>
-										<!-- 取消按钮 -->
-										<span class="edit-btn" @click.stop="editHeadCancel">
-											<i class="el-icon-error" style="color:#666;"></i>
-										</span>
-									</div>
-								</template>
-								<template v-else>
-									<span>{{tableTemplate.templateTitle[index].name ? tableTemplate.templateTitle[index].name : '价格模板'}}</span>
-									<div style="order:1;width:150px;">
-										<!-- 左移动 -->
-										<span class="edit-btn move-btn" title="向左移动" :class="{'disabled':index == 0}" @click.stop="handleMoveTemp(tableTemplate.templateTitle[index],index,dir='left')">
-											<i class="el-icon-caret-left"></i>
-										</span>
-										<!-- 右边移动 -->
-										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1 
-															|| index + 1 >= tableTemplate.templateTitle.length} " @click.stop="handleMoveTemp(tableTemplate.templateTitle[index],index,dir='right')">
-											<i class="el-icon-caret-right"></i>
-										</span>
-										<!-- 编辑按钮 -->
-										<span class="edit-btn" title="编辑名称" @click.stop="handleEditHeader(tableTemplate.templateTitle[index],index)">
-											<i style="font-size:16px;" class="el-icon-edit-outline"></i>
-										</span>
-										<span class="edit-btn" title="删除模板" @click.stop="handleDeleteTemp(tableTemplate.templateTitle[index].id,index)">
-											<i class="el-icon-delete" style="color:red;"></i>
-										</span>
-									</div>
-								</template>
-							</div>
-						</template>
-						<!-- 实际数据 -->
-						<template slot-scope="scope">
-							<div class="cell-block">
-								<div v-if="columnId == scope.column.id && cellIndex == scope.$index">
-									<el-input style="width:100px;padding:0;" @keyup.enter.native="editSucess(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')" ref="editTempInputRef" v-model="tempEditPrice"></el-input>
-									<!-- 保存按钮 -->
-									<span class="edit-btn" @click.stop="editSucess(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')">
-										<i class="el-icon-success" style="color:#E0BA4F"></i>
-									</span>
-									<!-- 取消按钮 -->
-									<span class="edit-btn" @click.stop="editCancel(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')">
-										<i class="el-icon-error" style="color:#666;"></i>
-									</span>
-								</div>
-								<!-- 对应价格 -->
-								<span v-else>
-									<span v-if="tableTemplate.priceTemplate[index].list">{{tableTemplate.priceTemplate[index].list[scope.$index].itemPrice}}</span>
-								</span>
-								<div v-if="!(columnId == scope.column.id && cellIndex == scope.$index)" class="eidt-price-btn">
-									<!-- 编辑按钮 -->
-									<span @click.stop="changeTemp(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')" class="edit-btn">
-										<i class="el-icon-edit-outline"></i>
-									</span>
-								</div>
-							</div>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div>
-
+			<!-- <div class="table_title">商品列表·共{{goodsList.length}}个条目</div> -->
 			<!-- 显示会员价列表 -->
-			<div class="table-box" v-show="vipPriceOpen">
-				<el-table style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
+			<div class="table-box">
+				<el-table ref="multipleTable" style="width:100%;margin-top:-1px;" :header-cell-style="{'background-color':'#f5f7fa'}" :data="nowGoods" max-height="600" :cell-style="{position:'relative'}" :row-style="{position:'relative'}" border stripe>
 					<el-table-column min-width="100" type="index" fixed label="序号" align="center"></el-table-column>
 					<el-table-column min-width="100" fixed label="商品名称" align="center">
 						<template slot-scope="scope">{{scope.row.goodsName}}</template>
@@ -138,11 +52,16 @@
 						<el-table-column min-width="75" label="基础价" align="center">
 							<template slot-scope="scope">{{scope.row.price}}</template>
 						</el-table-column>
-						<el-table-column min-width="75" label="会员价">
+						<!--会员价-->
+						<el-table-column v-if="vipPriceOpen" min-width="75" label="会员价">
 							<template slot-scope="scope">{{scope.row.vipPrice}}</template>
 						</el-table-column>
+						<!--特价-->
+						<el-table-column v-if="specialPriceOpen" min-width="75" label="特价">
+							<template slot-scope="scope">{{scope.row.specialPrice}}</template>
+						</el-table-column>
 					</el-table-column>
-					<el-table-column min-width="360" width="400" v-if="tableTemplate.templateTitle.length > 0" align="center" v-for="(item,index) in 
+					<el-table-column min-width="360" width="400" v-if="tableTemplate.templateTitle.length > 0" align="center" v-for="(item,index) in
 								tableTemplate.templateTitle" class-name="edithead" :key="index">
 						<!-- 自定义表头 -->
 						<template slot="header" slot-scope="scope">
@@ -161,15 +80,17 @@
 									</div>
 								</template>
 								<template v-else>
-									<span>{{tableTemplate.templateTitle[index].name ? tableTemplate.templateTitle[index].name : '价格模板'}}</span>
+									<span class="temp-name" :title="tableTemplate.templateTitle[index].name ? tableTemplate.templateTitle[index].name : '价格模板'">
+										{{tableTemplate.templateTitle[index].name ? tableTemplate.templateTitle[index].name : '价格模板'}}
+									</span>
 									<!-- 编辑按钮 -->
-									<div style="order:1;width:150px;">
+									<div class="edit-block-box" style="order:1;width:150px;">
 										<!-- 左移动 -->
 										<span class="edit-btn move-btn" title="向左移动" :class="{'disabled':index == 0}" @click.stop="handleMoveTemp(tableTemplate.templateTitle[index],index,dir='left')">
 											<i class="el-icon-caret-left"></i>
 										</span>
 										<!-- 右边移动 -->
-										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1 
+										<span class="edit-btn move-btn" title="向右移动" :class="{'disabled':index == 9 || tableTemplate.templateTitle.length <=1
 																|| index + 1 >= tableTemplate.templateTitle.length} " @click.stop="handleMoveTemp(tableTemplate.templateTitle[index],index,dir='right')">
 											<i class="el-icon-caret-right"></i>
 										</span>
@@ -183,68 +104,131 @@
 								</template>
 							</div>
 						</template>
-						<!-- 实际数据 -->
-						<el-table-column min-width="180" label="基础价" align="center">
-							<template slot-scope="scope">
-								<div class="cell-block">
-									<div v-if="columnId == scope.column.id && cellIndex == scope.$index">
-										<el-input style="width:80px;padding:0;" ref="editTempInputRef" @keyup.enter.native="editSucess(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')" v-model="tempEditPrice"></el-input>
-										<!-- 保存按钮 -->
-										<span class="edit-btn" @click.stop="editSucess(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')">
-											<i class="el-icon-success" style="color:#E0BA4F"></i>
-										</span>
-										<!-- 取消按钮 -->
-										<span class="edit-btn" @click.stop="editCancel(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')">
-											<i class="el-icon-error" style="color:#666;"></i>
-										</span>
-									</div>
-									<span v-else>
-										<span v-if="tableTemplate.priceTemplate[index].list">{{tableTemplate.priceTemplate[index].list[scope.$index].itemPrice}}</span>
-									</span>
-									<div v-if="!(columnId == scope.column.id && cellIndex == scope.$index)" class="eidt-price-btn">
-										<!-- 编辑按钮 -->
-										<span @click.stop="changeTemp(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='temp')" class="edit-btn">
-											<i class="el-icon-edit-outline"></i>
-										</span>
-									</div>
-								</div>
-							</template>
-						</el-table-column>
-						<el-table-column min-width="180" label="会员价" align="center">
-							<template slot-scope="scope">
-								<div class="cell-block" :class="{'grey':!tableTemplate.priceTemplate[index].list[scope.$index].isVip}">
-									<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isVip">
-										<div v-if="columnId == scope.column.id && cellIndex == scope.$index">
-											<el-input style="width:100px;padding:0;" ref="editTempInputRef" @keyup.enter.native="editSucess(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='vip')" v-model="tempEditVipPrice"></el-input>
-											<!-- 保存按钮 -->
-											<span class="edit-btn" @click.stop="editSucess(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='vip')">
-												<i class="el-icon-success" style="color:#E0BA4F"></i>
+							<!-- 基础价 -->
+							<el-table-column min-width="220" label="基础价" align="center">
+								<template slot-scope="scope">
+									<div class="cell-block">
+										<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isExist != 0">
+											<div v-if="columnId == scope.column.id && cellIndex == scope.$index">
+												<el-input style="width:80px;padding:0;" ref="editTempInputRef" @keyup.enter.native="editSucess(tableTemplate.priceTemplate[index].list[scope.$index],type='temp')" v-model="tempEditPrice"></el-input>
+												<!-- 保存按钮 -->
+												<span class="edit-btn" @click.stop="editSucess(tableTemplate.priceTemplate[index].list[scope.$index],type='temp')">
+													<i class="el-icon-success" style="color:#E0BA4F"></i>
+												</span>
+												<!-- 取消按钮 -->
+												<span class="edit-btn" @click.stop="editCancel(tableTemplate.priceTemplate[index].list[scope.$index],type='temp')">
+													<i class="el-icon-error" style="color:#666;"></i>
+												</span>
+											</div>
+											<span v-else>
+												<span v-if="tableTemplate.priceTemplate[index].list">{{tableTemplate.priceTemplate[index].list[scope.$index].itemPrice}}</span>
 											</span>
-											<!-- 取消按钮 -->
-											<span class="edit-btn" @click.stop="editCancel(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='vip')">
-												<i class="el-icon-error" style="color:#666;"></i>
-											</span>
+											<div v-if="!(columnId == scope.column.id && cellIndex == scope.$index)" class="eidt-price-btn">
+												<!-- 编辑按钮 -->
+												<span @click.stop="changeTemp(tableTemplate.priceTemplate[index].list[scope.$index],scope.$index,scope.column,type='temp')" class="edit-btn">
+													<i class="el-icon-edit-outline"></i>
+												</span>
+											</div>
+										</template>
+										<template v-else>
+											<el-button type="warning" @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+												点击添加模板价格
+											</el-button>
+										</template>
+										
+									</div>
+								</template>
+							</el-table-column>
+							<!-- 会员价 -->
+							<el-table-column v-if="vipPriceOpen" min-width="220" label="会员价" align="center">
+								<template slot-scope="scope">
+									<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isExist != 0">
+											<div class="cell-block" :class="{'grey':!tableTemplate.priceTemplate[index].list[scope.$index].isVip}">
+											<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isVip">
+												<div v-if="columnId == scope.column.id && cellIndex == scope.$index">
+													<el-input style="width:100px;padding:0;" ref="editTempInputRef"
+															@keyup.enter.native="editSucess(tableTemplate.priceTemplate[index].list[scope.$index],type='vip')" v-model="tempEditVipPrice"></el-input>
+													<!-- 保存按钮 -->
+													<span class="edit-btn" @click.stop="editSucess(tableTemplate.priceTemplate[index].list[scope.$index],type='vip')">
+														<i class="el-icon-success" style="color:#E0BA4F"></i>
+													</span>
+													<!-- 取消按钮 -->
+													<span class="edit-btn" @click.stop="editCancel(tableTemplate.priceTemplate[index].list[scope.$index],type='vip')">
+														<i class="el-icon-error" style="color:#666;"></i>
+													</span>
+												</div>
+												<span v-else>
+													<span v-if="tableTemplate.priceTemplate[index].list">{{tableTemplate.priceTemplate[index].list[scope.$index].vipPrice}}</span>
+												</span>
+											</template>
+
+											<template v-else-if="!tableTemplate.priceTemplate[index].list[scope.$index].isVip">
+												<span>--</span>
+											</template>
+
+											<div v-if="!(columnId == scope.column.id && cellIndex == scope.$index)" class="eidt-price-btn">
+												<!-- 编辑按钮 -->
+												<span v-if="tableTemplate.priceTemplate[index].list[scope.$index].isVip"
+													@click.stop="changeTemp(tableTemplate.priceTemplate[index].list[scope.$index],scope.$index,scope.column,type='vip')" class="edit-btn">
+													<i class="el-icon-edit-outline"></i>
+												</span>
+												<!--  -->
+												<el-switch v-model="tableTemplate.priceTemplate[index].list[scope.$index].isVip" @change="handleVipShowChange(index,scope.$index)" :width="30" class="vip-pirce-switch" active-color="#E8C148" inactive-color="#D2D2CF"></el-switch>
+											</div>
 										</div>
-										<span v-else>
-											<span v-if="tableTemplate.priceTemplate[index].list">{{tableTemplate.priceTemplate[index].list[scope.$index].vipPrice}}</span>
-										</span>
 									</template>
-
-									<template v-else-if="!tableTemplate.priceTemplate[index].list[scope.$index].isVip">
-										<span>--</span>
+									<template v-else>
+										<el-button type="warning" @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											点击添加模板价格
+										</el-button>
 									</template>
+								</template>
+							</el-table-column>
+							<!-- 特价 -->
+							<el-table-column v-if="specialPriceOpen" min-width="220" label="特价" align="center">
+								<template slot-scope="scope">
+									<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isExist != 0">
+										<div class="cell-block" :class="{'grey':!tableTemplate.priceTemplate[index].list[scope.$index].isSpecial}">
+											<template v-if="tableTemplate.priceTemplate[index].list[scope.$index].isSpecial">
+												<div v-if="columnId == scope.column.id && cellIndex == scope.$index">
+													<el-input style="width:100px;padding:0;" ref="editTempInputRef"
+															@keyup.enter.native="editSucess(tableTemplate.priceTemplate[index].list[scope.$index],type='special')"
+															v-model="tempEditSpecialPrice"></el-input>
+													<!-- 保存按钮 -->
+													<span class="edit-btn" @click.stop="editSucess(tableTemplate.priceTemplate[index].list[scope.$index],type='special')">
+														<i class="el-icon-success" style="color:#E0BA4F"></i>
+													</span>
+													<!-- 取消按钮 -->
+													<span class="edit-btn" @click.stop="editCancel(tableTemplate.priceTemplate[index].list[scope.$index],type='special')">
+														<i class="el-icon-error" style="color:#666;"></i>
+													</span>
+												</div>
+												<span v-else>
+													<span v-if="tableTemplate.priceTemplate[index].list">{{tableTemplate.priceTemplate[index].list[scope.$index].specialPrice}}</span>
+												</span>
+											</template>
 
-									<div v-if="!(columnId == scope.column.id && cellIndex == scope.$index)" class="eidt-price-btn">
-										<!-- 编辑按钮 -->
-										<span v-if="tableTemplate.priceTemplate[index].list[scope.$index].isVip" @click.stop="changeTemp(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='vip')" class="edit-btn">
-											<i class="el-icon-edit-outline"></i>
-										</span>
-										<!--  -->
-										<el-switch v-model="tableTemplate.priceTemplate[index].list[scope.$index].isVip" @change="handleVipShowChange(tableTemplate.templateTitle[index],index,scope.$index,scope.column,type='vip')" :width="30" class="vip-pirce-switch" active-color="#E8C148" inactive-color="#D2D2CF"></el-switch>
-									</div>
-								</div>
-							</template>
-						</el-table-column>
+											<template v-else-if="!tableTemplate.priceTemplate[index].list[scope.$index].isSpecial">
+												<span>--</span>
+											</template>
+
+											<div v-if="!(columnId == scope.column.id && cellIndex == scope.$index)" class="eidt-price-btn">
+												<!-- 编辑按钮 -->
+												<span v-if="tableTemplate.priceTemplate[index].list[scope.$index].isSpecial" @click.stop="changeTemp(tableTemplate.priceTemplate[index].list[scope.$index],scope.$index,scope.column,type='special')" class="edit-btn">
+													<i class="el-icon-edit-outline"></i>
+												</span>
+												<!--  -->
+												<el-switch v-model="tableTemplate.priceTemplate[index].list[scope.$index].isSpecial" @change="handleSpecialShowChange(index,scope.$index)" :width="30" class="vip-pirce-switch" active-color="#E8C148" inactive-color="#D2D2CF"></el-switch>
+											</div>
+										</div>
+									</template>
+									<template v-else>
+										<el-button type="warning" @click="existClick(tableTemplate.priceTemplate[index].list[scope.$index])">
+											点击添加模板价格
+										</el-button>
+									</template>	
+								</template>
+							</el-table-column>
 					</el-table-column>
 				</el-table>
 			</div>
@@ -267,10 +251,8 @@
 </template>
 
 <script>
-// import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
-// import utils from 'src/verdor/utils';
 export default {
 	name: 'price_temp_manager',
 	data() {
@@ -298,7 +280,7 @@ export default {
 
 			nowGoods: [],
 			vipPriceOpen: false, // 会员价是否开启
-
+			specialPriceOpen:false, // 特价开关
 			allGoods: [],
 			goodsList: [],
 
@@ -322,13 +304,13 @@ export default {
 			columnId: '',
 			tempEditPrice: '',
 			tempEditVipPrice: '',
+			tempEditSpecialPrice:'',
 
 			thEditer: false,
 			thEditerName: '',
 			thEditerIndex: -1,
 			winEventShow: false,
 			addTempName: '价格模板',
-			vipPriceShow: false,
 			numList: []
 		};
 	},
@@ -336,18 +318,34 @@ export default {
 		this.initPageTools();
 	},
 	methods: {
+		existClick(item){
+
+			console.log(item,'item')
+			http.createPricetemplate({
+					data: {
+						itemId:item.itemId,
+						titleId:item.titleId
+					}
+				})
+				.then(res => {
+					console.log(res,'909909909999')
+					this.getPricetemplateData(this.goodIds);
+				});
+		},
 		/* eslint-disable */
-		async handleVipShowChange(item, index, sindex, column, type) {
+		async handleVipShowChange(index, sindex) {
 			let price = this.tableTemplate.priceTemplate[index].list[sindex];
 			let isVip = price.isVip == true ? '1' : '0';
-
+			let isSpecial = price.isSpecial == true ? '1' : '0';
 			let data = await http.editPricetemplate({
 				data: {
 					priceTemplateId: price.id,
 					priceTemplateItemId: price.itemId,
 					priceTemplateItemPrice: price.itemPrice,
 					priceTemplateVipPrice: price.vipPrice,
-					priceTemplateIsVip: isVip
+					priceTemplateIsVip: isVip,
+					priceTemplateSpecialPrice: price.specialPrice,
+					priceTemplateIsSpecial: isSpecial
 				}
 			});
 			console.log(data);
@@ -357,7 +355,33 @@ export default {
 				this.initPage(this.tempGoods);
 			}
 			this.getPricetemplateData(this.goodIds);
-			this.vipPriceShow = isVip;
+		},
+		/* eslint-disable */
+		// 特价
+		async handleSpecialShowChange(index, sindex){
+			let price = this.tableTemplate.priceTemplate[index].list[sindex];
+			console.log(price,'price')
+			let isVip = price.isVip == true ? '1' : '0';
+			let isSpecial = price.isSpecial == true ? '1' : '0';
+
+			let data = await http.editPricetemplate({
+				data: {
+					priceTemplateId: price.id,
+					priceTemplateItemId: price.itemId,
+					priceTemplateItemPrice: price.itemPrice,
+					priceTemplateVipPrice: price.vipPrice,
+					priceTemplateIsVip: isVip,
+					priceTemplateSpecialPrice: price.specialPrice,
+					priceTemplateIsSpecial: isSpecial
+				}
+			});
+			console.log(data);
+			if (this.search && this.searchGoods) {
+				this.initPage(this.searchGoods);
+			} else {
+				this.initPage(this.tempGoods);
+			}
+			this.getPricetemplateData(this.goodIds);
 		},
 		// 移动模板
 		async handleMoveTemp(item, index, dir) {
@@ -376,10 +400,10 @@ export default {
 
 			if (dir == 'left') {
 				if (afterSort == 1) return;
-				afterSort = item.sort - 1;
+				afterSort = (item.sort*1) - 1;
 			} else if (dir == 'right') {
 				if (afterSort == 10) return;
-				afterSort = item.sort + 1;
+				afterSort = (item.sort*1) + 1;
 			}
 
 			console.log('before:' + beforeSort, 'after:' + afterSort);
@@ -450,16 +474,17 @@ export default {
 			this.thEditerIndex = -1;
 		},
 		// 点击编辑价格
-		changeTemp(item, index, sindex, column, type) {
-			console.log(item, 'jige');
-			let price = this.tableTemplate.priceTemplate[index].list[sindex];
+		changeTemp(item,sindex,column, type) {
+			let price = item;
 			console.log(price, '00');
 			this.columnId = column.id;
 			this.cellIndex = sindex;
 
 			if (type == 'vip') {
 				this.tempEditVipPrice = price.vipPrice;
-			} else {
+			} else if(type == 'special'){
+				this.tempEditSpecialPrice = price.specialPrice;
+			}else {
 				this.tempEditPrice = price.itemPrice;
 			}
 			this.$nextTick(() => {
@@ -468,14 +493,15 @@ export default {
 				});
 			});
 		},
-		async editSucess(item, index, sindex, column, type) {
-			let price = this.tableTemplate.priceTemplate[index].list[sindex];
+		async editSucess(item, type) {
+			let price = item;
 			let isVip = price.isVip == true ? '1' : '0';
+			let isSpecial = price.isSpecial == true ? '1' : '0';
 			let data = null;
-
 			if (
 				!this.checkNumber(this.tempEditVipPrice) ||
-				!this.checkNumber(this.tempEditPrice)
+				!this.checkNumber(this.tempEditPrice) ||
+				!this.checkNumber(this.tempEditSpecialPrice)
 			) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
@@ -487,7 +513,8 @@ export default {
 
 			if (
 				parseInt(this.tempEditVipPrice).toString().length >= 8 ||
-				parseInt(this.tempEditPrice).toString().length >= 8
+				parseInt(this.tempEditPrice).toString().length >= 8 ||
+				parseInt(this.tempEditSpecialPrice).toString().length >= 8
 			) {
 				this.$store.commit('setWin', {
 					title: '温馨提示',
@@ -496,6 +523,24 @@ export default {
 				});
 				return;
 			}
+			console.log(Number(this.tempEditVipPrice),Number(price.itemPrice))
+			if(type == 'vip' && Number(this.tempEditVipPrice) > Number(price.itemPrice)){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '会员价不得高于原始价',
+					winType: 'alert'
+				});
+				return;
+			}
+			if(type == 'special' && Number(this.tempEditSpecialPrice) > Number(price.itemPrice)){
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					content: '会员价不得高于特价',
+					winType: 'alert'
+				});
+				return;
+			}
+
 
 			if (type == 'vip') {
 				data = await http.editPricetemplate({
@@ -503,16 +548,36 @@ export default {
 						priceTemplateId: price.id,
 						priceTemplateItemId: price.itemId,
 						priceTemplateItemPrice: price.itemPrice,
+						priceTemplateIsSpecial: isSpecial,
+						priceTemplateSpecialPrice:price.specialPrice,
+						
 						priceTemplateIsVip: isVip,
 						priceTemplateVipPrice: this.tempEditVipPrice
 					}
 				});
-			} else {
+			} else if (type == 'special'){
 				data = await http.editPricetemplate({
 					data: {
 						priceTemplateId: price.id,
 						priceTemplateItemId: price.itemId,
-						priceTemplateVipPrice: isVip,
+						priceTemplateItemPrice: price.itemPrice,
+						priceTemplateIsVip: isVip,
+						priceTemplateVipPrice: price.vipPrice,
+
+						priceTemplateIsSpecial: isSpecial,
+						priceTemplateSpecialPrice: this.tempEditSpecialPrice
+					}
+				});
+			}else {
+				data = await http.editPricetemplate({
+					data: {
+						priceTemplateId: price.id,
+						priceTemplateItemId: price.itemId,
+						priceTemplateVipPrice: price.vipPrice,
+						priceTemplateIsVip: isVip,
+						
+						priceTemplateIsSpecial: isSpecial,
+						priceTemplateSpecialPrice:price.specialPrice,
 						priceTemplateItemPrice: this.tempEditPrice
 					}
 				});
@@ -536,15 +601,20 @@ export default {
 			}
 			return false;
 		},
-		editCancel(item, index, sindex, column, type) {
+		editCancel(item,  type) {
 			this.columnId = '';
 			this.cellIndex = -1;
-			let price = this.tableTemplate.priceTemplate[index].list[sindex];
-			if (type == 'vip') {
-				this.tempEditVipPrice = price.vipPrice;
-			} else {
-				this.tempEditPrice = price.itemPrice;
-			}
+			let price =item;
+			this.tempEditVipPrice = '';
+			this.tempEditSpecialPrice = '';
+			this.tempEditPrice = '';
+			// if (type == 'vip') {
+			// 	this.tempEditVipPrice = price.vipPrice;
+			// } else if(type == 'special'){
+			// 	this.tempEditSpecialPrice = price.specialPrice;
+			// } else {
+			// 	this.tempEditPrice = price.itemPrice;
+			// }
 		},
 		// 删除模板
 		async handleDeleteTemp(id) {
@@ -617,13 +687,29 @@ export default {
 					item.isVip == '1'
 						? (item.isVip = true)
 						: (item.isVip = false);
+
+					item.isSpecial == '1'
+						? (item.isSpecial = true)
+						: (item.isSpecial = false);	
 				});
 			}
+
 			let arr = [];
 			for (let i = 0; i < data.priceTemplate.length; i++) {
 				arr[i] = {};
 				arr[i].list = data.priceTemplate[i];
 				arr[i].sort = data.templateTitle[i].sort;
+				
+				for(let k of data.priceTemplate[i]){
+					if(k.isExist == 0){
+						arr[i].isExist = 0
+					}else if(k.isExist == 1){
+						arr[i].isExist = 1
+					}
+				}
+
+
+
 			}
 
 			arr.sort((a, b) => {
@@ -693,7 +779,8 @@ export default {
 
 			this.tempGoods = this.pageGoods = this.filterGoodsByCategoryByPid(
 				this.goodsList,
-				this.oneArea.id
+				this.oneArea.id,
+				item.child
 			);
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
@@ -995,16 +1082,6 @@ export default {
 			}
 			return goods;
 		},
-		initIds() {
-			if (this.nowGoods.length > 0) {
-				let ids = [];
-				this.nowGoods.forEach(item => {
-					ids.push(item.id);
-				});
-				this.goodIds = ids.join(',');
-				this.getPricetemplateData(this.goodIds);
-			}
-		},
 		//-----------分页---------
 		initPage(arr) {
 			this.totalNum = Math.ceil(arr.length / this.pageSize);
@@ -1028,10 +1105,15 @@ export default {
 				});
 				this.goodIds = ids.join(',');
 				this.getPricetemplateData(this.goodIds);
+				this.$refs.multipleTable.bodyWrapper.scrollTop = 0;
 			}
 		},
 		// 分页条数改变
 		sizeChange(num) {
+			this.tableTemplate = {
+				priceTemplate: [],
+				templateTitle: []
+			};
 			this.pageSize = num;
 			this.currentPage = 1;
 			this.initPage(this.tempGoods);
@@ -1128,6 +1210,9 @@ export default {
 		.eidt-price-btn {
 			display: block;
 		}
+		.edit-block-box{
+			display: inline-block;
+		}
 	}
 
 	.eidt-price-btn {
@@ -1163,6 +1248,16 @@ export default {
 				color: #ddd;
 			}
 		}
+	}
+	.temp-name{
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		min-width: 35px;
+	}
+	.edit-block-box{
+		display: none;
 	}
 }
 </style>

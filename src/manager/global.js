@@ -27,7 +27,7 @@ let global = {
 	 *   pro:"*****",//不满足条件时给的提示
 	 * }
 	 * @param {Context} context 上下文环境
-	 * 
+	 *
 	 * 注意事项：
 	 * 1.如果没有给出条件和正则,则判断该变量的值是否不等于该变量类型的原始值
 		1):var a = 10,条件:a!=0;
@@ -36,7 +36,7 @@ let global = {
 		此时应使用value键,把真实的值附上去
 		1)  export default{
 				data:function(){
-					return {b:1} 
+					return {b:1}
 				},
 				motheds:{
 					check(){

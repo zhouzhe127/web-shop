@@ -408,7 +408,7 @@
 					width: 0.21rem;
 					height: 0.23rem;
 					background-image: url(../../res/icon/icon-menu.png);
-					background-size: 3.4rem 0.23rem;
+					background-size: 3.6rem 0.23rem;
 					background-repeat: no-repeat;
 					position: absolute;
 					top: 0.21rem;

@@ -103,6 +103,22 @@
 								<el-input v-model="bag.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
 							</template>
 						</el-form-item>
+						<el-form-item v-if="bag.type!='2'" label="特价">
+							<!-- <el-switch v-model="isVipShow"  @change="openVipRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+							<template v-if="isVipShow">
+								<el-radio @click="getVipRadio(1)" v-model="bag.isVip" label="1" border>会员价格</el-radio>
+    							<el-radio @click="getVipRadio(2)" v-model="bag.isVip" label="2" border>会员折扣</el-radio>
+							</template>
+							<template v-if="bag.isVip == 1">
+								<span style="color:#606266;margin:0 20px;">会员价格</span>
+								<el-input v-model="bag.vipPrice" maxlength = "10" placeholder = "输入会员价" style = "width:120px;"></el-input>
+							</template> -->
+							<el-switch v-model="isSpecial" @change="openSpecialRadio" active-color="#E1BB4A" inactive-color="#e6e6e6"></el-switch>
+								<template v-if="isSpecial">
+									<span style="color:#606266;margin:0 20px;">特价价格</span>
+									<el-input v-model="bag.specialPrice" maxlength="10" placeholder="输入特价价格" style="width:120px;"></el-input>
+								</template>
+						</el-form-item>
 						<el-form-item label="描述" prop="description" style="width:550px;">
 							<el-input type="textarea" :autosize="{minRows: 3, maxRows: 6}" v-model="bag.description"></el-input>
 						</el-form-item>
@@ -170,6 +186,7 @@
 				vipPriceArr: ['会员价格', '会员折扣'], //会员专享的操作
 				isVipShow:false,//是否VIP
 				isStatus:false,//是否估清
+				isSpecial:false //是否特价
 			};
 		},
 		props: {
@@ -455,6 +472,30 @@
 						return;
 					}
 				}
+				if (this.isSpecial) {
+					if (!global.checkData({
+						specialPrice: {
+							reg: /((^[1-9]\d{0,9})|^0)(\.\d{1,2})?$/,
+							pro: '请输入正确的特价价格!'
+						}
+					},
+					this.bag
+					)) return;
+					if (Number(this.bag.specialPrice > 100000)) {
+						this.$store.commit('setWin', {
+							title: '提示信息',
+							content: '特价价格不能大于10万!'
+						});
+						return;
+					}
+					if (Number(this.bag.price) < Number(this.bag.specialPrice)) {
+						this.$store.commit('setWin', {
+							title: '提示信息',
+							content: '特价价格大于售价!'
+						});
+						return;
+					}
+				}
 
 				if (!this.packageTag) this.packageTag = [];
 				if (this.packageTag.length == 0) {
@@ -478,6 +519,10 @@
 				this.bag.imageName = res;
 			},
 			//--------------开关--------------
+			//特价开通关闭
+			openSpecialRadio(res) {
+				this.isSpecial = res;
+			},
 			openVipRadio(res){
 				console.log(res);
 				this.isVipShow = res;
@@ -587,6 +632,8 @@
 						status: Number(this.bag.status), // 0:正常 1:估清  2:下架
 						packageTag: packTag,
 						imageName: this.bag.imageName ? this.bag.imageName : '',
+						isSpecial: Number(this.isSpecial),
+						specialPrice: Number(this.bag.specialPrice),
 					},
 				});
 				return res;
@@ -613,6 +660,8 @@
 						packageTag: packageTag,
 						newPackageTag:newPackage,
 						imageName: this.bag.imageName ? this.bag.imageName : '',
+						isSpecial: Number(this.isSpecial),
+						specialPrice: Number(this.bag.specialPrice),
 					},
 				});
 				return res;
@@ -652,6 +701,9 @@
 					this.bag.isRecommend = Boolean(this.bag.isRecommend*1);
 					if(this.bag.isVip*1>0){
 						this.isVipShow = true;
+					}
+					if (this.bag.isSpecial == 1) {
+						this.isSpecial = true;
 					}
 					this.packageTag = res.packageTag;
 					if (!this.packageTag) this.packageTag = [];

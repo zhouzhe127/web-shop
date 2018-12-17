@@ -194,7 +194,7 @@ export default {
 		//		document.addEventListener('click', this.myClick);
 		this.getOneAreaList(); //获取分类列表
 		//微店渠道下不展示自定义套餐
-		if (Number(this.goodCom.id) >= 7 && Number(this.goodCom.id) <= 11) {
+		if (Number(this.goodCom.id) >= 7 && Number(this.goodCom.id) <= 12) {
 			this.weiShow = false;
 		}
 		//初始化数据

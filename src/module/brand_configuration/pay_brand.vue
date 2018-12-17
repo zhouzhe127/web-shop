@@ -13,8 +13,10 @@
 				<template slot-scope="scope">
 					<span style="color: #FE8D2C;cursor:pointer" @click="edit(scope.row,scope.$index)">编辑</span>
 					<span style="padding:0 5px;color: #D2D2D2">|</span>
-					<span style="color: #FD3F1F;cursor:pointer" @click="joinShop(scope.row,scope.$index)">指派</span>
-					<span style="padding:0 5px;color: #D2D2D2">|</span>
+					<template v-if="scope.row.paymentName !='先锋支付'">
+						<span style="color: #FD3F1F;cursor:pointer" @click="joinShop(scope.row,scope.$index)">指派</span>
+						<span style="padding:0 5px;color: #D2D2D2">|</span>
+					</template>
 					<span style="cursor:pointer;color: #2ea7e0;" v-if="scope.row.isOpen ==0" @click="isOpenDetial(scope.$index,scope.row)">开启</span>
 					<span style="cursor:pointer;color: #2ea7e0;" v-if="scope.row.isOpen == 1" @click="isOpenDetial(scope.$index,scope.row)">关闭</span>
 				</template>
@@ -106,6 +108,11 @@ export default {
 					} else if (detial.paymentName == '收钱吧') {
 						obj.appId = detial.payConfig.appId; //收钱吧appid
 						obj.code = detial.payConfig.code; //收钱吧激活码
+						this.editPayConfig(obj);
+					}else if (detial.paymentName == '先锋支付') {
+						obj.merchantId  = detial.payConfig.merchantId ; //商户号 
+						obj.mer_pri_key = detial.payConfig.mer_pri_key; // 商户私钥
+						obj.xf_pub_key = detial.payConfig.xf_pub_key; // 先锋公钥
 						this.editPayConfig(obj);
 					}
 				} else {
@@ -244,6 +251,18 @@ export default {
 				}
 				this.types = 'sqb';
 				this.showWin = true;
+			} else if (bill.paymentName == '先锋支付') {
+				if (
+					!this.detial.payConfig ||
+					this.detial.payConfig.length == 0
+				) {
+					this.detial.payConfig = {};
+					this.detial.payConfig.merchantId = ''; //merchantId
+					this.detial.payConfig.mer_pri_key = ''; //商户私钥
+					this.detial.payConfig.xf_pub_key = ''; //先锋公钥
+				}
+				this.types = 'xfzf';
+				this.showWin = true;
 			}
 		},
 		//修改微信、支付宝
@@ -372,6 +391,13 @@ export default {
 					)
 				)
 					return false;
+			}else if (detial.paymentName == '收钱吧') {
+				if (!global.checkData({ appId: '收钱吧appid不能为空' },detial.payConfig))return false;
+				if(!global.checkData({code:'收钱吧激活码不能为空'},detial.payConfig))return false;
+			}else if (detial.paymentName == '先锋支付') {
+				if (!global.checkData({ merchantId: '商户号不能为空' },detial.payConfig))return false;
+				if(!global.checkData({mer_pri_key:'商户私钥不能为空'},detial.payConfig))return false;
+				if(!global.checkData({xf_pub_key:'先锋公钥不能为空'},detial.payConfig))return false;
 			}
 			//分割微信证书、证书密钥 字符串
 			function splitkey(item) {

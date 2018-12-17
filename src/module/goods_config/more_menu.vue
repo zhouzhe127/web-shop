@@ -76,7 +76,8 @@ export default {
 				{ id: 8, name: '自助点单' },
 				{ id: 9, name: '外卖' },
 				{ id: 10, name: '自提' },
-				{ id: 11, name: '快递' }
+				{ id: 11, name: '快递' },
+				{ id: 12, name: '在线预约'}
 			],
 			packMenuId: 1, //选中渠道类型，默认桌台模式
 			weiXinType: 7, //微信子渠道类型，默认在线点单
