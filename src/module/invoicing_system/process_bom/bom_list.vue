@@ -6,7 +6,10 @@
     <div id="bomList">
 		<div class="filter">
 			<div class="inpbox">
-			<el-input v-model="suppliesName" placeholder="请输入物料名称"></el-input>
+				<el-input v-model="suppliesName" placeholder="请输入物料名称"></el-input>
+			</div>
+			<div class="inpbox">
+				<el-input v-model="barCode" placeholder="请输入物料编码"></el-input>
 			</div>
 			<div class="inpbox">
 				<el-input v-model="createUser" placeholder="请输入创建人"></el-input>
@@ -16,6 +19,8 @@
 		</div>
 		<el-table :data="allList" stripe border style="width: 100%">
 			<el-table-column label="物料名称" prop="material" min-width="200">
+			</el-table-column>
+			<el-table-column label="物料编码" prop="barCode" min-width="200">
 			</el-table-column>
 			<el-table-column label="所需物料" min-width="150">
 				<template slot-scope="props">{{props.row.kindNum}}种</template>
@@ -58,7 +63,8 @@ export default {
 			count: 0,
 			page:1,
 			total:0,
-			size:10
+			size:10,
+			barCode:'',
 		};
 	},
 	methods: {
@@ -68,7 +74,8 @@ export default {
 					material:this.suppliesName,
 					user:this.createUser,
 					page:this.page,
-					num:this.size
+					num:this.size,
+					barCode:this.barCode,
 				}
 			});
 			this.allList = data.list;
@@ -80,6 +87,7 @@ export default {
 		},
 		searchReset(){
 			this.suppliesName = '';
+			this.barCode = '';
 			this.createUser = '';
 			this.page = 1;
 			this.init();
