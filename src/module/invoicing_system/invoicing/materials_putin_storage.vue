@@ -618,6 +618,15 @@
 				}
 			},
 			async continuePutin() {
+				this.number = Number(this.number)||0;
+				this.weight = Number(this.weight)||0;
+				if(this.number<0||this.weight<0){
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '请输入大于0的数量！'
+					});
+					return;
+				}
 				if (this.getInfo.type == 1) {
 					if (this.startTime > this.endTime) {
 						this.$store.commit('setWin', {
