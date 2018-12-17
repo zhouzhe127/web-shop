@@ -58,7 +58,7 @@
              </template>
             <!-- 失败的 -->
              <template v-if="item.filedArr.length>0">
-                <span @click="handleOpenD(item)"  style="cursor:pointer;color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down":class="{'el-icon-arrow-up':item.opened}"></i></span>
+                <span @click="handleOpenD(item)"  style="cursor:pointer;color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down" :class="{'el-icon-arrow-up':item.opened}"></i></span>
                 <template v-if="item.opened">
                   <div style="display:flex;width:100%;align-items: baseline;margin-bottom:10px;">
                     <span style="100px;">
@@ -97,7 +97,7 @@
           <div class="t-name" style="margin-bottom:10px;">店铺：{{item.name}}</div>
           <!-- 失败的 -->
           <div class="t-info" >
-            <span @click="handleOpenD(item)"  style="cursor:pointer; color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down":class="{'el-icon-arrow-up':item.opened}"></i></span>
+            <span @click="handleOpenD(item)"  style="cursor:pointer; color:#F5535C;margin-bottom: 10px;display: block;">{{item.filedArr.length}}个商品失败<i class="el-icon-arrow-down" :class="{'el-icon-arrow-up':item.opened}"></i></span>
             <template v-if="item.opened">
               <div style="display:flex;width:100%;align-items: baseline;">
                 <span style="100px;">
