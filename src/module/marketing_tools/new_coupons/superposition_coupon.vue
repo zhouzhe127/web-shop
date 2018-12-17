@@ -541,7 +541,7 @@ export default {
 			this.goodsType = type;
 			if (this.goodsType == '1') {
 				this.Goods = this.selectGoods;
-				this.Packages = this.selectPackagesl;
+				this.Packages = this.selectPackages;
 			} else {
 				this.Goods = this.selectGoodsSec;
 				this.Packages = this.selectPackagesSec;
