@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:20:29 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-18 18:28:19
+ * @Last Modified time: 2018-12-18 18:42:16
  */
 
 <template>
@@ -196,7 +196,7 @@ export default {
 		async getUserRoleList(){
 			let nodeIds = [];
 
-			if(this.roleId == 0){
+			if(this.roleId != 0){
 				let res = await this.getHttp('getUserRoleList');
 				if(Array.isArray(res)){
 					res.map((ele)=>{
