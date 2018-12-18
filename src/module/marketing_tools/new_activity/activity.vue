@@ -209,48 +209,42 @@ export default {
 				return utils.format(this.atime1, 'yyyy-MM-dd');
 			}
 		},
-		computed: {
-			start1: {
-				get: function() {
-					return utils.format(this.atime1, 'yyyy-MM-dd');
-				}
-			},
-			end1: {
-				get: function() {
-					return utils.format(this.btime1, 'yyyy-MM-dd');
-				}
-			},
-			day: {
-				get: function() {
-					let startTime = utils.format(this.btime, 'yyyy,MM,dd'); //获取开始时间年月日
-					let endTime = utils.format(this.atime, 'yyyy,MM,dd'); //获取结束时间年月日
-					return this.getDays(startTime, endTime) + '天';
-				}
-			},
+		end1: {
+			get: function() {
+				return utils.format(this.btime1, 'yyyy-MM-dd');
+			}
 		},
-		methods: {
-			setEndTime: function(startTime, endTime) {
-				// 设置活动结束时间
-				startTime = utils.format(startTime, 'yyyy,MM,dd'); //获取开始时间年月日 
-				endTime = utils.format(endTime, 'yyyy,MM,dd'); //获取结束时间年月日
-				if (endTime == '0' && startTime == '0') {
-					return '无限期';
-				} else {
-					return this.getDays(startTime, endTime) + '天';
-				}
-			},
-			getDays(strDateStart, strDateEnd) {
-				let strSeparator = ','; //日期分隔符
-				let oDate1;
-				let oDate2;
-				let iDays;
-				oDate1 = strDateStart.split(strSeparator);
-				oDate2 = strDateEnd.split(strSeparator);
-				let strDateS = new Date(oDate1[0], oDate1[1] - 1, oDate1[2]);
-				let strDateE = new Date(oDate2[0], oDate2[1] - 1, oDate2[2]);
-				iDays = parseInt(Math.abs(strDateS - strDateE) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
-				return iDays + 1;
-			},
+		day: {
+			get: function() {
+				let startTime = utils.format(this.btime, 'yyyy,MM,dd'); //获取开始时间年月日
+				let endTime = utils.format(this.atime, 'yyyy,MM,dd'); //获取结束时间年月日
+				return this.getDays(startTime, endTime) + '天';
+			}
+		},
+	},
+	methods: {
+		setEndTime: function(startTime, endTime) {
+			// 设置活动结束时间
+			startTime = utils.format(startTime, 'yyyy,MM,dd'); //获取开始时间年月日 
+			endTime = utils.format(endTime, 'yyyy,MM,dd'); //获取结束时间年月日
+			if (endTime == '0' && startTime == '0') {
+				return '无限期';
+			} else {
+				return this.getDays(startTime, endTime) + '天';
+			}
+		},
+		getDays(strDateStart, strDateEnd) {
+			let strSeparator = ','; //日期分隔符
+			let oDate1;
+			let oDate2;
+			let iDays;
+			oDate1 = strDateStart.split(strSeparator);
+			oDate2 = strDateEnd.split(strSeparator);
+			let strDateS = new Date(oDate1[0], oDate1[1] - 1, oDate1[2]);
+			let strDateE = new Date(oDate2[0], oDate2[1] - 1, oDate2[2]);
+			iDays = parseInt(Math.abs(strDateS - strDateE) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
+			return iDays + 1;
+		},
 
 		transFormData: function(time, type) {
 			// 转换时间
@@ -298,105 +292,95 @@ export default {
 						});
 						this.newgetActivityList();
 					}
-				});
-			},
-			//删除
-			deletecoupons: function(item) {
-				this.sendData({
-					urlType: 'deleteActivity',
-					data: {
-						activityId: item.id,
-					},
-					str: '确认要删除吗？'
-				});
-			},
-			//下架
-			off: function(item) {
-				this.sendData({
-					urlType: 'releaseOrDownActivity',
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType,
-						isRelease: 0
-					},
-					str: '确定要下架吗?'
-				});
-			},
-			//上架
-			on: function(item) {
-				this.sendData({
-					urlType: 'releaseOrDownActivity',
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType,
-						isRelease: 1
-					},
-					str: '确认要上架吗?'
-				});
-			},
-			//发布
-			publish(item) {
-				this.sendData({
-					urlType: 'releaseOrDownActivity',
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType,
-						isRelease: 1
-					},
-					str: '确定要发布吗?'
-				});
-			},
-			//关闭
-			async close(item) {
-				this.sendData({
-					urlType: 'closeActivity',
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType
-					},
-					str: '确定要关闭吗?'
-				});
+				}
+			});
+		},
+		//删除
+		deletecoupons: function(item) {
+			this.sendData({
+				urlType: 'deleteActivity',
+				data: {
+					activityId: item.id,
+				},
+				str: '确认要删除吗？'
+			});
+		},
+		//下架
+		off: function(item) {
+			this.sendData({
+				urlType: 'releaseOrDownActivity',
+				data: {
+					activityId: item.id,
+					type: item.type,
+					mouldType: item.mouldType,
+					isRelease: 0
+				},
+				str: '确定要下架吗?'
+			});
+		},
+		//上架
+		on: function(item) {
+			this.sendData({
+				urlType: 'releaseOrDownActivity',
+				data: {
+					activityId: item.id,
+					type: item.type,
+					mouldType: item.mouldType,
+					isRelease: 1
+				},
+				str: '确认要上架吗?'
+			});
+		},
+		//发布
+		publish(item) {
+			this.sendData({
+				urlType: 'releaseOrDownActivity',
+				data: {
+					activityId: item.id,
+					type: item.type,
+					mouldType: item.mouldType,
+					isRelease: 1
+				},
+				str: '确定要发布吗?'
+			});
+		},
+		//关闭
+		async close(item) {
+			this.sendData({
+				urlType: 'closeActivity',
+				data: {
+					activityId: item.id,
+					type: item.type,
+					mouldType: item.mouldType
+				},
+				str: '确定要关闭吗?'
+			});
 
-			},
-			searchlist: function() { //根据日期查找活动列表
-				this.page = 1;
-				this.newgetActivityList();
-			},
-			tabSwitch: function(index) { //选项卡的切换
-				this.flag = index;
-				this.page = 1;
-				this.newgetActivityList();
-			},
-			async newgetActivityList() {
-				let tabstatus = this.flag;
-				//已下架 -1
-				//已结束 -2
-				if (this.flag == 3) tabstatus = -1;
-				if (this.flag == 4) tabstatus = -2;
-				let data = await http.newgetActivityList({
-					data: {
-						fromDate: this.valueTime == '' ? '' : parseInt(this.valueTime[0] / 1000), //开始日期
-						toDate: this.valueTime == '' ? '' : parseInt(this.valueTime[1] / 1000), //结束日期
-						page: this.page, //页数
-						num: this.num,
-						status: tabstatus,
-						type: this.activityType, //活动类型
-						activityName: this.activityTitle
-					}
-				});
-				this.activityList = data.list;
-				this.pageTotal = data.total;
-				this.count = data.count;
-			},
-			modfycoupons(item, type) { //编辑活动
-				if (type == '2') {
-					//点击查看详情的状态
-					item.isShowdetail = true;
-					storage.session('activityDetail', 'true');
+		},
+		searchlist: function() { //根据日期查找活动列表
+			this.page = 1;
+			this.newgetActivityList();
+		},
+		tabSwitch: function(index) { //选项卡的切换
+			this.flag = index;
+			this.page = 1;
+			this.newgetActivityList();
+		},
+		async newgetActivityList() {
+			let tabstatus = this.flag;
+			//已下架 -1
+			//已结束 -2
+			if (this.flag == 3) tabstatus = -1;
+			if (this.flag == 4) tabstatus = -2;
+			let data = await http.newgetActivityList({
+				data: {
+					fromDate: this.valueTime == '' ? '' : parseInt(this.valueTime[0] / 1000), //开始日期
+					toDate: this.valueTime == '' ? '' : parseInt(this.valueTime[1] / 1000), //结束日期
+					page: this.page, //页数
+					num: this.num,
+					status: tabstatus,
+					type: this.activityType, //活动类型
+					activityName: this.activityTitle
 				}
 			});
 			this.activityList = data.list;
@@ -474,54 +458,44 @@ export default {
 				if (item.selected == true) {
 					idArr.push(item.id);
 				}
-				if (allPeople.indexOf(item.type) != -1) {
-					objName = '所有人';
+			});
+		},
+		getShopList: function() {
+			// 获取卡属门店店铺列表
+			if (this.ischain == '3') { // 处理品牌逻辑
+				this.shopsList = storage.session('shopList');
+				for (let item of this.shopsList) {
+					item.name = item.shopName;
 				}
-				//个例
-				if (item.type == '1' || item.type == '3') {
-					if (item.objectType == '0' && item.type == '1') {
-						objName = '店内';
-					} else {
-						let memberName = '';
-						let fansName = '';
-						let member = item.sendProgress.split(',')[0]; //会员的筛选数量
-						if (member > 0) {
-							memberName = '会员';
-						}
-						if (item.selectFans && item.selectFans == 1) {
-							fansName = '粉丝';
-						}
-						if (memberName != '' && fansName != '') {
-							objName = memberName + '+' + fansName;
-						} else {
-							objName = memberName + fansName;
-						}
-					}
-				}
-				return objName;
+			} else if (this.ischain == '0') {
+				//this.shopsName = this.userData.currentShop.name;
+				//this.listObj.belongToShop.push(this.userData.currentShop.id);
 			}
 		},
-		components: {
-			page: () =>
-				import( /* webpackChunkName:'page_element' */ 'src/components/page_element'),
-			canMulti: () =>
-				import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
-			'comTable': () =>
-				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
-			selectStore: () =>
-				import( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
-			PageElement: () =>
-				import( /*webpackChunkName: "page_element"*/ 'src/components/page_element'),
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.page = 1;
+			this.num = p;
+			this.newgetActivityList();
 		},
-		beforeCreate() {
-			currentShop = storage.session('userShop').currentShop;
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.newgetActivityList();
 		},
-		mounted() {
-			this.ischain = currentShop.ischain;
-			//console.log(this.ischain)
-			this.activityType = storage.session('activityType');
-			if (this.ischain != 1 && this.ischain != 2) {
-				this.setTitle();
+		getObject: function(item) {
+			// 生日活动 新会员开卡礼 裂变活动 会员日 消费券返券 '全体会员'
+			// 满减活动 消费满次 唤醒营销 '所有人'
+			// 自定义活动 店内 线上=> 会员和粉丝
+			// 消费额激励 会员 和 粉丝
+			let objName = '--';
+			let allMember = ['0', '2', '4', '5', '9'];
+			let allPeople = ['6', '8', '10'];
+			if (allMember.indexOf(item.type) != -1) {
+				objName = '全体会员';
+			}
+			if (allPeople.indexOf(item.type) != -1) {
+				objName = '所有人';
 			}
 			//个例
 			if (item.type == '1' || item.type == '3') {
@@ -569,186 +543,189 @@ export default {
 		if (this.ischain != 1 && this.ischain != 2) {
 			this.setTitle();
 		}
-	};
+		this.newgetActivityList();
+		this.getShopList();
+	}
+};
 </script>
 <style scoped>
-	#activity {
-		min-width: 800px;
-	}
+#activity {
+	min-width: 800px;
+}
 
-	#activity .filbox {
-		margin-right: 20px;
-	}
+#activity .filbox {
+	margin-right: 20px;
+}
 
-	#activity .choice {
-		height: 40px;
-	}
+#activity .choice {
+	height: 40px;
+}
 
-	#activity .choice span {
-		font-size: 16px;
-		line-height: 40px;
-	}
+#activity .choice span {
+	font-size: 16px;
+	line-height: 40px;
+}
 
-	.list {
-		min-width: 1300px;
-	}
+.list {
+	min-width: 1300px;
+}
 
-	.list .oUl {
-		width: 100%;
-		height: 50px;
-		height: 50px;
-		background-color: #e6e6e6;
-	}
+.list .oUl {
+	width: 100%;
+	height: 50px;
+	height: 50px;
+	background-color: #e6e6e6;
+}
 
-	.list .oUl li {
-		height: 50px;
-		height: 50px;
-		line-height: 50px;
-		text-align: center;
-		float: left;
-	}
+.list .oUl li {
+	height: 50px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	float: left;
+}
 
-	.list .oUl li:nth-child(1) {
-		width: 10%;
-	}
+.list .oUl li:nth-child(1) {
+	width: 10%;
+}
 
-	.list .oUl li:nth-child(2) {
-		width: 10%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+.list .oUl li:nth-child(2) {
+	width: 10%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
-	.list .oUl li:nth-child(3) {
-		width: 10%;
-	}
+.list .oUl li:nth-child(3) {
+	width: 10%;
+}
 
-	.list .oUl li:nth-child(4) {
-		width: 20%;
-	}
+.list .oUl li:nth-child(4) {
+	width: 20%;
+}
 
-	.list .oUl li:nth-child(5) {
-		width: 10%;
-	}
+.list .oUl li:nth-child(5) {
+	width: 10%;
+}
 
-	.list .oUl li:nth-child(6) {
-		width: 10%;
-	}
+.list .oUl li:nth-child(6) {
+	width: 10%;
+}
 
-	.list .oUl li:nth-child(7) {
-		width: 10%;
-	}
+.list .oUl li:nth-child(7) {
+	width: 10%;
+}
 
-	.list .oUl li:nth-child(8) {
-		width: 20%;
-	}
+.list .oUl li:nth-child(8) {
+	width: 20%;
+}
 
-	.list .oUl li:nth-child(8) a {
-		float: left;
-	}
+.list .oUl li:nth-child(8) a {
+	float: left;
+}
 
-	.list .oUl li section {
-		height: 50px;
-		line-height: 50px;
-		text-align: center;
-		float: left;
-		cursor: pointer;
-		color: #808080;
-	}
+.list .oUl li section {
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	float: left;
+	cursor: pointer;
+	color: #808080;
+}
 
-	.sel {
-		display: inline-block;
-		width: 120px;
-		height: 40px;
-		font-size: 16px;
-		background: #f2f2f2;
-		border-radius: 3px;
-		text-align: center;
-		line-height: 40px;
-		cursor: pointer;
-		margin-right: 10px;
-	}
+.sel {
+	display: inline-block;
+	width: 120px;
+	height: 40px;
+	font-size: 16px;
+	background: #f2f2f2;
+	border-radius: 3px;
+	text-align: center;
+	line-height: 40px;
+	cursor: pointer;
+	margin-right: 10px;
+}
 
-	.on {
-		background: #E1BB4A;
-		color: #fff;
-	}
+.on {
+	background: #E1BB4A;
+	color: #fff;
+}
 
-	.off {
-		background: #f2f2f2;
-	}
+.off {
+	background: #f2f2f2;
+}
 
-	#test {
-		display: inline-block;
-		vertical-align: middle;
-		position: relative;
-		height: 40px;
-		margin: 20px 0;
-	}
+#test {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	height: 40px;
+	margin: 20px 0;
+}
 
-	.el-input {
-		width: auto;
-	}
+.el-input {
+	width: auto;
+}
 
-	#test .filtrate {
-		display: inline-block;
-		height: 40px;
-		cursor: pointer;
-		color: #44404A;
-		margin-left: 20px;
-		position: relative;
-	}
+#test .filtrate {
+	display: inline-block;
+	height: 40px;
+	cursor: pointer;
+	color: #44404A;
+	margin-left: 20px;
+	position: relative;
+}
 
-	#test .filtrate input {
-		width: 200px;
-		height: 40px;
-		text-indent: 15px;
-	}
+#test .filtrate input {
+	width: 200px;
+	height: 40px;
+	text-indent: 15px;
+}
 
-	#test .oClickBox {
-		display: inline-block;
-		border: 1px solid #b3b3b3;
-		width: 310px;
-		height: 40px;
-		line-height: 40px;
-		position: relative;
-		cursor: pointer;
-	}
+#test .oClickBox {
+	display: inline-block;
+	border: 1px solid #b3b3b3;
+	width: 310px;
+	height: 40px;
+	line-height: 40px;
+	position: relative;
+	cursor: pointer;
+}
 
-	.oClickBox .oSpan {
-		border-right: 1px solid #b3b3b3;
-		display: inline-block;
-		text-align: center;
-		width: 270px;
-		height: 38px;
-	}
+.oClickBox .oSpan {
+	border-right: 1px solid #b3b3b3;
+	display: inline-block;
+	text-align: center;
+	width: 270px;
+	height: 38px;
+}
 
-	#test .down {
-		width: 0;
-		height: 0;
-		border-left: 5px solid transparent;
-		border-right: 5px solid transparent;
-		border-top: 10px solid #b3b3b3;
-		position: absolute;
-		right: 15px;
-		top: 15px;
-	}
+#test .down {
+	width: 0;
+	height: 0;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 10px solid #b3b3b3;
+	position: absolute;
+	right: 15px;
+	top: 15px;
+}
 
-	#test .searchBtn {
-		width: 40px;
-		height: 40px;
-		background-color: #29A7E1;
-	}
+#test .searchBtn {
+	width: 40px;
+	height: 40px;
+	background-color: #29A7E1;
+}
 
-	.search {
-		display: inline-block;
-		width: 40px;
-		height: 40px;
-		background-color: #29A7E1;
-		cursor: pointer;
-	}
+.search {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	background-color: #29A7E1;
+	cursor: pointer;
+}
 
-	.search {
-		background: url(../../../res/images/search.png) center center no-repeat;
-	}
+.search {
+	background: url(../../../res/images/search.png) center center no-repeat;
+}
 </style>

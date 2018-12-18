@@ -46,13 +46,13 @@
 				<section>
 					<ul class="title">
 						<div class="container clearfix">
-							<li v-for="(int,i) in couponLists" :class="ruleIndex == i ? 'active' : ''" @click="getDetails(i)">
+							<li v-for="(int,i) in couponLists" :key="i" :class="ruleIndex == i ? 'active' : ''" @click="getDetails(i)">
 								{{int.name}}
 								<i v-if='!int.modify' class="deletes" @click.stop='deletesecPush(i)'></i>
 							</li>
 						</div>
 					</ul>
-					<div class="content" v-for="(item,ind) in couponLists" v-if='ruleIndex == ind'>
+					<div class="content" v-for="(item,ind) in couponLists" v-if='ruleIndex == ind'  :key="ind" >
 						<!-- 券总量 -->
 						<div class="online-box clearfix" v-if="item.modify">
 							<span class="online-sub fl">状态:</span>
@@ -232,441 +232,395 @@ export default {
 			// 关闭页面
 			this.$router.push('/admin/activity/couponActivity');
 		},
-		watch: {
-			'startObj.time': 'timeChange',
-			'endObj.time': 'timeChange',
-		},
-		methods: {
-			getStartTime(str) { //活动的开始时间
-				this.startObj.time = str;
-			},
-			getEndTime(str) { //活动的结束时间
-				this.endObj.time = str;
-			},
-			timeChange: function() { //相差天数计算
-				this.returnInt = Math.ceil(
-					(new Date(this.endObj.time).getTime() -
-						new Date(this.startObj.time).getTime()) /
-					(1000 * 60 * 60 * 24)
-				);
-			},
-			getDetails: function(index) { //点击查看详情
-				// 获取规则详情
-				this.ruleIndex = index;
-			},
-			deletesecPush: function(ind) { //删除二级图文推送
-				if (this.ruleIndex >= ind) {
-					this.ruleIndex = 0;
-				}
-				this.couponLists.splice(ind, 1);
-			},
-			haveIndex: function(i) { //券总量
-				this.integralOn = i;
-			},
-			selexpirationTime: function(i) { //选择参与类型
-				// this.couponLists[showIndex].expirationTime = this.expirationTimeList[i].name;
-				// this.couponLists[showIndex].expirationTimeId = this.expirationTimeList[i].id;
-				this.couponLists[this.ruleIndex].expirationTimeId = i;
-			},
-			selintegralList: function(i) { //选择券总量
-				//this.couponLists[showIndex].integralTime = this.integralList[i].name;
-				this.couponLists[this.ruleIndex].integralId = i;
-				//console.log(this.couponLists[this.ruleIndex].integralId);
-				//this.integralId = this.integralList[i].id;
-			},
-			closePage: function() {
-				// 关闭页面
-				this.$router.push('/admin/activity/couponActivity');
-			},
-			//关联优惠券弹窗
-			// async addCount() {
-			// 	let data = await http.getGetCouponCondition({
+		//关联优惠券弹窗
+		// async addCount() {
+		// 	let data = await http.getGetCouponCondition({
 
-			// 	});
-			// 	let coupons = [];
-			// 	for (let item of data) {
-			// 		item.num = 1;
-			// 		if (item.type != 7 && item.fromType != 2) { //type7是积分卡券
-			// 			coupons.push(item);
-			// 		}
-			// 	}
-			// 	this.couponList = this.arrayfilter(coupons, this.couponLists);
-			// 	this.showCoupon = true;
-			// },
-			addCoupon: function() { //添加优惠券
-				this.showCoupon = true;
-			},
-			winEvent(obj) {
-				if (obj.status == 'ok') {
-					//console.log(JSON.stringify(obj.data.select))
-					let obj1 = {
-						integralTime: '无上限',
-						integralId: 0,
-						expirationTime: '不参与',
-						expirationTimeId: 0,
-						voucheramount: 0, //券总分量填写的数量
-						purchasevoucher: 0, //购券填写的数量
-						collection: '', //人均领取的次数 
-						isShelves: 1 //优惠券的状态                   
-					};
-					if (this.couponLists.length + obj.data.select.length > 10) {
-						this.valiData('优惠券最多一共关联10张!');
-						return false;
-					}
-					for (let item of obj.data.select) {
-						let obj2 = Object.assign({}, item, obj1);
-						this.couponLists.push(obj2);
-					}
-				}
-				this.showCoupon = false;
-			},
-			valiData: function(content, title, winType) { //提示框格式化
-				this.$store.commit('setWin', {
-					content: content,
-					title: title,
-					winType: winType
-				});
-			},
-			checkForm: function() { //验证
-				if (this.activityName == '') {
-					this.valiData('活动标题不能为空!');
-					return false;
-				}
-				if (this.startObj.time - this.endObj.time > 0) {
-					this.valiData('活动时间选择有误!');
-					return false;
-				}
-				if (this.couponLists.length <= 0) {
-					this.valiData('请添加关联券!');
-					return false;
-				}
-				for (let item of this.couponLists) {
-					if (item.integralId == 1 && item.voucheramount == '') {
-						this.valiData(`${item.name}请填写券总量!`);
-						return false;
-					}
-					if (item.expirationTimeId == 1 && (item.purchasevoucher == '' || item.purchasevoucher == 0)) {
-						this.valiData(`${item.name}请填写参与购券金额且购券金额需大于0!`);
-						return false;
-					}
-					if (item.collection == '') {
-						this.valiData(`${item.name}请填写人均领取次数!`);
-						return false;
-					}
-					if (Number(item.collection) > 999 || Number(item.collection) < 1) {
-						this.valiData(`${item.name}人均领取次数范围1-999!`);
-						return false;
-					}
-				}
-				return true;
-			},
-			saveConfig: function(type) {
-				if (!this.checkForm()) return;
-				if (this.editId == '') {
-					this.addConfig(type);
-				} else {
-					this.ediConfig(type);
-				}
-			},
-			async addConfig(type) { //增加活动
-				let arr = [];
-				let obj = {
-					couponIds: []
-				};
-				for (let item of this.couponLists) {
-					let value = {
-						'id': item.id, //优惠券ID
-						'type': item.type, //优惠券类型
-						'name': item.name,
-						'isCeiling': item.integralId, //是否设置券总量上限 1是 0否
-						'ceilingNum': item.voucheramount, //上限数量 int 10
-						'isBuy': item.expirationTimeId, //是否参与购买 1是 0否
-						'price': item.purchasevoucher, //购买价格
-						'perCapitaNum': item.collection, //人均 领券次数
-						'isShelves': 1 //是否上架 1是 0否
-					};
-					obj.couponIds.push(value);
-				}
-				arr.push(obj);
-				await http.fissionActivity({
-					data: {
-						type: 7, //活动类别
-						mouldType: 0, //长期活动模板
-						name: this.activityName, //活动名
-						objectType: 2, //活动对象
-						startTime: parseInt(this.startObj.time / 1000), //开始时间
-						endTime: parseInt(this.endObj.time / 1000), //结束时间
-						isAuto: type, //保存 
-						rule: JSON.stringify(arr)
-					}
-				});
-				let message = (type == 0) ? '保存成功' : '发布成功';
-				this.valiData(message);
-				this.closePage();
-			},
-			async ediConfig(type) {
-				let activityDetail = {}; //data
-				activityDetail.type = 7;
-				activityDetail.mouldType = 0;
-				activityDetail.name = this.activityName;
-				activityDetail.objectType = 2;
-				activityDetail.startTime = parseInt(this.startObj.time / 1000);
-				activityDetail.endTime = parseInt(this.endObj.time / 1000);
-				activityDetail.isAuto = type;
-				activityDetail.rule = [];
-				let arr = [];
-				let obj = {
-					id: this.ruleId,
-					couponIds: []
-				};
-				for (let item of this.couponLists) {
-					let value = {
-						'id': item.id, //优惠券ID
-						'type': item.type, //优惠券类型
-						'name': item.name,
-						'isCeiling': item.integralId, //是否设置券总量上限 1是 0否
-						'ceilingNum': item.voucheramount, //上限数量 int 10
-						'isBuy': item.expirationTimeId, //是否参与购买 1是 0否
-						'price': item.purchasevoucher, //购买价格
-						'perCapitaNum': item.collection, //人均 领券次数
-						'isShelves': item.isShelves //是否上架 1是 0否
-					};
-					obj.couponIds.push(value);
-				}
-				arr.push(obj);
-				activityDetail.rule = arr;
-				await http.fissionActivity({
-					data: {
-						activityId: this.editId, //任务Id
-						data: JSON.stringify(activityDetail)
-					}
-				});
-				let message = (type == 0) ? '保存成功' : '发布成功';
-				this.valiData(message);
-				this.closePage();
-			},
-			async newgetActivityDetail(item) {
-				// 获取活动的详情
-				let data = await http.newgetActivityDetail({
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType
-					}
-				});
-				if (data) {
-					this.activityName = data.name; //活动名称
-					this.startObj.time = data.startTime * 1000; //开始时间
-					this.endObj.time = data.endTime * 1000; //结束时间
-					this.ruleId = data.rule[0].id; //规则id 
-					//拆分优惠券
-					let couponIds = JSON.parse(data.rule[0].couponIds);
-					for (let item of couponIds) {
-						let obj = {
-							id: item.id, //优惠券的id
-							type: item.type, //优惠券的type
-							name: item.name, //优惠券名称
-							integralTime: item.isCeiling == 0 ? '无上限' : '自定义',
-							integralId: item.isCeiling, //券总量 0 无上限 1 自定义
-							expirationTime: item.isBuy == 0 ? '不参与' : '参与',
-							expirationTimeId: item.isBuy, //参与购券 0 不参与 1 参与
-							voucheramount: item.ceilingNum, //券总分量填写的数量
-							purchasevoucher: item.price, //购券填写的数量
-							collection: item.perCapitaNum, //人均领取的次数   
-							isShelves: item.isShelves,
-							modify: true
-						};
-						this.couponLists.push(obj);
-					}
-				}
-			},
-			modifyStatus: function(item) { //修改优惠券上下架状态
-				item.isShelves = Boolean(Number(item.isShelves));
-				item.isShelves = !item.isShelves;
-				item.isShelves = Number(item.isShelves);
-			},
-			keepValue: function(ind) { //保留两位小数
-				this.couponLists[ind].purchasevoucher = utils.toFloatStr(this.couponLists[ind].purchasevoucher, 2);
-			},
+		// 	});
+		// 	let coupons = [];
+		// 	for (let item of data) {
+		// 		item.num = 1;
+		// 		if (item.type != 7 && item.fromType != 2) { //type7是积分卡券
+		// 			coupons.push(item);
+		// 		}
+		// 	}
+		// 	this.couponList = this.arrayfilter(coupons, this.couponLists);
+		// 	this.showCoupon = true;
+		// },
+		addCoupon: function() { //添加优惠券
+			this.showCoupon = true;
 		},
-		components: {
-			calendar: () =>
-				import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
-			'singleSelect': () =>
-				import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
-			selectBtn: () =>
-				import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
-			'addCoupon': () =>
-				import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
-		},
-		mounted() {
-			this.$store.commit('setPageTools', [{
-				name: '<返回活动列表',
-				className: ['activity'],
-				fn: () => {
-					this.closePage();
+		winEvent(obj) {
+			if (obj.status == 'ok') {
+				//console.log(JSON.stringify(obj.data.select))
+				let obj1 = {
+					integralTime: '无上限',
+					integralId: 0,
+					expirationTime: '不参与',
+					expirationTimeId: 0,
+					voucheramount: 0, //券总分量填写的数量
+					purchasevoucher: 0, //购券填写的数量
+					collection: '', //人均领取的次数 
+					isShelves: 1 //优惠券的状态                   
+				};
+				if (this.couponLists.length + obj.data.select.length > 10) {
+					this.valiData('优惠券最多一共关联10张!');
+					return false;
 				}
-			}]);
-			let activityInfo = storage.session('activityInfo');
-			let activityDetail = storage.session('activityDetail');
-			if (activityDetail) {
-				this.isactivityDetail = false;
+				for (let item of obj.data.select) {
+					let obj2 = Object.assign({}, item, obj1);
+					this.couponLists.push(obj2);
+				}
 			}
-			if (activityInfo) {
-				this.editId = activityInfo.id;
-				this.newgetActivityDetail(activityInfo);
+			this.showCoupon = false;
+		},
+		valiData: function(content, title, winType) { //提示框格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		checkForm: function() { //验证
+			if (this.activityName == '') {
+				this.valiData('活动标题不能为空!');
+				return false;
+			}
+			if (this.startObj.time - this.endObj.time > 0) {
+				this.valiData('活动时间选择有误!');
+				return false;
+			}
+			if (this.couponLists.length <= 0) {
+				this.valiData('请添加关联券!');
+				return false;
+			}
+			for (let item of this.couponLists) {
+				if (item.integralId == 1 && item.voucheramount == '') {
+					this.valiData(`${item.name}请填写券总量!`);
+					return false;
+				}
+				if (item.expirationTimeId == 1 && (item.purchasevoucher == '' || item.purchasevoucher == 0)) {
+					this.valiData(`${item.name}请填写参与购券金额且购券金额需大于0!`);
+					return false;
+				}
+				if (item.collection == '') {
+					this.valiData(`${item.name}请填写人均领取次数!`);
+					return false;
+				}
+				if (Number(item.collection) > 999 || Number(item.collection) < 1) {
+					this.valiData(`${item.name}人均领取次数范围1-999!`);
+					return false;
+				}
+			}
+			return true;
+		},
+		saveConfig: function(type) {
+			if (!this.checkForm()) return;
+			if (this.editId == '') {
+				this.addConfig(type);
+			} else {
+				this.ediConfig(type);
 			}
 		},
-		beforeDestroy() {
-			//将编辑的任务缓存清掉
-			storage.session('activityInfo', null);
-			storage.session('activityDetail', null);
+		async addConfig(type) { //增加活动
+			let arr = [];
+			let obj = {
+				couponIds: []
+			};
+			for (let item of this.couponLists) {
+				let value = {
+					'id': item.id, //优惠券ID
+					'type': item.type, //优惠券类型
+					'name': item.name,
+					'isCeiling': item.integralId, //是否设置券总量上限 1是 0否
+					'ceilingNum': item.voucheramount, //上限数量 int 10
+					'isBuy': item.expirationTimeId, //是否参与购买 1是 0否
+					'price': item.purchasevoucher, //购买价格
+					'perCapitaNum': item.collection, //人均 领券次数
+					'isShelves': 1 //是否上架 1是 0否
+				};
+				obj.couponIds.push(value);
+			}
+			arr.push(obj);
+			await http.fissionActivity({
+				data: {
+					type: 7, //活动类别
+					mouldType: 0, //长期活动模板
+					name: this.activityName, //活动名
+					objectType: 2, //活动对象
+					startTime: parseInt(this.startObj.time / 1000), //开始时间
+					endTime: parseInt(this.endObj.time / 1000), //结束时间
+					isAuto: type, //保存 
+					rule: JSON.stringify(arr)
+				}
+			});
+			let message = (type == 0) ? '保存成功' : '发布成功';
+			this.valiData(message);
+			this.closePage();
+		},
+		async ediConfig(type) {
+			let activityDetail = {}; //data
+			activityDetail.type = 7;
+			activityDetail.mouldType = 0;
+			activityDetail.name = this.activityName;
+			activityDetail.objectType = 2;
+			activityDetail.startTime = parseInt(this.startObj.time / 1000);
+			activityDetail.endTime = parseInt(this.endObj.time / 1000);
+			activityDetail.isAuto = type;
+			activityDetail.rule = [];
+			let arr = [];
+			let obj = {
+				id: this.ruleId,
+				couponIds: []
+			};
+			for (let item of this.couponLists) {
+				let value = {
+					'id': item.id, //优惠券ID
+					'type': item.type, //优惠券类型
+					'name': item.name,
+					'isCeiling': item.integralId, //是否设置券总量上限 1是 0否
+					'ceilingNum': item.voucheramount, //上限数量 int 10
+					'isBuy': item.expirationTimeId, //是否参与购买 1是 0否
+					'price': item.purchasevoucher, //购买价格
+					'perCapitaNum': item.collection, //人均 领券次数
+					'isShelves': item.isShelves //是否上架 1是 0否
+				};
+				obj.couponIds.push(value);
+			}
+			arr.push(obj);
+			activityDetail.rule = arr;
+			await http.fissionActivity({
+				data: {
+					activityId: this.editId, //任务Id
+					data: JSON.stringify(activityDetail)
+				}
+			});
+			let message = (type == 0) ? '保存成功' : '发布成功';
+			this.valiData(message);
+			this.closePage();
+		},
+		async newgetActivityDetail(item) {
+			// 获取活动的详情
+			let data = await http.newgetActivityDetail({
+				data: {
+					activityId: item.id,
+					type: item.type,
+					mouldType: item.mouldType
+				}
+			});
+			if (data) {
+				this.activityName = data.name; //活动名称
+				this.startObj.time = data.startTime * 1000; //开始时间
+				this.endObj.time = data.endTime * 1000; //结束时间
+				this.ruleId = data.rule[0].id; //规则id 
+				//拆分优惠券
+				let couponIds = JSON.parse(data.rule[0].couponIds);
+				for (let item of couponIds) {
+					let obj = {
+						id: item.id, //优惠券的id
+						type: item.type, //优惠券的type
+						name: item.name, //优惠券名称
+						integralTime: item.isCeiling == 0 ? '无上限' : '自定义',
+						integralId: item.isCeiling, //券总量 0 无上限 1 自定义
+						expirationTime: item.isBuy == 0 ? '不参与' : '参与',
+						expirationTimeId: item.isBuy, //参与购券 0 不参与 1 参与
+						voucheramount: item.ceilingNum, //券总分量填写的数量
+						purchasevoucher: item.price, //购券填写的数量
+						collection: item.perCapitaNum, //人均领取的次数   
+						isShelves: item.isShelves,
+						modify: true
+					};
+					this.couponLists.push(obj);
+				}
+			}
+		},
+		modifyStatus: function(item) { //修改优惠券上下架状态
+			item.isShelves = Boolean(Number(item.isShelves));
+			item.isShelves = !item.isShelves;
+			item.isShelves = Number(item.isShelves);
+		},
+		keepValue: function(ind) { //保留两位小数
+			this.couponLists[ind].purchasevoucher = utils.toFloatStr(this.couponLists[ind].purchasevoucher, 2);
+		},
+	},
+	components: {
+		calendar: () =>
+			import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+		'singleSelect': () =>
+			import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+		selectBtn: () =>
+			import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+		'addCoupon': () =>
+			import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '<返回活动列表',
+			className: ['activity'],
+			fn: () => {
+				this.closePage();
+			}
+		}]);
+		let activityInfo = storage.session('activityInfo');
+		let activityDetail = storage.session('activityDetail');
+		if (activityDetail) {
+			this.isactivityDetail = false;
 		}
-	};
+		if (activityInfo) {
+			this.editId = activityInfo.id;
+			this.newgetActivityDetail(activityInfo);
+		}
+	},
+	beforeDestroy() {
+		//将编辑的任务缓存清掉
+		storage.session('activityInfo', null);
+		storage.session('activityDetail', null);
+	}
+};
 </script>
 <style type="text/css" scoped>
-	#addcouponAct {
-		width: 1200px;
-		height: auto;
-	}
+#addcouponAct {
+	width: 1200px;
+	height: auto;
+}
 
-	#addcouponAct .online-box {
-		width: 100%;
-		height: auto;
-		min-height: 40px;
-		margin-bottom: 29px;
-	}
+#addcouponAct .online-box {
+	width: 100%;
+	height: auto;
+	min-height: 40px;
+	margin-bottom: 29px;
+}
 
-	#addcouponAct .online-box .online-sub {
-		display: block;
-		font-size: 16px;
-		width: 110px;
-		height: 40px;
-		line-height: 40px;
-		color: #333;
-		text-align: right;
-		margin-right: 14px;
-	}
+#addcouponAct .online-box .online-sub {
+	display: block;
+	font-size: 16px;
+	width: 110px;
+	height: 40px;
+	line-height: 40px;
+	color: #333;
+	text-align: right;
+	margin-right: 14px;
+}
 
-	#addcouponAct .online-box .rightHalf {
-		max-width: 1000px;
-		height: auto;
-		float: left;
-		line-height: 40px;
-	}
+#addcouponAct .online-box .rightHalf {
+	max-width: 1000px;
+	height: auto;
+	float: left;
+	line-height: 40px;
+}
 
-	#addcouponAct .online-box .rightHalf .state {
-		height: 40px;
-	}
+#addcouponAct .online-box .rightHalf .state {
+	height: 40px;
+}
 
-	#addcouponAct .online-box .rightHalf .state span,
-	#addcouponAct .online-box .rightHalf .state a {
-		float: left;
-		display: block;
-		height: 40px;
-		line-height: 40px;
-		font-size: 16px;
-		min-width: 50px;
-		margin-right: 20px;
-	}
+#addcouponAct .online-box .rightHalf .state span,
+#addcouponAct .online-box .rightHalf .state a {
+	float: left;
+	display: block;
+	height: 40px;
+	line-height: 40px;
+	font-size: 16px;
+	min-width: 50px;
+	margin-right: 20px;
+}
 
-	#addcouponAct .online-box .rightHalf .state a {
-		color: #28a8e0;
-	}
+#addcouponAct .online-box .rightHalf .state a {
+	color: #28a8e0;
+}
 
-	#addcouponAct .online-box .rightHalf .couponNum {
-		margin-top: 19px;
-	}
+#addcouponAct .online-box .rightHalf .couponNum {
+	margin-top: 19px;
+}
 
-	#addcouponAct .online-box .rightHalf .name,
-	#addcouponAct .online-box .rightHalf .coupon {
-		width: 280px;
-		height: 40px;
-		background-color: #ffffff;
-		border: solid 1px #cecdcd;
-		text-indent: 15px;
-		margin-right: 15px;
-	}
+#addcouponAct .online-box .rightHalf .name,
+#addcouponAct .online-box .rightHalf .coupon {
+	width: 280px;
+	height: 40px;
+	background-color: #ffffff;
+	border: solid 1px #cecdcd;
+	text-indent: 15px;
+	margin-right: 15px;
+}
 
-	#addcouponAct .online-box .handle-tips {
-		height: 40px;
-		line-height: 40px;
-		text-indent: 25px;
-		background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
-		color: #999999;
-	}
+#addcouponAct .online-box .handle-tips {
+	height: 40px;
+	line-height: 40px;
+	text-indent: 25px;
+	background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
+	color: #999999;
+}
 
-	#addcouponAct .online-box .rightHalf span {
-		line-height: 40px;
-	}
+#addcouponAct .online-box .rightHalf span {
+	line-height: 40px;
+}
 
-	#addcouponAct .online-box .rightHalf .title {
-		max-width: 800px;
-		height: 50px;
-		overflow-x: auto;
-		overflow-y: hidden;
-		white-space: nowrap;
-		padding-top: 10px;
-	}
+#addcouponAct .online-box .rightHalf .title {
+	max-width: 800px;
+	height: 50px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+	padding-top: 10px;
+}
 
-	#addcouponAct .online-box .rightHalf .title .active {
-		background-color: #B3B3B3;
-	}
+#addcouponAct .online-box .rightHalf .title .active {
+	background-color: #B3B3B3;
+}
 
-	#addcouponAct .online-box .rightHalf .title li {
-		/* float: left; */
-		display: inline-block;
-		min-width: 100px;
-		height: 40px;
-		margin-right: 10px;
-		background-color: #f2f2f2;
-		text-align: center;
-		line-height: 40px;
-		position: relative;
-		padding: 0 10px;
-	}
+#addcouponAct .online-box .rightHalf .title li {
+	/* float: left; */
+	display: inline-block;
+	min-width: 100px;
+	height: 40px;
+	margin-right: 10px;
+	background-color: #f2f2f2;
+	text-align: center;
+	line-height: 40px;
+	position: relative;
+	padding: 0 10px;
+}
 
-	#addcouponAct .online-box .rightHalf .title li:hover i.deletes {
-		position: absolute;
-		right: -12px;
-		top: -12px;
-		background: url(../../../res/images/delete.png) center center no-repeat;
-		height: 30px;
-		width: 30px;
-		cursor: pointer;
-	}
+#addcouponAct .online-box .rightHalf .title li:hover i.deletes {
+	position: absolute;
+	right: -12px;
+	top: -12px;
+	background: url(../../../res/images/delete.png) center center no-repeat;
+	height: 30px;
+	width: 30px;
+	cursor: pointer;
+}
 
-	#addcouponAct .online-box .rightHalf .content {
-		width: 800px;
-		height: 430px;
-		border: 1px solid #b3b3b3;
-		padding: 26px 0 0 31px;
-	}
+#addcouponAct .online-box .rightHalf .content {
+	width: 800px;
+	height: 430px;
+	border: 1px solid #b3b3b3;
+	padding: 26px 0 0 31px;
+}
 
-	#addcouponAct .online-box .rightHalf .secbox {
-		height: 40px;
-		border: 1px solid #CECDCD;
-		margin-right: 16px;
-		float: left;
-	}
+#addcouponAct .online-box .rightHalf .secbox {
+	height: 40px;
+	border: 1px solid #CECDCD;
+	margin-right: 16px;
+	float: left;
+}
 
-	#addcouponAct .online-box .rightHalf .secbox .cumulative {
-		width: 188px;
-		height: 38px;
-		border: 1px solid #eaeaea;
-		float: left;
-		outline: none;
-		text-indent: 17px;
-	}
+#addcouponAct .online-box .rightHalf .secbox .cumulative {
+	width: 188px;
+	height: 38px;
+	border: 1px solid #eaeaea;
+	float: left;
+	outline: none;
+	text-indent: 17px;
+}
 
-	#addcouponAct .online-box .rightHalf .secbox span {
-		display: block;
-		float: left;
-		width: 38px;
-		height: 38px;
-		font-size: 16px;
-		text-align: center;
-		line-height: 38px;
-		border-left: 1px solid #CECDCD;
-	}
+#addcouponAct .online-box .rightHalf .secbox span {
+	display: block;
+	float: left;
+	width: 38px;
+	height: 38px;
+	font-size: 16px;
+	text-align: center;
+	line-height: 38px;
+	border-left: 1px solid #CECDCD;
+}
 </style>

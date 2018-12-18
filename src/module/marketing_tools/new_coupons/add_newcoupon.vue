@@ -103,85 +103,80 @@ export default {
 			this.$router.push(path);
 			storage.session('couponStatus', 'addCoupon');
 		},
-		methods: {
-			addCoupon: function(path) {
-				this.$router.push(path);
-				storage.session('couponStatus', 'addCoupon');
-			},
-			setTitle: function() { //设置标题
-				this.$store.commit('setPageTools', [{
-					name: '过期提醒',
-					fn: () => {
-						this.openEdit();
-					},
-					className: 'el-btn-yellow'
-				}]);
-			},
-			openEdit: function() { //设置过期提醒
-				this.$router.push('/admin/addCoupon/overdueReminder');
-			}
+		setTitle: function() { //设置标题
+			this.$store.commit('setPageTools', [{
+				name: '过期提醒',
+				fn: () => {
+					this.openEdit();
+				},
+				className: 'el-btn-yellow'
+			}]);
 		},
-		mounted() {
-			this.setTitle(); //设置标题
+		openEdit: function() { //设置过期提醒
+			this.$router.push('/admin/addCoupon/overdueReminder');
 		}
-	};
+	},
+	mounted() {
+		this.setTitle(); //设置标题
+	}
+};
 </script>
 <style type="text/css" scoped>
-	#newcoupon .oUl .oLi {
-		width: 300px;
-		height: 200px;
-		float: left;
-		margin-right: 20px;
-		margin-top: 30px;
-		background-repeat: no-repeat;
-	}
+#newcoupon .oUl .oLi {
+	width: 300px;
+	height: 200px;
+	float: left;
+	margin-right: 20px;
+	margin-top: 30px;
+	background-repeat: no-repeat;
+}
 
-	#newcoupon .oUl .oLi .oBtop {
-		width: 300px;
-		height: 58px;
-	}
+#newcoupon .oUl .oLi .oBtop {
+	width: 300px;
+	height: 58px;
+}
 
-	#newcoupon .oUl .oLi .oBtop span {
-		font-size: 26px;
-		color: #ffffff;
-		line-height: 58px;
-		margin-left: 10px;
-	}
+#newcoupon .oUl .oLi .oBtop span {
+	font-size: 26px;
+	color: #ffffff;
+	line-height: 58px;
+	margin-left: 10px;
+}
 
-	#newcoupon .oUl .oLi .oBottom {
-		width: 100%;
-		height: 143px;
-		padding-top: 18px;
-	}
+#newcoupon .oUl .oLi .oBottom {
+	width: 100%;
+	height: 143px;
+	padding-top: 18px;
+}
 
-	#newcoupon .oUl .oLi .oBottom .oBLeft {
-		width: 100%;
-		height: 84px;
-		padding: 0 71px 0 25px;
-	}
+#newcoupon .oUl .oLi .oBottom .oBLeft {
+	width: 100%;
+	height: 84px;
+	padding: 0 71px 0 25px;
+}
 
-	#newcoupon .oUl .oLi .oBottom .oBLeft h3 {
-		line-height: 26px;
-		font-size: 16px;
-		font-weight: normal;
-		color: #333;
-	}
+#newcoupon .oUl .oLi .oBottom .oBLeft h3 {
+	line-height: 26px;
+	font-size: 16px;
+	font-weight: normal;
+	color: #333;
+}
 
-	#newcoupon .oUl .oLi .oBottom .oBRight {
-		width: 100%;
-		height: auto;
-	}
+#newcoupon .oUl .oLi .oBottom .oBRight {
+	width: 100%;
+	height: auto;
+}
 
-	#newcoupon .oUl .oLi .oBottom .oBRight .addcoupon {
-		width: 83px;
-		font-size: 20px;
-		height: 22px;
-		text-align: center;
-		line-height: 19px;
-		color: #6CC2E6;
-		border-bottom: 1px solid #6CC2E6;
-		float: right;
-		margin-right: 20px;
-		cursor: pointer;
-	}
+#newcoupon .oUl .oLi .oBottom .oBRight .addcoupon {
+	width: 83px;
+	font-size: 20px;
+	height: 22px;
+	text-align: center;
+	line-height: 19px;
+	color: #6CC2E6;
+	border-bottom: 1px solid #6CC2E6;
+	float: right;
+	margin-right: 20px;
+	cursor: pointer;
+}
 </style>

@@ -248,19 +248,27 @@ export default {
 					width: 150 + 'px',
 					flex: 'none'
 				}
-				this.isPublic[type] = !this.isPublic[type];
 			},
-			rangEvent(obj) { //关联弹窗的回掉
-				if (obj.status == 'ok') {
-					this.selectsList = obj.select;
+			{
+				titleName: '序列',
+				titleStyle: {
+					width: 150 + 'px',
+					flex: 'none'
 				}
-				this.showRang = false;
 			},
-			chooseIntegral: function(index) {
-				this.isMemberShare = index;
+			{
+				titleName: '订单金额(元)'
 			},
-			openpreferential: function(res) { //开启优惠规则
-				this.preferential = res;
+			{
+				titleName: '减免金额(元)'
+			}
+			],
+			formList: [], //展示的数据
+			editId: '', //编辑的id
+			isPublic: {
+				'1': false,
+				'2': false,
+				'3': false
 			},
 			activityDetail: true, //是否查看详情
 			activityScene: [{
@@ -332,78 +340,86 @@ export default {
 					this.valiData('请完善优惠方案信息!');
 					return false;
 				}
-				for (let item of this.formList) { //判断信息不能为空
-					if (item.fullCash == '' || item.reduceCsah == '') {
-						this.valiData('请完善优惠方案信息!');
-						return false;
+			}
+			this.formList.push(obj);
+			for (let i = 0; i < this.formList.length; i++) {
+				this.formList[i].index = i + 1;
+			}
+		},
+		delplan: function(item) {
+			this.formList.splice(item.index - 1, 1);
+			for (let i = 0; i < this.formList.length; i++) {
+				this.formList[i].index = i + 1;
+				if (!this.isRepeat(this.formList) && this.formList[i].fullCash != 0) { //删除的时候判断订单金额有无重复
+					this.formList[i].fullStatus = false;
+				}
+			}
+		},
+		formatValue: function(index, value) {
+			this.formList[index - 1][value] = utils.toFloatStr(this.formList[index - 1][value], 2);
+			if (value == 'fullCash') {
+				this.formList[index - 1].fullStatus = false;
+				if (this.formList[index - 1].fullCash == 0) {
+					this.formList[index - 1].fullStatus = true;
+					this.formList[index - 1].fullerrorMessage = '订单金额不能为0!';
+				}
+				if (this.isRepeat(this.formList)) {
+					this.formList[index - 1].fullStatus = true;
+					this.formList[index - 1].fullerrorMessage = '订单金额不能重复!';
+				}
+				if (!this.isRepeat(this.formList)) {
+					for (let item of this.formList) {
+						item.fullStatus = false;
 					}
 				}
-				this.formList.push(obj);
-				for (let i = 0; i < this.formList.length; i++) {
-					this.formList[i].index = i + 1;
+			}
+			if (value == 'reduceCsah') {
+				this.formList[index - 1].reduceStatus = false;
+				if (this.formList[index - 1].reduceCsah == 0) {
+					this.formList[index - 1].reduceStatus = true;
+					this.formList[index - 1].reduceerrorMessage = '减免金额不能为0!';
 				}
-			},
-			delplan: function(item) {
-				this.formList.splice(item.index - 1, 1);
-				for (let i = 0; i < this.formList.length; i++) {
-					this.formList[i].index = i + 1;
-					if (!this.isRepeat(this.formList) && this.formList[i].fullCash != 0) { //删除的时候判断订单金额有无重复
-						this.formList[i].fullStatus = false;
-					}
-				}
-			},
-			formatValue: function(index, value) {
-				this.formList[index - 1][value] = utils.toFloatStr(this.formList[index - 1][value], 2);
-				if (value == 'fullCash') {
-					this.formList[index - 1].fullStatus = false;
-					if (this.formList[index - 1].fullCash == 0) {
-						this.formList[index - 1].fullStatus = true;
-						this.formList[index - 1].fullerrorMessage = '订单金额不能为0!';
-					}
-					if (this.isRepeat(this.formList)) {
-						this.formList[index - 1].fullStatus = true;
-						this.formList[index - 1].fullerrorMessage = '订单金额不能重复!';
-					}
-					if (!this.isRepeat(this.formList)) {
-						for (let item of this.formList) {
-							item.fullStatus = false;
-						}
-					}
-				}
-				if (value == 'reduceCsah') {
-					this.formList[index - 1].reduceStatus = false;
-					if (this.formList[index - 1].reduceCsah == 0) {
-						this.formList[index - 1].reduceStatus = true;
-						this.formList[index - 1].reduceerrorMessage = '减免金额不能为0!';
-					}
-				}
-			},
-			isRepeat: function(arr) { //判断订单金额是否有重复
-				let hash = {};
-				for (let i in arr) {
-					if (hash[arr[i].fullCash])
-						return true;
-					hash[arr[i].fullCash] = true;
-				}
+			}
+		},
+		isRepeat: function(arr) { //判断订单金额是否有重复
+			let hash = {};
+			for (let i in arr) {
+				if (hash[arr[i].fullCash])
+					return true;
+				hash[arr[i].fullCash] = true;
+			}
+			return false;
+		},
+		validationForm: function() { //验证满减金额
+			for (let item of this.formList) {
+				if (item.fullStatus || item.reduceStatus) return false;
+				if (item.fullCash == '' || item.reduceCsah == '') return false;
+			}
+			return true;
+		},
+		valiData: function(content, title, winType) {
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		checkForm: function() {
+			if (this.activityName == '') {
+				this.valiData('活动标题不能为空!');
 				return false;
-			},
-			validationForm: function() { //验证满减金额
-				for (let item of this.formList) {
-					if (item.fullStatus || item.reduceStatus) return false;
-					if (item.fullCash == '' || item.reduceCsah == '') return false;
-				}
-				return true;
-			},
-			valiData: function(content, title, winType) {
-				this.$store.commit('setWin', {
-					content: content,
-					title: title,
-					winType: winType
-				});
-			},
-			checkForm: function() {
-				if (this.activityName == '') {
-					this.valiData('活动标题不能为空!');
+			}
+			if (this.ischain == '3' && this.selectsList.length == 0) {
+				this.valiData('请选择活动门店!');
+				return false;
+			}
+			if (!this.payDiscount && !this.preferential) {
+				this.valiData('请至少开启一个规则!');
+				return false;
+			}
+			if (this.payDiscount) {
+				if (this.cash == '' || this.payCash == '') {
+					this.valiData('请完善默认规则信息!');
 					return false;
 				}
 			}
@@ -438,6 +454,15 @@ export default {
 						orderPrice: this.cash, //不满
 						pay: this.payCash //付
 					},
+					status: Number(this.preferential),
+					discountRule: []
+				},
+			};
+			let discountRule = [];
+			for (let item of this.formList) {
+				let ruleobj = {
+					orderPrice: item.fullCash,
+					reduction: item.reduceCsah
 				};
 				discountRule.push(ruleobj);
 			}
@@ -486,69 +511,38 @@ export default {
 						orderPrice: this.cash, //不满
 						pay: this.payCash //付
 					},
+					status: Number(this.preferential),
+					discountRule: []
+				},
+			};
+			let discountRule = [];
+			for (let item of this.formList) {
+				let ruleobj = {
+					orderPrice: item.fullCash,
+					reduction: item.reduceCsah
 				};
-				let discountRule = [];
-				for (let item of this.formList) {
-					let ruleobj = {
-						orderPrice: item.fullCash,
-						reduction: item.reduceCsah
-					};
-					discountRule.push(ruleobj);
+				discountRule.push(ruleobj);
+			}
+			obj.couponIds.discountRule = discountRule; //满减规则			
+			arr.push(obj);
+			activityDetail.rule = arr;
+			await http.fissionActivity({
+				data: {
+					activityId: this.editId, //任务Id
+					data: JSON.stringify(activityDetail)
 				}
-				obj.couponIds.discountRule = discountRule; //满减规则			
-				arr.push(obj);
-				activityDetail.rule = arr;
-				await http.fissionActivity({
-					data: {
-						activityId: this.editId, //任务Id
-						data: JSON.stringify(activityDetail)
-					}
-				});
-				let message = (type == 0) ? '保存成功' : '发布成功';
-				this.valiData(message);
-				this.closePage();
-			},
-			async getActivityDetail(item) {
-				// 获取活动的详情
-				let data = await http.newgetActivityDetail({
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType
-					}
-				});
-				if (data) {
-					this.activityName = data.name; //活动名称
-					this.startTime = data.startTime * 1000; //开始时间
-					this.endTime = data.endTime * 1000; //结束时间
-					this.ruleId = data.rule[0].id; //规则id
-					this.selectsList = data.shopIds.split(','); //门店范围
-					data.rule[0].couponIds = JSON.parse(data.rule[0].couponIds);
-					this.isItemShare = data.rule[0].couponIds.isItemShare;
-					this.isMemberShare = data.rule[0].couponIds.isMemberShare;
-					this.compulsoryName = this.list[this.isMemberShare].name;
-					this.isWholeShare = data.rule[0].couponIds.isWholeShare;
-					this.compulsoryCreditsId = data.rule[0].couponIds.isCompel; //强制减免
-					this.compulsoryCreditsName = this.list[this.compulsoryCreditsId].name;
-					this.payDiscount = Boolean(Number(data.rule[0].couponIds.otherRule.status));
-					this.cash = data.rule[0].couponIds.otherRule.orderPrice;
-					this.payCash = data.rule[0].couponIds.otherRule.pay;
-					this.preferential = Boolean(Number(data.rule[0].couponIds.status));
-					let discountRule = data.rule[0].couponIds.discountRule;
-					for (let i = 0; i < discountRule.length; i++) {
-						let obj = {
-							index: i + 1, //索引
-							fullCash: discountRule[i].orderPrice, //满金额
-							reduceCsah: discountRule[i].reduction, //减金额
-							fullStatus: false, //错误状态
-							reduceStatus: false, //减免金额状态
-							fullerrorMessage: '', //错误的信息
-							reduceerrorMessage: ''
-						};
-						this.formList.push(obj);
-					}
-					this.activitySceneId = data.scene; //活动场景
-					this.activitySceneName = this.activityScene[this.activitySceneId - 1].name;
+			});
+			let message = (type == 0) ? '保存成功' : '发布成功';
+			this.valiData(message);
+			this.closePage();
+		},
+		async getActivityDetail(item) {
+			// 获取活动的详情
+			let data = await http.newgetActivityDetail({
+				data: {
+					activityId: item.id,
+					type: item.type,
+					mouldType: item.mouldType
 				}
 			});
 			if (data) {
@@ -613,218 +607,224 @@ export default {
 			fn: () => {
 				this.closePage();
 			}
-			if (activityInfo) {
-				this.editId = activityInfo.id;
-				this.getActivityDetail(activityInfo);
-			}
-		},
-		beforeDestroy() {
-			//将编辑的任务缓存清掉
-			storage.session('activityInfo', null);
-			storage.session('activityDetail', null);
+		}]);
+		let activityInfo = storage.session('activityInfo');
+		let activityDetail = storage.session('activityDetail');
+		if (activityDetail) {
+			this.activityDetail = false;
 		}
-	};
+		if (activityInfo) {
+			this.editId = activityInfo.id;
+			this.getActivityDetail(activityInfo);
+		}
+	},
+	beforeDestroy() {
+		//将编辑的任务缓存清掉
+		storage.session('activityInfo', null);
+		storage.session('activityDetail', null);
+	}
+};
 </script>
 <style type="text/css" scoped>
-	#reduction {
-		width: 1400px;
-		height: auto;
-	}
+#reduction {
+	width: 1400px;
+	height: auto;
+}
 
-	#reduction .set-line {
-		width: 1000px;
-		height: 28px;
-		line-height: 28px;
-		border-left: 4px solid #28a8e0;
-		margin: 15px 0 35px;
-		position: relative;
-	}
+#reduction .set-line {
+	width: 1000px;
+	height: 28px;
+	line-height: 28px;
+	border-left: 4px solid #28a8e0;
+	margin: 15px 0 35px;
+	position: relative;
+}
 
-	#reduction .set-line .titles {
-		float: left;
-		margin-left: 12px;
-		width: 100px;
-		font-size: 16px;
-		text-align: left;
-	}
+#reduction .set-line .titles {
+	float: left;
+	margin-left: 12px;
+	width: 100px;
+	font-size: 16px;
+	text-align: left;
+}
 
-	#reduction .set-line .line {
-		display: inline-block;
-		width: 870px;
-		border-bottom: 1px dashed #d9d9d9;
-		margin-bottom: 5px;
-	}
+#reduction .set-line .line {
+	display: inline-block;
+	width: 870px;
+	border-bottom: 1px dashed #d9d9d9;
+	margin-bottom: 5px;
+}
 
-	#reduction .online-box {
-		width: 100%;
-		height: auto;
-		min-height: 40px;
-		margin-bottom: 29px;
-	}
+#reduction .online-box {
+	width: 100%;
+	height: auto;
+	min-height: 40px;
+	margin-bottom: 29px;
+}
 
-	#reduction .online-box .online-sub {
-		display: block;
-		font-size: 16px;
-		width: 170px;
-		height: 40px;
-		line-height: 40px;
-		color: #333;
-		text-align: right;
-		margin-right: 14px;
-	}
+#reduction .online-box .online-sub {
+	display: block;
+	font-size: 16px;
+	width: 170px;
+	height: 40px;
+	line-height: 40px;
+	color: #333;
+	text-align: right;
+	margin-right: 14px;
+}
 
-	#reduction .online-box .rightHalf {
-		width: auto;
-		height: auto;
-		float: left;
-		line-height: 40px;
-	}
+#reduction .online-box .rightHalf {
+	width: auto;
+	height: auto;
+	float: left;
+	line-height: 40px;
+}
 
-	#reduction .online-box .freeFix {
-		width: 100px;
-		height: 40px;
-		border: 1px #D2D2D2 solid;
-		display: inline-block;
-		line-height: 40px;
-		text-align: center;
-		cursor: pointer;
-		float: left;
-	}
+#reduction .online-box .freeFix {
+	width: 100px;
+	height: 40px;
+	border: 1px #D2D2D2 solid;
+	display: inline-block;
+	line-height: 40px;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+}
 
-	#reduction .online-box .presentActive {
-		border: 1px #FF9200 solid;
-		background: #FFEDD1;
-		color: #FF9200;
-	}
+#reduction .online-box .presentActive {
+	border: 1px #FF9200 solid;
+	background: #FFEDD1;
+	color: #FF9200;
+}
 
-	#reduction .online-box .rightHalf .delete {
-		color: #FF3D04;
-	}
+#reduction .online-box .rightHalf .delete {
+	color: #FF3D04;
+}
 
-	#reduction .online-box .rightHalf .orderCash {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: center;
-	}
+#reduction .online-box .rightHalf .orderCash {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
 
-	#reduction .online-box .rightHalf .addclassify {
-		margin-right: 10px;
-	}
+#reduction .online-box .rightHalf .addclassify {
+	margin-right: 10px;
+}
 
-	#reduction .online-box .rightHalf span {
-		line-height: 40px;
-	}
+#reduction .online-box .rightHalf span {
+	line-height: 40px;
+}
 
-	#reduction .online-box .rightHalf .name {
-		width: 280px;
-		height: 40px;
-		background-color: #ffffff;
-		border: solid 1px #cecdcd;
-		text-indent: 15px;
-	}
+#reduction .online-box .rightHalf .name {
+	width: 280px;
+	height: 40px;
+	background-color: #ffffff;
+	border: solid 1px #cecdcd;
+	text-indent: 15px;
+}
 
-	#reduction .online-box .rightHalf .input-box {
-		display: inline-block;
-		vertical-align: middle;
-	}
+#reduction .online-box .rightHalf .input-box {
+	display: inline-block;
+	vertical-align: middle;
+}
 
-	#reduction .handle-tips {
-		height: 40px;
-		line-height: 40px;
-		text-indent: 25px;
-		background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
-		color: #999999;
-	}
+#reduction .handle-tips {
+	height: 40px;
+	line-height: 40px;
+	text-indent: 25px;
+	background: url("../../../../src/res/images/prompt.png") 0 center no-repeat;
+	color: #999999;
+}
 
-	#reduction .warning-tips {
-		width: 130px;
-		height: 40px;
-		line-height: 40px;
-		text-indent: 25px;
-		background: url("../../../../src/res/images/tip.png") 0 center no-repeat;
-		background-size: 16px 18px;
-		color: #EA3B44;
-	}
+#reduction .warning-tips {
+	width: 130px;
+	height: 40px;
+	line-height: 40px;
+	text-indent: 25px;
+	background: url("../../../../src/res/images/tip.png") 0 center no-repeat;
+	background-size: 16px 18px;
+	color: #EA3B44;
+}
 
-	#reduction .online-box .rightHalf section {
-		/* width: 190px;
+#reduction .online-box .rightHalf section {
+	/* width: 190px;
     height: 38px;
     border: 1px solid #CECDCD; */
-		margin: 0 16px;
-		float: left;
-	}
+	margin: 0 16px;
+	float: left;
+}
 
-	#reduction .online-box .rightHalf section .cumulative {
-		width: 150px;
-		height: 36px;
-		border: 1px solid #eaeaea;
-		float: left;
-		outline: none;
-		text-indent: 17px;
-	}
+#reduction .online-box .rightHalf section .cumulative {
+	width: 150px;
+	height: 36px;
+	border: 1px solid #eaeaea;
+	float: left;
+	outline: none;
+	text-indent: 17px;
+}
 
-	#reduction .online-box .rightHalf section span {
-		display: block;
-		float: left;
-		width: 38px;
-		height: 37px;
-		text-align: center;
-		line-height: 38px;
-		border-left: 1px solid #CECDCD;
-	}
+#reduction .online-box .rightHalf section span {
+	display: block;
+	float: left;
+	width: 38px;
+	height: 37px;
+	text-align: center;
+	line-height: 38px;
+	border-left: 1px solid #CECDCD;
+}
 
-	#reduction .online-box .rightHalf .prompting {
-		display: inline-block;
-		width: 40px;
-		height: 40px;
-		background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
-		position: relative;
-		vertical-align: middle;
-		cursor: pointer;
-	}
+#reduction .online-box .rightHalf .prompting {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
+	position: relative;
+	vertical-align: middle;
+	cursor: pointer;
+}
 
-	#reduction .online-box .rightHalf .prompting .detDiv {
-		display: inline-block;
-		width: 279px;
-		background: #45404b;
-		position: absolute;
-		top: 0px;
-		left: 45px;
-		padding: 10px;
-		box-shadow: 3px 2px 10px #ccc;
-		z-index: 100;
-	}
+#reduction .online-box .rightHalf .prompting .detDiv {
+	display: inline-block;
+	width: 279px;
+	background: #45404b;
+	position: absolute;
+	top: 0px;
+	left: 45px;
+	padding: 10px;
+	box-shadow: 3px 2px 10px #ccc;
+	z-index: 100;
+}
 
-	#reduction .online-box .rightHalf .prompting .detDiv .detI {
-		width: 0;
-		height: 0;
-		line-height: 0;
-		position: absolute;
-		top: 10px;
-		left: -20px;
-		right: 30%;
-		border-width: 10px;
-		border-top: 0px;
-		border-style: solid;
-		border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
-	}
+#reduction .online-box .rightHalf .prompting .detDiv .detI {
+	width: 0;
+	height: 0;
+	line-height: 0;
+	position: absolute;
+	top: 10px;
+	left: -20px;
+	right: 30%;
+	border-width: 10px;
+	border-top: 0px;
+	border-style: solid;
+	border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
+}
 
-	#reduction .online-box .rightHalf .prompting .detDiv .detH3 {
-		line-height: 22px;
-		color: #e6e6e7;
-	}
+#reduction .online-box .rightHalf .prompting .detDiv .detH3 {
+	line-height: 22px;
+	color: #e6e6e7;
+}
 
-	#reduction .online-box .rightHalf .prompting .detDiv .triright {
-		width: 0;
-		height: 0;
-		border-top: 10px solid transparent;
-		border-bottom: 10px solid transparent;
-		border-right: 10px solid #45404b;
-		border-left: 10px solid transparent;
-	}
+#reduction .online-box .rightHalf .prompting .detDiv .triright {
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #45404b;
+	border-left: 10px solid transparent;
+}
 
-	#reduction .online-box .rightHalf .margin {
-		margin-right: 10px;
-	}
+#reduction .online-box .rightHalf .margin {
+	margin-right: 10px;
+}
 </style>

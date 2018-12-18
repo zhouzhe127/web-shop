@@ -68,7 +68,7 @@
 						<span>卖手消费列表</span>
 						<span></span>
 						<span>共
-							<a href="javascript:;">{{count}}</a>条记录</span>
+								<a href="javascript:;">{{count}}</a>条记录</span>
 					</div>
 					<div class="list_title_r fr">
 					</div>
@@ -160,65 +160,83 @@
 import http from 'src/manager/http';
 import { mixin } from './mixin.js';
 
-	export default {
-		mixins: [mixin],
-		data() {
-			return {
-				page: 1,
-				num: 10,
-				count: 0, //条数
-				allTotal: 1,
-				valueTime: [new Date().setDate(1) -
-					(new Date().getTime() - new Date().setHours(0, 0, 0, 0)), new Date().setHours(23, 59, 59, 999)
-				], //时间控件
-				viewList: [{
-					name: '按天数',
-					id: 0
-				}, {
-					name: '按详情',
-					id: 1
-				}],
-				viewName: '按天数',
-				viewId: 0,
-				transmitId: [], //传递给选择店铺页面的id 
-				shopIds: null, //选择查看的店铺的id
-				selectName: null,
-				handlers: '', //经手人
-				approvedPerson: '', //核准人
-				proList: [], //卖手消费统计数据
-				statistics: [], //总数据
-				returnInt: 1, //相差天数
-				type: 'index',
-				oneShopId: '', //单店的shopId
-				oneShopName: '', //单店的店铺名称
-				childType: 'day',
-				userData: '',
-				// staffList: Object,
-				showWin: false,
-				beforeAmount: '', //原来的金额价格
-				sellHandId: '',
-				showBackWin: false,
-				modifyId: '', //修改记录的某一条id
-				storeShowH: '20px',
-				isShowStore: false, //已选中店铺列表 是否展开
-			};
+export default {
+	mixins: [mixin],
+	data() {
+		return {
+			page: 1,
+			num: 10,
+			count: 0, //条数
+			allTotal: 1,
+			valueTime: [new Date().setDate(1) -
+				(new Date().getTime() - new Date().setHours(0, 0, 0, 0)), new Date().setHours(23, 59, 59, 999)
+			], //时间控件
+			viewList: [{
+				name: '按天数',
+				id: 0
+			}, {
+				name: '按详情',
+				id: 1
+			}],
+			viewName: '按天数',
+			viewId: 0,
+			transmitId: [], //传递给选择店铺页面的id 
+			shopIds: null, //选择查看的店铺的id
+			selectName: null,
+			handlers: '', //经手人
+			approvedPerson: '', //核准人
+			proList: [], //卖手消费统计数据
+			statistics: [], //总数据
+			returnInt: 1, //相差天数
+			type: 'index',
+			oneShopId: '', //单店的shopId
+			oneShopName: '', //单店的店铺名称
+			childType: 'day',
+			userData: '',
+			// staffList: Object,
+			showWin: false,
+			beforeAmount: '', //原来的金额价格
+			sellHandId: '',
+			showBackWin: false,
+			modifyId: '', //修改记录的某一条id
+			storeShowH: '20px',
+			isShowStore: false, //已选中店铺列表 是否展开
+		};
+	},
+	components: {
+		elShopList: () =>
+			import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
+		'sell-hand-oneshop': () =>
+			import( /*webpackChunkName: "sell_hand_statisticsOneshop"*/ './sell_hand_statisticsOneshop'),
+		'sell-hand-modify': () =>
+			import( /*webpackChunkName: "sell_hand_modifywin"*/ './sell_hand_modifywin'),
+		'back-win': () =>
+			import( /*webpackChunkName: "sell_hand_back_win"*/ './sell_hand_back_win'),
+		'modify-record': () =>
+			import( /*webpackChunkName: "modify_the_record"*/ './modify_the_record')
+	},
+	// created() {
+	// 	this.ischain = storage.session('userShop').currentShop.ischain;
+	// },
+	mounted() {
+		this.getshopIdorshopName();
+		this.getAssistantstaff(); //获取工作人员
+		this.getConsumeStatistics(); //获取数据
+	},
+	methods: {
+		openStore() { //展开收起-已选中店铺列表
+			if (this.isShowStore == true) { //展开时点击
+				this.storeShowH = '20px';
+			} else {
+				this.storeShowH = 'auto';
+			}
+			this.isShowStore = !this.isShowStore;
 		},
-		components: {
-			elShopList: () =>
-				import( /*webpackChunkName: "el_shopList"*/ 'src/components/el_shopList'),
-			'sell-hand-oneshop': () =>
-				import( /*webpackChunkName: "sell_hand_statisticsOneshop"*/ './sell_hand_statisticsOneshop'),
-			'sell-hand-modify': () =>
-				import( /*webpackChunkName: "sell_hand_modifywin"*/ './sell_hand_modifywin'),
-			'back-win': () =>
-				import( /*webpackChunkName: "sell_hand_back_win"*/ './sell_hand_back_win'),
-			'modify-record': () =>
-				import( /*webpackChunkName: "modify_the_record"*/ './modify_the_record')
+		chooseTime: function(time) { //获取时间
+			this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
 		},
-		mounted() {
-			this.getshopIdorshopName();
-			this.getAssistantstaff(); //获取工作人员
-			this.getConsumeStatistics(); //获取数据
+		selData: function(value) { //选择按天还是按详情
+			this.viewId = value;
 		},
 		// 获取数据
 		async getConsumeStatistics() {
@@ -239,209 +257,182 @@ import { mixin } from './mixin.js';
 					this.count = res.count;
 					this.allTotal = res.total;
 				}
-				this.isShowStore = !this.isShowStore;
-			},
-			chooseTime: function(time) { //获取时间
-				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
-			},
-			selData: function(value) { //选择按天还是按详情
-				this.viewId = value;
-			},
-			// 获取数据
-			async getConsumeStatistics() {
-				let res = await http.getConsumeStatistics({
-					data: {
-						'startTime': parseInt(this.valueTime[0] / 1000), //开始时间
-						'endTime': parseInt(this.valueTime[1] / 1000), //结束时间
-						'shopIds': this.shopIds, //选择门店
-						'type': this.viewId, //查看类型
-						'page': this.page,
-						'num': this.num,
-						'brokerage': this.handlers, //经手人
-						'authorize': this.approvedPerson //核准人
-					}
-				});
-				if (res) {
-					if (this.page == '1') {
-						this.count = res.count;
-						this.allTotal = res.total;
-					}
-					this.proList = [];
-					this.proList = res.list; //底部数据
-					if (res.userData) {
-						this.userData = res.userData;
-					}
-					this.statistics = [];
-					if (res.Statistics != '') {
-						let statistics = res.Statistics;
-						statistics.days = this.timeChange();
-						//console.log(statistics)
-						this.statistics.push(statistics);
-					}
+				this.proList = [];
+				this.proList = res.list; //底部数据
+				if (res.userData) {
+					this.userData = res.userData;
 				}
-			},
-			getSelectShopList: function(res) {
-				this.transmitId = res;
-				let selectNameStr = '';
-				for (let i = 0; i < this.postSelectShopList.length; i++) {
-					if (this.transmitId.includes(this.postSelectShopList[i].id)) {
-						this.postSelectShopList[i].selected = true;
-						selectNameStr = selectNameStr + this.postSelectShopList[i].name + ',';
-					} else {
-						this.postSelectShopList[i].selected = false;
-					}
+				this.statistics = [];
+				if (res.Statistics != '') {
+					let statistics = res.Statistics;
+					statistics.days = this.timeChange();
+					//console.log(statistics)
+					this.statistics.push(statistics);
 				}
-				this.shopIds = res.join(',');
-				this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
-			},
-			searchDate: function() { //搜索查询数据
-				this.page = 1;
-				if (this.viewId == '1') {
-					this.childType = 'detail';
-				} else {
-					this.childType = 'day';
-				}
-				//console.log(this.childType)
-				this.getConsumeStatistics();
-			},
-			resetFun: function() { //重置方法
-				this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]; //时间控件
-				this.viewName = '按天数';
-				this.viewId = 0;
-				this.getshopIdorshopName();
-				this.handlers = '';
-				this.approvedPerson = '';
-				this.page = 1;
-				this.num = 10;
-				this.getConsumeStatistics();
-			},
-			timeChange: function() {
-				//相差天数计算
-				this.returnInt = Math.ceil(
-					(new Date(this.valueTime[1]).getTime() -
-						new Date(this.valueTime[0]).getTime()) /
-					(1000 * 60 * 60 * 24)
-				);
-				return this.returnInt;
-			},
-			getDetailShow: function(res) { //单店查看某时间段的详情回调
-				this.type = res;
-			},
-			openOneshop: function(shopId) { //查看某天的数据
-				this.oneShopId = shopId;
-				this.oneShopName = this.getShopName(shopId);
-				this.type = 'oneshop';
-			},
-			getUserInfo: function(id, type) { //获取用户信息
-				let info = '--';
-				for (let key in this.userData) {
-					if (id == key) {
-						if (type == '1') {
-							info = this.userData[key].name;
-						} else {
-							info = this.userData[key].mobile;
-						}
-						break;
-					}
-				}
-				return info;
-			},
-			getResult: function(res) { //修改弹窗回调
-				if (res == 'ok') {
-					this.getConsumeStatistics();
-					this.showWin = false;
-				}
-				this.showWin = false;
-			},
-			modify: function(item) { //修改
-				this.beforeAmount = item.cash;
-				this.sellHandId = item.id; //统计id
-				this.showWin = true;
-			},
-			getBackResult: function(res) { //退回的弹窗
-				if (res == 'ok') {
-					this.getConsumeStatistics();
-				}
-				this.showBackWin = false;
-			},
-			backRecod: function(item) { //退回
-				this.sellHandId = item.id; //统计id
-				this.showBackWin = true;
-			},
-			getModifyResult: function(res) { //从调整记录回来
-				this.type = res;
-			},
-			openModify: function(item) { //打开
-				if (item) {
-					this.modifyId = item.id;
-				}
-				this.type = 'modify';
 			}
+		},
+		getSelectShopList: function(res) {
+			this.transmitId = res;
+			let selectNameStr = '';
+			for (let i = 0; i < this.postSelectShopList.length; i++) {
+				if (this.transmitId.includes(this.postSelectShopList[i].id)) {
+					this.postSelectShopList[i].selected = true;
+					selectNameStr = selectNameStr + this.postSelectShopList[i].name + ',';
+				} else {
+					this.postSelectShopList[i].selected = false;
+				}
+			}
+			this.shopIds = res.join(',');
+			this.selectName = selectNameStr == '' ? '请选择店铺' : selectNameStr;
+		},
+		searchDate: function() { //搜索查询数据
+			this.page = 1;
+			if (this.viewId == '1') {
+				this.childType = 'detail';
+			} else {
+				this.childType = 'day';
+			}
+			//console.log(this.childType)
+			this.getConsumeStatistics();
+		},
+		resetFun: function() { //重置方法
+			this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]; //时间控件
+			this.viewName = '按天数';
+			this.viewId = 0;
+			this.getshopIdorshopName();
+			this.handlers = '';
+			this.approvedPerson = '';
+			this.page = 1;
+			this.num = 10;
+			this.getConsumeStatistics();
+		},
+		timeChange: function() {
+			//相差天数计算
+			this.returnInt = Math.ceil(
+				(new Date(this.valueTime[1]).getTime() -
+					new Date(this.valueTime[0]).getTime()) /
+				(1000 * 60 * 60 * 24)
+			);
+			return this.returnInt;
+		},
+		getDetailShow: function(res) { //单店查看某时间段的详情回调
+			this.type = res;
+		},
+		openOneshop: function(shopId) { //查看某天的数据
+			this.oneShopId = shopId;
+			this.oneShopName = this.getShopName(shopId);
+			this.type = 'oneshop';
+		},
+		getUserInfo: function(id, type) { //获取用户信息
+			let info = '--';
+			for (let key in this.userData) {
+				if (id == key) {
+					if (type == '1') {
+						info = this.userData[key].name;
+					} else {
+						info = this.userData[key].mobile;
+					}
+					break;
+				}
+			}
+			return info;
+		},
+		getResult: function(res) { //修改弹窗回调
+			if (res == 'ok') {
+				this.getConsumeStatistics();
+				this.showWin = false;
+			}
+			this.showWin = false;
+		},
+		modify: function(item) { //修改
+			this.beforeAmount = item.cash;
+			this.sellHandId = item.id; //统计id
+			this.showWin = true;
+		},
+		getBackResult: function(res) { //退回的弹窗
+			if (res == 'ok') {
+				this.getConsumeStatistics();
+			}
+			this.showBackWin = false;
+		},
+		backRecod: function(item) { //退回
+			this.sellHandId = item.id; //统计id
+			this.showBackWin = true;
+		},
+		getModifyResult: function(res) { //从调整记录回来
+			this.type = res;
+		},
+		openModify: function(item) { //打开
+			if (item) {
+				this.modifyId = item.id;
+			}
+			this.type = 'modify';
 		}
-	};
+	}
+};
 </script>
 <style scoped>
-	#sell_hand {
-		width: 100%;
-		height: 100%;
-	}
+#sell_hand {
+	width: 100%;
+	height: 100%;
+}
 
-	#sell_hand .search_box {
-		width: 100%;
-		height: 40px;
-		margin-bottom: 20px;
-	}
+#sell_hand .search_box {
+	width: 100%;
+	height: 40px;
+	margin-bottom: 20px;
+}
 
-	#sell_hand .search_box .box_child {
-		height: 40px;
-		margin-right: 20px;
-	}
+#sell_hand .search_box .box_child {
+	height: 40px;
+	margin-right: 20px;
+}
 
-	#sell_hand .search_box .box_child span {
-		display: block;
-		height: 40px;
-		font-size: 16px;
-		line-height: 40px;
-		margin-right: 10px;
-	}
+#sell_hand .search_box .box_child span {
+	display: block;
+	height: 40px;
+	font-size: 16px;
+	line-height: 40px;
+	margin-right: 10px;
+}
 
-	#sell_hand .list_top {
-		margin-bottom: 20px;
-	}
+#sell_hand .list_top {
+	margin-bottom: 20px;
+}
 
-	#sell_hand .store-show {
-		width: 100%;
-		margin-bottom: 20px;
-		display: block;
-		overflow: hidden;
-		line-height: 20px;
-		position: relative;
-	}
+#sell_hand .store-show {
+	width: 100%;
+	margin-bottom: 20px;
+	display: block;
+	overflow: hidden;
+	line-height: 20px;
+	position: relative;
+}
 
-	#sell_hand .store-show i {
-		float: left;
-		position: absolute;
-		left: 0;
-		top: 0;
+#sell_hand .store-show i {
+	float: left;
+	position: absolute;
+	left: 0;
+	top: 0;
 
-	}
+}
 
-	#sell_hand .store-show .store-block {
-		overflow: hidden;
-		width: 100%;
-		padding-left: 84px;
-	}
+#sell_hand .store-show .store-block {
+	overflow: hidden;
+	width: 100%;
+	padding-left: 84px;
+}
 
-	#sell_hand .store-show .store-block em {
-		float: left;
-		color: #09f;
-		margin-right: 5px;
-		cursor: pointer;
-		text-decoration: underline;
-	}
+#sell_hand .store-show .store-block em {
+	float: left;
+	color: #09f;
+	margin-right: 5px;
+	cursor: pointer;
+	text-decoration: underline;
+}
 
-	#sell_hand .store-show .store-block span {
-		float: left;
-		color: #333;
-	}
+#sell_hand .store-show .store-block span {
+	float: left;
+	color: #333;
+}
 </style>

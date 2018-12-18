@@ -27,20 +27,41 @@ export default {
 					color: '#fff'
 				}
 			},
-			getAppliedWin: function(res) {
-				if (res == 'ok') {
-					if (this.selectId === '') {
-						this.valiData('请选择关联用户组');
-						return false;
-					}
-					this.$emit('getGroupingResult', res, this.selectId);
-				} else {
-					this.$emit('getGroupingResult', res);
+			cancelStyle: {
+				content: '取消',
+				style: {
+					backgroundColor: '#b3b3b3',
+					color: '#fff'
 				}
 			},
-			clicktheRadio: function(item) { //新建分组菜单选中的id
-				this.selectId = item.id;
-			},
+			selectId: '', //选中的放在这里面
+			validName: ''
+		};
+	},
+	props: {
+		menuselName: Array, //菜单
+	},
+	methods: {
+		valiData: function(content, title, winType) { //提示框格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		getAppliedWin: function(res) {
+			if (res == 'ok') {
+				if (this.selectId === '') {
+					this.valiData('请选择关联用户组');
+					return false;
+				}
+				this.$emit('getGroupingResult', res, this.selectId);
+			} else {
+				this.$emit('getGroupingResult', res);
+			}
+		},
+		clicktheRadio: function(item) { //新建分组菜单选中的id
+			this.selectId = item.id;
 		},
 	},
 	components: {
@@ -52,33 +73,33 @@ export default {
 };
 </script>
 <style scoped>
-	#tan {
-		width: 100%;
-		height: 100%;
-		padding: 20px;
-	}
+#tan {
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+}
 
-	#tan .online-box {
-		width: 100%;
-		height: auto;
-		min-height: 40px;
-		margin-bottom: 29px;
-	}
+#tan .online-box {
+	width: 100%;
+	height: auto;
+	min-height: 40px;
+	margin-bottom: 29px;
+}
 
-	#tan .online-box .online-sub {
-		display: block;
-		font-size: 16px;
-		width: 100px;
-		height: 40px;
-		line-height: 40px;
-		color: #333;
-		text-align: right;
-		margin-right: 14px;
-	}
+#tan .online-box .online-sub {
+	display: block;
+	font-size: 16px;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	color: #333;
+	text-align: right;
+	margin-right: 14px;
+}
 
-	#tan .online-box .rightHalf {
-		width: 400px;
-		height: auto;
-		float: left;
-	}
+#tan .online-box .rightHalf {
+	width: 400px;
+	height: auto;
+	float: left;
+}
 </style>

@@ -228,34 +228,34 @@
 						<div class="fl tips">
 							<img src="../../../res/icon/alert.jpg" />
 						</div>
-						<div class="fl">
-							限制150字
+							<div class="fl">
+								限制150字
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<!-- 保存 -->
-			<div class="left ">
-				<div class="text" style="margin-right: 10px;">
+				<!-- 保存 -->
+				<div class="left ">
+					<div class="text" style="margin-right: 10px;">
+					</div>
 				</div>
-			</div>
-			<div class="right">
-				<div class="fl">
-					<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+				<div class="right">
+					<div class="fl">
+						<el-button style="width: 200px;height:49px;" type="primary" @click="getSendInfo">保存</el-button>
+					</div>
 				</div>
+				<!-- 选择门店的弹窗 -->
+				<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
+				<!-- 关联商品的弹窗 -->
+				<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="Goods" :isGoods="true" :packages="Packages" :goInName="'beingJudged'" :isOnlyGoods="false"></goodListWin>
 			</div>
-			<!-- 选择门店的弹窗 -->
-			<coupon-shop-win @closeShopWin="closeShopWin" v-if="shopWin" :selectShops="selectShops" :shopList='shopList'></coupon-shop-win>
-			<!-- 关联商品的弹窗 -->
-			<goodListWin v-if="goodsWin" @goodListWin="closeGoodWin" :goodsIds="Goods" :isGoods="true" :packages="Packages" :goInName="'beingJudged'" :isOnlyGoods="false"></goodListWin>
-		</div>
 	</section>
 </template>
 <script type="text/javascript">
-	import global from 'src/manager/global';
-	import storage from 'src/verdor/storage';
-	import http from 'src/manager/http';
-	import utils from 'src/verdor/utils';
+import global from 'src/manager/global';
+import storage from 'src/verdor/storage';
+import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
 
 export default {
 	data() {
@@ -463,40 +463,68 @@ export default {
 				if (couponDetail.useTime && couponDetail.useTime.list) {
 					this.useDate.week = this.changeArrToNeed(couponDetail.useTime.list, 'w');
 				}
-				if (couponDetail.periodSel == 2) {
-					if (couponDetail.useTime && couponDetail.useTime.list) {
-						this.useDate.month = this.changeArrToNeed(couponDetail.useTime.list, 'm');
-					}
+			}
+			if (couponDetail.periodSel == 2) {
+				if (couponDetail.useTime && couponDetail.useTime.list) {
+					this.useDate.month = this.changeArrToNeed(couponDetail.useTime.list, 'm');
 				}
-				this.validTimeId = couponDetail.delayHours; //领取生效
-				for (let item of this.validTimeList) {
-					if (item.id == this.validTimeId) {
-						this.validTime = item.name;
-					}
-				} //领取后多久生效的名称
-				if (couponDetail.lowestConsume != 0) { //使用门槛
-					this.useThresholdId = 1;
-					this.useThresholdName = '指定门槛';
-					this.threshold = couponDetail.lowestConsume; //指定门槛的金额
+			}
+			this.validTimeId = couponDetail.delayHours; //领取生效
+			for (let item of this.validTimeList) {
+				if (item.id == this.validTimeId) {
+					this.validTime = item.name;
 				}
-				//判断优惠共享更改的状态
-				if (couponDetail.sharingStatus == 0) {
-					this.isSharingId = 0;
-					this.isSharing = '不与其它优惠共享';
-				} else if (couponDetail.sharingStatus == 2) {
-					this.isSharingId = 1;
-					this.concessionSharingId = 0;
-					this.isSharing = '可与其他优惠共享';
-					this.concessionSharing = '不与会员卡优惠共用';
-				} else if (couponDetail.sharingStatus == 1) {
-					this.isSharingId = 1;
-					this.concessionSharingId = 1;
-					this.isSharing = '可与其他优惠共享';
-					this.concessionSharing = '可与会员卡优惠共用';
-				}
-				this.annotation = couponDetail.annotation; //备注
-				this.useKnow = couponDetail.useKnow; //使用须知
+			} //领取后多久生效的名称
+			if (couponDetail.lowestConsume != 0) { //使用门槛
+				this.useThresholdId = 1;
+				this.useThresholdName = '指定门槛';
+				this.threshold = couponDetail.lowestConsume; //指定门槛的金额
+			}
+			//判断优惠共享更改的状态
+			if (couponDetail.sharingStatus == 0) {
+				this.isSharingId = 0;
+				this.isSharing = '不与其它优惠共享';
+			} else if (couponDetail.sharingStatus == 2) {
+				this.isSharingId = 1;
+				this.concessionSharingId = 0;
+				this.isSharing = '可与其他优惠共享';
+				this.concessionSharing = '不与会员卡优惠共用';
+			} else if (couponDetail.sharingStatus == 1) {
+				this.isSharingId = 1;
+				this.concessionSharingId = 1;
+				this.isSharing = '可与其他优惠共享';
+				this.concessionSharing = '可与会员卡优惠共用';
+			}
+			this.annotation = couponDetail.annotation; //备注
+			this.useKnow = couponDetail.useKnow; //使用须知
 
+		}
+	},
+	components: {
+		'can-multi': () =>
+			import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+		'coupon-shop-win': () =>
+			import( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
+		// 'coupon-goods-win': () =>
+		// 	import ( /* webpackChunkName:'coupon_goods_win' */ './../coupon_goods_win'),
+		selectBtn: () =>
+			import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+		'use-time': () =>
+			import( /* webpackChunkName:'use_time' */ './use_time'),
+		goodListWin: () =>
+			import( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
+	},
+	methods: {
+		showText() {
+			this.hiddenText = !this.hiddenText;
+		},
+		openShopWin() { //打开选择店铺的弹窗
+			this.shopWin = true;
+		},
+		closeShopWin(val) { //选择店铺弹窗关闭的回掉
+			this.shopWin = false;
+			if (val) {
+				this.selectShops = val.selectShops;
 			}
 		},
 		openGoodsWindow(type) { //打开关联商品的弹窗
@@ -514,86 +542,117 @@ export default {
 			}
 			this.goodsWin = true;
 		},
-		methods: {
-			showText() {
-				this.hiddenText = !this.hiddenText;
-			},
-			openShopWin() { //打开选择店铺的弹窗
-				this.shopWin = true;
-			},
-			closeShopWin(val) { //选择店铺弹窗关闭的回掉
-				this.shopWin = false;
-				if (val) {
-					this.selectShops = val.selectShops;
-				}
-			},
-			openGoodsWindow(type) { //打开关联商品的弹窗
-				if (this.selectShops.length == 0 && this.ischain == '3') {
-					this.valiData('请先选择店铺', '提示信息');
-					return false;
-				}
-				this.goodsType = type;
+		closeGoodWin(res, item) { //  关闭商品弹框
+			if (res == 'ok') {
+				// if (item.goodArr.length + item.packArr.length > 5) {
+				// 	this.valiData('商品和套餐最多一共只能选择5个', '提示信息');
+				// 	return false;
+				// }
 				if (this.goodsType == '1') {
 					this.selectGoods = item.goodArr;
 					this.selectPackages = item.packArr;
+				} else {
+					this.selectGoodsSec = item.goodArr;
+					this.selectPackagesSec = item.packArr;
 				}
+				this.valiData('关联成功', '提示信息');
 				this.goodsWin = false;
-			},
-			valiData(content, title = '提示信息', winType = 'alert') {
-				this.$store.commit('setWin', {
-					winType: winType,
-					title: title,
-					content: content
-				});
-			},
-			arrToString(arr) {
-				let str = '';
-				for (let i = 0; i < arr.length; i++) {
-					str += arr[i];
-					if (i < arr.length - 1) {
-						str += ',';
-					}
+			}
+			this.goodsWin = false;
+		},
+		getArrLength(type) { //返回数组的长度
+			return this[type].length;
+		},
+		changecompulsoryCredits: function(item) { //是否包含口味
+			this.compulsoryCredits = item.compulsoryCredits;
+		},
+		changeuseThreshold: function(item) { //使用门槛
+			this.useThresholdId = item.id;
+		},
+		showCalendar() { //是否打开日历组建
+			this.isShowCa = !this.isShowCa;
+		},
+		transformDate(t) { //日期格式化
+			return utils.format(new Date(t), 'yyyy-MM-dd');
+		},
+		getValidDay() { //获取一共多少天
+			return Math.floor((this.validType.valueTime[1] - this.validType.valueTime[0]) / (24 * 3600 * 1000) + 1);
+		},
+		selexpirationTime: function(i) { //领取生效
+			this.validTime = this.validTimeList[i].name; //点击卡类型对应的名字
+			this.validTimeId = this.validTimeList[i].id; //点击卡类型对应的id
+		},
+		getSharing: function(value) {
+			this.isSharingId = value;
+		},
+		getconcession: function(value) {
+			this.concessionSharingId = value;
+		},
+		getResult: function(val) { //使用时间段
+			this.useDate = val;
+			console.log(JSON.stringify(val));
+		},
+		//商品点击返回
+		doThrowWinGoods(res, item) {
+			if (res == 'ok') {
+				this.selectGoods = item.goodArr;
+				this.selectPackages = item.packArr;
+			}
+			this.goodsWin = false;
+		},
+		valiData(content, title = '提示信息', winType = 'alert') {
+			this.$store.commit('setWin', {
+				winType: winType,
+				title: title,
+				content: content
+			});
+		},
+		arrToString(arr) {
+			let str = '';
+			for (let i = 0; i < arr.length; i++) {
+				str += arr[i];
+				if (i < arr.length - 1) {
+					str += ',';
 				}
-				return str;
-			},
-			changeArr(arr, type) {
-				let nArr = [];
-				for (let i = 0; i < arr.length; i++) {
-					let o = {};
-					if (type == 'w') {
-						o.week = arr[i].week.sort(function(a, b) {
-							return a - b;
-						});
+			}
+			return str;
+		},
+		changeArr(arr, type) {
+			let nArr = [];
+			for (let i = 0; i < arr.length; i++) {
+				let o = {};
+				if (type == 'w') {
+					o.week = arr[i].week.sort(function(a, b) {
+						return a - b;
+					});
 
-					} else if (type == 'm') {
-						o.month = arr[i].month.sort(function(a, b) {
-							return a - b;
-						});
-					}
-					o.isNextDay = arr[i].isNextDay;
-					let startslot = (arr[i].startslotH + ':' + arr[i].startslotM);
-					let endslot = (arr[i].endslotH + ':' + arr[i].endslotM);
-					o.startslot = startslot;
-					o.endslot = endslot;
-					nArr.push(o);
+				} else if (type == 'm') {
+					o.month = arr[i].month.sort(function(a, b) {
+						return a - b;
+					});
 				}
-				return nArr;
-			},
-			changeArrToNeed(arr, type) {
-				let na = [];
-				for (let i = 0; i < arr.length; i++) {
-					let obj = {};
-					obj.startslotH = arr[i].startslot.split(':')[0];
-					obj.startslotM = arr[i].startslot.split(':')[1];
-					obj.endslotH = arr[i].endslot.split(':')[0];
-					obj.endslotM = arr[i].endslot.split(':')[1];
-					obj.isNextDay = arr[i].isNextDay;
-					if (type == 'w') {
-						obj.week = arr[i].week;
-					} else if (type == 'm') {
-						obj.month = arr[i].month;
-					}
-					na.push(obj);
+				o.isNextDay = arr[i].isNextDay;
+				let startslot = (arr[i].startslotH + ':' + arr[i].startslotM);
+				let endslot = (arr[i].endslotH + ':' + arr[i].endslotM);
+				o.startslot = startslot;
+				o.endslot = endslot;
+				nArr.push(o);
+			}
+			return nArr;
+		},
+		changeArrToNeed(arr, type) {
+			let na = [];
+			for (let i = 0; i < arr.length; i++) {
+				let obj = {};
+				obj.startslotH = arr[i].startslot.split(':')[0];
+				obj.startslotM = arr[i].startslot.split(':')[1];
+				obj.endslotH = arr[i].endslot.split(':')[0];
+				obj.endslotM = arr[i].endslot.split(':')[1];
+				obj.isNextDay = arr[i].isNextDay;
+				if (type == 'w') {
+					obj.week = arr[i].week;
+				} else if (type == 'm') {
+					obj.month = arr[i].month;
 				}
 				na.push(obj);
 			}
@@ -615,230 +674,209 @@ export default {
 					this.valiData('请选择优惠券的关联店铺');
 					return false;
 				}
-				if (this.ischain == '3') {
-					if (this.selectShops.length == 0) {
-						this.valiData('请选择优惠券的关联店铺');
-						return false;
-					}
-				}
-				if (this.selectGoods.length == 0 && this.selectPackages.length == 0) {
-					this.valiData('请选择关联商品或套餐');
+			}
+			if (this.selectGoods.length == 0 && this.selectPackages.length == 0) {
+				this.valiData('请选择关联商品或套餐');
+				return false;
+			}
+			//第二件优惠方式
+			if (this.secondId == 0) {
+				this.valiData('请选择第二件商品优惠方式');
+				return false;
+			}
+			//验证折扣范围
+			if (this.secondId == 1 && (this.discount < 1 || this.discount > 100)) {
+				this.valiData('折扣范围1-100');
+				return false;
+			}
+			//验证第二件商品是否选择
+			if (this.selectGoodsSec.length == 0 && this.selectPackagesSec.length == 0) {
+				this.valiData('请选择第二件商品或套餐');
+				return false;
+			}
+			if (this.secondId != 1 && this.disamount == '') {
+				this.valiData('请输入第二件商品优惠金额');
+				return false;
+			}
+			//领券多长时间有效的限制
+			if (this.validType.index == 0) {
+				if (this.validType.time.toString().trim() == '') {
+					this.valiData('请输入券有效期');
 					return false;
 				}
-				//第二件优惠方式
-				if (this.secondId == 0) {
-					this.valiData('请选择第二件商品优惠方式');
+				if (!reg.test(this.validType.time)) {
+					this.valiData('券有效期只能是整数');
 					return false;
 				}
-				//验证折扣范围
-				if (this.secondId == 1 && (this.discount < 1 || this.discount > 100)) {
-					this.valiData('折扣范围1-100');
+				if (this.validType.time == 0) {
+					this.valiData('券有效期不能为0');
 					return false;
 				}
-				//验证第二件商品是否选择
-				if (this.selectGoodsSec.length == 0 && this.selectPackagesSec.length == 0) {
-					this.valiData('请选择第二件商品或套餐');
-					return false;
-				}
-				if (this.secondId != 1 && this.disamount == '') {
-					this.valiData('请输入第二件商品优惠金额');
-					return false;
-				}
-				//领券多长时间有效的限制
-				if (this.validType.index == 0) {
-					if (this.validType.time.toString().trim() == '') {
-						this.valiData('请输入券有效期');
-						return false;
-					}
-					if (!reg.test(this.validType.time)) {
-						this.valiData('券有效期只能是整数');
-						return false;
-					}
-					if (this.validType.time == 0) {
-						this.valiData('券有效期不能为0');
-						return false;
-					}
-				}
-				let arr = [];
-				let alertText = '';
-				if (this.useDate.index != 0) {
+			}
+			let arr = [];
+			let alertText = '';
+			if (this.useDate.index != 0) {
 
+				if (this.useDate.index == 1) {
+					arr = this.useDate.week;
+					alertText = '使用时段请选择日期(周)';
+				} else if (this.useDate.index == 2) {
+					arr = this.useDate.month;
+					alertText = '使用时段请选择日期(月)';
+				}
+				for (let i = 0; i < arr.length; i++) {
 					if (this.useDate.index == 1) {
-						arr = this.useDate.week;
-						alertText = '使用时段请选择日期(周)';
+						if (arr[i].week.length == 0) {
+							this.valiData(alertText);
+							return false;
+						}
 					} else if (this.useDate.index == 2) {
-						arr = this.useDate.month;
-						alertText = '使用时段请选择日期(月)';
-					}
-					for (let i = 0; i < arr.length; i++) {
-						if (this.useDate.index == 1) {
-							if (arr[i].week.length == 0) {
-								this.valiData(alertText);
-								return false;
-							}
-						} else if (this.useDate.index == 2) {
-							if (arr[i].month.length == 0) {
-								this.valiData(alertText);
-								return false;
-							}
+						if (arr[i].month.length == 0) {
+							this.valiData(alertText);
+							return false;
 						}
-						let startslotH = arr[i].startslotH.toString().trim();
-						let startslotM = arr[i].startslotM.toString().trim();
-						let endslotH = arr[i].endslotH.toString().trim();
-						let endslotM = arr[i].endslotM.toString().trim();
+					}
+					let startslotH = arr[i].startslotH.toString().trim();
+					let startslotM = arr[i].startslotM.toString().trim();
+					let endslotH = arr[i].endslotH.toString().trim();
+					let endslotM = arr[i].endslotM.toString().trim();
 
-						if (startslotH == '' || startslotM == '' || endslotH == '' || endslotM == '') {
-							this.valiData('使用时段的时间不能为空');
+					if (startslotH == '' || startslotM == '' || endslotH == '' || endslotM == '') {
+						this.valiData('使用时段的时间不能为空');
+						return false;
+					}
+					if (!reg.test(startslotH) || !reg.test(startslotM) || !reg.test(endslotH) || !reg.test(endslotM)) {
+						this.valiData('使用时段的时间只能是整数');
+						return false;
+					}
+					if (startslotH > 23 || startslotM > 59 || endslotH > 23 || endslotM > 59) {
+						this.valiData('请输入正确的使用时间');
+						return false;
+					}
+					if (!arr[i].isNextDay) {
+						if (startslotH > endslotH || (startslotH == endslotH && startslotM > endslotM)) {
+							this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
 							return false;
-						}
-						if (!reg.test(startslotH) || !reg.test(startslotM) || !reg.test(endslotH) || !reg.test(endslotM)) {
-							this.valiData('使用时段的时间只能是整数');
-							return false;
-						}
-						if (startslotH > 23 || startslotM > 59 || endslotH > 23 || endslotM > 59) {
-							this.valiData('请输入正确的使用时间');
-							return false;
-						}
-						if (!arr[i].isNextDay) {
-							if (startslotH > endslotH || (startslotH == endslotH && startslotM > endslotM)) {
-								this.valiData('使用时段里，未点击隔天,结束时间不能小于开始时间');
-								return false;
-							}
 						}
 					}
 				}
-				//指定门槛的金额
-				if (this.useThresholdId == 1) {
-					if (this.threshold.toString().trim() == '') {
-						this.valiData('指定门槛金额不能为空');
-						return false;
-					}
-					if ((this.threshold - 0) < 0) {
-						this.valiData('指定门槛金额不能小于0');
-						return false;
-					}
-					if (!reg2.test(this.threshold)) {
-						this.valiData('指定门槛金额只能是数字');
-						return false;
-					}
-				}
-				if (this.annotation.length > 20) {
-					this.valiData('备注字数不能大于20');
+			}
+			//指定门槛的金额
+			if (this.useThresholdId == 1) {
+				if (this.threshold.toString().trim() == '') {
+					this.valiData('指定门槛金额不能为空');
 					return false;
 				}
-				if (this.useKnow.length > 150) {
-					this.valiData('使用须知字数不能大于150');
+				if ((this.threshold - 0) < 0) {
+					this.valiData('指定门槛金额不能小于0');
 					return false;
 				}
-				return true;
-			},
-			getSendInfo() {
-				//验证输入
-				if (this.checkData()) {
-					let obj = {};
-					if (this.ischain == '3') {
-						obj.shopIds = this.arrToString(this.selectShops);
-					} else {
-						obj.shopIds = storage.session('userShop').currentShop.id;
-					}
-					obj.gids = this.arrToString(this.selectGoods); //关联商品
-					obj.pids = this.arrToString(this.selectPackages); //关联套餐
-					obj.name = this.couponName; //优惠券名称
-					//obj.param = ''; //减免金额
-					obj.delayHours = this.validTimeId; //领取后生效时间
-					//  'useTime' => '{'type':'week','list':[{'startslot':'09:00','endslot':'05:00','week':[0,1],'isNextDay':0}]}',       //使用时段，为空代表不限制
-					obj.annotation = this.annotation; //优惠券备注
-					obj.useKnow = this.useKnow; //使用须知
-					obj.validityType = this.validType.index; //券有效期
-					obj.periodSel = this.useDate.index; //使用时间段
-					obj.isDiscount = ''; // 是否强免 
-					obj.tastePrice = this.compulsoryCredits; //是否包含口味价格
-					obj.useLimit = ''; //最大使用上限
-					obj.billPrice = ''; //入账金额
-					obj.reckoningPrice = ''; //结算金额
-					// 优惠券共享
-					if (this.isSharingId === 0) {
-						obj.sharingStatus = 0;
-					} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
-						obj.sharingStatus = 2;
-					} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
-						obj.sharingStatus = 1;
-					}
-
-					if (this.useThresholdId == 0) { //指定门槛金额
-						obj.lowestConsume = 0;
-					} else {
-						obj.lowestConsume = this.threshold;
-					}
-					let useTime = {};
-					if (this.useDate.index == 1) {
-						useTime.type = 'week';
-						useTime.list = this.changeArr(this.useDate.week, 'w');
-					}
-					if (this.useDate.index == 2) {
-						useTime.type = 'month';
-						useTime.list = this.changeArr(this.useDate.month, 'm');
-					}
-					useTime = JSON.stringify(useTime);
-					obj.useTime = useTime;
-					if (this.validType.index == 0) {
-						obj.relativeTime = this.validType.time;
-					} else {
-						obj.startTime = parseInt(this.validType.valueTime[0] / 1000);
-						obj.endTime = parseInt(this.validType.valueTime[1] / 1000);
-					}
-					//第二件商品券
-					obj.type = 9;
-					//是否叠加
-					obj.isSuperposition = this.superpositionId;
-					//折扣类型
-					obj.discountType = this.secondId;
-					if (this.secondId == '1') {
-						obj.param = this.discount;
-					} else {
-						obj.param = this.disamount;
-					}
-					if (!utils.isEmptyObject(this.couponDetail)) {
-						obj.id = this.couponDetail.id;
-					}
-					//第二件菜品
-					obj.giveGids = this.arrToString(this.selectGoodsSec); //关联商品
-					obj.givePids = this.arrToString(this.selectPackagesSec); //关联套餐
-					this.operateCoupons(obj);
+				if (!reg2.test(this.threshold)) {
+					this.valiData('指定门槛金额只能是数字');
+					return false;
 				}
-			},
-			async operateCoupons(sendInfo) {
-				if (!this.editCoupon) {
-					await http.addCoupon({
-						data: sendInfo
-					});
-					this.valiData('添加成功');
-					this.$router.push('/admin/addCoupon');
+			}
+			if (this.annotation.length > 20) {
+				this.valiData('备注字数不能大于20');
+				return false;
+			}
+			if (this.useKnow.length > 150) {
+				this.valiData('使用须知字数不能大于150');
+				return false;
+			}
+			return true;
+		},
+		getSendInfo() {
+			//验证输入
+			if (this.checkData()) {
+				let obj = {};
+				if (this.ischain == '3') {
+					obj.shopIds = this.arrToString(this.selectShops);
 				} else {
-					await http.editCoupon({
-						data: sendInfo
-					});
-					this.valiData('修改成功');
-					setTimeout(() => {
-						storage.session('couponDetail', '');
-						this.$emit('changeMnage');
-					}, 500);
+					obj.shopIds = storage.session('userShop').currentShop.id;
 				}
-			},
-			clicktheRadio: function(item) {
-				this.validType.index = item.validType;
-			},
-			selData: function(value) { //领取后生效
-				this.validTimeId = value;
-			},
-			choiceSec: function(value) { //第二件商品选择
-				this.secondId = value;
-			},
-			formatValue() {
-				this.disamount = utils.toFloatStr(this.disamount, 2);
-			},
-			chooseStack: function(item) { //是否叠加
-				this.superpositionId = item.id;
+				obj.gids = this.arrToString(this.selectGoods); //关联商品
+				obj.pids = this.arrToString(this.selectPackages); //关联套餐
+				obj.name = this.couponName; //优惠券名称
+				//obj.param = ''; //减免金额
+				obj.delayHours = this.validTimeId; //领取后生效时间
+				//  'useTime' => '{'type':'week','list':[{'startslot':'09:00','endslot':'05:00','week':[0,1],'isNextDay':0}]}',       //使用时段，为空代表不限制
+				obj.annotation = this.annotation; //优惠券备注
+				obj.useKnow = this.useKnow; //使用须知
+				obj.validityType = this.validType.index; //券有效期
+				obj.periodSel = this.useDate.index; //使用时间段
+				obj.isDiscount = ''; // 是否强免 
+				obj.tastePrice = this.compulsoryCredits; //是否包含口味价格
+				obj.useLimit = ''; //最大使用上限
+				obj.billPrice = ''; //入账金额
+				obj.reckoningPrice = ''; //结算金额
+				// 优惠券共享
+				if (this.isSharingId === 0) {
+					obj.sharingStatus = 0;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 0) {
+					obj.sharingStatus = 2;
+				} else if (this.isSharingId == 1 && this.concessionSharingId == 1) {
+					obj.sharingStatus = 1;
+				}
+
+				if (this.useThresholdId == 0) { //指定门槛金额
+					obj.lowestConsume = 0;
+				} else {
+					obj.lowestConsume = this.threshold;
+				}
+				let useTime = {};
+				if (this.useDate.index == 1) {
+					useTime.type = 'week';
+					useTime.list = this.changeArr(this.useDate.week, 'w');
+				}
+				if (this.useDate.index == 2) {
+					useTime.type = 'month';
+					useTime.list = this.changeArr(this.useDate.month, 'm');
+				}
+				useTime = JSON.stringify(useTime);
+				obj.useTime = useTime;
+				if (this.validType.index == 0) {
+					obj.relativeTime = this.validType.time;
+				} else {
+					obj.startTime = parseInt(this.validType.valueTime[0] / 1000);
+					obj.endTime = parseInt(this.validType.valueTime[1] / 1000);
+				}
+				//第二件商品券
+				obj.type = 9;
+				//是否叠加
+				obj.isSuperposition = this.superpositionId;
+				//折扣类型
+				obj.discountType = this.secondId;
+				if (this.secondId == '1') {
+					obj.param = this.discount;
+				} else {
+					obj.param = this.disamount;
+				}
+				if (!utils.isEmptyObject(this.couponDetail)) {
+					obj.id = this.couponDetail.id;
+				}
+				//第二件菜品
+				obj.giveGids = this.arrToString(this.selectGoodsSec); //关联商品
+				obj.givePids = this.arrToString(this.selectPackagesSec); //关联套餐
+				this.operateCoupons(obj);
+			}
+		},
+		async operateCoupons(sendInfo) {
+			if (!this.editCoupon) {
+				await http.addCoupon({
+					data: sendInfo
+				});
+				this.valiData('添加成功');
+				this.$router.push('/admin/addCoupon');
+			} else {
+				await http.editCoupon({
+					data: sendInfo
+				});
+				this.valiData('修改成功');
+				setTimeout(() => {
+					storage.session('couponDetail', '');
+					this.$emit('changeMnage');
+				}, 500);
 			}
 		},
 		clicktheRadio: function(item) {
@@ -860,312 +898,312 @@ export default {
 };
 </script>
 <style type="text/css" scoped>
-	#breakCoupon {
-		width: 1200px;
-		line-height: 40px;
-		text-align: center;
-		color: #333;
-		overflow: hidden;
-		padding-bottom: 300px;
-		position: relative;
-	}
+#breakCoupon {
+	width: 1200px;
+	line-height: 40px;
+	text-align: center;
+	color: #333;
+	overflow: hidden;
+	padding-bottom: 300px;
+	position: relative;
+}
 
-	#breakCoupon .icon {
-		display: inline-block;
-		width: 18px;
-		height: 18px;
-		background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
-		position: relative;
-		vertical-align: middle;
-		cursor: pointer;
-	}
+#breakCoupon .icon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background: url(../../../../src/res/icon/orderdetial18.png) no-repeat center;
+	position: relative;
+	vertical-align: middle;
+	cursor: pointer;
+}
 
-	#breakCoupon .icon .detDiv {
-		display: inline-block;
-		width: 460px;
-		background: #45404b;
-		position: absolute;
-		top: -10px;
-		left: 35px;
-		padding: 10px;
-		box-shadow: 3px 2px 10px #ccc;
-		z-index: 100;
-	}
+#breakCoupon .icon .detDiv {
+	display: inline-block;
+	width: 460px;
+	background: #45404b;
+	position: absolute;
+	top: -10px;
+	left: 35px;
+	padding: 10px;
+	box-shadow: 3px 2px 10px #ccc;
+	z-index: 100;
+}
 
-	#breakCoupon .icon .detDiv .detI {
-		width: 0;
-		height: 0;
-		line-height: 0;
-		position: absolute;
-		top: 10px;
-		left: -20px;
-		right: 30%;
-		border-width: 10px;
-		border-top: 0px;
-		border-style: solid;
-		border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
-	}
+#breakCoupon .icon .detDiv .detI {
+	width: 0;
+	height: 0;
+	line-height: 0;
+	position: absolute;
+	top: 10px;
+	left: -20px;
+	right: 30%;
+	border-width: 10px;
+	border-top: 0px;
+	border-style: solid;
+	border-color: #f7f7f7 #f7f7f7 #45404b #f7f7f7;
+}
 
-	#breakCoupon .icon .detDiv .detH3 {
-		line-height: 22px;
-		color: #e6e6e7;
-	}
+#breakCoupon .icon .detDiv .detH3 {
+	line-height: 22px;
+	color: #e6e6e7;
+}
 
-	#breakCoupon .icon .detDiv .triright {
-		width: 0;
-		height: 0;
-		border-top: 10px solid transparent;
-		border-bottom: 10px solid transparent;
-		border-right: 10px solid #45404b;
-		border-left: 10px solid transparent;
-	}
+#breakCoupon .icon .detDiv .triright {
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #45404b;
+	border-left: 10px solid transparent;
+}
 
-	#breakCoupon .and {
-		display: inline-block;
-	}
+#breakCoupon .and {
+	display: inline-block;
+}
 
-	#breakCoupon .and span {
-		color: #000000;
-		padding: 0 10px;
-	}
+#breakCoupon .and span {
+	color: #000000;
+	padding: 0 10px;
+}
 
-	#breakCoupon .set-line {
-		width: 1000px;
-		height: 28px;
-		line-height: 28px;
-		border-left: 4px solid #28a8e0;
-		margin: 15px 0 35px;
-		position: relative;
-	}
+#breakCoupon .set-line {
+	width: 1000px;
+	height: 28px;
+	line-height: 28px;
+	border-left: 4px solid #28a8e0;
+	margin: 15px 0 35px;
+	position: relative;
+}
 
-	#breakCoupon .set-line .title {
-		float: left;
-		margin-left: 12px;
-		width: 70px;
-		font-size: 16px;
-		text-align: left;
-	}
+#breakCoupon .set-line .title {
+	float: left;
+	margin-left: 12px;
+	width: 70px;
+	font-size: 16px;
+	text-align: left;
+}
 
-	#breakCoupon .set-line .line {
-		display: inline-block;
-		width: 900px;
-		border-bottom: 1px dashed #d9d9d9;
-		margin-bottom: 5px;
-	}
+#breakCoupon .set-line .line {
+	display: inline-block;
+	width: 900px;
+	border-bottom: 1px dashed #d9d9d9;
+	margin-bottom: 5px;
+}
 
-	#breakCoupon .left,
-	#breakCoupon .right {
-		min-height: 40px;
-		float: left;
-		margin-bottom: 15px;
-	}
+#breakCoupon .left,
+#breakCoupon .right {
+	min-height: 40px;
+	float: left;
+	margin-bottom: 15px;
+}
 
-	#breakCoupon .left {
-		color: #000000;
-		width: 180px;
-	}
+#breakCoupon .left {
+	color: #000000;
+	width: 180px;
+}
 
-	#breakCoupon .right {
-		width: 970px;
-	}
+#breakCoupon .right {
+	width: 970px;
+}
 
-	#breakCoupon .right .line {
-		width: 100%;
-		height: 40px;
-		padding-left: 10px;
-	}
+#breakCoupon .right .line {
+	width: 100%;
+	height: 40px;
+	padding-left: 10px;
+}
 
-	#breakCoupon .right .reduceamount {
-		height: 38px;
-		width: 150px;
-		float: left;
-	}
+#breakCoupon .right .reduceamount {
+	height: 38px;
+	width: 150px;
+	float: left;
+}
 
-	#breakCoupon .right .yuan {
-		border-left: 1px solid #999;
-		width: 48px;
-		float: left;
-		height: 38px;
-	}
+#breakCoupon .right .yuan {
+	border-left: 1px solid #999;
+	width: 48px;
+	float: left;
+	height: 38px;
+}
 
-	#breakCoupon .right .couponinp {
-		height: 30px;
-		width: 60px;
-		border: 1px solid #999;
-	}
+#breakCoupon .right .couponinp {
+	height: 30px;
+	width: 60px;
+	border: 1px solid #999;
+}
 
-	#breakCoupon .right .fl {
-		padding-left: 10px;
-	}
+#breakCoupon .right .fl {
+	padding-left: 10px;
+}
 
-	#breakCoupon .right .creditamount {
-		border: 1px solid #999;
-		width: 200px;
-		height: 40px;
-		padding: 0;
-		margin-left: 10px;
-	}
+#breakCoupon .right .creditamount {
+	border: 1px solid #999;
+	width: 200px;
+	height: 40px;
+	padding: 0;
+	margin-left: 10px;
+}
 
-	#breakCoupon .right .fl .inp {
-		border: 1px solid #999;
-		width: 250px;
-		height: 40px;
-		line-height: 40px;
-		padding-left: 10px;
-	}
+#breakCoupon .right .fl .inp {
+	border: 1px solid #999;
+	width: 250px;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+}
 
-	#breakCoupon .left .text {
-		float: right;
-		height: 100%;
-		padding: 0 10px;
-		text-align: right;
-		font-size: 16px;
-	}
+#breakCoupon .left .text {
+	float: right;
+	height: 100%;
+	padding: 0 10px;
+	text-align: right;
+	font-size: 16px;
+}
 
-	#breakCoupon .right .buttons {
-		padding: 0 10px 0 40px;
-		background-color: #28a8e0;
-		height: 40px;
-		width: 120px;
-		cursor: pointer;
-		float: left;
-		color: #fff;
-		position: relative;
-		transition: background-color ease-in-out 0.2s;
-	}
+#breakCoupon .right .buttons {
+	padding: 0 10px 0 40px;
+	background-color: #28a8e0;
+	height: 40px;
+	width: 120px;
+	cursor: pointer;
+	float: left;
+	color: #fff;
+	position: relative;
+	transition: background-color ease-in-out 0.2s;
+}
 
-	#breakCoupon .right .associated {
-		float: left;
-		width: 600px;
-		text-align: left;
-		padding-left: 15px;
-	}
+#breakCoupon .right .associated {
+	float: left;
+	width: 600px;
+	text-align: left;
+	padding-left: 15px;
+}
 
-	#breakCoupon .right .buttons:hover {
-		background-color: #2a80b9;
-	}
+#breakCoupon .right .buttons:hover {
+	background-color: #2a80b9;
+}
 
-	#breakCoupon .right .buttons img {
-		position: absolute;
-		top: 11px;
-		left: 15px;
-	}
+#breakCoupon .right .buttons img {
+	position: absolute;
+	top: 11px;
+	left: 15px;
+}
 
-	#breakCoupon .right .reduce span {
-		float: left;
-		display: block;
-		width: 98px;
-		height: 38px;
-		border: 1px solid #999;
-		/* margin-right: 15px; */
-		text-align: center;
-		line-height: 38px;
-		cursor: pointer;
-		background: #fff;
-	}
+#breakCoupon .right .reduce span {
+	float: left;
+	display: block;
+	width: 98px;
+	height: 38px;
+	border: 1px solid #999;
+	/* margin-right: 15px; */
+	text-align: center;
+	line-height: 38px;
+	cursor: pointer;
+	background: #fff;
+}
 
-	#breakCoupon .right .reduce .sign {
-		background: #fff3e5;
-		border: 1px solid #f8931f;
-		color: #f9911e;
-	}
+#breakCoupon .right .reduce .sign {
+	background: #fff3e5;
+	border: 1px solid #f8931f;
+	color: #f9911e;
+}
 
-	#breakCoupon .right .cleander {
-		width: 310px;
-		height: 40px;
-		border: 1px solid #999;
-		float: left;
-	}
+#breakCoupon .right .cleander {
+	width: 310px;
+	height: 40px;
+	border: 1px solid #999;
+	float: left;
+}
 
-	#breakCoupon .right .cleander_o {
-		width: 100%;
-		height: 40px;
-		line-height: 40px;
-		cursor: pointer;
-	}
+#breakCoupon .right .cleander_o {
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	cursor: pointer;
+}
 
-	#breakCoupon .right .cleander_t {
-		float: left;
-		width: 40%;
-		height: 40px;
-	}
+#breakCoupon .right .cleander_t {
+	float: left;
+	width: 40%;
+	height: 40px;
+}
 
-	#breakCoupon .right .cleander_f {
-		float: left;
-		width: 20%;
-		height: 40px;
-	}
+#breakCoupon .right .cleander_f {
+	float: left;
+	width: 20%;
+	height: 40px;
+}
 
-	#breakCoupon .right .cleander_s {
-		float: left;
-		width: 40%;
-		height: 40px;
-	}
+#breakCoupon .right .cleander_s {
+	float: left;
+	width: 40%;
+	height: 40px;
+}
 
-	#breakCoupon .right .triangle {
-		border: 1px solid #999;
-		width: 40px;
-		float: left;
-		height: 40px;
-		border-left: none;
-		cursor: pointer;
-	}
+#breakCoupon .right .triangle {
+	border: 1px solid #999;
+	width: 40px;
+	float: left;
+	height: 40px;
+	border-left: none;
+	cursor: pointer;
+}
 
-	#breakCoupon .right .foday {
-		width: 80px;
-		float: left;
-		height: 40px;
-		font-size: 12px;
-		text-align: left;
-		color: #00a1e9;
-		padding-left: 10px;
-	}
+#breakCoupon .right .foday {
+	width: 80px;
+	float: left;
+	height: 40px;
+	font-size: 12px;
+	text-align: left;
+	color: #00a1e9;
+	padding-left: 10px;
+}
 
-	#breakCoupon .right .note {
-		border: 1px solid #999;
-		width: 352px;
-		height: 40px;
-		padding: 0;
-		margin-left: 10px;
-	}
+#breakCoupon .right .note {
+	border: 1px solid #999;
+	width: 352px;
+	height: 40px;
+	padding: 0;
+	margin-left: 10px;
+}
 
-	#breakCoupon .right .note input {
-		height: 38px;
-		width: 350px;
-		float: left;
-	}
+#breakCoupon .right .note input {
+	height: 38px;
+	width: 350px;
+	float: left;
+}
 
-	#breakCoupon .right .useinformation {
-		border: 1px solid #999;
-		width: 382px;
-		height: 180px;
-		padding: 0px;
-		margin-left: 10px;
-	}
+#breakCoupon .right .useinformation {
+	border: 1px solid #999;
+	width: 382px;
+	height: 180px;
+	padding: 0px;
+	margin-left: 10px;
+}
 
-	#breakCoupon .right .useinformation .describe {
-		width: 360px;
-		height: 158px;
-	}
+#breakCoupon .right .useinformation .describe {
+	width: 360px;
+	height: 158px;
+}
 
-	#breakCoupon .right .useinformation .describetip {
-		width: 100%;
-		height: 18px;
-		line-height: 18px;
-		vertical-align: middle;
-		padding: 8px;
-		margin-top: 8px;
-	}
+#breakCoupon .right .useinformation .describetip {
+	width: 100%;
+	height: 18px;
+	line-height: 18px;
+	vertical-align: middle;
+	padding: 8px;
+	margin-top: 8px;
+}
 
-	#breakCoupon .right .useinformation .describetip .tips {
-		width: 18px;
-		height: 18px;
-		margin-right: 10px;
-	}
+#breakCoupon .right .useinformation .describetip .tips {
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+}
 
-	#breakCoupon .save-coupon {
-		position: absolute;
-		bottom: 60px;
-		left: 180px;
-	}
+#breakCoupon .save-coupon {
+	position: absolute;
+	bottom: 60px;
+	left: 180px;
+}
 </style>
