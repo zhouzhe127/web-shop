@@ -76,7 +76,8 @@ export default {
 	},
 	props: {
 		beforeAmount: String, //原来的价格
-		sellHandId: String //单个统计的id
+		sellHandId: String, //单个统计的id
+		cmpareStatus: Boolean
 	},
 	watch: {
 		'amount': function() {
@@ -102,7 +103,8 @@ export default {
 			let res = await http.consumeVerifyCalculation({
 				data: {
 					originalPrice: this.beforeAmount, //原价格
-					modifyPrice: this.amount
+					modifyPrice: this.amount,
+					isGuide: Number(this.cmpareStatus) //0 奖励客户的专属顾问 1扫码人员
 				}
 			});
 			if (res) {
@@ -125,7 +127,7 @@ export default {
 						coins: this.cash, //修改后的金币
 						return: 0
 					}
-				},true);
+				}, true);
 			} catch (e) {
 				this.httpStatus = false;
 				this.errorShow(e.error.message);

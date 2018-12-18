@@ -104,7 +104,7 @@
 				<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="allTotal" :page-sizes="[10, 20, 30]"></el-pagination>
 			</div>
 			<!-- 修改弹窗 -->
-			<sell-hand-modify v-if="showWin" @getAppliedWin='getResult' :beforeAmount="beforeAmount" :sellHandId="sellHandId"></sell-hand-modify>
+			<sell-hand-modify v-if="showWin" @getAppliedWin='getResult' :beforeAmount="beforeAmount" :sellHandId="sellHandId" :cmpareStatus="cmpareStatus"></sell-hand-modify>
 			<!-- 退回弹窗 -->
 			<back-win v-if="showBackWin" @getBackAppliedWin='getBackResult' :sellHandId="sellHandId"></back-win>
 		</template>
@@ -135,7 +135,8 @@ export default {
 			sellHandId: '',
 			showBackWin: false,
 			type: 'index',
-			modifyId: ''
+			modifyId: '',
+			cmpareStatus: true
 		};
 	},
 	props: {
@@ -184,7 +185,6 @@ export default {
 				if (res.Statistics != '') {
 					let statistics = res.Statistics;
 					statistics.days = 1;
-					//console.log(statistics)
 					this.statistics.push(statistics);
 				}
 			}
@@ -246,6 +246,7 @@ export default {
 		modify: function(item) { //修改
 			this.beforeAmount = item.cash;
 			this.sellHandId = item.id; //统计id
+			this.cmpareStatus = this.compareId(item);
 			this.showWin = true;
 		},
 		getBackResult: function(res) { //退回的弹窗
@@ -265,6 +266,15 @@ export default {
 		openModify: function(item) { //打开调整记录
 			this.modifyId = item.id;
 			this.type = 'modify';
+		},
+		compareId: function(item) { //比较id
+			let cmpareStatus = true;
+			for (let key in this.userData) {
+				if (item.fansId == this.userData[key].fansId && item.staffFansId == this.userData[key].staffFansId) {
+					cmpareStatus = false;
+				}
+			}
+			return cmpareStatus;
 		}
 	}
 };
