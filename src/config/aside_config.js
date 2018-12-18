@@ -478,6 +478,13 @@ let need = {
 		renovation: { //粮票集装修
 			name: 'renovation'
 		},
+		priceTemplate:{     //价格模板
+			name:'priceTemplate'
+		},
+		AssignGoodsConcise:{  // 商品指派
+			name:'AssignGoodsConcise'
+		}
+
 	}
 };
 export default need;
