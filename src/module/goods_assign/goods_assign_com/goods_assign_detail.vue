@@ -284,27 +284,24 @@ export default {
           obj.conditions = item.conditions;
           obj.shopId = item.shopId;
           obj.assignIds = infoObj.assignIds;
-          // console.log(item,'itemitemitem')
           if(item.logData.length <=0){
             obj.succArr = infoObj.assignIds.split(',');
             obj.filedArr = [];
-            this.successGoodsNum = obj.succArr.length * infoObj.log.length;
+            this.successGoodsNum += obj.succArr.length * 1;
             this.filedGoodsNum = 0;
           }else{
             for(let k in item.logData){
                 let els = item.logData[k];
                 obj.filedArr = els.assignIds.concat(els.otherIds);
                 obj.filedRes = this.filedMsg[k];
-                this.filedGoodsNum = obj.filedArr.length;
+                console.log(this.filedMsg)
+                this.filedGoodsNum += obj.filedArr.length * 1;
                 this.successGoodsNum =this.totalTaskGoodsNum - this.filedGoodsNum;
             }
             obj.succArr = []
           }
           arr.push(obj);        
       });
-
-    console.log(arr,'arrarr') 
-    
       arr.map((item,index)=>{
         console.log(item.conditions,'item.conditions')
         let obj = {};
