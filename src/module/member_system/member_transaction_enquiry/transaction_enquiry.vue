@@ -18,10 +18,12 @@
 			<div class="date">
 				<!-- 选择卡属门店 -->
 				<div class="dateBox fl" v-if="cardTypeId == 1 && isBrand">
+					<span>卡属门店</span>
 					<selectStore :showName="'请选择卡属门店'" :shopIds="belongsId" @chooseShop="backShopId"></selectStore>
 				</div>
 				<!-- 选择操作门店 -->
 				<div class="dateBox fl" v-if="isBrand">
+					<span>操作门店</span>
 					<selectStore :showName="'请选择操作门店'" :shopIds="storesId" @chooseShop="backstoresId"></selectStore>
 				</div>
 				<!-- 选择交易类型 -->
@@ -110,21 +112,7 @@
 					</el-table-column>
 				</el-table>
 			</div>
-			<!-- <comTable :listName="'交易列表'" :titleData="titleData" :introData="consumeList" :allTotal="count" :bannerStyle="bannerStyle" :contentStyle="contentStyle" :titleHeight="50" :listHeight="50" :listWidth="1300" :fixed="0">
-				<span slot="con-0" slot-scope="props" @click="openDetail(scope.row)">
-					{{scope.row.cardNumber}}</span>
-				<span slot="con-2" slot-scope="props">{{formatTime(scope.row.createTime,'yyyy-MM-dd hh:mm')}}</span>
-				<span slot="con-3" slot-scope="props" @click="openOid(scope.row.oid,scope.row.belongToShop,scope.row.fromId)">
-					{{(scope.row.oid == '' || scope.row.oid == '0')?'--':scope.row.oid}}</span>
-				<span slot="con-4" slot-scope="props">{{getshopName(scope.row.belongToShop)}}</span>
-				<span slot="con-5" slot-scope="props">{{getconsumeName(scope.row.type)}}</span>
-				<span slot="con-6" slot-scope="props">{{(scope.row.type == '4' || scope.row.type == '9')?scope.row.operatePoint:scope.row.operateAmount}}</span>
-				<span slot="con-7" slot-scope="props">{{(scope.row.type == '4' || scope.row.type == '9')?scope.row.point:scope.row.amount}}</span>
-				<span slot="con-8" slot-scope="props">{{getPaytype(scope.row)}}</span>
-				<span slot="con-9" slot-scope="props">{{isBrand?getshopName(scope.row.fromId):getshopName(scope.row.shopId)}}</span>
-			</comTable> -->
 			<section class="turn-page">
-				<!-- <pageElement @pageNum="getPageNum" :page="Number(page)" :total="Number(TotalPage)" :numArr="[10,20,30,40,50]" :isNoJump="true"></pageElement> -->
 				<div class="pageWrap">
 					<el-pagination background @size-change="handleSizeChange" @current-change="pageChange" :current-page="page" :page-size="num" layout="sizes, prev, pager, next" :page-count="TotalPage" :page-sizes="[10, 20, 30]"></el-pagination>
 				</div>
@@ -139,71 +127,319 @@
 	</div>
 </template>
 <script>
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	export default {
-		data() {
-			return {
-				isShow: 'all', //是否显示订单详情
-				detail: null, //传给订单详情的数据
-				userData: Object,
-				isBrand: false, //是否是品牌
-				// belongsList: [], //卡属店铺的列表
-				// storesList: [], //操作店铺的列表
-				// shopList: [], //店铺列表
-				valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
-				belongsId: [], //选中的店铺列表的id
-				storesId: [], //选中的店铺列表的id
-				trantypeList: [{ //交易类型
-					name: '全部',
-					id: 0
-				}, {
-					name: '消费',
-					id: 1
-				}, {
-					name: '储值',
-					id: 2
-				}, {
-					name: '卡激活',
-					id: 15
-				}, {
-					name: '积分消费',
-					id: 9
-				}, {
-					name: '积分奖励',
-					id: 4
-				}],
-				trantypeId: 0, //交易类型对应的id
-				trantypehigh: '全部',
-				consumeList: [], //卡查询的数据列表
-				page: 1, //页码数
-				num: 10,
-				TotalPage: 1, //总页数
-				count: 0, //数据的总的条数
-				titleData: [], //传给公共表格的表头数据
-				bannerStyle: null, //表格头部样式
-				contentStyle: null, //表格内容样式
-				cardNumber: '', //卡号
-				cardTypeselect: '电子卡', //电子卡实体卡选择切换
-				cardTypeList: [{
-					name: '电子卡',
-					id: 0
-				}, {
-					name: '实体卡',
-					id: 1
-				}],
-				cardTypeId: 0, //选中的卡类型的ifd
-				mid: '',
-				shopsId: '',
-				constructionshopId: '', //单店的id
-				allShop: [] //所有门店
-			};
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+export default {
+	data() {
+		return {
+			isShow: 'all', //是否显示订单详情
+			detail: null, //传给订单详情的数据
+			userData: Object,
+			isBrand: false, //是否是品牌
+			valueTime: [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+			belongsId: [], //选中的店铺列表的id
+			storesId: [], //选中的店铺列表的id
+			trantypeList: [{ //交易类型
+				name: '全部',
+				id: 0
+			}, {
+				name: '消费',
+				id: 1
+			}, {
+				name: '储值',
+				id: 2
+			}, {
+				name: '卡激活',
+				id: 15
+			}, {
+				name: '积分消费',
+				id: 9
+			}, {
+				name: '积分奖励',
+				id: 4
+			}],
+			trantypeId: 0, //交易类型对应的id
+			trantypehigh: '全部',
+			consumeList: [], //卡查询的数据列表
+			page: 1, //页码数
+			num: 10,
+			TotalPage: 1, //总页数
+			count: 0, //数据的总的条数
+			titleData: [], //传给公共表格的表头数据
+			bannerStyle: null, //表格头部样式
+			contentStyle: null, //表格内容样式
+			cardNumber: '', //卡号
+			cardTypeselect: '电子卡', //电子卡实体卡选择切换
+			cardTypeList: [{
+				name: '电子卡',
+				id: 0
+			}, {
+				name: '实体卡',
+				id: 1
+			}],
+			cardTypeId: 0, //选中的卡类型的ifd
+			mid: '',
+			shopsId: '',
+			constructionshopId: '', //单店的id
+			allShop: [] //所有门店
+		};
+	},
+	created() {
+		this.getShopList();
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '导出',
+			className: ['fd-blue'],
+			fn: () => {
+				this.export();
+			}
+		}]);
+		this.userData = storage.session('userShop');
+		if (this.userData.currentShop && this.userData.currentShop.ischain == 3) { //ischain状态为3 说明是品牌下面的店铺
+			this.isBrand = true; //更改品牌店的状态
+		} else {
+			this.isBrand = false;
+			this.constructionshopId = this.userData.currentShop.id; //单店的id
+		}
+		this.getCardConsumeList();
+	},
+	destroyed() {
+		//离开页面时 清除缓存数据
+		storage.session('orderDetial', null);
+	},
+	methods: {
+		chooseTime: function(time) { //获取时间
+			this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
 		},
-		created() {
+		//接受子组件传递回来的事件
+		getDetailShow() { //从订单详情返回回来
+			this.isShow = 'all';
+		},
+		//交易查询
+		checkForm: function() {
+			if (this.storesId.length == 0 && this.isBrand) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '请选择操作门店'
+				});
+				return false;
+			}
+			if (this.belongsId.length == 0 && this.cardTypeId == 1 && this.isBrand) {
+				this.$store.commit('setWin', {
+					title: '温馨提示',
+					winType: 'alter',
+					content: '请选择卡属门店'
+				});
+				return false;
+			}
+			return true;
+		},
+		async getCardConsumeList() {
+			if (!this.checkForm()) return;
+			let res = await http.getCardConsumeList({
+				data: {
+					startTime: parseInt(this.valueTime[0] / 1000), //开始时间
+					endTime: parseInt(this.valueTime[1] / 1000), //结束时间
+					page: this.page, //请求的页数
+					num: this.num, //请求的数据的条数
+					fromId: this.isBrand ? this.storesId.join(',') : this.constructionshopId, //操作门店门牌号
+					belongToShop: this.isBrand ? this.belongsId.join(',') : '', //卡属门店
+					memberCardId: 0, //实体卡关联id
+					consumeType: this.trantypeId, //交易类型
+					memberType: this.cardTypeId
+				}
+			});
+			if (res) {
+				this.consumeList = res.consumeList;
+				if (this.page == 1) {
+					this.TotalPage = res.total;
+				}
+				if (this.page == 1) {
+					this.count = res.count;
+				}
+			}
+		},
+		//点击搜索（搜索图标和筛选）
+		screeningBtn: function() {
+			this.TotalPage = 1;
+			this.page = 1;
+			this.getCardConsumeList(); //交易查询
+		},
+		//显示交易类型的文字
+		/*eslint-disable*/
+		getconsumeName: function(type) {
+			switch (Number(type)) {
+				case 1:
+					return '消费';
+					break;
+				case 2:
+					return '储值';
+					break;
+				case 3:
+					return '积分兑换';
+					break;
+				case 15:
+					return '卡激活';
+					break;
+				case 9:
+					return '积分消费';
+					break;
+				case 4:
+					return '积分奖励';
+					break;
+				case 5:
+					return '裂变获得积分';
+					break;
+				case 6:
+					return '微信消费';
+					break;
+				case 10:
+					return '积分增加';
+					break;
+				case 11:
+					return '积分减少';
+					break;
+				case 12:
+					return '余额增加';
+					break;
+				case 13:
+					return '余额减少';
+					break;
+				case 14:
+					return '退款失败';
+					break;
+				default:
+					return '全部';
+			}
+		},
+		/*eslint-enable*/
+		//显示支付类型的文字
+		getPaytype(item) {
+			if (item.type == '3' || item.type == '4' || item.type == '9' || item.type == '10' || item.type == '11' || item.type ==
+				'12' || item.type == '13' || item.type == '14') {
+				return '--';
+			} else if (item.type == '1') {
+				if (item.memberType == '0') {
+					return '会员卡支付';
+				} else if (item.type == '1') {
+					return '卡支付';
+				}
+			} else if (item.payType == '1') {
+				return '现金';
+			} else if (item.payType == '2') {
+				return '银行卡';
+			} else if (item.payType == '3') {
+				return '微信';
+			} else if (item.payType == '4') {
+				return '支付宝';
+			} else if (item.payType == '6') {
+				return '中信微信';
+			} else if (item.payType == '7') {
+				return '中信支付宝';
+			} else if (item.payType == '10') {
+				return '微信企业支付';
+			} else if (item.payType == '23') {
+				return '上海中信';
+			} else if (item.payType == '24') {
+				return '上海中信支付宝';
+			} else if (item.payType == '27') {
+				return '收钱吧微信';
+			} else if (item.payType == '28') {
+				return '收钱吧支付宝';
+			}
+		},
+		//把时间戳转化成***年**月**日
+		formatTime(time, str) {
+			return utils.format(new Date(Number(time) * 1000), str);
+		},
+		//将店铺编号转换成对应的shopId
+		getshopId: function(num, shop) {
+			let shopId = '';
+			if (String(num) == '') {
+				return '';
+			} else {
+				for (let i = 0; i < this.allShop.length; i++) {
+					if (shop[Number(num)] == this.allShop[i].shopName) {
+						shopId = this.allShop[i].id;
+					}
+				}
+				return shopId;
+			}
+		},
+		//根据id获取店铺名称
+		getshopName(id) {
+			let shopName = '--';
+			for (let i = 0; i < this.allShop.length; i++) {
+				if (id == this.allShop[i].id) {
+					shopName = this.isBrand ? this.allShop[i].shopName : this.allShop[i].name;
+				}
+			}
+			return shopName;
+		},
+		//重置
+		filterReset() {
+			this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)]; //时间控件
 			this.getShopList();
+			this.screeningBtn();
 		},
-		mounted() {
+		//点击查看详情
+		async openOid(oid, belongToShop, fromId) {
+			if (oid == '' || oid == '0') {
+				return;
+			}
+			let res = await http.OrderstatisticsBillDelite({
+				data: {
+					shopId: fromId,
+					oid: oid
+				}
+			});
+			if (res) {
+				res.oidDetial = 'enquiry'; //自定义商品统计特有标记
+				this.detail = res;
+				if (this.isBrand) {
+					this.detail.fromId = fromId;
+				}
+			}
+			this.isShow = 'order';
+		},
+		getPageNum: function(obj) {
+			this.page = obj.page;
+			this.num = obj.num;
+			this.getCardConsumeList();
+		},
+		async
+		export () {
+			await http.exportCardConsumeList({
+				data: {
+					startTime: parseInt(this.valueTime[0] / 1000), //开始时间
+					endTime: parseInt(this.valueTime[1] / 1000), //结束时间
+					page: this.page, //请求的页数
+					num: this.num, //请求的数据的条数
+					fromId: this.isBrand ? this.storesId.join(',') : this.constructionshopId, //操作门店门牌号
+					belongToShop: this.isBrand ? this.belongsId.join(',') : '', //卡属门店
+					memberCardId: 0, //实体卡关联id
+					consumeType: this.trantypeId, //交易类型
+					memberType: this.cardTypeId,
+					export: 1
+				}
+			});
+		},
+		openDetail: function(item) { //点击查看详情
+			if (item.cardNumber == '') {
+				this.isShow = 'member';
+				this.mid = item.memberId;
+				this.shopsId = item.shopId;
+			} else {
+				this.cardNumber = item.cardNumber;
+				this.isShow = 'detail';
+			}
+		},
+		//子组件返回的事件
+		getDetail() { //从卡详情返回回来
+			this.isShow = 'all';
 			this.$store.commit('setPageTools', [{
 				name: '导出',
 				className: ['fd-blue'],
@@ -211,624 +447,183 @@
 					this.export();
 				}
 			}]);
-			this.userData = storage.session('userShop');
-			if (this.userData.currentShop && this.userData.currentShop.ischain == 3) { //ischain状态为3 说明是品牌下面的店铺
-				this.isBrand = true; //更改品牌店的状态
-			} else {
-				this.isBrand = false;
-				this.constructionshopId = this.userData.currentShop.id; //单店的id
-			}
-			// let shopNumber = []; //门店编号
-			// let shopName = []; //店铺名字
-			// let shopList = []; //店铺列表
-			// if (this.isBrand) {
-			// 	shopList = storage.session('shopList'); //获取到品牌下面所有店铺信息
-			// 	for (let i in shopList) {
-			// 		let obj = {
-			// 			name: shopList[i].shopNumber + '-' + shopList[i].shopName,
-			// 			id: shopList[i].id
-			// 		};
-			// 		let shopobj = {
-			// 			name: shopList[i].shopName,
-			// 			id: shopList[i].id
-			// 		};
-			// 		shopName.push(obj);
-			// 		shopNumber.push(shopobj);
-			// 	}
-			// } else {
-			// 	shopList.push(this.userData.currentShop);
-			// 	let obj = {
-			// 		name: this.userData.currentShop.shopNumber + '-' + this.userData.currentShop.name,
-			// 		id: this.userData.currentShop.id
-			// 	};
-			// 	let shopobj = {
-			// 		name: this.userData.currentShop.name,
-			// 		id: this.userData.currentShop.id
-			// 	};
-			// 	shopName.push(obj);
-			// 	shopNumber.push(shopobj);
-			// }
-			// this.belongsList = shopNumber;
-			// this.storesList = shopNumber;
-			// this.shopList = shopList;
+		},
+		//组件返回店铺Id
+		backShopId: function(id) { //选择卡属门店返回的
+			this.belongsId = id;
+		},
+		backstoresId: function(id) { //选择操作门店返回的
+			this.storesId = id; //门店数组
+		},
+		selData: function(value) { //选择交易类型返回的
+			this.trantypeId = value;
+		},
+		selcardType(item) { //选择电子卡或者实体卡
+			this.page = 1;
+			this.cardTypeId = item.id;
+			this.count = 0;
+			this.TotalPage = 1;
+			this.consumeList = [];
 			this.getCardConsumeList();
-			// document.onclick = () => {
-			// 	this.belongsLimit = false;
-			// 	this.storesLimit = false;
-			// 	this.trantypeLimit = false;
-			// };
 		},
-		destroyed() {
-			//离开页面时 清除缓存数据
-			storage.session('orderDetial', null);
+		//每页显示多少条数据
+		handleSizeChange(p) {
+			this.num = p;
+			this.page = 1;
+			this.getCardConsumeList();
 		},
-		methods: {
-			chooseTime: function(time) { //获取时间
-				//console.log(new Date(time[1]).setHours(23, 59, 59, 999));
-				//console.log(new Date())
-				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
-			},
-			//接受子组件传递回来的事件
-			getDetailShow() { //从订单详情返回回来
-				this.isShow = 'all';
-			},
-			//交易查询
-			checkForm: function() {
-				if (this.storesId.length == 0 && this.isBrand) {
-					this.$store.commit('setWin', {
-						title: '温馨提示',
-						winType: 'alter',
-						content: '请选择操作门店'
-					});
-					return false;
-				}
-				if (this.belongsId.length == 0 && this.cardTypeId == 1 && this.isBrand) {
-					this.$store.commit('setWin', {
-						title: '温馨提示',
-						winType: 'alter',
-						content: '请选择卡属门店'
-					});
-					return false;
-				}
-				return true;
-			},
-			async getCardConsumeList() {
-				if (!this.checkForm()) return;
-				let res = await http.getCardConsumeList({
-					data: {
-						startTime: parseInt(this.valueTime[0] / 1000), //开始时间
-						endTime: parseInt(this.valueTime[1] / 1000), //结束时间
-						page: this.page, //请求的页数
-						num: this.num, //请求的数据的条数
-						fromId: this.isBrand ? this.storesId.join(',') : this.constructionshopId, //操作门店门牌号
-						belongToShop: this.isBrand ? this.belongsId.join(',') : '', //卡属门店
-						memberCardId: 0, //实体卡关联id
-						consumeType: this.trantypeId, //交易类型
-						memberType: this.cardTypeId
-					}
-				});
-				if (res) {
-					this.consumeList = res.consumeList;
-					if (this.page == 1) {
-						this.TotalPage = res.total;
-					}
-					if (this.page == 1) {
-						this.count = res.count;
-					}
-					// if (this.consumeList.length == 0) {
-					// 	this.count = 0;
-					// }
-				}
-			},
-			//点击搜索（搜索图标和筛选）
-			screeningBtn: function() {
-				this.TotalPage = 1;
-				this.page = 1;
-				this.getCardConsumeList(); //交易查询
-			},
-			//显示交易类型的文字
-			/*eslint-disable*/
-			getconsumeName: function(type) {
-				switch (Number(type)) {
-					case 1:
-						return '消费';
-						break;
-					case 2:
-						return '储值';
-						break;
-					case 3:
-						return '积分兑换';
-						break;
-					case 15:
-						return '卡激活';
-						break;
-					case 9:
-						return '积分消费';
-						break;
-					case 4:
-						return '积分奖励';
-						break;
-					case 5:
-						return '裂变获得积分';
-						break;
-					case 6:
-						return '微信消费';
-						break;
-					case 10:
-						return '积分增加';
-						break;
-					case 11:
-						return '积分减少';
-						break;
-					case 12:
-						return '余额增加';
-						break;
-					case 13:
-						return '余额减少';
-						break;
-					case 14:
-						return '退款失败';
-						break;
-					default:
-						return '全部';
-				}
-			},
-			/*eslint-enable*/
-			//显示支付类型的文字
-			getPaytype(item) {
-				if (item.type == '3' || item.type == '4' || item.type == '9' || item.type == '10' || item.type == '11' || item.type ==
-					'12' || item.type == '13' || item.type == '14') {
-					return '--';
-				} else if (item.type == '1') {
-					if (item.memberType == '0') {
-						return '会员卡支付';
-					} else if (item.type == '1') {
-						return '卡支付';
-					}
-				} else if (item.payType == '1') {
-					return '现金';
-				} else if (item.payType == '2') {
-					return '银行卡';
-				} else if (item.payType == '3') {
-					return '微信';
-				} else if (item.payType == '4') {
-					return '支付宝';
-				} else if (item.payType == '6') {
-					return '中信微信';
-				} else if (item.payType == '7') {
-					return '中信支付宝';
-				} else if (item.payType == '10') {
-					return '微信企业支付';
-				} else if (item.payType == '23') {
-					return '上海中信';
-				} else if (item.payType == '24') {
-					return '上海中信支付宝';
-				} else if (item.payType == '27') {
-					return '收钱吧微信';
-				} else if (item.payType == '28') {
-					return '收钱吧支付宝';
-				}
-			},
-			//把时间戳转化成***年**月**日
-			formatTime(time, str) {
-				return utils.format(new Date(Number(time) * 1000), str);
-			},
-			//将店铺编号转换成对应的shopId
-			getshopId: function(num, shop) {
-				let shopId = '';
-				if (String(num) == '') {
-					return '';
-				} else {
-					for (let i = 0; i < this.allShop.length; i++) {
-						if (shop[Number(num)] == this.allShop[i].shopName) {
-							shopId = this.allShop[i].id;
-						}
-					}
-					return shopId;
-				}
-			},
-			//根据id获取店铺名称
-			getshopName(id) {
-				let shopName = '--';
-				for (let i = 0; i < this.allShop.length; i++) {
-					if (id == this.allShop[i].id) {
-						shopName = this.isBrand ? this.allShop[i].shopName : this.allShop[i].name;
-					}
-				}
-				return shopName;
-			},
-			//重置
-			filterReset() {
-				this.valueTime = [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
-				this.getShopList();
-				this.screeningBtn();
-			},
-			//点击查看详情
-			async openOid(oid, belongToShop, fromId) {
-				if (oid == '' || oid == '0') {
-					return;
-				}
-				// if(belongToShop == '' || belongToShop == 0){
-				// 	this.$store.commit('setWin', {
-				// 		title: '温馨提示',
-				// 		winType: 'alter',
-				// 		content: '快捷支付暂无法查看订单详情'
-				// 	});
-				// 	return false;				
-				// }
-				let res = await http.OrderstatisticsBillDelite({
-					data: {
-						shopId: fromId,
-						oid: oid
-					}
-				});
-				if (res) {
-					res.oidDetial = 'enquiry'; //自定义商品统计特有标记
-					this.detail = res;
-					if (this.isBrand) {
-						this.detail.fromId = fromId;
-					}
-				}
-				this.isShow = 'order';
-			},
-			getPageNum: function(obj) {
-				this.page = obj.page;
-				this.num = obj.num;
-				this.getCardConsumeList();
-			},
-			async
-			export () {
-				await http.exportCardConsumeList({
-					data: {
-						startTime: parseInt(this.valueTime[0] / 1000), //开始时间
-						endTime: parseInt(this.valueTime[1] / 1000), //结束时间
-						page: this.page, //请求的页数
-						num: this.num, //请求的数据的条数
-						fromId: this.isBrand ? this.storesId.join(',') : this.constructionshopId, //操作门店门牌号
-						belongToShop: this.isBrand ? this.belongsId.join(',') : '', //卡属门店
-						memberCardId: 0, //实体卡关联id
-						consumeType: this.trantypeId, //交易类型
-						memberType: this.cardTypeId,
-						export: 1
-					}
-				});
-			},
-			openDetail: function(item) { //点击查看详情
-				if (item.cardNumber == '') {
-					this.isShow = 'member';
-					this.mid = item.memberId;
-					this.shopsId = item.shopId;
-				} else {
-					this.cardNumber = item.cardNumber;
-					this.isShow = 'detail';
-				}
-			},
-			//子组件返回的事件
-			getDetail() { //从卡详情返回回来
-				this.isShow = 'all';
-				this.$store.commit('setPageTools', [{
-					name: '导出',
-					className: ['fd-blue'],
-					fn: () => {
-						this.export();
-					}
-				}]);
-			},
-			//组件返回店铺Id
-			backShopId: function(id) { //选择卡属门店返回的
-				this.belongsId = id;
-			},
-			backstoresId: function(id) { //选择操作门店返回的
-				//console.log(id);
-				this.storesId = id; //门店数组
-			},
-			selData: function(value) { //选择交易类型返回的
-				this.trantypeId = value;
-			},
-			selcardType(item) { //选择电子卡或者实体卡
-				this.page = 1;
-				this.cardTypeId = item.id;
-				this.count = 0;
-				this.TotalPage = 1;
-				this.consumeList = [];
-				this.getCardConsumeList();
-				//console.log(item.id)
-			},
-			//每页显示多少条数据
-			handleSizeChange(p) {
-				this.num = p;
-				this.page = 1;
-				this.getCardConsumeList();
-			},
-			//页码跳转
-			pageChange(p) {
-				this.page = p;
-				this.getCardConsumeList();
-			},
-			judgeTypes: function(item) {
-				// 判断操作类型 是否加还是减
-				// let operate;
-				// if (item.type == '1' || item.type == '3' || item.type == '6' || item.type == '9' || item.type == '11' || item.type ==
-				// 	'13') {
-				// 	operate = '-';
-				// } else {
-				// 	operate = '+';
-				// }
-
-				if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
-					'10' || item.type == '11') {
-					return item.operatePoint;
-				} else {
-					if (item.type == '1' || item.type == '6') {
-						return (Number(item.operateAmount) + Number(item.operateGiftAmount));
-					} else if (item.type == '2') {
-						return (parseInt(Number(item.operateGiftAmount) * 100) + parseInt(Number(item.rechargeAmount) * 100)) / 100;
-					} else {
-						return Number(item.operateAmount);
-					}
-				}
-			},
-			//获取店铺列表
-			getShopList: function() {
-				//this.allShop = this.delShopId;
-				this.allShop = [];
-				this.belongsId = [];
-				this.storesId = [];
-				this.allShop = storage.session('shopList');
-				let userDate = storage.session('userShop').currentShop;
-				let wx = {
-					shopName: '微信',
-					name: userDate.name,
-					id: userDate.id,
-					ischain: userDate.ischain
-				};
-				this.allShop.push(wx);
-				for (let item of this.allShop) {
-					this.belongsId.push(item.id);
-					this.storesId.push(item.id);
-				}
-			},
+		//页码跳转
+		pageChange(p) {
+			this.page = p;
+			this.getCardConsumeList();
 		},
-		components: {
-			orderDetail: () =>
-				import ( /*webpackChunkName: 'delete_detail'*/ './../../statistics/delete_detail'),
-			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
-			pageElement: () =>
-				import ( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
-			comTable: () =>
-				import ( /*webpackChunkName:'com_table'*/ 'src/components/com_table'),
-			//详情
-			cardDetail: () =>
-				import ( /*webpackChunkName: 'card_queries_detail'*/ './../card_queries_detail'),
-			selectStore: () =>
-				import ( /*webpackChunkName: 'transaction_shop'*/ './transaction_shop.vue'),
-			memberDetail: () =>
-				import ( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_management/member_manage_detail'),
-		}
-	};
+		judgeTypes: function(item) {
+			// 判断操作类型 是否加还是减
+			if (item.type == '3' || item.type == '4' || item.type == '5' || item.type == '8' || item.type == '9' || item.type ==
+				'10' || item.type == '11') {
+				return item.operatePoint;
+			} else {
+				if (item.type == '1' || item.type == '6') {
+					return (Number(item.operateAmount) + Number(item.operateGiftAmount));
+				} else if (item.type == '2') {
+					return (parseInt(Number(item.operateGiftAmount) * 100) + parseInt(Number(item.rechargeAmount) * 100)) / 100;
+				} else {
+					return Number(item.operateAmount);
+				}
+			}
+		},
+		//获取店铺列表
+		getShopList: function() {
+			this.allShop = [];
+			this.belongsId = [];
+			this.storesId = [];
+			this.allShop = storage.session('shopList');
+			let userDate = storage.session('userShop').currentShop;
+			let wx = {
+				shopName: '微信',
+				name: userDate.name,
+				id: userDate.id,
+				ischain: userDate.ischain
+			};
+			this.allShop.push(wx);
+			for (let item of this.allShop) {
+				this.belongsId.push(item.id);
+				this.storesId.push(item.id);
+			}
+		},
+	},
+	components: {
+		orderDetail: () =>
+			import( /*webpackChunkName: 'delete_detail'*/ './../../statistics/delete_detail'),
+		calendar: () =>
+			import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+		pageElement: () =>
+			import( /*webpackChunkName:'page_element'*/ 'src/components/page_element'),
+		comTable: () =>
+			import( /*webpackChunkName:'com_table'*/ 'src/components/com_table'),
+		//详情
+		cardDetail: () =>
+			import( /*webpackChunkName: 'card_queries_detail'*/ './../card_queries_detail'),
+		selectStore: () =>
+			import( /*webpackChunkName: 'transaction_shop'*/ './transaction_shop.vue'),
+		memberDetail: () =>
+			import( /*webpackChunkName: 'member_manage_detail'*/ './../../member_system/member_management/member_manage_detail'),
+	}
+};
 </script>
 <style lang="less" scoped>
-	#transaction-enquiry .date {
-		height: 40px;
-		margin-bottom: 20px;
-	}
+#transaction-enquiry .date {
+	height: 40px;
+	margin-bottom: 20px;
+}
 
-	#transaction-enquiry .date .dateBox {
-		margin-right: 15px;
-		margin-bottom: 10px;
-	}
+#transaction-enquiry .date .dateBox {
+	margin-right: 15px;
+	margin-bottom: 10px;
+}
+#transaction-enquiry .date .dateBox span{
+	font-size: 16px;
+	margin-right: 10px;
+}
 
-	#transaction-enquiry .list {
-		max-width: 1400px;
-	}
+#transaction-enquiry .list {
+	max-width: 1400px;
+}
 
-	#transaction-enquiry .list .list_title {
-		max-width: 1400px;
-		height: 45px;
-		border: 1px solid #EAEEF5;
-		line-height: 45px;
-		padding-left: 17px;
-		padding-right: 68px;
-		border-bottom: none;
-	}
+#transaction-enquiry .list .list_title {
+	max-width: 1400px;
+	height: 45px;
+	border: 1px solid #EAEEF5;
+	line-height: 45px;
+	padding-left: 17px;
+	padding-right: 68px;
+	border-bottom: none;
+}
 
-	#transaction-enquiry .list .list_title .list_title_l a {
-		color: red;
-		font-size: 16px;
-	}
+#transaction-enquiry .list .list_title .list_title_l a {
+	color: red;
+	font-size: 16px;
+}
 
-	#transaction-enquiry .list .list_title span {
-		font-size: 16px;
-		color: #333;
-		font-weight: bold;
-	}
+#transaction-enquiry .list .list_title span {
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+}
 
-	#transaction-enquiry .list .list_title span:first-child {
-		margin-right: 11px;
-	}
+#transaction-enquiry .list .list_title span:first-child {
+	margin-right: 11px;
+}
 
-	#transaction-enquiry .list .list_title span:nth-child(2) {
-		display: inline-block;
-		width: 5px;
-		height: 5px;
-		border-radius: 50%;
-		background: #000;
-		margin-right: 11px;
-		vertical-align: middle;
-		/*margin-top: 20px;*/
-	}
+#transaction-enquiry .list .list_title span:nth-child(2) {
+	display: inline-block;
+	width: 5px;
+	height: 5px;
+	border-radius: 50%;
+	background: #000;
+	margin-right: 11px;
+	vertical-align: middle;
+	/*margin-top: 20px;*/
+}
 
-	#transaction-enquiry {
-		.content {
-			width: 100%;
-			margin-bottom: 30px; // .date {
-			// 	float: left;
-			// 	.data-center {
-			// 		float: left;
-			// 		width: 25px;
-			// 		line-height: 40px;
-			// 		text-align: center;
-			// 	}
-			// 	/*搜索图标*/
-			// 	.order-order-searchA,
-			// 	.order-order-search {
-			// 		display: inline-block;
-			// 		float: left;
-			// 		width: 40px;
-			// 		height: 40px;
-			// 		background-color: #29A7E1;
-			// 		cursor: pointer;
-			// 		margin-right: 15px;
-			// 	}
-			// 	.order-order-searchA:hover {
-			// 		background-color: #1878a5;
-			// 		transition: background-color ease-in-out 0.2s;
-			// 	}
-			// 	.order-order-searchA:active {
-			// 		background-color: #154961;
-			// 	}
-			// 	.order-order-search {
-			// 		background: url(../../res/images/search.png) center center no-repeat;
-			// 	}
-			// }
-		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*三角形-所有的边框线*/
-
-	.calendar-ctr {
-		width: 38px;
-		height: 40px;
-		position: relative;
-		z-index: 5;
-		border-left: #b3b3b3 solid 1px;
-	}
-
-	.calendar-ctr i {
-		height: 10px;
-		width: 10px;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin-top: -5px;
-		margin-left: -5px;
-		border-top: 10px solid #b3b3b3;
-		border-left: 5px solid transparent;
-		border-right: 5px solid transparent;
-		box-sizing: border-box;
-	}
-
-	.statisticsLists {
-		border: 1px solid #cccccc;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*下拉列表选择*/
-
-	#transaction-enquiry .statisticsLists {
-		position: relative;
-		line-height: 35px;
-		font-size: 16px;
-		text-align: left;
-		display: inline-block;
-		width: 180px;
-		vertical-align: middle;
-		float: left;
-		margin-right: 5px;
-	}
-
-	#transaction-enquiry .statisticsLists .spanSty {
-		height: 38px;
-		width: 137px;
-		display: block;
-		float: left;
-		text-align: center;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
-
-	#transaction-enquiry .statisticsLists ul {
+#transaction-enquiry {
+	.content {
 		width: 100%;
-		max-height: 205px;
-		overflow: auto;
-		margin: 0;
-		position: absolute;
-		top: 40px;
-		left: 0;
-		z-index: 10;
-		background: #fff;
+		margin-bottom: 30px; // .date {
+		// 	float: left;
+		// 	.data-center {
+		// 		float: left;
+		// 		width: 25px;
+		// 		line-height: 40px;
+		// 		text-align: center;
+		// 	}
+		// 	/*搜索图标*/
+		// 	.order-order-searchA,
+		// 	.order-order-search {
+		// 		display: inline-block;
+		// 		float: left;
+		// 		width: 40px;
+		// 		height: 40px;
+		// 		background-color: #29A7E1;
+		// 		cursor: pointer;
+		// 		margin-right: 15px;
+		// 	}
+		// 	.order-order-searchA:hover {
+		// 		background-color: #1878a5;
+		// 		transition: background-color ease-in-out 0.2s;
+		// 	}
+		// 	.order-order-searchA:active {
+		// 		background-color: #154961;
+		// 	}
+		// 	.order-order-search {
+		// 		background: url(../../res/images/search.png) center center no-repeat;
+		// 	}
+		// }
 	}
+}
 
-	#transaction-enquiry .statisticsLists ul li {
-		width: 100%;
-		white-space: normal;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		text-align: center;
-		height: 41px;
-		border: 1px #b3b3b3 solid;
-		border-top: 0;
-		background: #fff;
-		cursor: pointer;
-	}
 
-	#transaction-enquiry .statisticsLists ul li:hover {
-		background: #f1f1f1;
-	}
 
-	#transaction-enquiry .choise .tableListInp div {
-		width: 38px;
-		height: 38px;
-		position: relative;
-		z-index: 5;
-	}
 
 
 
@@ -850,22 +645,34 @@
 
 
 
+/*三角形-所有的边框线*/
 
+.calendar-ctr {
+	width: 38px;
+	height: 40px;
+	position: relative;
+	z-index: 5;
+	border-left: #b3b3b3 solid 1px;
+}
 
+.calendar-ctr i {
+	height: 10px;
+	width: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -5px;
+	margin-left: -5px;
+	border-top: 10px solid #b3b3b3;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	box-sizing: border-box;
+}
 
-	/*搜索和重置*/
+.statisticsLists {
+	border: 1px solid #cccccc;
+}
 
-	#transaction-enquiry .content a {
-		display: block;
-		width: 80px;
-		height: 40px;
-		text-align: center;
-		line-height: 40px;
-		font-size: 16px;
-		color: #fff;
-		float: left;
-		margin-left: 5px;
-	}
 
 
 
@@ -889,12 +696,66 @@
 
 
 
+/*下拉列表选择*/
 
+#transaction-enquiry .statisticsLists {
+	position: relative;
+	line-height: 35px;
+	font-size: 16px;
+	text-align: left;
+	display: inline-block;
+	width: 180px;
+	vertical-align: middle;
+	float: left;
+	margin-right: 5px;
+}
 
+#transaction-enquiry .statisticsLists .spanSty {
+	height: 38px;
+	width: 137px;
+	display: block;
+	float: left;
+	text-align: center;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
 
+#transaction-enquiry .statisticsLists ul {
+	width: 100%;
+	max-height: 205px;
+	overflow: auto;
+	margin: 0;
+	position: absolute;
+	top: 40px;
+	left: 0;
+	z-index: 10;
+	background: #fff;
+}
 
+#transaction-enquiry .statisticsLists ul li {
+	width: 100%;
+	white-space: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: center;
+	height: 41px;
+	border: 1px #b3b3b3 solid;
+	border-top: 0;
+	background: #fff;
+	cursor: pointer;
+}
 
+#transaction-enquiry .statisticsLists ul li:hover {
+	background: #f1f1f1;
+}
 
+#transaction-enquiry .choise .tableListInp div {
+	width: 38px;
+	height: 38px;
+	position: relative;
+	z-index: 5;
+}
 
 
 
@@ -912,23 +773,26 @@
 
 
 
-	/*分页*/
 
-	#transaction-enquiry .pages {
-		float: left;
-		width: 100%;
-		margin-top: 40px;
-		height: 40px;
-		position: relative;
-		margin-bottom: 40px;
-	}
 
 
 
 
 
 
+/*搜索和重置*/
 
+#transaction-enquiry .content a {
+	display: block;
+	width: 80px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	font-size: 16px;
+	color: #fff;
+	float: left;
+	margin-left: 5px;
+}
 
 
 
@@ -968,227 +832,290 @@
 
 
 
-	/*列表*/
 
 
-	/*#transaction-enquiry .list{*/
 
 
-	/*width: 100%;*/
 
 
-	/*min-height: 156px;*/
 
+/*分页*/
 
-	/*border: 1px solid #D2D2D2;*/
+#transaction-enquiry .pages {
+	float: left;
+	width: 100%;
+	margin-top: 40px;
+	height: 40px;
+	position: relative;
+	margin-bottom: 40px;
+}
 
 
-	/*}*/
 
 
-	/*#transaction-enquiry .list .list_title{*/
 
 
-	/*width: 100%;*/
 
 
-	/*height: 45px;*/
 
 
-	/*line-height: 45px;*/
 
 
-	/*padding-left: 17px;*/
 
 
-	/*}*/
 
 
-	/*#transaction-enquiry .list .list_title span{*/
 
 
-	/*font-size: 16px;*/
 
 
-	/*color: #333;*/
 
 
-	/*font-weight: bold;*/
 
 
-	/*}*/
 
 
-	/*#transaction-enquiry .list .list_title span:first-child{*/
 
 
-	/*margin-right: 11px;*/
 
 
-	/*}*/
 
 
-	/*#transaction-enquiry .list .list_title span:nth-child(2){*/
 
 
-	/*display:inline-block;*/
 
 
-	/*width: 5px;*/
 
 
-	/*height: 5px;*/
 
 
-	/*border-radius: 50%;*/
 
 
-	/*background: #000;*/
 
 
-	/*margin-right: 11px;*/
 
 
-	/*vertical-align:middle;*/
+/*列表*/
 
 
-	/*}*/
+/*#transaction-enquiry .list{*/
 
 
-	/*#transaction-enquiry .list .list_title span:last-child a{*/
+/*width: 100%;*/
 
 
-	/*font-size: 16px;*/
+/*min-height: 156px;*/
 
 
-	/*color: #FF3C05;*/
+/*border: 1px solid #D2D2D2;*/
 
 
-	/*}*/
+/*}*/
 
 
-	/*#transaction-enquiry .list .heads{*/
+/*#transaction-enquiry .list .list_title{*/
 
 
-	/*width: 100%;*/
+/*width: 100%;*/
 
 
-	/*height: 41px;*/
+/*height: 45px;*/
 
 
-	/*background: #F2F2F2;*/
+/*line-height: 45px;*/
 
 
-	/*}*/
+/*padding-left: 17px;*/
 
 
-	/*#transaction-enquiry .list .heads li{*/
+/*}*/
 
 
-	/*float: left;*/
+/*#transaction-enquiry .list .list_title span{*/
 
 
-	/*width: 8.75%;*/
+/*font-size: 16px;*/
 
 
-	/*text-align: center;*/
+/*color: #333;*/
 
 
-	/*line-height: 41px;*/
+/*font-weight: bold;*/
 
 
-	/*font-size: 16px;*/
+/*}*/
 
 
-	/*color: #43414A;*/
+/*#transaction-enquiry .list .list_title span:first-child{*/
 
 
-	/*}*/
+/*margin-right: 11px;*/
 
 
-	/*#transaction-enquiry .list .noList{*/
+/*}*/
 
 
-	/*width: 100%;*/
+/*#transaction-enquiry .list .list_title span:nth-child(2){*/
 
 
-	/*height: 68px;*/
+/*display:inline-block;*/
 
 
-	/*text-align: center;*/
+/*width: 5px;*/
 
 
-	/*line-height: 68px;*/
+/*height: 5px;*/
 
 
-	/*font-size: 24px;*/
+/*border-radius: 50%;*/
 
 
-	/*color: #E0E0E0;*/
+/*background: #000;*/
 
 
-	/*}*/
+/*margin-right: 11px;*/
 
 
-	/*#transaction-enquiry .list .contents{*/
+/*vertical-align:middle;*/
 
 
-	/*width: 100%;*/
+/*}*/
 
 
-	/*height: 69px;*/
+/*#transaction-enquiry .list .list_title span:last-child a{*/
 
 
-	/*border-bottom: 1px solid #F7F7F7;*/
+/*font-size: 16px;*/
 
 
-	/*}*/
+/*color: #FF3C05;*/
 
 
-	/*#transaction-enquiry .list .contents .sty{*/
+/*}*/
 
 
-	/*color: #00AAE5;*/
+/*#transaction-enquiry .list .heads{*/
 
 
-	/*cursor: pointer;*/
+/*width: 100%;*/
 
 
-	/*}*/
+/*height: 41px;*/
 
 
-	/*#transaction-enquiry .list .contents li{*/
+/*background: #F2F2F2;*/
 
 
-	/*float: left;*/
+/*}*/
 
 
-	/*width: 8.75%;*/
+/*#transaction-enquiry .list .heads li{*/
 
 
-	/*height: 69px;*/
+/*float: left;*/
 
 
-	/*text-align: center;*/
+/*width: 8.75%;*/
 
 
-	/*line-height: 69px;*/
+/*text-align: center;*/
 
 
-	/*font-size: 14px;*/
+/*line-height: 41px;*/
 
 
-	/*color: #666;*/
+/*font-size: 16px;*/
 
 
-	/*overflow: hidden;*/
+/*color: #43414A;*/
 
 
-	/*text-overflow: ellipsis;*/
+/*}*/
 
 
-	/*white-space: nowrap;*/
+/*#transaction-enquiry .list .noList{*/
 
 
-	/*}*/
+/*width: 100%;*/
+
+
+/*height: 68px;*/
+
+
+/*text-align: center;*/
+
+
+/*line-height: 68px;*/
+
+
+/*font-size: 24px;*/
+
+
+/*color: #E0E0E0;*/
+
+
+/*}*/
+
+
+/*#transaction-enquiry .list .contents{*/
+
+
+/*width: 100%;*/
+
+
+/*height: 69px;*/
+
+
+/*border-bottom: 1px solid #F7F7F7;*/
+
+
+/*}*/
+
+
+/*#transaction-enquiry .list .contents .sty{*/
+
+
+/*color: #00AAE5;*/
+
+
+/*cursor: pointer;*/
+
+
+/*}*/
+
+
+/*#transaction-enquiry .list .contents li{*/
+
+
+/*float: left;*/
+
+
+/*width: 8.75%;*/
+
+
+/*height: 69px;*/
+
+
+/*text-align: center;*/
+
+
+/*line-height: 69px;*/
+
+
+/*font-size: 14px;*/
+
+
+/*color: #666;*/
+
+
+/*overflow: hidden;*/
+
+
+/*text-overflow: ellipsis;*/
+
+
+/*white-space: nowrap;*/
+
+
+/*}*/
 </style>
