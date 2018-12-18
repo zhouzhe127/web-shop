@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-18 18:13:48
+ * @Last Modified time: 2018-12-18 18:41:17
  */
 <template>  
 	<div>
@@ -150,6 +150,9 @@ export default {
 				case 'continue':
 					obj['continue'] = true;
 					this.throwData( utils.deepCopy(obj));  
+					this.sortObj.max += 1;
+					this.sortObj.num += 1;
+					this.collection = {};
 					break;				
 				case 'ok':
 					this.throwData( utils.deepCopy(obj));  
