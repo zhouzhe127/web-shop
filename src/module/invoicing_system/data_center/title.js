@@ -400,4 +400,19 @@ module.exports = [
     "title": "t-42",
     "changeNum": false, 
     "attr":"barCode",         
-}];
+},{
+    "id": 43,
+    "name": "消耗数量",
+    "title": "t-43",
+    "changeNum": true, 
+    "attr":"MATERIAL_CHECK_INVENTORY_WASTAGE_NUM",  
+},{
+    "id": 44,
+    "name": "消耗总金额",
+    "title": "t-44",
+    "changeNum": false, 
+    "attr":"MATERIAL_CHECK_INVENTORY_WASTAGE_COST",  
+    "toFixed":2
+}
+
+];

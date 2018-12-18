@@ -241,6 +241,12 @@
 				<span slot-scope="{row,column}" @click="viewHistory(row,'t-41',column)" class="yellow-font">{{row['t-41']}}</span>                                                
 			</el-table-column>
 
+			<el-table-column v-if="toggleTitle('t-43')" prop="t-43" min-width="150px" label="消耗数量" >
+			</el-table-column>
+
+			<el-table-column v-if="toggleTitle('t-44')" prop="t-44" min-width="150px" label="消耗总金额" >
+			</el-table-column>
+
 		</el-table>        
 	</div>
 
