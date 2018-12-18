@@ -103,17 +103,17 @@ export default {
 			days: 0, //一共的天数
 			indexOn: 0,
 			bannerList: [{
-					index: 0,
-					name: '未关联'
-				},
-				{
-					index: 1,
-					name: '已关联'
-				},
-				{
-					index: -1,
-					name: '已过期'
-				}
+				index: 0,
+				name: '未关联'
+			},
+			{
+				index: 1,
+				name: '已关联'
+			},
+			{
+				index: -1,
+				name: '已过期'
+			}
 			], //
 			isShowCa: false, //  是否展示时间选择组件
 			changeMnage: true, //  是否显示修改优惠券页面

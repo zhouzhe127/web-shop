@@ -171,68 +171,62 @@
 	*/
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
-import global from 'src/manager/global';
 export default {
 	data() {
 		return {
 			shopId: null,
 			bookingStatus: false, //预约状态
 			payWays: [{
-					id: 5,
-					name: '定金支付'
-				},
-				{
-					id: 1,
-					name: '全额支付'
-				}
-			], //支付方式	
+				id: 5,
+				name: '定金支付'
+			},
+			{
+				id: 1,
+				name: '全额支付'
+			}], //支付方式	
 			payTypeName: '定金支付',
 			payTypeId: 5,
 			payAttr: '', //支付定金的百分比		
 			durationList: [{ //活动期限
-					name: '关闭提醒',
-					id: -1
-				},
-				{
-					name: '10分钟',
-					id: 10
-				},
-				{
-					name: '20分钟',
-					id: 20
-				},
-				{
-					name: '30分钟',
-					id: 30
-				}
-			],
+				name: '关闭提醒',
+				id: -1
+			},
+			{
+				name: '10分钟',
+				id: 10
+			},
+			{
+				name: '20分钟',
+				id: 20
+			},
+			{
+				name: '30分钟',
+				id: 30
+			}],
 			durationId: -1, //桌台提醒
 			durationName: '关闭提醒', //桌台提醒
 			durationNameWX: '关闭提醒',
 			durationIdWX: -1, //微信提醒
-			permit: [ //是否允许取消订单
-				{
-					id: 0,
-					name: '不允许'
-				},
-				{
-					id: 1,
-					name: '允许'
-				}
-			],
+			permit: [{ //是否允许取消订单{
+				id: 0,
+				name: '不允许'
+			},
+			{
+				id: 1,
+				name: '允许'
+			}],
 			orderName: '不允许', //是否允许取消订单
 			orderId: 0, //是否允许取消订单	
 			refundName: '不允许', //是否允许退款
 			refundId: 0, //是否允许退款					
 			delays: [{
-					id: 0,
-					name: '不延长'
-				},
-				{
-					id: 1,
-					name: '延长'
-				}
-			], //是否延长桌位预留
+				id: 0,
+				name: '不延长'
+			},
+			{
+				id: 1,
+				name: '延长'
+			}], //是否延长桌位预留
 			tableName: '不延长',
 			tableId: 0,
 			reservedList: [{ //延长桌位预留时间
@@ -395,7 +389,7 @@ export default {
 				if (this.payAttr == '') {
 					this.valiData('请填写定金支付的百分比');
 					return false;
-				};
+				}
 				if (this.payAttr < 1 || this.payAttr > 100) {
 					this.valiData('定金百分比取值范围1-100');
 					return false;

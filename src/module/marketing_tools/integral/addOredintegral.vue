@@ -170,25 +170,25 @@ export default {
 	data() {
 		return {
 			bannerList: [{
-					name: '品牌商品',
-					id: 0
-				},
-				{
-					name: '门店商品',
-					id: 1
-				}
+				name: '品牌商品',
+				id: 0
+			},
+			{
+				name: '门店商品',
+				id: 1
+			}
 			], //固定还是自定义方案，数组
 			isFlag: true,
 			indexOn: 0, //默认固定
 			commoditySlect: '品牌商品',
 			durationList: [{ //活动期限
-					name: '积分商品',
-					id: 0
-				},
-				{
-					name: '优惠券',
-					id: 1
-				}
+				name: '积分商品',
+				id: 0
+			},
+			{
+				name: '优惠券',
+				id: 1
+			}
 			],
 			durationId: 0,
 			durationName: '积分商品', //状态
@@ -221,7 +221,7 @@ export default {
 	watch: {
 		'selectCoupon': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.selectCoupon);
 			}
 		}

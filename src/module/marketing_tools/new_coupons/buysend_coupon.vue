@@ -259,24 +259,24 @@ export default {
 			selectGoods: [], //选中的商品
 			selectPackages: [], //选中的套餐
 			compulsoryCreditsList: [{
-					'compulsoryCredits': '0',
-					'name': '否'
-				},
-				{
-					'compulsoryCredits': '1',
-					'name': '是'
-				}
+				'compulsoryCredits': '0',
+				'name': '否'
+			},
+			{
+				'compulsoryCredits': '1',
+				'name': '是'
+			}
 			],
 			compulsoryName: '否',
 			compulsoryCredits: '0', //是否包含口味价格
 			validList: [{
-					'validType': '0',
-					'name': '相对时间'
-				},
-				{
-					'validType': '1',
-					'name': '指定时间'
-				}
+				'validType': '0',
+				'name': '相对时间'
+			},
+			{
+				'validType': '1',
+				'name': '指定时间'
+			}
 			],
 			validName: '相对时间',
 			validType: {
@@ -287,33 +287,33 @@ export default {
 				'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
 			}, //券有效期 
 			validTimeList: [{ //过期时间
-					name: '领取后即刻生效',
-					id: 0
-				},
-				{
-					name: '领取1小时后生效',
-					id: 1
-				},
-				{
-					name: '领取2小时后生效',
-					id: 2
-				},
-				{
-					name: '领取3小时后生效',
-					id: 3
-				},
-				{
-					name: '领取6小时后生效',
-					id: 6
-				},
-				{
-					name: '领取12小时后生效',
-					id: 12
-				},
-				{
-					name: '领取24小时后生效',
-					id: 24
-				}
+				name: '领取后即刻生效',
+				id: 0
+			},
+			{
+				name: '领取1小时后生效',
+				id: 1
+			},
+			{
+				name: '领取2小时后生效',
+				id: 2
+			},
+			{
+				name: '领取3小时后生效',
+				id: 3
+			},
+			{
+				name: '领取6小时后生效',
+				id: 6
+			},
+			{
+				name: '领取12小时后生效',
+				id: 12
+			},
+			{
+				name: '领取24小时后生效',
+				id: 24
+			}
 			],
 			validTimeId: '0', //领取后选定时间内生效
 			validTime: '领取后即刻生效', //状态 
@@ -325,13 +325,13 @@ export default {
 				'show': false
 			}, //使用时段 
 			useThresholdList: [{ //指定门槛
-					name: '不设限制',
-					id: 0
-				},
-				{
-					name: '指定门槛',
-					id: 1
-				},
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定门槛',
+				id: 1
+			},
 			],
 			useThresholdName: '不设限制',
 			useThresholdId: '0',
@@ -343,24 +343,24 @@ export default {
 			isSharingId: 0,
 			isSharing: '不与其它优惠共享',
 			isSharingList: [{ //是否优惠共享
-					name: '不与其它优惠共享',
-					id: 0
-				},
-				{
-					name: '可与其他优惠共享',
-					id: 1
-				}
+				name: '不与其它优惠共享',
+				id: 0
+			},
+			{
+				name: '可与其他优惠共享',
+				id: 1
+			}
 			],
 			concessionSharingId: 0,
 			concessionSharing: '不与会员卡优惠共用',
 			concessionSharingList: [{ //优惠共享
-					name: '不与会员卡优惠共用',
-					id: 0
-				},
-				{
-					name: '可与会员卡优惠共用',
-					id: 1
-				}
+				name: '不与会员卡优惠共用',
+				id: 0
+			},
+			{
+				name: '可与会员卡优惠共用',
+				id: 1
+			}
 			],
 			sharingStatus: '',
 			goodsNum: '', //购买的的数量
@@ -617,11 +617,11 @@ export default {
 			let reg = /^[0-9]*$/;
 			let reg2 = /^\d+(\.\d+)?$/;
 			if (!global.checkData({
-					couponName: {
-						cond: `$$.trim() !== '' && $$.length<=20`,
-						pro: '优惠券名称不能为空且不能超过20个字'
-					},
-				}, this)) {
+				couponName: {
+					cond: `$$.trim() !== '' && $$.length<=20`,
+					pro: '优惠券名称不能为空且不能超过20个字'
+				},
+			}, this)) {
 				return false;
 			}
 			if (this.ischain == '3') {

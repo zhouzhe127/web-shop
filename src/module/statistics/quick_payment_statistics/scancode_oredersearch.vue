@@ -379,23 +379,23 @@ export default {
 	},
 	mounted() {
 		this.$store.commit('setPageTools', [{
-				name: '返回',
-				className: 'el-btn-blue',
-				fn: () => {
-					this.returnShopstatic();
-				}
-			},
-			{
-				name: '导出',
-				className: 'el-btn-yellow',
-				fn: () => {
-					if (this.codes && this.codes != '') {
-						this.codesExport(this.codes);
-					} else {
-						this.Export();
-					}
+			name: '返回',
+			className: 'el-btn-blue',
+			fn: () => {
+				this.returnShopstatic();
+			}
+		},
+		{
+			name: '导出',
+			className: 'el-btn-yellow',
+			fn: () => {
+				if (this.codes && this.codes != '') {
+					this.codesExport(this.codes);
+				} else {
+					this.Export();
 				}
 			}
+		}
 		]);
 		if (this.codes && this.codes != '') {
 			this.getScanPayOrderByCodes(this.codes);

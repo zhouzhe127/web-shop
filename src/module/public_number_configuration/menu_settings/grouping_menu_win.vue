@@ -17,7 +17,6 @@
 	</Win>
 </template>
 <script type="text/javascript">
-import http from 'src/manager/http';
 export default {
 	data() {
 		return {
@@ -70,9 +69,6 @@ export default {
 			import( /* webpackChunkName:'win' */ 'src/components/win'),
 		'mulSelect': () =>
 			import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
-	},
-	mounted() {
-
 	}
 };
 </script>

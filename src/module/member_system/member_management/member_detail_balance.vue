@@ -94,7 +94,6 @@ export default {
 			amount: this.memberInfo.totalAmount,
 			point: this.memberInfo.point,
 			operationType: '+',
-			calculateId: 0,
 			title: '',
 			calculateList: [{
 				name: '增加',

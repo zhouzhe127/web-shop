@@ -133,7 +133,7 @@ export default {
 	created() {
 		this.userData = storage.session('userShop');//获取店铺数据
 		this.shopId = this.userData.currentShop.id;
-		let shopIdArr = [],shopList = [];
+		let shopIdArr = [];
 		if (this.userData.currentShop.ischain == '3') {
 			this.shopList = storage.session('shopList');
 			for(let item of this.shopList){//组合店铺列表

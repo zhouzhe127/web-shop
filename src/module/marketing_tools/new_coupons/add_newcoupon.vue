@@ -33,69 +33,69 @@ export default {
 	data() {
 		return {
 			couponClassList: [{
-					'name': '减免优惠券',
-					'description': '订单中所购商品总额需达到用券限额才能使用。',
-					'type': 1,
-					'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/breakCoupon'
-				},
-				{
-					'name': '折扣优惠券',
-					'description': '单张订单限用一张折扣优惠券,按折扣金额减免支付。',
-					'type': 2,
-					'PlaceImgUrl': require('../../../res/images/todiscount.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/discountCoupon'
-				},
-				{
-					'name': '赠菜优惠券',
-					'description': '只能用于特定菜品,单个订单也可以用多张赠菜优惠券,按面值金额减免支付。',
-					'type': 3,
-					'PlaceImgUrl': require('../../../res/images/togift.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/giveCoupon'
-				},
-				{
-					'name': '代金券',
-					'description': '单张订单可使用多张代金券设定券实收金额与面额计入订单统计。',
-					'type': 4,
-					'PlaceImgUrl': require('../../../res/images/todai.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/vouchersCoupon'
-				},
-				{
-					'name': '积分卡券',
-					'description': '积分即可使用',
-					'type': 5,
-					'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/intergralcardCoupon'
-				},
-				{
-					'name': '粮票集(券)',
-					'description': '该优惠券仅适用于粮票集,关联砍价时使用,创建后无法同步及修改。',
-					'type': 6,
-					'PlaceImgUrl': require('../../../res/images/toreduce.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/breaksGgiveFood'
-				},
-				{
-					'name': '第二件商品券',
-					'description': '只能从第二件或其倍数开始计算优惠使用。',
-					'type': 7,
-					'PlaceImgUrl': require('../../../res/images/coupon_shang.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/superposition'
-				},
-				{
-					'name': '定额券',
-					'description': '只能用于指定商品,购买时只需要支付配置的金额。',
-					'type': 8,
-					'PlaceImgUrl': require('../../../res/images/coupon_ding.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/quota'
-				},
-				{
-					'name': '买送券',
-					'description': '只能用于购买指定商品赠送指定商品。',
-					'type': 9,
-					'PlaceImgUrl': require('../../../res/images/coupon_mai.png'), // eslint-disable-line
-					'path': '/admin/addCoupon/buysend'
-				}
-			],
+				'name': '减免优惠券',
+				'description': '订单中所购商品总额需达到用券限额才能使用。',
+				'type': 1,
+				'PlaceImgUrl': require('../../../res/images/toreduce.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/breakCoupon'
+			},
+			{
+				'name': '折扣优惠券',
+				'description': '单张订单限用一张折扣优惠券,按折扣金额减免支付。',
+				'type': 2,
+				'PlaceImgUrl': require('../../../res/images/todiscount.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/discountCoupon'
+			},
+			{
+				'name': '赠菜优惠券',
+				'description': '只能用于特定菜品,单个订单也可以用多张赠菜优惠券,按面值金额减免支付。',
+				'type': 3,
+				'PlaceImgUrl': require('../../../res/images/togift.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/giveCoupon'
+			},
+			{
+				'name': '代金券',
+				'description': '单张订单可使用多张代金券设定券实收金额与面额计入订单统计。',
+				'type': 4,
+				'PlaceImgUrl': require('../../../res/images/todai.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/vouchersCoupon'
+			},
+			{
+				'name': '积分卡券',
+				'description': '积分即可使用',
+				'type': 5,
+				'PlaceImgUrl': require('../../../res/images/toreduce.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/intergralcardCoupon'
+			},
+			{
+				'name': '粮票集(券)',
+				'description': '该优惠券仅适用于粮票集,关联砍价时使用,创建后无法同步及修改。',
+				'type': 6,
+				'PlaceImgUrl': require('../../../res/images/toreduce.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/breaksGgiveFood'
+			},
+			{
+				'name': '第二件商品券',
+				'description': '只能从第二件或其倍数开始计算优惠使用。',
+				'type': 7,
+				'PlaceImgUrl': require('../../../res/images/coupon_shang.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/superposition'
+			},
+			{
+				'name': '定额券',
+				'description': '只能用于指定商品,购买时只需要支付配置的金额。',
+				'type': 8,
+				'PlaceImgUrl': require('../../../res/images/coupon_ding.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/quota'
+			},
+			{
+				'name': '买送券',
+				'description': '只能用于购买指定商品赠送指定商品。',
+				'type': 9,
+				'PlaceImgUrl': require('../../../res/images/coupon_mai.png'),// eslint-disable-line
+				'path': '/admin/addCoupon/buysend'
+			}
+			]
 		};
 	},
 	methods: {

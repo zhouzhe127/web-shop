@@ -106,21 +106,21 @@ export default {
 		return {
 			commoditySlect: '历史纪录',
 			bannerList: [{
-					name: '历史纪录',
-					type: 0
-				},
-				{
-					name: '更改记录',
-					type: 1
-				},
-				{
-					name: '积分变动',
-					type: 2
-				},
-				{
-					name: '余额变动',
-					type: 3
-				}
+				name: '历史纪录',
+				type: 0
+			},
+			{
+				name: '更改记录',
+				type: 1
+			},
+			{
+				name: '积分变动',
+				type: 2
+			},
+			{
+				name: '余额变动',
+				type: 3
+			}
 			], //
 			index: null,
 			indexOn: 0, //判断是进行中的活动还是已结束的活动，默认进行中

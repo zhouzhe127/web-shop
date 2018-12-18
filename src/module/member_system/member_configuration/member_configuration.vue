@@ -78,7 +78,6 @@
 </template>
 <script type="text/javascript">
 import http from 'src/manager/http';
-import utils from 'src/verdor/utils';
 import storage from 'src/verdor/storage';
 
 export default {

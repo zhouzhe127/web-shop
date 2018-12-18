@@ -158,7 +158,7 @@ export default {
 				data: {
 					advanceTime: advanceTime //提前推送时间
 				}
-			})
+			});
 			if (res) {
 				this.valiData('保存成功');
 				this.returnStore();

@@ -238,8 +238,8 @@
 			</div>
 	</section>
 </template>
-<script>
-	import global from 'src/manager/global';
+<script type="text/javascript">
+import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
@@ -272,7 +272,7 @@ export default {
 				'compulsoryCredits': '1',
 				'name': '是'
 			}],
-			compulsoryName:'否',
+			compulsoryName: '否',
 			compulsoryCredits: '0', //是否强制减免
 			deratePrice: '', //折扣力度
 			validList: [{
@@ -383,7 +383,7 @@ export default {
 			} else if (couponDetail.type == 4) {
 				this.typeId = 1; //单品减免 整单减免
 			}
-			this.commoditySlect = this.goodlist[this.typeId].name;//单品减免 整单折扣
+			this.commoditySlect = this.goodlist[this.typeId].name; //单品减免 整单折扣
 			this.couponName = couponDetail.name; //优惠券名称
 			if (couponDetail.shopIds && couponDetail.shopIds.length > 0) {
 				this.selectShops = couponDetail.shopIds.split(',');
@@ -402,7 +402,7 @@ export default {
 			}
 			this.deratePrice = dp; //折扣力度
 			this.compulsoryCredits = couponDetail.isDiscount; //强制减免
-			if(this.compulsoryCredits == '1'){
+			if (this.compulsoryCredits == '1') {
 				this.compulsoryName = '是';
 			}
 			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
@@ -459,17 +459,17 @@ export default {
 	},
 	components: {
 		'can-multi': () =>
-			import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+			import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
 		'coupon-shop-win': () =>
-			import ( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
+			import( /* webpackChunkName:'coupon_shop_win' */ './../coupon_shop_win'),
 		'coupon-goods-win': () =>
-			import ( /* webpackChunkName:'coupon_goods_win' */ './../coupon_goods_win'),
+			import( /* webpackChunkName:'coupon_goods_win' */ './../coupon_goods_win'),
 		selectBtn: () =>
-			import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+			import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 		'use-time': () =>
-			import ( /* webpackChunkName:'use_time' */ './use_time'),
+			import( /* webpackChunkName:'use_time' */ './use_time'),
 		goodListWin: () =>
-			import ( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
+			import( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
 	},
 	methods: {
 		showText() {
@@ -526,7 +526,7 @@ export default {
 		getValidDay() { //获取一共多少天
 			return Math.floor((this.validType.valueTime[1] - this.validType.valueTime[0]) / (24 * 3600 * 1000) + 1);
 		},
-		
+
 		selexpirationTime: function(i) { //领取生效
 			this.validTime = this.validTimeList[i].name; //点击卡类型对应的名字
 			this.validTimeId = this.validTimeList[i].id; //点击卡类型对应的id
@@ -534,11 +534,11 @@ export default {
 		getSharing: function(value) {
 			//console.log(value);
 			this.isSharingId = value;
-			
+
 		},
 		getconcession: function(value) {
 			this.concessionSharingId = value;
-			
+
 		},
 		getResult: function(val) { //使用时间段
 			this.useDate = val;
@@ -638,7 +638,7 @@ export default {
 				this.valiData('请输入折扣力度,不能小于0');
 				return false;
 			}
-		
+
 			let nums = this.deratePrice - 0;
 
 			if (nums < 1 || nums > 99) {
@@ -658,7 +658,7 @@ export default {
 				if (this.validType.time == 0) {
 					this.valiData('券有效期不能为0');
 					return false;
-				}						
+				}
 			}
 			let arr = [];
 			let alertText = '';

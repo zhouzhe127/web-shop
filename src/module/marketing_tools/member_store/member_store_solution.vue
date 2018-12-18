@@ -213,7 +213,7 @@
 		<select-work-shop-win :slectsShopIds="slectsShopIds" :isEdit="isEdit" @closeWin="closeShopWin" v-if="isShowShopWin"></select-work-shop-win>
 	</div>
 </template>
-<script>
+<script type="text/javascript">
 import storage from 'src/verdor/storage';
 import global from 'src/manager/global';
 import http from 'src/manager/http';
@@ -224,11 +224,11 @@ export default {
 		return {
 			ischain: '',
 			bannerList: [{
-					name: '固定方案'
-				},
-				{
-					name: '自定义方案'
-				}
+				name: '固定方案'
+			},
+			{
+				name: '自定义方案'
+			}
 			], //固定还是自定义方案，数组
 			//          bannerOn: '',//判断是固定方案还是自定义方案，默认固定
 			indexOn: 0, //默认固定
@@ -236,56 +236,56 @@ export default {
 			num: 1, //排序输入框默认值
 			defNum: 1, //自定义排序输入框默认值
 			presentList: [{
-					name: '赠送固定储值金额'
-				},
-				{
-					name: '按比例赠送储值金额'
-				}
+				name: '赠送固定储值金额'
+			},
+			{
+				name: '按比例赠送储值金额'
+			}
 			],
 			presentOn: '-1',
 			integralList: [{
-					name: '赠送固定积分'
-				},
-				{
-					name: '按比例赠送积分'
-				}
+				name: '赠送固定积分'
+			},
+			{
+				name: '按比例赠送积分'
+			}
 			],
 			integralOn: '-1',
 			conditionList: [{
-					name: '满足储值区间可赠送',
-					id: 0
-				},
-				{
-					name: '满足储值条件可赠送',
-					id: 1
-				}
+				name: '满足储值区间可赠送',
+				id: 0
+			},
+			{
+				name: '满足储值条件可赠送',
+				id: 1
+			}
 			],
 			conditionOn: 0,
 			typeName: '满足储值区间可赠送',
 			willShow: false, //活动类型框是否显示
 			ditchList: [{
-					id: 1,
-					name: '微信'
-				},
-				{
-					id: 2,
-					name: 'POS收银'
-				}
+				id: 1,
+				name: '微信'
+			},
+			{
+				id: 2,
+				name: 'POS收银'
+			}
 			],
 			ditchOn: '-1',
 			selects: [],
 			rangeList: [{
-					name: '等于',
-					id: '1'
-				},
-				{
-					name: '大于等于',
-					id: '3'
-				},
-				{
-					name: '小于等于',
-					id: '4'
-				}
+				name: '等于',
+				id: '1'
+			},
+			{
+				name: '大于等于',
+				id: '3'
+			},
+			{
+				name: '小于等于',
+				id: '4'
+			}
 			],
 			rangeShow: false,
 			rangeName: '等于',
@@ -332,7 +332,7 @@ export default {
 		},
 		'couponIds': {
 			deep: true,
-			handler: function(val) {
+			handler: function() {
 				this.getCouponName(this.couponIds);
 			}
 		}
@@ -483,18 +483,18 @@ export default {
 				this.depositRule = '';
 				this.slectsShopIds = this.flag ? this.fixedslectsShopIds : []; //固定方案的id
 				if (!global.checkData({
-						name: '请填写方案名',
-						channel: '请选择显示渠道',
-						deposit: {
-							cond: `$$!=''&&!isNaN($$)`,
-							pro: '请正确填写储值金额'
-						},
-						payment: {
-							cond: `$$!=''&&!isNaN($$)`,
-							pro: '请正确填写支付金额'
-						},
+					name: '请填写方案名',
+					channel: '请选择显示渠道',
+					deposit: {
+						cond: `$$!=''&&!isNaN($$)`,
+						pro: '请正确填写储值金额'
+					},
+					payment: {
+						cond: `$$!=''&&!isNaN($$)`,
+						pro: '请正确填写支付金额'
+					},
 
-					}, this)) return false;
+				}, this)) return false;
 			}
 			//判断必填项是否填写完整
 			if (this.type == 2) {
@@ -524,15 +524,15 @@ export default {
 				if (this.conditionOn == 0) {
 					this.depositRule = 2;
 					if (!global.checkData({
-							defDeposit: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写自定义赠送条件起始金额'
-							},
-							defPayment: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写自定义赠送条件结束金额'
-							},
-						}, this)) return false;
+						defDeposit: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写自定义赠送条件起始金额'
+						},
+						defPayment: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写自定义赠送条件结束金额'
+						},
+					}, this)) return false;
 					//判断储值金额区间
 					if (this.depositRule == 2) {
 						if ((Number(this.defDeposit) - Number(this.defPayment)) > 0) {
@@ -545,11 +545,11 @@ export default {
 				}
 				if (this.conditionOn == 1) {
 					if (!global.checkData({
-							defDeposit: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写自定义赠送条件起始金额'
-							},
-						}, this)) return false;
+						defDeposit: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写自定义赠送条件起始金额'
+						},
+					}, this)) return false;
 				}
 			}
 			//判断赠送金额条件

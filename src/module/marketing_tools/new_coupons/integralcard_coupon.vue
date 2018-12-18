@@ -113,8 +113,8 @@
 			</div>
 	</section>
 </template>
-<script>
-	import global from 'src/manager/global';
+<script type="text/javascript">
+import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
@@ -156,7 +156,7 @@ export default {
 			let couponDetail = this.couponDetail;
 			this.editCoupon = true;
 			this.couponName = couponDetail.name; //优惠券名称
-			this.deratePrice = couponDetail.param;//及分量
+			this.deratePrice = couponDetail.param; //及分量
 			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
 			// console.log(this.validType.index)
 			if (couponDetail.validityType == 0) {
@@ -174,13 +174,13 @@ export default {
 	},
 	components: {
 		'can-multi': () =>
-			import ( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+			import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
 		selectBtn: () =>
-			import ( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+			import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
 		'use-time': () =>
-			import ( /* webpackChunkName:'use_time' */ './use_time'),
+			import( /* webpackChunkName:'use_time' */ './use_time'),
 		goodListWin: () =>
-			import ( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
+			import( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
 	},
 	methods: {
 		closeShopWin(val) { //选择店铺弹窗关闭的回掉
@@ -303,7 +303,7 @@ export default {
 				if (this.validType.time == 0) {
 					this.valiData('券有效期不能为0');
 					return false;
-				}						
+				}
 			}
 			if (this.annotation.length > 20) {
 				this.valiData('备注字数不能大于20');
