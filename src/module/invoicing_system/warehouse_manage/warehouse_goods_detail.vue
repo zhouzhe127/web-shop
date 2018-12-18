@@ -63,7 +63,7 @@
 					:current-page="page"
 					background
 					layout="total,prev, pager, next"
-					:total="count">
+					:page-count="pageTotal">
 				</el-pagination>
 			</div>
 		</div>
@@ -129,8 +129,8 @@ export default {
 			this.count = Number(this.allList.length);
 			this.pageTotal = Math.ceil(list.length / this.showNum);
 			this.selList = this.allList.slice(
-				(this.page - 1) * 10,
-				(this.page) * 10
+				(this.page - 1) * this.showNum,
+				(this.page) * this.showNum
 			);
 		},
 		async getDetail() {
@@ -145,13 +145,13 @@ export default {
 			this.goodsDetail = data;
 		},
 		indexMethod(index){
-			return 10*(this.page-1)+index+1;
+			return this.showNum*(this.page-1)+index+1;
 		},
 		pageChange(page) {
 			this.page = page;
 			this.selList = this.allList.slice(
-				(this.page - 1) * 10,
-				(this.page) * 10
+				(this.page - 1) * this.showNum,
+				(this.page) * this.showNum
 			);
 		},
 		getTime(time) {

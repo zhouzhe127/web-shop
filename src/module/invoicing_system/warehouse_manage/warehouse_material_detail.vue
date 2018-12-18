@@ -38,7 +38,7 @@
 			</el-select>
 		    </div>
 			<div class="list">
-				<el-table :data="batchList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table :data="selList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 				    </el-table-column>
 				    <el-table-column prop="batchCode" label="批次编号">
@@ -74,7 +74,7 @@
 					:current-page="page"
 					background
 					layout="total,prev, pager, next"
-					:total="count">
+					:page-count="pageTotal">
 				</el-pagination>
 			</div>
 		</div>
@@ -163,6 +163,7 @@
 					arr.push({value:item.muId,label:item.name});
 				}
 				this.goodsUnit = arr;
+				this.pageTotal = Math.ceil(this.batchList.length / this.showNum);
 				this.paging();
 			},
 			async getDetail() {
@@ -179,25 +180,18 @@
 				}
 			},
 			indexMethod(index){
-				return 10*(this.page-1)+index+1;
+				return this.showNum*(this.page-1)+index+1;
 			},
 			paging() { //分页
-				this.pageTotal = Math.ceil(this.batchList.length / this.showNum);
 				let start = (this.page - 1) * this.showNum;
 				let end = this.page * this.showNum;
-				if(end > this.batchList.length) end = this.batchList.length;
-				for(let i = start; i < end; i++) {
-					let num = i < 9 ? '0' + (i + 1) : (i + 1);
-					this.batchList[i].indexNum = num;
-				}
 				this.selList = this.batchList.slice(start, end);
 			},
 			timeFormat(time) {
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
 			},
-			pageChange(obj) {
-				this.page = obj.page;
-				this.showNum = obj.num;
+			pageChange(page) {
+				this.page = page;
 				this.paging();
 			},
 			comUnit(...args) { //number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称
