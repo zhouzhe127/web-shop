@@ -1,9 +1,9 @@
 <!--
-    **菜单设置
-    *
-    * 胡江
-    * *
-    *
+	**菜单设置
+	*
+	* 胡江
+	* *
+	*
 -->
 <template>
 	<div class="mall-menu" style="width: 1517px;" id="menu" v-cloak>
@@ -66,15 +66,6 @@
 						</template>
 					</div>
 				</div>
-				<!-- <div class="menu-config-title" style="position: relative;">
-					<span class="required fl">菜单配置</span>
-					<input type="text" placeholder="请输入菜单名称" v-model="parentTitle" @blur="selectType" v-if="addParent == true" />
-					<input type="text" placeholder="请输入菜单名称" v-model="childTitle" @blur="selectType" v-if="addChild == true" />
-					<a href="javascript:void(0)" class="fr menu-del" v-if="addParent == true" @click="delParent">删除菜单</a>
-					<a href="javascript:void(0)" class="fr menu-del" v-if="addChild == true" @click="delChild">删除子菜单</a>
-					<p style="position: absolute;left: 100px;color: #ccc;" v-if="addParent == true">字数不超过4个汉字或8个字母</p>
-					<p style="position: absolute;left: 100px;color: #ccc;" v-if="addChild == true">字数不超过8个汉字或16个字母</p>
-				</div> -->
 				<!-- 菜单内容 -->
 				<div class="online-box clearfix" v-if="!parentHide">
 					<span class="online-sub fl required">菜单内容</span>
@@ -251,7 +242,7 @@ export default {
 		return {
 			userData: Object,
 			shopId: '', //shopID
-			uploadUrl: '', //上传图片			
+			uploadUrl: '', //上传图片           
 			menuList: [], //菜单列表 一级列表以及二级列表
 			addParent: false, //一级菜单判断
 			addChild: false, //二级菜单判断
@@ -285,7 +276,7 @@ export default {
 			graphicUrl: '', //图文的链接
 			graphicimgUrl: '', //图文的图片地址
 			secondary: [],
-			ruleIndex: 0, //点中的第几个	
+			ruleIndex: 0, //点中的第几个  
 			groupId: '',
 			validName: '卖手默认',
 			validList: [{
@@ -599,21 +590,6 @@ export default {
 				}
 				if (arr[i].sub_button != undefined) {
 					for (j = 0; j < arr[i].sub_button.length; j++) {
-						// if (arr[i].sub_button[j].type == '1') {
-						// 	if (arr[i].sub_button[j].message == undefined || utils.trim(arr[i].sub_button[j].message) == '') {
-						// 		this.$store.commit('setWin', {
-						// 			title: '操作提示',
-						// 			winType: 'alter',
-						// 			content: `${arr[i].sub_button[j].name}请填写消息内容！`,
-						// 		});
-						// 		this.addChild = true;
-						// 		this.addParent = false;
-						// 		this.childTitle = arr[i].sub_button[j].name;
-						// 		this.type = arr[i].sub_button[j].type;
-						// 		this.getTypeIndex();
-						// 		return false;
-						// 	}
-						// }
 						//判断发送消息
 						if (arr[i].sub_button[j].type == '1' && arr[i].sub_button[j].message == '') {
 							this.valiData(`${arr[i].name}二级菜单${arr[i].sub_button[j].name}请填写消息内容！`);
@@ -673,62 +649,14 @@ export default {
 								}
 							}
 						}
-						// if (arr[i].sub_button[j].type == '2') {
-						// 	if (arr[i].sub_button[j].url == undefined || utils.trim(arr[i].sub_button[j].url) == '') {
-						// 		this.$store.commit('setWin', {
-						// 			title: '操作提示',
-						// 			winType: 'alter',
-						// 			content: `${arr[i].sub_button[j].name}请填写url地址！`,
-						// 		});
-						// 		this.addChild = true;
-						// 		this.addParent = false;
-						// 		this.childTitle = arr[i].sub_button[j].name;
-						// 		this.type = arr[i].sub_button[j].type;
-						// 		return false;
-						// 	}
-						// }
 					}
 				}
-				// if (arr[i].type == '1' && arr[i].sub_button == undefined) {
-				// 	if (arr[i].message == undefined || utils.trim(arr[i].message) == '') {
-				// 		this.$store.commit('setWin', {
-				// 			title: '操作提示',
-				// 			winType: 'alter',
-				// 			content: `${arr[i].name}请填写消息内容！`,
-				// 		});
-				// 		this.addParent = true;
-				// 		this.addChild = false;
-				// 		this.parentTitle = arr[i].name;
-				// 		this.type = arr[i].type;
-				// 		this.getTypeIndex();
-				// 		return false;
-				// 	}
-				// }
-				// if (arr[i].type == '2' && arr[i].sub_button == undefined) {
-				// 	if (arr[i].url == undefined || utils.trim(arr[i].url) == '') {
-				// 		this.$store.commit('setWin', {
-				// 			title: '操作提示',
-				// 			winType: 'alter',
-				// 			content: `${arr[i].name}请填写url地址！`,
-				// 		});
-				// 		this.addParent = true;
-				// 		this.addChild = false;
-				// 		this.parentTitle = arr[i].name;
-				// 		this.type = arr[i].type;
-				// 		this.getTypeIndex();
-				// 		return false;
-				// 	}
-				// }
 			}
 			return true;
 		},
 		//保存
 		async saveMenu() {
-			//console.log(this.saveStatus);
 			if (!this.checkForm()) return;
-			// 提交判断
-			//更改微信菜单
-			//                console.log(' //更改微信菜单');
 			let res = '';
 			if (this.menuId == 'default') {
 				res = await http.saveWeChateMenu({
@@ -1095,9 +1023,6 @@ export default {
 				type: '1',
 				status: '1'
 			});
-			//console.log(JSON.stringify(this.menuList))
-			//                this.menuList = sd.copy(this.menuList);
-			//                this.menuList = JSON.parse(JSON.stringify(this.menuList));
 			this.typeIndex = 0;
 			this.childIndex = this.menuList[this.parentIndex].sub_button.length - 1;
 		},
@@ -1172,9 +1097,6 @@ export default {
 				this.graphicimgUrl = this.uploadUrl + res; //图片
 			}
 			this.selectType();
-			// this.endingImage = res;//图片传给后台
-			// let bgName = this.endingImage.lastIndexOf('/');
-			// this.endingImageName = this.endingImage.substring(bgName + 1, this.endingImage.length);
 		},
 		async bgNameChange(ind) {
 			// 上传图片 背景图片回调
@@ -1206,6 +1128,7 @@ export default {
 				this.ruleIndex = 0;
 			}
 			this.secondary.splice(ind, 1);
+			this.selectType();
 		},
 		getDetails: function(index) { //二级图文点击
 			// 获取规则详情
@@ -1626,9 +1549,9 @@ textarea:focus {
 		align-items: center;
 
 		// span {
-		// 	margin-bottom: 13px;
-		// 	font-size: 16px;
-		// 	color: RGB(51, 51, 51);
+		//  margin-bottom: 13px;
+		//  font-size: 16px;
+		//  color: RGB(51, 51, 51);
 		// }
 	}
 }
@@ -1730,10 +1653,10 @@ textarea:focus {
 }
 
 // .handle-tips {
-// 	height: 40px;
-// 	line-height: 40px;
-// 	text-indent: 45px;
-// 	background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
-// 	color: #999999;
+//  height: 40px;
+//  line-height: 40px;
+//  text-indent: 45px;
+//  background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
+//  color: #999999;
 // }
 </style>
