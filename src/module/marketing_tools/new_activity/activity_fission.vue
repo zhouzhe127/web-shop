@@ -99,49 +99,48 @@
 	import storage from 'src/verdor/storage';
 	import utils from 'src/verdor/utils';
 
-	export default {
-		data() {
-			return {
-				startObj: {
-					time: utils.getTime({
-						time: new Date()
-					}).start
-				},
-				endObj: {
-					time: new Date().setHours(23, 59, 59, 999)
-				},
-				dates: new Date().getTime(), //当前时间
-				returnInt: 1, //相差天数
-				promotersPoint: '', //关注者者获得的积分
-				promotersNum: '', //推广者者获得积分的次数
-				followersPoint: '', //推广者获得的积分
-				activityName: '', //活动的名称
-				showCoupon: false, //打开优惠券的弹窗	
-				couponList: [], //优惠券列表
-				selectCoupon: [], //选中的列表
-				promotersCoupon: [], //推广者获得的优惠券
-				followersCoupon: [], //关注者获得的优惠券
-				couponType: '', //优惠券类型 区分关注者和推广者 
-				editId: '', //编辑任务的id
-				ruleId: '', //规则ID
-				isclick: false, //只能保存一次
-				isactivityDetail: true
-			};
-		},
-		watch: {
-			'startObj.time': 'timeChange',
-			'endObj.time': 'timeChange',
-			'promotersCoupon': {
-				deep: true,
-				handler: function() {
-					this.getCouponName(this.promotersCoupon);
-				}
+export default {
+	data() {
+		return {
+			startObj: {
+				time: utils.getTime({
+					time: new Date()
+				}).start
 			},
-			'followersCoupon': {
-				deep: true,
-				handler: function() {
-					this.getCouponName(this.followersCoupon);
-				}
+			endObj: {
+				time: new Date().setHours(23, 59, 59, 999)
+			},
+			dates: new Date().getTime(), //当前时间
+			returnInt: 1, //相差天数
+			promotersPoint: '', //关注者者获得的积分
+			promotersNum: '', //推广者者获得积分的次数
+			followersPoint: '', //推广者获得的积分
+			activityName: '', //活动的名称
+			showCoupon: false, //打开优惠券的弹窗	
+			couponList: [], //优惠券列表
+			selectCoupon: [], //选中的列表
+			promotersCoupon: [], //推广者获得的优惠券
+			followersCoupon: [], //关注者获得的优惠券
+			couponType: '', //优惠券类型 区分关注者和推广者 
+			editId: '', //编辑任务的id
+			ruleId: '', //规则ID
+			isclick: false, //只能保存一次
+			isactivityDetail: true
+		};
+	},
+	watch: {
+		'startObj.time': 'timeChange',
+		'endObj.time': 'timeChange',
+		'promotersCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.promotersCoupon);
+			}
+		},
+		'followersCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.followersCoupon);
 			}
 		},
 		methods: {

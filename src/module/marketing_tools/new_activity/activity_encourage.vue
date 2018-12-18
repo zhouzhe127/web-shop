@@ -180,53 +180,228 @@
 	<memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
 </template>
 <script type="text/javascript">
-	import utils from 'src/verdor/utils';
-	import storage from 'src/verdor/storage';
-	import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
+import storage from 'src/verdor/storage';
+import http from 'src/manager/http';
 
-	export default {
-		data() {
-			return {
-				startObj: {
-					time: utils.getTime({
-						time: new Date()
-					}).start
-				},
-				endObj: {
-					time: utils.getTime({
-						time: new Date()
-					}).end
-				},
-				dates: new Date().getTime(), //当前时间
-				returnInt: 1, //相差天数
-				list: [{
-					name: '微信',
-					id: '1'
-				}],
-				selects: [],
-				msmStatus: false,
-				interestList: [
-					{ //会员权益
-						name: '无',
-						id: 0
-					},
-					{
-						name: '电子优惠券',
-						id: 1
-					}
-				],
-				interestName: '无',
+export default {
+	data() {
+		return {
+			startObj: {
+				time: utils.getTime({
+					time: new Date()
+				}).start
+			},
+			endObj: {
+				time: utils.getTime({
+					time: new Date()
+				}).end
+			},
+			dates: new Date().getTime(), //当前时间
+			returnInt: 1, //相差天数
+			list: [{
+				name: '微信',
+				id: '1'
+			}],
+			selects: [],
+			msmStatus: false,
+			interestList: [{ //会员权益
+				name: '无',
+				id: 0
+			},
+			{
+				name: '电子优惠券',
+				id: 1
+			}
+			],
+			interestName: '无',
+			interestId: 0,
+			durationList: [{ //活动期限
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定额度',
+				id: 1
+			}
+			],
+			durationId: 0,
+			durationName: '不设限制', //状态
+			isList: false,
+			isConsumeList: false,
+			onListName: '无',
+			activityList: [], //选择活动范围列表
+			shopList: [],
+			couponLists: [], //已选择优惠劵
+			memberRights: -1,
+			minConsume: -1,
+			isLoops: false,
+			Loops: '',
+			ruleList: [{
+				durationName: '不设限制', //最低消费
+				durationId: 0,
+				minConsumess: '', //最低消费的金额
+				maxConsumes: '', //最高消费的金额
+				isLoop: false, //是否循环
+				interestName: '无', //会员权益
 				interestId: 0,
-				durationList: [
-					{ //活动期限
-						name: '不设限制',
-						id: 0
-					},
-					{
-						name: '指定额度',
-						id: 1
-					}
-				],
+				couponIds: [], //优惠券
+				pushChannel: [], //消息推送渠道
+				msgContent: '' //内容设置
+			}],
+			ischain: 0, //3为品牌 0为单店
+			title: '', //标题
+			maxConsume: '', //最高消费
+			minConsumes: '', //最低消费
+			ruleObj: {
+				minConsume: '',
+				maxConsume: '',
+				isLoop: false,
+				memberRights: '',
+				couponIds: [],
+				pushChannel: [],
+				msgContent: ''
+			}, //规则对象
+			ruleLists: [],
+			compareArr: [], //用于比较优惠劵数组
+			shopName: '',
+			edit: false,
+			activityDetail: {},
+			explain: '', //内容设置
+			parameter: [{
+				name: '【会员姓名】',
+				id: '{memberName}'
+			},
+			{
+				name: '【优惠券名称】',
+				id: '{couponName}'
+			},
+			{
+				name: '【优惠券数量】',
+				id: '{couponNum}'
+			},
+			{
+				name: '【活动名称】',
+				id: '{activityName}'
+			},
+			{
+				name: '【消费日期】',
+				id: '{salesTime}'
+			}
+			],
+			showRang: false,
+			showCoupon: false,
+			selectsList: [],
+			integralList: [{
+				name: '默认全部'
+			},
+			{
+				name: '会员筛选'
+			}
+			],
+			integralOn: 0, //活动对象的选择
+			indexCustom: 0, //活动对象选中的
+			showVip: false, //打开高级筛选	
+			member: '0', //筛选出来的人数
+			fans: '0', //粉丝的人数
+			memfilter: '', //筛选的条件
+			memberStatus: true,
+			isactivityDetail: true,
+			ruleIndex: 0, //点中的第几个  
+			selectCoupon: [], //选中的优惠券
+			checkedMember: false, //会员选中的
+			checkedFans: false, //粉丝选中的
+			shopId: '' //单店的shopId
+		};
+	},
+	methods: {
+		selOnSend(arr) {
+			this.ruleList[this.ruleIndex].pushChannel = arr;
+		},
+		getStartTime(str) {
+			this.startObj.time = str;
+		},
+		getEndTime(str) {
+			this.endObj.time = str;
+		},
+		valiData: function(content, title, winType) { //弹窗提示格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		selexpirationTime: function(i) { //最低消费
+			//点击对应的名字
+			this.ruleList[this.ruleIndex].durationId = i; //点击对应的id
+			if (this.ruleList[this.ruleIndex].durationId == 0) {
+				this.ruleList[this.ruleIndex].isLoop = false;
+			}
+			//console.log(this.ruleList[this.ruleIndex].durationId);
+		},
+		selinterest: function(i) { //会员权益
+			//this.ruleList[showIndex].interestName = this.interestList[i].name; //点击对应的名字
+			this.ruleList[this.ruleIndex].interestId = i; //点击对应的id
+		},
+		openActivityWin() {
+			//设置活动范围
+			this.showRang = true;
+		},
+		rangEvent(obj) {
+			if (obj.status == 'ok') {
+				this.selectsList = obj.select;
+				//console.log(JSON.stringify(this.selectsList))
+			}
+			this.showRang = false;
+		},
+		winEvent(obj) { //选择优惠券弹窗回掉
+			this.showCoupon = false;
+			if (obj.status == 'ok') {
+				this.ruleList[this.ruleIndex].couponIds = obj.data.select;
+			}
+		},
+		addCoupon: function(item) { //添加优惠券
+			this.selectCoupon = item.couponIds;
+			this.showCoupon = true;
+		},
+		timeChange: function() {
+			//相差天数计算
+			this.returnInt = Math.ceil(
+				(new Date(this.endObj.time).getTime() -
+					new Date(this.startObj.time).getTime()) /
+				(1000 * 60 * 60 * 24)
+			);
+		},
+		addParameter: function(index) {
+			//添加参数
+			this.ruleList[this.ruleIndex].msgContent += this.parameter[index].id;
+
+		},
+		closePage: function() {
+			// 关闭页面
+			this.$router.push('/admin/activity/generalActivity');
+		},
+		isLoopFun: function(item) {
+			// 是否循环
+			if (item.durationId == 1) {
+				item.isLoop = !item.isLoop;
+			} else {
+				this.valiData('请选择并填写最低消费金额');
+			}
+		},
+		formatValue: function(item, type) {
+			switch (type) {
+				case '1':
+					item.minConsumess = utils.toFloatStr(item.minConsumess, 2);
+					break;
+				case '2':
+					item.maxConsumes = utils.toFloatStr(item.maxConsumes, 2);
+					break;
+			}
+		},
+		addRule: function() { //新增规则
+			let obj = {
+				durationName: '不设限制', //最低消费
 				durationId: 0,
 				durationName: '不设限制', //状态
 				isList: false,
@@ -755,10 +930,48 @@
 			}
 			this.getShopList();
 		},
-		beforeDestroy() {
-			storage.session('activityInfo', null);
-			storage.session('memberIds', null);
-			storage.session('activityDetail', null);
+		'selectCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.ruleList[this.ruleIndex].couponIds);
+			}
+		}
+	},
+	components: {
+		calendar: () =>
+			import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+		mulSelect: () =>
+			import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+		rang: () =>
+			import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+		'addCoupon': () =>
+			import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+		'memberScreening': () =>
+			import( /* webpackChunkName:'activity_screening' */ './activity_screening'),
+		'singleSelect': () =>
+			import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+		selectBtn: () =>
+			import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '返回活动列表',
+			className: 'el-btn-blue',
+			fn: () => {
+				this.closePage();
+			}
+		}]);
+		this.userData = storage.session('userShop');
+		this.ischain = this.userData.currentShop.ischain;
+		this.shopName = this.userData.currentShop.name;
+		this.shopId = this.userData.currentShop.id;
+		this.getShopList();
+		let memberIds = storage.session('memberIds'); //获取是否有会员信息
+		if (memberIds) {
+			this.checkedMember = true; //让其默认选中会员
+			this.member = memberIds.length;
+			this.memfilter = memberIds.join(',');
+			this.memberStatus = false; //会员标识
 		}
 	};
 </script>

@@ -96,65 +96,80 @@
 	</section>
 </template>
 <script type="text/javascript">
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	import http from 'src/manager/http';
-	import getAppliedWin from './member_mamage_choiceshop.vue';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+import http from 'src/manager/http';
+import getAppliedWin from './member_mamage_choiceshop.vue';
 
-	export default {
-		data() {
-			return {
-				commoditySlect: '历史纪录',
-				bannerList: [
-					{
-						name: '历史纪录',
-						type: 0
-					},
-					{
-						name: '更改记录',
-						type: 1
-					},
-					{
-						name: '积分变动',
-						type: 2
-					},
-					{
-						name: '余额变动',
-						type: 3
-					}
-				], //
-				index: null,
-				indexOn: 0, //判断是进行中的活动还是已结束的活动，默认进行中
-				willShow: false, //功能提示框是否显示
-				memberInfo: {}, //会员信息
-				page: 1, //页码
-				num: 10,
-				listInfo: {}, //类型
-				staffList: [], //员工列表
-				bannerIndex: 0,
-				type: 0,
-				count: 0,
-				total: 0,
-				showCon: '',
-				gid: '',
-				shopId: '',
-				showType: '',
-				brandId: storage.session('userShop').currentShop.ischain, //3为品牌 0为单店
-				showWin: false, //弹窗默认关闭状态 
-				isPopupwindow: '',
-				list: [], //直营店铺列表
-				allList: [], //所有的店铺
-				listName: '', //表名
-				modifyStatus: false, //编辑会员信息的弹窗
-				bussiness: [], //会员标签
-				genderList: {
-					0: '未知',
-					1: '男',
-					2: '女'
-				},
-				detail: '', //订单详情
-				isShow: 'all'
-			};
+export default {
+	data() {
+		return {
+			commoditySlect: '历史纪录',
+			bannerList: [{
+				name: '历史纪录',
+				type: 0
+			},
+			{
+				name: '更改记录',
+				type: 1
+			},
+			{
+				name: '积分变动',
+				type: 2
+			},
+			{
+				name: '余额变动',
+				type: 3
+			}
+			], //
+			index: null,
+			indexOn: 0, //判断是进行中的活动还是已结束的活动，默认进行中
+			willShow: false, //功能提示框是否显示
+			memberInfo: {}, //会员信息
+			page: 1, //页码
+			num: 10,
+			listInfo: {}, //类型
+			staffList: [], //员工列表
+			bannerIndex: 0,
+			type: 0,
+			count: 0,
+			total: 0,
+			showCon: '',
+			gid: '',
+			shopId: '',
+			showType: '',
+			brandId: storage.session('userShop').currentShop.ischain, //3为品牌 0为单店
+			showWin: false, //弹窗默认关闭状态 
+			isPopupwindow: '',
+			list: [], //直营店铺列表
+			allList: [], //所有的店铺
+			listName: '', //表名
+			modifyStatus: false, //编辑会员信息的弹窗
+			bussiness: [], //会员标签
+			genderList: {
+				0: '未知',
+				1: '男',
+				2: '女'
+			},
+			detail: '', //订单详情
+			isShow: 'all'
+		};
+	},
+	props: {
+		mid: String,
+		shopsId: String
+	},
+	methods: {
+		selType(index) { //历史记录 积分纪录
+			this.bannerIndex = index;
+		},
+		pageChange(obj) { //翻页
+			this.page = obj.page;
+			this.num = obj.num;
+			//this.getRecordList(this.bannerIndex);
+		},
+		closePage() {
+			this.$emit('throwWinResult', false); //抛出一个事件给父组件
 		},
 		props: {
 			mid: String,

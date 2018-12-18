@@ -210,105 +210,43 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import utils from 'src/verdor/utils';
-	import storage from 'src/verdor/storage';
+import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
+import storage from 'src/verdor/storage';
 
-	export default {
-		data() {
-			return {
-				ischain: storage.session('userShop').currentShop.ischain,
-				shopId: storage.session('userShop').currentShop.id, //单店的id
-				shopName: storage.session('userShop').currentShop.name,
-				activityName: '', //活动的名称
-				startTime: new Date().setHours(0, 0, 0, 0), //开始时间
-				endTime: new Date().setHours(23, 59, 59, 999), //结束时间
-				showRang: false, //打开关联门店的弹窗
-				activityList: [], //选择活动范围列表
-				shopList: [], //店铺选择的列表
-				selectsList: [],
-				list: [
-					{
-						name: '否',
-						id: 0
-					},
-					{
-						name: '是',
-						id: 1
-					}
-				],
-				compulsoryName: '否', //是否与会员折扣同享
-				isMemberShare: 0, //会员折扣共享
-				isItemShare: 0, //单品优惠券共享
-				isWholeShare: 0, //整单优惠券共享
-				payDiscount: false, //默认规则
-				cash: 0, //不满金额
-				payCash: 0, //支付金额
-				preferential: false, //优惠设置
-				titleList: [
-					{
-						titleName: '操作',
-						titleStyle: {
-							width: 150 + 'px',
-							flex: 'none'
-						}
-					},
-					{
-						titleName: '序列',
-						titleStyle: {
-							width: 150 + 'px',
-							flex: 'none'
-						}
-					},
-					{
-						titleName: '订单金额(元)'
-					},
-					{
-						titleName: '减免金额(元)'
-					}
-				],
-				formList: [], //展示的数据
-				editId: '', //编辑的id
-				isPublic: {
-					'1': false,
-					'2': false,
-					'3': false
-				},
-				activityDetail: true, //是否查看详情
-				activityScene: [
-					{
-						name: '微店',
-						id: 1
-					},
-					{
-						name: '快捷支付',
-						id: 2
-					}
-				],
-				activitySceneName: '微店',
-				activitySceneId: 1,
-				compulsoryCreditsName: '否', //强制减免
-				compulsoryCreditsId: 0 //强制减免id
-			};
-		},
-		methods: {
-			startTimeChange(time) {
-				//开始时间
-				this.startTime = time;
-			},
-			endTimeChange(time) {
-				//结束时间
-				this.endTime = time;
-			},
-			openActivityWin() {
-				//设置活动范围
-				this.showRang = true;
-			},
-			isPublicNumber: function(type) { //提示的状态
-				for (let key in this.isPublic) {
-					if (key != type) {
-						this.isPublic[key] = false;
-					}
+export default {
+	data() {
+		return {
+			ischain: storage.session('userShop').currentShop.ischain,
+			shopId: storage.session('userShop').currentShop.id, //单店的id
+			shopName: storage.session('userShop').currentShop.name,
+			activityName: '', //活动的名称
+			startTime: new Date().setHours(0, 0, 0, 0), //开始时间
+			endTime: new Date().setHours(23, 59, 59, 999), //结束时间
+			showRang: false, //打开关联门店的弹窗
+			activityList: [], //选择活动范围列表
+			shopList: [], //店铺选择的列表
+			selectsList: [],
+			list: [{
+				name: '否',
+				id: 0
+			}, {
+				name: '是',
+				id: 1
+			}],
+			compulsoryName: '否', //是否与会员折扣同享
+			isMemberShare: 0, //会员折扣共享
+			isItemShare: 0, //单品优惠券共享
+			isWholeShare: 0, //整单优惠券共享
+			payDiscount: false, //默认规则
+			cash: 0, //不满金额
+			payCash: 0, //支付金额
+			preferential: false, //优惠设置
+			titleList: [{
+				titleName: '操作',
+				titleStyle: {
+					width: 150 + 'px',
+					flex: 'none'
 				}
 				this.isPublic[type] = !this.isPublic[type];
 			},
@@ -324,22 +262,74 @@
 			openpreferential: function(res) { //开启优惠规则
 				this.preferential = res;
 			},
-			closePage: function() {
-				// 关闭页面
-				this.$router.push('/admin/activity/generalActivity');
-			},
-			addplan: function() { //添加优惠方案
-				let obj = {
-					index: '', //索引
-					fullCash: '', //满金额
-					reduceCsah: '', //减金额
-					fullStatus: false, //错误状态
-					reduceStatus: false, //减免金额状态
-					fullerrorMessage: '', //错误的信息
-					reduceerrorMessage: ''
-				};
-				if (this.preferential && !this.validationForm()) {
-					this.valiData('订单金额或满减金额未填写或填写有误!');
+			activityDetail: true, //是否查看详情
+			activityScene: [{
+				name: '微店',
+				id: 1
+			}, {
+				name: '快捷支付',
+				id: 2
+			}],
+			activitySceneName: '微店',
+			activitySceneId: 1,
+			compulsoryCreditsName: '否', //强制减免
+			compulsoryCreditsId: 0 //强制减免id
+		};
+	},
+	methods: {
+		startTimeChange(time) {
+			//开始时间
+			this.startTime = time;
+		},
+		endTimeChange(time) {
+			//结束时间
+			this.endTime = time;
+		},
+		openActivityWin() {
+			//设置活动范围
+			this.showRang = true;
+		},
+		isPublicNumber: function(type) { //提示的状态
+			for (let key in this.isPublic) {
+				if (key != type) {
+					this.isPublic[key] = false;
+				}
+			}
+			this.isPublic[type] = !this.isPublic[type];
+		},
+		rangEvent(obj) { //关联弹窗的回掉
+			if (obj.status == 'ok') {
+				this.selectsList = obj.select;
+			}
+			this.showRang = false;
+		},
+		chooseIntegral: function(index) {
+			this.isMemberShare = index;
+		},
+		openpreferential: function(res) { //开启优惠规则
+			this.preferential = res;
+		},
+		closePage: function() {
+			// 关闭页面
+			this.$router.push('/admin/activity/generalActivity');
+		},
+		addplan: function() { //添加优惠方案
+			let obj = {
+				index: '', //索引
+				fullCash: '', //满金额
+				reduceCsah: '', //减金额
+				fullStatus: false, //错误状态
+				reduceStatus: false, //减免金额状态
+				fullerrorMessage: '', //错误的信息
+				reduceerrorMessage: ''
+			};
+			if (this.preferential && !this.validationForm()) {
+				this.valiData('订单金额或满减金额未填写或填写有误!');
+				return false;
+			}
+			for (let item of this.formList) { //判断信息不能为空
+				if (item.fullCash == '' || item.reduceCsah == '') {
+					this.valiData('请完善优惠方案信息!');
 					return false;
 				}
 				for (let item of this.formList) { //判断信息不能为空
@@ -416,110 +406,85 @@
 					this.valiData('活动标题不能为空!');
 					return false;
 				}
-				if (this.ischain == '3' && this.selectsList.length == 0) {
-					this.valiData('请选择活动门店!');
-					return false;
-				}
-				if (!this.payDiscount && !this.preferential) {
-					this.valiData('请至少开启一个规则!');
-					return false;
-				}
-				if (this.payDiscount) {
-					if (this.cash == '' || this.payCash == '') {
-						this.valiData('请完善默认规则信息!');
-						return false;
-					}
-				}
-				if (this.preferential && this.formList.length <= 0) {
-					this.valiData('请添加优惠规则方案!');
-					return false;
-				}
-				if (this.preferential && !this.validationForm()) {
-					this.valiData('订单金额或满减金额信息有误,请更改!');
-					return false;
-				}
-				return true;
-			},
-			saveConfig: function(type) { //保存
-				if (!this.checkForm()) return;
-				if (this.editId == '') {
-					this.addConfig(type);
-				} else {
-					this.ediConfig(type);
-				}
-			},
-			async addConfig(type) {
-				let arr = [];
-				let obj = {
-					couponIds: {
-						isCompel: this.compulsoryCreditsId, //强制减免
-						isMemberShare: this.isMemberShare, //会员折扣共享
-						isItemShare: this.isItemShare, //单品优惠券共享
-						isWholeShare: this.isWholeShare, //整单优惠券共享
-						otherRule: {
-							status: Number(this.payDiscount),
-							orderPrice: this.cash, //不满
-							pay: this.payCash //付
-						},
-						status: Number(this.preferential),
-						discountRule: []
+			}
+			if (this.preferential && this.formList.length <= 0) {
+				this.valiData('请添加优惠规则方案!');
+				return false;
+			}
+			if (this.preferential && !this.validationForm()) {
+				this.valiData('订单金额或满减金额信息有误,请更改!');
+				return false;
+			}
+			return true;
+		},
+		saveConfig: function(type) { //保存
+			if (!this.checkForm()) return;
+			if (this.editId == '') {
+				this.addConfig(type);
+			} else {
+				this.ediConfig(type);
+			}
+		},
+		async addConfig(type) {
+			let arr = [];
+			let obj = {
+				couponIds: {
+					isCompel: this.compulsoryCreditsId, //强制减免
+					isMemberShare: this.isMemberShare, //会员折扣共享
+					isItemShare: this.isItemShare, //单品优惠券共享
+					isWholeShare: this.isWholeShare, //整单优惠券共享
+					otherRule: {
+						status: Number(this.payDiscount),
+						orderPrice: this.cash, //不满
+						pay: this.payCash //付
 					},
 				};
-				let discountRule = [];
-				for (let item of this.formList) {
-					let ruleobj = {
-						orderPrice: item.fullCash,
-						reduction: item.reduceCsah
-					};
-					discountRule.push(ruleobj);
+				discountRule.push(ruleobj);
+			}
+			obj.couponIds.discountRule = discountRule; //满减规则
+			arr.push(obj);
+			await http.fissionActivity({
+				data: {
+					type: 6, //活动类别
+					shopIds: this.ischain == '3' ? this.selectsList.join(',') : this.shopId,
+					mouldType: 0, //长期活动模板
+					scene: this.activitySceneId, //活动场景
+					name: this.activityName, //活动名
+					objectType: 2, //活动对象
+					startTime: parseInt(this.startTime / 1000), //开始时间
+					endTime: parseInt(this.endTime / 1000), //结束时间
+					isAuto: type, //保存 
+					rule: JSON.stringify(arr)
 				}
-				obj.couponIds.discountRule = discountRule; //满减规则
-				arr.push(obj);
-				await http.fissionActivity({
-					data: {
-						type: 6, //活动类别
-						shopIds: this.ischain == '3' ? this.selectsList.join(',') : this.shopId,
-						mouldType: 0, //长期活动模板
-						scene: this.activitySceneId, //活动场景
-						name: this.activityName, //活动名
-						objectType: 2, //活动对象
-						startTime: parseInt(this.startTime / 1000), //开始时间
-						endTime: parseInt(this.endTime / 1000), //结束时间
-						isAuto: type, //保存 
-						rule: JSON.stringify(arr)
-					}
-				});
-				let message = (type == 0) ? '保存成功' : '发布成功';
-				this.valiData(message);
-				this.closePage();
-			},
-			async ediConfig(type) {
-				let activityDetail = {}; //data
-				activityDetail.type = 6;
-				activityDetail.shopIds = this.ischain == '3' ? this.selectsList.join(',') : this.shopId;
-				activityDetail.mouldType = 0;
-				activityDetail.name = this.activityName;
-				activityDetail.objectType = 2;
-				activityDetail.startTime = parseInt(this.startTime / 1000);
-				activityDetail.endTime = parseInt(this.endTime / 1000);
-				activityDetail.isAuto = type;
-				activityDetail.scene = this.activitySceneId; //活动场景
-				activityDetail.rule = [];
-				let arr = [];
-				let obj = {
-					id: this.ruleId,
-					couponIds: {
-						isCompel: this.compulsoryCreditsId, //强制减免
-						isMemberShare: this.isMemberShare, //会员折扣共享
-						isItemShare: this.isItemShare, //单品优惠券共享
-						isWholeShare: this.isWholeShare, //整单优惠券共享
-						otherRule: {
-							status: Number(this.payDiscount),
-							orderPrice: this.cash, //不满
-							pay: this.payCash //付
-						},
-						status: Number(this.preferential),
-						discountRule: []
+			});
+			let message = (type == 0) ? '保存成功' : '发布成功';
+			this.valiData(message);
+			this.closePage();
+		},
+		async ediConfig(type) {
+			let activityDetail = {}; //data
+			activityDetail.type = 6;
+			activityDetail.shopIds = this.ischain == '3' ? this.selectsList.join(',') : this.shopId;
+			activityDetail.mouldType = 0;
+			activityDetail.name = this.activityName;
+			activityDetail.objectType = 2;
+			activityDetail.startTime = parseInt(this.startTime / 1000);
+			activityDetail.endTime = parseInt(this.endTime / 1000);
+			activityDetail.isAuto = type;
+			activityDetail.scene = this.activitySceneId; //活动场景
+			activityDetail.rule = [];
+			let arr = [];
+			let obj = {
+				id: this.ruleId,
+				couponIds: {
+					isCompel: this.compulsoryCreditsId, //强制减免
+					isMemberShare: this.isMemberShare, //会员折扣共享
+					isItemShare: this.isItemShare, //单品优惠券共享
+					isWholeShare: this.isWholeShare, //整单优惠券共享
+					otherRule: {
+						status: Number(this.payDiscount),
+						orderPrice: this.cash, //不满
+						pay: this.payCash //付
 					},
 				};
 				let discountRule = [];
@@ -585,39 +550,68 @@
 					this.activitySceneId = data.scene; //活动场景
 					this.activitySceneName = this.activityScene[this.activitySceneId - 1].name;
 				}
-			},
-			selectScene: function(item) {
-				this.activitySceneId = item.id;
-			},
-			chooseReduction: function(index) {
-				this.compulsoryCreditsId = index;
+			});
+			if (data) {
+				this.activityName = data.name; //活动名称
+				this.startTime = data.startTime * 1000; //开始时间
+				this.endTime = data.endTime * 1000; //结束时间
+				this.ruleId = data.rule[0].id; //规则id
+				this.selectsList = data.shopIds.split(','); //门店范围
+				data.rule[0].couponIds = JSON.parse(data.rule[0].couponIds);
+				this.isItemShare = data.rule[0].couponIds.isItemShare;
+				this.isMemberShare = data.rule[0].couponIds.isMemberShare;
+				this.compulsoryName = this.list[this.isMemberShare].name;
+				this.isWholeShare = data.rule[0].couponIds.isWholeShare;
+				this.compulsoryCreditsId = data.rule[0].couponIds.isCompel; //强制减免
+				this.compulsoryCreditsName = this.list[this.compulsoryCreditsId].name;
+				this.payDiscount = Boolean(Number(data.rule[0].couponIds.otherRule.status));
+				this.cash = data.rule[0].couponIds.otherRule.orderPrice;
+				this.payCash = data.rule[0].couponIds.otherRule.pay;
+				this.preferential = Boolean(Number(data.rule[0].couponIds.status));
+				let discountRule = data.rule[0].couponIds.discountRule;
+				for (let i = 0; i < discountRule.length; i++) {
+					let obj = {
+						index: i + 1, //索引
+						fullCash: discountRule[i].orderPrice, //满金额
+						reduceCsah: discountRule[i].reduction, //减金额
+						fullStatus: false, //错误状态
+						reduceStatus: false, //减免金额状态
+						fullerrorMessage: '', //错误的信息
+						reduceerrorMessage: ''
+					};
+					this.formList.push(obj);
+				}
+				this.activitySceneId = data.scene; //活动场景
+				this.activitySceneName = this.activityScene[this.activitySceneId - 1].name;
 			}
 		},
-		components: {
-			calendar: () =>
-				import( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
-			rang: () =>
-				import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
-			'singleSelect': () =>
-				import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
-			onOff: () =>
-				import( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
-			comTable: () =>
-				import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+		selectScene: function(item) {
+			this.activitySceneId = item.id;
+			//console.log(this.activitySceneId)
 		},
-		mounted() {
-			this.shopList = storage.session('shopList'); //获取品牌下面的店铺列表
-			this.$store.commit('setPageTools', [{
-				name: '返回活动列表',
-				className: 'el-btn-blue',
-				fn: () => {
-					this.closePage();
-				}
-			}]);
-			let activityInfo = storage.session('activityInfo');
-			let activityDetail = storage.session('activityDetail');
-			if (activityDetail) {
-				this.activityDetail = false;
+		chooseReduction: function(index) {
+			this.compulsoryCreditsId = index;
+		}
+	},
+	components: {
+		calendar: () =>
+			import( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
+		rang: () =>
+			import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+		'singleSelect': () =>
+			import( /*webpackChunkName: 'mul_select'*/ 'src/components/single_select'),
+		onOff: () =>
+			import( /* webpackChunkName:'on_off' */ 'src/components/on_off'),
+		comTable: () =>
+			import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+	},
+	mounted() {
+		this.shopList = storage.session('shopList'); //获取品牌下面的店铺列表
+		this.$store.commit('setPageTools', [{
+			name: '返回活动列表',
+			className: 'el-btn-blue',
+			fn: () => {
+				this.closePage();
 			}
 			if (activityInfo) {
 				this.editId = activityInfo.id;

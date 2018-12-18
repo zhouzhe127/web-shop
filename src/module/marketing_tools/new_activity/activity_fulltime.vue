@@ -119,70 +119,72 @@
 	import http from 'src/manager/http';
 	//import global from 'src/manager/global';
 
-	export default {
-		data() {
-			return {
-				edit: false, //是否为编辑
-				startObj: {
-					time: utils.getTime({
-						time: new Date()
-					}).start
-				}, //开始时间
-				endObj: {
-					time: new Date().setHours(23, 59, 59, 999)
-				}, //结束时间
-				editId: '', //编辑id
-				actName: '', //活动名称
-				explain: '', //生活动说明
-				goodsType: [{
-					'name': '微信',
-					'id': '1'
-				}], //消息推送渠道
-				goodsSelect: [], //消息推送渠道选中
-				customSelect: [], //自定义活动选择的
-				msmStatus: false, //短信开关状态
-				marketingStatus: false, //自定义活动的状态
-				activityDetail: {}, //详情
-				shopList: [],
-				contentSetting: '', //生日活动内容设置
-				parameter: [
-					{
-						'name': '【会员姓名】',
-						'id': '{memberName}'
-					}, 
-					{
-						'name': '【优惠券名称】',
-						'id': '{couponName}'
-					}, 
-					{
-						'name': '【优惠券数量】',
-						'id': '{couponNum}'
-					}, 
-					{
-						'name': '【活动名称】',
-						'id': '{activityName}'
-					}, 
-					{
-						'name': '【消费次数】',
-						'id': '{consumeNum}'
-					},
-					{
-						'name': '【送券时间】',
-						'id': '{giveTime}'
-					}
-				],
-				showBirthCoupon: false,
-				couponList: [], //优惠券列表
-				selectCoupon: [], //选中的列表
-				isactivityDetail: true, //是否查看详情
-				returnInt: 1, //相隔的天数
-				number: '', //消费满次
-				showCoupon: false,
-				showVip: false,
-				member: 0, //会员关联的人数
-				memfilter: '',
-				ruleId: '', //规则ID
-			};
+export default {
+	data() {
+		return {
+			edit: false, //是否为编辑
+			startObj: {
+				time: utils.getTime({
+					time: new Date()
+				}).start
+			}, //开始时间
+			endObj: {
+				time: new Date().setHours(23, 59, 59, 999)
+			}, //结束时间
+			editId: '', //编辑id
+			actName: '', //活动名称
+			explain: '', //生活动说明
+			goodsType: [{
+				'name': '微信',
+				'id': '1'
+			}], //消息推送渠道
+			goodsSelect: [], //消息推送渠道选中
+			customSelect: [], //自定义活动选择的
+			msmStatus: false, //短信开关状态
+			marketingStatus: false, //自定义活动的状态
+			activityDetail: {}, //详情
+			shopList: [],
+			contentSetting: '', //生日活动内容设置
+			parameter: [{
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			}, {
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			}, {
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			}, {
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			}, {
+				'name': '【消费次数】',
+				'id': '{consumeNum}'
+			},
+			{
+				'name': '【送券时间】',
+				'id': '{giveTime}'
+			},
+			],
+			showBirthCoupon: false,
+			couponList: [], //优惠券列表
+			selectCoupon: [], //选中的列表
+			isactivityDetail: true, //是否查看详情
+			returnInt: 1, //相隔的天数
+			number: '', //消费满次
+			showCoupon: false,
+			showVip: false,
+			member: 0, //会员关联的人数
+			memfilter: '',
+			ruleId: '', //规则ID
+		};
+	},
+	watch: {
+		'explain': function() {
+			if (this.explain.length > 150) {
+				this.valiData('仅限150个字符');
+				this.explain = this.explain.substr(0, 150);
+			}
 		},
 		watch: {
 			'explain': function() {
@@ -206,173 +208,12 @@
 				}
 			}
 		},
-		methods: {
-			valiData: function(content, title, winType) { //弹窗提示格式化
-				this.$store.commit('setWin', {
-					content: content,
-					title: title,
-					winType: winType
-				});
-			},
-			addVip: function() { //会员筛选
-				this.showVip = true;
-			},
-			selectVipEvent(obj) {
-				if (obj.status == 'ok') {
-					this.member = obj.member;
-					this.memfilter = obj.memfilter;
-				}
-				this.$store.commit('setPageTools', [{
-					name: '返回活动列表',
-					className: 'el-btn-blue',
-					fn: () => {
-						this.returnAct();
-					}
-				}]);
-				this.showVip = false;
-			},
-			chooseTime: function(time) { //获取时间
-				this.valueTime[1] = new Date(time[1]).setHours(23, 59, 59, 999);
-			},
-			addParameter: function(index) { //添加参数
-				this.contentSetting += this.parameter[index].id;
-			},
-			winEvent(obj) { //选择优惠券弹窗回掉
-				this.showCoupon = false;
-				if (obj.status == 'ok') {
-					this.selectCoupon = obj.data.select;
-				}
-			},
-			selOn(arr) {
-				this.goodsSelect = arr;
-			},
-			returnAct() {
-				this.$router.push('/admin/activity/generalActivity');
-			},
-			//关联优惠券弹窗
-			addCoupon: function() { //添加优惠券
-				this.showCoupon = true;
-			},
-			checkForm: function() { //b表单的验证
-				if (this.actName == '') {
-					this.valiData('请输入活动名称');
-					return false;
-				}
-				if (this.startTime < new Date().setHours(0, 0, 0, 0)) {
-					this.valiData('开始时间不能小于当前时间');
-					return false;
-				}
-				if (this.startTime - this.endTime > 0) {
-					this.valiData('开始时间不能大于结束时间');
-					return false;
-				}
-				if (this.member < 0) {
-					this.valiData('请关联活动对象');
-					return false;
-				}
-				if (this.selectCoupon.length == 0) {
-					this.valiData('请选择关联优惠券');
-					return false;
-				}
-				if (Number(this.number) < 1 || Number(this.number) > 999) {
-					this.valiData('请填写消费满次数1-999');
-					return false;
-				}
-				return true;
-			},
-			async birthSave(type) {
-				if (!this.checkForm()) return;
-				let arr = [];
-				let obj = {
-					id: this.ruleId,
-					couponIds: {
-						couponIds: this.selectCoupon,
-						consumeNum: this.number //消费满次数
-
-					}, //消费次返券
-					pushChannel: this.goodsSelect.toString().replace(/,/g, ''), //消息推送渠道
-					msgContent: this.contentSetting, //内容设置
-				};
-				arr.push(obj);
-				if (!this.edit) {
-					await http.fissionActivity({
-						data: {
-							type: 8, //活动类别
-							mouldType: 0, //长期活动模板
-							name: this.actName, //活动名
-							explain: this.explain, //活动说明
-							objectType: 4, //活动对象
-							getType: 0, //获得方式
-							isAuto: type, //保存 
-							memberIds: this.memfilter, //活动关联会员
-							memberNum: this.member, //会员人数
-							startTime: parseInt(this.startObj.time / 1000), //开始时间
-							endTime: parseInt(this.endObj.time / 1000), //结束时	间	
-							rule: JSON.stringify(arr)
-						}
-					});
-				} else {
-					this.activityDetail.name = this.actName; //活动名称
-					this.activityDetail.startTime = parseInt(this.startObj.time / 1000); //开始时间
-					this.activityDetail.endTime = parseInt(this.endObj.time / 1000); //结束时间	
-					this.activityDetail.memberIds = this.memfilter; //会员条件
-					this.activityDetail.memberNum = this.member; //会员数量				
-					this.activityDetail.explain = this.explain; //活动说明
-					this.activityDetail.rule = arr;
-					this.activityDetail.isAuto = type;
-					await http.fissionActivity({
-						data: {
-							activityId: this.editId,
-							data: JSON.stringify(this.activityDetail)
-						}
-					});
-				}
-				let message = (type == '0') ? '保存成功' : '发布成功';
-				this.valiData(message);
-				this.returnAct();
-			},
-			async getActivityDetail(item) {
-				// 获取详情
-				let data = await http.newgetActivityDetail({
-					data: {
-						activityId: item.id,
-						type: item.type,
-						mouldType: item.mouldType
-					}
-				});
-				this.activityDetail = data;
-				this.actName = data.name; //活动名称
-				this.startObj.time = data.startTime * 1000; //开始时间
-				this.endObj.time = data.endTime * 1000; //结束时间
-				this.member = data.sendProgress.split(',')[0]; //会员的筛选数量
-				this.memfilter = data.memberIds; //会员的筛选条件
-				let couponIds = JSON.parse(data.rule[0].couponIds);
-				this.number = couponIds.consumeNum; //消费次数
-				this.selectCoupon = couponIds.couponIds;
-				this.goodsSelect = data.rule[0].pushChannel.length > 1 ? data.rule[0].pushChannel.split('').toString().split(',') :
-					data.rule[0].pushChannel.split(','); //消息推送渠道
-				this.contentSetting = data.rule[0].msgContent; //内容设置
-				this.explain = data.explain; //活动说明
-				this.ruleId = data.rule[0].id; //规则id
-				this.edit = true;
-			},
-			timeChange: function() {
-				//相差天数计算
-				this.returnInt = Math.ceil(
-					(new Date(this.endObj.time).getTime() -
-						new Date(this.startObj.time).getTime()) /
-					(1000 * 60 * 60 * 24)
-				);
-			},
-			getCouponName: function(arr) { //获取优惠券名称
-				let couponName = '';
-				let couponArr = [];
-				for (let item of arr) {
-					let oneCoupon = item.name + '*' + item.num;
-					couponArr.push(oneCoupon);
-				}
-				couponName = couponArr.join(';');
-				return couponName;
+		'startObj.time': 'timeChange',
+		'endObj.time': 'timeChange',
+		'selectCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.selectCoupon);
 			}
 		},
 		components: {

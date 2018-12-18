@@ -116,30 +116,185 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import utils from 'src/verdor/utils';
-	import storage from 'src/verdor/storage';
-	import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
+import storage from 'src/verdor/storage';
+import http from 'src/manager/http';
 
-	export default {
-		data() {
-			return {
-				ischain: '',
-				shopId: '', //单店的id
-				startObj: {
-					time: utils.getTime({
-						time: new Date()
-					}).start
-				},
-				endObj: {
-					time: utils.getTime({
-						time: new Date()
-					}).end
-				},
-				returnInt: 1, //相差天数
-				list: [
-					{
-						'name': '微信',
-						'id': '1'
+export default {
+	data() {
+		return {
+			ischain: '',
+			shopId: '', //单店的id
+			startObj: {
+				time: utils.getTime({
+					time: new Date()
+				}).start
+			},
+			endObj: {
+				time: utils.getTime({
+					time: new Date()
+				}).end
+			},
+			returnInt: 1, //相差天数
+			list: [{
+				'name': '微信',
+				'id': '1'
+			}],
+			selects: [], //选中的状态
+			durationList: [{ //活动期限
+				name: '无',
+				id: 0
+			},
+			{
+				name: '电子优惠劵',
+				id: 1
+			}
+			],
+			durationId: 0,
+			durationName: '无', //状态
+			explain: '',
+			title: '', // 活动标题
+			shopName: '',
+			edit: false,
+			activityDetail: {},
+			memberContent: '', //内容设置
+			parameter: [{
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			},
+			{
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			},
+			{
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			},
+			{
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			},
+			{
+				'name': '【注册时间】',
+				'id': '{registerTime}'
+			}
+			],
+			showRang: false,
+			showCoupon: false,
+			isactivityDetail: true, //是否查看详情
+			shopList: [], //店铺选择的列表
+			selectsList: [], //门店列表选中的
+			selectCoupon: [],
+			couponList: [],
+			editId: ''
+		};
+	},
+	methods: {
+		valiData: function(content, title, winType) { //弹窗提示格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		selOnSend(arr) { //消息推送渠道
+			this.selects = arr;
+		},
+		getStartTime(str) { //开始时间
+			this.startObj.time = str;
+		},
+		getEndTime(str) { //结束时间
+			this.endObj.time = str;
+		},
+		selexpirationTime: function(i) { //会员权益
+			//this.durationName = this.durationList[i].name; //点击对应的名字
+			this.durationId = i; //点击对应的id
+		},
+		addParameter: function(index) { //添加参数
+			this.memberContent += this.parameter[index].id;
+		},
+		timeChange: function() {
+			//相差天数计算
+			this.returnInt = Math.ceil((new Date(this.endObj.time).getTime() - new Date(this.startObj.time).getTime()) / (1000 * 60 * 60 * 24));
+		},
+		openActivityWin: function() {
+			//设置活动范围
+			this.showRang = true;
+		},
+		rangEvent(obj) { //关联弹窗的回掉
+			if (obj.status == 'ok') {
+				this.selectsList = obj.select;
+			}
+			this.showRang = false;
+		},
+		winEvent(obj) { //选择优惠券弹窗回掉
+			this.showCoupon = false;
+			if (obj.status == 'ok') {
+				this.selectCoupon = obj.data.select;
+			}
+		},
+		//关联优惠券弹窗
+		addCoupon: function() { //添加优惠券
+			this.showCoupon = true;
+		},
+		closePage: function() {
+			// 关闭页面
+			this.$router.push('/admin/activity/generalActivity');
+		},
+		checkForm: function() {
+			if (this.title.trim() == '') {
+				this.valiData('请填写活动标题');
+				return false;
+			}
+			if (this.startObj.time > this.endObj.time) {
+				this.valiData('开始时间不能大于结束时间');
+				return false;
+			}
+			if (this.endObj.time < this.startObj.time) {
+				this.valiData('结束时间不能小于开始时间');
+				return false;
+			}
+			if (this.endObj.time < new Date().getTime()) {
+				this.valiData('活动结束时间应大于当前时间');
+				return false;
+			}
+			if (this.ischain == '3' && this.selectsList.length == 0) {
+				this.valiData('请选择活动范围');
+				return false;
+			}
+			if (this.durationId == 1 && this.selectCoupon.length == 0) {
+				this.valiData('请选择优惠券');
+				return false;
+			}
+			return true;
+		},
+		async addActivity(type) {
+			if (!this.checkForm()) return;
+			// 新建活动
+			let arr = [];
+			let obj = {
+				couponIds: this.selectCoupon, //优惠券
+				minConsume: '',
+				maxConsume: '',
+				isLoop: '0',
+				memberRights: this.durationId, //会员权益
+				pushChannel: this.selects.toString().replace(/,/g, ''),
+				msgContent: this.memberContent
+			};
+			arr.push(obj);
+			if (this.edit) {
+				// 修改信息
+				this.activityDetail.name = this.title; //活动名称
+				this.activityDetail.startTime = Math.round(this.startObj.time / 1000); //开始时间 
+				this.activityDetail.endTime = Math.round(this.endObj.time / 1000); //结束时间
+				this.activityDetail.shopIds = this.ischain == '3' ? this.selectsList.join(',') : this.shopId; //活动范围
+				arr[0].id = this.activityDetail.rule[0].id;
+				this.activityDetail.rule = utils.deepCopy(arr);
+				this.activityDetail.isAuto = type;
+				await http.fissionActivity({
+					data: {
+						activityId: this.editId,
+						data: JSON.stringify(this.activityDetail)
 					}
 				],
 				selects: [], //选中的状态
@@ -423,8 +578,48 @@
 				this.getActivityDetail(activityInfo);
 			}
 		},
-		beforeDestroy() {
-			storage.session('activityInfo', null);
+		'selectCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.selectCoupon);
+			}
+		}
+	},
+	components: {
+		calendar: () =>
+			import( /*webpackChunkName: 'calendar_result'*/ 'src/components/calendar_result'),
+		'canMulti': () =>
+			import( /* webpackChunkName:'can_multi' */ 'src/components/can_multi'),
+		'mulSelect': () =>
+			import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+		'rang': () =>
+			import( /* webpackChunkName:'activity_agift_rang' */ './activity_agift_rang'),
+		'addCoupon': () =>
+			import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+		selectBtn: () =>
+			import( /* webpackChunkName:"select_btn" */ 'src/components/select_btn'),
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '返回活动列表',
+			className: 'el-btn-blue',
+			fn: () => {
+				this.closePage();
+			}
+		}]);
+		this.shopList = storage.session('shopList'); //获取品牌下面的店铺列表
+		let userData = storage.session('userShop');
+		this.ischain = userData.currentShop.ischain;
+		this.shopName = userData.currentShop.name;
+		this.shopId = userData.currentShop.id;
+		let activityInfo = storage.session('activityInfo');
+		if (activityInfo) {
+			if (activityInfo.isShowdetail) {
+				//是否是查看活动详情
+				this.isactivityDetail = false;
+			}
+			this.editId = activityInfo.id;
+			this.getActivityDetail(activityInfo);
 		}
 	};
 </script>

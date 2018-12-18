@@ -145,113 +145,99 @@
 	<memberScreening v-else @selectVip='selectVipEvent'></memberScreening>
 </template>
 <script type="text/javascript">
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	import http from 'src/manager/http';
-	import global from 'src/manager/global';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+import http from 'src/manager/http';
+import global from 'src/manager/global';
 
-	let currentShop = null;
-	export default {
-		data() {
-			return {
-				startObj: { //活动的开始时间
-					time: utils.getTime({
-						time: new Date()
-					}).start
-				},
-				endObj: { //活动的结束时间
-					time: utils.getTime({
-						time: new Date()
-					}).end
-				},
-				dates: new Date().getTime(), //当前时间
-				returnInt: 1, //相差天数
-				edit: false, //是否为编辑
-				editId: '', //编辑id
-				//发放数量
-				total: [
-					{
-						text: '不设限制',
-						value: '0'
-					},
-					{
-						text: '设定总数',
-						value: '1'
-					}
-				],
-				num: true, //店内活动 数量限制显示
-				customName: '', //自定义活动名称
-				customExplain: '', //自定义活动说明
-				customIds: [], //自定义设置店内选中优惠券
-				selectCoupon: [], //自定义设置会员选中优惠券
-				member: 0, //会员关联的人数
-				fans: 0, //粉丝关联的人数
-				memfilter: '',
-				customList: [
-					{
-						name: '店内'
-					},
-					{
-						name: '会员'
-					}
-				],
-				indexCustom: '1', //活动对象选中的
-				goodsType: [
-					{
-						'name': '微信',
-						'id': '1'
-					}
-				], //消息推送渠道
-				customSelect: [], //自定义活动选择的
-				msmStatus: false, //短信开关状态
-				micsel: [], //每张优惠券select默认选中值
-				micselimit: [], //每日上限 select默认选中值
-				memberCoupon: [], //活动对象为会员时选中的优惠券
-				miCount: [], //店内选中的优惠券列表
-				activityDetail: {}, //详情
-				brandId: null, //3为品牌 0为单店
-				customActivity: '', //自定义活动
-				customParameter: [
-					{
-						'name': '【会员姓名】',
-						'id': '{memberName}'
-					},
-					{
-						'name': '【优惠券名称】',
-						'id': '{couponName}'
-					},
-					{
-						'name': '【优惠券数量】',
-						'id': '{couponNum}'
-					},
-					{
-						'name': '【活动名称】',
-						'id': '{activityName}'
-					}
-				],
-				showCoupon: false,
-				couponList: [], //优惠券列表
-				showVip: false,
-				memberStatus: true, //是否有从会员页面筛选过来的会员
-				isactivityDetail: true,
-				checkedMember: false, //会员选中的
-				checkedFans: false //粉丝选中的
-			};
-		},
-		watch: {
-			'micselimit': {
-				handler: function() {
-					console.log(this.micselimit, '---');
-				},
-				deep: true
+let currentShop = null;
+export default {
+	data() {
+		return {
+			startObj: { //活动的开始时间
+				time: utils.getTime({
+					time: new Date()
+				}).start
 			},
-			'customExplain': function() {
-				if (this.customExplain.length > 150) {
-					this.$store.commit('setWin', {
-						content: '仅限150个字符'
-					});
-					this.customExplain = this.customExplain.substr(0, 150);
-				}
+			endObj: { //活动的结束时间
+				time: utils.getTime({
+					time: new Date()
+				}).end
+			},
+			dates: new Date().getTime(), //当前时间
+			returnInt: 1, //相差天数
+			edit: false, //是否为编辑
+			editId: '', //编辑id
+			//发放数量
+			total: [{
+				text: '不设限制',
+				value: '0'
+			},
+			{
+				text: '设定总数',
+				value: '1'
+			}
+			],
+			num: true, //店内活动 数量限制显示
+			customName: '', //自定义活动名称
+			customExplain: '', //自定义活动说明
+			customIds: [], //自定义设置店内选中优惠券
+			selectCoupon: [], //自定义设置会员选中优惠券
+			member: 0, //会员关联的人数
+			fans: 0, //粉丝关联的人数
+			memfilter: '',
+			customList: [{
+				name: '店内'
+			},
+			{
+				name: '会员'
+			}
+			],
+			indexCustom: '1', //活动对象选中的
+			goodsType: [{
+				'name': '微信',
+				'id': '1'
+			}
+			], //消息推送渠道
+			customSelect: [], //自定义活动选择的
+			msmStatus: false, //短信开关状态
+			micsel: [], //每张优惠券select默认选中值
+			micselimit: [], //每日上限 select默认选中值
+			memberCoupon: [], //活动对象为会员时选中的优惠券
+			miCount: [], //店内选中的优惠券列表
+			activityDetail: {}, //详情
+			brandId: null, //3为品牌 0为单店
+			customActivity: '', //自定义活动
+			customParameter: [{
+				'name': '【会员姓名】',
+				'id': '{memberName}'
+			},
+			{
+				'name': '【优惠券名称】',
+				'id': '{couponName}'
+			},
+			{
+				'name': '【优惠券数量】',
+				'id': '{couponNum}'
+			},
+			{
+				'name': '【活动名称】',
+				'id': '{activityName}'
+			}
+			],
+			showCoupon: false,
+			couponList: [], //优惠券列表
+			showVip: false,
+			memberStatus: true, //是否有从会员页面筛选过来的会员
+			isactivityDetail: true,
+			checkedMember: false, //会员选中的
+			checkedFans: false //粉丝选中的
+		};
+	},
+	watch: {
+		'micselimit': {
+			handler: function() {
+				console.log(this.micselimit, '---');
 			},
 			'customActivity': function() {
 				if (this.customActivity.length > 150) {
@@ -287,13 +273,75 @@
 					title: title,
 					winType: winType
 				});
-			},
-			haveIndex(i) { //活动对象选择
-				this.indexCustom = i;
-				if (this.indexCustom == 0) {
-					this.selectCoupon = this.miCount;
-				} else if (this.indexCustom == 1) {
-					this.selectCoupon = this.memberCoupon;
+				this.customActivity = this.customActivity.substr(0, 150);
+			}
+		},
+		'startObj.time': 'timeChange',
+		'endObj.time': 'timeChange',
+		indexCustom: function() {
+			if (this.indexCustom == 1) {
+				this.selectCoupon = this.miCount;
+				this.num = true;
+			} else if (this.indexCustom == 2) {
+				this.selectCoupon = this.memberCoupon;
+				this.num = false;
+			}
+			//this.abc();
+		},
+		'selectCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.selectCoupon);
+			}
+		}
+	},
+	methods: {
+		valiData: function(content, title, winType) { //弹窗提示格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
+		haveIndex(i) { //活动对象选择
+			this.indexCustom = i;
+			if (this.indexCustom == 0) {
+				this.selectCoupon = this.miCount;
+			} else if (this.indexCustom == 1) {
+				this.selectCoupon = this.memberCoupon;
+			}
+			//this.abc();
+		},
+		getStartTime(str) {
+			this.startObj.time = str;
+		},
+		getEndTime(str) {
+			this.endObj.time = str;
+		},
+		timeChange: function() {
+			//相差天数计算
+			this.returnInt = Math.ceil(
+				(new Date(this.endObj.time).getTime() -
+					new Date(this.startObj.time).getTime()) /
+				(1000 * 60 * 60 * 24)
+			);
+		},
+		addVip() {
+			this.showVip = true;
+		},
+		selectVipEvent(obj) {
+			if (obj.status == 'ok') {
+				this.member = obj.member;
+				this.memfilter = obj.memfilter;
+				if (this.member == '0' && utils.isEmptyObject(this.memfilter)) {
+					this.checkedMember = false;
+				}
+			}
+			this.$store.commit('setPageTools', [{
+				name: '返回活动列表',
+				className: 'el-btn-blue',
+				fn: () => {
+					this.returnAct();
 				}
 				//this.abc();
 			},
@@ -361,54 +409,59 @@
 						this.memberCoupon = obj.data.select;
 					}
 				}
-			},
-			selOn(arr) {
-				this.goodsSelect = arr;
-			},
-			//自定义店内--发放数量输入框的显示隐藏
-			autosell: function(index, item) {
-				let look = this.$refs.autoLook;
-				let txt = this.$refs.autoTxt;
-				if (this.micsel[item] == 0) {
-					look[item].style.display = 'none';
-					txt[item].style.display = 'none';
-					this.miCount[item].micNum = '';
-				}
-				if (this.micsel[item] == 1) {
-					look[item].style.display = 'inline';
-					txt[item].style.display = 'inline-block';
-				}
-			},
-			autosellimit: function(index, item) {
-				let look = this.$refs.lookDay;
-				let txt = this.$refs.txtDay;
-				if (this.micselimit[item] == 0) {
-					look[item].style.display = 'none';
-					txt[item].style.display = 'none';
-					this.miCount[item].micLimit = '';
+			});
+		},
+		returnAct() {
+			this.$router.push('/admin/activity/generalActivity');
+		},
+		addCoupon: function() { //添加优惠券
+			this.showCoupon = true;
+			if (this.indexCustom == 1) {
+				this.selectCoupon = this.miCount;
+			} else if (this.indexCustom == 2) {
+				this.selectCoupon = this.memberCoupon;
+			}
+		},
+		//自定义活动保存
+		checkForm: function() {
+			if (!global.checkData({
+				isclick: {
+					cond: '$$!==true',
+					pro: '请勿重复保存'
+				},
+				customName: '活动名称未设置',
+				selectCoupon: {
+					cond: '$$.length!=0',
+					pro: '请关联优惠券'
+				},
 
-				}
-				if (this.micselimit[item] == 1) {
-					look[item].style.display = 'inline';
-					txt[item].style.display = 'inline-block';
-				}
-			},
-			delCount: function(index, item) {
-				this.$store.commit('setWin', {
-					content: '确认删除该优惠券？',
-					callback: (str) => {
-						if (str == 'ok') {
-							this.miCount.splice(item, 1);
-							this.customIds.splice(item, 1);
-						}
-					}
-				});
-			},
-			returnAct() {
-				this.$router.push('/admin/activity/generalActivity');
-			},
-			addCoupon: function() { //添加优惠券
-				this.showCoupon = true;
+			}, this)) return false;
+			if (this.indexCustom == 2 && !this.checkedMember && !this.checkedFans) {
+				this.valiData('请关联活动对象!');
+				return false;
+			}
+			if (this.startObj.time - this.endObj.time > 0) {
+				this.valiData('时间选择范围错误!');
+				return false;
+			}
+			return true;
+		},
+		async activitySave(type) {
+			if (!this.checkForm()) return;
+			if (!this.edit) {
+				let arr = [];
+				let obj = {
+					//活动对象为店内和活动对象为会员时传递的优惠券不一样
+					couponIds: this.indexCustom == 1 ? this.miCount : this.memberCoupon,
+					minConsume: '',
+					maxConsume: '',
+					isLoop: '0',
+					memberRights: '1',
+					pushChannel: this.customSelect.toString().replace(/,/g, ''), //自定义活动选中的数组
+					msgContent: this.customActivity //自定义活动内容设置
+				};
+				arr.push(obj);
+				let objectType = '';
 				if (this.indexCustom == 1) {
 					this.selectCoupon = this.miCount;
 				} else if (this.indexCustom == 2) {

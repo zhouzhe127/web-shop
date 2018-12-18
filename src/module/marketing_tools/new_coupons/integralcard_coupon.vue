@@ -114,41 +114,95 @@
 	</section>
 </template>
 <script type="text/javascript">
-	import global from 'src/manager/global';
-	import storage from 'src/verdor/storage';
-	import http from 'src/manager/http';
-	import utils from 'src/verdor/utils';
+import global from 'src/manager/global';
+import storage from 'src/verdor/storage';
+import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
 
-	export default {
-		data() {
-			return {
-				ischain: '', //0 单店 3 品牌
-				couponName: '', //优惠券名称
-				isShowCa: false, // 是否展示时间选择组件
-				selectShops: [], //选中的商铺
-				validList: [
-					{
-						'validType': '0',
-						'name': '相对时间'
-					},
-					{
-						'validType': '1',
-						'name': '指定时间'
-					}
-				],
-				validName: '相对时间',
-				validType: {
-					'index': 0, //0指定时间 1相对时间
-					'time': '', //制定时间输入的值 领取后多少日生效
-					'startTime': (new Date()).getTime(), //相对时间的开始时间
-					'endTime': (new Date()).getTime(), //相对时间的结束时间
-					'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
-				}, //券有效期 
-				annotation: '', //备注发
-				useKnow: '', //使用须知
-				deratePrice: '', //积分量
-				editCoupon: false
-			};
+export default {
+	data() {
+		return {
+			ischain: '', //0 单店 3 品牌
+			couponName: '', //优惠券名称
+			isShowCa: false, // 是否展示时间选择组件
+			selectShops: [], //选中的商铺
+			validList: [{
+				'validType': '0',
+				'name': '相对时间'
+			}, {
+				'validType': '1',
+				'name': '指定时间'
+			}],
+			validName: '相对时间',
+			validType: {
+				'index': 0, //0指定时间 1相对时间
+				'time': '', //制定时间输入的值 领取后多少日生效
+				'startTime': (new Date()).getTime(), //相对时间的开始时间
+				'endTime': (new Date()).getTime(), //相对时间的结束时间
+				'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+			}, //券有效期 
+			annotation: '', //备注发
+			useKnow: '', //使用须知
+			deratePrice: '', //积分量
+			editCoupon: false
+		};
+	},
+	props: {
+		couponDetail: Object, //详情
+	},
+	mounted() {
+		this.ischain = storage.session('userShop').currentShop.ischain;
+		if (!utils.isEmptyObject(this.couponDetail)) {
+			let couponDetail = this.couponDetail;
+			this.editCoupon = true;
+			this.couponName = couponDetail.name; //优惠券名称
+			this.deratePrice = couponDetail.param; //及分量
+			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
+			// console.log(this.validType.index)
+			if (couponDetail.validityType == 0) {
+				this.validType.time = couponDetail.relativeTime;
+			} else if (couponDetail.validityType == 1) {
+				this.validName = '指定时间';
+				this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
+				this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
+			}
+			//this.validType.index = couponDetail.periodSel;
+			this.annotation = couponDetail.annotation; //备注
+			this.useKnow = couponDetail.useKnow; //使用须知
+
+		}
+	},
+	components: {
+		'can-multi': () =>
+			import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+		selectBtn: () =>
+			import( /* webpackChunkName:'select_btn' */ 'src/components/select_btn'),
+		'use-time': () =>
+			import( /* webpackChunkName:'use_time' */ './use_time'),
+		goodListWin: () =>
+			import( /* webpackChunkName:'good_list_win' */ 'src/components/good_list_win'),
+	},
+	methods: {
+		closeShopWin(val) { //选择店铺弹窗关闭的回掉
+			this.shopWin = false;
+			if (val) {
+				this.selectShops = val.selectShops;
+			}
+		},
+		getArrLength(type) { //返回数组的长度
+			return this[type].length;
+		},
+		// changevalidType: function(item, index) { //指定时间和相对时间
+		// 	this.validType.index = index;
+		// },
+		showCalendar() { //是否打开日历组建
+			this.isShowCa = !this.isShowCa;
+		},
+		transformDate(t) { //日期格式化
+			return utils.format(new Date(t), 'yyyy-MM-dd');
+		},
+		getValidDay() { //获取一共多少天
+			return Math.floor((this.validType.valueTime[1] - this.validType.valueTime[0]) / (24 * 3600 * 1000) + 1);
 		},
 		props: {
 			couponDetail: Object, //详情
@@ -287,11 +341,40 @@
 					this.valiData('积分量不能小于0');
 					return false;
 				}
-				if (this.deratePrice == '') {
-					this.valiData('请输入积分量');
-					return false;
-				}
-				//领券多长时间有效的限制
+			}
+			if (this.annotation.length > 20) {
+				this.valiData('备注字数不能大于20');
+				return false;
+			}
+			if (this.useKnow.length > 150) {
+				this.valiData('使用须知字数不能大于150');
+				return false;
+			}
+			return true;
+		},
+		getSendInfo() {
+			//验证输入
+			if (this.checkData()) {
+				let obj = {};
+				obj.shopIds = storage.session('userShop').currentShop.id;
+				obj.gids = ''; //关联商品
+				obj.pids = ''; //关联套餐
+				obj.name = this.couponName; //优惠券名称
+				obj.param = this.deratePrice; //积分量
+				obj.delayHours = ''; //领取后生效时间
+				//  'useTime' => '{'type':'week','list':[{'startslot':'09:00','endslot':'05:00','week':[0,1],'isNextDay':0}]}',       //使用时段，为空代表不限制
+				obj.annotation = this.annotation; //优惠券备注
+				obj.useKnow = this.useKnow; //使用须知
+				obj.validityType = this.validType.index; //券有效期
+				obj.periodSel = ''; //使用时间段
+				obj.isDiscount = ''; // 是否强免 
+				obj.tastePrice = ''; //是否包含口味价格
+				obj.useLimit = ''; //最大使用上限
+				obj.billPrice = ''; //入账金额
+				obj.reckoningPrice = ''; //结算金额
+				obj.lowestConsume = '';
+				let useTime = {};
+				obj.useTime = useTime;
 				if (this.validType.index == 0) {
 					if (this.validType.time.toString().trim() == '') {
 						this.valiData('请输入券有效期');

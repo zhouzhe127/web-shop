@@ -86,67 +86,55 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	export default {
-		data() {
-			return {
-				ischain: '', //店铺id 品牌店/单店
-				couponList: [], //优惠券列表
-				page: 1, //当前页的数据
-				total: 1,
-				index: null,
-				pageNum: 10, //一版页码处理多少数据
-				pageCount: 0, //总条数
-				valueTime: [], //时间控件
-				days: 0, //一共的天数
-				indexOn: 0,
-				bannerList: [
-					{
-						index: 0,
-						name: '未关联'
-					},
-					{
-						index: 1,
-						name: '已关联'
-					},
-					{
-						index: -1,
-						name: '已过期'
-					}
-				], //
-				isShowCa: false, //  是否展示时间选择组件
-				changeMnage: true, //  是否显示修改优惠券页面
-				showCoupon: false, //  是否显示优惠券弹框
-				couponInfo: '', //  优惠券信息
-				allTotal: 100,
-				pageTotal: 10,
-				couponType: 0, //优惠券的标识
-				couponDetail: Object, //优惠券的详情
-				couponTypeList: {
-					1: '单品减免优惠券',
-					2: '整单减免优惠券',
-					3: '单品打折优惠券',
-					4: '整单打折优惠券',
-					5: '赠菜优惠券',
-					6: '代金券',
-					7: '积分卡券',
-					8: '随机立减优惠券',
-					9: '第二件商品券',
-					10: '买送券',
-					11: '定额券'
-				},
-				unbindWin: false, //同步优惠券的弹窗
-				asyncId: '', //同步优惠券的id
-				count: 0 //总条数
-			};
-		},
-		computed: {
-			start: {
-				get() {
-					return utils.format(new Date(this.atime), 'yyyy-MM-dd');
-				}
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+export default {
+	data() {
+		return {
+			ischain: '', //店铺id 品牌店/单店
+			couponList: [], //优惠券列表
+			page: 1, //当前页的数据
+			total: 1,
+			index: null,
+			pageNum: 10, //一版页码处理多少数据
+			pageCount: 0, //总条数
+			valueTime: [], //时间控件
+			days: 0, //一共的天数
+			indexOn: 0,
+			bannerList: [{
+				index: 0,
+				name: '未关联'
+			},
+			{
+				index: 1,
+				name: '已关联'
+			},
+			{
+				index: -1,
+				name: '已过期'
+			}
+			], //
+			isShowCa: false, //  是否展示时间选择组件
+			changeMnage: true, //  是否显示修改优惠券页面
+			showCoupon: false, //  是否显示优惠券弹框
+			couponInfo: '', //  优惠券信息
+			allTotal: 100,
+			pageTotal: 10,
+			couponType: 0, //优惠券的标识
+			couponDetail: Object, //优惠券的详情
+			couponTypeList: {
+				1: '单品减免优惠券',
+				2: '整单减免优惠券',
+				3: '单品打折优惠券',
+				4: '整单打折优惠券',
+				5: '赠菜优惠券',
+				6: '代金券',
+				7: '积分卡券',
+				8: '随机立减优惠券',
+				9: '第二件商品券',
+				10: '买送券',
+				11: '定额券'
 			},
 			end: {
 				get() {

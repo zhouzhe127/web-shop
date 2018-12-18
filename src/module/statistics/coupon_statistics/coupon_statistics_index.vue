@@ -111,144 +111,140 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
 
-	export default {
-		data() {
-			return {
-				startTime: utils.getTime({
-					time: new Date().setDate(1)
-				}).start, //日期组件的开始时间
-				endTime: utils.getTime({
-					time: new Date()
-				}).end, //日期组件的结束时间
-				list: [], // coupon 数据
-				page: 1, // 当前页码
-				listLen: 0, // 数据量
-				pageTotal: 0, //页码总数
-				card: [
-					//  优惠券类型
-					{
-						name: '单品减免',
-						id: 1
-					},
-					{
-						name: '整单减免',
-						id: 2
-					},
-					{
-						name: '单品折扣',
-						id: 3
-					},
-					{
-						name: '整单折扣',
-						id: 4
-					},
-					{
-						name: '赠品',
-						id: 5
-					},
-					{
-						name: '代金券',
-						id: 6
-					},
-					{
-						name: '随机减免券',
-						id: 8
-					},
-					{
-						name: '第二件商品券',
-						id: 9
-					},
-					{
-						name: '买送券',
-						id: 10
-					},
-					{
-						name: '定额券',
-						id: 11
-					}
-				],
-				selectName: {
-					'1': '单品减免',
-					'2': '整单减免',
-					'3': '单品折扣',
-					'4': '整单折扣',
-					'5': '赠品',
-					'6': '代金券',
-					'8': '随机减免券',
-					'9': '第二件商品券',
-					'10': '买送券',
-					'11': '定额券',
-				}, // 默认优惠券
-				shopListBtn: false, // 是否展示优惠券列表
-				fiterId: [],
-				changePage: true,
-				couponType: 0,
-				couponStatus: 0,
-				couponId: 0, //被选中的优惠券的id
-				shopIds: 0,
-				couponName: '', // 多选优惠券名称
-				ischain: '', //门店类型
-				currentName: [], //  门店种类名称
-				currentTotal: 0, //  核销总量
-				currentList: [], //  品牌列表
-				FilterName: [], //过滤核销量
-				isShow0: false, // 判断优惠券状态添加class
-				isShow1: true,
-				isShow2: true,
-				isShow3: true,
-				exportUrl: 'javascript:void(0);',
-				isBrand: '',
-				isClick: false,
-				userData: '',
-				showJob: false,
-				showCard: [], //优惠券类型选中的id
-				selectedCoupon: '全部优惠券', //显示选中的优惠券
-				storeList: [
-					{
-						name: '全部'
-					},
-					{
-						name: '已关联'
-					},
-					{
-						name: '未关联'
-					},
-					{
-						name: '已过期'
-					}
-				],
-				indexOn: 0,
-				num: 10
-			};
+export default {
+	data() {
+		return {
+			startTime: utils.getTime({
+				time: new Date().setDate(1)
+			}).start, //日期组件的开始时间
+			endTime: utils.getTime({
+				time: new Date()
+			}).end, //日期组件的结束时间
+			list: [], // coupon 数据
+			page: 1, // 当前页码
+			listLen: 0, // 数据量
+			pageTotal: 0, //页码总数
+			card: [{
+				name: '单品减免',
+				id: 1
+			},
+			{
+				name: '整单减免',
+				id: 2
+			},
+			{
+				name: '单品折扣',
+				id: 3
+			},
+			{
+				name: '整单折扣',
+				id: 4
+			},
+			{
+				name: '赠品',
+				id: 5
+			},
+			{
+				name: '代金券',
+				id: 6
+			},
+			{
+				name: '随机减免券',
+				id: 8
+			},
+			{
+				name: '第二件商品券',
+				id: 9
+			},
+			{
+				name: '买送券',
+				id: 10
+			},
+			{
+				name: '定额券',
+				id: 11
+			}
+			],
+			selectName: {
+				'1': '单品减免',
+				'2': '整单减免',
+				'3': '单品折扣',
+				'4': '整单折扣',
+				'5': '赠品',
+				'6': '代金券',
+				'8': '随机减免券',
+				'9': '第二件商品券',
+				'10': '买送券',
+				'11': '定额券',
+			}, // 默认优惠券
+			shopListBtn: false, // 是否展示优惠券列表
+			fiterId: [],
+			changePage: true,
+			couponType: 0,
+			couponStatus: 0,
+			couponId: 0, //被选中的优惠券的id
+			shopIds: 0,
+			couponName: '', // 多选优惠券名称
+			ischain: '', //门店类型
+			currentName: [], //  门店种类名称
+			currentTotal: 0, //  核销总量
+			currentList: [], //  品牌列表
+			FilterName: [], //过滤核销量
+			isShow0: false, // 判断优惠券状态添加class
+			isShow1: true,
+			isShow2: true,
+			isShow3: true,
+			exportUrl: 'javascript:void(0);',
+			isBrand: '',
+			isClick: false,
+			userData: '',
+			showJob: false,
+			showCard: [], //优惠券类型选中的id
+			selectedCoupon: '全部优惠券', //显示选中的优惠券
+			storeList: [{
+				name: '全部'
+			},
+			{
+				name: '已关联'
+			},
+			{
+				name: '未关联'
+			},
+			{
+				name: '已过期'
+			}
+			],
+			indexOn: 0,
+			num: 10
+		};
+	},
+	methods: {
+		selectEndTime: function(time) { //选择日期
+			this.endTime = new Date(time).setHours(23, 59, 59, 999);
 		},
-		methods: {
-			selectEndTime: function(time) { //选择日期
-				this.endTime = new Date(time).setHours(23, 59, 59, 999);
-			},
-			selallcoupon: function() { //选择优惠券 全选
-				let arr = [];
-				for (let item of this.card) {
-					arr.push(item.id);
-				}
-				if (this.showCard.length == this.card.length) {
-					this.showCard = [];
-				} else {
-					this.showCard = arr;
-				}
-			},
-			ensure: function() {
-				this.showJob = false;
-				this.selectedCoupon = '';
-				let selArr = [];
-				for (let i = 0; i < this.card.length; i++) {
-					if (this.showCard.indexOf(this.card[i].id) != -1) {
-						selArr.push(this.card[i].name);
-						//this.selectedCoupon += this.card[i].name + ',';
-					}
+		selallcoupon: function() { //选择优惠券 全选
+			let arr = [];
+			for (let item of this.card) {
+				arr.push(item.id);
+			}
+			if (this.showCard.length == this.card.length) {
+				this.showCard = [];
+			} else {
+				this.showCard = arr;
+			}
+		},
+		ensure: function() {
+			this.showJob = false;
+			this.selectedCoupon = '';
+			let selArr = [];
+			for (let i = 0; i < this.card.length; i++) {
+				if (this.showCard.indexOf(this.card[i].id) != -1) {
+					selArr.push(this.card[i].name);
+					//this.selectedCoupon += this.card[i].name + ',';
 				}
 				this.selectedCoupon = selArr.join(',');
 				if (!this.selectedCoupon) {
@@ -353,46 +349,28 @@
 					arr.push(item.id);
 					selbrr.push(item.name);
 				}
-				this.showCard = arr;
-				this.selectedCoupon = selbrr.join(',');
-				this.searchInDate();
-			},
-			// searchCurrentDate() {
-			// 	let start = this.currstartTime.time || this.currstartTime;
-			// 	let end = this.currendTime.time || this.currendTime;
-			// 	if (!this.isBrand) {
-			// 		this.getOneCoupon(start, end, this.userData.currentShop.id);
-			// 	} else {
-			// 		this.getOneCoupon(start, end, this.fiterId.join());
-			// 	}
-			// },
-			//方案列表点击选择方案
-			chooseStore: function(index) {
-				this.page = 1;
-				this.indexOn = index;
-				this.getCouponData();
-			},
-			//每页显示多少条数据
-			handleSizeChange(p) {
-				this.page = 1;
-				this.num = p;
-				this.getCouponData();
-			},
-			//页码跳转
-			pageChange(p) {
-				this.page = p;
-				this.getCouponData();
-			},
-			getDetailShow(res) { //子组件评价列表返给父组件的
-				this.changePage = res;
-				this.$store.commit('setPageTools', [{
-					name: '导出',
-					fn: () => {
-						this.getToOut();
-					},
-					className: 'el-btn-blue'
-				}]);
-			},
+			});
+		},
+		searchInDate() {
+			this.getCouponData();
+		},
+		handleToCount(couponId, name) {
+			//  页面跳转
+			// if (send == 0) {
+			// 	this.$store.commit('setWin', {
+			// 		title: '提示信息',
+			// 		content: '该优惠券暂未领券',
+			// 		winType: 'alert'
+			// 	});
+			// 	return false;
+			// }
+			this.couponId = couponId;
+			this.couponName = name;
+			this.changePage = !this.changePage;
+		},
+		handleSearchInDate() {
+			//  筛选优惠券类型
+			this.getCouponData();
 		},
 		mounted() {
 			this.$store.commit('setPageTools', [{

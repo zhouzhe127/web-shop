@@ -51,7 +51,7 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">更多图片</span>
 				<div class="rightHalf">
-					<el-button class="fl" type="primary" icon="el-icon-plus" style="width:179px;">上传图片
+					<el-button class="fl" type="primary" style="width:179px;" @click="addImages('add')">添加图片
 					</el-button>
 					<div class="fl handle-tips">
 						<i></i> 推荐尺寸:大小1M 上限100张
@@ -62,25 +62,43 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl"></span>
 				<div class="rightHalf">
-					<div class="list_box" style="width:800px;">
+					<div class="list_box" style="width:700px;">
 						<div class="list_title">
 							<div class="list_title_l fl">
 								<span>图片列表</span>
 								<span></span>
 								<span>共
-								<a href="javascript:;">{{count}}</a>张</span>
+								<a href="javascript:;">{{allProList.length}}</a>张</span>
 							</div>
 							<div class="list_title_r fr">
 							</div>
 						</div>
 						<el-table :data="proList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'70px'}">
-							<el-table-column fixed prop="id" label="图片名称" width="160" align="center">
+							<el-table-column fixed prop="name" label="图片名称" width="200" align="center">
 							</el-table-column>
 							<el-table-column label="图片类型" prop="name" align="center" width="160">
+								<template slot-scope="scope">
+									<span>{{imgType[scope.row.type]}}</span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="createTime" label="缩略图" align="center" width="160">
+								<template slot-scope="scope">
+									<div class="list_img">
+										<el-popover placement="top" width="400" trigger="hover">
+											<div class="bigImg">
+												<img alt="logo" v-bind:src="imgHost  + scope.row.url" />
+											</div>
+												<img slot="reference" alt="logo" v-bind:src="imgHost  + scope.row.url" />
+												</el-popover>
+											</div>
+								</template>
 							</el-table-column>
 							<el-table-column label="操作" align="center">
+								<template slot-scope="scope">
+									<el-button size="medium" type="text" style="color: #29abe2;" @click="addImages('edi',scope.row)">编辑</el-button>
+									<span style="padding:0 5px;color: #D2D2D2">|</span>
+									<el-button size="medium" type="text" style="color: #fd3f1f;" @click="deleteImg(scope.row)">删除</el-button>
+								</template>
 							</el-table-column>
 						</el-table>
 					</div>
@@ -92,12 +110,12 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl"></span>
 				<div class="rightHalf">
-					<el-button class="fl" type="primary" style="width:179px;">保存
+					<el-button class="fl" type="primary" style="width:179px;" @click="saveConfig">保存
 					</el-button>
 				</div>
 			</div>
 			<!-- 添加图片的弹窗 -->
-			<addImage :type="'edi'" @getAppliedWin="()=>{}"></addImage>
+			<add-image v-if="showWin" :type="type" :detail="detail" :allProList="allProList" @getAppliedWin="getImageResult"></add-image>
 		</div>
 </template>
 <script type="text/javascript">
@@ -107,18 +125,31 @@ import storage from 'src/verdor/storage';
 export default {
 	data() {
 		return {
-			count: '0',
 			allTotal: 1,
 			page: 1,
 			num: 10,
 			brandName: '', //品牌名称
 			fileName: '', //首页展示图片的
 			imgHost: '',
-			proList: [] //图片列表
-
+			allProList: [], //所有的数据
+			proList: [], //图片列表
+			showWin: false,
+			imgType: {
+				1: '环境',
+				2: '商品'
+			},
+			type: 'add', //新增或编辑
+			detail: {} //某个详情
 		};
 	},
 	methods: {
+		valiData: function(content, title, winType) { //弹窗提示格式化
+			this.$store.commit('setWin', {
+				content: content,
+				title: title,
+				winType: winType
+			});
+		},
 		async fileNameChange() {
 			//  上传图片
 			let res = await http.fileUpload({
@@ -134,25 +165,114 @@ export default {
 		handleSizeChange(p) {
 			this.page = 1;
 			this.num = p;
-			//this.openProList();
+			this.setPage();
 		},
 		//页码跳转
 		pageChange(p) {
 			this.page = p;
-			//this.openProList();
+			this.setPage();
 		},
-		// getImageResult:function(res){//图片弹窗的回调
+		getImageResult: function(res) { //图片弹窗的回调
+			if (res == 'ok') {
+				this.foodGetShopPs();
+			}
+			this.showWin = false;
+		},
+		addImages: function(type, item) { //添加更多图片
+			this.type = type;
+			if (type == 'edi') {
+				this.detail = item;
+			}
+			this.showWin = true;
+		},
+		async foodGetShopPs() { //获取粮票装修信息
+			let res = await http.foodGetShopPs({
+				data: {
 
-		// }
+				}
+			});
+			if (res) {
+				this.brandName = res.shopName;
+				this.fileName = res.topImg;
+				this.allProList = [];
+				for (let key in res.imgs) {
+					let obj = {
+						id: key,
+						url: res.imgs[key].url,
+						type: res.imgs[key].type,
+						name: res.imgs[key].name
+					};
+					this.allProList.push(obj);
+				}
+				this.$nextTick(() => {
+					this.setPage();
+				});
+			}
+		},
+		checkForm: function() {
+			if (this.brandName == '') {
+				this.valiData('请填写品牌名称!');
+				return false;
+			}
+			if (this.fileName == '') {
+				this.valiData('请上传首页展示图片!');
+				return false;
+			}
+			return true;
+		},
+		saveConfig: function() { //保存配置
+			this.foodUpdate();
+		},
+		async foodUpdate() { //更新配置
+			if (!this.checkForm()) return;
+			let date = await http.foodUpdate({
+				data: {
+					name: this.brandName, //品牌名称
+					topImg: this.fileName,
+					img: ''
+				}
+			});
+			if (date) {
+				this.valiData('保存成功!');
+			}
+		},
+		setPage: function() { //自定义翻页
+			this.allTotal = Math.ceil((this.allProList.length) / (this.num)); //根据数据总和和一页展示的数量计算出总页数
+			let pageStart = (this.page - 1) * (this.num); //起始
+			let pageEnd = (this.page) * (this.num); //结束
+			this.proList = this.allProList.slice(pageStart, pageEnd); //即将展示页面的数组
+		},
+		deleteImg: function(item) { //删除图片
+			this.$store.commit('setWin', {
+				title: '温馨提示',
+				winType: 'confirm',
+				content: '确定删除该图片?',
+				callback: (res) => {
+					if (res == 'ok') {
+						this.foodDeleteImg(item);
+					}
+				}
+			});
+		},
+		async foodDeleteImg(item) {
+			let res = await http.foodDeleteImg({
+				data: {
+					No: item.id
+				}
+			});
+			if (res) {
+				this.valiData('删除成功');
+				this.foodGetShopPs();
+			}
+		}
 	},
-	watch: {},
-	computed: {},
 	components: {
-		addImage: () =>
-			import( /*webpackChunkName: 'food_stamps_win'*/ './food_stamps_win'),
+		'add-image': () =>
+			import( /*webpackChunkName: "food_stamps_win"*/ './food_stamps_win'),
 	},
 	mounted() {
 		this.imgHost = storage.session('userShop').uploadUrl; //图片的前缀
+		this.foodGetShopPs();
 	}
 };
 </script>
@@ -234,6 +354,24 @@ export default {
 	height: 100%;
 }
 
+#foodStamp .list_img {
+	height: 45px;
+}
+
+#foodStamp .list_img img {
+	width: 45px;
+	height: 45px;
+}
+.bigImg{
+	width: 300px;
+	height: 200px;
+	margin: 0 auto;
+}
+.bigImg img{
+	width: 100%;
+	height: 100%;
+}
+
 .handle-tips {
 	height: 40px;
 	line-height: 40px;
@@ -241,5 +379,4 @@ export default {
 	background: url(../../../res/images/handle-tips.png?0) 20px center no-repeat;
 	color: #999999;
 }
-
 </style>

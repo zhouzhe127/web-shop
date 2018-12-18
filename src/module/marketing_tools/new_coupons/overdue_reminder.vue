@@ -59,7 +59,7 @@ import http from 'src/manager/http';
 export default {
 	data() {
 		return {
-			overdueStatus: true, //优惠券过期提醒状态
+			overdueStatus: false, //优惠券过期提醒状态
 			pushdateNum: '1', //推送日期
 			pushdateList: [{ //推送日期
 				name: '1'
@@ -83,6 +83,12 @@ export default {
 			}, {
 				name: '10'
 			}, {
+				name: '11'
+			}, {
+				name: '12'
+			}, {
+				name: '13'
+			}, {
 				name: '14'
 			}, {
 				name: '15'
@@ -92,6 +98,10 @@ export default {
 				name: '17'
 			}, {
 				name: '18'
+			}, {
+				name: '19'
+			}, {
+				name: '20'
 			}, {
 				name: '21'
 			}, {
@@ -158,11 +168,11 @@ export default {
 			let res = await http.getPointConfig({});
 			if (res) {
 				let list = res.list;
-				if(list.expireCouponDay != '0' && list.expireCouponHour != '0'){
+				if (list.expireCouponDay != '0' && list.expireCouponHour != '0') {
 					this.pushdateNum = list.expireCouponDay;
 					this.pushNum = list.expireCouponHour;
 					this.overdueStatus = true;
-				}else{
+				} else {
 					this.overdueStatus = false;
 				}
 			}

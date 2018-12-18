@@ -133,69 +133,104 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	// import global from 'src/manager/global';
-	export default {
-		data() {
-			return {
-				activityName: '', //活动名称
-				returnInt: 1, //相差天数
-				startObj: {
-					time: new Date().setHours(0, 0, 0, 0)
-				},
-				endObj: {
-					time: new Date().setHours(23, 59, 59, 999)
-				},
-				ruleIndex: 0, //点中的第几个  
-				couponLists: [], //券列表
-				//integralTime: '无上限', //券总量  
-				//integralId: 0,
-				integralList: [
-					{
-						name: '无上限',
-						id: 0
-					},
-					{
-						name: '自定义',
-						id: 1
-					}
-				],
-				// voucheramount: '', //券总分量填写的数量
-				// purchasevoucher: '', //购券填写的数量
-				// collection: '', //人均领取的次数
-				expirationTimeList: [
-					{
-						//过期时间
-						name: '不参与',
-						id: 0
-					},
-					{
-						name: '参与',
-						id: 1
-					}
-				],
-				couponState: [
-					{
-						id: 1,
-						status: '正常',
-						option: '下架优惠券'
-					},
-					{
-						id: 0,
-						status: '已下架',
-						option: '上架优惠券'
-					}
-				],
-				//expirationTimeId: 0,
-				//expirationTime: '不参与', //状态
-				couponList: [], //优惠券列表
-				showCoupon: false, //打开优惠券的弹窗  
-				editId: '', //活动编辑的id
-				ruleId: '', //规则id
-				isactivityDetail: true
-			};
+import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+// import global from 'src/manager/global';
+export default {
+	data() {
+		return {
+			activityName: '', //活动名称
+			returnInt: 1, //相差天数
+			startObj: {
+				time: new Date().setHours(0, 0, 0, 0)
+			},
+			endObj: {
+				time: new Date().setHours(23, 59, 59, 999)
+			},
+			ruleIndex: 0, //点中的第几个  
+			couponLists: [], //券列表
+			integralList: [{
+				name: '无上限',
+				id: 0
+			},
+			{
+				name: '自定义',
+				id: 1
+			}
+			],
+			expirationTimeList: [{
+				name: '不参与',
+				id: 0
+			},
+			{
+				name: '参与',
+				id: 1
+			}
+			],
+			couponState: [{
+				id: 1,
+				status: '正常',
+				option: '下架优惠券'
+			},
+			{
+				id: 0,
+				status: '已下架',
+				option: '上架优惠券'
+			}
+			],
+			couponList: [], //优惠券列表
+			showCoupon: false, //打开优惠券的弹窗  
+			editId: '', //活动编辑的id
+			ruleId: '', //规则id
+			isactivityDetail: true
+		};
+	},
+	watch: {
+		'startObj.time': 'timeChange',
+		'endObj.time': 'timeChange',
+	},
+	methods: {
+		getStartTime(str) { //活动的开始时间
+			this.startObj.time = str;
+		},
+		getEndTime(str) { //活动的结束时间
+			this.endObj.time = str;
+		},
+		timeChange: function() { //相差天数计算
+			this.returnInt = Math.ceil(
+				(new Date(this.endObj.time).getTime() -
+					new Date(this.startObj.time).getTime()) /
+				(1000 * 60 * 60 * 24)
+			);
+		},
+		getDetails: function(index) { //点击查看详情
+			// 获取规则详情
+			this.ruleIndex = index;
+		},
+		deletesecPush: function(ind) { //删除二级图文推送
+			if (this.ruleIndex >= ind) {
+				this.ruleIndex = 0;
+			}
+			this.couponLists.splice(ind, 1);
+		},
+		haveIndex: function(i) { //券总量
+			this.integralOn = i;
+		},
+		selexpirationTime: function(i) { //选择参与类型
+			// this.couponLists[showIndex].expirationTime = this.expirationTimeList[i].name;
+			// this.couponLists[showIndex].expirationTimeId = this.expirationTimeList[i].id;
+			this.couponLists[this.ruleIndex].expirationTimeId = i;
+		},
+		selintegralList: function(i) { //选择券总量
+			//this.couponLists[showIndex].integralTime = this.integralList[i].name;
+			this.couponLists[this.ruleIndex].integralId = i;
+			//console.log(this.couponLists[this.ruleIndex].integralId);
+			//this.integralId = this.integralList[i].id;
+		},
+		closePage: function() {
+			// 关闭页面
+			this.$router.push('/admin/activity/couponActivity');
 		},
 		watch: {
 			'startObj.time': 'timeChange',

@@ -157,10 +157,8 @@
 	</div>
 </template>
 <script type="text/javascript">
-	import http from 'src/manager/http';
-	import {
-		mixin
-	} from './mixin.js';
+import http from 'src/manager/http';
+import { mixin } from './mixin.js';
 
 	export default {
 		mixins: [mixin],
@@ -222,12 +220,24 @@
 			this.getAssistantstaff(); //获取工作人员
 			this.getConsumeStatistics(); //获取数据
 		},
-		methods: {
-			openStore() { //展开收起-已选中店铺列表
-				if (this.isShowStore == true) { //展开时点击
-					this.storeShowH = '20px';
-				} else {
-					this.storeShowH = 'auto';
+		// 获取数据
+		async getConsumeStatistics() {
+			let res = await http.getConsumeStatistics({
+				data: {
+					'startTime': parseInt(this.valueTime[0] / 1000), //开始时间
+					'endTime': parseInt(this.valueTime[1] / 1000), //结束时间
+					'shopIds': this.shopIds, //选择门店
+					'type': this.viewId, //查看类型
+					'page': this.page,
+					'num': this.num,
+					'brokerage': this.handlers, //经手人
+					'authorize': this.approvedPerson //核准人
+				}
+			});
+			if (res) {
+				if (this.page == '1') {
+					this.count = res.count;
+					this.allTotal = res.total;
 				}
 				this.isShowStore = !this.isShowStore;
 			},

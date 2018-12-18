@@ -140,10 +140,6 @@ export default {
 				}
 			}
 		},
-		searchDate: function() { //搜索查询数据
-			this.page = 1;
-			this.getConsumeStatistics();
-		},
 		resetFun: function() { //重置方法
 			this.handlers = '';
 			this.approvedPerson = '';

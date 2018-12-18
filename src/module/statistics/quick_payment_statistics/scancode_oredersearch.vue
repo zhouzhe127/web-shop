@@ -377,25 +377,45 @@
 		created() {
 			this.getShopList();
 		},
-		mounted() {
-			this.$store.commit('setPageTools', [
-				{
-					name: '返回',
-					className: 'el-btn-blue',
-					fn: () => {
-						this.returnShopstatic();
-					}
-				},
-				{
-					name: '导出',
-					className: 'el-btn-yellow',
-					fn: () => {
-						if (this.codes && this.codes != '') {
-							this.codesExport(this.codes);
-						} else {
-							this.Export();
-						}
-					}
+	},
+	props: {
+		constructionsName: String, //店铺名称
+		startTime: Number, //开始时间
+		endTime: Number, //结束时间
+		constructionsId: String, //店铺的id
+		isOpenTime: Boolean,
+		oneData: String,
+		taskId: Number,
+		codes: Array
+	},
+	components: {
+		pageElement: () =>
+			import( /*webpackChunkName:"page_element"*/ 'src/components/page_element'),
+		comTable: () =>
+			import( /*webpackChunkName: "com_table"*/ 'src/components/com_table'),
+		getAppliedWin,
+		paymentCode: () =>
+			import( /*webpackChunkName: "scancode_payment_codewin"*/ './scancode_payment_codewin')
+	},
+	created() {
+		this.getShopList();
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '返回',
+			className: 'el-btn-blue',
+			fn: () => {
+				this.returnShopstatic();
+			}
+		},
+		{
+			name: '导出',
+			className: 'el-btn-yellow',
+			fn: () => {
+				if (this.codes && this.codes != '') {
+					this.codesExport(this.codes);
+				} else {
+					this.Export();
 				}
 			]);
 			if (this.codes && this.codes != '') {
@@ -403,9 +423,12 @@
 			} else {
 				this.getScanPayData();
 			}
-		},
-		destroyed() {
-			clearInterval(this.timer);
+		}
+		]);
+		if (this.codes && this.codes != '') {
+			this.getScanPayOrderByCodes(this.codes);
+		} else {
+			this.getScanPayData();
 		}
 	};
 </script>

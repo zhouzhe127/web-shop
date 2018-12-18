@@ -37,7 +37,8 @@ const marketing_tools = {
 	"0416": "marketing_tools/sweepcode_pay",
 	"0417": "marketing_tools/member_store_config",
 	"0418": "marketing_tools/template_switching",
-	"0419": "marketing_tools/bargain_activity"
+	"0419": "marketing_tools/bargain_activity",
+	"0420": "marketing_tools/food_stamps_config"
 };
 const shop_config = {
 	"051": "shop_config/employee_manage",

@@ -475,12 +475,9 @@ let need = {
 		sellingConsumptionStatistics: { //卖手消费统计
 			name: 'sellingConsumptionStatistics'
 		},
-		priceTemplate:{     //价格模板
-			name:'priceTemplate'
+		renovation: { //粮票集装修
+			name: 'renovation'
 		},
-		AssignGoodsConcise:{  // 商品指派
-			name:'AssignGoodsConcise'
-		}
 	}
 };
 export default need;

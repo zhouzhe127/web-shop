@@ -31,19 +31,24 @@
 				</div>
 			</div>
 			<el-table :data="activityList" border :stripe="true" :header-cell-style="{'background-color':'#f5f7fa'}" :header-row-style="{'height':'40px'}" :row-style="{'height':'60px'}">
-				<el-table-column fixed label="活动类型" align="center">
+				<el-table-column fixed label="活动类型" align="center" width="120">
 					<template slot-scope="scope">
 						{{setType(scope.row.type)}}
 					</template>
 				</el-table-column>
-				<el-table-column label="活动名称" prop="name" align="center">
+				<el-table-column label="活动名称" prop="name" align="center" width="200">
 				</el-table-column>
-				<el-table-column label="创建时间" align="center">
+				<el-table-column label="创建时间" align="center" width="150">
 					<template slot-scope="scope">
-						<span>{{transFormData(scope.row.createTime)}}</span>
+						<span>{{transFormData(scope.row.createTime,'')}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="活动期限" align="center">
+				<el-table-column label="活动时间" align="center" v-if="activityType == '6'" width="260">
+					<template slot-scope="scope">
+						<span>{{transFormData(scope.row.startTime,1)}}至{{transFormData(scope.row.endTime,1)}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column label="活动期限" align="center" width="150">
 					<template slot-scope="scope">
 						<span v-if="scope.row.type == '0'">{{timeLimit[scope.row.limit].name}}</span>
 						<span v-else>{{setEndTime(scope.row.startTime,scope.row.endTime)}}</span>
@@ -63,13 +68,13 @@
 						</template>
 					</el-table-column>
 				</template>
-				<el-table-column label="券发放数量" align="center">
+				<el-table-column label="券发放数量" align="center" width="120">
 					<template slot-scope="scope">
 						<span v-if="scope.row.giveNum == '0'">无限制</span>
 						<span v-else>{{scope.row.giveNum}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="每日发放上限" align="center">
+				<el-table-column label="每日发放上限" align="center" width="130">
 					<template slot-scope="scope">
 						<span v-if="scope.row.dayGiveNum == '0'">无限制</span>
 						<span v-else>{{scope.row.giveNum}}</span>
@@ -120,97 +125,89 @@
 	</section>
 </template>
 <script type="text/javascript">
-	import storage from 'src/verdor/storage';
-	import utils from 'src/verdor/utils';
-	import http from 'src/manager/http';
+import storage from 'src/verdor/storage';
+import utils from 'src/verdor/utils';
+import http from 'src/manager/http';
 
-	let currentShop = null;
+let currentShop = null;
 
-	export default {
-		data() {
-			return {
-				index: '',
-				ischain: null, //店铺id 品牌店/单店
-				giveNum: '', //发放数量
-				buttonList: [
-					{
-						'name': '未发布'
-					},
-					{
-						'name': '发布中'
-					},
-					{
-						'name': '已发布'
-					},
-					{
-						'name': '已下架'
-					},
-					{
-						'name': '已结束'
-					}
-				],
-				flag: 0, //当前选中按钮
-				timeLimit: [
-					{
-						'name': '永久',
-						value: '1'
-					},
-					{
-						'name': '一年',
-						value: '2'
-					},
-					{
-						'name': '二年',
-						value: '0'
-					}
-				],
-				customList: [
-					{
-						'name': '店内'
-					},
-					{
-						'name': '会员'
-					}
-				],
-				goodsType: [
-					{
-						'name': '微信',
-						'id': '1'
-					},
-					{
-						'name': '短信',
-						'id': '2'
-					}
-				], //消息推送渠道
-				valueTime: [], //时间控件
-				activityList: [], //活动列表
-				num: 10, //一版页码处理多少数据
-				pageTotal: 1, //总页数
-				page: 1,
-				activityType: '', //活动类型的type
-				shopsList: [], // 卡属门店
-				shopsName: '选择门店',
-				activityTitle: '', //活动名称
-				typeObj: {
-					'0': '生日活动',
-					'1': '自定义活动',
-					'2': '新会员开卡礼',
-					'3': '消费额激励',
-					'4': '裂变活动',
-					'5': '会员日',
-					'6': '满减活动',
-					'7': '领券活动',
-					'8': '消费满次活动',
-					'9': '消费券返券活动',
-					'10': '唤醒营销活动',
-				},
-				count: '',
-				sceneList: {
-					'0': '全部',
-					'1': '微店',
-					'2': '快捷支付'
-				}
-			};
+export default {
+	data() {
+		return {
+			index: '',
+			ischain: null, //店铺id 品牌店/单店
+			giveNum: '', //发放数量
+			buttonList: [{
+				'name': '未发布'
+			}, {
+				'name': '发布中'
+			}, {
+				'name': '已发布'
+			}, {
+				'name': '已下架'
+			}, {
+				'name': '已结束'
+			}],
+			flag: 0, //当前选中按钮
+			timeLimit: [{
+				'name': '永久',
+				value: '1'
+			}, {
+				'name': '一年',
+				value: '2'
+			}, {
+				'name': '二年',
+				value: '0'
+			}, ],
+			customList: [{
+				'name': '店内'
+			},
+			{
+				'name': '会员'
+			}
+			],
+			goodsType: [{
+				'name': '微信',
+				'id': '1'
+			}, {
+				'name': '短信',
+				'id': '2'
+			}], //消息推送渠道
+			valueTime: [], //时间控件
+			activityList: [], //活动列表
+			num: 10, //一版页码处理多少数据
+			pageTotal: 1, //总页数
+			page: 1,
+			activityType: '', //活动类型的type
+			shopsList: [], // 卡属门店
+			shopsName: '选择门店',
+			activityTitle: '', //活动名称
+			typeObj: {
+				'0': '生日活动',
+				'1': '自定义活动',
+				'2': '新会员开卡礼',
+				'3': '消费额激励',
+				'4': '裂变活动',
+				'5': '会员日',
+				'6': '满减活动',
+				'7': '领券活动',
+				'8': '消费满次活动',
+				'9': '消费券返券活动',
+				'10': '唤醒营销活动',
+			},
+			count: '',
+			sceneList: {
+				'0': '全部',
+				'1': '微店',
+				'2': '快捷支付'
+			}
+		};
+	},
+	computed: {
+		start1: {
+			get: function() {
+				return utils.format(this.atime1, 'yyyy-MM-dd');
+			}
 		},
 		computed: {
 			start1: {
@@ -255,43 +252,51 @@
 				return iDays + 1;
 			},
 
-			transFormData: function(t) {
-				// 转换时间
-				return utils.format(t, 'yyyy-MM-dd');
-			},
-			setType: function(type) {
-				// 设置活动类型
-				return this.typeObj[type];
-			},
-			//下一页
-			// addpage() {
-			// 	this.light(this.flag);
-			// },
-			getPageNum: function(obj) {
-				this.page = obj.page;
-				this.num = obj.num;
-				this.newgetActivityList();
-			},
-			//新增活动
-			// addActivity: function() {
-			// 	// openWin(true, true);
-			// 	this.showAdd = true;
-			// },
-			sendData({
-				urlType,
-				data,
-				str
-			}) {
-				this.$store.commit('setWin', {
-					type: 'confirm',
-					content: str,
-					callback: async (str) => {
-						if (str == 'ok') {
-							await http[urlType]({
-								data
-							});
-							this.newgetActivityList();
-						}
+		transFormData: function(time, type) {
+			// 转换时间
+			if (time && time.length == 10) {
+				time *= 1000;
+			}
+			let str = '';
+			if (type == 1) {
+				str = 'yyyy-MM-dd hh:mm';
+			} else {
+				str = 'yyyy-MM-dd';
+			}
+			return utils.format(new Date(time), str);
+		},
+		setType: function(type) {
+			// 设置活动类型
+			return this.typeObj[type];
+		},
+		//下一页
+		// addpage() {
+		// 	this.light(this.flag);
+		// },
+		getPageNum: function(obj) {
+			this.page = obj.page;
+			this.num = obj.num;
+			this.newgetActivityList();
+		},
+		//新增活动
+		// addActivity: function() {
+		// 	// openWin(true, true);
+		// 	this.showAdd = true;
+		// },
+		sendData({
+			urlType,
+			data,
+			str
+		}) {
+			this.$store.commit('setWin', {
+				type: 'confirm',
+				content: str,
+				callback: async (str) => {
+					if (str == 'ok') {
+						await http[urlType]({
+							data
+						});
+						this.newgetActivityList();
 					}
 				});
 			},
@@ -393,107 +398,81 @@
 					item.isShowdetail = true;
 					storage.session('activityDetail', 'true');
 				}
-				//当前点击的对象的数据保存起来
-				storage.session('activityInfo', item);
-				this.addActivity();
-			},
-			setTitle: function() { //设置标题
-				this.$store.commit('setPageTools', [
-					{
-						name: '返回',
-						className: 'el-btn-blue',
-						fn: () => {
-							this.returnActivity();
-						}
-					},
-					{
-						name: '新建活动',
-						className: 'el-btn-yellow',
-						fn: () => {
-							this.addActivity();
-						}
-					}
-				]);
-			},
-			returnActivity: function() { //返回活动首页
-				this.$router.push('/admin/activity');
-			},
-			addActivity: function() { //新建活动
-				switch (this.activityType) {
-					case 0:
-						this.$router.push('/admin/activity/generalActivity/birth');
-						break;
-					case 1:
-						this.$router.push('/admin/activity/generalActivity/custom');
-						break;
-					case 2:
-						this.$router.push('/admin/activity/generalActivity/agift');
-						break;
-					case 3:
-						this.$router.push('/admin/activity/generalActivity/encourage');
-						break;
-					case 4:
-						this.$router.push('/admin/activity/generalActivity/fission');
-						break;
-					case 5:
-						this.$router.push('/admin/activity/generalActivity/member');
-						break;
-					case 6:
-						this.$router.push('/admin/activity/generalActivity/fullreduce');
-						break;
-					case 8:
-						this.$router.push('/admin/activity/generalActivity/fulltime');
-						break;
-					case 9:
-						this.$router.push('/admin/activity/generalActivity/returnticket');
-						break;
-					case 10:
-						this.$router.push('/admin/activity/generalActivity/wakemarketing');
-						break;
+			});
+			this.activityList = data.list;
+			this.pageTotal = data.total;
+			this.count = data.count;
+		},
+		modfycoupons(item, type) { //编辑活动
+			if (type == '2') {
+				//点击查看详情的状态
+				item.isShowdetail = true;
+				storage.session('activityDetail', 'true');
+			}
+			//当前点击的对象的数据保存起来
+			storage.session('activityInfo', item);
+			this.addActivity();
+		},
+		setTitle: function() { //设置标题
+			this.$store.commit('setPageTools', [{
+				name: '返回',
+				className: 'el-btn-blue',
+				fn: () => {
+					this.returnActivity();
 				}
 			},
-			// 获取卡属门店店铺列表
-			clickShopList: function(arr) {
-				let idArr = [];
-				arr.forEach((item) => { //,index
-					if (item.selected == true) {
-						idArr.push(item.id);
-					}
-				});
-			},
-			getShopList: function() {
-				// 获取卡属门店店铺列表
-				if (this.ischain == '3') { // 处理品牌逻辑
-					this.shopsList = storage.session('shopList');
-					for (let item of this.shopsList) {
-						item.name = item.shopName;
-					}
-				} else if (this.ischain == '0') {
-					//this.shopsName = this.userData.currentShop.name;
-					//this.listObj.belongToShop.push(this.userData.currentShop.id);
+			{
+				name: '新建活动',
+				className: 'el-btn-yellow',
+				fn: () => {
+					this.addActivity();
 				}
-			},
-			//每页显示多少条数据
-			handleSizeChange(p) {
-				this.page = 1;
-				this.num = p;
-				this.newgetActivityList();
-			},
-			//页码跳转
-			pageChange(p) {
-				this.page = p;
-				this.newgetActivityList();
-			},
-			getObject: function(item) {
-				// 生日活动 新会员开卡礼 裂变活动 会员日 消费券返券 '全体会员'
-				// 满减活动 消费满次 唤醒营销 '所有人'
-				// 自定义活动 店内 线上=> 会员和粉丝
-				// 消费额激励 会员 和 粉丝
-				let objName = '--';
-				let allMember = ['0', '2', '4', '5', '9'];
-				let allPeople = ['6', '8', '10'];
-				if (allMember.indexOf(item.type) != -1) {
-					objName = '全体会员';
+			}
+			]);
+		},
+		returnActivity: function() { //返回活动首页
+			this.$router.push('/admin/activity');
+		},
+		addActivity: function() { //新建活动
+			switch (this.activityType) {
+				case 0:
+					this.$router.push('/admin/activity/generalActivity/birth');
+					break;
+				case 1:
+					this.$router.push('/admin/activity/generalActivity/custom');
+					break;
+				case 2:
+					this.$router.push('/admin/activity/generalActivity/agift');
+					break;
+				case 3:
+					this.$router.push('/admin/activity/generalActivity/encourage');
+					break;
+				case 4:
+					this.$router.push('/admin/activity/generalActivity/fission');
+					break;
+				case 5:
+					this.$router.push('/admin/activity/generalActivity/member');
+					break;
+				case 6:
+					this.$router.push('/admin/activity/generalActivity/fullreduce');
+					break;
+				case 8:
+					this.$router.push('/admin/activity/generalActivity/fulltime');
+					break;
+				case 9:
+					this.$router.push('/admin/activity/generalActivity/returnticket');
+					break;
+				case 10:
+					this.$router.push('/admin/activity/generalActivity/wakemarketing');
+					break;
+			}
+		},
+		// 获取卡属门店店铺列表
+		clickShopList: function(arr) {
+			let idArr = [];
+			arr.forEach((item) => { //,index
+				if (item.selected == true) {
+					idArr.push(item.id);
 				}
 				if (allPeople.indexOf(item.type) != -1) {
 					objName = '所有人';
@@ -544,8 +523,51 @@
 			if (this.ischain != 1 && this.ischain != 2) {
 				this.setTitle();
 			}
-			this.newgetActivityList();
-			this.getShopList();
+			//个例
+			if (item.type == '1' || item.type == '3') {
+				if (item.objectType == '0' && item.type == '1') {
+					objName = '店内';
+				} else {
+					let memberName = '';
+					let fansName = '';
+					let member = item.sendProgress.split(',')[0]; //会员的筛选数量
+					if (member > 0) {
+						memberName = '会员';
+					}
+					if (item.selectFans && item.selectFans == 1) {
+						fansName = '粉丝';
+					}
+					if (memberName != '' && fansName != '') {
+						objName = memberName + '+' + fansName;
+					} else {
+						objName = memberName + fansName;
+					}
+				}
+			}
+			return objName;
+		}
+	},
+	components: {
+		page: () =>
+			import( /* webpackChunkName:'page_element' */ 'src/components/page_element'),
+		canMulti: () =>
+			import( /*webpackChunkName: 'can_multi'*/ 'src/components/can_multi'),
+		'comTable': () =>
+			import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+		selectStore: () =>
+			import( /*webpackChunkName: 'select_store'*/ 'src/components/select_store'),
+		PageElement: () =>
+			import( /*webpackChunkName: "page_element"*/ 'src/components/page_element'),
+	},
+	beforeCreate() {
+		currentShop = storage.session('userShop').currentShop;
+	},
+	mounted() {
+		this.ischain = currentShop.ischain;
+		//console.log(this.ischain)
+		this.activityType = storage.session('activityType');
+		if (this.ischain != 1 && this.ischain != 2) {
+			this.setTitle();
 		}
 	};
 </script>

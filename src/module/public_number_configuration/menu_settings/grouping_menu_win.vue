@@ -17,37 +17,15 @@
 	</Win>
 </template>
 <script type="text/javascript">
-	export default {
-		data() {
-			return {
-				okStyle: {
-					content: '确认',
-					style: {
-						backgroundColor: '#FF9800',
-						color: '#fff'
-					}
-				},
-				cancelStyle: {
-					content: '取消',
-					style: {
-						backgroundColor: '#b3b3b3',
-						color: '#fff'
-					}
-				},
-				selectId: '', //选中的放在这里面
-				validName: ''
-			};
-		},
-		props: {
-			menuselName: Array, //菜单
-		},
-		methods: {
-			valiData: function(content, title, winType) { //提示框格式化
-				this.$store.commit('setWin', {
-					content: content,
-					title: title,
-					winType: winType
-				});
+export default {
+	data() {
+		return {
+			okStyle: {
+				content: '确认',
+				style: {
+					backgroundColor: '#FF9800',
+					color: '#fff'
+				}
 			},
 			getAppliedWin: function(res) {
 				if (res == 'ok') {
@@ -64,13 +42,14 @@
 				this.selectId = item.id;
 			},
 		},
-		components: {
-			Win: () =>
-				import( /* webpackChunkName:'win' */ 'src/components/win'),
-			'mulSelect': () =>
-				import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
-		}
-	};
+	},
+	components: {
+		Win: () =>
+			import( /* webpackChunkName:'win' */ 'src/components/win'),
+		'mulSelect': () =>
+			import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+	}
+};
 </script>
 <style scoped>
 	#tan {

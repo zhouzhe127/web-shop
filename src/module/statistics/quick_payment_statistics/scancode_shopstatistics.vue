@@ -365,8 +365,22 @@
 			this.setTitle();
 			this.getScanPayData();
 		},
-		destroyed() {
-			clearInterval(this.timer);
+		setTitle: function() {
+			this.$store.commit('setPageTools', [{
+				name: '返回',
+				className: 'el-btn-blue',
+				fn: () => {
+					this.returnStore();
+				}
+			},
+			{
+				name: '导出',
+				className: 'el-btn-yellow',
+				fn: () => {
+					this.Exportcodes();
+				}
+			}
+			]);
 		}
 	};
 </script>

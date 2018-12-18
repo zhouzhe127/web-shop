@@ -400,6 +400,18 @@ export default {
 		type: 'file',
 		// method: 'get'
 	},
+	'foodUpdate': {
+		url: f + 'shop/update', // 装修更新门店名称
+		method: 'post'
+	},
+	'foodDeleteImg': {
+		url: f + 'shop/deleteImg', // 装修删除图片
+		method: 'post'
+	},
+	'foodGetShopPs': {
+		url: f + 'shop/getShopPs', // 获取装修信息
+		method: 'post'
+	},
 	/* ↑ 砍价活动(粮票集) ↑
 	-------------------*/
 	'couponRemind': {

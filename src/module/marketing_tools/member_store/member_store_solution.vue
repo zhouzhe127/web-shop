@@ -211,128 +211,145 @@
 		<select-work-shop-win :slectsShopIds="slectsShopIds" :isEdit="isEdit" @closeWin="closeShopWin" v-if="isShowShopWin"></select-work-shop-win>
 	</div>
 </template>
-<script>
-	import storage from 'src/verdor/storage';
-	import global from 'src/manager/global';
-	import http from 'src/manager/http';
-	import utils from 'src/verdor/utils';
+<script type="text/javascript">
+import storage from 'src/verdor/storage';
+import global from 'src/manager/global';
+import http from 'src/manager/http';
+import utils from 'src/verdor/utils';
 
-	export default {
-		data() {
-			return {
-				ischain: '',
-				bannerList: [
-					{
-						name: '固定方案'
-					},
-					{
-						name: '自定义方案'
-					}
-				], //固定还是自定义方案，数组
-				//          bannerOn: '',//判断是固定方案还是自定义方案，默认固定
-				indexOn: 0, //默认固定
-				isFlag: true, //编辑方案是固定和自定义是否可以切换
-				num: 1, //排序输入框默认值
-				defNum: 1, //自定义排序输入框默认值
-				presentList: [
-					{
-						name: '赠送固定储值金额'
-					},
-					{
-						name: '按比例赠送储值金额'
-					}
-				],
-				presentOn: '-1',
-				integralList: [
-					{
-						name: '赠送固定积分'
-					},
-					{
-						name: '按比例赠送积分'
-					}
-				],
-				integralOn: '-1',
-				conditionList: [
-					{
-						name: '满足储值区间可赠送',
-						id: 0
-					},
-					{
-						name: '满足储值条件可赠送',
-						id: 1
-					}
-				],
-				conditionOn: 0,
-				typeName: '满足储值区间可赠送',
-				willShow: false, //活动类型框是否显示
-				ditchList: [
-					{
-						id: 1,
-						name: '微信'
-					},
-					{
-						id: 2,
-						name: 'POS收银'
-					}
-				],
-				ditchOn: '-1',
-				selects: [],
-				rangeList: [
-					{
-						name: '等于',
-						id: '1'
-					},
-					{
-						name: '大于等于',
-						id: '3'
-					},
-					{
-						name: '小于等于',
-						id: '4'
-					}
-				],
-				rangeShow: false,
-				rangeName: '等于',
-				rangeOn: 0,
-				id: '', //方案ID
-				name: '', //方案名
-				defName: '', //自定义方案名
-				sort: '', //排序
-				channel: '', //渠道:1(微信),2(pos收银)【自定义方案默认2】
-				defChannel: '', //自定义渠道
-				deposit: '', //储值金额(自定义方案时 条件是满足储值金额区间可赠送时是范围开始金额)
-				defDeposit: '', //自定义方案范围开始
-				payment: '', //支付金额 (自定义方案时 条件是满足储值金额区间可赠送时是储值范围结束金额)
-				defPayment: '', //自定义方案范围结束
-				giftAmount: '', //赠送金额
-				defGiftAmount: '', //自定义方案赠送金额
-				giftPoint: '', //赠送积分
-				defGiftPoint: '', //自定义方案赠送积分
-				type: '', //储值类型 1固定 2自定义
-				giftAmountRule: '', //增送金额规则 1(赠送固定储值金额) 2(按比例赠送储值金额) （没有就不用传）
-				giftPointRule: '', //增送积分规则 1(赠送固定积分) 2(按比例赠送积分) （没有就不用传）
-				depositRule: '', //自定义类型独有:1(等于)2(范围) 3(大于等于) 4（小于等于） （没有就不用传）
-				couponIds: [], //json串关联的优惠券
-				compareArr: [], //用于比较优惠劵数组
-				editdetail: '', //修改数据
-				showCoupon: false,
-				slectsShopIds: [], //   选择的门店
-				customslectsShopIds: [], //自定义方案选择的门店
-				fixedslectsShopIds: [], //固定方案选择的门店
-				isShowShopWin: false,
-				isEdit: false,
-				flag: false,
-			};
-		},
-		watch: {
-			'selects': function() {
-				this.flag = false;
-				for (let item of this.selects) {
-					if (item == '2') {
-						this.flag = true;
-						break;
-					}
+export default {
+	data() {
+		return {
+			ischain: '',
+			bannerList: [{
+				name: '固定方案'
+			},
+			{
+				name: '自定义方案'
+			}
+			], //固定还是自定义方案，数组
+			//          bannerOn: '',//判断是固定方案还是自定义方案，默认固定
+			indexOn: 0, //默认固定
+			isFlag: true, //编辑方案是固定和自定义是否可以切换
+			num: 1, //排序输入框默认值
+			defNum: 1, //自定义排序输入框默认值
+			presentList: [{
+				name: '赠送固定储值金额'
+			},
+			{
+				name: '按比例赠送储值金额'
+			}
+			],
+			presentOn: '-1',
+			integralList: [{
+				name: '赠送固定积分'
+			},
+			{
+				name: '按比例赠送积分'
+			}
+			],
+			integralOn: '-1',
+			conditionList: [{
+				name: '满足储值区间可赠送',
+				id: 0
+			},
+			{
+				name: '满足储值条件可赠送',
+				id: 1
+			}
+			],
+			conditionOn: 0,
+			typeName: '满足储值区间可赠送',
+			willShow: false, //活动类型框是否显示
+			ditchList: [{
+				id: 1,
+				name: '微信'
+			},
+			{
+				id: 2,
+				name: 'POS收银'
+			}
+			],
+			ditchOn: '-1',
+			selects: [],
+			rangeList: [{
+				name: '等于',
+				id: '1'
+			},
+			{
+				name: '大于等于',
+				id: '3'
+			},
+			{
+				name: '小于等于',
+				id: '4'
+			}
+			],
+			rangeShow: false,
+			rangeName: '等于',
+			rangeOn: 0,
+			id: '', //方案ID
+			name: '', //方案名
+			defName: '', //自定义方案名
+			sort: '', //排序
+			channel: '', //渠道:1(微信),2(pos收银)【自定义方案默认2】
+			defChannel: '', //自定义渠道
+			deposit: '', //储值金额(自定义方案时 条件是满足储值金额区间可赠送时是范围开始金额)
+			defDeposit: '', //自定义方案范围开始
+			payment: '', //支付金额 (自定义方案时 条件是满足储值金额区间可赠送时是储值范围结束金额)
+			defPayment: '', //自定义方案范围结束
+			giftAmount: '', //赠送金额
+			defGiftAmount: '', //自定义方案赠送金额
+			giftPoint: '', //赠送积分
+			defGiftPoint: '', //自定义方案赠送积分
+			type: '', //储值类型 1固定 2自定义
+			giftAmountRule: '', //增送金额规则 1(赠送固定储值金额) 2(按比例赠送储值金额) （没有就不用传）
+			giftPointRule: '', //增送积分规则 1(赠送固定积分) 2(按比例赠送积分) （没有就不用传）
+			depositRule: '', //自定义类型独有:1(等于)2(范围) 3(大于等于) 4（小于等于） （没有就不用传）
+			couponIds: [], //json串关联的优惠券
+			compareArr: [], //用于比较优惠劵数组
+			editdetail: '', //修改数据
+			showCoupon: false,
+			slectsShopIds: [], //   选择的门店
+			customslectsShopIds: [], //自定义方案选择的门店
+			fixedslectsShopIds: [], //固定方案选择的门店
+			isShowShopWin: false,
+			isEdit: false,
+			flag: false,
+		};
+	},
+	watch: {
+		'selects': function() {
+			this.flag = false;
+			for (let item of this.selects) {
+				if (item == '2') {
+					this.flag = true;
+					break;
 				}
+			}
+		},
+		'couponIds': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.couponIds);
+			}
+		}
+	},
+	components: {
+		subadd: () =>
+			import( /* webpackChunkName:'subadd' */ 'src/components/subadd'),
+		mulSelect: () =>
+			import( /* webpackChunkName:'mul_select' */ 'src/components/mul_select'),
+		'addCoupon': () =>
+			import( /*webpackChunkName: 'associated_coupons'*/ 'src/components/associated_coupons'),
+		'select-work-shop-win': () =>
+			import( /* webpackChunkName: 'select_work_shop_win' */ './../../seller_assistant/staff/select_work_shop_win'),
+	},
+	mounted() {
+		this.$store.commit('setPageTools', [{
+			name: '返回',
+			fn: () => {
+				this.backList();
 			},
 			'couponIds': {
 				deep: true,
@@ -435,22 +452,87 @@
 				this.selects = index;
 				this.channel = this.selects;
 
-			},
+		//选择区间范围
+		chooseRange: function(item) {
+			//console.log(item)
+			//this.rangeOn = index;
+			// this.rangeName = item.name;
+			// this.rangeShow = false;
+			this.depositRule = item;
+		},
+		//显示活动类型
+		getClick: function() {
+			if (this.willShow == true) {
+				this.willShow = false;
+			} else {
+				this.willShow = true;
+			}
+		},
+		//显示区间条件
+		getRange: function() {
+			if (this.rangeShow == true) {
+				this.rangeShow = false;
+			} else {
+				this.rangeShow = true;
+			}
+		},
+		//选择满足何种赠送条件
+		choseType: function(index, item) {
+			this.conditionOn = index;
+			this.typeName = item.name;
+			this.willShow = false;
+		},
+		//返回
+		backList: function() {
+			this.$router.push('/admin/memberStoredValueScheme');
+		},
+		//关联优惠券弹窗
+		addCoupon: function() { //添加优惠券
+			this.showCoupon = true;
+		},
+		//请求接口
+		async creatStore() {
+			//判断是固定方案还是自定义方案
+			this.channel = this.selects.toString().replace(',', '');
 
-			//选择区间范围
-			chooseRange: function(item) {
-				//console.log(item)
-				//this.rangeOn = index;
-				// this.rangeName = item.name;
-				// this.rangeShow = false;
-				this.depositRule = item;
-			},
-			//显示活动类型
-			getClick: function() {
-				if (this.willShow == true) {
-					this.willShow = false;
-				} else {
-					this.willShow = true;
+			this.type = this.indexOn + 1;
+			if (this.type == 1) {
+				this.giftAmountRule = '';
+				this.giftPointRule = '';
+				this.depositRule = '';
+				this.slectsShopIds = this.flag ? this.fixedslectsShopIds : []; //固定方案的id
+				if (!global.checkData({
+					name: '请填写方案名',
+					channel: '请选择显示渠道',
+					deposit: {
+						cond: `$$!=''&&!isNaN($$)`,
+						pro: '请正确填写储值金额'
+					},
+					payment: {
+						cond: `$$!=''&&!isNaN($$)`,
+						pro: '请正确填写支付金额'
+					},
+
+				}, this)) return false;
+			}
+			//判断必填项是否填写完整
+			if (this.type == 2) {
+				this.defChannel = 2;
+				this.name = this.defName;
+				this.num = this.defNum;
+				this.channel = this.defChannel;
+				this.deposit = this.defDeposit;
+				this.payment = this.defPayment;
+				this.giftAmount = this.defGiftAmount;
+				this.giftPoint = this.defGiftPoint;
+				this.slectsShopIds = this.customslectsShopIds; //自定义方案的id
+				if (this.presentOn == 0 || this.presentOn == 1) {
+					if (this.giftAmount == '') {
+						this.$store.commit('setWin', {
+							content: '请填写赠送金额'
+						});
+						return false;
+					}
 				}
 			},
 			//显示区间条件
@@ -460,60 +542,21 @@
 				} else {
 					this.rangeShow = true;
 				}
-			},
-			//选择满足何种赠送条件
-			choseType: function(index, item) {
-				this.conditionOn = index;
-				this.typeName = item.name;
-				this.willShow = false;
-			},
-			//返回
-			backList: function() {
-				this.$router.push('/admin/memberStoredValueScheme');
-			},
-			//关联优惠券弹窗
-			addCoupon: function() { //添加优惠券
-				this.showCoupon = true;
-			},
-			//请求接口
-			async creatStore() {
-				//判断是固定方案还是自定义方案
-				this.channel = this.selects.toString().replace(',', '');
-
-				this.type = this.indexOn + 1;
-				if (this.type == 1) {
-					this.giftAmountRule = '';
-					this.giftPointRule = '';
-					this.depositRule = '';
-					this.slectsShopIds = this.flag ? this.fixedslectsShopIds : []; //固定方案的id
-					if (!global.checkData(
-						{
-							name: '请填写方案名',
-							channel: '请选择显示渠道',
-							deposit: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写储值金额'
-							},
-							payment: {
-								cond: `$$!=''&&!isNaN($$)`,
-								pro: '请正确填写支付金额'
-							},
-
-						}, this)) return false;
-				}
-				//判断必填项是否填写完整
-				if (this.type == 2) {
-					this.defChannel = 2;
-					this.name = this.defName;
-					this.num = this.defNum;
-					this.channel = this.defChannel;
-					this.deposit = this.defDeposit;
-					this.payment = this.defPayment;
-					this.giftAmount = this.defGiftAmount;
-					this.giftPoint = this.defGiftPoint;
-					this.slectsShopIds = this.customslectsShopIds; //自定义方案的id
-					if (this.presentOn == 0 || this.presentOn == 1) {
-						if (this.giftAmount == '') {
+				if (this.conditionOn == 0) {
+					this.depositRule = 2;
+					if (!global.checkData({
+						defDeposit: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写自定义赠送条件起始金额'
+						},
+						defPayment: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写自定义赠送条件结束金额'
+						},
+					}, this)) return false;
+					//判断储值金额区间
+					if (this.depositRule == 2) {
+						if ((Number(this.defDeposit) - Number(this.defPayment)) > 0) {
 							this.$store.commit('setWin', {
 								content: '请填写赠送金额'
 							});
@@ -559,14 +602,30 @@
 							}, this)) return false;
 					}
 				}
-				//判断赠送金额条件
-				if (this.presentOn == 0 && this.type == 2) {
-					if (this.defGiftAmount == 0) {
-						this.$store.commit('setWin', {
-							content: '请输入大于0的赠送金额'
-						});
-						return false;
-					}
+				if (this.conditionOn == 1) {
+					if (!global.checkData({
+						defDeposit: {
+							cond: `$$!=''&&!isNaN($$)`,
+							pro: '请正确填写自定义赠送条件起始金额'
+						},
+					}, this)) return false;
+				}
+			}
+			//判断赠送金额条件
+			if (this.presentOn == 0 && this.type == 2) {
+				if (this.defGiftAmount == 0) {
+					this.$store.commit('setWin', {
+						content: '请输入大于0的赠送金额'
+					});
+					return false;
+				}
+			}
+			if (this.presentOn == 1 && this.type == 2) {
+				if (this.defGiftAmount == 0) {
+					this.$store.commit('setWin', {
+						content: '请输入大于0的赠送金额比例'
+					});
+					return false;
 				}
 				if (this.presentOn == 1 && this.type == 2) {
 					if (this.defGiftAmount == 0) {

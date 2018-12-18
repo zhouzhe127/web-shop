@@ -244,186 +244,179 @@
 	import http from 'src/manager/http';
 	import utils from 'src/verdor/utils';
 
-	export default {
-		data() {
-			return {
-				ischain: '', //0 单店 3 品牌
-				couponName: '', //优惠券名称
-				shopWin: false, // 店铺弹框
-				hiddenText: false,
-				goodsWin: false, // 商品弹框
-				isShowCa: false, // 是否展示时间选择组件
-				selectShops: [], //选中的商铺
-				Goods: [],
-				Packages: [],
-				selectGoods: [], //选中的商品
-				selectPackages: [], //选中的套餐
-				compulsoryCreditsList: [
-					{
-						'compulsoryCredits': '0',
-						'name': '否'
-					},
-					{
-						'compulsoryCredits': '1',
-						'name': '是'
-					}
-				],
-				compulsoryName: '否',
-				compulsoryCredits: '0', //是否包含口味价格
-				validList: [
-					{
-						'validType': '0',
-						'name': '相对时间'
-					},
-					{
-						'validType': '1',
-						'name': '指定时间'
-					}
-				],
-				validName: '相对时间',
-				validType: {
-					'index': 0, //0指定时间 1相对时间
-					'time': '', //制定时间输入的值 领取后多少日生效
-					'startTime': (new Date()).getTime(), //相对时间的开始时间
-					'endTime': (new Date()).getTime(), //相对时间的结束时间
-					'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
-				}, //券有效期 
-				validTimeList: [
-					{ //过期时间
-						name: '领取后即刻生效',
-						id: 0
-					},
-					{
-						name: '领取1小时后生效',
-						id: 1
-					},
-					{
-						name: '领取2小时后生效',
-						id: 2
-					},
-					{
-						name: '领取3小时后生效',
-						id: 3
-					},
-					{
-						name: '领取6小时后生效',
-						id: 6
-					},
-					{
-						name: '领取12小时后生效',
-						id: 12
-					},
-					{
-						name: '领取24小时后生效',
-						id: 24
-					}
-				],
-				validTimeId: '0', //领取后选定时间内生效
-				validTime: '领取后即刻生效', //状态 
-				useDate: {
-					'list': ['不设限制', '指定每周使用时段', '指定每月使用日期和时段 '],
-					'index': 0,
-					'week': [], //周
-					'month': [], //月
-					'show': false
-				}, //使用时段 
-				useThresholdList: [
-					{ //指定门槛
-						name: '不设限制',
-						id: 0
-					},
-					{
-						name: '指定门槛',
-						id: 1
-					},
-				],
-				useThresholdName: '不设限制',
-				useThresholdId: '0',
-				threshold: '', //指定门槛金额
-				annotation: '', //备注
-				useKnow: '', //使用须知
-				editCoupon: false, //修改的标示
-				shopList: [], //店铺
-				isSharingId: 0,
-				isSharing: '不与其它优惠共享',
-				isSharingList: [
-					{ //是否优惠共享
-						name: '不与其它优惠共享',
-						id: 0
-					},
-					{
-						name: '可与其他优惠共享',
-						id: 1
-					}
-				],
-				concessionSharingId: 0,
-				concessionSharing: '不与会员卡优惠共用',
-				concessionSharingList: [
-					{ //优惠共享
-						name: '不与会员卡优惠共用',
-						id: 0
-					},
-					{
-						name: '可与会员卡优惠共用',
-						id: 1
-					}
-				],
-				sharingStatus: '',
-				goodsNum: '', //购买的的数量
-				giveNum: '', //赠送的数量
-				goodsType: '0', //标示菜品弹窗
-				selectGoodsSec: [], //第二件选中的商品
-				selectPackagesSec: [], //第二件选中的套餐
-				isGoods: true
-			};
-		},
-		props: {
-			couponDetail: Object, //详情
-		},
-		mounted() {
-			this.ischain = storage.session('userShop').currentShop.ischain;
-			this.shopList = storage.session('shopList');
-			if (!utils.isEmptyObject(this.couponDetail)) {
-				let couponDetail = this.couponDetail;
-				this.editCoupon = true;
-				this.couponName = couponDetail.name; //优惠券名称
-				if (couponDetail.shopIds && couponDetail.shopIds.length > 0) {
-					this.selectShops = couponDetail.shopIds.split(',');
-				} //选中的店铺
-				if (couponDetail.gids && couponDetail.gids.length > 0 && couponDetail.gids != null && couponDetail.gids != 0) {
-					this.selectGoods = couponDetail.gids.split(',');
-				} //关联商品
-				if (couponDetail.pids && couponDetail.pids.length > 0 && couponDetail.pids != null && couponDetail.pids != 0) {
-					this.selectPackages = couponDetail.pids.split(',');
-				} //关联套餐
-				//第二件商品套餐选中
-				if (couponDetail.giveGids) {
-					this.selectGoodsSec = couponDetail.giveGids.split(',');
-				}
-				if (couponDetail.givePids) {
-					this.selectPackagesSec = couponDetail.givePids.split(',');
-				}
-				//购买商品数量
-				this.goodsNum = couponDetail.goodsNum;
-				//赠送商品数量
-				this.giveNum = couponDetail.giveNum;
-				this.compulsoryCredits = couponDetail.tastePrice; //是否包含口味
-				if (this.compulsoryCredits == '1') {
-					this.compulsoryName = '是';
-				}
-				this.validType.index = couponDetail.validityType; //相对时间 绝对时间
-				if (couponDetail.validityType == 0) {
-					this.validType.time = couponDetail.relativeTime;
-				} else if (couponDetail.validityType == 1) {
-					this.validName = '指定时间';
-					this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
-					this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
-				}
-				this.useDate.index = couponDetail.periodSel;
-				if (couponDetail.periodSel == 1) {
-					if (couponDetail.useTime && couponDetail.useTime.list) {
-						this.useDate.week = this.changeArrToNeed(couponDetail.useTime.list, 'w');
-					}
+export default {
+	data() {
+		return {
+			ischain: '', //0 单店 3 品牌
+			couponName: '', //优惠券名称
+			shopWin: false, // 店铺弹框
+			hiddenText: false,
+			goodsWin: false, // 商品弹框
+			isShowCa: false, // 是否展示时间选择组件
+			selectShops: [], //选中的商铺
+			Goods: [],
+			Packages: [],
+			selectGoods: [], //选中的商品
+			selectPackages: [], //选中的套餐
+			compulsoryCreditsList: [{
+				'compulsoryCredits': '0',
+				'name': '否'
+			},
+			{
+				'compulsoryCredits': '1',
+				'name': '是'
+			}
+			],
+			compulsoryName: '否',
+			compulsoryCredits: '0', //是否包含口味价格
+			validList: [{
+				'validType': '0',
+				'name': '相对时间'
+			},
+			{
+				'validType': '1',
+				'name': '指定时间'
+			}
+			],
+			validName: '相对时间',
+			validType: {
+				'index': 0, //0指定时间 1相对时间
+				'time': '', //制定时间输入的值 领取后多少日生效
+				'startTime': (new Date()).getTime(), //相对时间的开始时间
+				'endTime': (new Date()).getTime(), //相对时间的结束时间
+				'valueTime': [new Date().setHours(0, 0, 0, 0), new Date().setHours(23, 59, 59, 999)], //时间控件
+			}, //券有效期 
+			validTimeList: [{ //过期时间
+				name: '领取后即刻生效',
+				id: 0
+			},
+			{
+				name: '领取1小时后生效',
+				id: 1
+			},
+			{
+				name: '领取2小时后生效',
+				id: 2
+			},
+			{
+				name: '领取3小时后生效',
+				id: 3
+			},
+			{
+				name: '领取6小时后生效',
+				id: 6
+			},
+			{
+				name: '领取12小时后生效',
+				id: 12
+			},
+			{
+				name: '领取24小时后生效',
+				id: 24
+			}
+			],
+			validTimeId: '0', //领取后选定时间内生效
+			validTime: '领取后即刻生效', //状态 
+			useDate: {
+				'list': ['不设限制', '指定每周使用时段', '指定每月使用日期和时段 '],
+				'index': 0,
+				'week': [], //周
+				'month': [], //月
+				'show': false
+			}, //使用时段 
+			useThresholdList: [{ //指定门槛
+				name: '不设限制',
+				id: 0
+			},
+			{
+				name: '指定门槛',
+				id: 1
+			},
+			],
+			useThresholdName: '不设限制',
+			useThresholdId: '0',
+			threshold: '', //指定门槛金额
+			annotation: '', //备注
+			useKnow: '', //使用须知
+			editCoupon: false, //修改的标示
+			shopList: [], //店铺
+			isSharingId: 0,
+			isSharing: '不与其它优惠共享',
+			isSharingList: [{ //是否优惠共享
+				name: '不与其它优惠共享',
+				id: 0
+			},
+			{
+				name: '可与其他优惠共享',
+				id: 1
+			}
+			],
+			concessionSharingId: 0,
+			concessionSharing: '不与会员卡优惠共用',
+			concessionSharingList: [{ //优惠共享
+				name: '不与会员卡优惠共用',
+				id: 0
+			},
+			{
+				name: '可与会员卡优惠共用',
+				id: 1
+			}
+			],
+			sharingStatus: '',
+			goodsNum: '', //购买的的数量
+			giveNum: '', //赠送的数量
+			goodsType: '0', //标示菜品弹窗
+			selectGoodsSec: [], //第二件选中的商品
+			selectPackagesSec: [], //第二件选中的套餐
+			isGoods: true
+		};
+	},
+	props: {
+		couponDetail: Object, //详情
+	},
+	mounted() {
+		this.ischain = storage.session('userShop').currentShop.ischain;
+		this.shopList = storage.session('shopList');
+		if (!utils.isEmptyObject(this.couponDetail)) {
+			let couponDetail = this.couponDetail;
+			this.editCoupon = true;
+			this.couponName = couponDetail.name; //优惠券名称
+			if (couponDetail.shopIds && couponDetail.shopIds.length > 0) {
+				this.selectShops = couponDetail.shopIds.split(',');
+			} //选中的店铺
+			if (couponDetail.gids && couponDetail.gids.length > 0 && couponDetail.gids != null && couponDetail.gids != 0) {
+				this.selectGoods = couponDetail.gids.split(',');
+			} //关联商品
+			if (couponDetail.pids && couponDetail.pids.length > 0 && couponDetail.pids != null && couponDetail.pids != 0) {
+				this.selectPackages = couponDetail.pids.split(',');
+			} //关联套餐
+			//第二件商品套餐选中
+			if (couponDetail.giveGids) {
+				this.selectGoodsSec = couponDetail.giveGids.split(',');
+			}
+			if (couponDetail.givePids) {
+				this.selectPackagesSec = couponDetail.givePids.split(',');
+			}
+			//购买商品数量
+			this.goodsNum = couponDetail.goodsNum;
+			//赠送商品数量
+			this.giveNum = couponDetail.giveNum;
+			this.compulsoryCredits = couponDetail.tastePrice; //是否包含口味
+			if (this.compulsoryCredits == '1') {
+				this.compulsoryName = '是';
+			}
+			this.validType.index = couponDetail.validityType; //相对时间 绝对时间
+			if (couponDetail.validityType == 0) {
+				this.validType.time = couponDetail.relativeTime;
+			} else if (couponDetail.validityType == 1) {
+				this.validName = '指定时间';
+				this.validType.valueTime[0] = (couponDetail.startTime - 0) * 1000;
+				this.validType.valueTime[1] = (couponDetail.endTime - 0) * 1000;
+			}
+			this.useDate.index = couponDetail.periodSel;
+			if (couponDetail.periodSel == 1) {
+				if (couponDetail.useTime && couponDetail.useTime.list) {
+					this.useDate.week = this.changeArrToNeed(couponDetail.useTime.list, 'w');
 				}
 				if (couponDetail.periodSel == 2) {
 					if (couponDetail.useTime && couponDetail.useTime.list) {
@@ -617,18 +610,24 @@
 					}
 					na.push(obj);
 				}
-				return na;
-			},
-			checkData() {
-				let reg = /^[0-9]*$/;
-				let reg2 = /^\d+(\.\d+)?$/;
-				if (!global.checkData(
-					{
-						couponName: {
-							cond: `$$.trim() !== '' && $$.length<=20`,
-							pro: '优惠券名称不能为空且不能超过20个字'
-						},
-					}, this)) {
+				na.push(obj);
+			}
+			return na;
+		},
+		checkData() {
+			let reg = /^[0-9]*$/;
+			let reg2 = /^\d+(\.\d+)?$/;
+			if (!global.checkData({
+				couponName: {
+					cond: `$$.trim() !== '' && $$.length<=20`,
+					pro: '优惠券名称不能为空且不能超过20个字'
+				},
+			}, this)) {
+				return false;
+			}
+			if (this.ischain == '3') {
+				if (this.selectShops.length == 0) {
+					this.valiData('请选择优惠券的关联店铺');
 					return false;
 				}
 				if (this.ischain == '3') {

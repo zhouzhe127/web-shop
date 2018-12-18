@@ -166,17 +166,107 @@
 	import storage from 'src/verdor/storage';
 	import getAppliedWin from './../../seller_assistant/spiking_commodity/new_goods_win.vue';
 
-	export default {
-		data() {
-			return {
-				bannerList: [
-					{
-						name: '品牌商品',
-						id: 0
-					},
-					{
-						name: '门店商品',
-						id: 1
+export default {
+	data() {
+		return {
+			bannerList: [{
+				name: '品牌商品',
+				id: 0
+			},
+			{
+				name: '门店商品',
+				id: 1
+			}
+			], //固定还是自定义方案，数组
+			isFlag: true,
+			indexOn: 0, //默认固定
+			commoditySlect: '品牌商品',
+			durationList: [{ //活动期限
+				name: '积分商品',
+				id: 0
+			},
+			{
+				name: '优惠券',
+				id: 1
+			}
+			],
+			durationId: 0,
+			durationName: '积分商品', //状态
+			showCoupon: false,
+			couponList: [], //优惠券列表
+			selectCoupon: [], //选中的列表
+			name: '', //商品名称
+			price: '', //所需积分
+			inventory: '', //库存
+			sort: '', //商品排序
+			status: false,
+			gid: null,
+			imgData: null,
+			fileName: null,
+			expire: '', //过期时间
+			limit: 0, //购买次数
+			description: '',
+			bigName: null,
+			title: '',
+			cash: '0', //兑换所需的现金
+			ass: '',
+			shopList: [], //店铺列表
+			isPopupwindow: '',
+			shopStock: '', //店铺库存
+			shopstock: [], //获取店铺库存
+			editInfos: '',
+			showWin: false,
+		};
+	},
+	watch: {
+		'selectCoupon': {
+			deep: true,
+			handler: function() {
+				this.getCouponName(this.selectCoupon);
+			}
+		}
+	},
+	mounted() {
+		let userData = storage.session('userShop');
+		this.shopId = userData.currentShop.id;
+		this.imgHost = userData.uploadUrl;
+		this.ischain = userData.currentShop.ischain;
+		this.uid = userData.user.id;
+		if (this.ischain == 3) {
+			this.shopList = storage.session('shopList');
+			for (let item of this.shopList) {
+				item.name = item.shopName;
+			}
+		} else if (this.ischain == 0) {
+			this.shopList.push(userData.currentShop);
+		}
+		for (let i = 0; i < this.shopList.length; i++) {
+			this.shopList[i].stock = '';
+		}
+		let editInfos = storage.session('editInfos');
+		this.editInfos = editInfos;
+		if (this.editInfos) {
+			this.title = '编辑积分商品';
+			this.isFlag = !this.isFlag;
+			for (let key in this.editInfos) {
+				this[key] = this.editInfos[key];
+				if (key == 'status')
+					this.status = Boolean(this.editInfos.status == '已上架');
+				if (key == 'type')
+					this.indexOn = this.editInfos.type;
+				this.commoditySlect = this.bannerList[this.indexOn].name;
+				if (key == 'id') this.gid = this.editInfos.id;
+				if (key == 'bigImage')
+					this.bigName =
+					this.editInfos.bigImage == '' ? null : this.editInfos.bigImage;
+				if (key == 'imageName')
+					this.fileName = this.editInfos.imageName == '' ? null : this.editInfos.imageName;
+				if (key == 'goodsType')
+					this.durationId = this.editInfos.goodsType;
+				this.durationName = this.durationList[this.durationId].name;
+				if (key == 'coupons') {
+					if (this.editInfos.coupons && this.editInfos.coupons != '') {
+						this.selectCoupon = this.editInfos.coupons;
 					}
 				], //固定还是自定义方案，数组
 				isFlag: true,
