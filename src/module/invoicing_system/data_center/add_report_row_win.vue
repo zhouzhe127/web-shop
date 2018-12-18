@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-13 15:18:02
+ * @Last Modified time: 2018-12-18 18:13:48
  */
 <template>  
 	<div>
@@ -38,7 +38,8 @@
 			<template slot="footer">
 				<div class="footer">
 					<div class="footer-btn">
-						<el-button @click="clickBtn('cancel')">取 消</el-button>
+						<el-button type="info" @click="clickBtn('cancel')">取 消</el-button>
+						<el-button @click="clickBtn('continue')" v-if="!this.pCollection">继续添加</el-button>
 						<el-button @click="clickBtn('ok')" type="primary">确 定</el-button>
 					</div>
 				</div>
@@ -116,13 +117,6 @@ export default {
 				};
 			}
 		},
-		//物料范围
-		pScope:{
-			type:[Array],
-			default:function(){
-				return [];
-			}
-		},
 		//选择的集合id
 		pCollection:{
 			type:[Number,String],
@@ -148,15 +142,21 @@ export default {
 	},
 	methods: {
 		clickBtn(sym){
-			let obj = {};
-			if(sym == 'cancel'){
-				this.throwData(false);
-			}else{
-				obj = {
-					pSortObj : this.sortObj,
-					pCollection : this.collection,
-				};
-				this.throwData( utils.deepCopy(obj));  
+			let obj = {
+				pSortObj : this.sortObj,
+				pCollection : this.collection,
+			};
+			switch(sym){
+				case 'continue':
+					obj['continue'] = true;
+					this.throwData( utils.deepCopy(obj));  
+					break;				
+				case 'ok':
+					this.throwData( utils.deepCopy(obj));  
+					break;
+				default:
+					this.throwData(false);
+				
 			}
 		},
 
@@ -168,11 +168,15 @@ export default {
 			}
 			switch(this.showCom){
 				case winType.createCollection:  //新建集合,抛出新建的集合
-					await this.getCollectionList(obj.id);
-					this.getSelectCollection(this.collection);
+					if(!obj.continue){
+						this.showCom = '';
+					}
+					delete obj.continue;
+					this.initCollection([obj]);
+					this.collectionList.push(obj);
+					this.getSelectCollection(obj);
 					break;
 			}
-			this.showCom = '';
 		},
 		//获取选择的集合
 		getSelectCollection(row){
@@ -183,15 +187,26 @@ export default {
 
 
 		initDataByProps(){
-			let def = {
-				min:1,
-				max:10,
-				num:1
-			};
-			//排序值
-			this.sortObj =  Object.assign(def, utils.deepCopy(this.pSortObj));      
-			//集合
-			this.collection = {id:this.pCollection};
+			this.initSortObj();
+			Object.assign(this.sortObj, utils.deepCopy(this.pSortObj));  
+
+			this.collection = this.getEle(this.collectionList,'id',this.pCollection);		    
+			if(!this.collection) this.collection = {};
+		},
+
+
+
+
+		//获取集合列表,选中的集合对象
+		async getCollectionList(){
+			let retData = await this.getHttp('materialreportGetStatisticScopeCategoryList');
+			let collectionList = retData.list;
+
+			if(!Array.isArray(collectionList)){
+				collectionList = [];			
+			}
+			this.initCollection(collectionList);
+			return collectionList;	
 		},
 		initCollection(list){
 			for(let ele of list){
@@ -202,21 +217,6 @@ export default {
 				}
 			}
 		},
-		//获取集合列表,选中的集合对象
-		async getCollectionList(id){
-			let retData = await this.getHttp('materialreportGetStatisticScopeCategoryList');
-			let collection = null;
-			let collectionList = retData.list;
-
-			if(Array.isArray(collectionList)){
-				this.initCollection(collectionList);
-				collection = this.getEle(collectionList,'id',id);				
-				if(collection) this.collection = collection;
-				this.collectionList = collectionList;				
-			}
-		},
-
-
 		//获取集合说明
 		getExplain(data,list){//生成说明
 			let str = '';
@@ -250,6 +250,17 @@ export default {
 			}
 			return sele;
 		},
+
+
+
+
+		initSortObj(){
+			this.sortObj = {
+				min:1,
+				max:10,
+				num:1
+			};
+		},
 		//打开弹窗
 		openWin(sym){
 			this.showCom = sym;
@@ -269,15 +280,21 @@ export default {
 			}
 		},
 	},
-	mounted(){
+	async mounted(){
+		this.collectionList = await this.getCollectionList();
 		this.initDataByProps();
-		this.getCollectionList(this.collection.id);
+	},
+	watch:{
+		'pSortObj':function(){
+			this.initDataByProps();
+		},
+		'pCollection':function(){
+			this.initDataByProps();
+		}
 	},
 	components:{
 		selectCollectionCom:() => import(/* webpackChunkName:"select_collection"*/'./select_collection'),
-		selectMaterialCom:() => import(/* webpackChunkName:"report_select_material_win"*/'./report_select_material_win'),
 		createCollectionCom:()=>import( /*webpackChunkName: 'creat_gather_win'*/ 'src/module/invoicing_system/data_center/creat_templatelist/creat_gather_win.vue'), //新建集合
-		
 	}
 };
 </script>
