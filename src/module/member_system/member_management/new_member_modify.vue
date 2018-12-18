@@ -6,22 +6,13 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl">姓名</span>
 				<div class="rightHalf">
-					<!-- <input type="text" class="name" placeholder="请输入用户姓名" v-model='userName' /> -->
 					<el-input v-model="userName" placeholder="请输入用户姓名" maxlength="20" style="width:179px;"></el-input>
 				</div>
 			</div>
-			<!-- 手机号 -->
-			<!-- <div class="online-box clearfix">
-				<span class="online-sub fl">手机号</span>
-				<div class="rightHalf">
-					<input type="text" class="name" placeholder="请输入手机号" v-model='mobile' />
-				</div>
-			</div> -->
 			<!-- 性别 -->
 			<div class="online-box clearfix">
 				<span class="online-sub fl">性别</span>
 				<div class="rightHalf">
-					<!-- <select-btn :name='genderName' :sorts="genderList.map(v=>v.name)" :width="180" @selOn="selegender"></select-btn> -->
 					<el-select v-model="genderName" placeholder="请选择" @change="selegender" style="color:#c0c4cc;width: 179px;">
 						<el-option v-for="item in genderList" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
@@ -32,8 +23,6 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl">生日</span>
 				<div class="rightHalf">
-					<!--日期组件 开始时间-->
-					<!-- 	<calendar-mouth ref='startCal' :pObj='startObj' :tips='tipstart.tips' @throwTime="getStartTime" class="fl"></calendar-mouth> -->
 					<el-date-picker v-model="birthdayTime" type="date" placeholder="请选择生日" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd" style="color:#c0c4cc;width: 179px;">
 					</el-date-picker>
 				</div>
@@ -42,7 +31,6 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl">会员等级</span>
 				<div class="rightHalf">
-					<!-- <select-btn :name='expirationTime' :sorts="expirationTimeList.map(v=>v.name)" :width="180" @selOn="selexpirationTime"></select-btn> -->
 					<el-select v-model="expirationTime" placeholder="请选择" @change="selexpirationTime" style="color:#c0c4cc;width: 179px;">
 						<el-option v-for="item in expirationTimeList" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
@@ -90,23 +78,11 @@ export default {
 			}], //性别列表
 			genderName: '男',
 			genderId: 0, //性别选中的	
-			// startObj: {
-			// 	time: utils.getTime({
-			// 		time: new Date()
-			// 	}).start,
-			// 	show: 1,
-			// 	detail: 1,
-			// 	width: 140
-			// },
 			startObj: {
 				time: utils.getTime({
 					time: new Date()
 				}).start
 			},
-			// tipstart: {
-			// 	tips: '请选择生日',
-			// 	tipsValue: ''
-			// },
 			expirationTimeList: [], //会员等级
 			expirationTimeId: '', //会员等级选中的
 			expirationTime: '请选择会员等级', //状态
@@ -137,13 +113,9 @@ export default {
 			//this.genderName = this.genderList[i].name; //点击门店对应的名字
 			this.genderId = i; //点击门店对应的id	
 		},
-		// getStartTime(str) { //生日范围的开始时间
-		// 	this.startObj.time = str;
-		// 	this.tipstart = this.formatDate(this.startObj.time);
-		// },
 		selexpirationTime: function(i) {
-			this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
-			this.expirationTimeId = this.expirationTimeList[i].id; //点击卡类型对应的id
+			//this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
+			this.expirationTimeId = i; //点击卡类型对应的id
 		},
 		async getMemberList() {
 			// 获取所有会员等级
@@ -155,7 +127,6 @@ export default {
 					this.expirationTimeList.push(item);
 				}
 			}
-			//this.expirationTimeList = utils.deepCopy(data);
 		},
 		checkForm: function() {
 			if (this.startObj.time > new Date().getTime()) {
