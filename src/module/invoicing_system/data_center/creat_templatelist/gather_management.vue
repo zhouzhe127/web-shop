@@ -11,35 +11,36 @@
 			<el-table ref="multipleTable" border v-loading="loading" :header-cell-style="{'background':'#f5f7fa'}" :data="viewData"
 			 tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
 
-				<el-table-column label="批量删除">
-					<template slot="header" slot-scope="scope">
+				<el-table-column v-if="reset" width="150">
+					<!-- <template slot="header" slot-scope="scope">
 						<el-button type="text" size="small" style='color:#D34A2B' @click="dleSelection()">批量删除</el-button>
 					</template>
-					<el-table-column width="100" v-if="reset">
+					<el-table-column width="100" v-if="reset"> -->
 						<template slot="header" slot-scope="scope">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+							<el-button type="text" size="small" style='color:#606266' @click="dleSelection()">批量删除</el-button>
 						</template>
 						<template slot-scope="scope">
 							<el-checkbox v-model="scope.row.checkOut" @change="handleSingleChange"></el-checkbox>
 						</template>
-					</el-table-column>
+					<!-- </el-table-column> -->
 				</el-table-column>
 				<el-table-column label="集合名称" prop="name" width="200">
 				</el-table-column>
-				<el-table-column prop="formula" label="物料数量" show-overflow-tooltip>
+				<el-table-column label="集合类型" show-overflow-tooltip>
 					<template slot-scope="scope">
-						<span>{{scope.row.mid.length}}</span>
+						<span>{{gatherType[scope.row.type]}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="集合单位" show-overflow-tooltip>
+				<el-table-column label="说明" show-overflow-tooltip>
 					<template slot-scope="scope">
-						<span>{{scope.row.unit.name}}</span>
+						<span>{{getExplain(scope.row)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" fixed="right" width="200">
+				<el-table-column label="操作" fixed="right" width="150">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="editList(scope.row)">编辑</el-button>
-						<el-button type="text" size="small" @click="dleSelection(scope.row)" style='color:#D34A2B'>删除</el-button>
+						<el-button type="text" size="small" @click="dleSelection(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -48,8 +49,9 @@
 				 :page-size="num" layout="sizes, prev, pager, next, jumper" :total="Number(allTotal)"></el-pagination>
 			</div>
 		</div>
-		<createCollectionCom v-if="showCreatWin" :title="isEdit?'编辑集合':'新建集合'" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
-		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom>
+		<!-- <createCollectionCom v-if="showCreatWin" :title="isEdit?'编辑集合':'新建集合'" :collectName="editData.name" :pCollectionId="editData.id" :pUnitId="editData.unit?editData.unit.id:null"
+		 :selects="editData.mid" @change="creatWinClose"></createCollectionCom> -->
+		 <creatGatherWin v-if="showCreatWin" :materialList="materialList" :title="isEdit?'编辑集合':'新建集合'" :editData='editData' @change="creatWinClose"></creatGatherWin>
 	</div>
 </template>
 <script>
@@ -70,7 +72,14 @@
 				reset: true,
 				checkAll: false,
 				isIndeterminate: false,
-				isEdit:false
+				isEdit:false,
+				materialList:[],//物料列表
+				gatherType:{
+					3:'物料',
+					4:'单位-物料集合',
+					5:'供应商-物料集合',
+					6:'物料-供应商集合',
+				}
 			};
 		},
 		methods: {
@@ -79,6 +88,7 @@
 				this.isIndeterminate = false;
 				this.allSelection = [];
 				let data = await http.materialreportGetStatisticScopeCategoryList();
+				console.log(data);
 				this.allTotal = data.list.length;
 				this.tableData = data.list;
 				this.loading = false;
@@ -96,14 +106,54 @@
 					(this.page - 1) * this.num,
 					this.page * this.num
 				);
+				console.log(this.viewData);
 			},
 			handleSelectionChange(val) {
 				this.multipleSelection = val;
 
 			},
-
+			getExplain(data){//生成说明
+				let str = '';
+				let text = '';
+				if(data.type!=6)str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`;
+				switch(data.type){
+					// case 3:
+					// 	str = data.isCategory==0?`物料数量：${data.mid.length}`:`物料分类数量：${data.cid.length}`
+					// 	break;
+					case 4:
+						text = `物料单位：${data.unit.name}；`;
+						str = text+str;
+						break;
+					case 5:
+						text = `供应商数量：${data.supplierName.split(',').length}；`;
+						str = text+str;
+						break;
+					case 6:
+						str = `物料名称：${this.getMateralName(data.mid).name}；供应商数量：${data.supplierName.split(',').length}`;
+						break;		
+				}
+				return str;
+			},
+			getMateralName(id){
+				let sele = '';
+				for(let item of this.materialList){
+					if(id == item.id){
+						sele = item;
+						break;
+					}
+				}
+				return sele;
+			},
 			crageBtn() {
 				this.$store.commit('setPageTools', [{
+					name: '返回',
+					className: '',
+					type: 4,
+					icon: 'el-icon-plus',
+					fn: () => {
+						window.history.go(-1);
+					}
+				},{
 					name: '新建集合',
 					className: 'primary',
 					type: 4,
@@ -126,7 +176,6 @@
 				this.showCreatWin = true;
 				this.editData = data;
 				this.isEdit = true;
-				console.log(data);
 			},
 			dleSelection(data) {
 				let str = '';
@@ -210,18 +259,44 @@
 				this.num = num;
 				this.pagination();
 				this.setCheckChange();
-			}
+			},
+			//获取所有物料
+			async recursiveGetMaterialList() {
+				let subObj = {
+					name: '',
+					cid: '',
+					type: -1,
+					num: 50
+				};
+
+				let page = 1;
+				let arr = [];
+
+				for (let i = 0; i < page; i += 1) {
+					subObj.page = i + 1;
+					let retObj = await http.getMaterialList({
+						data: subObj
+					});
+					page = Number(retObj.total);
+					arr.push(...retObj.list);
+				}
+				this.materialList = arr;
+				// return arr;
+			},
 		},
 		activated() {
 			this.crageBtn();
 			this.init();
+			this.recursiveGetMaterialList();
 		},
 		deactivated() {
 			this.$store.commit('setPageTools', []);
 		},
 		components: {
 			createCollectionCom: () => import( /* webpackChunkName:"report_add_collection_win"*/
-				'src/module/invoicing_system/data_center/report_add_collection_win.vue')
+				'src/module/invoicing_system/data_center/report_add_collection_win.vue'),
+			creatGatherWin: () =>
+				import( /*webpackChunkName: 'creat_gather_win'*/ './creat_gather_win.vue'), //新建集合
 		}
 	};
 </script>

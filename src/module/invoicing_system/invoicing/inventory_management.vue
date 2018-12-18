@@ -5,22 +5,12 @@
 		<!-- <ul class="tebBox" v-if="inventConfigure==0">
 			<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
 		</ul> -->
-		<el-radio-group v-if="inventConfigure==0" v-model="tabactive" fill="#e1bb4a" size="medium" @change="tebClick">
+		<el-radio-group v-if="inventConfigure==0" v-model="tabactive" fill="#e1bb4a" @change="tebClick">
 			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
 		</el-radio-group>
 		<!--列表数据-->
 		<section v-show="tabactive==0">
 			<section class="statisticsList" style="vertical-align: middle;margin-bottom: 20px;">
-				<!-- <section class="filter">
-					<input v-model="searchName" type="text" placeholder="请输入商品名" />
-					<input v-model="searchCode" type="text" placeholder="请输入条形码" />
-					<input v-model="secBarCode" type="text" placeholder="请输入副条形码" />
-					<div class="selBox">
-						<select-btn :sorts="goodsList" :name="allGoods" @selOn="selectList" ref="select"></select-btn>
-						<a @click="searchList" href="javascript:void(0);" class="blue" style="width: 100px;height: 40px;line-height: 40px;margin-right: 8px;">筛选</a>
-						<a @click="searchReset" href="javascript:void(0);" class="gray" style="width: 100px;height: 40px;line-height: 40px;">重置</a>
-					</div>
-				</section> -->
 				<div class="asideone">
 					<div class="sleType">
 						<el-input v-model="searchName" placeholder="请输入商品名"></el-input>
@@ -42,8 +32,8 @@
 					</div>
 				</div>
 			</section>
-			<el-table :data="goodsdetail" stripe border style="width: 100%">
-				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
+			<el-table :data="goodsdetail" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column type="index" :index="indexMethod" label="序号" width="100" >
 		   	 	</el-table-column>
 				<el-table-column prop="goodsName" label="商品名" min-width="200">
 				</el-table-column>

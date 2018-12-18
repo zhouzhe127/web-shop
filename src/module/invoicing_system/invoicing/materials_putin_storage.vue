@@ -184,8 +184,8 @@
 					<div v-if="unitName!=smallUnit" class="weightNum-unit">{{smallUnit}}</div>
 				</div>
 				<div class="note">
-					<p>备注</p>
-					<span>{{existingBatchInfo.remark}}</span>
+					<p>备注：</p>
+					<span>{{existingBatchInfo.remark||'--'}}</span>
 				</div>
 			</ul>
 		</div>
@@ -494,7 +494,7 @@
 				}
 			},
 			getpiceunit(id){
-				let str = ''
+				let str = '';
 				for(let item of this.UnitDataInfo){
 					if(id == item.muId){
 						str = item.name;
@@ -503,6 +503,15 @@
 				return str;
 			},
 			async confirm() {
+				this.number = Number(this.number)||0;
+				this.weight = Number(this.weight)||0;
+				if(this.number<0||this.weight<0){
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '请输入大于0的数量！'
+					});
+					return;
+				}
 				if (this.getInfo.type == 1) {
 					if (this.startTime > this.endTime) {
 						this.$store.commit('setWin', {
@@ -539,7 +548,7 @@
 						});
 						return;
 					}
-					if (this.number == '' && this.weight == '') {
+					if (!this.number && !this.weight) {
 						this.$store.commit('setWin', {
 							title: '操作提示',
 							content: '请输入数量/重量'
@@ -568,7 +577,8 @@
 						});
 						return;
 					}
-					if (this.number == '' && this.weight == '') {
+					console.log(this.number);
+					if (!this.number && !this.weight) {
 						this.$store.commit('setWin', {
 							title: '操作提示',
 							content: '请输入数量'
@@ -608,6 +618,15 @@
 				}
 			},
 			async continuePutin() {
+				this.number = Number(this.number)||0;
+				this.weight = Number(this.weight)||0;
+				if(this.number<0||this.weight<0){
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '请输入大于0的数量！'
+					});
+					return;
+				}
 				if (this.getInfo.type == 1) {
 					if (this.startTime > this.endTime) {
 						this.$store.commit('setWin', {

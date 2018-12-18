@@ -22,9 +22,12 @@
 					<div class="title">已选择：({{sortList.length}})</div>
 					<div class="item" v-for="(item,index) in sortList" :key="index">
 						<em>{{index+1}}</em>
-						<span class="btn sign" :data-id="item.id">
-							{{item.name}}
-						</span>
+						<div class="posi-box">
+							<span class="btn" :data-id="item.id">
+								{{item.name}}
+							</span>
+							<i class="el-icon-circle-check"></i>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -94,7 +97,7 @@
 			},
 			listClick(event) { //点击仓库 排序
 				let target = event.target;
-				if (target.className.includes('btn') && !target.className.includes('ban')) {
+				if (target.className.includes('btn')) {
 					let id = target.getAttribute('data-id');
 					let name = target.textContent;
 					let obj = {
@@ -106,9 +109,6 @@
 					}
 					this.sortList.push(obj);
 					this.widList.push(id);
-				}
-				if(target.className.includes('ban')){
-					this.$message({message: '该物料在此仓库中没有库存，无法排序',type: 'error'});
 				}
 			},
 			sortClick(event) { //点击排序好的仓库-取消排序
@@ -129,14 +129,13 @@
 		},
 		components: {
 			win: () =>
-				import ( /*webpackChunkName:'win'*/ 'src/components/win'),
+				import ( /*webpackChunkName:'win'*/ 'src/components/win_element'),
 		}
 	};
 </script>
 
 <style lang="less" scoped>
 	.content {
-		background: #f7f7f7;
 		.overflow-hidden {
 			text-overflow: ellipsis;
 			overflow: hidden;
@@ -145,7 +144,7 @@
 		.block {
 			width: 100%;
 			min-height: 400px;
-			padding: 20px 0;
+			padding-top: 20px;
 			display: flex;
 			span {
 				height: 40px;
@@ -157,7 +156,9 @@
 				margin: 5px;
 				padding: 0 15px;
 				background-color: #fff;
-				&.ban{background: #ddd;cursor: not-allowed;}
+				border-radius: 4px;
+				max-width: 100%;
+				.overflow-hidden;
 			}
 			.box {
 				padding: 0 15px;
@@ -188,11 +189,24 @@
 						display: inline-block;
 					}
 				}
-				span {
-					color: #f8931f;
-					border: 1px solid #f8931f;
+				.posi-box{
+					position: relative;
+					display: inline-block;
+					margin: 5px;
 					max-width: 100%;
-					.overflow-hidden;
+					i{
+						position: absolute;
+						right: -5px;
+						top: -5px;
+						font-size: 16px;
+						color: #E1BB4A;
+					}
+				}
+				span {
+					color: #E1BB4A;
+					border: 1px solid #E1BB4A;
+					position: relative;
+					margin: 0;
 				}
 			}
 		}

@@ -16,7 +16,7 @@
 				<el-button type="info" @click="reset">重置</el-button>
 			</div>
 		</div>
-		<el-table :data="pickerList" stripe border style="width: 100%">
+		<el-table :data="pickerList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 		    <el-table-column type="index" label="序号" width="100">
 		    </el-table-column>
 		    <el-table-column prop="name" label="领料人">

@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<div class="main">
-			<el-table :data="selList" stripe border style="width: 100%" >
+			<el-table :data="selList" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 				<el-table-column type="index" :index="indexMethod" label="序号" width="100">
 			    </el-table-column>
 			    <el-table-column prop="batchCode" label="批次编号">
@@ -63,7 +63,7 @@
 					:current-page="page"
 					background
 					layout="total,prev, pager, next"
-					:total="count">
+					:page-count="pageTotal">
 				</el-pagination>
 			</div>
 		</div>
@@ -104,7 +104,7 @@ export default {
 		}
 		this.$store.commit('setPageTools', [{
 			name: '返回',
-			className: 'info',
+			className: '',
 			type:4,
 			fn: () => {
 				storage.session('warehouseDetailDestroy', true);
@@ -129,8 +129,8 @@ export default {
 			this.count = Number(this.allList.length);
 			this.pageTotal = Math.ceil(list.length / this.showNum);
 			this.selList = this.allList.slice(
-				(this.page - 1) * 10,
-				(this.page) * 10
+				(this.page - 1) * this.showNum,
+				(this.page) * this.showNum
 			);
 		},
 		async getDetail() {
@@ -145,13 +145,13 @@ export default {
 			this.goodsDetail = data;
 		},
 		indexMethod(index){
-			return 10*(this.page-1)+index+1;
+			return this.showNum*(this.page-1)+index+1;
 		},
 		pageChange(page) {
 			this.page = page;
 			this.selList = this.allList.slice(
-				(this.page - 1) * 10,
-				(this.page) * 10
+				(this.page - 1) * this.showNum,
+				(this.page) * this.showNum
 			);
 		},
 		getTime(time) {

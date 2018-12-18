@@ -11,18 +11,19 @@
 			<el-table ref="multipleTable" border :header-cell-style="{'background':'#f5f7fa'}" :data="viewData" tooltip-effect="dark"
 			 style="width: 100%">
 
-				<el-table-column label="批量删除">
-					<template slot="header" slot-scope="scope">
+				<el-table-column label="批量删除" width="150" v-if="reset">
+					<!-- <template slot="header" slot-scope="scope">
 						<el-button type="text" size="small" style='color:#D34A2B' @click="dleSelection()">批量删除</el-button>
-					</template>
-					<el-table-column width="100" v-if="reset">
+					</template> -->
+					<!-- <el-table-column width="100" v-if="reset"> -->
 						<template slot="header" slot-scope="scope">
 							<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+							<el-button type="text" size="small" style='color:#606266' @click="dleSelection()">批量删除</el-button>
 						</template>
 						<template slot-scope="scope">
 							<el-checkbox v-model="scope.row.checkOut" @change="handleSingleChange"></el-checkbox>
 						</template>
-					</el-table-column>
+					<!-- </el-table-column> -->
 				</el-table-column>
 				<el-table-column label="名称" prop="name" width="200">
 				</el-table-column>
@@ -33,7 +34,7 @@
 				<el-table-column label="操作" fixed="right" width="150">
 					<template slot-scope="scope">
 						<el-button type="text" size="small" @click="editFormula(scope.row)">编辑</el-button>
-						<el-button type="text" size="small" @click="dleSelection(scope.row)" style='color:#D34A2B'>删除</el-button>
+						<el-button type="text" size="small" @click="dleSelection(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -97,6 +98,7 @@ export default {
 			this.formulaData.base = this.baseList;
 			//获取公式项数据
 			let data = await http.materialreportGetStatisticItemFormulaList();
+			console.log(data);
 			for(let item of data.list){
 				item.formulaStr = item.formula.replace(/id_(\d+)/g,(match,p1)=>{
 					for(let base of this.baseList){
@@ -168,6 +170,15 @@ export default {
 		},
 		crageBtn() {
 			this.$store.commit('setPageTools', [
+				{
+					name: '返回',
+					className: '',
+					type: 4,
+					icon: 'el-icon-plus',
+					fn: () => {
+						window.history.go(-1);
+					}
+				},
 				{
 					name: '新建公式项',
 					className: 'primary',

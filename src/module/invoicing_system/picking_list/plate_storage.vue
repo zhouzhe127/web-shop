@@ -134,6 +134,14 @@
 			initBtn() {
 				let arr = [
 					{
+						name: '返回',
+						className: '',
+						type: 4,
+						fn: () => {
+							this.cancel();
+						}
+					},
+					{
 						name: '确认',
 						className: 'primary',
 						type: 4,
@@ -141,14 +149,6 @@
 							this.enter();
 						}
 					},
-					{
-						name: '返回',
-						className: 'info',
-						type: 4,
-						fn: () => {
-							this.cancel();
-						}
-					}
 				];
 				this.$store.commit('setPageTools', arr);
 			},
@@ -549,7 +549,7 @@
 		.head {
 			height: 50px;
 			line-height: 50px;
-			font-size: 16px;
+			font-size: 14px;
 			padding-left: 20px;
 			color: #333333;
 		}
@@ -585,11 +585,11 @@
 		}
 
 		.oulFirst {
-			background-color: #F2F2F2;
+			background-color: #f5f7fa;
 			color: #434149;
 
 			li {
-				font-size: 16px;
+				font-size: 14px;
 				height: 50px;
 				line-height: 50px;
 

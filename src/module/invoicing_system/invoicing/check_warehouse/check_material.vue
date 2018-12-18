@@ -8,9 +8,23 @@
 <template>
 	<div id='check-material'>
 		<template v-if='!addShow'>
-			<div class="main">
+			<div class="main" v-loading="loading">
 				<div class="head">
 					盘库物料列表 · 共<em>{{listLength}}</em>个条目
+					<div class="check-div">
+					<el-checkbox v-model="selObj.isUpdateZero">未选中的物料库存消耗至0</el-checkbox>
+						<el-tooltip 
+							class="item" 
+							effect="dark" 
+							placement="bottom">
+							<div slot="content"><i class="el-icon-warning"> 说明</i>
+							<br/><br/>
+							该条目被勾选后，所有未选中的商品，库存统一变更为0
+							<br/>
+							操作日志及进销存统计中记录类型为批盘消耗。</div>
+							<i class="check-icon el-icon-info"></i>
+						</el-tooltip>
+					</div>
 				</div>
 				<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 					<el-table-column label="单位选择" width="150">
@@ -86,6 +100,7 @@
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 import utils from 'src/verdor/utils';
+import Timer from 'src/verdor/timer';
 export default{
 	data(){
 		return{
@@ -95,6 +110,7 @@ export default{
 				list:[],
 				search:{},
 				storeAll:false,
+				isUpdateZero:false,//未选中的商品/物料库存消耗至0
 			},
 			selMatItem:[],//已选择物料列表
 			selMatSearch:null,
@@ -120,6 +136,8 @@ export default{
 				1:'半成品',
 				2:'普通物料',
 			},
+			timerId:'',
+			loading:false,
 		};
 	},
 	components:{
@@ -138,6 +156,9 @@ export default{
 		}else{
 			this.addShow = true;
 		}
+	},
+	destroyed(){
+		this.stopRepeat();
 	},
 	methods:{
 		initBtn() {
@@ -245,7 +266,7 @@ export default{
 			let end = this.page*this.pageShow;
 			let list = this.selObj.list.slice(start,end);
 			let setList = utils.deepCopy(list);
-			this.setListData(setList);
+			this.eachSaveList(this.setListData(setList));
 		},
 		setSuprlus(num,unit){//换算库存数量
 			let def='',min='',value=1;
@@ -361,15 +382,15 @@ export default{
 				if(item.oneNum!=='' || item.twoNum!==''){
 					let total = Number(item.oneNum)*Number(item.unitValue) + Number(item.twoNum);
 					if(isNaN(item.oneNum) || isNaN(item.twoNum)) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量必须为数字`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量必须为数字`,type: 'error'});
 						return false;
 					}
 					if(total<0) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量不能小于0`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量不能小于0`,type: 'error'});
 						return false;
 					}
 					if(total>999999999) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量过大!`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量过大!`,type: 'error'});
 						return false;
 					}
 				}
@@ -380,35 +401,60 @@ export default{
 			this.setPageSave();//翻页操作才能触发保存，所以这里调用一下，存入最后一次返回后填写的数据
 			this.setSendList();//设置发送数据
 			if(!this.checkList.length){
-				this.myAlert('请填写盘库数量');
+				this.$message({message: '请填写盘库数量',type: 'error'});
 				return;
 			}
 			if(!this.veriList()) return;
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '操作提示',
-				content: '确认盘库？',
-				callback: (res) => {
-					if (res == 'ok') {
-						setTimeout(()=>{
-							this.checkMatSubmit();
-						});
-					}
-				},
+			let tips='是否确认盘库?';
+			if(this.selObj.isUpdateZero){
+				tips = '是否确认盘库? 注意：未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量';
+			}
+			this.$confirm(tips, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(async () => {
+				setTimeout(()=>{
+					this.checkMatSubmit();
+				});
+			}).catch(()=>{
+				//
 			});
 		},
-		async checkMatSubmit(){
-			let data = await http.GoodsinventoryBatchSetMaterialInventory({data:{
+		checkMatSubmit(){
+			http.GoodsinventoryBatchSetMaterialInventory({data:{
 				type:1,
 				data:this.checkList,
-			}});
-			if(data.result){
-				this.myAlert('物料盘库成功！');
-				delete this.$route.query.id;
-				this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
-			}else{
-				this.myAlert('物料盘库失败！');
-			}
+				isUpdateZero:Number(this.selObj.isUpdateZero),
+			}}).then(data => {
+				let taskId = data;
+				this.loading = true; //开始加载动画
+				//轮询请求taskId
+				this.timerId = Timer.add(() => {
+					http.taskInfo({data: {taskId:taskId}})
+						.then(data => {
+							if (data.status == 3) {
+								//轮询完成
+								this.stopRepeat();
+								
+								this.$message({message: '物料盘库成功！',type: 'success'});
+								delete this.$route.query.id;
+								this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
+							} else if (data.status == 2) {
+								//失败
+								this.stopRepeat();
+								this.$message({message: `请求失败，请重试！`,type: 'error'});
+							}
+						});
+				},1000,600,false,() => {
+					this.stopRepeat();
+					this.$message({message: `请求超时，请重试！`,type: 'error'});
+				});
+			});
+		},
+		stopRepeat(){//停止轮询
+			Timer.clear(this.timerId);
+			this.loading = false; //停止加载动画
 		},
 		async getMatList(){//获取物料列表
 			let data = await http.materialGetListByArea({data:{
@@ -422,13 +468,7 @@ export default{
 			}});
 			this.pageTotal = data.total;
 			this.listLength = data.count;
-			this.setListData(data.list);
-		},
-		myAlert(content) {
-			this.$store.commit('setWin', {
-				title: '操作提示',
-				content: content,
-			});
+			this.eachSaveList(this.setListData(data.list));
 		},
 		setListData(list){//设置列表数据
 			for(let item of list){
@@ -456,7 +496,7 @@ export default{
 				this.$set(item,'oneName',oneName),this.$set(item,'twoName',twoName);
 				this.$set(item,'unitValue',value);
 			}
-			this.eachSaveList(list);
+			return list;
 		},
 		eachSaveList(list){//遍历保存的数据，翻页时填入列表
 			if(this.pageSaveList.length){
@@ -508,9 +548,19 @@ export default{
 	padding-top: 10px;overflow:auto;
 	.main{
 		.head{
-			height: 50px;line-height: 50px;padding: 0 20px;font-size: 14px;
+			height: 50px;line-height: 50px;padding: 0 10px;font-size: 14px;
 			border: 1px solid #ebeef5;border-bottom: 0;
+			overflow: hidden;
 			em{color: #ff3c04;padding: 0 2px;}
+			.check-div{
+				float: right;
+				height: 49px;
+				line-height: 49px;
+				.check-icon{
+					margin-left: 10px;
+					color: #666;
+				}
+			}
 		}
 		.input-box{
 			display: inline-block;vertical-align: middle;overflow: hidden;

@@ -1068,10 +1068,6 @@ export default {
 		url: b + "materialreport/getMaterialReportList", //获取物料报表列表
 		method: 'get'
 	},
-	"getStatisticScopeCategoryList": {
-		url: b + "materialreport/getStatisticScopeCategoryList", //获取统计范围（分类集合列表）
-		method: 'get'
-	},
 	"setStatisticScopeCategory": {
 		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
 		method: 'post'
@@ -1093,7 +1089,7 @@ export default {
 		method: 'get'
 	},
 	"materialreportGetStatisticScopeCategoryList": {
-		url: b + "materialreport/getStatisticScopeCategoryList", //获取集合列表
+		url: b + "materialreport/getStatisticScopeList", //获取集合列表
 		method: 'get'
 	},
 	"materialreportDeleteMaterialByIds": {
@@ -1113,7 +1109,7 @@ export default {
 		method: 'post'
 	},
 	"materialreportDeleteStatisticScopeCategory": {
-		url: b + "materialreport/deleteStatisticScopeCategory", //删除分类集合
+		url: b + "materialreport/deleteStatisticScope", //删除分类集合
 		method: 'post'
 	},
 	"templateDeleteReportTemplate": {
@@ -1143,6 +1139,46 @@ export default {
 	"materialreportGetMaterialErrorLog": {
 		url: b + "materialreport/getMaterialErrorLog", //生成物料报表-错误日志
 		method: 'get',
-	}
+	},
+	"materialReportSetStatisticScopeMaterial": {
+		url: b + "materialReport/setStatisticScopeMaterial", //添加或更新物料集合
+		method: 'post',
+	},
+	"materialreportSetStatisticScopeUnitMaterial": {
+		url: b + "materialreport/setStatisticScopeUnitMaterial", //添加或更新单位-物料集合
+		method: 'post',
+	},
+	"materialReportSetStatisticScopeSupplierMaterial": {
+		url: b + "materialReport/setStatisticScopeSupplierMaterial", //添加或更新供应商-物料集合
+		method: 'post',
+	},
+	"materialReportSetStatisticScopeMaterialSupplier": {
+		url: b + "materialReport/setStatisticScopeMaterialSupplier", //添加或更新物料-供应商集合
+		method: 'post',
+	},
+	"materialreportGetScopeList": {
+		url: b + "materialreport/getScopeList", //物料报表集合列表
+		method: 'get',
+	},
+	"materialCreateMaterialBarCode": {
+		url: b + "material/createMaterialBarCode", //自动生成物料编码
+		method: 'post',
+	},
+	"materialCreateCateBarCode": {
+		url: b + "material/createCateBarCode", //自动生成分类编码
+		method: 'post',
+	},
+	//总日志导出
+	"InvoicingExportGoodsLogList": {
+		url: b + "Invoicing/exportGoodsLogList",
+		method: "get",
+		type: "file"
+	},
+	"InvoicingExportMaterialLogList": {
+		url: b + "Invoicing/exportMaterialLogList",
+		method: "get",
+		type: "file"
+	},
+
 
 }

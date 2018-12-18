@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import storage from 'src/verdor/storage';
 
 //批次详情默认跳转页
@@ -389,7 +391,15 @@ let config = [
 				obj.query = {id:item.other.logId};
 				context.$router.push(obj);	
 			}
-		}
+		},
+		{
+			"type" : 25,
+			"typeName": "批盘消耗",				
+			"historyDescripe":"",
+			"batchDescripe": "",
+			"canViewHistory": false,
+			"canViewBatch": false,
+		},
 	];
 
 export default config;

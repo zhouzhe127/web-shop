@@ -418,7 +418,7 @@
 					        	<span class="name-btn" @click="showDetail(scope.row,2)">{{scope.row.name}}</span>
 					      	</template>
 					    </el-table-column>
-						<el-table-column prop="barCode" label="条形码" width="200">
+						<el-table-column prop="barCode" label="物料编码" width="200">
 					    </el-table-column>
 						<el-table-column label="单位选择" min-width="200">
 							<template slot-scope="scope">

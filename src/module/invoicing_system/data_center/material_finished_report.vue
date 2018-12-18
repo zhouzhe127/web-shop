@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-10-25 16:41:18 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-11-23 18:16:01
+ * @Last Modified time: 2018-12-13 17:27:03
  */
 
 <template>
@@ -92,11 +92,11 @@ export default {
 		return {
 			loading:false,
 			statusMap : {
-				reject : 13,		//报表生成失败
+				reject : 0,		//报表生成失败
 				rejectName:'失败',
-				resolve : 0,		//报表生成成功
+				resolve : 2,		//报表生成成功
 				resolveName:'成功',
-				opending : 12		//报表生成中
+				opending : 1		//报表生成中
 			},						//报表的最终状态
 			tableData:[],
 			template:{},                        //模板
@@ -148,7 +148,7 @@ export default {
 					if(item.status == statusMap.reject){
 						this.$message('报表生成失败!');
 					}else if(item.status == statusMap.resolve){
-						this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id}});
+						this.$router.push({path:'/admin/materialReport/viewReport',query:{id:item.id,name:item.name}});
 					}else{
 						this.$message('报表正在生成中,请稍后...');
 					}
@@ -160,10 +160,6 @@ export default {
 						this.getHttp('materialreportExportMaterialReportExcel',{id:item.id}).then((res)=>{
 							exportFile({
 								url:res,
-								// data:{
-								// 	token:this.token,
-								// 	shopId:this.shopId
-								// }
 							});
 						});
 					}else{
@@ -202,16 +198,17 @@ export default {
 				async ()=>{
 					let retObj = await this.getHttp('materialreportGetMaterialReportList',subObj);
 					this.pageObj.total = Number(retObj.count) | 0;
-					if(Array.isArray(retObj.data)){
-						this.tableData = this.mapListAttr(retObj.data);
+					let data = retObj.list;
+					if(Array.isArray(data)){
+						this.tableData = this.mapListAttr(data);
 						this.matchSelectList(this.tableData,this.selectList);
 						this.selectAll = this.isSelectCurrentPage(this.tableData);
 						if(this.isSelectCurrentPage(this.tableData,{val:this.statusMap.resolve,attr:'status'})){
 							this.clearTaskTimer('rList');
 						}
 					}
-					if(!retObj.data || (Array.isArray(retObj.data) && retObj.data.length == 0) ){
-							this.clearTaskTimer('rList');						
+					if(!data || (Array.isArray(data) && data.length == 0) ){
+						this.clearTaskTimer('rList');						
 					}
 				},
 				15000,
@@ -255,10 +252,12 @@ export default {
 							if(this.tableData.length == 0){
 								if(this.pageObj.currentPage > 1){
 									this.pageObj.currentPage -= 1;
-									this.funGetPage('current-change',this.pageObj.currentPage);
 								}else{
-									this.pageObj.total = 0;
+									this.pageObj.currentPage = 1;
 								}
+								this.funGetPage('current-change',this.pageObj.currentPage);								
+							}else{
+								this.pageObj.total -= ids.length;
 							}
 						}else{
 							this.$message('删除失败!');  
@@ -290,7 +289,7 @@ export default {
 
 				let temp = {
 					id : ele.id,                                    //报表id
-					name : ele.objName,                             //报表名称
+					name : ele.name,                             	//报表名称
 					createTime : ele.createTime,                    //生成时间
 					scope : ele.beginTime+' 至 '+ele.endTime,        //数据时间范围
 					createUName : ele.createUName,                  //生成人   
