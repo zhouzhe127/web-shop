@@ -8,7 +8,7 @@
 		<div slot="content" class="content">
 			<div class="input-box">
 				模板名称 <em>*</em>
-				<el-input v-model="modelName" placeholder="模板名称" maxlength="20"></el-input>
+				<el-input v-model="modelName" class="input-wid" placeholder="模板名称" maxlength="20"></el-input>
 			</div>
 		</div>
 	</win>
@@ -70,8 +70,7 @@ export default {
 	.content{
 		.input-box{padding: 50px 0;text-align: center;vertical-align: middle;
 			em{color: red;}
-			input{width: 180px;height: 30px;line-height: 30px;vertical-align: middle;padding: 0 10px;margin-left: 10px;}
-			input:focus{outline: none;}
+			.input-wid{width: 180px;}
 		}
 	}
 </style>
