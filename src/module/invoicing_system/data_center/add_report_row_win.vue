@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-18 18:41:17
+ * @Last Modified time: 2018-12-19 09:48:38
  */
 <template>  
 	<div>
@@ -29,7 +29,9 @@
 				<!-- 展示选择的集合 -->
 				<div class="textarea">
 					<div v-if="collection.id">
-						{{collection.instruction}}
+						<p class="conllection-description">集合名称 : {{collection.name}}</p>
+						<p class="conllection-description">集合类型 : {{collection.instruction}}</p>
+						<p class="conllection-description">集合说明 : {{collection.typeName}}</p>
 					</div>
 				</div>
 
@@ -325,7 +327,10 @@ export default {
 		padding-top:20px;
 		height: 374px;
 	}
-
+	.conllection-description{
+		padding-top:10px;
+		font-size:14px;
+	}
 	.collection-tips-icon{
 		color: #ccc;
 		font-size:14px;
