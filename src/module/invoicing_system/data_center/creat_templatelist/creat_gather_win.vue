@@ -83,7 +83,8 @@
 				</div>
 			</div>
 			<span slot="footer" class="dialog-footer">
-				<el-button @click="handleClose">取 消</el-button>
+				<el-button v-if="!id" @click="handleClose('continue')" type="text">继续添加</el-button>
+				<el-button v-else @click="handleClose">取 消</el-button>
 				<el-button type="primary" @click="handleClose('ok')">确 定</el-button>
 			</span>
 		</el-dialog>
@@ -171,16 +172,28 @@
 				// return arr;
 			},
 			async handleClose(done) {
-				if (done == 'ok') {
+				if (done == 'ok'||done == 'continue') {
 					if (!this.checkData()) {
 						return false;
 					}
 					let backData = await this.sendData();
+					backData.continue = done == 'continue'? true:false;
 					this.$emit('change', backData);
 				} else {
 					this.$emit('change', false);
 				}
-
+				if(done == 'continue'){
+					this.resetData();
+				}
+			},
+			resetData(){
+				this.gatherName = '';
+				this.chooseCate = false;
+				this.materisSingle = false;
+				this.selectUnit = {};
+				this.selectMater = [];
+				this.selectClassifyId = [];
+				this.selectSuppier = [];
 			},
 			sendWarning(type, str) {
 				this.$message({

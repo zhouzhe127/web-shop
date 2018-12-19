@@ -398,8 +398,16 @@
 				let data = await http[url]({
 					data: sendObj
 				});
+				if (!this.id) this.id = data;
 				if (data) {
-					window.history.go(-1);
+					// window.history.go(-1);
+					this.$router.push({
+						path: '/admin/materialReport/createReport',
+						query: {
+							id: this.id,
+							name: this.listName
+						}
+					});
 					this.$message({
 						type: 'success',
 						message: `${this.id?'修改':'添加'}成功!`
@@ -417,7 +425,7 @@
 				});
 				console.log(this.roleList);
 			},
-			delColumn(index, type, item) { //type:1是行，2是列
+			delColumn(index, type) { //type:1是行，2是列
 				let str = type == 1 ? '行' : '列';
 				let data = type == 1 ? this.tableData : this.columnData;
 				this.$confirm(`是否删除第${index+1}${str}`, '提示', {
@@ -426,12 +434,11 @@
 					type: 'warning'
 				}).then(() => {
 					data.splice(index, 1);
-					if (item.pScope.length > 0) this.pShowMaterial = true;
-					this.resetColumn();
 					this.$message({
 						type: 'success',
 						message: '删除成功!'
 					});
+					this.resetColumn();
 				}).catch(() => {
 					this.$message({
 						type: 'info',
@@ -478,7 +485,8 @@
 					this.resetColumn();
 					// this.columnData = utils.deepCopy(this.sortList(this.columnData,data,'sort'));
 				}
-				this.columnShow = false;
+				console.log(data);
+				if(!data||!data.continue)this.columnShow = false;
 			},
 			editColumn(item, index) {
 				this.editIndex = index;
@@ -514,12 +522,14 @@
 			},
 			resetColumn() { //刷新列表方法
 				this.reset = false;
+				console.log(this.columnData);
 				this.$nextTick(() => {
 					this.reset = true;
+					console.log(this.columnData);
 				});
 			},
 			getRowData(data) { //接受行数据
-				this.rowShow = false;
+				if(!data||!data.continue)this.rowShow = false;
 				console.log(data);
 				if (data) {
 					this.pCollection = '';
