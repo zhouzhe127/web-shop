@@ -461,7 +461,7 @@ let need = {
 			name: 'purchaseAudit'
 		},
 		materialWorking: { //加工物料
-			name: 'processMaterial'
+			name: 'processHistory'
 		},
 		getReportTemplate: {
 			name: 'materialReport' //物料报表模板
@@ -478,11 +478,11 @@ let need = {
 		renovation: { //粮票集装修
 			name: 'renovation'
 		},
-		priceTemplate:{     //价格模板
-			name:'priceTemplate'
+		priceTemplate: { //价格模板
+			name: 'priceTemplate'
 		},
-		AssignGoodsConcise:{  // 商品指派
-			name:'AssignGoodsConcise'
+		AssignGoodsConcise: { // 商品指派
+			name: 'AssignGoodsConcise'
 		}
 
 	}

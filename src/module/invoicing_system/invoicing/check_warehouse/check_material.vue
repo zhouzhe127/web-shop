@@ -190,6 +190,7 @@ export default{
 			this.wid = wids?wids.join(','):'';
 			this.areaId = aids?aids.join(','):'';
 			this.cid = data.content.c2 ? data.content.c2 : data.content.c1;
+			this.selObj.isUpdateZero = data.content.isUpdateZero==1;
 			this.selObj.search={//设置搜索条件
 				cid: this.cid,   					//商品类型 0普通商品，1称重商品
 				sortOneId: data.content.c1,			//一级分类id
@@ -223,7 +224,7 @@ export default{
 			this.pageTotal = Math.floor(data.length/this.pageShow);
 			this.listLength = data.length;
 			this.selObj.list = data;
-			this.setListData(data);
+			this.eachSaveList(this.setListData(data));
 		},
 		unitSel(list){//单位选择 res:单位列表下标 , index:列表下标
 			let unit = list.unit[list.unitIndex];

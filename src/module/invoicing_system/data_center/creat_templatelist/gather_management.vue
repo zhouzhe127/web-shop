@@ -166,7 +166,7 @@
 				}]);
 			},
 			creatWinClose(data) {
-				this.showCreatWin = false;
+				if(!data||!data.continue)this.showCreatWin = false;
 				if (data) {
 					this.page = 1;
 					this.init();

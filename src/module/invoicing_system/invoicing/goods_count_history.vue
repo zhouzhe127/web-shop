@@ -32,7 +32,7 @@
 					<el-button @click="clickBtn('filter')" type="primary">筛选</el-button>
 					<el-button @click="clickBtn('reset')" type="info">重置</el-button>
 				</div>
-				<div class="posi-block">
+				<div class="posi-block" v-if="showBtn">
 					<el-button @click="checkLog('add')" type="danger">查看盘盈单</el-button>
 					<el-button @click="checkLog('reduce')" type="success">查看盘亏单</el-button>
 				</div>
@@ -106,6 +106,7 @@ export default {
 				listName:''				//列表名
 			},
 			timeDate:[new Date(Date.parse(new Date())-30*3600*24*1000),new Date()],
+			showBtn:false,				//特殊跳转按钮
 		};
 	},
 	props:{
@@ -127,8 +128,15 @@ export default {
 		this.initHeadTips();
 		this.initBtn();
 		this.clickBtn('reset');
+		this.setShowBtn();
 	},
 	methods: {
+		//设置特殊跳转按钮 批量盘盈/批量盘亏
+		setShowBtn(){
+			if(this.tabObj[0].name=='商品盘库' || this.tabObj[0].name=='物料盘库'){
+				this.showBtn = true;
+			}
+		},
 		//查看盘盈/盘亏日志
 		checkLog(type){
 			let obj = {

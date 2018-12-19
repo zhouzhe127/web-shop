@@ -80,7 +80,7 @@
 	export default {
 		data() {
 			return {
-				id: '480', //模板id
+				id: '', //模板id
 				moldeName: '',
 				titleName:'',
 				tableYData: [],
@@ -251,12 +251,20 @@
 			},
 			crageBtn() {
 				this.$store.commit('setPageTools', [{
-					name: '返回',
+					name: '返回报表列表',
 					className: '',
 					type: 5,
 					icon: 'el-icon-back',
 					fn: () => {
-						window.history.go(-1);
+						this.$router.push({path:'/admin/materialReport'});
+					}
+				},{
+					name: '重新编辑',
+					className: 'primary',
+					type: 5,
+					icon: 'el-icon-back',
+					fn: () => {
+						this.$router.push({path:'/admin/materialReport/creatTempMain',query:{id:this.id}});
 					}
 				}]);
 			},
@@ -298,7 +306,8 @@
 					}
 				});
 				if (data) {
-					window.history.go(-1);
+					// window.history.go(-1);
+					this.$router.push({path:'/admin/materialReport/finishedReport',query:{tempName:this.moldeName,tempId:this.id,permission:1}});
 					this.$message({
 						message: '生成报表成功!',
 						type: 'success'

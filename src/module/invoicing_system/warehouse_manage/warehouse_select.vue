@@ -68,7 +68,7 @@
 			</div>
 			<div class="tips">
 				<div class="btn-box" v-if="!single">
-					<el-checkbox v-model="brandAll" size="mini" border @change="getAll(1)">全选品牌</el-checkbox>
+					<el-checkbox v-model="brandAll" size="mini" border @change="getAll(1)" v-if="isBrand">全选品牌</el-checkbox>
 					<el-checkbox v-model="storeAll" size="mini" border @change="getAll(2)">全选门店</el-checkbox>
 				</div>
 				<span class="tips-span">已选中: {{selName}}</span>
@@ -78,7 +78,6 @@
 </template>
 <script>
 //该组件直接在组件内容调用接口，请求仓库数据
-import utils from 'src/verdor/utils';
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 
@@ -390,7 +389,7 @@ export default {
 				text-align: right;
 				float: right;
 			}
-			.btn-box{float: left;}
+			.btn-box{float: left;margin-top: 1px;}
 		}
 	}
 </style>

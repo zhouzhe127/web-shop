@@ -400,6 +400,7 @@ export default {
 				{items=[],type='',wids:wid,aids:areaId} = content;
 
 			this.stateStore.addGoods.name = obj.name;
+			this.stateStore.addGoods.isUpdateZero = content.isUpdateZero==1;
 			if(Array.isArray(items)){
 				if(items.length == 0){
 					if(Array.isArray(wid)){

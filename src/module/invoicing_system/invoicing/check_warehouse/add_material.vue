@@ -330,6 +330,7 @@
 				this.sortTwoId = data.content.c2;
 				this.cid = this.sortTwoId?this.sortTwoId:this.sortOneId;
 				this.selectItem = data.content.items;
+				this.isUpdateZero = data.content.isUpdateZero==1;
 				if(!this.selectItem.length){
 					this.storeAll = true;
 				}else{
@@ -522,6 +523,7 @@
 					c1: this.sortOneId,
 					c2: this.sortTwoId,
 					items: this.selectItem,
+					isUpdateZero:Number(this.isUpdateZero),
 				};
 				if(isEdit){
 					obj.id = this.tempId;
@@ -566,16 +568,15 @@
 				}
 			},
 			toModelTemplate(content){
-				this.$store.commit('setWin', {
-					winType: 'confirm',
-					title: '操作提示',
-					content: content,
-					callback: (res) => {
-						if (res == 'ok') {
-							delete this.$route.query.id;
-							this.$router.push({path:'/admin/materialCountTemplate',query:this.$route.query});
-						}
-					},
+				this.$confirm(content, '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'success'
+				}).then(() => {
+					delete this.$route.query.id;
+					this.$router.push({path:'/admin/materialCountTemplate',query:this.$route.query});
+				}).catch(()=>{
+					//
 				});
 			},
 			async getData() {//获取物料列表

@@ -354,22 +354,24 @@
 			//获取分销价
 			async getDistr() {
 				let res = await http.invoicingGetDistributionConfig();
-				res.map(v => {
-					let obj = {};
-					Object.assign(obj, {
-						distributionId: v.id,
-						value: '',
-						name: v.name,
-						unitId: ''
+				if(res){//单店下是没有分销价的
+					res.map(v => {
+						let obj = {};
+						Object.assign(obj, {
+							distributionId: v.id,
+							value: '',
+							name: v.name,
+							unitId: ''
+						});
+						this.olddis.map(s => {
+							if (v.id == s.distributionId) {
+								obj.value = s.value;
+								obj.unitId = s.unitId;
+							}
+						});
+						this.dispiceArr.push(obj);
 					});
-					this.olddis.map(s => {
-						if (v.id == s.distributionId) {
-							obj.value = s.value;
-							obj.unitId = s.unitId;
-						}
-					});
-					this.dispiceArr.push(obj);
-				});
+				}
 			},
 		},
 		async mounted() {
