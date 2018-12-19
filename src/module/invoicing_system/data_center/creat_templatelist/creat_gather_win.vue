@@ -470,7 +470,7 @@
 					// white-space: nowrap;
 					// overflow: hidden;
 					// text-overflow: ellipsis;
-					width: 55%;
+					width: 50%;
 					span{
 						display: inline-block;
 						width: 45%;
