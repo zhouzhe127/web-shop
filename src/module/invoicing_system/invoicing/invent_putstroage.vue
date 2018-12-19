@@ -466,14 +466,14 @@
 					this.check = false;
 					return false;
 				}
-				if (this.win.selects.length == 0) {
-					this.$store.commit('setWin', {
-						title: '操作提示',
-						content: '请选择供货商'
-					});
-					this.check = false;
-					return false;
-				}
+				// if (this.win.selects.length == 0) {
+				// 	this.$store.commit('setWin', {
+				// 		title: '操作提示',
+				// 		content: '请选择供货商'
+				// 	});
+				// 	this.check = false;
+				// 	return false;
+				// }
 				if (!this.newShopdetail.warehouse) {
 					this.$store.commit('setWin', {
 						title: '操作提示',
@@ -514,7 +514,7 @@
 						itemId: this.gid,
 						wid: this.newShopdetail.warehouse.wid,
 						areaId: this.newShopdetail.warehouse.areaId,
-						supplierId: this.win.selects[0],
+						supplierId: this.win.selects[0]||0,
 						totalSurplus: this.newNum,
 						productionTime: productTime,
 						expiryTime: end,
@@ -610,7 +610,7 @@
 						productionTime: this.startTime / 1000,
 						expiryTime: this.endTime / 1000,
 						batchCode: this.batchCode, //批次编码
-						supplierId: this.win.selects[0], //供应商ID
+						supplierId: this.win.selects[0]||0, //供应商ID
 						articleNo: this.artNo, //货号
 						purchasePrice: this.purchasePrice, //进价
 						remark: this.remarks //备注
@@ -641,7 +641,7 @@
 					this.artNo = resole.articleNo;
 					this.purchasePrice = resole.purchasePrice;
 					this.newNum = resole.surplus;
-					this.win.selects[0] = resole.supplierId;
+					this.win.selects[0] = resole.supplierId||0;
 				} else if (this.isStatus == 1) {
 					this.goodsWid = resole.wid; //老批次入库已有wid
 					this.goodsareaId = resole.areaId;

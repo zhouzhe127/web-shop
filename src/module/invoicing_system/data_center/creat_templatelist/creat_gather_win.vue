@@ -39,7 +39,7 @@
 							<div class="steps">
 								<span>步骤一：</span>
 								<el-button type="primary" @click="showWin(1)" icon="el-icon-plus">选择物料单位</el-button>
-								<span>已选择物料单位：{{selectUnit.name}}</span>
+								<span class="spanText" :title="selectUnit.name">已选择物料单位：<span>{{selectUnit.name}}</span></span>
 							</div>
 							<div class="steps">
 								<span>步骤二：</span>
@@ -71,7 +71,7 @@
 							<div class="steps">
 								<span>步骤一：</span>
 								<el-button type="primary" @click="showWin(0)" icon="el-icon-plus">选择物料</el-button>
-								<span>已选择物料名称：{{selectMater.name}}</span>
+								<span class="spanText" :title="selectMater.name">已选择物料名称：<span>{{selectMater.name}}</span></span>
 							</div>
 							<div class="steps">
 								<span>步骤二：</span>
@@ -172,21 +172,21 @@
 				// return arr;
 			},
 			async handleClose(done) {
-				if (done == 'ok'||done == 'continue') {
+				if (done == 'ok' || done == 'continue') {
 					if (!this.checkData()) {
 						return false;
 					}
 					let backData = await this.sendData();
-					backData.continue = done == 'continue'? true:false;
+					backData.continue = done == 'continue' ? true : false;
 					this.$emit('change', backData);
 				} else {
 					this.$emit('change', false);
 				}
-				if(done == 'continue'){
+				if (done == 'continue') {
 					this.resetData();
 				}
 			},
-			resetData(){
+			resetData() {
 				this.gatherName = '';
 				this.chooseCate = false;
 				this.materisSingle = false;
@@ -211,7 +211,7 @@
 					}
 				} else {
 					let setArr = this.selectMater;
-					if(!Array.isArray(this.selectMater)){
+					if (!Array.isArray(this.selectMater)) {
 						setArr = [this.selectMater];
 					}
 					if (Array.from(setArr, x => x.id).join(',') == '') {
@@ -364,9 +364,9 @@
 		async mounted() {
 			await this.init();
 			this.recursiveGetMaterialList();
-			if (this.editData&&this.editData.id) {
+			if (this.editData && this.editData.id) {
 				this.sleType = this.editData.type - 3;
-				this.$nextTick(()=>{
+				this.$nextTick(() => {
 					this.setEdit(this.editData);
 				});
 			}
@@ -459,10 +459,23 @@
 				}
 
 				.steps {
-					width: 80%;
+					width: 90%;
 					border: 1px #cccccc dashed;
 					margin-bottom: 15px;
 					padding: 10px 15px;
+				}
+
+				.spanText {
+					display: inline-block;
+					// white-space: nowrap;
+					// overflow: hidden;
+					// text-overflow: ellipsis;
+					width: 55%;
+					span{
+						display: inline-block;
+						width: 45%;
+						vertical-align: middle;
+					}
 				}
 			}
 
