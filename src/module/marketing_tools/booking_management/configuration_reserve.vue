@@ -183,7 +183,8 @@ export default {
 			{
 				id: 1,
 				name: '全额支付'
-			}], //支付方式	
+			}
+			], //支付方式	
 			payTypeName: '定金支付',
 			payTypeId: 5,
 			payAttr: '', //支付定金的百分比		
@@ -202,7 +203,8 @@ export default {
 			{
 				name: '30分钟',
 				id: 30
-			}],
+			}
+			],
 			durationId: -1, //桌台提醒
 			durationName: '关闭提醒', //桌台提醒
 			durationNameWX: '关闭提醒',
@@ -214,7 +216,8 @@ export default {
 			{
 				id: 1,
 				name: '允许'
-			}],
+			}
+			],
 			orderName: '不允许', //是否允许取消订单
 			orderId: 0, //是否允许取消订单	
 			refundName: '不允许', //是否允许退款
@@ -226,7 +229,8 @@ export default {
 			{
 				id: 1,
 				name: '延长'
-			}], //是否延长桌位预留
+			}
+			], //是否延长桌位预留
 			tableName: '不延长',
 			tableId: 0,
 			reservedList: [{ //延长桌位预留时间
@@ -401,9 +405,17 @@ export default {
 						this.valiData('请完善到店取消规则信息');
 						return false;
 					}
+					if (item.value < 1 || item.value > 100) {
+						this.valiData('退款百分比1-100');
+						return false;
+					}
 				}
 				if (this.cancel.other == '') {
 					this.valiData('请完善到店取消规则信息');
+					return false;
+				}
+				if (this.cancel.other < 1 || this.cancel.other > 100) {
+					this.valiData('退款百分比1-100');
 					return false;
 				}
 			}
