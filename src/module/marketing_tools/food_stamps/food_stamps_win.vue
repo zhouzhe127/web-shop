@@ -98,6 +98,7 @@ export default {
 		},
 		async getAppliedWin(res) {
 			if (res == 'ok') {
+				if (!this.checkForm()) return;
 				await this.foodUpdate();
 			}
 			this.$emit('getAppliedWin', res);
@@ -137,7 +138,6 @@ export default {
 			this.isUpload = false;
 		},
 		async foodUpdate() { //更新配置 上传菜品图
-			if (!this.checkForm()) return;
 			let key = '';
 			if (this.type == 'add') {
 				if (this.typeId == 1) {
@@ -167,18 +167,33 @@ export default {
 			}
 		},
 		getNum: function() {
-			let Hnum = 0;
-			let Gnum = 0;
+			let Hnum = [];
+			let Gnum = [];
 			for (let item of this.allProList) {
 				if (item.id.indexOf('H') != -1) {
-					Hnum++;
+					let id = item.id.substring(1, item.id.length);
+					Hnum.push(Number(id));
 				}
 				if (item.id.indexOf('G') != -1) {
-					Gnum++;
+					let id = item.id.substring(1, item.id.length);
+					Gnum.push(Number(id));
 				}
 			}
-			this.Hnum = Hnum;
-			this.Gnum = Gnum;
+			if (Hnum.length > 0) {
+				this.Hnum = this.max(Hnum);
+			}
+			if (Gnum.length > 0) {
+				this.Gnum = this.max(Gnum);
+			}
+		},
+		max: function(arr) { //返回最大值
+			let num = arr[0];
+			for (let i = 0; i < arr.length; i++) {
+				if (num < arr[i]) {
+					num = arr[i];
+				}
+			}
+			return num;
 		}
 	},
 	components: {
