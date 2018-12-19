@@ -541,15 +541,19 @@
 					// } else {
 					data.strTitle = `${data.pCollection.name}（${this.getExplain(data.pCollection)}种）`;
 					let checkSome = false;
-					for (let list of this.tableData) {
-						if (list.pCollection.id == data.pCollection.id) {
-							checkSome = true;
-							break;
+					if(!this.isEdit){
+						for (let list of this.tableData) {
+							if (list.pCollection.id == data.pCollection.id) {
+								checkSome = true;
+								break;
+							}
 						}
 					}
+					
 
 					if (!checkSome) {
 						this.sortList(this.tableData, data, 'pSortObj');
+						this.isEdit = false;
 					} else {
 						this.$message({
 							type: 'info',
