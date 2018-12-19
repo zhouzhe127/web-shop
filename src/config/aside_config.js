@@ -459,9 +459,6 @@ let need = {
 		getPurchaseOrderReviewList: { //采购审核
 			name: 'purchaseAudit'
 		},
-		materialWorking: { //加工物料
-			name: 'processMaterial'
-		},
 		bargaining: { // 砍价功能
 			name: 'bargainActivity'
 		},
@@ -474,13 +471,6 @@ let need = {
 		getReportTemplate: {
 			name: 'materialReport' //物料报表模板
 		},
-		materialWorking: { //加工物料
-			name: 'processHistory'
-		},
-		getReportTemplate: {
-			name: 'materialReport' //物料报表模板
-		}
 	},
-
 };
 export default need;
