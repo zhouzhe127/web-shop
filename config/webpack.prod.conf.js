@@ -1,4 +1,3 @@
-
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -6,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const ExtractAssetsFromIndex = require('extract-assets-from-css');
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');//多线程压缩js
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'); //多线程压缩js
 
 const path = require('path');
 
@@ -20,32 +19,34 @@ let webpackConfig = merge(baseWebpackConfig, {
 	mode: 'production',
 	output: {
 		filename: jsName,
-		path: path.resolve(__dirname,'../', `${configs.dest}static`),
+		path: path.resolve(__dirname, '../', `${configs.dest}static`),
 		publicPath,
 		chunkFilename: 'js/async/[name].js?[chunkhash:8]',
 		libraryTarget: 'umd',
 		umdNamedDefine: true
 	},
-	externals:{
-		'@babel/polyfill':{
+	externals: {
+		'@babel/polyfill': {
 			root: 'BabelPolyfill',
 			commonjs: 'babel-polyfill',
 			commonjs2: 'babel-polyfill',
 			amd: 'babel-polyfill'
 		},
-		'vue' : 'Vue',
-		'vuex' : 'Vuex',
-		'vue-router' : 'VueRouter',
-		'src/components/element-ui.common' : 'Element',
+		'vue': 'Vue',
+		'vuex': 'Vuex',
+		'vue-router': 'VueRouter',
+		'src/components/element-ui.common': 'Element',
 		'src/components/index.css': 'ElementCss'
 	},
-	
+
 	module: {
-        
+
 	},
-	devtool: configs.anomaly ?  'source-map':false,
+	devtool: configs.anomaly ? 'source-map' : false,
 	plugins: [
-		new MiniCssExtractPlugin({filename: 'css/[name].css?[contenthash:8]'}),
+		new MiniCssExtractPlugin({
+			filename: 'css/[name].css?[contenthash:8]'
+		}),
 		/* new UglifyJsPlugin({
             cache: true,
             parallel: true,
@@ -58,7 +59,7 @@ let webpackConfig = merge(baseWebpackConfig, {
           }),  */
 		new ParallelUglifyPlugin({
 			// cacheDir: '.cache/',
-			uglifyJS:{
+			uglifyJS: {
 				output: {
 					comments: false
 				},
@@ -81,10 +82,10 @@ let webpackConfig = merge(baseWebpackConfig, {
 			// return chunk.modules.map(m => path.relative(m.context, m.request)).join("_");
 		}),
 		new HtmlWebpackPlugin({
-			template: path.resolve(__dirname, '../','src/template/index.html'),
-			filename: path.resolve(__dirname,'../', `${configs.dest}static/index.html`),
+			template: path.resolve(__dirname, '../', 'src/template/index.html'),
+			filename: path.resolve(__dirname, '../', `${configs.dest}static/index.html`),
 			title: configs.title,
-			chunks: ['verdor','manifest', 'main'], //指定index页面需要的模块,
+			chunks: ['verdor', 'manifest', 'main'], //指定index页面需要的模块,
 			// inject:"head",
 			// minify: {
 			//     removeComments: true,
@@ -97,15 +98,20 @@ let webpackConfig = merge(baseWebpackConfig, {
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.css(\?\w+)?$/g,
 			cssProcessor: require('cssnano'),
-			cssProcessorOptions: { discardComments: { removeAll: true },safe: true/* 避免打包后修改z-index的问题 */ },
+			cssProcessorOptions: {
+				discardComments: {
+					removeAll: true
+				},
+				safe: true /* 避免打包后修改z-index的问题 */
+			},
 			canPrint: true
 		}),
 
 		new ExtractAssetsFromIndex({
-			cssHashLength:8,
-			styleName:'style2js',
-			crossOrigin:configs.anomaly,
-			publicPath:configs.publicPath
+			cssHashLength: 8,
+			styleName: 'style2js',
+			crossOrigin: configs.anomaly,
+			publicPath: configs.publicPath
 		})
 
 	]

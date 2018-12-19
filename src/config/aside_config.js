@@ -483,8 +483,10 @@ let need = {
 		},
 		AssignGoodsConcise: { // 商品指派
 			name: 'AssignGoodsConcise'
-		}
-
+		},
+		customPackageStatistics: { // 自定义套餐统计
+			name: 'customPackageStatistics'
+		},
 	}
 };
 export default need;
