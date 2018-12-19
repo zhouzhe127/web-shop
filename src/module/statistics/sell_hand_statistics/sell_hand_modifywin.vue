@@ -104,7 +104,7 @@ export default {
 				data: {
 					originalPrice: this.beforeAmount, //原价格
 					modifyPrice: this.amount,
-					isGuide: Number(this.cmpareStatus) //0 奖励客户的专属顾问 1扫码人员
+					// isGuide: Number(this.cmpareStatus) //0 奖励客户的专属顾问 1扫码人员
 				}
 			});
 			if (res) {
