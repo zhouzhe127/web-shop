@@ -9,7 +9,7 @@
 	<div class="bom-order">
 		<div class="filter">
 			<div class="inline-box">
-				<el-input placeholder="请输入物料名称" v-model="matName"></el-input>
+				<el-input placeholder="请输入物料名称" v-model="materialName"></el-input>
 			</div>
 			<div class="inline-box">
 				<el-input placeholder="请输入物料编码" v-model="barCode"></el-input>
@@ -137,7 +137,7 @@
 	import utils from 'src/verdor/utils';
 	import http from 'src/manager/http';
 	import global from 'src/manager/global';
-	
+	import Timer from 'src/verdor/timer';
 	export default {
 		data() {
 			return {
@@ -152,7 +152,7 @@
 				list: [], //数据列表
 				listLength: 0, //数据条数
 				userData: '', //用户数据
-				matName: '', //商品名称
+				materialName: '', //商品名称
 				cid:'',//分类id
 				wid:'',//仓库id
 				areaId:'',//区域id
@@ -189,6 +189,8 @@
 				isEdit:'',//是否编辑模板
 				useList:[],
 				isUpdateZero:false,
+				timerId:'',
+				loading:false,
 			};
 		},
 		props:[
@@ -227,6 +229,9 @@
 				this.getWarehouseList();//获取仓库列表
 			}
 		},
+		destroyed(){
+			this.stopRepeat();
+		},
 		methods: {
 			//表格单击事件-点击单行都可以选择checkbox
 			rowClick(res){
@@ -240,12 +245,7 @@
 			},
 			initBtn() {
 				let arr = [
-					{name: '保存模板',className: 'primary',type:4,
-						fn: () => {
-							this.saveModel();
-						}
-					},
-					{name: '取消',className: '',type:4,
+					{name: '取消',className: 'info',type:4,
 						fn: () => {
 							if(!this.selObj && this.isEdit){
 								window.history.go(-1);
@@ -254,14 +254,20 @@
 								if(!this.selObj.list.length && objStr=='{}' && !this.selObj.storeAll){
 									window.history.go(-1);
 								}else{
+									this.$store.commit('setPageTools', []);
 									this.$emit('emit',false);
 								}
 							}
 						}
 					},
+					{name: '保存模板',className: 'success',type:4,
+						fn: () => {
+							this.saveModel();
+						}
+					},
 				];
 				if(this.selObj || !this.isEdit){
-					arr.unshift({name: '确定',className: 'primary',type:4,
+					arr.push({name: '确定',className: 'primary',type:4,
 						fn: () => {
 							this.veriConfirmClick();
 						}
@@ -274,12 +280,12 @@
 					return res.item;
 				});
 				if(this.isUpdateZero && !this.selList.length && !this.storeAll){
-					this.$confirm('未选中的商品库存将消耗至0，减少量日志记录为批盘消耗量', '提示', {
+					this.$confirm('未选中的商品库存将消耗至0，减少量日志记录为批盘消耗量（未选中任何物料，直接盘库，该操作15分钟只能生效一次）', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
-						this.checkGoodsSubmit();
+						this.checkMatSubmit();
 					}).catch(()=>{
 						//
 					});
@@ -301,21 +307,44 @@
 					storeAll:this.storeAll,//是否全选
 					isUpdateZero:this.isUpdateZero,
 				};
+				this.$store.commit('setPageTools', []);
 				this.$emit('emit',obj);
 			},
 			//不填写数量直接提交
-			async checkMatSubmit(){
-				let data = await http.GoodsinventoryBatchSetMaterialInventory({data:{
+			checkMatSubmit(){
+				http.GoodsinventoryBatchSetMaterialInventory({data:{
 					type:1,
-					data:'',
+					data:[],
 					isUpdateZero:Number(this.isUpdateZero),
-				}});
-				if(data.result){
-					this.$message({message: '物料盘库成功！',type: 'success'});
-					this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
-				}else{
-					this.$message({message: '物料盘库失败！',type: 'error'});
-				}
+				}}).then(data => {
+					let taskId = data;
+					this.loading = true; //开始加载动画
+					//轮询请求taskId
+					this.timerId = Timer.add(() => {
+						http.taskInfo({data: {taskId:taskId}})
+							.then(data => {
+								if (data.status == 3) {
+									//轮询完成
+									Timer.clear(this.timerId);
+									
+									this.$message({message: '物料盘库成功！',type: 'success'});
+									delete this.$route.query.id;
+									this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
+								} else if (data.status == 2) {
+									//失败
+									this.stopRepeat();
+									this.$message({message: `请求失败，请重试！`,type: 'error'});
+								}
+							});
+					},1000,600,false,() => {
+						this.stopRepeat();
+						this.$message({message: `请求超时，请重试！`,type: 'error'});
+					});
+				});
+			},
+			stopRepeat(){//停止轮询
+				Timer.clear(this.timerId);
+				this.loading = false; //停止加载动画
 			},
 			async editTemplate(){//编辑模板
 				let data = await http.getInventoryMaterialTemplate({data:{
@@ -331,6 +360,8 @@
 				this.cid = this.sortTwoId?this.sortTwoId:this.sortOneId;
 				this.selectItem = data.content.items;
 				this.isUpdateZero = data.content.isUpdateZero==1;
+				this.materialName = data.content.materialName;
+				this.barCode = data.content.barCode;
 				if(!this.selectItem.length){
 					this.storeAll = true;
 				}else{
@@ -524,6 +555,8 @@
 					c2: this.sortTwoId,
 					items: this.selectItem,
 					isUpdateZero:Number(this.isUpdateZero),
+					materialName:this.materialName,
+					barCode:this.barCode,
 				};
 				if(isEdit){
 					obj.id = this.tempId;
@@ -559,7 +592,7 @@
 				});
 				if(data){
 					if(!this.selObj && this.isEdit){
-						this.myAlert('模板修改成功！');
+						this.$message({message:'模板修改成功！',type:'success'});
 						delete this.$route.query.id;
 						this.$router.push({path:'/admin/materialCountTemplate',query:this.$route.query});
 					}else{
@@ -583,7 +616,7 @@
 				let data = await http.materialGetListByArea({data:{
 					page: this.page,
 					num: this.pageShow,
-					name: this.matName,
+					name: this.materialName,
 					cid: this.cid>0?this.cid:'',
 					wid : this.wid,
 					areaId : this.areaId,
@@ -596,6 +629,8 @@
 					sortTwoId: this.sortTwoId,
 					wid : this.wid,
 					areaId : this.areaId,
+					materialName: this.materialName,
+					barCode:this.barCode,
 				};
 				this.list = this.setAlready(data.list);
 				this.listLength = data.count;
@@ -640,7 +675,7 @@
 				this.getData();
 			},
 			reset() { //重置
-				let arr = ['matName','cid','wid','areaId','sortOneId','sortOneId','barCode'];
+				let arr = ['materialName','cid','wid','areaId','sortOneId','sortOneId','barCode'];
 				for(let item of arr){
 					this[item] = '';
 				}
@@ -681,7 +716,7 @@
 						num++;
 					}
 				}
-				this.pageAll = !this.storeAll && num==this.list.length;
+				this.pageAll = !this.storeAll && num && num==this.list.length;
 			},
 			//全选 全选本页
 			radioAll(type){
