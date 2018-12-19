@@ -24,11 +24,9 @@ export default {
 			requestData: {},
 			btnOK:{
 				content:'确定',
-				style:'background-color:#ff9800'
 			},
 			btnCancel:{
 				content:'取消',
-				style:'background-color:#a0a0a0'
 			},
 		};
 	},
@@ -61,7 +59,7 @@ export default {
 	},
 	components: {
 		win: () =>
-			import( /*webpackChunkName:'win'*/ 'src/components/win'),
+			import( /*webpackChunkName:'win'*/ 'src/components/win_element'),
 	}
 };
 </script>
@@ -70,7 +68,7 @@ export default {
 	.content{
 		.input-box{padding: 50px 0;text-align: center;vertical-align: middle;
 			em{color: red;}
-			.input-wid{width: 180px;}
+			.input-wid{width: 210px;}
 		}
 	}
 </style>
