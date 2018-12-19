@@ -6,7 +6,7 @@
     *
 -->
 <template>
-	<win :align="'center'" :height="500" :width="700" :ok="btnOk" @winEvent="closeSelfWin">
+	<win :align="'center'" :height="500" :width="700" :ok="btnOk" :other="otherBtn" @winEvent="closeSelfWin">
 		<span slot="title">{{title}}</span>
 		<div class="add-column" slot="content">
 			<div class="inp-block">
@@ -105,7 +105,9 @@ export default {
 			btnOk: {
 				content: '确定'
 			},
-			btnCancel: {},
+			otherBtn:{
+				content: '继续添加'
+			},
 			name:'',//列表项名称
 			sortObj:{//排序
 				num:1,
@@ -123,7 +125,6 @@ export default {
 			},
 			storeList:[],//已选中的店铺列表
 			wareList:[],//选中的仓库列表
-			storeWarehouse:[],//店铺-仓库列表
 			itemName:'',//已选统计项
 			wareName:'',
 			storeName:'',
@@ -166,7 +167,7 @@ export default {
 		  		store:[],				//店铺
 				warehouse:[],			//仓库
 				type:'',				//统计项类型 1基础 2公式
-				
+				continue:false,			//是否继续 默认false 继续传true
 			}
 		*/
 	},
@@ -204,13 +205,29 @@ export default {
 		},
 		closeSelfWin(res) {
 			if(res == 'ok') {
-				this.confirmWin();
-			} else {
+				this.confirmWin(false);
+			} else if(res == 'other'){
+				this.confirmWin(true);
+				this.continueClean();
+			}else{
 				this.$emit('emit',false);
 			}
 		},
+		//继续添加，清空数据 排序+1
+		continueClean(){
+			let arr = ['name','itemName','storeName','wareName'];
+			for(let item of arr){
+				this[item] = '';
+			}
+			this.sortObj.num++;
+			this.sortObj.max++;
+			this.itemObj = {};
+			this.wareList = [];
+			this.storeList = [];
+		},
 		initData(){
 			if(this.pObj.name){//编辑
+				this.otherBtn = null;
 				this.editColumn();
 			}else{//新建
 				if(this.pObj.sortObj) this.sortObj = this.pObj.sortObj;
@@ -278,7 +295,7 @@ export default {
 			this.formulaData.formula = this.formulaList;
 		},
 		//抛出列表项数据
-		confirmWin(){
+		confirmWin(isContinue){
 			if(!this.itemName){
 				this.$message({message: '请选择统计项',type: 'error'});
 				return;
@@ -298,6 +315,7 @@ export default {
 				store:this.storeList,//店铺
 				warehouse:this.wareList,//仓库
 				type:this.itemType,//统计项类型 1基础项 2公式项
+				continue:isContinue,//是否继续
 			};
 			this.$emit('emit',this.emitObj);
 		},
