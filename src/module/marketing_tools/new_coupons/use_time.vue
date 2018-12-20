@@ -9,21 +9,6 @@
 	<div id="useTime">
 		<div class="right clearfix">
 			<section class="clearfix" style="margin-bottom:10px;">
-				<!-- <div class="fl" style="width: 250px;height: 40px;padding: 0;position: relative;cursor: pointer;text-align:center;" @click="selectItemShow('useDate')">
-					<div class="fl" style="border: 1px solid #999;width: 200px;height: 40px;padding: 0;line-height:40px;">
-						{{useDate.list[useDate.index]}}
-					</div>
-					<div style="border:1px solid #999;width: 40px;float: left;height:40px;border-left: none;line-height:40px;">
-						<img src="../../../res/icon/q2x.png" />
-					</div>
-					<div class="list" v-if="useDate.show" transition="slidUpDown" style="width: 240px;">
-						<ul>
-							<template v-for="(v,index) in useDate.list">
-								<li :key="index" @click="changeItemIndex('useDate',index)">{{v}}</li>
-							</template>
-						</ul>
-					</div>
-				</div> -->
 				<el-select class="fl" v-model="validTime" @change="selData" style="color:#c0c4cc">
 					<el-option v-for="(item,index) in useDate.list" :key="index" :label="item" :value="index">
 					</el-option>
@@ -175,11 +160,8 @@ export default {
 		return {
 			week: ['日', '一', '二', '三', '四', '五', '六'],
 			openMonthIndex: -1, //打开日期选择的下标  
-			validTime: '不设限制'
+			validTime: ''
 		};
-	},
-	components: {
-
 	},
 	methods: {
 		selectItemShow(item) {
@@ -390,23 +372,24 @@ export default {
 			this.$emit('getTime', this.useDate);
 		},
 		selData: function(value) { //领取后生效
-			// console.log(value)
-			// this.validTimeId = value;
 			this.useDate.index = value;
 		},
-	},
-	computed: {
-
+		getvalidTime:function(){
+			this.validTime = this.useDate.list[this.useDate.index];
+		}
 	},
 	watch: {
 		'useDate': {
 			handler() {
+				this.getvalidTime();
 				this.emitMethod(); //派发事件
 			},
 			deep: true
 		}
+	},
+	mounted(){
+		this.getvalidTime();
 	}
-
 };
 </script>
 <style type="text/css" scoped>

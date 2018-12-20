@@ -14,8 +14,8 @@
 					<el-button type="primary" @click="getActivityList">查询</el-button>
 				</div>
 				<div class="rightBtn">
-					<el-button type="primary" @click="downQrCode" v-if="!isBrand">下载小程序码</el-button>
-					<el-button type="primary" @click="newActivity" v-else>新建活动</el-button>
+					<el-button type="primary" @click="downQrCode" >下载小程序码</el-button>
+					<el-button type="primary" @click="newActivity" v-if="isBrand">新建活动</el-button>
 				</div>
 			</div>
 			<div class="list">
