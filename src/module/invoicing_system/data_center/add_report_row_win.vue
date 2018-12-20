@@ -2,7 +2,7 @@
  * @Author: weifu.zeng 
  * @Date: 2018-11-02 11:19:44 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-12-19 09:48:38
+ * @Last Modified time: 2018-12-20 16:33:51
  */
 <template>  
 	<div>
@@ -30,8 +30,8 @@
 				<div class="textarea">
 					<div v-if="collection.id">
 						<p class="conllection-description">集合名称 : {{collection.name}}</p>
-						<p class="conllection-description">集合类型 : {{collection.instruction}}</p>
-						<p class="conllection-description">集合说明 : {{collection.typeName}}</p>
+						<p class="conllection-description">集合类型 : {{collection.typeName}}</p>
+						<p class="conllection-description">集合说明 : {{collection.instruction}}</p>
 					</div>
 				</div>
 
