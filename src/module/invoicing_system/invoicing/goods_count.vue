@@ -138,7 +138,9 @@ export default {
 			stateStore:{
 				addGoods:{
 					list:[],
-					search:{}
+					search:{},
+					storeAll:false,
+					isUpdateZero:false,
 				}						//添加商品
 			},	
 			stateCountNum:[],			//保存填写的商品总数量	
@@ -156,6 +158,7 @@ export default {
 			this.templateId = this.$route.query.id;
 			this.useTemplate();
 		}else{
+			this.$store.commit('setFixButton', []);
 			this.showAddGoodsCom = true;
 		}
 	},
@@ -254,9 +257,8 @@ export default {
 				return;	
 			}
 
-			let {list=[],search={},storeAll,name='',isUpdateZero=false,} = res;
+			let {list=[],search={},storeAll,name='',isUpdateZero=false} = res;
 			this.stateStore.addGoods = {search,list,storeAll,name,isUpdateZero};
-			console.log(this.stateStore.addGoods);
 			if(list.length == 0){
 				this.pageObj.flag = false;
 			}else{
@@ -397,7 +399,7 @@ export default {
 			if(!this.toRawType(content,'Object')) content = {};
 
 			let arr = [],
-				{items=[],type='',wids:wid,aids:areaId} = content;
+				{items=[],type='',wids:wid,aids:areaId,goodsName,barCode} = content;
 
 			this.stateStore.addGoods.name = obj.name;
 			this.stateStore.addGoods.isUpdateZero = content.isUpdateZero==1;
@@ -409,7 +411,8 @@ export default {
 					if(Array.isArray(areaId)){
 						areaId = areaId.join(',');
 					}
-					this.stateStore.addGoods.search = {type,wid,areaId};
+					type = type?type:'';
+					this.stateStore.addGoods.search = {type,wid,areaId,goodsName,barCode};
 					this.stateStore.addGoods.list = [];
 					this.stateStore.addGoods.storeAll = true;
 					this.pageObj.flag = false;
@@ -594,32 +597,32 @@ export default {
 			this.loading = false; //停止加载动画
 		},
 		initBtn(){
-			this.$store.commit('setPageTools',[
+			this.$store.commit('setFixButton',[
 				{
-					name: '确认盘库',
-					className:'primary',
-					type:4,
+					name: '取消',
+					className:'info',
+					type:1,
 					fn:()=>{
-						this.submitData();
+						this.$router.go(-1);
 					}
 				},
 				{
 					name: '添加商品',
 					className:'success',
-					type:4,
+					type:1,
 					fn:()=>{
+						this.$store.commit('setFixButton', []);
 						this.showAddGoodsCom = true;
 					}
 				},
 				{
-					name: '取消',
-					className:'',
-					type:4,
+					name: '确认盘库',
+					className:'primary',
+					type:1,
 					fn:()=>{
-						this.$router.go(-1);
+						this.submitData();
 					}
 				},
-
 			]);            
 		},
 		isPrimitive (value) {

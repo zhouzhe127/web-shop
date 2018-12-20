@@ -341,7 +341,6 @@ export default {
 		}	
 	}
     .table{
-		border:@table-border;
 		border-bottom:none;
 		border-radius:4px;
 		width:100%;

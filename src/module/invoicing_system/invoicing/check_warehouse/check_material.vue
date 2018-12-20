@@ -154,6 +154,7 @@ export default{
 			this.initBtn();
 			this.setDefault(tempId);
 		}else{
+			this.$store.commit('setFixButton', []);
 			this.addShow = true;
 		}
 	},
@@ -163,23 +164,24 @@ export default{
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确定盘库',className: 'primary',type:4,
-					fn: () => {
-						this.checkMaterial();
-					}
-				},
-				{name: '添加物料',className: 'success',type:4,
-					fn: () => {
-						this.addShow = true;
-					}
-				},
-				{name: '取消盘库',className: 'info',type:4,
+				{name: '取消',className: 'info',type:1,
 					fn: () => {
 						window.history.go(-1);
 					}
 				},
+				{name: '添加物料',className: 'success',type:1,
+					fn: () => {
+						this.$store.commit('setFixButton', []);
+						this.addShow = true;
+					}
+				},
+				{name: '确定盘库',className: 'primary',type:1,
+					fn: () => {
+						this.checkMaterial();
+					}
+				},
 			];
-			this.$store.commit('setPageTools', arr);
+			this.$store.commit('setFixButton', arr);
 		},
 		async setDefault(tempId){//设置默认数据-使用模板时调用
 			let data = await http.getInventoryMaterialTemplate({data:{
@@ -197,6 +199,8 @@ export default{
 				sortTwoId: data.content.c2,			//二级分类id
 				wid : this.wid, 					//仓库id
 				areaId : this.areaId, 				//区域id
+				materialName: data.content.materialName,
+				barCode: data.content.barCode,
 			};
 			this.selObj.name = data.name;
 			let param = ['cid','wid','areaId'],paramNum=0;
@@ -461,11 +465,12 @@ export default{
 			let data = await http.materialGetListByArea({data:{
 				page: this.page,
 				num: this.pageShow,
-				name: '',
 				cid: this.cid,
 				wid : this.wid,
 				areaId : this.areaId,
 				type:-1,
+				name: this.selObj.search.materialName,
+				barCode:this.selObj.search.barCode,
 			}});
 			this.pageTotal = data.total;
 			this.listLength = data.count;
