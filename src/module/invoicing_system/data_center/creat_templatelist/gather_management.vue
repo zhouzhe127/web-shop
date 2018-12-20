@@ -149,7 +149,6 @@
 					name: '返回',
 					className: '',
 					type: 4,
-					icon: 'el-icon-plus',
 					fn: () => {
 						window.history.go(-1);
 					}
