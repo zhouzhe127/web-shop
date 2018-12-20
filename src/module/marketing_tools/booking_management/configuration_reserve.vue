@@ -384,7 +384,7 @@ export default {
 				data: obj
 			});
 			if (res) {
-				this.valiData('保存着成功');
+				this.valiData('保存成功');
 			}
 		},
 		checkForm: function() { //验证表单
