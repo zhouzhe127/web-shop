@@ -461,7 +461,6 @@ export default {
 			}
 			for (let i = 0; i < goodList.length; i++) {
 				this.$set(goodList[i], 'selected', false); //往列表里塞selected，单选全选点击用
-				// goodList[i].selected = false;
 				if (obj[goodList[i].id]) {
 					console.log('有重复id');
 				} else {
@@ -515,10 +514,6 @@ export default {
 					packlist.splice(i, 1);
 					i--;
 				}
-				// if(){
-				// 	packlist.splice(i, 1);
-				// 	i--;
-				// }
 			}
 			// console.log(packlist);
 			for (let i = 0; i < packlist.length; i++) {
