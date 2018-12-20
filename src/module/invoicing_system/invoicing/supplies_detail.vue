@@ -80,14 +80,12 @@
 				<i>{{wa.distributionName}}&nbsp;:&nbsp;{{wa.value}}/<strong v-for="(u,i) in goodsDetail.unit" :key="i" v-if="u.muId==wa.unitId">{{u.name}}</strong></i>
 			</li>
 		</div>
-		<!-- <ul class="tebBox">
-			<li v-for="(item,index) in tebData" @click="tebClick(index)" :key="index" :class="{active:tabactive==index}">{{item}}</li>
-		</ul> -->
-		<div style="margin:20px 0;">
-			<select-btn :sorts="goodsUnit" :name="'单位切换'" @selOn="selectList" ref="select"></select-btn>
+		<div style="margin:20px 0;width:180px;">
+			<el-select v-model="selUnit" placeholder="单位切换">
+				<el-option v-for="(item,index) in goodsUnit" :key="index" :label="item.name" :value="item"></el-option>
+			</el-select>
 		</div>
-		<supplies-list :goodsData="goodsData" :selUnit="selUnit"></supplies-list>
-		<!-- <supplies-opert :mid="mid" v-if="mid" :unit="goodsDetail.unit" v-show="tabactive==1"></supplies-opert> -->
+		<supplies-list :goodsData="goodsData" :selUnit="selUnit?selUnit:goodsUnit[0]"></supplies-list>
 	</div>
 </template>
 <script>
@@ -104,7 +102,7 @@
 				dataUnit: ['月', '日', '年'],
 				goodsData: '',
 				goodsUnit: '',
-				selUnit: 0,
+				selUnit: '',
 				showDetail: true,
 				isBrand: false,
 				typeValue:['成品','半成品','普通物料']
@@ -169,7 +167,7 @@
 						this.goodsData.relation.unshift(str[0]);
 					}
 				}
-				this.setUnitList();
+				this.goodsUnit = this.goodsData.relation;
 			},
 			// tebClick(index) {
 			// 	this.tabactive = index;
@@ -184,13 +182,6 @@
 					}
 					return res.join(',');
 				}
-			},
-			setUnitList() {
-				let arr = [];
-				for (let item of this.goodsData.relation) {
-					arr.push(item.name);
-				}
-				this.goodsUnit = arr;
 			},
 			getdefUnit(arr, type) {
 				//获取默认单位,最小单位
@@ -228,10 +219,11 @@
 					}
 				});
 			},
-			selectList(sle) {
-				//选择单位
-				this.selUnit = sle;
-			},
+			// selectList(sle) {
+			// 	//选择单位
+			// 	console.log(sle);
+			// 	this.selUnit = sle;
+			// },
 			revampcate() { //修改单位
 				this.$router.push({
 					path: 'revampUnit',
@@ -269,15 +261,15 @@
 	#suppliesDetaile {
 		margin-top: 10px;
 		.headBox {
-			border: 1px #ccc solid;
+			border: 1px #ebeef5 solid;
 			position: relative;
 			.headTitle {
 				padding: 10px 20px;
-				background-color: #eeeeee;
+				background-color: #f5f7fa;
 				a {
 					font-size: 14px;
-					text-decoration: #29a8e0 underline;
-					color: #29a8e0;
+					text-decoration: #E1BB4A underline;
+					color: #E1BB4A;
 					cursor: pointer;
 				}
 			}

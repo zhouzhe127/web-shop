@@ -181,7 +181,8 @@ export default {
 			let arr=[];
 			if(this.detail.status=='0'){//未审核
 				if(this.isExamine){//从审核页面进来
-					arr = [{name: '审核通过',className: 'primary',type:4,
+					arr = [
+						{name: '审核通过',className: 'primary',type:4,
 							fn: () => {
 								this.setOrderStatus(2,'审核通过');
 							}
@@ -325,7 +326,8 @@ export default {
 			for(let item of this.matList){
 				mTotal = mTotal+Number(item.unitPrice*item.numRes);
 			}
-			this.totalPrice = gTotal+mTotal;
+			let str = (gTotal+mTotal);
+			this.totalPrice = str.toFixed(2);
 		},
 		getSupplierName(id){
 			for(let item of this.supplierList){

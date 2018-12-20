@@ -23,8 +23,10 @@
 				<el-input v-model="positionName" clearable placeholder="请输入职位名称" style="width:150px;"></el-input>
 			</section>
 			<section class=" top_input">
-				<a href="javascript:void(0);" class="blue btn" @click="searchPosition()">筛选</a>
-				<a href="javascript:void(0);" class="gray btn" @click="resetSearch()">重置</a>
+				<el-button type="primary"  @click="searchPosition">筛选</el-button>
+				<el-button type="info" @click="resetSearch">重置</el-button>
+				<!-- <a href="javascript:void(0);" class="blue btn" @click="searchPosition()">筛选</a>
+				<a href="javascript:void(0);" class="gray btn" @click="resetSearch()">重置</a> -->
 			</section>
 		</section>
 		<!-- <comTable :listName="'职位管理列表'" :titleData="titleData" :introData="currentList" :allTotal="newrecordList.length" :bannerStyle="bannerStyle"
@@ -39,7 +41,7 @@
 		</comTable> -->
 		<section class="oBox">
 			<div class="boxTop">
-				<span style="font-size:16px;margin-right: 20px;">职位管理列表 · 共<span style="color: #ff3c04;font-size: inherit;">{{newrecordList.length}}</span>个条目</span>
+				<span style="font-size:16px;margin-right: 20px;">职位管理列表 · 共<span style="color: #ff3c04;font-size: inherit;">{{list.length}}</span>个条目</span>
 			</div>
 			<el-table
 				ref="multipleTable" stripe
@@ -161,15 +163,18 @@
 		},
 		methods: {
 			init() {
-				let obj = {
-					openShopPosition: () => {
-						this.openShop();
-					},
-					openBrandPosition: () => {
-						this.openBrand();
-					}
-				};
-				this.$store.commit('setPageTools', obj);
+				let arr = [{
+					name: '添加门店职位',
+					type:4,
+					className: 'primary',
+					fn: this.openShop
+				},{
+					name: '添加品牌职位',
+					type:4,
+					className: 'primary',
+					fn: this.openBrand
+				}];
+				this.$store.commit('setPageTools', arr);
 			},
 			//选择职位类型
 			selectType(index) {

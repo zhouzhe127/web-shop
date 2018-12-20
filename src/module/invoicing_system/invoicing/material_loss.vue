@@ -77,16 +77,17 @@
 				</li>
 				<div class="weightNum">
 					<p>数量/重量</p>
-					<input type="text" placeholder="0" v-model="remainNumber" maxlength="10">
+					<input style="text-indent: 10px;" type="text" placeholder="0" v-model="remainNumber" maxlength="10">
 					<span v-if="lossInfo.purchaseUnit">{{unitInfoDefault}}</span>
 					<span v-if="unitInfoDefault != unitInfoMin">+</span>
-					<input v-if="unitInfoDefault != unitInfoMin" type="text" placeholder="0" style="width:200px;" v-model="remainWeight" maxlength="10">
+					<input v-if="unitInfoDefault != unitInfoMin" type="text" placeholder="0" style="text-indent: 10px;width:200px;" v-model="remainWeight"
+					 maxlength="10">
 					<div v-if="unitInfoDefault != unitInfoMin" class="weightNum-unit">{{unitInfoMin}}</div>
 					<span v-if="lossInfo.purchaseUnit">（当前批次库存：{{lossInfo.surplus}}{{unitInfoMin}}）</span>
 				</div>
 				<div class="note">
 					<p>备注</p>
-					<textarea placeholder="请输入备注" maxlength="40"></textarea>
+					<textarea style="resize: none;padding:10px;" placeholder="请输入备注" maxlength="40"></textarea>
 				</div>
 				<div class="prompt">
 					<img src="../../../res/icon/prompt.png" alt="">
@@ -196,10 +197,10 @@
 					this.wareClose();
 				}
 			},
-			getpiceunit(id){
-				let str = ''
-				for(let item of this.unitInfo){
-					if(id == item.muId){
+			getpiceunit(id) {
+				let str = '';
+				for (let item of this.unitInfo) {
+					if (id == item.muId) {
 						str = item.name;
 					}
 				}
@@ -247,6 +248,7 @@
 				window.history.go(-1);
 			},
 			async continueLoss() {
+				if (!this.checkData()) return false;
 				let res = await http.materialLoss({
 					data: {
 						mid: this.lossInfo.itemId,
@@ -272,6 +274,7 @@
 				this.remainWeight = '';
 			},
 			async confirm() {
+				if (!this.checkData()) return false;
 				let res = await http.materialLoss({
 					data: {
 						mid: this.lossInfo.itemId,
@@ -297,7 +300,27 @@
 					});
 				}
 			},
+			checkData() {
+				let number = Number(this.remainWeight) || 0,
+					weight = Number(this.remainNumber) || 0;
+				if (number < 0 || weight < 0) {
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '请输入大于0的数量！'
+					});
+					return false;
+				}
+				if (number + weight == 0) {
+					this.$store.commit('setWin', {
+						title: '操作提示',
+						content: '请输入数量'
+					});
+					return false;
+				}
+				return true;
+			},
 			timeConversion(time) {
+				if (!time) return '--';
 				return utils.format(new Date(Number(time)), 'yyyy-MM-dd hh:mm:ss');
 			}
 		},
@@ -309,13 +332,13 @@
 		},
 		components: {
 			selectBtn: () =>
-				import ( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
+				import( /*webpackChunkName: 'select_btn'*/ 'src/components/select_btn'),
 			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
+				import( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
 			warehouseWin: () =>
-				import ( /*webpackChunkName: 'warehouse_win'*/ './warehouse_win'),
+				import( /*webpackChunkName: 'warehouse_win'*/ './warehouse_win'),
 			multipleWin: () =>
-				import ( /*webpackChunkName: 'multiple_win'*/ 'src/components/multiple_win'),
+				import( /*webpackChunkName: 'multiple_win'*/ 'src/components/multiple_win'),
 		}
 	};
 </script>
@@ -325,16 +348,19 @@
 		.material-info {
 			width: 100%;
 			height: auto;
+
 			.titleTop {
 				width: 100%;
 				height: 40px;
 				overflow: hidden;
+
 				.topbox {
 					width: 100%;
 					height: 40px;
 					margin: 10px;
 					line-height: 40px;
 					position: relative;
+
 					i {
 						width: 2px;
 						height: 28px;
@@ -343,6 +369,7 @@
 						left: 0;
 						background-color: #28a8e0;
 					}
+
 					h3 {
 						width: 73px;
 						height: 40px;
@@ -352,6 +379,7 @@
 					}
 				}
 			}
+
 			.dian {
 				width: 10px;
 				height: 1px;
@@ -359,13 +387,16 @@
 				margin: 20px 5px;
 				float: left;
 			}
+
 			.material-info-body {
 				margin-top: 10px;
 				width: 100%;
 				padding-left: 40px;
+
 				li {
 					height: 30px;
 					line-height: 30px;
+
 					div {
 						width: 33%;
 						float: left;
@@ -373,20 +404,24 @@
 				}
 			}
 		}
+
 		.new-inventory {
 			width: 100%;
 			margin-top: 10px;
 			height: auto;
+
 			.titleTop {
 				width: 100%;
 				height: 40px;
 				overflow: hidden;
+
 				.topbox {
 					width: 100%;
 					height: 40px;
 					margin: 10px;
 					line-height: 40px;
 					position: relative;
+
 					i {
 						width: 2px;
 						height: 28px;
@@ -395,6 +430,7 @@
 						left: 0;
 						background-color: #28a8e0;
 					}
+
 					h3 {
 						width: 73px;
 						height: 40px;
@@ -404,6 +440,7 @@
 					}
 				}
 			}
+
 			.dian {
 				width: 10px;
 				height: 1px;
@@ -411,17 +448,21 @@
 				margin: 20px 5px;
 				float: left;
 			}
+
 			.new-inventory-body {
 				width: 1000px;
 				height: auto;
 				margin-top: 10px;
+
 				li {
 					margin-top: 20px;
 					height: 40px;
+
 					section {
 						width: 400px;
 						font-size: 20px;
 						float: left;
+
 						p {
 							width: 100px;
 							height: 40px;
@@ -429,6 +470,7 @@
 							float: left;
 							text-align: right;
 						}
+
 						h6 {
 							width: 100px;
 							height: 40px;
@@ -436,27 +478,32 @@
 							float: left;
 							text-align: right;
 						}
+
 						p:after {
 							content: "*";
 							color: red;
 							margin: 0 5px;
 						}
+
 						h6:after {
 							content: "";
 							color: red;
 							margin: 0 5px;
 						}
+
 						span {
 							height: 40px;
 							line-height: 40px;
 							float: left;
 						}
+
 						input {
 							height: 40px;
 							float: left;
 							padding-left: 10px;
 							width: 200px;
 						}
+
 						.tableListInp {
 							color: #666666;
 							border: #b3b3b3 solid 1px;
@@ -464,12 +511,14 @@
 							width: 233px;
 							display: inline-block;
 							cursor: pointer;
+
 							div {
 								width: 41px;
 								height: 40px;
 								position: relative;
 								z-index: 5;
 							}
+
 							.inptext {
 								height: 39px;
 								width: 190px;
@@ -478,6 +527,7 @@
 								border-right: 1px #b3b3b3 solid;
 								padding-left: 10px;
 							}
+
 							.addstyle {
 								font-size: 30px;
 								text-align: center;
@@ -487,11 +537,13 @@
 								line-height: 30px;
 							}
 						}
+
 						.priceUnit {
 							width: 300px;
 							float: left;
 						}
 					}
+
 					.dateBox {
 						list-style: none;
 						width: 200px;
@@ -499,9 +551,11 @@
 						float: left;
 					}
 				}
+
 				.weightNum {
 					margin-top: 20px;
 					height: 40px;
+
 					p {
 						width: 100px;
 						height: 40px;
@@ -509,20 +563,24 @@
 						float: left;
 						text-align: right;
 					}
+
 					p:after {
 						content: "*";
 						color: red;
 						margin: 0 5px;
 					}
+
 					input {
 						height: 40px;
 						width: 100px;
 						float: left;
 					}
+
 					span {
 						margin: 10px 5px 0 5px;
 						float: left;
 					}
+
 					.weightNum-unit {
 						width: 40px;
 						height: 40px;
@@ -533,10 +591,12 @@
 						float: left;
 					}
 				}
+
 				.note {
 					width: 100%;
 					margin-top: 30px;
 					height: 80px;
+
 					p {
 						width: 100px;
 						height: 40px;
@@ -544,24 +604,29 @@
 						float: left;
 						text-align: right;
 					}
+
 					p:after {
 						content: "";
 						color: red;
 						margin: 0 5px;
 					}
+
 					textarea {
 						width: 600px;
 						height: 80px;
 						float: left;
 					}
 				}
+
 				.prompt {
 					width: 100%;
 					height: 40px;
+
 					img {
 						margin-left: 100px;
 						vertical-align: middle;
 					}
+
 					span {
 						line-height: 40px;
 						color: #ccc;
@@ -569,11 +634,13 @@
 				}
 			}
 		}
+
 		.btn {
 			width: 100%;
 			height: 50px;
 			margin-left: 100px;
 			margin-top: 20px;
+
 			li {
 				width: 10%;
 				height: 50px;
@@ -582,6 +649,7 @@
 				text-align: center;
 				float: left;
 				color: #fff;
+
 				&:nth-child(2) {
 					background: #fff;
 					border: 1px solid orange;

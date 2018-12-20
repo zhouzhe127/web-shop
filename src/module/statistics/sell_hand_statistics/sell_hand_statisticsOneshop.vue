@@ -181,11 +181,7 @@ export default {
 		getDetail: function(item) { //查看详情
 			this.oneDate = item.day;
 			this.type = 'oneDetail';
-		},
-		searchDate: function() { //搜索查询数据
-			this.page = 1;
-			this.getConsumeStatistics();
-		},
+		}
 	}
 };
 </script>

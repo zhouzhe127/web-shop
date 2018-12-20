@@ -46,13 +46,13 @@
 				<section>
 					<ul class="title">
 						<div class="container clearfix">
-							<li v-for="(int,i) in couponLists" :class="ruleIndex == i ? 'active' : ''" @click="getDetails(i)">
+							<li v-for="(int,i) in couponLists" :key="i" :class="ruleIndex == i ? 'active' : ''" @click="getDetails(i)">
 								{{int.name}}
 								<i v-if='!int.modify' class="deletes" @click.stop='deletesecPush(i)'></i>
 							</li>
 						</div>
 					</ul>
-					<div class="content" v-for="(item,ind) in couponLists" v-if='ruleIndex == ind'>
+					<div class="content" v-for="(item,ind) in couponLists" v-if='ruleIndex == ind'  :key="ind" >
 						<!-- 券总量 -->
 						<div class="online-box clearfix" v-if="item.modify">
 							<span class="online-sub fl">状态:</span>

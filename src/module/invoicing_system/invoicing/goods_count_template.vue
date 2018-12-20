@@ -5,44 +5,44 @@
 -->
 	<div id="goods-count-template">
 		<div class="tab-div">
-			<span @click="linkToPage">{{tabObj[0].name}}</span>
-			<span class="select-tab">{{tabObj[1].name}}</span>
+			<el-button-group>
+				<el-button @click="linkToPage">{{tabObj[0].name}}</el-button>
+				<el-button type="primary">{{tabObj[1].name}}</el-button>
+			</el-button-group>
 		</div>
 		<div class="content-head">
-			<input type="text" class="template-name" maxlength="30" v-model="search" placeholder="请输入模板名称">
-			<span class="blue common-btn" @click="clickBtn('filter')">筛选</span><span @click="clickBtn('reset')" class="gray common-btn">重置</span>
+			<div class="in-block">
+				<el-input  maxlength="30" v-model="search" placeholder="请输入模板名称"></el-input>
+			</div>
+			<div class="in-block">
+				<el-button @click="clickBtn('filter')" type="primary">筛选</el-button>
+				<el-button @click="clickBtn('reset')" type="info">重置</el-button>
+			</div>
 		</div>
 
 		<div class="content-body">
-			<com-table
-				:showHand ="true"
-				:listName ="'模板列表'"
-				:listHeight ='70'
-				:showTitle ="1"
-				:titleData ="titleData"
-				:introData="nowList"
-				:allTotal ="searchList.length"
-				:fixed="1"
-				:bannerStyle="{'color':'#43414a','fontSize':'16px'}"
-				:widthType ="true"
-				:listWidth ="1200"            
-			>
-				<div slot-scope="{data,index}" slot="con-0" class="operation-column">
-					<span @click="deleteUse(data,index,'use')" class="operation line">使用</span>
-					<span @click="deleteUse(data,index,'edit')" class="operation line edit-color">编辑</span>
-					<span @click="deleteUse(data,index,'delete')" class="operation delete-color">删除</span>
-				</div>
-				<template slot-scope="pro" slot="con-1" class="operation-column">
-					{{pro.data.itemIndex}}
-				</template>
-			</com-table>
-			<div>
-				<page-element 
-					:page="pageObj.page" 
-					:total="pageObj.total"  
-					@pageNum="getPageNum"
-				></page-element>
-			</div>
+			<el-table :data="nowList" stripe border style="width: 100%;" :header-cell-style="{'background-color':'#f5f7fa'}">
+				<el-table-column type="index" :index="indexMethod" label="序号" width="200">
+				</el-table-column>
+				<el-table-column label="模板名称" prop="name" >
+				</el-table-column>
+				<el-table-column label="操作" fixed="right" width="200">
+					<template slot-scope="scope">
+						<el-button type="text" @click="deleteUse(scope.row,scope.$index,'use')">使用</el-button>
+						<el-button type="text" @click="deleteUse(scope.row,scope.$index,'edit')" style="color:#34A9AA;">编辑</el-button>
+						<el-button type="text" @click="deleteUse(scope.row,scope.$index,'delete')" style="color:#D34A2B;">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
+		<div>
+			<el-pagination background @current-change="pageChange"
+				@size-change="sizeChange"
+				:current-page="pageObj.page"
+				:page-sizes="[10, 20, 50]"
+				layout="sizes, total, prev, pager, next, jumper"
+				:total="pageObj.listNum">
+			</el-pagination>
 		</div>
 	</div>
 </template>
@@ -65,6 +65,7 @@
 					page: 1,
 					total: 0,
 					num: 10, 				//每页显示多少条
+					listNum:0,
 				},
 				templateList: [], 			//模板列表
 				nowList: [], 				//当前展示的模板
@@ -80,6 +81,9 @@
 			}
 		},
 		methods: {
+			indexMethod(index){
+				return this.pageObj.num*(this.pageObj.page-1)+index+1;
+			},
 			linkToPage(){
 				//tab切换
 				let query = this.$route.query,
@@ -104,10 +108,7 @@
 			},
 			filterList(){
 				this.searchList = this.fnSearch(this.templateList, this.search);
-				this.getPageNum({
-					page: this.pageObj.page,
-					num: this.pageObj.num
-				});
+				this.pageChange(this.pageObj.page);
 			},
 			async deleteTemplate(path,item) {
 				let res = await this.getHttp(path, {
@@ -119,7 +120,7 @@
 				this.templateList = this.templateList.filter((ele) => {
 					return ele.id != item.id;
 				});
-				
+				this.pageObj.listNum = this.templateList.length;
 				this.filterList();
 
 				if(this.nowList.length == 0 && this.pageObj.page > 1){
@@ -145,14 +146,16 @@
 
 				switch(flag){
 					case 'delete':
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							winType: 'confirm',
-							content: '确认删除该模板?',
-							callback: (res) => {
-								if(res == 'ok') this.deleteTemplate(obj.delPath,item);
-							}
-						});	
+						this.$confirm('确认删除该模板?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							this.deleteTemplate(obj.delPath,item);
+							this.$message({type: 'success',message: '删除成功!'});
+						}).catch(() => {
+							//         
+						});
 						break;
 					case 'use':
 						query.id = item.id;
@@ -182,6 +185,7 @@
 
 						if(Array.isArray(arr)) {
 							this.templateList = arr;
+							this.pageObj.listNum = this.templateList.length;
 						}
 						break;
 					case '3':
@@ -190,6 +194,7 @@
 
 						if(Array.isArray(arr)) {
 							this.templateList = arr;
+							this.pageObj.listNum = this.templateList.length;
 						}						
 						break;
 				}
@@ -211,7 +216,8 @@
 				this.$store.commit('setPageTools',[
 					{
 						name: obj.name,
-						style:{height:'40px','color':'#fff'},
+						type:4,
+						className:'primary',
 						fn:()=>{
 							this.$router.push({path:obj.path,query:this.$route.query});
 						}
@@ -240,16 +246,18 @@
 						break;
 				}
 			},
-			getPageNum(obj) {
+			pageChange(res) {
 				//分页
-				this.pageObj.page = obj.page;
-				this.pageObj.num = obj.num;
+				this.pageObj.page = res;
 				this.pageObj.total = Math.ceil(this.searchList.length / this.pageObj.num);
 				this.nowList = this.initPage(this.searchList, this.pageObj.page, this.pageObj.num);
 				this.nowList = this.addItemIndex(this.nowList);
 			},
-
-
+			sizeChange(size){
+				this.pageObj.num = size;
+				this.nowList = this.initPage(this.searchList, this.pageObj.page, this.pageObj.num);
+				this.nowList = this.addItemIndex(this.nowList);
+			},
 			initPage(list, page, num) {
 				//分页
 				let sIndex = (page - 1) * num;
@@ -331,6 +339,11 @@
 				margin-right: 10px;
 			}
 		}
+		.in-block{
+			display: inline-block;
+			margin-right:15px;
+			margin-bottom:20px;
+		}
 		.operation-column {
 			text-align: center;
 			vertical-align: middle;
@@ -358,6 +371,9 @@
 			.delete-color{
 				color:@r;
 			}
+		}
+		.content-body{
+			margin-bottom: 20px;
 		}
 	}
 </style>

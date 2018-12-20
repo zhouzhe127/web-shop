@@ -2,41 +2,40 @@
 
 <template>
 	<div class="supplies">
-		<div class="list">
-			<div class="head">
-				批次列表 · 共
-				<em>{{goodsList.length}}</em>条数据
-			</div>
-			<div class="title">
-				<span>操作</span>
-				<span>序号</span>
-				<span>批次编码</span>
-				<span>生产日期</span>
-				<span>供应商</span>
-				<span>数量/重量</span>
-				<span>进价</span>
-				<span>仓库所属</span>
-			</div>
-			<ul>
-				<li v-for="(item,index) in showList" :key="index">
-					<div class="infoDetail">
-						<a href="javascript:void(0);" @click="showDetail(item)" style="color:#5ebee8;" v-if="inventConfigs.commonStock==1">入库</a><span v-if="inventConfigs.commonStock==1">|</span>
-						<a href="javascript:void(0);" @click="addListhouse(item)" style="color:red;">耗损</a>
-						<!-- <a href="javascript:void(0);" @click="openBar(item)" style="color:orange;">修改</a> -->
-					</div>
-					<span class="wide handle">
-						{{(index+1)+(page-1)*10}}
-					</span>
-					<span>{{item.batchCode}}</span>
-					<span>{{getTime(item.productionTime)}}</span>
-					<span>{{item.supplier||"--"}}</span>
-					<span v-if="goodsData.relation.length>0">{{comUnit(item.surplus,goodsData.relation[selUnit].value,goodsData.relation[selUnit].name,isMin.name)}}</span>
-					<span v-else>--</span>
-					<span>{{item.distributionPrice}}元/{{getpiceunit(Number(item.distributionUnit))}}</span>
-					<span>{{item.wName||"暂无"}}-{{item.aName||"暂无"}}</span>
-				</li>
-			</ul>
-			<div v-if="showList.length == 0" id="emptyData">目前没有显示数据</div>
+		<div>
+			<el-table :data="showList" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
+				<el-table-column :label="`批次列表 · 共${goodsList.length}个条目`" class-name='tabletop'>
+					<el-table-column prop="date" label="操作">
+						<template slot-scope="scope">
+							<el-button type="text" @click="showDetail(scope.row)" style="color:#34A9AA;" v-if="inventConfigs.commonStock==1">入库</el-button>
+							<el-button type="text" @click="addListhouse(scope.row)" style="color:#D34A2B;">耗损</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column type="index" :index="indexMethod" label="序号" width="100"></el-table-column>
+					<el-table-column prop="batchCode" label="批次编码"></el-table-column>
+					<el-table-column label="生产日期">
+						<template slot-scope="scope">
+							<div>{{getTime(scope.row.productionTime)}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="supplier" label="供应商"></el-table-column>
+					<el-table-column label="数量/重量">
+						<template slot-scope="scope">
+							<div>{{comUnit(scope.row.surplus,selUnit.value,selUnit.name,isMin.name)}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="进价">
+						<template slot-scope="scope">
+							<div>{{scope.row.distributionPrice}}元/{{getpiceunit(Number(scope.row.distributionUnit))}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="仓库所属">
+						<template slot-scope="scope">
+							<div>{{scope.row.wName||"暂无"}}-{{scope.row.aName||"暂无"}}</div>
+						</template>
+					</el-table-column>
+				</el-table-column>
+			</el-table>
 		</div>
 		<div class="page-box">
 			<!-- <page-btn @pageNum="pageChange" :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page"></page-btn> -->
@@ -55,7 +54,7 @@
 				page: 1,
 				pageTotal: 0,
 				num: 10,
-				showList: '',
+				showList: [],
 				relation: '',
 				isMin: '',
 				inventConfigs:{}//进销存配置
@@ -63,6 +62,9 @@
 		},
 		props: ['goodsData', 'selUnit'],
 		methods: {
+			indexMethod(index){
+				return this.num*(this.page-1)+index+1;
+			},
 			getTime(time) {
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
 			},
@@ -146,84 +148,6 @@
 <style lang="less" scoped>
 	.supplies {
 		padding-bottom: 50px;
-		.list {
-			border: 1px solid #ccc;
-			border-bottom: 2px solid #ddd;
-			.head {
-				height: 50px;
-				line-height: 50px;
-				padding: 0 10px;
-				font-size: 16px;
-				em {
-					color: #ff3c04;
-					font-size: inherit;
-				}
-			}
-			.title {
-				background: #e6e6e6;
-				overflow: hidden;
-				span {
-					float: left;
-					height: 40px;
-					line-height: 40px;
-					text-align: center;
-					width: 11%;
-					&:first-child {
-						width: 20%;
-					}
-				}
-			}
-			ul li {
-				overflow: hidden;
-				border-bottom: 2px solid #ddd;
-				&:last-child {
-					border-bottom: 0;
-				}
-				span {
-					float: left;
-					height: 70px;
-					line-height: 70px;
-					text-align: center;
-					width: 11%;
-					color: #555;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-				}
-				.infoDetail {
-					width: 20%;
-					float: left;
-					height: 70px;
-					line-height: 70px;
-					text-align: center;
-					display: flex;
-					justify-content: space-around;
-					a {
-						display: inline-block;
-						text-align: center;
-					}
-				}
-				.handle {
-					em {
-						display: inline-block;
-						padding: 0 20px;
-						height: 18px;
-						line-height: normal;
-						cursor: pointer;
-						&:hover {
-							text-decoration: underline;
-						}
-					}
-					.edit {
-						color: #ff8d00;
-						border-right: 1px solid #ddd;
-					}
-					.detail {
-						color: #27a8e0;
-					}
-				}
-			}
-		}
 		.page-box {
 			margin-top: 10px;
 		}

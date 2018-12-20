@@ -150,25 +150,35 @@ export default {
 			pushtimeList: [ //推送时间
 				{
 					name: '8',
-				}, {
+				}, 
+				{
 					name: '9'
-				}, {
+				}, 
+				{
 					name: '10'
-				}, {
+				}, 
+				{
 					name: '14'
-				}, {
+				}, 
+				{
 					name: '15'
-				}, {
+				}, 
+				{
 					name: '16'
-				}, {
+				}, 
+				{
 					name: '17'
-				}, {
+				}, 
+				{
 					name: '18'
-				}, {
+				}, 
+				{
 					name: '21'
-				}, {
+				}, 
+				{
 					name: '22'
-				}, {
+				}, 
+				{
 					name: '23'
 				}
 			],
@@ -184,22 +194,28 @@ export default {
 			activityDetail: {}, //详情
 			shopList: [],
 			contentSetting: '', //生日活动内容设置
-			parameter: [{
-				'name': '【会员姓名】',
-				'id': '{memberName}'
-			}, {
-				'name': '【会员生日】',
-				'id': '{memberBirthday}'
-			}, {
-				'name': '【优惠券名称】',
-				'id': '{couponName}'
-			}, {
-				'name': '【优惠券数量】',
-				'id': '{couponNum}'
-			}, {
-				'name': '【活动名称】',
-				'id': '{activityName}'
-			}],
+			parameter: [
+				{
+					'name': '【会员姓名】',
+					'id': '{memberName}'
+				}, 
+				{
+					'name': '【会员生日】',
+					'id': '{memberBirthday}'
+				}, 
+				{
+					'name': '【优惠券名称】',
+					'id': '{couponName}'
+				}, 
+				{
+					'name': '【优惠券数量】',
+					'id': '{couponNum}'
+				}, 
+				{
+					'name': '【活动名称】',
+					'id': '{activityName}'
+				}
+			],
 			showCoupon: false,
 			couponList: [], //优惠券列表
 			selectCoupon: [], //选中的列表

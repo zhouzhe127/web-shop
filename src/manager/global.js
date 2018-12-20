@@ -1,7 +1,9 @@
 import storage from '../verdor/storage';
 import Timer from '../verdor/timer';
 import utils from '../verdor/utils';
-import { store } from './store';
+import {
+	store
+} from './store';
 
 let global = {
 	checkLogin() {
@@ -25,7 +27,7 @@ let global = {
 	 *   pro:"*****",//不满足条件时给的提示
 	 * }
 	 * @param {Context} context 上下文环境
-	 * 
+	 *
 	 * 注意事项：
 	 * 1.如果没有给出条件和正则,则判断该变量的值是否不等于该变量类型的原始值
 		1):var a = 10,条件:a!=0;
@@ -34,7 +36,7 @@ let global = {
 		此时应使用value键,把真实的值附上去
 		1)  export default{
 				data:function(){
-					return {b:1} 
+					return {b:1}
 				},
 				motheds:{
 					check(){
@@ -72,8 +74,8 @@ let global = {
 				let fun = new Function(
 					'value',
 					'if(' +
-						cond.replace(/\$\$/g, 'value') +
-						'){return true;}return false;'
+					cond.replace(/\$\$/g, 'value') +
+					'){return true;}return false;'
 				);
 				if (!fun.call(context, value)) {
 					store.commit('setWin', {
@@ -188,21 +190,21 @@ let global = {
 	win_num: 0,
 
 	// 本地时的请求接口地址
-	// host: {
-	// 	shop: 'http://v5.ishandian.com.cn/shop/',
-	// 	bc: 'http://bc.api.ishandian.com.cn/Api/',
-	// 	wx: 'http://zishi.ishandian.com.cn/api/',
-	// 	pos: 'http://v5.ishandian.com.cn/pos/',
-	// 	fs: 'http://fs.ishandian.com.cn/api/'
-	// },
-	// qa
 	host: {
-		shop: 'http://v5.qa.ishandian.com.cn/shop/',
-		bc: 'http://bc.api.qa.ishandian.com.cn/api/',
-		wx: 'http://wx.qa.ishandian.com.cn/api/',
-		pos: 'http://v5.qa.ishandian.com.cn/pos/',
-		fs: 'http://fs.qa.ishandian.com.cn/api/'
+		shop: 'http://v5.ishandian.com.cn/shop/',
+		bc: 'http://bc.ishandian.com.cn/Api/',
+		wx: 'http://zishi.ishandian.com.cn/api/',
+		pos: 'http://v5.ishandian.com.cn/pos/',
+		fs: 'http://fs.ishandian.com.cn/api/'
 	},
+	// qa
+	// host: {
+	// 	shop: 'http://v5.qa.ishandian.com.cn/shop/',
+	// 	bc: 'http://bc.api.qa.ishandian.com.cn/api/',
+	// 	wx: 'http://wx.qa.ishandian.com.cn/api/',
+	// 	pos: 'http://v5.qa.ishandian.com.cn/pos/',
+	// 	fs: 'http://fs.qa.ishandian.com.cn/api/'
+	// },
 	// pre
 	// "host" : {"shop":"http://v5pre.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.pre.ishandian.net/api/","wx":"http://wxpre.ishandian.net/api/","fs": "https://fspre.ishandian.net/api/"},
 	// "host" : {"shop":"http://v5.ishandian.net/shop/","pos":"http://v5pre.ishandian.net/pos/","bc":"http://bc.api.ishandian.net/api/","wx":"http://wx.ishandian.net/api/","fs": "https://fs.i-shandian.com/api/"},
@@ -230,7 +232,10 @@ let global = {
 		let obj = {};
 		if (showName == minName) {
 			if (type) {
-				obj = { oNull: '', tNull: number == 0.0 ? '' : number };
+				obj = {
+					oNull: '',
+					tNull: number == 0.0 ? '' : number
+				};
 				return obj;
 			} else {
 				showNum = number + minName;
@@ -241,7 +246,10 @@ let global = {
 		let fltint = (number % value).toFixed(3) + ''; //小数
 		if (integer == 0) {
 			if (type) {
-				obj = { oNull: '', tNull: fltint == 0.0 ? '' : fltint };
+				obj = {
+					oNull: '',
+					tNull: fltint == 0.0 ? '' : fltint
+				};
 				return obj;
 			} else {
 				showNum = fltint + minName;
@@ -249,7 +257,10 @@ let global = {
 			}
 		} else if (parseInt(fltint * 1000) == 0) {
 			if (type) {
-				obj = { oNull: integer == 0.0 ? '' : integer, tNull: '' };
+				obj = {
+					oNull: integer == 0.0 ? '' : integer,
+					tNull: ''
+				};
 				return obj;
 			} else {
 				showNum = integer + showName;
@@ -257,7 +268,10 @@ let global = {
 			}
 		} else {
 			if (type) {
-				obj = { oNull: integer, tNull: fltint };
+				obj = {
+					oNull: integer,
+					tNull: fltint
+				};
 				return obj;
 			} else {
 				if (Number(fltint) < 0) {

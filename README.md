@@ -13,18 +13,18 @@
 
 ## 技术栈
 
-* vue 2+
+* vue 2.5+
 * vuex
 * vue-router
 * webpack 4+
-* es6
+* es6+
 * less
 * [sd-element](http://gitlab.shandian.tech/zhouzhe/sd-element)
 
 ## 部署
 
 ### 环境要求
-* Node.js 8+
+* Node.js 9+
 * npm 5+
 
 ### 开发模式

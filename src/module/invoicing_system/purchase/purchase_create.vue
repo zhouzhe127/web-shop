@@ -418,7 +418,7 @@
 					        	<span class="name-btn" @click="showDetail(scope.row,2)">{{scope.row.name}}</span>
 					      	</template>
 					    </el-table-column>
-						<el-table-column prop="barCode" label="条形码" width="200">
+						<el-table-column prop="barCode" label="物料编码" width="200">
 					    </el-table-column>
 						<el-table-column label="单位选择" min-width="200">
 							<template slot-scope="scope">
@@ -647,7 +647,7 @@ export default {
 			];
 			this.$store.commit('setFixButton', arr);
 		},
-		//重新提交
+		//重新提交-获取原数据
 		async setresetList(){
 			let data = await http.purchaseorderGetDetail({data:{
 				id:this.resetId,
@@ -767,22 +767,14 @@ export default {
 		async submitOrder(){
 			let list= this.setSubmitList();
 			if(!this.listVeri(list)) return;
-			let httpName = '',tipName='';
-			if(this.resetId){
-				httpName = 'purchaseorderEdit';
-				tipName = '修改';
-			}else{
-				httpName = 'purchaseorderAdd';
-				tipName = '新建';
-			}
-			let data = await http[httpName]({data:{
-				id: this.resetId,
+			
+			let data = await http.purchaseorderAdd({data:{
 				code: this.orderCode.trim(),
 				remark: this.remark.trim(),
 				content: list,
 			}});
 			if(data){
-				this.$message({message: `采购单${tipName}成功！`,type: 'success'});
+				this.$message({message: `采购单新建成功！`,type: 'success'});
 				delete this.$route.query.tempId;
 				delete this.$route.query.resetId;
 				this.$router.push({
@@ -1006,6 +998,7 @@ export default {
 					}
 					this[resName].splice(addIndex+1,0,obj);
 					this.$message({message: '添加成功！',type: 'success'});
+					this.computeTotalPrice();
 				}else{
 					this.$confirm(`该${tipName}已在编辑区，是否覆盖？`, '提示', {
 						confirmButtonText: '确定',
@@ -1024,15 +1017,18 @@ export default {
 						}
 						this[resName].splice(coverIndex,coverNum,obj);
 						this.$message({message: '覆盖成功！',type: 'success'});
-					}).catch();
+						this.computeTotalPrice();
+					}).catch(()=>{
+						//
+					});
 				}
 			}else{
 				this.$message({message: '添加成功！',type: 'success'});
 				this[resName].push(obj);
 				this[alrName].push(res.id);//已经选中的id 存入选中列表
 				this.setAlreadyId(this[listName],alrName);
+				this.computeTotalPrice();
 			}
-			this.computeTotalPrice();
 		},
 		//列表-取消
 		cancelList(res,type,index){
@@ -1086,7 +1082,8 @@ export default {
 					mTotal = mTotal + item.unitPrice*(item.num/item.unitValue);
 				}
 			}
-			this.orderTotal = gTotal+mTotal;
+			let str = (gTotal+mTotal);
+			this.orderTotal = str.toFixed(2);
 		},
 		setNumfloat(num){//设置2位浮点型数字
 			let str = num+'';

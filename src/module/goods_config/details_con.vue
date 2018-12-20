@@ -24,7 +24,7 @@
 					</el-radio-button>
 				</el-radio-group>
 			</div>
-			<section style="width:100%;height:50px;">
+			<section style="width:100%;margin-bottom:10px;">
 				<div v-if="ischain == 1|| ischain == 2" style="float:left;margin-right:10px;">
 					<el-select v-model="typeName" @change="selectType" placeholder="请选择指派类型" style="width:150px;">
 						<el-option v-for="item in goodSec" :key="item.id" :label="item.name" :value="item.id">
@@ -495,19 +495,20 @@ export default {
 			this.oneArea = {
 				id: item.id,
 				name: item.name,
-				show: false
+				show: false,
+				child:item.child
 			};
 			this.child = item.child;
 			this.child || (this.child = []);
 
 			this.tempGoods = this.pageGoods = this.filterGoodsByCategoryByPid(
 				this.goodsList,
-				this.oneArea.id
+				this.oneArea.id,
+				item.child
 			);
 			if (typeof index == 'number') {
 				this.selectNavId = -1;
 			}
-
 			if (this.search.trim().length != 0) {
 				this.searchGoods = this.funSearchGoods(this.tempGoods);
 				this.pageGoods = this.changeNav(
@@ -579,7 +580,7 @@ export default {
 			this.initPage(this.pageGoods);
 		},
 		//根据所提供的商品和分类,将商品分类
-		filterGoodsByCategoryByPid(goods, id) {
+		filterGoodsByCategoryByPid(goods, id,child) {
 			if (id == -1) return goods;
 			let arr = [];
 			goods.forEach(ele => {
@@ -589,9 +590,51 @@ export default {
 						arr.push(ele);
 						return true;
 					}
+					if (child) {
+						for (let i = 0; i < child.length; i++) {
+							ele.cids.some(v => {
+								if (v == child[i].id) {
+									arr.push(ele);
+									return true;
+								}
+							});
+						}
+					}
 				});
 			});
+			// 根据id去重
+			arr = this.combineObjectInList(arr, 'id');
 			return arr;
+		},
+		combineObjectInList(arr, item) {
+			//数组去除重复，item为重复判定项，list为重复记录需要累加的值的数组
+			let obj = {};
+			let a = [];
+			for (let i in arr) {
+				if (!obj[arr[i][item]]) {
+					obj[arr[i][item]] = this.copyObj(arr[i]); //数组克隆
+				}
+			}
+			for (let k in obj) {
+				a.push(obj[k]);
+			}
+			return a;
+		},
+		copyObj(obj) {
+			//obj arr 对象的克隆（区分于指针赋值）
+			if (obj.constructor == Array) {
+				let a = [];
+				for (let i in obj) {
+					a.push(obj[i]);
+				}
+				return a;
+			} else {
+				let o = {};
+				for (let i in obj) {
+					o[i] = obj[i];
+				}
+				return o;
+			}
 		},
 		//根据商品导航筛选商品
 		filterGoodsByNav(id) {
@@ -688,12 +731,13 @@ export default {
 				BC = BC.toLowerCase();
 				let categoryCode = ele.categoryCode.toLowerCase();
 				let goodsCode = ele.goodsCode.toLowerCase();
-				let goodcode = categoryCode + '-' +goodsCode;
+				let goodcode = categoryCode + '-' + goodsCode;
 				let name = ele.goodsName.toLowerCase();
 				let search = this.search.toLowerCase();
 				if (BC && BC.indexOf(search) > -1) return true;
 				if (name && name.indexOf(search) > -1) return true;
-				if (categoryCode && categoryCode.indexOf(search) > -1) return true;
+				if (categoryCode && categoryCode.indexOf(search) > -1)
+					return true;
 				if (goodsCode && goodsCode.indexOf(search) > -1) return true;
 				if (goodcode && goodcode.indexOf(search) > -1) return true;
 			});
@@ -713,7 +757,7 @@ export default {
 			}
 			let startIndex = (this.currentPage - 1) * this.num;
 			let endIndex = this.currentPage * this.num;
-			
+
 			this.nowGoods = arr.slice(startIndex, endIndex);
 		},
 		//获取分页跳转的页码
@@ -888,64 +932,90 @@ export default {
 		},
 		//初始化按钮
 		initSyncBtn() {
-			let obj = {};
-			
-			//添加商品，如果是表格模式，显示添加按钮
-			if (this.selectTab == 1) {
-				obj.addGood = () => {
-					this.openAddWin({});
-				};
-			}
-			//导入
-			obj.leadIn = function(){
-				// className:'',
-				this.importGoods().then(res => {
-					if (!res) {
-						this.$store.commit('setWin', {
-							title: '温馨提示',
-							content: '导入商品成功!'
+			let arr = [
+				{
+					name: '添加',
+					className: '',
+					type: 5,
+					fn: this.openAddWin
+				},
+				{
+					name: '导入',
+					className: '',
+					inputName: 'goods',
+					type: 6,
+					fn: async () => {
+						let info = http.importGoods({
+							data: { shopId: this.shopId },
+							timeout: 60000,
+							formId: 'form_import_good'
 						});
-						this.showCom = '';
-					} else {
-						this.showCom = 'errorGoods';
-						this.comObj = {
-							errorInfo: res
-						};
+						info.then(res => {
+							if (!res) {
+								this.$store.commit('setWin', {
+									title: '温馨提示',
+									content: '导入商品成功!'
+								});
+								this.showCom = '';
+							} else {
+								this.showCom = 'errorGoods';
+								this.comObj = {
+									errorInfo: res
+								};
+							}
+							this.getGoodsList(true).then(goods => {
+								this.allGoods = goods;
+								this.goodsList = this.initGoodsStock(
+									goods,
+									this.numList
+								);
+								this.goodsList = this.deleteChildGoods(
+									this.goodsList
+								);
+								this.goodsList = this.funSortGood(
+									this.goodsList
+								);
+								if (this.twoArea.id == -2) {
+									this.selectOneArea(
+										this.oneArea,
+										this.oneIndex,
+										true
+									);
+								} else {
+									this.selectTwoArea(
+										this.twoArea,
+										this.twoIndex,
+										true
+									);
+								}
+							});
+						});
 					}
-					this.getGoodsList(true).then(goods => {
-						this.allGoods = goods;
-						this.goodsList = this.initGoodsStock(
-							goods,
-							this.numList
-						);
-						this.goodsList = this.deleteChildGoods(this.goodsList);
-						this.goodsList = this.funSortGood(this.goodsList);
-						if (this.twoArea.id == -2) {
-							this.selectOneArea(
-								this.oneArea,
-								this.oneIndex,
-								true
-							);
-						} else {
-							this.selectTwoArea(
-								this.twoArea,
-								this.twoIndex,
-								true
-							);
-						}
-					});
-				});
-			};
-			//导出
-			obj.leadOut = () => {
-				this.exportGoodsList();
-			};
-			//同步商品
-			if (this.ischain == 1 || this.ischain == 2) {
-				obj.sync = () => {
-					this.showCom = 'asyncWin';
-				};
-			}this.$store.commit('setPageTools', obj);
+				},
+				{
+					name: '导出',
+					className: '',
+					type: 5,
+					fn: this.exportGoodsList
+				},
+				{
+					name: '同步商品',
+					className: '',
+					type: 5,
+					fn: () => {
+						this.showCom = 'asyncWin';
+					}
+				}
+			];
+			//如果是非直营加盟--没有同步
+			if (this.ischain == 0 || this.ischain == 3) {
+				arr.splice(arr.length - 1, 1);
+			}
+			//如果列表模式有添加按钮
+			if (this.selectTab == 0) {
+				arr.splice(0, 1);
+			}
+			this.$store.commit('setPageTools', arr);
 		},
 		//初始化数据
 		initData() {
@@ -1004,15 +1074,15 @@ export default {
 				let item = goods[i];
 				let imgName = item.imageName;
 				let imgArr = imgName.split('.');
-				imgName = imgArr[0]+'_normal.'+imgArr[1];
+				imgName = imgArr[0] + '_normal.' + imgArr[1];
 				// console.log(imgName);
 				item.imageName = imgName;
-			// }
+				// }
 			}
 			storage.session('goodList', goods);
 			return goods;
 		},
-		async getGoodsList(flag, goodVer,otherVer) {
+		async getGoodsList(flag, goodVer, otherVer) {
 			let goods = null;
 			if (flag) {
 				goods = await this.getGoods();
@@ -1021,7 +1091,10 @@ export default {
 				if (!httpGoodVersion) {
 					goods = await this.getGoods();
 				} else {
-					if (httpGoodVersion.goodsConfigVer == goodVer && httpGoodVersion.otherConfigVer == otherVer) {
+					if (
+						httpGoodVersion.goodsConfigVer == goodVer &&
+						httpGoodVersion.otherConfigVer == otherVer
+					) {
 						goods = storage.session('goodList');
 						if (!goods) goods = await this.getGoods();
 					} else {
@@ -1033,11 +1106,13 @@ export default {
 		},
 		//导入商品
 		async importGoods() {
+			console.log('info');
 			let info = await http.importGoods({
 				data: { shopId: this.shopId },
 				timeout: 60000,
 				formId: 'form_import_good'
 			});
+			console.log(info);
 			return info;
 		},
 		//导出商品
@@ -1052,7 +1127,11 @@ export default {
 		async syncRequest() {
 			let res = await this.getHttp('ShopGetExtra'); //获取版本号
 			let cate = await this.getCategoryList(false, res.otherConfigVer); //获取分类
-			let goods = await this.getGoodsList(false, res.goodsConfigVer,res.otherConfigVer); //获取商品列表
+			let goods = await this.getGoodsList(
+				false,
+				res.goodsConfigVer,
+				res.otherConfigVer
+			); //获取商品列表
 			let { list } = await this.getHttp('InventoryGetlist'); //获取库存数量
 
 			if (cate[0] && cate[0].id != -1) {

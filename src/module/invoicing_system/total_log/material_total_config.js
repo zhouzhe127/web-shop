@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import storage from 'src/verdor/storage';
 
 //批次详情默认跳转页
@@ -17,17 +19,26 @@ function forbiddenClick(context,item){
 	return false;
 }
 
+/*
+	删除的类型:
+		盘库,批量盘库	
+	新增类型:
+	20,21,22,23,24
+
+*/
+
+
 let config = [
-		{
-			"type": 1,
-			"typeName": "盘库",
-			"historyDescripe": "",
-			"batchDescripe": "",
-			"canViewHistory": false,
-			"canViewBatch": true,
-			"batchClick": defaultBatchClick,
-			"historyClick":forbiddenClick
-		},
+		// {
+		// 	"type": 1,
+		// 	"typeName": "盘库",
+		// 	"historyDescripe": "",
+		// 	"batchDescripe": "",
+		// 	"canViewHistory": false,
+		// 	"canViewBatch": true,
+		// 	"batchClick": defaultBatchClick,
+		// 	"historyClick":forbiddenClick
+		// },
 		{
 			"type": 2,
 			"typeName": "入库",
@@ -40,7 +51,7 @@ let config = [
 		},
 		{
 			"type": 3,
-			"typeName": "耗损",
+			"typeName": "普通耗损",
 			"historyDescripe": "",
 			"batchDescripe": "",
 			"canViewHistory": false,
@@ -133,7 +144,7 @@ let config = [
 		},
 		{
 			"type": 9,
-			"typeName": "领料回库",
+			"typeName": "领料盘库回库",	//领料回库 ->领料盘库回库
 			"historyDescripe": "点击进入该条领料盘库记录。领料盘库中，增加一条剩余数量，消耗数量自动计算",
 			"batchDescripe": "",
 			"canViewHistory": true,
@@ -298,21 +309,97 @@ let config = [
 			"batchClick": forbiddenClick,
 			"historyClick":forbiddenClick
 		},
+		// {
+		// 	"type": 19,
+		// 	"typeName": "批量盘库",
+		// 	"historyDescripe": "查看该条相关的盘库记录详情。（单个盘库没有盘库记录，无法跳转所以为暗色）。盘库记录里边的单条数据也要增加成本金额。",
+		// 	"batchDescripe": "",
+		// 	"canViewHistory": true,
+		// 	"canViewBatch": true,
+		// 	"batchClick": defaultBatchClick,
+		// 	"historyClick":function(context,item){
+		// 		let obj = {};
+		// 		obj.path = '/admin/materialCountDetail';
+		// 		obj.query = {id:item.other.logId};
+		// 		context.$router.push(obj);				
+		// 	}
+		// }
 		{
-			"type": 19,
-			"typeName": "批量盘库",
-			"historyDescripe": "查看该条相关的盘库记录详情。（单个盘库没有盘库记录，无法跳转所以为暗色）。盘库记录里边的单条数据也要增加成本金额。",
-			"batchDescripe": "",
+			"type": 20,
+			"typeName": "采购单入库",		//采购单的详情,				//入货批次的变化
+			"historyDescripe": "采购单详情",
+			"batchDescripe": "入货批次的变化",
 			"canViewHistory": true,
 			"canViewBatch": true,
 			"batchClick": defaultBatchClick,
 			"historyClick":function(context,item){
+				let {purchaseId} = item.other; 
+				context.$router.push({
+					path:"/admin/purchaseManagement/detail",
+					query : {
+						id : purchaseId
+					}
+				});	
+			}
+		},
+		{
+			"type": 21,
+			"typeName": "普通盘盈",							//							//批次变化量
+			"historyDescripe": "",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": false,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": forbiddenClick
+		},
+		{
+			"type": 22,
+			"typeName": "普通盘亏",										//批次变化量
+			"historyDescripe": "",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": false,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": forbiddenClick
+		},
+		{
+			"type":23,
+			"typeName" : "批量盘亏",		//批量盘库详情				//批次变化量	
+			"historyDescripe": "批量盘库详情",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": function(context,item){
 				let obj = {};
 				obj.path = '/admin/materialCountDetail';
 				obj.query = {id:item.other.logId};
-				context.$router.push(obj);				
+				context.$router.push(obj);	
 			}
-		}
+		},
+		{
+			"type":24,
+			"typeName" : "批量盘盈",			//批量盘库详情				//批次变化量	
+			"historyDescripe": "批量盘库详情",
+			"batchDescripe": "批次变化量",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick": function(context,item){
+				let obj = {};
+				obj.path = '/admin/materialCountDetail';
+				obj.query = {id:item.other.logId};
+				context.$router.push(obj);	
+			}
+		},
+		{
+			"type" : 25,
+			"typeName": "批盘消耗",				
+			"historyDescripe":"",
+			"batchDescripe": "",
+			"canViewHistory": false,
+			"canViewBatch": false,
+		},
 	];
 
 export default config;

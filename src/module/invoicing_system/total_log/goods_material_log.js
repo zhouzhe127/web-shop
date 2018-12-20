@@ -2,30 +2,30 @@ import http from 'src/manager/http';
 import global from 'src/manager/global';
 import storage from 'src/verdor/storage';
 import gConfig from './goods_total_config';
-import mConfig from './material_total_config'
+import mConfig from './material_total_config';
 
 export default {
-    data(){
-        return{
-            valiDate:[
-                {id:0,name:'月'},
-                {id:1,name:'日'},
-                {id:2,name:'年'},
+	data(){
+		return{
+			valiDate:[
+				{id:0,name:'月'},
+				{id:1,name:'日'},
+				{id:2,name:'年'},
 			],
 			isBrand:false,
 			shopId:null,
-        };
-    },
-    methods:{
-        //初始时间
-        initTime(){
-            let start,end;
-            end = new Date();
-            start = end.getTime() - global.timeConst.ONEMONTH;
-            start = new Date(start);
-            return [start,end];
+		};
+	},
+	methods:{
+		//初始时间
+		initTime(){
+			let start,end;
+			end = new Date();
+			start = end.getTime() - global.timeConst.ONEMONTH;
+			start = new Date(start);
+			return [start,end];
 		},
-        //初始化分页组件
+		//初始化分页组件
 		initPageObj(){
 			this.pageObj = {
 				total:0,				//总记录数
@@ -33,58 +33,58 @@ export default {
 				pagerCount:11,			//每页显示的按钮数
 				currentPage:1,          //当前页
 			};
-        },
-        //初始化条件
-        initCondition(){
-            this.condition = {
-                time:[],                    //时间                
-                operationType:[],           //操作类型
-                goodsName:'',               //物料名称
-                code:'',                    //物料简码
-                operationUser:'',           //操作人
-                category:[],                //分类
-                wid:[],                     //仓库
-            };
-        },
-        //获取操作类型
-        async getOperationList(type){
-            let operationList = [];
-            let url = 'invoicing_getInventoryLogType';
-            if(type == 'material') url = 'invoic_getType';
-
-            operationList = await this.getHttp(url);
-            this.operationList = this.changeOperationType(operationList);
 		},
-        //获取所有条件
-        getSubmitData(){
-            let obj = {},
-                condition = this.condition;
+		//初始化条件
+		initCondition(){
+			this.condition = {
+				time:[],                    //时间                
+				operationType:[],           //操作类型
+				goodsName:'',               //物料名称
+				code:'',                    //物料简码
+				operationUser:'',           //操作人
+				category:[],                //分类
+				wid:[],                     //仓库
+			};
+		},
+		//获取操作类型
+		async getOperationList(type){
+			let operationList = [];
+			let url = 'invoicing_getInventoryLogType';
+			if(type == 'material') url = 'invoic_getType';
 
-            obj.type = condition.operationType;
-            obj.name = condition.goodsName;
-            obj.barCode = condition.code;
-            obj.wid = condition.wid;
-            obj.page = this.pageObj.currentPage;
-            obj.size = this.pageObj.pageSize;
-            obj.beginTime = 0;
-            obj.endTime = 0;       
-            obj.cid = '';
-            obj.createUName = condition.operationUser;
+			operationList = await this.getHttp(url);
+			this.operationList = this.changeOperationType(operationList);
+		},
+		//获取所有条件
+		getSubmitData(){
+			let obj = {},
+				condition = this.condition;
 
-            if(Array.isArray(condition.time) && condition.time.length > 0){
-                let [start,end] = condition.time;
-                start = start.getTime();
-                end = end.getTime();
-                obj.beginTime = parseInt(start / 1000);
-                obj.endTime = parseInt(end / 1000);  
-            }
-            if(Array.isArray(condition.category) && condition.category.length > 0){
-                obj.cid = condition.category[0];
-                if(condition.category.length >= 2){
-                    obj.cid = condition.category[1];                    
-                }   
-            }
-            return obj;
+			obj.type = condition.operationType;
+			obj.name = condition.goodsName;
+			obj.barCode = condition.code;
+			obj.wid = condition.wid;
+			obj.page = this.pageObj.currentPage;
+			obj.size = this.pageObj.pageSize;
+			obj.beginTime = 0;
+			obj.endTime = 0;       
+			obj.cid = '';
+			obj.createUName = condition.operationUser;
+
+			if(Array.isArray(condition.time) && condition.time.length > 0){
+				let [start,end] = condition.time;
+				start = start.getTime();
+				end = end.getTime();
+				obj.beginTime = parseInt(start / 1000);
+				obj.endTime = parseInt(end / 1000);  
+			}
+			if(Array.isArray(condition.category) && condition.category.length > 0){
+				obj.cid = condition.category[0];
+				if(condition.category.length >= 2){
+					obj.cid = condition.category[1];                    
+				}   
+			}
+			return obj;
 		},
 		initData() {
 			let userData = storage.session('userShop');
@@ -112,38 +112,38 @@ export default {
 				return ele[attr] == this.shopId;
 			});
 		},
-        //查看记录
-        viewHistory(item){
+		//查看记录
+		viewHistory(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
 			
-            let temp = {};
-            temp = this.getEle(config,item.type,'type');
-            temp['historyClick'](this,item);
-            console.log(temp);
-        },
-        //查看批次详情
-        viewBatchDetail(item){
-			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
-			
-            let temp = {};
-            temp = this.getEle(config,item.type,'type');
-            temp['batchClick'](this,item);
-            console.log(temp);
+			let temp = {};
+			temp = this.getEle(config,item.type,'type');
+			temp['historyClick'](this,item);
+			console.log(temp);
 		},
-        //是否可以查看批次详情
-        canviewBatchDetail(item){
+		//查看批次详情
+		viewBatchDetail(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
 			
-            let temp = null;
+			let temp = {};
+			temp = this.getEle(config,item.type,'type');
+			temp['batchClick'](this,item);
+			console.log(temp);
+		},
+		//是否可以查看批次详情
+		canviewBatchDetail(item){
+			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
+			
+			let temp = null;
 			temp = this.getAttr(config,item.type,'type','canViewBatch');
 			if(typeof temp == 'function'){
 				return !temp(item);
 			}else{
 				return !temp;				
 			}
-        },
-        //是否可以查看记录
-        canViewHistory(item){
+		},
+		//是否可以查看记录
+		canViewHistory(item){
 			let config = this.tabFlag == 'goods' ? gConfig : mConfig;
 			let temp = null;
 			temp =  this.getAttr(config,item.type,'type','canViewHistory');
@@ -152,19 +152,29 @@ export default {
 			}else{
 				return !temp;				
 			}
-        },
+		},
 		
 
-        //初始化对象的属性
-        initObject(obj,attrs=[],val=0){
-            for(let a of attrs){
-                if(!obj[a]){
-                    obj[a] = val;
-                }
-            }
-        },
+		//计算数值
+		calcNum(obj,attrs = []){
+			let fixed = 2;
+			for(let key of attrs){
+				let num = Number(obj[key]);
+				if(!num) num = 0;
+				num = num.toFixed(fixed);
+				obj[key] = num;
+			}
+		},
+		//初始化对象的属性
+		initObject(obj,attrs=[],val=0){
+			for(let a of attrs){
+				if(!obj[a]){
+					obj[a] = val;
+				}
+			}
+		},
 		//商品物料导航的切换
-        navigateTo(navigate){
+		navigateTo(navigate){
 			if(navigate == 'goods'){
 				this.$router.push({path:'/admin/totalLog/materialTotalLog',query:this.$route.query});
 			}else{
@@ -189,15 +199,15 @@ export default {
 				second:time.getSeconds(),
 				week:0,
 				str:'',
-                time:'',
-                dateTime:'',          
-			}
+				time:'',
+				dateTime:'',          
+			};
 			let {year,month,day,hour,minute} = date;
-            month += 1;
+			month += 1;
 			hour = hour > 9 ? hour : '0'+hour;
 			minute = minute > 9 ? minute : '0'+minute;
-            date.time = `${hour}:${minute}`;
-            date.dateTime = `${year}-${month}-${day}`;
+			date.time = `${hour}:${minute}`;
+			date.dateTime = `${year}-${month}-${day}`;
 			date.str = `${year}-${month}-${day} ${hour}:${minute}`;
 			return date;
 		},
@@ -231,7 +241,7 @@ export default {
 			}
 			let temp = [];
 			temp = arr.map((ele)=>{
-				return ele[attr]
+				return ele[attr];
 			});
 			return temp;
 		},
@@ -245,8 +255,5 @@ export default {
 			}
 			return temp;
 		},
-    },
-    mounted(){
-
-    }
-}
+	}
+};

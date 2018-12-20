@@ -16,9 +16,14 @@
 						<div class="line"></div>
 					</div>
 					<div class="list-box" v-show="brandShow">
-						<span class="radio-cell" v-for="(item,index) in brandList" :key="index">
+						<span class="radio-cell" v-for="(item,index) in brandList" :key="index" v-if="single">
 							<el-radio v-model="wareId" :label="item.id" border>{{item.name}}</el-radio>
 						</span>
+						<el-checkbox-group v-model="mulBrand" v-if="!single">
+							<span class="radio-cell" v-for="(item,index) in brandList" :key="index">
+								<el-checkbox :label="item.id" border>{{item.name}}</el-checkbox >
+							</span>
+						</el-checkbox-group>
 					</div>
 				</div>
 				<div class="block-box" v-if="!only || only==2">
@@ -27,8 +32,8 @@
 						<div class="line shop"></div>
 					</div>
 					<div class="filter">
-						<div class="inline-box">
-							<select-shop @chooseShop="getDrop" :shopIds="shopIds"></select-shop>
+						<div class="inline-box" v-if="isBrand">
+							<select-shop @chooseShop="getDrop" :shopIds="shopIds" :isSingle="single"></select-shop>
 						</div>
 						<div class="inline-box">
 							<el-input placeholder="请输入仓库名称" v-model="wareName" style="width:200px;"></el-input>
@@ -39,12 +44,17 @@
 						</div>
 					</div>
 					<div class="list-box">
-						<span class="radio-cell" v-for="(item,index) in shopList" :key="index">
+						<span class="radio-cell" v-for="(item,index) in shopList" :key="index" v-if="single">
 							<el-radio v-model="wareId" :label="item.id" border>{{item.name}}</el-radio>
 						</span>
+						<el-checkbox-group v-model="mulshop" v-if="!single">
+							<span class="radio-cell" v-for="(item,index) in shopList" :key="index">
+								<el-checkbox :label="item.id" border>{{item.name}}</el-checkbox >
+							</span>
+						</el-checkbox-group>
 					</div>
 				</div>
-				<div class="block-box" v-if="isArea">
+				<div class="block-box" v-if="isArea && single">
 					<div class="ware-title">
 						<span>区域</span>
 						<div class="line shop"></div>
@@ -56,13 +66,18 @@
 					</div>
 				</div>
 			</div>
-			<div class="tips">已选中: {{selName}}</div>
+			<div class="tips">
+				<div class="btn-box" v-if="!single">
+					<el-checkbox v-model="brandAll" size="mini" border @change="getAll(1)" v-if="isBrand">全选品牌</el-checkbox>
+					<el-checkbox v-model="storeAll" size="mini" border @change="getAll(2)">全选门店</el-checkbox>
+				</div>
+				<span class="tips-span">已选中: {{selName}}</span>
+			</div>
 		</div>
 	</win>
 </template>
 <script>
-//该组件直接在组件内容调用接口，请求仓库数据，且会缓存数据，不会重复请求
-import utils from 'src/verdor/utils';
+//该组件直接在组件内容调用接口，请求仓库数据
 import http from 'src/manager/http';
 import storage from 'src/verdor/storage';
 
@@ -82,28 +97,40 @@ export default {
 			wareId:'',//仓库id
 			wareObj:{},//选中的仓库对象
 			shopIds:[],//已选中的店铺id
+			shopIdsList:[],//店铺id列表
 			wareName:'',//仓库名称
 			selName:'',//已选中仓库名称
 			brandShow:true,//是否显示品牌
 			only:'',
 			isArea:false,//是否开区区域选择 默认不开启
 			areaId:'',//区域id
+
+			single:true,//是否单选 默认单选
+			mulBrand:[],//多选模式下 品牌选中集合
+			mulshop:[],//多选模式下 单店选中集合
+			wareArr:[],//抛出的多选仓库
+			brandAll:false,//全选品牌
+			storeAll:false,//全选门店
+			isBrand:true,//是否品牌
 		};
 	},
 	props: {
 		pObj: null,
 		// {
-		// 	title:'', 		(可不传) 标题 '选择xxx'
-		// 	selectId:'', 	(必须) 已选中的仓库id
-		//	shopId:'',		(可不传) 店铺id 用于品牌下单店的过滤
-		//	only:'',		(可不传) 1只看品牌 2只看单店 默认全部展示
-		//	isArea:false,	(可不传) 是否开启区域选择 默认不开启
-		//	areaId:'',		(可不传) 区域id 开启区域选择时才会用到
+		// 	title:'', 			(可不传) 标题 '选择xxx'
+		// 	selectId:'', 		(必须) 已选中的仓库id
+		//	shopId:'',			(可不传) 店铺id 用于品牌下单店的过滤
+		//	only:'',			(可不传) 1只看品牌 2只看单店 默认全部展示
+		//	isArea:false,		(可不传) 是否开启区域选择 默认不开启
+		//	areaId:'',			(可不传) 区域id 开启区域选择时才会用到
+		//	isMultiple:false,	(可不传) 是否开启多选 默认不开启
 		// }
 	},
 	watch:{
 		'wareId':'radioChange',
-		'areaId':'areaChange'
+		'mulBrand':'checkChange',
+		'mulshop':'checkChange',
+		'areaId':'areaChange',
 	},
 	mounted() {
 		this.initData();
@@ -121,23 +148,54 @@ export default {
 					this.$message({message: '请选择区域！',type: 'error'});
 					return;
 				}
-				this.$emit('throwWin', res, this.wareObj);
+				let send = this.single? this.wareObj:this.wareArr;
+				this.$emit('throwWin', res, send);
 			} else {
 				this.$emit('throwWin', res);
 			}
 		},
 		initData(){
+			//开启多选
+			this.single = !this.pObj.isMultiple;
 			//只显示品牌 或 单店
 			this.only = this.pObj.only?this.pObj.only:'';
 			//开启区域
 			this.isArea = this.pObj.isArea?this.pObj.isArea:'';
-			this.getWarehouse().then(()=>{
-				this.title = this.pObj.title?this.pObj.title:'选择仓库';
-				this.wareId = this.pObj.selectId?this.pObj.selectId:'';
+			this.title = this.pObj.title?this.pObj.title:'选择仓库';
+			this.getWarehouse();
+
+			let userShop = storage.session('shopList');
+			this.shopIdsList = userShop.map((item)=>{
+				return item.id;
 			});
+			this.shopIds = this.shopIdsList;
+			this.isBrand = storage.session('userShop').currentShop.ischain=='3';
+		},
+		getAll(type){
+			let listName = '',idMulName='',allName='';
+			if(type==1){//全选品牌
+				listName = 'brandList';
+				idMulName = 'mulBrand';
+				allName = 'brandAll';
+			}else{//全选门店
+				listName = 'shopList';
+				idMulName = 'mulshop';
+				allName = 'storeAll';
+			}
+			if(this[allName]){
+				let idArr = [];
+				for(let item of this[listName]){
+					idArr.push(item.id);
+				}
+				this[idMulName] = idArr;
+			}else{
+				this[idMulName] = [];
+			}
 		},
 		getDrop(res){
 			this.shopIds = res;
+			this.wareName = '';
+			this.filter();
 		},
 		//选择仓库-点击radio按钮
 		radioChange(){
@@ -153,6 +211,25 @@ export default {
 			}else{
 				this.selName = this.wareObj.name;
 			}
+		},
+		//选择仓库-点击checkbox按钮
+		checkChange(){
+			let array = this.mulBrand.concat(this.mulshop);
+			let list = [];
+			for(let wid of array){
+				for(let item of this.dataList){
+					if(wid==item.id){
+						list.push(item);
+						break;
+					}
+				}
+			}
+			if(list.length>1){
+				this.selName = list.length+'个';
+			}else{
+				this.selName = list.length? list[0].name:'';
+			}
+			this.wareArr = list;
 		},
 		//选择区域-点击radio按钮
 		areaChange(){
@@ -185,7 +262,7 @@ export default {
 		//重置
 		reset(){
 			this.shopList = this.shopListOri;
-			this.shopIds = [];
+			this.shopIds = this.shopIdsList;
 			this.wareName = '';
 		},
 		//获取仓库列表
@@ -208,13 +285,11 @@ export default {
 					brandList.push({
 						id:item.id,
 						name:item.name,
-						ischain:true,
 					});
 				}else{
 					let obj={
 						id:item.id,
 						name:item.name,
-						ischain:false,
 						shopId:item.shopId,
 					};
 					if(this.pObj.shopId){//传入了店铺id 经过筛选后只显示本店仓库
@@ -229,6 +304,26 @@ export default {
 			this.brandList = brandList;
 			this.shopListOri = listOri;
 			this.shopList = listOri;
+			this.setAlready();
+		},
+		setAlready(){
+			if(this.single){//单选
+				this.wareId = this.pObj.selectId?this.pObj.selectId:'';
+			}else{//多选
+				let mulBrand = [];
+				for(let i=0;i<this.pObj.selectId.length;i++){
+					let item = this.pObj.selectId[i];
+					for(let brand of this.brandList){
+						if(item==brand.id){
+							mulBrand.push(...this.pObj.selectId.splice(i,1));
+							i--;
+							break;
+						}
+					}
+				}
+				this.mulBrand = mulBrand;
+				this.mulshop = this.pObj.selectId;
+			}
 		}
 	},
 };
@@ -236,8 +331,9 @@ export default {
 <style lang='less' scoped>
 	.ware-select{
 		position: relative;
+		height: 500px;
 		.ware-main{
-			height: 500px;overflow: auto;padding: 20px;padding-top: 10px;
+			height: 460px;overflow: auto;padding: 0 20px;padding-top: 10px;
 			.filter{
 				padding-top: 15px;
 				.inline-box{
@@ -282,9 +378,18 @@ export default {
 			}
 		}
 		.tips{
-			position: absolute;bottom: 5px;left: 0;width: 100%;padding: 0 20px;
-			text-align: right;
-			color: #e1bb4a;
+			position: absolute;bottom: 0px;left: 0;width: 100%;padding: 0 20px;
+			overflow: hidden;
+			z-index: 2;
+			background: #fff;
+			.tips-span{
+				height: 30px;
+				line-height: 30px;
+				color: #e1bb4a;
+				text-align: right;
+				float: right;
+			}
+			.btn-box{float: left;margin-top: 1px;}
 		}
 	}
 </style>

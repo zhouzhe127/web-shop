@@ -5,34 +5,60 @@
 	 -->
 	<div id="goods-count-history">
 		<div class="content-body" v-if="!showAddGoodsCom">
-			<com-table
-				:showHand ="true"
-				:listName ="'盘库商品列表'"
-				:listHeight ='70'
-				:showTitle ="1"
-				:titleData ="titleData"
-				:introData="nowList"
-				:allTotal ="pageObj.listNum"
-				:fixed="0"
-				:bannerStyle="{'color':'#333','font-size':'16px'}"
-				:widthType ="true"
-				:listWidth ="1435" 
-				:contentStyle ="{'color':'#666',fontSize:'14px'}"           
-			>
-			<div slot="con-0" slot-scope="{data,index}">
-				<span class="operation-left line" @click="clearInput(data)">清空</span>
-				<span class="operation-right" @click="openWin(data)">批量盘库</span>
+			<div class="main" v-loading="loading">
+				<div class="head">
+					盘库商品列表 · 共<em>{{pageObj.listNum}}</em>个条目
+					<div class="check-div">
+					<el-checkbox v-model="stateStore.addGoods.isUpdateZero">未选中的商品库存消耗至0</el-checkbox>
+						<el-tooltip 
+							class="item" 
+							effect="dark" 
+							placement="bottom">
+							<div slot="content"><i class="el-icon-warning"> 说明</i>
+							<br/><br/>
+							该条目被勾选后，所有未选中的商品，库存统一变更为0
+							<br/>
+							操作日志及进销存统计中记录类型为批盘消耗。</div>
+							<i class="check-icon el-icon-info"></i>
+						</el-tooltip>
+					</div>
+				</div>
+				<el-table :data="nowList" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column width="180" fixed="left">
+						<template slot-scope="scope" >
+							<el-button type="text" @click="clearInput(scope.row)" style='color:#D34A2B'>清空输入</el-button>
+							<el-button type="text" @click="openWin(scope.row)">批次盘库</el-button>
+						</template>
+					</el-table-column>
+					<el-table-column label="盘库数量" width="200">
+						<template slot-scope="scope">
+							<el-input v-model="scope.row.countNum" maxlength="9" placeholder="请输入数字" 
+							@input="checkNum(scope.row,scope.$index)"
+							:disabled="scope.row.canWrite">
+							</el-input>
+						</template>
+					</el-table-column>
+					<el-table-column prop="surplusUnit" label="库存数量" min-width="200">
+					</el-table-column>
+					<el-table-column prop="name" label="商品名" min-width="200">
+					</el-table-column>
+					<el-table-column prop="barCode" label="条形码" width="200">
+					</el-table-column>
+					<el-table-column prop="storeName" label="所属仓库" width="200">
+					</el-table-column>
+					<el-table-column prop="batch" label="批次数量" width="100">
+					</el-table-column>
+					<el-table-column prop="typeName" label="商品类型" width="150">
+					</el-table-column>
+				</el-table>
 			</div>
-			<div slot="con-1" slot-scope="{data,index}">
-				<input type="text" v-model="data.countNum" class="count-num" :readonly="data.canWrite" :class="{'canWrite':data.canWrite}" maxlength="9" placeholder="请输入数字" @input="checkNum(data,index)">
-			</div>
-			</com-table>
-			<div>
-				<page-element 
-					:page="pageObj.page" 
-					:total="pageObj.total"  
-					@pageNum="getPageNum"
-				></page-element>
+			<div class="page-box">
+				<el-pagination @current-change="getPageNum"
+					:current-page="pageObj.page"
+					background
+					layout="prev, pager, next"
+					:page-count="pageObj.total">
+				</el-pagination>
 			</div>
 			<component
 				:is ="showCom"
@@ -70,6 +96,7 @@
 */	
 import http from 'src/manager/http';
 import utils from 'src/verdor/utils';
+import Timer from 'src/verdor/timer';
 export default {
 	data () {
 		return {
@@ -105,22 +132,22 @@ export default {
 				flag:true,				//前端分页,false,后端分页
 			},
 			toggle:true,               	//tab切换
-
 			showCom:'',
 			comObj:{},
-
 			showAddGoodsCom:false,		//展示添加商品组件
 			stateStore:{
 				addGoods:{
 					list:[],
-					search:{}
+					search:{},
+					storeAll:false,
+					isUpdateZero:false,
 				}						//添加商品
 			},	
-
 			stateCountNum:[],			//保存填写的商品总数量	
 			batchListNum:[],			//保存填写的每个批次数量	
-
 			opearItem:{},				//当前操作的商品
+			timerId:'',
+			loading:false,
 		};
 	},
 	mounted(){
@@ -131,8 +158,12 @@ export default {
 			this.templateId = this.$route.query.id;
 			this.useTemplate();
 		}else{
+			this.$store.commit('setFixButton', []);
 			this.showAddGoodsCom = true;
 		}
+	},
+	destroyed(){
+		this.stopRepeat();
 	},
 	methods: {
 		getTime(flag,res){
@@ -163,22 +194,16 @@ export default {
 				//去重并保存已盘点批次
 				this.batchListNum = this.delBatchCountNum(res);
 				this.batchListNum.push(...arr);
-
+				this.opearItem.batchList = res;
 				num += '';
 				//批次求和
-				for(let i = 0;i<this.nowList.length;i++){
-					if(this.nowList[i].id == this.opearItem.id){
-						if(!num){
-							//未盘点数量时
-							this.opearItem.canWrite = false;	//当盘点批次数量总和为空时,可以继续填写盘点总量
-						}else{
-							//已盘点数量时
-							this.opearItem.canWrite = true;		//当盘点批次数量总和为不空时,不可以继续填写盘点总量
-							this.opearItem.countNum = num;
-						}
-						this.nowList.splice(i,1,this.opearItem);
-						break;
-					}
+				if(!num){
+					//未盘点数量时
+					this.opearItem.canWrite = false;	//当盘点批次数量总和为空时,可以继续填写盘点总量
+				}else{
+					//已盘点数量时
+					this.opearItem.canWrite = true;		//当盘点批次数量总和为不空时,不可以继续填写盘点总量
+					this.opearItem.countNum = num;
 				}
 			}
 
@@ -232,9 +257,8 @@ export default {
 				return;	
 			}
 
-			let {list=[],search={},storeAll,name=''} = res;
-			this.stateStore.addGoods = {search,list,storeAll,name};
-
+			let {list=[],search={},storeAll,name='',isUpdateZero=false} = res;
+			this.stateStore.addGoods = {search,list,storeAll,name,isUpdateZero};
 			if(list.length == 0){
 				this.pageObj.flag = false;
 			}else{
@@ -245,14 +269,10 @@ export default {
 				this.pageObj.listNum = this.list.length;
 			}
 			this.pageObj.page = 1;
-			this.getPageNum({
-				page:this.pageObj.page,
-				num:this.pageObj.num
-			});
+			this.getPageNum(this.pageObj.page);
 		},
 		getPageNum(obj){
-			this.pageObj.page = obj.page;
-			this.pageObj.num = obj.num;
+			this.pageObj.page = obj;
 
 			if(this.pageObj.flag){
 				//前端分页
@@ -311,7 +331,7 @@ export default {
 				temp = list.filter((ele)=>{
 					let flag = true;
 					for(let e of nowList){
-						if(ele.id == e.id){
+						if(ele.id == e.id && ele.wid == e.wid && ele.areaId == e.areaId){
 							flag = false;
 							break;
 						}
@@ -325,7 +345,7 @@ export default {
 			let temp = [];
 			this.stateCountNum = this.delStateCountNum(this.stateCountNum,this.nowList);
 			temp = this.getHasNumItem(this.nowList);
-			this.stateCountNum.push(...temp);			
+			this.stateCountNum.push(...temp);	
 		},
 		delBatchCountNum(list=[]){
 			//根据商品id,区域id,区域id,仓库id清除批次,之后再添加批次
@@ -342,8 +362,6 @@ export default {
 			});
 			return temp;
 		},
-
-
 		async getList(){
 			//搜索商品
 			let obj = {
@@ -371,7 +389,7 @@ export default {
 				this.nowList = res.list;
 				this.nowList = this.ininList(this.nowList);
 				this.nowList = this.matchStateList(this.stateCountNum,this.nowList);
-				this.list = [];				//清空
+				this.list = [];
 			}
 		},
 		async useTemplate(){
@@ -381,9 +399,10 @@ export default {
 			if(!this.toRawType(content,'Object')) content = {};
 
 			let arr = [],
-				{items=[],type='',wids:wid,aids:areaId} = content;
+				{items=[],type='',wids:wid,aids:areaId,goodsName,barCode} = content;
 
 			this.stateStore.addGoods.name = obj.name;
+			this.stateStore.addGoods.isUpdateZero = content.isUpdateZero==1;
 			if(Array.isArray(items)){
 				if(items.length == 0){
 					if(Array.isArray(wid)){
@@ -392,7 +411,8 @@ export default {
 					if(Array.isArray(areaId)){
 						areaId = areaId.join(',');
 					}
-					this.stateStore.addGoods.search = {type,wid,areaId};
+					type = type?type:'';
+					this.stateStore.addGoods.search = {type,wid,areaId,goodsName,barCode};
 					this.stateStore.addGoods.list = [];
 					this.stateStore.addGoods.storeAll = true;
 					this.pageObj.flag = false;
@@ -417,14 +437,9 @@ export default {
 				}
 				this.pageObj.page = 1;
 
-				this.getPageNum({
-					page:this.pageObj.page,
-					num:this.pageObj.num
-				});
+				this.getPageNum(this.pageObj.page);
 			}
 		},
-
-
 		checkNum(item){
 			if(item.canWrite) return;
 			let num = item.countNum+'',
@@ -457,12 +472,12 @@ export default {
 			temp[0] += '';
 			item.countNum = temp[0];
 		},
+		//清空输入
 		clearInput(item){
-			//清空输入
-			if(item.canWrite){
-				return;
-			}
+			this.batchListNum = this.delBatchCountNum(item.batchList);
 			item.countNum = '';
+			item.canWrite = false;
+			item.batchList = [];
 		},
 		ininList(list){
 			//初始化列表数据,组合字段
@@ -473,14 +488,13 @@ export default {
 				if(!ele.warehouseArea){
 					ele.warehouseArea = ele.areaName;//接口兼容
 				}
-				if(!ele.countNum){
-					ele.countNum = '';												//盘点数量
-				}
+				this.$set(ele,'countNum','');
+				this.$set(ele,'canWrite',false);
 				ele.storeName = `${ele.warehouse}/${ele.warehouseArea}`;			//仓库区域
 				ele.typeName = types[ele.type];										//商品类型
 				ele.surplusUnit = ele.surplus+ele.unit;								//库存数
 				ele.id = ele.gid;													//统一商品id
-				ele.batchId = '0';													//盘总数量时,后台接受的batchId为0
+				ele.batchId = '0';//盘总数量时,后台接受的batchId为0
 				return ele;
 			});
 			return arr;
@@ -489,7 +503,6 @@ export default {
 			//获取提交的数据
 			let temp = {
 				new:[],
-				old:[],
 			};
 			
 			for(let ele of list){
@@ -524,80 +537,93 @@ export default {
 
 			sum = [...this.stateCountNum];
 			sum.push(...this.batchListNum);
-
 			temp = this.formatData(sum);
 			return temp;
 		},
-		async submitData(){
+		submitData(){
 			let obj = {};
 
 			this.addStateCountNum();
 			this.delSameList();
 			obj = this.mergeList();
-			obj.new.push(...obj.old);
 			if(obj.new.length == 0){
-				this.alert('请先填写盘库数量!');
+				this.$message({message: '请先填写盘库数量',type: 'error'});
 				return;
 			}
-
-			this.alert('确认盘库?',async ()=>{
-				let retData = await this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
+			let tips='是否确认盘库?';
+			if(this.stateStore.addGoods.isUpdateZero){
+				tips = '是否确认盘库? 注意：未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量';
+			}
+			this.$confirm(tips, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.getHttp('GoodsinventoryBatchSetGoodsInventory',{
 					data:obj.new,
-					type:0
+					type:0,
+					isUpdateZero:Number(this.stateStore.addGoods.isUpdateZero),
+				}).then(data => {
+					let taskId = data;
+					this.loading = true; //开始加载动画
+					//轮询请求taskId
+					this.timerId = Timer.add(() => {
+						http.taskInfo({data: {taskId:taskId}})
+							.then(data => {
+								if (data.status == 3) {
+									//轮询完成
+									this.stopRepeat();
+									
+									this.$message({message: '商品盘库成功！',type: 'success'});
+									delete this.$route.query.id;
+									this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
+								} else if (data.status == 2) {
+									//失败
+									this.stopRepeat();
+									this.$message({message: `请求失败，请重试！`,type: 'error'});
+								}
+							});
+					},1000,600,false,() => {
+						this.stopRepeat();
+						this.$message({message: `请求超时，请重试！`,type: 'error'});
+					});
 				});
-				if(retData.result){
-					this.alert('盘库成功!');
-					delete this.$route.query.id;
-					this.$router.push({path:'/admin/goodsCountHistory',query:this.$route.query});
-				}else{
-					this.alert('盘库失败!');
-				}
+			}).catch(()=>{
+				//
 			});
 		},
+		stopRepeat(){//停止轮询
+			Timer.clear(this.timerId);
+			this.loading = false; //停止加载动画
+		},
 		initBtn(){
-			let style = {height:'40px','color':'#fff'};
-			this.$store.commit('setPageTools',[
+			this.$store.commit('setFixButton',[
 				{
-					name: '确认盘库',
-					className:'yellow',
-					style,
-					fn:()=>{
-						this.submitData();
-					}
-				},
-				{
-					name: '添加商品',
-					style,
-					fn:()=>{
-						this.showAddGoodsCom = true;
-					}
-				},
-				{
-					name: '取消盘库',
-					className:'gray',
-					style,
+					name: '取消',
+					className:'info',
+					type:1,
 					fn:()=>{
 						this.$router.go(-1);
 					}
 				},
-
-			]);            
-		},
-		alert(str,callback){
-			let obj = {
-				title:'温馨提示',
-				content:str,
-				winType:'alert'			
-			};
-			if(typeof callback == 'function'){
-				obj.winType = 'confirm';
-				obj.callback = (res)=>{
-					if(res == 'ok'){
-						callback();
+				{
+					name: '添加商品',
+					className:'success',
+					type:1,
+					fn:()=>{
+						this.$store.commit('setFixButton', []);
+						this.showAddGoodsCom = true;
 					}
-				};
-			}
-			this.$store.commit('setWin',obj);
+				},
+				{
+					name: '确认盘库',
+					className:'primary',
+					type:1,
+					fn:()=>{
+						this.submitData();
+					}
+				},
+			]);            
 		},
 		isPrimitive (value) {
 			return ( typeof value === 'string' || typeof value === 'number');
@@ -636,6 +662,24 @@ export default {
 	@import url('../warehouse_manage/z_less.less');
 	#goods-count-history{
 		.content-body{
+			padding-top: 10px;
+			.main{
+				.head{
+					height: 50px;line-height: 50px;padding: 0 10px;font-size: 14px;
+					border: 1px solid #ebeef5;border-bottom: 0;
+					em{color: #ff3c04;padding: 0 2px;}
+					.check-div{
+						float: right;
+						height: 49px;
+						line-height: 49px;
+						.check-icon{
+							margin-left: 10px;
+							color: #666;
+						}
+					}
+				}
+			}
+			.page-box{padding: 20px 0;}
 			.opera-common{
 				display: inline-block;
 				.whb(auto,40px,none);

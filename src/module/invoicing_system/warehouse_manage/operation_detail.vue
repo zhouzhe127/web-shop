@@ -317,7 +317,7 @@ export default {
 		getDetailObj(obj) {
 			this.showCom = obj.showCom; //打印的时候 是否展示详细内容
 		},
-		tabClick(index) { //单据类型切换
+		tabClick(event) { //单据类型切换
 			let target = event.target;
 			if(target.tagName.toLocaleLowerCase() == 'span') {
 				let type = target.getAttribute('data-type');

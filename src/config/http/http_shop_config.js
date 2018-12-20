@@ -537,6 +537,10 @@ export default {
 		url: s + 'Notice/delete', //删除通知
 		method: 'get'
 	},
+	'updownNotice': {
+		url: s + 'Notice/upOrLowShelf', //下架上架通知
+		method: 'post'
+	},
 	'deletePayment': {
 		url: s + 'payment/deletePayment', //删除支付方式
 		method: 'get'

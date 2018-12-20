@@ -16,13 +16,13 @@
 			</div>
 			<div class="timebox">
 				<span>提交时间：</span>
-				<el-date-picker v-model="applytimeAll" type="daterange" align="right" unlink-panels range-separator="至"
+				<el-date-picker v-model="applytimeAll" type="daterange" align="right" unlink-panels range-separator="-"
 				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 				</el-date-picker>
 			</div>
 			<div class="timebox">
 				<span>审核时间：</span>
-				<el-date-picker v-model="audittimeAll" type="daterange" align="right" unlink-panels range-separator="至"
+				<el-date-picker v-model="audittimeAll" type="daterange" align="right" unlink-panels range-separator="-"
 				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 				</el-date-picker>
 			</div>
@@ -43,26 +43,26 @@
 			<el-table :data="tableData" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
 				<el-table-column prop="date" label="序号" fixed width="100" type="index" :index="indexMethod">
 				</el-table-column>
-				<el-table-column label="采购单状态">
+				<el-table-column label="采购单状态" width="120">
 					<template slot-scope="scope">
 						<span>{{getstatus(scope.row.status)}}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="code" label="采购单号">
+				<el-table-column prop="code" label="采购单号" min-width="200">
 				</el-table-column>
-				<el-table-column label="提交时间">
+				<el-table-column label="提交时间" min-width="200">
 					<template slot-scope="scope">
 						<div>{{getTime(scope.row.createTime)}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="createUser" label="申请人">
+				<el-table-column prop="createUser" label="申请人" width="120">
 				</el-table-column>
-				<el-table-column label="审核时间">
+				<el-table-column label="审核时间" min-width="180">
 					<template slot-scope="scope">
 						<div>{{getTime(scope.row.auditTime)}}</div>
 					</template>
 				</el-table-column>
-				<el-table-column prop="auditUser" label="审核人">
+				<el-table-column prop="auditUser" label="审核人" width="120">
 				</el-table-column>
 				<el-table-column label="操作" fixed="right" width="100">
 					<template slot-scope="scope">
@@ -161,19 +161,23 @@
 				return (index + 1) + (this.page - 1) * this.num;
 			},
 			async getList() {
+				if(!this.audittimeAll) this.audittimeAll = [];
+				if(!this.applytimeAll) this.applytimeAll = [];
 				let audiStartTime = this.audittimeAll[0] ? parseInt((this.audittimeAll[0] || 0) / 1000) : '';
 				let audiEndtTime = this.audittimeAll[1] ? parseInt((utils.getTime({
 					time: this.audittimeAll[1] || 0
+				}).end) / 1000) : '';
+				let applyStartTime = this.applytimeAll[0] ? parseInt((this.applytimeAll[0] || 0) / 1000) : '';
+				let applyEndtTime = this.applytimeAll[1] ? parseInt((utils.getTime({
+					time: this.applytimeAll[1] || 0
 				}).end) / 1000) : '';
 				let url = this.webstyle == 0 ? 'InvoigetPurchaseOrderList' : 'InvoigetPurchaseOrderReviewList';
 				let data = await http[url]({
 					data: {
 						status: this.typeValue,
 						code: this.orderCode,
-						beginCreateTime: parseInt(this.applytimeAll[0] / 1000), //提交时间
-						endCreateTime: parseInt(utils.getTime({
-							time: this.applytimeAll[1]
-						}).end / 1000),
+						beginCreateTime: applyStartTime, //提交时间
+						endCreateTime: applyEndtTime,
 						auditUser: this.auditUser,
 						beginAuditTime: audiStartTime, //审核时间
 						endAuditTime: audiEndtTime,

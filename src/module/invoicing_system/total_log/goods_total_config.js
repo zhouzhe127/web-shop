@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import storage from 'src/verdor/storage';
 //批次详情默认跳转页
 function defaultBatchClick(context,item){
@@ -262,25 +264,24 @@ let config = [
 					id:item.other.dispatchId
 				};  
 				context.$router.push(obj);				
-				
 			}	
 		},
-		{
-			"type": 18,
-			"typeName": "批量盘库",
-			"historyDescripe":"查看该条相关的批量盘库记录。（单个盘库没有盘库记录，无法跳转所以为暗色）",
-			"batchDescripe": "",
-			"canViewHistory": true,
-			"canViewBatch": true,
-			"batchClick": defaultBatchClick,
-			"historyClick":function(context,item){
-				let obj = {};
-				obj.path = '/admin/goodsCountDetail';
-				obj.query = {id:item.other.logId};
+		// {
+		// 	"type": 18,
+		// 	"typeName": "批量盘库",
+		// 	"historyDescripe":"查看该条相关的批量盘库记录。（单个盘库没有盘库记录，无法跳转所以为暗色）",
+		// 	"batchDescripe": "",
+		// 	"canViewHistory": true,
+		// 	"canViewBatch": true,
+		// 	"batchClick": defaultBatchClick,
+		// 	"historyClick":function(context,item){
+		// 		let obj = {};
+		// 		obj.path = '/admin/goodsCountDetail';
+		// 		obj.query = {id:item.other.logId};
 
-				context.$router.push(obj);				
-			}
-		},
+		// 		context.$router.push(obj);				
+		// 	}
+		// },
 		{
 			"type": 19,
 			"typeName": "上架(货架)",
@@ -300,6 +301,72 @@ let config = [
 			"canViewBatch": false,
 			"batchClick": forbiddenClick,
 			"historyClick":forbiddenClick
+		},
+		{
+			"type" : 21,
+			"typeName": "采购单入货",				
+			"historyDescripe":"采购单详情",
+			"batchDescripe": "入货批次的变化",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"historyClick": function(context,item){
+				let {purchaseId} = item.other; 
+				context.$router.push({
+					path:"/admin/purchaseManagement/detail",
+					query : {
+						id : purchaseId
+					}
+				});								
+			},
+			"batchClick":defaultBatchClick
+		},
+		{
+			"type" : 22,
+			"typeName": "批盘消耗",				
+			"historyDescripe":"",
+			"batchDescripe": "",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick":function(context,item){
+				let obj = {};
+				obj.path = '/admin/goodsCountDetail';
+				obj.query = {id:item.other.logId};
+
+				context.$router.push(obj);				
+			}
+		},
+		{
+			"type" : 23,
+			"typeName": "批盘盘盈",				
+			"historyDescripe":"",
+			"batchDescripe": "",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick":function(context,item){
+				let obj = {};
+				obj.path = '/admin/goodsCountDetail';
+				obj.query = {id:item.other.logId};
+
+				context.$router.push(obj);				
+			}
+		},
+		{
+			"type" : 24,
+			"typeName": "批盘盘亏",				
+			"historyDescripe":"",
+			"batchDescripe": "",
+			"canViewHistory": true,
+			"canViewBatch": true,
+			"batchClick": defaultBatchClick,
+			"historyClick":function(context,item){
+				let obj = {};
+				obj.path = '/admin/goodsCountDetail';
+				obj.query = {id:item.other.logId};
+
+				context.$router.push(obj);				
+			}
 		}
 	];
 

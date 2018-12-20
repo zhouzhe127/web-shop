@@ -2,7 +2,7 @@
  * @Author: zhengu.jiang
  * @Date: 2018-08-13 10:45:55 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-11-14 16:41:49
+ * @Last Modified time: 2018-11-22 14:41:30
  * @Module: 收银分析表格
  */
 
@@ -220,7 +220,8 @@ export default {
 		'isChange',
 		'exportIndex',
 		'shopId',
-		'num'
+		'num',
+		'taskId'
 	],
 	mounted() {
 		console.log(this.selHead);
@@ -330,39 +331,51 @@ export default {
 					return v;
 				}
 			});
+			// console.log(data);
 			let exportData = utils.deepCopy(data);
-			//将时间放入每个店铺中
+			let timeData = [];
 			for (let i = 0; i < exportData.length; i++) {
 				for (let j = 0; j < exportData[i].list.length; j++) {
 					let shop = exportData[i].list[j];
-					shop['time'] = exportData[i].time;
-					if (this.flag == 1 || this.flag == 2) {
-						//报表为占比数据，添加%导出
-						//订单量 销量 消费金额 代金劵金额 代金劵数量 快捷支付实收金额不需要加%
-						for (let key in shop) {
-							if (
-								key != 'orderNum' &&
-								key != 'goodsNum' &&
-								key != 'originalPrice' &&
-								key != 'shopName' &&
-								key != 'time' &&
-								key != 'vouchersCash' &&
-								key != 'vouchersNum' &&
-								key != 'paidIn'
-							) {
-								shop[key] = `${shop[key]}%`;
-							}
-						}
-					}
-					delete exportData[i].list[j].shopId;
+					let detail = shop.shopId + '_' + exportData[i].time;
+					timeData.push(detail);
 				}
 			}
-			exportData = JSON.stringify(exportData);
-			console.log(exportData.length);
-			if (exportData.length > 570000) {
-				this.errorShow('数据量过大，请缩小范围查询');
-				return false;
-			}
+			timeData = JSON.stringify(timeData);
+			// console.log(timeData);
+			// return;
+			//将时间放入每个店铺中
+			// for (let i = 0; i < exportData.length; i++) {
+			// 	for (let j = 0; j < exportData[i].list.length; j++) {
+			// 		let shop = exportData[i].list[j];
+			// 		shop['time'] = exportData[i].time;
+			// 		if (this.flag == 1 || this.flag == 2) {
+			// 			//报表为占比数据，添加%导出
+			// 			//订单量 销量 消费金额 代金劵金额 代金劵数量 快捷支付实收金额不需要加%
+			// 			for (let key in shop) {
+			// 				if (
+			// 					key != 'orderNum' &&
+			// 					key != 'goodsNum' &&
+			// 					key != 'originalPrice' &&
+			// 					key != 'shopName' &&
+			// 					key != 'time' &&
+			// 					key != 'vouchersCash' &&
+			// 					key != 'vouchersNum' &&
+			// 					key != 'paidIn'
+			// 				) {
+			// 					shop[key] = `${shop[key]}%`;
+			// 				}
+			// 			}
+			// 		}
+			// 		delete exportData[i].list[j].shopId;
+			// 	}
+			// }
+			// exportData = JSON.stringify(exportData);
+			// console.log(exportData.length);
+			// if (exportData.length > 570000) {
+			// 	this.errorShow('数据量过大，请缩小范围查询');
+			// 	return false;
+			// }
 			//选中的表头
 			let titleData = [];
 			this.headList.forEach(v => {
@@ -374,8 +387,11 @@ export default {
 			http.exportAnalysisReport({
 				data: {
 					shopId: this.shopId,
-					analysisInfo: exportData,
-					type: this.flag == 3 || this.flag == 4 ? 1 : '',
+					taskId:this.taskId,
+					timeData:timeData,
+					// analysisInfo: exportData,
+					// reportType: this.flag == 3 || this.flag == 4 ? 1 : '',
+					reportType: this.flag*1 +1,
 					titleData: JSON.stringify(titleData)
 				}
 			});

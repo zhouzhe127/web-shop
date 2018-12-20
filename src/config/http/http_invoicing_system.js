@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
 	s,
 	w,
@@ -991,39 +992,39 @@ export default {
 		url: b + "template/deleteTemplate",
 		method: "post"
 	},
-	"MaterialstatisticGetStatisticData":{//获取物料统计任务结果
-		url:b+"Materialstatistic/getStatisticData",
-		method:"get"
+	"MaterialstatisticGetStatisticData": { //获取物料统计任务结果
+		url: b + "Materialstatistic/getStatisticData",
+		method: "get"
 	},
-	"MaterialstatisticStatisticStart":{//创建物料统计任务
-		url:b+"Materialstatistic/statisticStart",
-		method:'get'
+	"MaterialstatisticStatisticStart": { //创建物料统计任务
+		url: b + "Materialstatistic/statisticStart",
+		method: 'get'
 	},
 	//进销存配置
 
-	"invoicingUpdateTopConfig":{
-		url:b+"invoicing/updateTopConfig",					//更新是否开启物料、商品
-		method:'post'
+	"invoicingUpdateTopConfig": {
+		url: b + "invoicing/updateTopConfig", //更新是否开启物料、商品
+		method: 'post'
 	},
-	"invoicingUpdateSaleConfig":{
-		url:b+"invoicing/updateSaleConfig",					//更新是否超卖
-		method:'post'
+	"invoicingUpdateSaleConfig": {
+		url: b + "invoicing/updateSaleConfig", //更新是否超卖
+		method: 'post'
 	},
-	"invoicingUpdateMaterialConfig":{						//物料编码配置
-		url:b+"invoicing/updateMaterialConfig",
-		method:'post'
+	"invoicingUpdateMaterialConfig": { //物料编码配置
+		url: b + "invoicing/updateMaterialConfig",
+		method: 'post'
 	},
-	"updatePurchaseAuditConfig":{							//采购审核
-		url:b+'invoicing/updatePurchaseAuditConfig',
-		method:'post'
+	"updatePurchaseAuditConfig": { //采购审核
+		url: b + 'invoicing/updatePurchaseAuditConfig',
+		method: 'post'
 	},
-	"invoicingUpdateStockConfig":{							//入库配置
-		url:b+"invoicing/updateStockConfig",
-		method:'post'
+	"invoicingUpdateStockConfig": { //入库配置
+		url: b + "invoicing/updateStockConfig",
+		method: 'post'
 	},
-	"invoicingUpdateDistributionConfig":{
-		url:b+"invoicing/updateDistributionConfig",			//分销价配置		
-		method:'post'
+	"invoicingUpdateDistributionConfig": {
+		url: b + "invoicing/updateDistributionConfig", //分销价配置		
+		method: 'post'
 	},
 	"purchaseorderAdd": { //新增采购单
 		url: b + "purchaseorder/add",
@@ -1053,9 +1054,131 @@ export default {
 		url: b + "purchaseorder/putPurchaseOrderStorage",
 		method: "get"
 	},
-	"MaterialstatisticExportStatisticData":{				//统计导出
-		url:b+"Materialstatistic/exportStatisticData",
+	"MaterialstatisticExportStatisticData": { //统计导出
+		url: b + "Materialstatistic/exportStatisticData",
 		method: "get",
-		type:'file'
-	}
+		type: 'file'
+	},
+	//---------获取报表模板列表---------------------
+	"templateGetReportTemplates": {
+		url: b + "template/getReportTemplates", //获取报表模板列表
+		method: 'get'
+	},
+	"materialreportGetMaterialReportList": {
+		url: b + "materialreport/getMaterialReportList", //获取物料报表列表
+		method: 'get'
+	},
+	"setStatisticScopeCategory": {
+		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
+		method: 'post'
+	},
+	"materialreportGetReportItemList": { //自定义模板 获取基础项
+		url: b + "materialreport/getReportItemList",
+		method: 'get'
+	},
+	"materialreportSetStatisticItemFormula": { //自定义模板 新建公式项
+		url: b + "materialreport/setStatisticItemFormula",
+		method: 'post'
+	},
+	"materialreportDeleteStatisticItemFormula": { //自定义模板 批量删除公式项
+		url: b + "materialreport/deleteStatisticItemFormula",
+		method: 'post'
+	},
+	"materialreportGetStatisticItemFormulaList": {
+		url: b + "materialreport/getStatisticItemFormulaList", //获取公式列表
+		method: 'get'
+	},
+	"materialreportGetStatisticScopeCategoryList": {
+		url: b + "materialreport/getStatisticScopeList", //获取集合列表
+		method: 'get'
+	},
+	"materialreportDeleteMaterialByIds": {
+		url: b + "materialreport/deleteMaterialByIds", //删除/批量删除报表
+		method: 'get'
+	},
+	"setStatisticScopeCategory": {
+		url: b + "materialreport/setStatisticScopeCategory", //添加或更新分类统计范围		
+		method: 'post'
+	},
+	"templateGetReportTemplateDetail": {
+		url: b + "template/getReportTemplateDetail", //自定义报表模板详情		
+		method: 'get'
+	},
+	"materialreportAddReportTask": {
+		url: b + "materialreport/addReportTask", //创建自定义报表任务
+		method: 'post'
+	},
+	"materialreportDeleteStatisticScopeCategory": {
+		url: b + "materialreport/deleteStatisticScope", //删除分类集合
+		method: 'post'
+	},
+	"templateDeleteReportTemplate": {
+		url: b + "template/deleteReportTemplate", //删除自定义报表模板
+		method: 'post'
+	},
+	"templateEditReportTemplate": {
+		url: b + "template/editReportTemplate", //修改自定义报表模板
+		method: 'post'
+	},
+	"templateAddReportTemplate": {
+		url: b + "template/addReportTemplate", //添加自定义报表模板		
+		method: 'post'
+	},
+	"materialreportGetMaterialReportDetail": {
+		url: b + "materialreport/getMaterialReportDetail", //获取报表详情
+		method: 'get'
+	},
+	"materialreportExportMaterialReportExcel": {
+		url: b + "materialreport/exportMaterialReportExcel", //导出报表
+		method: 'get',
+	},
+	"materialGetMaterialDataByIds": {
+		url: b + "material/getMaterialDataByIds", //获取多个物料详情
+		method: 'get',
+	},
+	"materialreportGetMaterialErrorLog": {
+		url: b + "materialreport/getMaterialErrorLog", //生成物料报表-错误日志
+		method: 'get',
+	},
+	"materialReportSetStatisticScopeMaterial": {
+		url: b + "materialReport/setStatisticScopeMaterial", //添加或更新物料集合
+		method: 'post',
+	},
+	"materialreportSetStatisticScopeUnitMaterial": {
+		url: b + "materialreport/setStatisticScopeUnitMaterial", //添加或更新单位-物料集合
+		method: 'post',
+	},
+	"materialReportSetStatisticScopeSupplierMaterial": {
+		url: b + "materialReport/setStatisticScopeSupplierMaterial", //添加或更新供应商-物料集合
+		method: 'post',
+	},
+	"materialReportSetStatisticScopeMaterialSupplier": {
+		url: b + "materialReport/setStatisticScopeMaterialSupplier", //添加或更新物料-供应商集合
+		method: 'post',
+	},
+	"materialreportGetScopeList": {
+		url: b + "materialreport/getScopeList", //物料报表集合列表
+		method: 'get',
+	},
+	"materialCreateMaterialBarCode": {
+		url: b + "material/createMaterialBarCode", //自动生成物料编码
+		method: 'post',
+	},
+	"materialCreateCateBarCode": {
+		url: b + "material/createCateBarCode", //自动生成分类编码
+		method: 'post',
+	},
+	//总日志导出
+	"InvoicingExportGoodsLogList": {
+		url: b + "Invoicing/exportGoodsLogList",
+		method: "get",
+		type: "file"
+	},
+	"InvoicingExportMaterialLogList": {
+		url: b + "Invoicing/exportMaterialLogList",
+		method: "get",
+		type: "file"
+	},
+
+
 }

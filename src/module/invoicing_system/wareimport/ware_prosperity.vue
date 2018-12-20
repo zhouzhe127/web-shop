@@ -52,8 +52,8 @@
 			this.init();
 			this.heardBtn();
 		},
-		destroyed(){
-			storage.session('detailNeed',null);
+		destroyed() {
+			storage.session('detailNeed', null);
 		},
 		methods: {
 			async init() {
@@ -114,6 +114,9 @@
 				this.dataList = [];
 				this.showData = [];
 				this.titleList = [];
+				this.allTotal = 0;
+				this.page = 1;
+				this.pageTotal = 0;
 				this.init();
 			},
 			pageChange(currentPage) {
@@ -122,59 +125,61 @@
 			},
 			heardBtn() {
 				this.$store.commit('setPageTools', [{
-					name: '返回',
-					className: ['back'],
-					fn: () => {
-						window.history.go(-1);
-					}
-				},
-				{
-					name: '导出失败记录',
-					className: ['wearhouse handle'],
-					fn: async () => {
-						if(this.failLog){
-							await http.Invent_redshes({
-								url: this.failLog,
-								data: {
-									format: 'csv'
-								}
-							});
-						}else{
-							this.$message({
-								message: '没有失败记录！',
-								type: 'warning'
-							});
+						name: '返回',
+						className: ['back'],
+						fn: () => {
+							window.history.go(-1);
 						}
-						
+					},
+					{
+						name: '导出失败记录',
+						className: ['wearhouse handle'],
+						fn: async () => {
+							if (this.failLog) {
+								await http.Invent_redshes({
+									url: this.failLog,
+									data: {
+										format: 'csv'
+									}
+								});
+							} else {
+								this.$message({
+									message: '没有失败记录！',
+									type: 'warning'
+								});
+							}
+
+						}
 					}
-				}
 				]);
 			},
 			getTime(time) {
 				return utils.format(parseInt(time) * 1000, 'yyyy-MM-dd');
 			},
-			getId() {//string
+			getId() { //string
 				return this.dataList.index;
 			}
 		},
 		components: {
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
 			detailsDes: () =>
-				import ( /*webpackChunkName: 'details_des'*/ 'src/components/details_des'),
+				import( /*webpackChunkName: 'details_des'*/ 'src/components/details_des'),
 			pageTurn: () =>
-				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 		}
 	};
 </script>
 <style lang="less" scoped>
 	#wareImport {
 		width: 100%;
+
 		.titleHeand {
 			span {
 				font-size: 16px;
 			}
 		}
+
 		@import url("./warecom");
 	}
 </style>

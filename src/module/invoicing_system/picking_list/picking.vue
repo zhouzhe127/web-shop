@@ -145,7 +145,17 @@
 				item:{ },   //
 				isOneName:true,   //是否只有最小单位
 				sleSupplies: '', // 保存选中的物料，回传组件
+				isPincking:false,//是否从领料列表进入
 			};
+		},
+		beforeRouteEnter (to, from, next) {
+			if(from.path=='/admin/pickingList'){
+				next(function(self){
+					self.isPincking = true;
+				});
+			}else{
+				next();	
+			}
 		},
 		mounted(){
 			this.initBtn();
@@ -159,31 +169,31 @@
 			matter: ()=> import (/*webpackChunkName: 'output_select_supplies'*/ '../warehouse_manage/output_select_supplies')
 		},
 		methods:{
-			initBtn(){//初始化按钮
+			initBtn(){//初始化按钮 
 				let arr = [
 					{
-						name: '确定',
-						className: 'primary',type:4,
+						name: '取消',
+						className: 'info',type:1,
 						fn: () => {
-							this.enter(); //确认
+							this.cancel(); 
 						}
 					},
 					{
 						name: '继续添加',
-						className: 'primary',type:5,
+						className: '',type:1,
 						fn: () => {
-							this.again(); //确认
+							this.again();
 						}
 					},
 					{
-						name: '取消',
-						className: 'info',type:4,
+						name: '确定',
+						className: 'primary',type:1,
 						fn: () => {
-							this.cancel(); //确认
+							this.enter();
 						}
-					}
+					},
 				];
-				this.$store.commit('setPageTools', arr);
+				this.$store.commit('setFixButton', arr);
 			},
 			//获取领料人
 			async getPicker(){
@@ -285,7 +295,6 @@
 			},
 			unitConversion(detailList){
 				for(let matItem of detailList){
-					let index = 0;
 					for(let unitItem of matItem.unitData){
 						if(unitItem.isDefault==1){
 							matItem.defaultName=unitItem.name;  //默认单位名
@@ -351,7 +360,7 @@
 				this.sleSupplies.splice(index,1);
 			},
 			//接收弹窗内容
-			getWin(res,backData,index){
+			getWin(res,backData){
 				this.showBatch = false;
 				if(res == 'ok'){
 					let data = this.pickData.materialInfo;
@@ -376,7 +385,11 @@
 			},
 			//取消
 			cancel(){
-				this.$router.push({path:'../pickingList',query:this.$route.query});
+				if(this.isPincking){
+					this.$router.push({path:'../pickingList',query:this.$route.query});
+				}else{
+					window.history.go(-1);
+				}
 			},
 			//继续添加
 			again(){
