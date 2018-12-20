@@ -219,6 +219,7 @@
 			},
 			async getPriceList() {//获取分销价列表
 				let data = await http.invoicingGetDistributionConfig();
+				if(!Array.isArray(data)) data = [];
 				this.priceList = data.map((res)=>{
 					return {value:res.id,label:res.name};
 				});
@@ -300,7 +301,7 @@
 				for(let item of list){
 					for(let shop of this.shopList){//店铺名称
 						if(shop.shopId==item.shopId){
-							item.shopName = shop.shopName
+							item.shopName = shop.shopName;
 							break;
 						}
 					}

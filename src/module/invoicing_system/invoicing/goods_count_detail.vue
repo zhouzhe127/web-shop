@@ -193,9 +193,11 @@ export default {
 					}
 					this.tableData = this.tableData.map((ele,index)=>{
 						ele.arrow = Number(ele.after) > Number(ele.before);
-						ele.before = global.comUnit(Number(ele.before),ele.unitInfo.countUnitVal, ele.unitInfo.countUnitName, ele.unitInfo.minName);
-						ele.after = global.comUnit(Number(ele.after),ele.unitInfo.countUnitVal, ele.unitInfo.countUnitName, ele.unitInfo.minName);
-						ele.change = global.comUnit(Number(ele.change),ele.unitInfo.countUnitVal, ele.unitInfo.countUnitName, ele.unitInfo.minName);
+						if(ele.unitInfo){
+							ele.before = global.comUnit(Number(ele.before),ele.unitInfo.countUnitVal, ele.unitInfo.countUnitName, ele.unitInfo.minName);
+							ele.after = global.comUnit(Number(ele.after),ele.unitInfo.countUnitVal, ele.unitInfo.countUnitName, ele.unitInfo.minName);
+							ele.change = global.comUnit(Number(ele.change),ele.unitInfo.countUnitVal, ele.unitInfo.countUnitName, ele.unitInfo.minName);
+						}
 						ele.storeName = `${ele.wName}/${ele.aName}`;
 						let itemIndex = (this.pageObj.currentPage - 1) * this.pageObj.pageSize + 1 + index;
 						ele.itemIndex = itemIndex >= 10 ? itemIndex : '0' + itemIndex;

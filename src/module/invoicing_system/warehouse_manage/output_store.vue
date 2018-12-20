@@ -403,7 +403,9 @@
 							for(let i of this.clearArr) {
 								this[i] = [];
 							}
-						}).catch(()=>{});
+						}).catch(()=>{
+							//
+						});
 					} else { //两个仓库不相同
 						if(value.id != this[propName + 'WarehouseId']) {
 							for(let i of this.clearArr) {
@@ -755,7 +757,7 @@
 								distributionPrice:item.piceValue,
 								distributionUnit:item.piceUnitid== '等于进价'? 0:item.piceUnitid,
 								isPurchase:item.isPurchase
-							})
+							});
 						}
 						let isExist = false; //该条数据是否已存在
 						for(let out of this.suppliesOut) {
@@ -828,27 +830,29 @@
 			//获取分销价
 			async getDistr() {
 				let res = await http.invoicingGetDistributionConfig();
-				res.map(v => {
-					let obj = {};
-					Object.assign(obj, {
-						distributionId: v.id,
-						value: '',
-						name: v.name,
-						unitId: ''
+				if(res){
+					res.map(v => {
+						let obj = {};
+						Object.assign(obj, {
+							distributionId: v.id,
+							value: '',
+							name: v.name,
+							unitId: ''
+						});
+						this.dispiceArr.push(obj);
 					});
-					this.dispiceArr.push(obj);
-				});
-				this.dispiceArr = this.dispiceArr.concat([{
-					distributionId: -1,
-					value: '',
-					name: '等于进价',
-					unitId: ''
-				}, {
-					distributionId: -2,
-					value: '',
-					name: '自定义价格',
-					unitId: ''
-				}]);
+					this.dispiceArr = this.dispiceArr.concat([{
+						distributionId: -1,
+						value: '',
+						name: '等于进价',
+						unitId: ''
+					}, {
+						distributionId: -2,
+						value: '',
+						name: '自定义价格',
+						unitId: ''
+					}]);
+				}
 			},
 			picestyleChange(sle){
 				this.materialInfo.map(v => {
@@ -920,7 +924,7 @@
 							data.piceValue = v.value;
 							data.piceUnitid = v.unitId;
 						}
-					})
+					});
 				}
 				this.materialInfo = utils.deepCopy(this.materialInfo);
 			}
