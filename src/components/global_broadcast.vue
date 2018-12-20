@@ -1,7 +1,7 @@
 <template>
     
     <div id= "global_broadcast">
-            <win v-if="show" @winEvent = "winEvent" :type="winType" :isBody='false' :ok='ok' :cancel="cancel" :maskShow='maskShow'>
+            <win v-if="show" :zIndex = 'zIndex' @winEvent = "winEvent" :type="winType" :isBody='false' :ok='ok' :cancel="cancel" :maskShow='maskShow'>
                 <span slot="title">{{title}}</span>
                 <div slot="content" class="slotContent">
                     <div>
@@ -22,6 +22,7 @@
         },
         data(){
             return {
+                zIndex:3000
             }
         },
         methods:{

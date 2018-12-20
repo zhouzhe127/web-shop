@@ -1,6 +1,6 @@
 <template>
-	<div class="winContainer" :style="{'z-index':1500+win_id}">
-		<div class='win center' :style="{'width': width +'px','height': 'auto','z-index':1000+win_id,'transform':align=='center'?'translate(-50%,-50%)':null,'left':(align == 'left'?'0':(align == 'center'?'50%':null)),'right':align=='right'?'0':null}">
+	<div class="winContainer" :style="{'z-index':(zIndex ? zIndex : 1000) +win_id}">
+		<div class='win center' :style="{'width': width +'px','height': 'auto','z-index':(zIndex ? zIndex : 1000) +win_id,'transform':align=='center'?'translate(-50%,-50%)':null,'left':(align == 'left'?'0':(align == 'center'?'50%':null)),'right':align=='right'?'0':null}">
 			<div class='win-head'>
 				<span class='win-head-logo noselect'></span>
 				<span class='win-head-title noselect'>
@@ -16,7 +16,7 @@
 				<a class='win-ok blue ' :class="{'wid-ok':true,blue:true,'alert':type !== 'confirm'}" @click="okFun" :style="ok?ok.style:''">{{ok?ok.content:'确定'}}</a>
 			</div>
 		</div>
-		<div ref="mask" class="win-mask" v-show="maskShow" @click="closeMask" :style="{'z-index':1000 + win_id - 1}"></div>
+		<div ref="mask" class="win-mask" v-show="maskShow" @click="closeMask" :style="{'z-index':(zIndex ? zIndex : 1000) + win_id - 1}"></div>
 	</div>
 
 
@@ -73,7 +73,8 @@ export default {
 		hasBtn: {
 			type: Boolean,
 			default: true
-		}
+		},
+		zIndex:Number
 	},
 	data() {
 		return {
