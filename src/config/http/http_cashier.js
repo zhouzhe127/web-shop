@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
 	s,
 	w,
@@ -51,10 +52,10 @@ export default {
 		url: s + 'reportset/getConfig', //获取表头
 		method: 'post'
 	},
-	orderReportAnalysis: {
-		url: s + 'report/orderReportAnalysis', //收银分析查询
-		method: 'get'
-	},
+	// orderReportAnalysis: {
+	// 	url: s + 'report/orderReportAnalysis', //收银分析查询
+	// 	method: 'get'
+	// },
 	getAnalysis: {
 		url: s + 'Report/getAnalysis', //轮询结束获取数据
 		method: 'get'

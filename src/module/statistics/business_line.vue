@@ -17,7 +17,7 @@
 			<div v-for="(item,index) in checkList" :key="index" class="check-div" :class="[{active:lineSelect[item.name]},item.className]" :data-index="index" @click="chartSelect">
 				<i></i>{{item.name}}</div>
 		</div>
-		<div v-if="coverShow" class="loding-cover line-cover"><i class="el-icon-loading"></i></div>
+		<div v-show="coverShow" class="loding-cover line-cover"><i class="el-icon-loading"></i></div>
 	</div>
 </template>
 <script>
@@ -392,10 +392,10 @@ export default {
 	height: 100%;
 	z-index: 9;
 	background: #fff;
-	opacity: 0.7;
+	opacity: 0.9;
 	text-align: center;
 	display: flex;
-	i{display: inline-block;font-size: 40px;margin: auto;color: #666;opacity: 1;}
+	i{display: inline-block;font-size: 40px;margin: auto;color: #666;}
 }
 .line-cover {
 	height: 400px;

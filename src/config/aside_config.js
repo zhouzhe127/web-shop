@@ -1,7 +1,8 @@
 let need = {
 	setIcon: {
 		概况: -172,
-		商品配置: -218,
+		指派: -341,
+		商品配置: -219,
 		店铺配置: -266,
 		统计管理: -105,
 		营销工具: -21,
@@ -460,7 +461,10 @@ let need = {
 			name: 'purchaseAudit'
 		},
 		materialWorking: { //加工物料
-			name: 'processMaterial'
+			name: 'processHistory'
+		},
+		getReportTemplate: {
+			name: 'materialReport' //物料报表模板
 		},
 		bargaining: { // 砍价功能
 			name: 'bargainActivity'
@@ -473,6 +477,15 @@ let need = {
 		},
 		renovation: { //粮票集装修
 			name: 'renovation'
+		},
+		priceTemplate: { //价格模板
+			name: 'priceTemplate'
+		},
+		AssignGoodsConcise: { // 商品指派
+			name: 'AssignGoodsConcise'
+		},
+		customPackageStatistics: { // 自定义套餐统计
+			name: 'customPackageStatistics'
 		},
 	}
 };

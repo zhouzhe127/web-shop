@@ -2,7 +2,7 @@
  * @Author: 孔伟研 
  * @Date: 2018-09-19 11:39:01 
  * @Last Modified by: 孔伟研
- * @Last Modified time: 2018-11-12 17:08:04
+ * @Last Modified time: 2018-12-05 17:31:25
  * @Module:支付方式配置
 **/
 <template>
@@ -41,7 +41,7 @@
 									<span v-if="scope.row.isOpen == 0" class="line isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">开启</span>
 									<span v-if="scope.row.isOpen == 1" class="line isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">关闭</span>
 								</template>
-								<template v-if="scope.row.paymentName == '现金' || scope.row.paymentName == '银行卡' ">
+								<template v-if="scope.row.paymentName == '现金' || scope.row.paymentName == '银行卡'  || scope.row.paymentName == '商米支付' ">
 									<span v-if="scope.row.isOpen == 0" class="isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">开启</span>
 									<span v-if="scope.row.isOpen == 1" class="isBrandColor" @click="isOpenDetial(scope.$index,scope.row)">关闭</span>
 								</template>
@@ -227,6 +227,12 @@ export default {
 			let arr = await http.getPaymentList({ data: {} });
 			// arr.sort(this.paySort('sort'));
 			utils.sortByAll(arr,'sort');
+			for(let i=0;i<arr.length;i++){
+				if(arr[i].paymentName =='先锋支付'){
+					arr.splice(i,1);
+					i--;
+				}
+			}
 			this.payNameList = arr;
 		},
 		//修改微信、支付宝

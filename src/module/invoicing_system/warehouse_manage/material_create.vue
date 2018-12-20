@@ -15,14 +15,11 @@
 				<label class="required label">物料名称</label>
 				<el-input clearable v-model="materialName" maxlength="20" class="el-in" placeholder="请输入物料名称"></el-input>
 			</div>
-
-
 			<div class="label-content">
 				<label class="required label">物料编码</label>
 				<el-input clearable v-model="materialCode"  maxlength="6" class="el-in" placeholder="请输入物料编码"></el-input>
+				<el-button type="text" class="auto-code" @click="autoBarCode">生成编码</el-button>
 			</div>
-
-
 			<div class="label-content">
 				<label class="required label">物料类型</label>
 				<el-select v-model="typeValue" placeholder="全部类型" class="el-in">
@@ -34,8 +31,6 @@
 					></el-option>
 				</el-select>
 			</div>
-
-
 			<div class="label-content">
 				<label class="required label">物料分类</label>
 				<div class="icon-div" @click="openCategoryWin(winName.category)">
@@ -43,13 +38,12 @@
 					添加物料分类
 				</div>
 
-				<span class="tips" v-show="selectCategory.length > 0">
+				<span class="tips" v-show="selectCategory.id">
                     (已选择:
-                        <i v-for="(item,index) in selectCategory" :key="index">{{item.name}}<i v-if="index!=selectCategory.length-1">,</i></i>
+                        {{selectCategory.name}}
                     )
                 </span>
 			</div>
-
 			<div class="label-content">
 				<label class="label required-no">品牌</label>
 
@@ -57,16 +51,14 @@
 					<span class="el-icon-circle-plus-outline"></span>
 					添加品牌
 				</div>
-				<span class="tips" v-show="selectBrand.length > 0">
-                    (已选择:
-                        <i v-for="(item,index) in selectBrand" :key="index">{{item.name}}</i>
-                    )
+				<span class="tips" v-show="selectBrand.id">
+                    已选择品牌：{{selectBrand.name}}
                 </span>
 			</div>
-
 			<div class="label-content">
 				<label class="required label">保质期</label>
-				<el-input placeholder="请输入保质期" v-model="validityObj.time" @change="(res)=>{typeRatio(validityObj,'time','validate')}" class="el-in" maxlength="3">
+				<el-input placeholder="请输入保质期" v-model="validityObj.time" @change="(res)=>{typeRatio(validityObj,'time','validate')}" 
+					class="el-in" maxlength="3">
 					<el-select v-model="validityObj.type" slot="append" placeholder="请选择" class="el-append">
 						<el-option
 							v-for="item in validityTypeArr"
@@ -77,7 +69,6 @@
 					</el-select>
 				</el-input>
 			</div>
-
 			<div class="label-content">
 				<label class="required label">物料单位</label>
 
@@ -91,7 +82,6 @@
                     )
                 </span>
 			</div>
-
 			<!-- 单位选择 -->
 			<div class="label-content" v-show="selectUnit.length > 0">
 				<label class="required label">默认单位</label>
@@ -104,7 +94,6 @@
 					></el-option>
 				</el-select>
 			</div>
-
 			<div class="label-content" v-show="selectUnit.length > 0">
 				<label class="required label">最小单位</label>
 				<el-select v-model="convertUnit.minUnitId" @change="(res)=>{changeUnit(res,'minUnitName')}" placeholder="请选择最小单位" class="el-in">
@@ -116,7 +105,6 @@
 					></el-option>
 				</el-select>
 			</div>
-
 			<!-- 单位换算 -->
 			<div class="label-content" v-for="(item,index) in groupUnit" :key="index" v-if="item.unitId != convertUnit.minUnitId">
 				<label :class="{'required':index == 0,'label':true}">{{ index == 0 ? '单位换算' : ''}}</label>
@@ -129,7 +117,6 @@
 				<span class="equal-unit"> = 1 {{item.unitName}}</span>
 			</div>
 		</div>
-
 		<!-- 分销价 -->
 		<div class="head" v-if="isBrand">
 			<span>分销价格</span>
@@ -140,7 +127,7 @@
 				<div class="inline-box">
 					<label class="required-no label">{{list.name}}</label>
 					<div class="input-box">
-						<el-input v-model="list.value" placeholder="请输入价格" @change="(res)=>{typeRatio(list,'value','distribute')}"></el-input>
+						<el-input v-model="list.value" placeholder="请输入价格" class="el-in" @change="(res)=>{typeRatio(list,'value','distribute')}"></el-input>
 					</div>
 				</div>
 				<div class="inline-box">
@@ -156,14 +143,9 @@
 				</div>
 			</div>
 		</div>
-
-
-
 		<component 
 			:is="showCom" 
 			:pObj="comObj" 
-			:list="comObj.category" 
-			:selectList="comObj.selectCategory"  
 			:title ="comObj.title" 
 			:radio ="comObj.radio"
 			:tips ="comObj.tips"
@@ -222,9 +204,12 @@ export default {
 			typeValue:'',				//物料类型
 
 			category: [], 				//物料分类
-			selectCategory: [], 		//选择的分类
+			selectCategory: {			//选择的分类
+				id:'',
+				name:'',
+			},	
 
-			selectBrand: [], 			//选择的品牌
+			selectBrand: {}, 			//选择的品牌
 			brandList: [], 				//品牌列表
 
 			units: [], 					//单位列表
@@ -238,6 +223,11 @@ export default {
 		};
 	},
 	methods: {
+		//自动生成物料编码
+		async autoBarCode(){
+			let data = await http.materialCreateMaterialBarCode();
+			this.materialCode = data;
+		},
 		closeCommonWin(arr, res) {
 			let winName = this.winName;
 			let tempObj = {};
@@ -251,7 +241,7 @@ export default {
 					this.selectCategory = arr;
 					break;
 				case winName.brand:
-					this.selectBrand = arr;
+					this.selectBrand = arr[0];
 					break;
 				case winName.unit:
 					if(arr.length > 5) {
@@ -279,11 +269,7 @@ export default {
 			this.showCom = 'addCategory';
 			this.flag = flag;
 			this.comObj = {
-				category: this.category,
-				title: '选择分类',
-				selectCategory: this.selectCategory,
-				radio: true,
-				tips: '请先配置分类!'
+				id:this.selectCategory.id,
 			};
 		},
 		openAddUnitWin(flag) {
@@ -342,7 +328,7 @@ export default {
 
 			val = item[attr] + '';
 			val = val.trim();
-			temp = val.match(reg)
+			temp = val.match(reg);
 			if(!temp){
 				temp = [];
 				temp[0] = '';
@@ -356,19 +342,13 @@ export default {
 			let brandId = '',	
 				distributionData = [],				//分销价
 				convertUnit = this.convertUnit,
-				arr = [],							//分类id
 				unitData = [],						//换算比例
 				obj = {};							//最终提交的数据
 
 			//品牌
-			if(this.selectBrand[0]) {
-				brandId = this.selectBrand[0].id;
+			if(this.selectBrand) {
+				brandId = this.selectBrand.id;
 			}
-
-			//分类id
-			this.selectCategory.forEach((ele) => {
-				arr.push(ele.id);
-			});
 
 			//换率
 			this.groupUnit.forEach((ele) => {
@@ -394,7 +374,7 @@ export default {
 				brandId,
 				validity: this.validityObj.time,
 				validityType: this.validityObj.type,
-				cids: arr.join(','),
+				cid: this.selectCategory.id,
 				unitData: unitData,
 				type:this.typeValue
 			};
@@ -428,36 +408,36 @@ export default {
 					reg: /^[0-9A-Za-z]{1,6}$/,
 					pro: '编码由1-6位英文,数字组成!'
 				}
-			}, this)) return;
+			}, this)) return false;
 
 			if(this.typeValue === ''){
 				this.$message.error('请选择物料类型!');
-				return;
+				return false;
 			}
 
-			if(this.selectCategory.length == 0) {
+			if(!this.selectCategory.id) {
 				this.$message.error('请选择分类!');
-				return;
+				return false;
 			}
 
 			if(this.selectUnit.length == 0) {
 				this.$message.error('请选择单位!');
-				return;
+				return false;
 			}
 
 			if(this.convertUnit.defUnitId === ''){
 				this.$message.error('请选择默认单位!');	
-				return;			
+				return false;			
 			}
 			if(this.convertUnit.minUnitId === ''){
 				this.$message.error('请选择最小单位!');	
-				return;			
+				return false;			
 			}
 
 			for(let ele of this.groupUnit){
 				if(!ele.value){
 					this.$message.error('请输入换算比例!');	
-					return;
+					return false;
 				}
 			}
 
@@ -465,36 +445,30 @@ export default {
 			if(this.isBrand){
 				for(let ele of this.dispiceArr){
 					if(ele.value !== '' && !ele.unitId){
-						let tips = `请为 ${ele.name} 分销价选择相应的单位!`
+						let tips = `请为 ${ele.name} 分销价选择相应的单位!`;
 						this.$message.error(tips);						
-						return;
+						return false;
 					}
 				}
 			}
 			return true;
 		},
 		async clickBtn(flag) {
-			let temp = {};
 			storage.session('tabactive', 1);
-			switch(flag) {
-				case 'continue':
-				case 'ok':
-					if(!this.checkform()) return;
+			if(flag=='continue' || flag=='ok'){
+				if(this.checkform()){
 					let obj = this.formatData();
-
-					temp = await this.MaterialAddMaterial(obj);
+					await this.MaterialAddMaterial(obj);
 					this.alert('新建物料成功!');
-
 					if(flag == 'continue') {
 						this.initCondtion();
 						this.initConvert();
 					}else{
 						this.$router.go(-1);
 					}
-					break;
-				case 'cancel':
-					this.$router.go(-1); //返回到上一个页面
-					break;
+				}
+			}else if(flag=='cancel'){
+				this.$router.go(-1); //返回到上一个页面
 			}
 		},		
 
@@ -515,7 +489,7 @@ export default {
 			this.selectUnit = []; 			//选中的单位
 			this.typeValue = '';			//物料类型
 			this.selectCategory = [];		//选择中的分类
-			this.selectBrand = [];			//选择的品牌
+			this.selectBrand = {};			//选择的品牌
 			this.validityObj = {			//保质期
 				time: '',
 				type: 1,
@@ -564,7 +538,7 @@ export default {
 
 
 
-    	getEle(arr,val,attr){
+		getEle(arr,val,attr){
 			let temp = {};
 			for(let ele of arr){
 				if(ele[attr] == val){
@@ -573,7 +547,7 @@ export default {
 				}
 			}
 			return temp;
-        },
+		},
 		alert(content,fn,title='提示信息',){
 			this.$alert(content, title, {
 				confirmButtonText: '确定',
@@ -589,27 +563,6 @@ export default {
 				data: obj
 			});
 			return res;
-		},
-		//获取分类列表
-		async MaterialGetCategoryList() {
-			let res = await http.MaterialGetCategoryList({
-				data: {}
-			});
-			let temp = [];
-
-			if(!Array.isArray(res)) res = [];
-			temp = [...res];
-			res.forEach((ele) => {
-				ele.child = [];
-				if(ele.pid == 0) {
-					for(let i = 0, len = temp.length; i < len; i++) {
-						if(ele.id == temp[i].pid && ele.id != temp[i].id) {
-							ele.child.push(temp[i]);
-						}
-					}
-					this.category.push(ele);
-				}
-			});
 		},
 		//获取物料单位
 		async MaterialGetUnitList() {
@@ -653,22 +606,24 @@ export default {
 		this.initConvert();
 		this.initBtn();
 
-		this.MaterialGetCategoryList();
 		this.MaterialGetUnitList();
 		this.InvoicingBrandList();
+		this.autoBarCode();
 		this.getDistr();
 	},
 	components: {
 		unitBrand: () =>
 			import( /*webpackChunkName:'unit_brand_win'*/ './unit_brand_win'),
 		addCategory: () =>
-			import( /*webpackChunkName:'add_category_com'*/ 'src/components/add_category_com'),
+			import( /*webpackChunkName:'material_create_cate'*/ './material_create_cate'),
 
 	},
 };
 </script>
 <style lang='less' scoped>
-
+	.auto-code{
+		margin-left: 10px;
+	}
 	.head{
 		display: flex;
 		flex-flow: row nowrap;
@@ -691,7 +646,7 @@ export default {
 	}
 	
 	.el-in{
-		width:240px;
+		width:210px;
 	}
 	.el-append{
 		width:70px;

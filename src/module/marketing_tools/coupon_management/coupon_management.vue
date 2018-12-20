@@ -16,7 +16,7 @@
 						<span>优惠券列表</span>
 						<span></span>
 						<span>共
-								<a href="javascript:;">{{count}}</a>条记录</span>
+							<a href="javascript:;">{{count}}</a>条记录</span>
 					</div>
 					<div class="list_title_r fr">
 					</div>
@@ -86,370 +86,371 @@
 	</div>
 </template>
 <script type="text/javascript">
-import http from 'src/manager/http';
-import storage from 'src/verdor/storage';
-import utils from 'src/verdor/utils';
-export default {
-	data() {
-		return {
-			ischain: '', //店铺id 品牌店/单店
-			couponList: [], //优惠券列表
-			page: 1, //当前页的数据
-			total: 1,
-			index: null,
-			pageNum: 10, //一版页码处理多少数据
-			pageCount: 0, //总条数
-			valueTime: [], //时间控件
-			days: 0, //一共的天数
-			indexOn: 0,
-			bannerList: [{
-				index: 0,
-				name: '未关联'
-			},
-			{
-				index: 1,
-				name: '已关联'
-			},
-			{
-				index: -1,
-				name: '已过期'
-			}
-			], //
-			isShowCa: false, //  是否展示时间选择组件
-			changeMnage: true, //  是否显示修改优惠券页面
-			showCoupon: false, //  是否显示优惠券弹框
-			couponInfo: '', //  优惠券信息
-			allTotal: 100,
-			pageTotal: 10,
-			couponType: 0, //优惠券的标识
-			couponDetail: Object, //优惠券的详情
-			couponTypeList: {
-				1: '单品减免优惠券',
-				2: '整单减免优惠券',
-				3: '单品打折优惠券',
-				4: '整单打折优惠券',
-				5: '赠菜优惠券',
-				6: '代金券',
-				7: '积分卡券',
-				8: '随机立减优惠券',
-				9: '第二件商品券',
-				10: '买送券',
-				11: '定额券'
-			},
-			unbindWin: false, //同步优惠券的弹窗
-			asyncId: '', //同步优惠券的id
-			count: 0 //总条数
-		};
-	},
-	computed: {
-		start: {
-			get() {
-				return utils.format(new Date(this.atime), 'yyyy-MM-dd');
-			}
-		},
-		end: {
-			get() {
-				return utils.format(new Date(this.btime), 'yyyy-MM-dd');
-			}
-		},
-		day: {
-			get() {
-				return Math.floor((this.btime - this.atime) / (24 * 3600 * 1000));
-			}
-		}
-	},
-	methods: {
-		toEditCoupon(str) {
-			if (str == 'nochange') {
-				this.showCoupon = false;
-			} else {
-				this.showCoupon = false;
-				this.couponDetail = str;
-				this.couponType = str.type;
-			}
-		},
-		returnTime(time) {
-			time -= 0;
-			time = time * 1000;
-			return utils.format(new Date(time), 'yyyy-MM-dd');
-		},
-		getEndTime(item) {
-			let item1 = utils.deepCopy(item);
-			if (item1.validityType == 0) {
-				return '领券后' + item1.relativeTime + '天过期';
-			} else if (item1.validityType == 1) {
-				item1.endTime -= 0;
-				item1.endTime = item1.endTime * 1000;
-				return utils.format(new Date(item1.endTime), 'yyyy-MM-dd') + '过期';
-			}
-		},
-		async inte(index, page) {
-			this.indexOn = index;
-			if (page) {
-				this.page = 1;
-			}
-			let res = await http.getCouponList({
-				data: {
-					page: this.page,
-					num: this.pageNum,
-					status: this.indexOn,
-					fromDate: this.valueTime == '' ? '' : parseInt(this.valueTime[0] / 1000),
-					toDate: this.valueTime == '' ? '' : parseInt(this.valueTime[1] / 1000)
-				}
-			});
-			this.couponList = res.list;
-			if (this.page == 1) {
-				this.count = res.count;
-			}
-			this.total = res.total;
-		},
-		//
-		showCalendar() {
-			this.isShowCa = !this.isShowCa;
-		},
-		//关闭日期框
-		// closeDate() {
-		// 	this.isShowCa = false;
-		// },
-		//查询日期搜索
-		seachData() {
-			this.inte(this.indexOn);
-		},
-		//修改优惠券信息
-		modfycoupons(item) {
-			if (this.indexOn == '2') {
-				this.$store.commit('setWin', {
-					title: '提示信息',
-					winType: 'alert',
-					content: '过期优惠券无法编辑'
-				});
-				return false;
-			}
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '提示信息',
-				content: '确认修改吗？',
-				callback: str => {
-					if (str == 'ok') {
-						this.changeCoupon(item);
+	import http from 'src/manager/http';
+	import storage from 'src/verdor/storage';
+	import utils from 'src/verdor/utils';
+	export default {
+		data() {
+			return {
+				ischain: '', //店铺id 品牌店/单店
+				couponList: [], //优惠券列表
+				page: 1, //当前页的数据
+				total: 1,
+				index: null,
+				pageNum: 10, //一版页码处理多少数据
+				pageCount: 0, //总条数
+				valueTime: [], //时间控件
+				days: 0, //一共的天数
+				indexOn: 0,
+				bannerList: [
+					{
+						index: 0,
+						name: '未关联'
+					},
+					{
+						index: 1,
+						name: '已关联'
+					},
+					{
+						index: -1,
+						name: '已过期'
 					}
-				}
-			});
-		},
-		async changeCoupon(item) {
-			let res = await http.getCouponById({
-				data: {
-					couponId: item.id
-				}
-			});
-			this.couponDetail = res; //单张优惠券的详情
-			this.couponType = res.type;
-			this.changeMnage = false;
-		},
-		async delCoupon(item) {
-			await http.deleteCoupon({
-				data: {
-					couponId: item.id
-				}
-			});
-			this.inte(this.indexOn);
-		},
-		//删除优惠券信息
-		deletecoupons(item) {
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '提示信息',
-				content: '确认要删除吗？',
-				callback: str => {
-					if (str == 'ok') {
-						this.delCoupon(item);
-					}
-				}
-			});
-		},
-		//查看优惠券信息
-		opencoupons(index, item) {
-			this.showCoupon = true;
-			this.couponInfo = {
-				index,
-				item
+				], //
+				isShowCa: false, //  是否展示时间选择组件
+				changeMnage: true, //  是否显示修改优惠券页面
+				showCoupon: false, //  是否显示优惠券弹框
+				couponInfo: '', //  优惠券信息
+				allTotal: 100,
+				pageTotal: 10,
+				couponType: 0, //优惠券的标识
+				couponDetail: Object, //优惠券的详情
+				couponTypeList: {
+					1: '单品减免优惠券',
+					2: '整单减免优惠券',
+					3: '单品打折优惠券',
+					4: '整单打折优惠券',
+					5: '赠菜优惠券',
+					6: '代金券',
+					7: '积分卡券',
+					8: '随机立减优惠券',
+					9: '第二件商品券',
+					10: '买送券',
+					11: '定额券'
+				},
+				unbindWin: false, //同步优惠券的弹窗
+				asyncId: '', //同步优惠券的id
+				count: 0 //总条数
 			};
 		},
-		getcouponResult: function() {
-			this.couponType = 0;
-			this.inte(this.indexOn); //重新刷新一下列表
-		},
-		async syncCoupon() { //优惠券同步
-			let data = await http.syncCoupon({
-				data: {
-					couponId: this.asyncId //优惠券的id
+		computed: {
+			start: {
+				get() {
+					return utils.format(new Date(this.atime), 'yyyy-MM-dd');
 				}
-			});
-			if (data) {
-				this.$store.commit('setWin', {
-					content: '同步成功',
-					title: '操作提示',
-					winType: 'alert'
+			},
+			end: {
+				get() {
+					return utils.format(new Date(this.btime), 'yyyy-MM-dd');
+				}
+			},
+			day: {
+				get() {
+					return Math.floor((this.btime - this.atime) / (24 * 3600 * 1000));
+				}
+			}
+		},
+		methods: {
+			toEditCoupon(str) {
+				if (str == 'nochange') {
+					this.showCoupon = false;
+				} else {
+					this.showCoupon = false;
+					this.couponDetail = str;
+					this.couponType = str.type;
+				}
+			},
+			returnTime(time) {
+				time -= 0;
+				time = time * 1000;
+				return utils.format(new Date(time), 'yyyy-MM-dd');
+			},
+			getEndTime(item) {
+				let item1 = utils.deepCopy(item);
+				if (item1.validityType == 0) {
+					return '领券后' + item1.relativeTime + '天过期';
+				} else if (item1.validityType == 1) {
+					item1.endTime -= 0;
+					item1.endTime = item1.endTime * 1000;
+					return utils.format(new Date(item1.endTime), 'yyyy-MM-dd') + '过期';
+				}
+			},
+			async inte(index, page) {
+				this.indexOn = index;
+				if (page) {
+					this.page = 1;
+				}
+				let res = await http.getCouponList({
+					data: {
+						page: this.page,
+						num: this.pageNum,
+						status: this.indexOn,
+						fromDate: this.valueTime == '' ? '' : parseInt(this.valueTime[0] / 1000),
+						toDate: this.valueTime == '' ? '' : parseInt(this.valueTime[1] / 1000)
+					}
 				});
-			}
+				this.couponList = res.list;
+				if (this.page == 1) {
+					this.count = res.count;
+				}
+				this.total = res.total;
+			},
+			//
+			showCalendar() {
+				this.isShowCa = !this.isShowCa;
+			},
+			//关闭日期框
+			// closeDate() {
+			// 	this.isShowCa = false;
+			// },
+			//查询日期搜索
+			seachData() {
+				this.inte(this.indexOn);
+			},
+			//修改优惠券信息
+			modfycoupons(item) {
+				if (this.indexOn == '2') {
+					this.$store.commit('setWin', {
+						title: '提示信息',
+						winType: 'alert',
+						content: '过期优惠券无法编辑'
+					});
+					return false;
+				}
+				this.$store.commit('setWin', {
+					winType: 'confirm',
+					title: '提示信息',
+					content: '确认修改吗？',
+					callback: str => {
+						if (str == 'ok') {
+							this.changeCoupon(item);
+						}
+					}
+				});
+			},
+			async changeCoupon(item) {
+				let res = await http.getCouponById({
+					data: {
+						couponId: item.id
+					}
+				});
+				this.couponDetail = res; //单张优惠券的详情
+				this.couponType = res.type;
+				this.changeMnage = false;
+			},
+			async delCoupon(item) {
+				await http.deleteCoupon({
+					data: {
+						couponId: item.id
+					}
+				});
+				this.inte(this.indexOn);
+			},
+			//删除优惠券信息
+			deletecoupons(item) {
+				this.$store.commit('setWin', {
+					winType: 'confirm',
+					title: '提示信息',
+					content: '确认要删除吗？',
+					callback: str => {
+						if (str == 'ok') {
+							this.delCoupon(item);
+						}
+					}
+				});
+			},
+			//查看优惠券信息
+			opencoupons(index, item) {
+				this.showCoupon = true;
+				this.couponInfo = {
+					index,
+					item
+				};
+			},
+			getcouponResult: function() {
+				this.couponType = 0;
+				this.inte(this.indexOn); //重新刷新一下列表
+			},
+			async syncCoupon() { //优惠券同步
+				let data = await http.syncCoupon({
+					data: {
+						couponId: this.asyncId //优惠券的id
+					}
+				});
+				if (data) {
+					this.$store.commit('setWin', {
+						content: '同步成功',
+						title: '操作提示',
+						winType: 'alert'
+					});
+				}
+			},
+			unbundlingCoupon: function(item) { //打开同步优惠券的弹窗
+				this.asyncId = item.id;
+				this.unbindWin = true;
+			},
+			getResult: function(res) { //弹床的回掉
+				if (res == 'ok') {
+					this.syncCoupon();
+				}
+				this.unbindWin = false;
+			},
+			//每页显示多少条数据
+			handleSizeChange(p) {
+				this.page = 1;
+				this.pageNum = p;
+				this.inte(this.indexOn);
+			},
+			//页码跳转
+			pageChange(p) {
+				this.page = p;
+				this.inte(this.indexOn);
+			},
 		},
-		unbundlingCoupon: function(item) { //打开同步优惠券的弹窗
-			this.asyncId = item.id;
-			this.unbindWin = true;
-		},
-		getResult: function(res) { //弹床的回掉
-			if (res == 'ok') {
-				this.syncCoupon();
-			}
-			this.unbindWin = false;
-		},
-		//每页显示多少条数据
-		handleSizeChange(p) {
-			this.page = 1;
-			this.pageNum = p;
+		mounted() {
 			this.inte(this.indexOn);
+			this.ischain = storage.session('userShop').currentShop.ischain;
 		},
-		//页码跳转
-		pageChange(p) {
-			this.page = p;
-			this.inte(this.indexOn);
-		},
-	},
-	mounted() {
-		this.inte(this.indexOn);
-		this.ischain = storage.session('userShop').currentShop.ischain;
-	},
-	components: {
-		breakCoupon: () =>
-			import( /*webpackChunkName: 'breaks_coupon'*/ './../new_coupons/breaks_coupon'),
-		discountCoupon: () =>
-			import( /*webpackChunkName: 'discount_coupon'*/ './../new_coupons/discount_coupon'),
-		giveCoupon: () =>
-			import( /*webpackChunkName: 'give_coupon'*/ './../new_coupons/give_coupon'),
-		vouchersCoupon: () =>
-			import( /*webpackChunkName: 'vouchers_coupon'*/ './../new_coupons/vouchers_coupon'),
-		intergralcardCoupon: () =>
-			import( /*webpackChunkName: 'integralcard_coupon'*/ './../new_coupons/integralcard_coupon'),
-		'coupon-manage-win': () =>
-			import( /* webpackChunkName:'coupon_manage_win' */ './coupon_manage_win'),
-		page: () =>
-			import( /* webpackChunkName: 'page_element' */ 'src/components/page_element'),
-		comTable: () =>
-			import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
-		maunBundling: () =>
-			import( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
-		superpositionCoupon: () =>
-			import( /*webpackChunkName: 'superposition_coupon'*/ './../new_coupons/superposition_coupon'),
-		buysendCoupon: () =>
-			import( /*webpackChunkName: 'buysend_coupon'*/ './../new_coupons/buysend_coupon'),
-		quotaCoupon: () =>
-			import( /*webpackChunkName: 'quota_coupon'*/ './../new_coupons/quota_coupon'),
-	}
-};
+		components: {
+			breakCoupon: () =>
+				import( /*webpackChunkName: 'breaks_coupon'*/ './../new_coupons/breaks_coupon'),
+			discountCoupon: () =>
+				import( /*webpackChunkName: 'discount_coupon'*/ './../new_coupons/discount_coupon'),
+			giveCoupon: () =>
+				import( /*webpackChunkName: 'give_coupon'*/ './../new_coupons/give_coupon'),
+			vouchersCoupon: () =>
+				import( /*webpackChunkName: 'vouchers_coupon'*/ './../new_coupons/vouchers_coupon'),
+			intergralcardCoupon: () =>
+				import( /*webpackChunkName: 'integralcard_coupon'*/ './../new_coupons/integralcard_coupon'),
+			'coupon-manage-win': () =>
+				import( /* webpackChunkName:'coupon_manage_win' */ './coupon_manage_win'),
+			page: () =>
+				import( /* webpackChunkName: 'page_element' */ 'src/components/page_element'),
+			comTable: () =>
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
+			maunBundling: () =>
+				import( /*webpackChunkName: 'coupon_maunbundling_win'*/ './coupon_maunbundling_win'),
+			superpositionCoupon: () =>
+				import( /*webpackChunkName: 'superposition_coupon'*/ './../new_coupons/superposition_coupon'),
+			buysendCoupon: () =>
+				import( /*webpackChunkName: 'buysend_coupon'*/ './../new_coupons/buysend_coupon'),
+			quotaCoupon: () =>
+				import( /*webpackChunkName: 'quota_coupon'*/ './../new_coupons/quota_coupon'),
+		}
+	};
 </script>
 <style type="text/css" scoped>
-.list {
-	min-width: 1230px;
-	min-height: 400px;
-}
+	.list {
+		min-width: 1230px;
+		min-height: 400px;
+	}
 
-.list .oUl {
-	width: 100%;
-	height: 50px;
-	height: 50px;
-	background-color: #e6e6e6;
-}
+	.list .oUl {
+		width: 100%;
+		height: 50px;
+		height: 50px;
+		background-color: #e6e6e6;
+	}
 
-.list .oUl li {
-	width: 20%;
-	height: 50px;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	float: left;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-}
+	.list .oUl li {
+		width: 20%;
+		height: 50px;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		float: left;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
 
-.list .oUl li a {
-	float: left;
-}
+	.list .oUl li a {
+		float: left;
+	}
 
-.list .oUl li section {
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	float: left;
-	cursor: pointer;
-	color: #808080;
-}
+	.list .oUl li section {
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		float: left;
+		cursor: pointer;
+		color: #808080;
+	}
 
-.test {
-	display: inline-block;
-	vertical-align: middle;
-	height: 40px;
-	margin: 20px 0;
-}
+	.test {
+		display: inline-block;
+		vertical-align: middle;
+		height: 40px;
+		margin: 20px 0;
+	}
 
-.oClickBox .oSpan {
-	border-right: 1px solid #b3b3b3;
-	display: inline-block;
-	float: left;
-	text-align: center;
-	width: 255px;
-	height: 40px;
-}
+	.oClickBox .oSpan {
+		border-right: 1px solid #b3b3b3;
+		display: inline-block;
+		float: left;
+		text-align: center;
+		width: 255px;
+		height: 40px;
+	}
 
 
 
-.search {
-	display: inline-block;
-	float: left;
-	width: 44px;
-	height: 40px;
-	background-color: #29a7e1;
-	cursor: pointer;
-}
+	.search {
+		display: inline-block;
+		float: left;
+		width: 44px;
+		height: 40px;
+		background-color: #29a7e1;
+		cursor: pointer;
+	}
 
-.search {
-	background: url(../../../res/images/search.png) center center no-repeat;
-}
+	.search {
+		background: url(../../../res/images/search.png) center center no-repeat;
+	}
 
-.diel {
-	display: inline-block;
-	width: 120px;
-	height: 40px;
-	font-size: 16px;
-	background: #f2f2f2;
-	border-radius: 3px;
-	text-align: center;
-	line-height: 40px;
-	cursor: pointer;
-	margin-right: 10px;
-}
+	.diel {
+		display: inline-block;
+		width: 120px;
+		height: 40px;
+		font-size: 16px;
+		background: #f2f2f2;
+		border-radius: 3px;
+		text-align: center;
+		line-height: 40px;
+		cursor: pointer;
+		margin-right: 10px;
+	}
 
-.on {
-	background: #E1BB4A;
-	color: #fff;
-}
+	.on {
+		background: #E1BB4A;
+		color: #fff;
+	}
 
-.worker_staff_footer {
-	text-align: left;
-	margin-top: 36px;
-}
+	.worker_staff_footer {
+		text-align: left;
+		margin-top: 36px;
+	}
 
-.align_item {
-	height: 80px;
-	align-items: center;
-	display: flex;
-}
+	.align_item {
+		height: 80px;
+		align-items: center;
+		display: flex;
+	}
 
-.align_item section {
-	border-bottom: 1px solid rgb(255, 255, 255);
-	background-color: rgb(255, 152, 0);
-	color: rgb(255, 255, 255);
-	height: 80px;
-	flex: 1;
-}
+	.align_item section {
+		border-bottom: 1px solid rgb(255, 255, 255);
+		background-color: rgb(255, 152, 0);
+		color: rgb(255, 255, 255);
+		height: 80px;
+		flex: 1;
+	}
 </style>

@@ -51,7 +51,7 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">更多图片</span>
 				<div class="rightHalf">
-					<el-button class="fl" type="primary" style="width:179px;" @click="addImages('add')">添加图片
+					<el-button class="fl" type="primary" style="width:179px;" @click="addImages('view')">添加图片
 					</el-button>
 					<div class="fl handle-tips">
 						<i></i> 推荐尺寸:大小1M 上限100张

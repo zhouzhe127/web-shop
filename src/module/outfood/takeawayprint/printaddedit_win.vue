@@ -86,7 +86,7 @@ export default {
 			elemeUserId: '',
 			goods: {}, //传给后台的选中商品
 			isAreaid: '', //是否为当前店铺id
-			packageIds: null, //套餐id
+			packageIds: '', //套餐id
 			// showThreeBounced: false, //三级弹框
 			postFirstPid: null,
 			postFirstTypes: null,
@@ -331,6 +331,8 @@ export default {
 					return;
 				}
 			}
+			this.shopsList = [];
+			this.shopsIndex = [];
 			let res = await http.getTakeoutShop(
 				{
 					data: {
@@ -354,10 +356,10 @@ export default {
 			this.shopsList = arr;
 			this.shopsIndex = [arr[0].TakeoutShopId];
 			//切换渠道，重置选中店铺
-			if (this.eleShopid&&arr[0].TakeoutShopId != this.eleShopid) {
-				this.shopsList = [];
-				this.shopsIndex = [];
-			}
+			// if (this.eleShopid&&arr[0].TakeoutShopId != this.eleShopid) {
+			// 	this.shopsList = [];
+			// 	this.shopsIndex = [];
+			// }
 			this.initTogath();
 		},
 		//获取选择店铺的id
@@ -484,7 +486,7 @@ export default {
 			}
 			this.showCom = 'printerRelation';
 			this.comObj = {
-				areaIndex: this.areaIndex,
+				areaIndex: utils.deepCopy(this.areaIndex),
 				goodsIds: utils.deepCopy(this.goodsIds),
 				eleShopid: this.eleShopid
 			};

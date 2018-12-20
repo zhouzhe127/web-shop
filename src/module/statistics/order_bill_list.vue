@@ -455,16 +455,16 @@ export default {
 		},
 		//验证
 		checkDate() {
-			let st = this.startTime;
-			let firstDay = new Date(Number(this.endTime)).setDate(1);
-			firstDay = new Date(firstDay).setHours(0, 0, 0, 0); // 按照结束时间的第一天计算
-			if (+st < +firstDay) {
-				this.$store.commit('setWin', {
-					title: '提示信息',
-					content: '很抱歉,选择的时间段不能跨月'
-				});
-				return true;
-			}
+			// let st = this.startTime;
+			// let firstDay = new Date(Number(this.endTime)).setDate(1);
+			// firstDay = new Date(firstDay).setHours(0, 0, 0, 0); // 按照结束时间的第一天计算
+			// if (+st < +firstDay) {
+			// 	this.$store.commit('setWin', {
+			// 		title: '提示信息',
+			// 		content: '很抱歉,选择的时间段不能跨月'
+			// 	});
+			// 	return true;
+			// }
 			if (
 				parseInt(this.startTime / 1000) > parseInt(this.endTime / 1000)
 			) {

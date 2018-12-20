@@ -1,5 +1,5 @@
 <!--
-    **批量盘库-选择物料
+    **新建加工-选择加工bom单
     *
     * 黄一帆
     * *
@@ -12,7 +12,10 @@
 				<input type="text" placeholder="请输入物料名" v-model="material" />
 			</div>
 			<div class="inline-box">
-				<el-select v-model="matType" placeholder="请选择bom单类型" @change="dropSelect" style="width:210px;">
+				<input type="text" placeholder="请输入物料编码" v-model="barCode" />
+			</div>
+			<div class="inline-box">
+				<el-select v-model="matType" placeholder="请选择bom单类型" style="width:210px;">
 				    <el-option
 						v-for="item in matTypeList"
 						:key="item.value"
@@ -34,7 +37,7 @@
 				</div>
 			</div>
 		</div>
-		<com-table :listName="'物料列表'" :titleData="titleList" :allTotal="listLength" :introData="list" :listHeight="70" :listWidth="1200">
+		<com-table :listName="'加工bom单列表'" :titleData="titleList" :allTotal="listLength" :introData="list" :listHeight="70" :listWidth="1200">
 			<div slot="title-0" slot-scope="props" class="select-all select-ban">
 				<span @click="radioAll('store')">{{storeAll?'取消全选':'全选'}}</span>
 				<i>|</i>
@@ -45,13 +48,13 @@
 			</span>
 			<span slot="con-1" slot-scope="props">{{(page-1)*pageShow+props.index>=9?(page-1)*pageShow+props.index+1:'0'+((page-1)*pageShow+props.index+1)}}</span>
 			<!--物料类型-->
-			<span slot="con-3" slot-scope="props">{{matTypeHash[props.data.mType]}}</span>
+			<span slot="con-4" slot-scope="props">{{matTypeHash[props.data.mType]}}</span>
 			<!--物料分类-->
-			<span slot="con-4" slot-scope="props">{{setCate(props.data.cate)}}</span>
+			<span slot="con-5" slot-scope="props">{{setCate(props.data.cate)}}</span>
 			<!--所需物料-->
-			<span slot="con-5" slot-scope="props">{{props.data.kindNum}}种</span>
+			<span slot="con-6" slot-scope="props">{{props.data.kindNum}}种</span>
 			<!--加工bom单类型-->
-			<span slot="con-6" slot-scope="props">{{typeHash[props.data.type]}}</span>
+			<span slot="con-7" slot-scope="props">{{typeHash[props.data.type]}}</span>
 		</com-table>
 		<div class="page-box">
 			<pageBtn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></pageBtn>
@@ -104,22 +107,24 @@
 					{titleName: '操作',titleStyle:{width:200+'px',}},
 					{titleName:'序号'},
 					{titleName: '物料名称',dataName: 'name'},
+					{titleName: '物料编码',dataName: 'barCode'},
 					{titleName: '物料类型',},
 					{titleName:'物料分类'},
 					{titleName: '所需物料'},
 					{titleName: '加工bom单类型'},
 				],
 				matTypeList:[
-					{value:'0,1,2',label:'全部'},
+					{value:'-1',label:'全部'},
 					{value:'0',label:'成品 '},
 					{value:'1',label:'半成品 '},
 					{value:'2',label:'普通物料 '},
 				],
-				matType:'0,1,2',
+				matType:'-1',
 				matTypeHash:{
-					0:'成品',
-					1:'半成品',
-					2:'普通物料'
+					'-1':'全部',
+					'0':'成品',
+					'1':'半成品',
+					'2':'普通物料'
 				},
 				typeHash:{
 					0:'手动',
@@ -139,6 +144,7 @@
 				sortTwoId:'',//二级分类id
 				isEdit:'',//是否编辑模板
 				useList:[],
+				barCode:'',//物料编码
 			};
 		},
 		props:[
@@ -160,7 +166,7 @@
 		},
 		mounted() {
 			this.initBtn();
-			this.setDefault();//设置默认选中
+			//this.setDefault();//设置默认选中
 			this.getData();//请求数据
 			this.getCategoryList();
 		},
@@ -210,9 +216,6 @@
 			filter() { //筛选 时间搜索公用
 				this.page = 1;
 				this.getData();
-			},
-			dropSelect(res){
-				this.matType = res;
 			},
 			checkSelect(){
 				if(!this.sortTwo.length){
@@ -319,6 +322,7 @@
 					material: this.material,
 					type: this.matType,
 					cid: this.cid,
+					barCode:this.barCode,
 				}});
 				this.searchObj = {
 					page: this.page,
@@ -376,13 +380,13 @@
 				}
 			},
 			reset() { //重置
-				let arr = ['material','cid','sortOneId','sortOneId'];
+				let arr = ['material','cid','sortOneId','sortOneId','barCode'];
 				for(let item of arr){
 					this[item] = '';
 				}
 				this.clearListSel(this.sortOne,'sortOne');
 				this.sortTwo = [];
-				this.matType = '0,1,2';
+				this.matType = '-1';
 				this.page = 1;
 				this.pageShow = 10;
 				this.getData();

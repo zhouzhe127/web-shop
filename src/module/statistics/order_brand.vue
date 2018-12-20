@@ -542,7 +542,6 @@ export default {
 				});
 				return false;
 			}
-			this.loading = false;
 			if (this.shopIds == '') {
 				this.$store.commit('setWin', {
 					title: '操作提示',
@@ -573,6 +572,7 @@ export default {
 					shopIds: this.shopIds
 				}
 			});
+			this.loading = false;
 			this.repeat = false;
 			if (res.taskId) {
 				this.taskId = res.taskId;

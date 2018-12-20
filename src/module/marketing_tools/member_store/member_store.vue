@@ -142,7 +142,7 @@
 								赠送金额{{scope.row.giftAmount}}元，赠送{{scope.row.giftPoint}}积分
 							</span>
 							<span v-if="scope.row.couponIds">
-								<span v-for="item in scope.row.couponIds">
+								<span v-for="item in scope.row.couponIds" :key='item.name'>
 									赠送{{item.name}}优惠券{{item.num}}张
 								</span>
 							</span>

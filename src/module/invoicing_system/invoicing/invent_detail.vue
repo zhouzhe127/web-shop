@@ -87,8 +87,7 @@
 										<div style="position: relative;width: 100%;overflow: hidden;padding-right: 20px;" :key="index">
 											<span class="shopAfter" style="display: inline-block;min-width:130px">{{item.shelfName||"暂无"}}/{{item.areaName||"暂无"}}</span>
 											<span @click="shelfModify(index,item)" class="modify" v-if="!soldShow&&!loseShow">修改</span>
-											<img src="../../../res/icon/icondelete.png" v-if="shelvesGoods.length != 1 &&!soldShow&&!loseShow" @click="delNum(item,index)"
-											/>
+											<img src="../../../res/icon/icondelete.png" v-if="shelvesGoods.length != 1 &&!soldShow&&!loseShow" @click="delNum(item,index)" />
 										</div>
 									</template>
 								</section>
@@ -132,23 +131,46 @@
 				</ul>
 			</section> -->
 			<section class="listBox" style="width:100%;height:auto;margin-top: 20px;">
-				<com-table :listName="'批次列表'" :titleData="titleList" :allTotal="allList.length" :introData="newbatchDetail">
-					<div class="infoDetail" slot="con-0" slot-scope="props">
-						<a href="javascript:void(0);" @click="addDetailhouse(props.data,1)" style="color:#5ebee8;" v-if="inventConfigs.commonStock==1">入库</a><span v-if="inventConfigs.commonStock==1">|</span>
-						<a href="javascript:void(0);" @click="batchLose(props.data)" style="color:red;">耗损</a>
-						<!-- <a href="javascript:void(0);" @click="revamp(props.data)" style="color:orange;">修改</a> -->
-					</div>
-					<span slot="con-1" slot-scope="props">{{(props.index+1)+(page-1)*10}}</span>
-					<span slot="con-3" slot-scope="props">{{getTime(props.data.productionTime)}}</span>
-					<span slot="con-5" slot-scope="props">{{props.data.surplus}}{{shopGoods.unit}}</span>
-					<span slot="con-7" slot-scope="props">{{props.data.wName||"暂无"}}/{{props.data.aName||"暂无"}}</span>
-				</com-table>
+				<el-table :data="newbatchDetail" border style="width: 100%" :header-cell-style="{'background':'#f5f7fa'}" stripe>
+					<el-table-column :label="`批次列表 · 共${allList.length}个条目`" class-name='tabletop'>
+						<el-table-column prop="date" width="100px" label="操作">
+							<template slot-scope="scope">
+								<el-button type="text" @click="addDetailhouse(scope.row,1)" style="color:#34A9AA;" v-if="inventConfigs.commonStock==1">入库</el-button>
+								<el-button type="text" @click="batchLose(scope.row)" style="color:#D34A2B;">耗损</el-button>
+							</template>
+						</el-table-column>
+						<el-table-column type="index" :index="indexMethod" label="序号" width="60"></el-table-column>
+						<el-table-column prop="batchCode" label="批次编码"></el-table-column>
+						<el-table-column label="生产日期">
+							<template slot-scope="scope">
+								<div>{{getTime(scope.row.productionTime)}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column prop="supplier" label="供应商"></el-table-column>
+						<el-table-column label="数量">
+							<template slot-scope="scope">
+								<div>{{scope.row.surplus}}{{shopGoods.unit}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="进价">
+							<template slot-scope="scope">
+								<div>{{scope.row.distributionPrice}}元/{{shopGoods.unit}}</div>
+							</template>
+						</el-table-column>
+						<el-table-column label="仓库所属">
+							<template slot-scope="scope">
+								<div>{{scope.row.wName||"暂无"}}/{{scope.row.aName||"暂无"}}</div>
+							</template>
+						</el-table-column>
+					</el-table-column>
+				</el-table>
 			</section>
 			<!-- <operating-record v-if="tabactive==1" :gid="shopList.id"></operating-record> -->
 			<div style="margin-top:10px;padding-bottom:30px;">
 				<!-- <page-turn :isNoJump="false" :isNoPaging='true' :total="pageTotal" :page="page" @pageNum="changePage"
 				    ref="pageTurn"></page-turn> -->
-				<el-pagination @current-change="changePage" background :current-page="page" layout="total, prev, pager, next, jumper" :total="Number(allList.length)"></el-pagination>	
+				<el-pagination @current-change="changePage" background :current-page="page" layout="total, prev, pager, next, jumper"
+				 :total="Number(allList.length)"></el-pagination>
 			</div>
 		</section>
 
@@ -169,7 +191,7 @@
 				shopList: '',
 				shopId: '',
 				allList: '', //列表数据
-				newbatchDetail: '', //每页数据
+				newbatchDetail: [], //每页数据
 				wareAll: '',
 				awayAll: '', //上架数据
 				shelvesGoods: '', //货架位置
@@ -193,43 +215,13 @@
 				shelveNum: 0,
 				loseShow: false,
 				loseItem: '',
-				inventConfigs:{},//进销存配置
-				titleList: [{
-					titleName: '操作',
-					titleStyle: {
-						width: '200px'
-					}
-				},
-				{
-					titleName: '序号',
-					titleStyle: {
-						width: '50px'
-					}
-				},
-				{
-					titleName: '批次编码',
-					dataName: 'batchCode'
-				},
-				{
-					titleName: '生产日期'
-				},
-				{
-					titleName: '供应商',
-					dataName: 'supplier'
-				},
-				{
-					titleName: storage.session('goodsDetail').type == 1 ? '重量' : '数量'
-				},
-				{
-					titleName: '进价',
-					dataName: 'distributionPrice'
-				},
-				{
-					titleName: '所属仓库'
-				}],
+				inventConfigs: {}, //进销存配置
 			};
 		},
 		methods: {
+			indexMethod(index){
+				return this.num*(this.page-1)+index+1;
+			},
 			async init() {
 				//获取详情
 				let data = await http.InvoicingGetGoodsDetail({
@@ -461,7 +453,7 @@
 			// 	this.tabactive = index;
 			// },
 			getTime(time) {
-				if (time == 0||!time) {
+				if (time == 0 || !time) {
 					return '--';
 				}
 				return utils.format(parseInt(time) * 1000, 'yyyy年MM月dd日');
@@ -522,19 +514,19 @@
 		},
 		components: {
 			pageTurn: () =>
-				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
+				import( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 			warehouseWin: () =>
-				import ( /*webpackChunkName: 'warehouse_win'*/ './warehouse_win'),
+				import( /*webpackChunkName: 'warehouse_win'*/ './warehouse_win'),
 			putawayWin: () =>
-				import ( /*webpackChunkName: 'putaway_win'*/ './putaway_win'),
+				import( /*webpackChunkName: 'putaway_win'*/ './putaway_win'),
 			// operatingRecord: () =>
 			// 	import ( /*webpackChunkName: 'operating_record'*/ './operating_record'),
 			inventSoldout: () =>
-				import ( /*webpackChunkName: 'invent_soldout'*/ './invent_soldout'),
+				import( /*webpackChunkName: 'invent_soldout'*/ './invent_soldout'),
 			loseManage: () =>
-				import ( /*webpackChunkName: 'lose_manage'*/ './lose_manage'),
+				import( /*webpackChunkName: 'lose_manage'*/ './lose_manage'),
 			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table')
+				import( /*webpackChunkName: 'com_table'*/ 'src/components/com_table')
 		}
 	};
 </script>
@@ -549,6 +541,7 @@
 		display: inline-block;
 		display: flex;
 		justify-content: space-around;
+
 		a {
 			display: inline-block;
 			text-align: center;
@@ -647,6 +640,7 @@
 	.infoDetail {
 		display: inline-block;
 		display: flex;
+
 		a {
 			display: inline-block;
 			width: 50%;

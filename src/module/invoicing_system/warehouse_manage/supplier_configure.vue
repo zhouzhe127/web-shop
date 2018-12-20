@@ -65,88 +65,96 @@
 			</div>
 		</div>
 
-		<div class="head" >
-			<span>编码配置</span>
-			<div></div>
-		</div>
-		<div class="content" >
-			<div>
-				<el-button @click="openDialog">变更</el-button>
+		<!-- 编码配置 -->
+		<template v-if="ischain == 3 || ischain == 0">
+			<div class="head" >
+				<span>物料编码配置</span>
+				<div></div>
 			</div>
-			<p>
-				<span>
-					分类 : {{condition.multiCategory ? '物料可以存在多个分类' : '物料不能存在多个分类'}}
-				</span>
-			</p>
-			<p>
-				<span>
-					物料编码排序 : {{condition.sortByBarCode ? '开启' : '关闭'}}
-				</span>
-			</p>
-			<p>
-				物料编码 : 
-				<span v-for="(item,index) in mCode" :key="index" v-if="item.id == condition.wholeBarCode">
-					{{item.name}}
-				</span>
-			</p>
-		</div>
+			<div class="content" >
+				<div>
+					<el-button @click="openDialog">变更</el-button>
+				</div>
+				<p>
+					<!-- <span>
+						分类 : {{condition.multiCategory ? '物料可以存在多个分类' : '物料不能存在多个分类'}}
+					</span> -->
+				</p>
+				<p>
+					<span>
+						物料编码排序 : {{condition.sortByBarCode ? '开启' : '关闭'}}
+					</span>
+				</p>
+				<p>
+					物料编码配置 : 
+					<span v-for="(item,index) in mCode" :key="index" v-if="item.id == condition.wholeBarCode">
+						{{item.name}}
+					</span>
+				</p>
+			</div>
+		</template>
 
-		<!-- 品牌开关 -->
-		<div class="head" v-if="isBrand">
-			<span>采购单配置</span>
-			<div></div>
-		</div>
-		<div class="content" v-if="isBrand">
-			<p>
-				采购审核 : 
-				<el-switch
-					v-model="condition.purchaseAudit"
-					active-color="#34A9AA"
-					inactive-color="#909399"
-					active-text="开"
-					inactive-text="关"
-					class="switch-left"
-					@change="(res)=>{changeSwitch('purchaseAudit',res)}"
-				>
-				</el-switch>
-			</p>
-		</div>
+		<!-- 采购单配置 -->
+		<template v-if="ischain == 3 || ischain == 0">
+			<div class="head" >
+				<span>采购单配置</span>
+				<div></div>
+			</div>
+			<div class="content">
+				<p>
+					采购审核 : 
+					<el-switch
+						v-model="condition.purchaseAudit"
+						active-color="#34A9AA"
+						inactive-color="#909399"
+						active-text="开"
+						inactive-text="关"
+						class="switch-left"
+						@change="(res)=>{changeSwitch('purchaseAudit',res)}"
+					>
+					</el-switch>
+				</p>
+			</div>
+		</template>
+		
+		<!-- 入库配置 -->
+		<template v-if="ischain == 3 || ischain == 0">
+			<div class="head" >
+				<span>入库配置</span>
+				<div></div>
+			</div>
+			<div class="content" >
+				<p>
+					是否允许直接入库 : 
+					<el-switch
+						v-model="condition.commonStock"
+						active-color="#34A9AA"
+						inactive-color="#909399"
+						active-text="开"
+						inactive-text="关"
+						class="switch-left"
+						@change="(res)=>{changeSwitch('commonStock',res)}"
+					>
+					</el-switch>
+				</p>
+				<p>
+					是否允许导入入库 : 
+					<el-switch
+						v-model="condition.importStock"
+						active-color="#34A9AA"
+						inactive-color="#909399"
+						active-text="开"
+						inactive-text="关"
+						class="switch-left"
+						@change="(res)=>{changeSwitch('importStock',res)}"
+					>
+					</el-switch>
+				</p>
+			</div>
+		</template>
 
-		<div class="head" >
-			<span>入库配置</span>
-			<div></div>
-		</div>
-		<div class="content" >
-			<p>
-				是否允许直接入库 : 
-				<el-switch
-					v-model="condition.commonStock"
-					active-color="#34A9AA"
-					inactive-color="#909399"
-					active-text="开"
-					inactive-text="关"
-					class="switch-left"
-					@change="(res)=>{changeSwitch('commonStock',res)}"
-				>
-				</el-switch>
-			</p>
-			<p>
-				是否允许导入入库 : 
-				<el-switch
-					v-model="condition.importStock"
-					active-color="#34A9AA"
-					inactive-color="#909399"
-					active-text="开"
-					inactive-text="关"
-					class="switch-left"
-					@change="(res)=>{changeSwitch('importStock',res)}"
-				>
-				</el-switch>
-			</p>
-		</div>
-
-
-		<template v-if="isBrand">
+		<!-- 分销价格名称 -->
+		<template v-if="ischain == 3">
 			<div class="head" >
 				<span>分销价格名称</span>
 				<div></div>
@@ -171,9 +179,9 @@
 		</template>
 
 		<div class="component" >
-			<el-dialog :title="dialog.title" :visible.sync="dialog.show" width="500px">
+			<el-dialog :title="dialog.title" :visible.sync="dialog.show" width="500px" :append-to-body="true">
 				<div class="content">
-					<p>
+					<!-- <p>
 						物料是否存在多个分类 :
 						<el-switch
 							v-model="dialog.multiCategory"
@@ -184,7 +192,7 @@
 							class="switch-left"
 						>
 						</el-switch>						
-					</p>
+					</p> -->
 					<p>
 						物料全码 :
 						<el-select style="width:240px" v-model="dialog.wholeBarCode"   placeholder="请选择" class="switch-left">
@@ -267,23 +275,21 @@ export default {
 			condition:{},														//
 			dialog:{
 				show:false,
-				title:'编码配置',
+				title:'物料编码配置',
 				wholeBarCode:0,													//物料全码
 				multiCategory:false,											//物料是否存在多个分类
 				sortByBarCode:false,											//是否根据物料编码排序
 			},
 			distribution:[],		
 			copyDistribution:[],												//备份
-			isBrand:false,			
+			ischain:0,															//店铺类型
 
 		};
 	},
 	methods: {
 		//底部确定按钮,只针对分销价
 		async clickBtn(flag){
-			let temp = {},
-				distribution = [],
-				res = {},
+			let distribution = [],
 				retData = {};
 
 			if(flag == 'ok'){
@@ -297,14 +303,18 @@ export default {
 					return;
 				}
 				distribution = this.getDistribution();
-				if(!this.checkDistributionChange(distribution)){
-					this.alert('保存成功!');					
-					return;
-				}
+
 				if(distribution.length == 0){
 					this.alert('请先填写分销价名称!');
 					return;
 				}
+
+
+				if(!this.checkDistributionChange(distribution)){
+					this.alert('保存成功!');					
+					return;
+				}
+
 				
 				retData = await this.getHttp('invoicingUpdateDistributionConfig',{distribution});
 				if(Array.isArray(retData.distribution)){
@@ -322,7 +332,8 @@ export default {
 			if(sym == 'confirm'){
 				//确定
 				subData = {
-					multiCategory : Number(this.dialog.multiCategory),
+					// multiCategory : Number(this.dialog.multiCategory),
+					multiCategory : 0,
 					sortByBarCode : Number(this.dialog.sortByBarCode),
 					wholeBarCode : this.dialog.wholeBarCode
 				};
@@ -341,7 +352,7 @@ export default {
 		},
 
 		//商品物料应用
-		async goodsMaterial(bool){
+		async goodsMaterial(){
 			let temp = this.getSelectConfig(this.config);
 			let ctrl = {};
 			await this.getHttp('invoicingUpdateTopConfig',temp);
@@ -429,31 +440,6 @@ export default {
 		},
 
 
-
-		//格式化数据
-		formatData(){
-			let condition = this.condition;
-			let attrs = 'commonStock,importStock,purchaseAudit,multiCategory,sortByBarCode'.split(',');
-			let temp = {};
-			let distribution = [];
-
-			//商品,物料应用
-			temp = this.getSelectConfig(this.config);
-
-			//是否可以售卖
-			temp.isShelveMinus = Number(condition.isShelveMinus);
-
-			//品牌配置
-			if(this.isBrand){
-				for(let attr of attrs){
-					temp[attr] = Number(condition[attr]);
-				}
-				temp.wholeBarCode = condition.wholeBarCode;
-			}else{
-				temp.distribution = [];
-			}
-			return temp;
-		},
 		//获取商品与物料的选中状态
 		getSelectConfig(list){
 			let temp = {};
@@ -505,7 +491,7 @@ export default {
 
 		initData(){
 			let currentShop = storage.session('userShop').currentShop;
-			this.isBrand = currentShop.ischain == 3;
+			this.ischain = currentShop.ischain;
 		},
 		async initConfig(obj){
 			if(!obj) obj = await this.getHttp('invociGetSupplier');
@@ -534,7 +520,7 @@ export default {
 			this.dialog.wholeBarCode = this.condition.wholeBarCode;
 		},
 		async initDistribute(distribution){
-			if(!this.isBrand) return;
+			if(this.ischain != 3) return;
 
 			if(!distribution) distribution = await this.getHttp('invoicingGetDistributionConfig');
 
@@ -586,7 +572,6 @@ export default {
 		},
 		//检验是否重名,true表示无重名
 		checkSameValue(list,attr='name'){
-			let flag = true;
 			for(let i = 0; i < list.length; i += 1){
 				for(let j = i+1; j < list.length ;j += 1){
 					if(list[i][attr] == list[j][attr]){
@@ -705,14 +690,14 @@ p{
 			height:23px;
 			line-height: 23px;
 			font-size: 16px; 
-			border-left:2px solid @ey;
+			border-left: 3px solid @ey;
 			padding-left:10px;
 			padding-right:5px;
 			flex-grow: 0;			
 		}
 		div{
 			flex-grow: 1;
-			border-bottom:2px dashed #ddd;
+			border-bottom: 1px dashed #ddd;
 			height:13px;
 		}
 	}
@@ -748,7 +733,7 @@ p{
 
 	.label{
 		float:left;
-		width:110px;
+		min-width:110px;
 		text-align: right;
 		line-height: 40px;
 		margin-right:20px;

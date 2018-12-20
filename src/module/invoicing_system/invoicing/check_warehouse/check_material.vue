@@ -8,71 +8,86 @@
 <template>
 	<div id='check-material'>
 		<template v-if='!addShow'>
-			<div class="main">
+			<div class="main" v-loading="loading">
 				<div class="head">
 					盘库物料列表 · 共<em>{{listLength}}</em>个条目
-				</div>
-				<div class="scroll-box">
-					<div class="title">
-						<span>操作</span>
-						<span>单位选择</span>
-						<span class="wide">盘库数量</span>
-						<span>物料名称</span>
-						<span>库存数量</span>
-						<span>所属仓库</span>
-						<span>批次数量</span>
-						<span>类型</span>
+					<div class="check-div">
+					<el-checkbox v-model="selObj.isUpdateZero">未选中的物料库存消耗至0</el-checkbox>
+						<el-tooltip 
+							class="item" 
+							effect="dark" 
+							placement="bottom">
+							<div slot="content"><i class="el-icon-warning"> 说明</i>
+							<br/><br/>
+							该条目被勾选后，所有未选中的商品，库存统一变更为0
+							<br/>
+							操作日志及进销存统计中记录类型为批盘消耗。</div>
+							<i class="check-icon el-icon-info"></i>
+						</el-tooltip>
 					</div>
-					<div class="list-item" v-for="(item,index) in list" :key="index">
-						<!--操作-->
-						<div class="cell select-ban">
-							<em class="clear" @click="clearItem(index)">清空输入</em>
-							<em @click="openBatchWin(index)">批量盘库</em>
-						</div>
-						<!--单位选择-->
-						<div class="cell">
-							<drop-down @emit="(res)=>{unitSel(res,index)}" class="sel-box"
-								:list="item.unitArr" 
-								:value="item.unitIndex" 
-								:width="90" 
-								:noRepeat="true"></drop-down>
-						</div>
-						<!--盘库数量-->
-						<div class="cell wide">
-							<template v-if="item.oneName">
+				</div>
+				<el-table :data="list" stripe border style="width:100%" :header-cell-style="{'background-color':'#f5f7fa'}">
+					<el-table-column label="单位选择" width="150">
+						<template slot-scope="scope">
+							<el-select v-model="scope.row.unitIndex" placeholder="请选择仓库" @change="unitSel(scope.row)">
+								<el-option
+									v-for="item in scope.row.unitArr"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
+							</el-select>
+						</template>
+					</el-table-column>
+					<el-table-column label="盘库数量" width="320" align="center">
+						<template slot-scope="scope">
+							<template v-if="scope.row.oneName">
 								<div class="input-box">
-									<input type="text" v-model="item.oneNum" maxlength="10" placeholder="请输入数量" :disabled="item.haveBatch"/>
-									<div class="word">{{item.oneName}}</div>
+									<input type="text" v-model="scope.row.oneNum" maxlength="10" placeholder="请输入数量" :disabled="scope.row.haveBatch"/>
+									<div class="word">{{scope.row.oneName}}</div>
 								</div>
 								+
 							</template>
 							<div class="input-box">
-								<input type="text" v-model="item.twoNum" maxlength="10" placeholder="请输入数量" :disabled="item.haveBatch"/>
-								<div class="word">{{item.twoName}}</div>
+								<input type="text" v-model="scope.row.twoNum" maxlength="10" placeholder="请输入数量" :disabled="scope.row.haveBatch"/>
+								<div class="word">{{scope.row.twoName}}</div>
 							</div>
-						</div>
-						<!--物料名称-->
-						<div class="cell text-ellipsis" :title="item.name">
-							{{item.name}}
-						</div>
-						<!--库存数量-->
-						<div class="cell text-ellipsis" :title="setSuprlus(item.surplus,item.unit)">
-							{{setSuprlus(item.surplus,item.unit)}}
-						</div>
-						<!--所属仓库-->
-						<div class="cell text-ellipsis" :title="item.wName+(item.aName?' / '+item.aName:'')">
-							{{item.wName}}{{item.aName?' / '+item.aName:''}}
-						</div>
-						<!--批次数量-->
-						<div class="cell">{{item.batch}}</div>
-						<!--类型-->
-						<div class="cell">{{matTypeHash[item.type]}}</div>
-					</div>
-					<div class="empty" v-if="!list.length">- 暂无条目 -</div>
-				</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="name" label="物料名称" min-width="200">
+					</el-table-column>
+					<el-table-column label="库存数量" min-width="200">
+						<template slot-scope="scope">
+							{{setSuprlus(scope.row.surplus,scope.row.unit)}}
+						</template>
+					</el-table-column>
+					<el-table-column label="所属仓库" width="200">
+						<template slot-scope="scope">
+							{{scope.row.wName}}{{scope.row.aName?' / '+scope.row.aName:''}}
+						</template>
+					</el-table-column>
+					<el-table-column prop="batch" label="批次数量" min-width="100">
+					</el-table-column>
+					<el-table-column label="类型" width="120">
+						<template slot-scope="scope">
+							{{matTypeHash[scope.row.type]}}
+						</template>
+					</el-table-column>
+					<el-table-column label="操作" fixed="left" width="160">
+						<template slot-scope="scope" >
+							<el-button type="text" style='color:#D34A2B' @click="clearItem(scope.row)">清空输入</el-button>
+							<el-button type="text" @click="openBatchWin(scope.row,scope.$index)">批次盘库</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
 			</div>
 			<div class="page-box">
-				<pageBtn @pageNum="pageChange" :total="pageTotal" :page="page" :isNoJump="true"></pageBtn>
+				<el-pagination @current-change="pageChange"
+					:current-page="page"
+					background
+					layout="prev, pager, next"
+					:page-count="pageTotal">
+				</el-pagination>
 			</div>
 		</template>
 		<!--<add-goods v-if="addShow" :selItem='selMatItem'></add-goods>-->
@@ -85,6 +100,7 @@
 import http from 'src/manager/http';
 import global from 'src/manager/global';
 import utils from 'src/verdor/utils';
+import Timer from 'src/verdor/timer';
 export default{
 	data(){
 		return{
@@ -94,6 +110,7 @@ export default{
 				list:[],
 				search:{},
 				storeAll:false,
+				isUpdateZero:false,//未选中的商品/物料库存消耗至0
 			},
 			selMatItem:[],//已选择物料列表
 			selMatSearch:null,
@@ -119,6 +136,8 @@ export default{
 				1:'半成品',
 				2:'普通物料',
 			},
+			timerId:'',
+			loading:false,
 		};
 	},
 	components:{
@@ -135,29 +154,34 @@ export default{
 			this.initBtn();
 			this.setDefault(tempId);
 		}else{
+			this.$store.commit('setFixButton', []);
 			this.addShow = true;
 		}
+	},
+	destroyed(){
+		this.stopRepeat();
 	},
 	methods:{
 		initBtn() {
 			let arr = [
-				{name: '确定盘库',style: 'background: #fe8d01;border: 1px solid #fe8d01;color: #fff;',
-					fn: () => {
-						this.checkMaterial();
-					}
-				},
-				{name: '添加物料',style: 'background: #29a7e1;border: 1px solid #29a7e1;color: #fff;',
-					fn: () => {
-						this.addShow = true;
-					}
-				},
-				{name: '取消盘库',style: 'background: #b3b3b3;border: 1px solid #b3b3b3;color: #fff;',
+				{name: '取消',className: 'info',type:1,
 					fn: () => {
 						window.history.go(-1);
 					}
 				},
+				{name: '添加物料',className: 'success',type:1,
+					fn: () => {
+						this.$store.commit('setFixButton', []);
+						this.addShow = true;
+					}
+				},
+				{name: '确定盘库',className: 'primary',type:1,
+					fn: () => {
+						this.checkMaterial();
+					}
+				},
 			];
-			this.$store.commit('setPageTools', arr);
+			this.$store.commit('setFixButton', arr);
 		},
 		async setDefault(tempId){//设置默认数据-使用模板时调用
 			let data = await http.getInventoryMaterialTemplate({data:{
@@ -168,12 +192,15 @@ export default{
 			this.wid = wids?wids.join(','):'';
 			this.areaId = aids?aids.join(','):'';
 			this.cid = data.content.c2 ? data.content.c2 : data.content.c1;
+			this.selObj.isUpdateZero = data.content.isUpdateZero==1;
 			this.selObj.search={//设置搜索条件
 				cid: this.cid,   					//商品类型 0普通商品，1称重商品
 				sortOneId: data.content.c1,			//一级分类id
 				sortTwoId: data.content.c2,			//二级分类id
 				wid : this.wid, 					//仓库id
 				areaId : this.areaId, 				//区域id
+				materialName: data.content.materialName,
+				barCode: data.content.barCode,
 			};
 			this.selObj.name = data.name;
 			let param = ['cid','wid','areaId'],paramNum=0;
@@ -201,16 +228,14 @@ export default{
 			this.pageTotal = Math.floor(data.length/this.pageShow);
 			this.listLength = data.length;
 			this.selObj.list = data;
-			this.setListData(data);
+			this.eachSaveList(this.setListData(data));
 		},
-		unitSel(obj,index){//单位选择 res:单位列表下标 , index:列表下标
-			let list = this.list[index];
-			let unit = list.unit[obj.value];
+		unitSel(list){//单位选择 res:单位列表下标 , index:列表下标
+			let unit = list.unit[list.unitIndex];
 			list.oneNum = '';
 			list.twoNum = '';
 			list.selBatchList = [];
 			list.haveBatch = false;
-			list.unitIndex = obj.value;
 			if(unit.isMin==1){
 				list.oneName = '';
 				list.unitValue = 1;
@@ -246,7 +271,7 @@ export default{
 			let end = this.page*this.pageShow;
 			let list = this.selObj.list.slice(start,end);
 			let setList = utils.deepCopy(list);
-			this.setListData(setList);
+			this.eachSaveList(this.setListData(setList));
 		},
 		setSuprlus(num,unit){//换算库存数量
 			let def='',min='',value=1;
@@ -265,8 +290,7 @@ export default{
 			//number领取量（以最小单位计算），value换算关系，showName展示的单位名称,minName最小单位名称
 			return global.comUnit(num,value,def,min);
 		},
-		clearItem(index){//清空输入
-			let list = this.list[index];
+		clearItem(list){//清空输入
 			list.oneNum = '';
 			list.twoNum = '';
 			list.selBatchList = [];
@@ -279,8 +303,7 @@ export default{
 				}
 			}
 		},
-		openBatchWin(index){//打开批次选择弹框
-			let list = this.list[index];
+		openBatchWin(list,index){//打开批次选择弹框
 			this.batchShow = true;
 			this.openIndex = index;
 			this.batchObj = {
@@ -343,17 +366,19 @@ export default{
 			}
 			for(let item of list){
 				let total = Number(item.oneNum)*Number(item.unitValue) + Number(item.twoNum);
-				if(!item.haveBatch && item.oneNum!=='' || item.twoNum!==''){//不选批次，不为空
-					let obj={
-						batchId:0,
-						wid:item.wid,
-						areaId:item.areaId,
-						surplus: total,
-						itemId:item.id,
-						unitId:item.unitId,
-					};
-					this.spliceArr(this.checkList,item);
-					this.checkList.push(obj);
+				if(!item.haveBatch){
+					if(item.oneNum!=='' || item.twoNum!==''){//不选批次，不为空
+						let obj={
+							batchId:0,
+							wid:item.wid,
+							areaId:item.areaId,
+							surplus: total,
+							itemId:item.id,
+							unitId:item.unitId,
+						};
+						this.spliceArr(this.checkList,item);
+						this.checkList.push(obj);
+					}
 				}
 			}
 		},
@@ -362,15 +387,15 @@ export default{
 				if(item.oneNum!=='' || item.twoNum!==''){
 					let total = Number(item.oneNum)*Number(item.unitValue) + Number(item.twoNum);
 					if(isNaN(item.oneNum) || isNaN(item.twoNum)) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量必须为数字`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量必须为数字`,type: 'error'});
 						return false;
 					}
 					if(total<0) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量不能小于0`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量不能小于0`,type: 'error'});
 						return false;
 					}
 					if(total>999999999) {
-						this.myAlert(`物料:${item.name}(${item.wName}/${item.aName}),盘库数量过大!`);
+						this.$message({message: `物料:${item.name}(${item.wName}/${item.aName}),盘库数量过大!`,type: 'error'});
 						return false;
 					}
 				}
@@ -378,56 +403,78 @@ export default{
 			return true;
 		},
 		checkMaterial(){//物料盘库
+			this.setPageSave();//翻页操作才能触发保存，所以这里调用一下，存入最后一次返回后填写的数据
 			this.setSendList();//设置发送数据
 			if(!this.checkList.length){
-				this.myAlert('请填写盘库数量');
+				this.$message({message: '请填写盘库数量',type: 'error'});
 				return;
 			}
 			if(!this.veriList()) return;
-			this.$store.commit('setWin', {
-				winType: 'confirm',
-				title: '操作提示',
-				content: '确认盘库？',
-				callback: (res) => {
-					if (res == 'ok') {
-						setTimeout(()=>{
-							this.checkMatSubmit();
-						});
-					}
-				},
+			let tips='是否确认盘库?';
+			if(this.selObj.isUpdateZero){
+				tips = '是否确认盘库? 注意：未选中的物料库存将消耗至0，减少量日志记录为批盘消耗量';
+			}
+			this.$confirm(tips, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(async () => {
+				setTimeout(()=>{
+					this.checkMatSubmit();
+				});
+			}).catch(()=>{
+				//
 			});
 		},
-		async checkMatSubmit(){
-			let data = await http.GoodsinventoryBatchSetMaterialInventory({data:{
+		checkMatSubmit(){
+			http.GoodsinventoryBatchSetMaterialInventory({data:{
 				type:1,
 				data:this.checkList,
-			}});
-			if(data.result){
-				this.myAlert('物料盘库成功！');
-				delete this.$route.query.id;
-				this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
-			}else{
-				this.myAlert('物料盘库失败！');
-			}
+				isUpdateZero:Number(this.selObj.isUpdateZero),
+			}}).then(data => {
+				let taskId = data;
+				this.loading = true; //开始加载动画
+				//轮询请求taskId
+				this.timerId = Timer.add(() => {
+					http.taskInfo({data: {taskId:taskId}})
+						.then(data => {
+							if (data.status == 3) {
+								//轮询完成
+								this.stopRepeat();
+								
+								this.$message({message: '物料盘库成功！',type: 'success'});
+								delete this.$route.query.id;
+								this.$router.push({path:'/admin/materialCountHistory',query:this.$route.query});
+							} else if (data.status == 2) {
+								//失败
+								this.stopRepeat();
+								this.$message({message: `请求失败，请重试！`,type: 'error'});
+							}
+						});
+				},1000,600,false,() => {
+					this.stopRepeat();
+					this.$message({message: `请求超时，请重试！`,type: 'error'});
+				});
+			});
+		},
+		stopRepeat(){//停止轮询
+			Timer.clear(this.timerId);
+			this.loading = false; //停止加载动画
 		},
 		async getMatList(){//获取物料列表
 			let data = await http.materialGetListByArea({data:{
 				page: this.page,
 				num: this.pageShow,
-				name: '',
 				cid: this.cid,
 				wid : this.wid,
 				areaId : this.areaId,
+				type:-1,
+				name: this.selObj.search.materialName,
+				barCode:this.selObj.search.barCode,
 			}});
 			this.pageTotal = data.total;
 			this.listLength = data.count;
-			this.setListData(data.list);
-		},
-		myAlert(content) {
-			this.$store.commit('setWin', {
-				title: '操作提示',
-				content: content,
-			});
+			this.eachSaveList(this.setListData(data.list));
 		},
 		setListData(list){//设置列表数据
 			for(let item of list){
@@ -447,14 +494,15 @@ export default{
 						unitId = unit.muId;
 					}
 				}
-				item.unitArr = unitArr;
-				item.unitIndex = unitIndex;
-				item.unitId = unitId;
-				item.oneNum = '',item.twoNum = '';
-				item.oneName = oneName,item.twoName = twoName;
-				item.unitValue = value;
+				this.$set(item,'haveBatch',false);
+				this.$set(item,'unitArr',unitArr);
+				this.$set(item,'unitIndex',unitIndex);
+				this.$set(item,'unitId',unitId);
+				this.$set(item,'oneNum',''),this.$set(item,'twoNum','');
+				this.$set(item,'oneName',oneName),this.$set(item,'twoName',twoName);
+				this.$set(item,'unitValue',value);
 			}
-			this.eachSaveList(list);
+			return list;
 		},
 		eachSaveList(list){//遍历保存的数据，翻页时填入列表
 			if(this.pageSaveList.length){
@@ -488,9 +536,8 @@ export default{
 				}
 			}
 		},
-		pageChange(obj){//翻页
-			this.page = obj.page;
-			this.pageShow = obj.num;
+		pageChange(res){//翻页
+			this.page = res;
 			this.setPageSave();//设置翻页后保存的数据
 			if(this.selObj.list.length){
 				this.webPage();
@@ -505,33 +552,41 @@ export default{
 <style lang="less" scoped>
 #check-material{
 	padding-top: 10px;overflow:auto;
-	.main{border: 1px solid #ccc;
-		.head{height: 50px;line-height: 50px;padding: 0 20px;font-size: 16px;
+	.main{
+		.head{
+			height: 50px;line-height: 50px;padding: 0 10px;font-size: 14px;
+			border: 1px solid #ebeef5;border-bottom: 0;
+			overflow: hidden;
 			em{color: #ff3c04;padding: 0 2px;}
-		}
-		.scroll-box{overflow: auto;}
-		.title{overflow:hidden;background: #e6e6e6;min-width: 1300px;
-			span{float: left;height: 40px;line-height: 40px;width: 11%;text-align: center;}
-			.wide{width:23%}
-		}
-		.list-item{border-bottom: 1px solid #ddd;min-width: 1300px;
-			.cell{float: left;height: 70px;line-height: 70px;width: 11%;text-align: center;
-				.sel-box{line-height: normal;}
-				em{color: #29a7e1;display: inline-block;height: 40px;line-height: 40px;padding: 0 5px;cursor: pointer;}
-				.clear{color: red;}
-				.input-box{
-					display: inline-block;vertical-align: middle;overflow: hidden;
-					input,.word{height: 40px;line-height: 38px;border: 1px solid #ccc;float: left;background: #fff;}
-					input{width: 85px;padding: 0 5px;}
-					.word{width: 40px;border-left: 0;text-align: center;}
+			.check-div{
+				float: right;
+				height: 49px;
+				line-height: 49px;
+				.check-icon{
+					margin-left: 10px;
+					color: #666;
 				}
 			}
-			.wide{width:23%}
-			&:last-child{border-bottom: 0;}
-			&:after{content: '';zoom: 1;clear: both;display: block;}
 		}
-		.empty{line-height: 70px;text-align: center;color: #ccc;font-size: 20px;}
+		.input-box{
+			display: inline-block;vertical-align: middle;overflow: hidden;
+			input,.word{
+				height: 40px;line-height: 38px;border: 1px solid #dcdfe6;float: left;background: #fff;
+			}
+			input{
+				width: 85px;padding: 0 5px;
+				border-top-left-radius: 4px;
+				border-bottom-left-radius: 4px;
+				&:focus{outline: none;}
+			}
+			.word{
+				width:50px;border-left: 0;text-align: center;
+				border-top-right-radius: 4px;
+				border-bottom-right-radius: 4px;
+				background: #f5f7fa;
+			}
+		}
 	}
-	.page-box{padding: 20px 0;padding-bottom: 100px;}
+	.page-box{padding: 20px 0;}
 }
 </style>

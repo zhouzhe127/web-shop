@@ -48,7 +48,7 @@
 				</div>
 			</div>
 		</div>
-		<el-table :data="list" stripe border style="width: 100%">
+		<el-table :data="list" stripe border style="width: 100%" :header-cell-style="{'background-color':'#f5f7fa'}">
 		    <el-table-column type="index" :index="indexMethod" label="序号" width="100">
 		    </el-table-column>
 		    <el-table-column prop="itemName" label="商品名称" min-width="200">
@@ -69,7 +69,7 @@
 		    </el-table-column>
 		    <el-table-column label="操作" fixed="right" width="150">
 		    	<template slot-scope="scope">
-		        	<el-button @click="listHandle(scope.row)" type="text" size="small">查看详情</el-button>
+		        	<el-button @click="listHandle(scope.row)" type="text">查看详情</el-button>
 		      	</template>
 		    </el-table-column>
 	  	</el-table>
@@ -141,11 +141,11 @@
 			this.userData = storage.session('userShop');
 			this.cid = this.userData.user.id;
 			this.isBrand = this.userData.currentShop.ischain == '3' ? 1 : 0; //是否为品牌,
+			this.initData();//设置保存的数据
 		},
 		mounted() {
-			this.initBtn();
-			this.initData();
-			this.getData();
+			this.initBtn();//初始化按钮
+			this.getData();//获取数据
 		},
 		methods: {
 			initBtn(){
@@ -172,6 +172,7 @@
 					storage.session('bomListCache', null);
 					storage.session('bomListDestroy', null);
 				}
+				this.listLength = this.page*this.pageShow;
 			},
 			timeChange(res){
 				this.startTime = new Date(res[0]).setHours(0,0,0,0);

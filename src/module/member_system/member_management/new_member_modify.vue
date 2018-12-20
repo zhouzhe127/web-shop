@@ -110,11 +110,9 @@ export default {
 			}
 		},
 		selegender: function(i) { //选择性别的方法
-			//this.genderName = this.genderList[i].name; //点击门店对应的名字
 			this.genderId = i; //点击门店对应的id	
 		},
 		selexpirationTime: function(i) {
-			//this.expirationTime = this.expirationTimeList[i].name; //点击卡类型对应的名字
 			this.expirationTimeId = i; //点击卡类型对应的id
 		},
 		async getMemberList() {
@@ -143,7 +141,6 @@ export default {
 			let data = await http.changeMember({
 				data: {
 					memberId: this.memberInfo.memberId, //会员id
-					// mobile: this.mobile, //手机号
 					name: this.userName, //姓名
 					gender: this.genderId == '0' ? '' : this.genderId, //性别
 					birthday: this.birthdayTime, //生日
@@ -184,9 +181,6 @@ export default {
 			};
 			return obj;
 		},
-		// selectTime: function(time) {
-		// 	console.log(time);
-		// }
 	},
 	components: {
 		Win: () =>

@@ -1,13 +1,13 @@
 /* * @Author: zhouzhe * @Date: 2018-04-26 13:50:23 */
 <template>
 	<div id="wareImport">
-		<el-radio-group v-model="tabactive" fill="#e1bb4a" size="medium" @change="tebClick">
+		<el-radio-group v-model="tabactive" fill="#e1bb4a" @change="tebClick">
 			<el-radio-button v-for="(item,index) in tebData" :key="index" :label="index">{{item}}</el-radio-button>
 		</el-radio-group>
 		<div class="serBox">
 			<h1>操作时间：</h1>
 			<div class="timer">
-				<el-date-picker v-model="timeAll" type="daterange" align="right" unlink-panels range-separator="至"
+				<el-date-picker v-model="timeAll" type="daterange" align="right" unlink-panels range-separator="-"
 				 start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
 				</el-date-picker>
 			</div>
@@ -252,14 +252,6 @@
 					content: con
 				});
 			}
-		},
-		components: {
-			comTable: () =>
-				import ( /*webpackChunkName: 'com_table'*/ 'src/components/com_table'),
-			calendar: () =>
-				import ( /*webpackChunkName: 'calendar_type'*/ 'src/components/calendar_type'),
-			pageTurn: () =>
-				import ( /*webpackChunkName: 'page_element'*/ 'src/components/page_element'),
 		}
 	};
 </script>

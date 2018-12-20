@@ -98,7 +98,7 @@
 					    </el-table-column>
 					    <el-table-column label="操作" fixed="right" width="150">
 					    	<template slot-scope="scope">
-					        	<el-button @click="listHandle(scope.row)" type="text" size="small">查看详情</el-button>
+					        	<el-button @click="listHandle(scope.row)" type="text">查看详情</el-button>
 					      	</template>
 					    </el-table-column>
 				  	</el-table>
