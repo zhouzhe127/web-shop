@@ -318,7 +318,7 @@
 		}
 		.area-detail {
 			display: block;
-			border: 1px #ccc solid;
+			border: 1px #ebeef5 solid;
 			border-top: none;
 			padding-left:40px; 
 			li {
