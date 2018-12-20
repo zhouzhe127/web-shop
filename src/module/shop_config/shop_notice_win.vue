@@ -75,8 +75,24 @@
 					</el-form-item>
 				</template>
 			</el-form>
+			<el-dialog
+				title="提示信息"
+				:visible.sync="timeWinShow"
+				width="30%"
+				>
+				<el-form :model="redDetial" :rules="rules" ref="redDetial" label-width="90px">
+					<el-form-item label="发布时间">
+						<el-date-picker v-model="staTime" type="datetime" placeholder="选择日期">
+						</el-date-picker>
+					</el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="timeWinShow = false">取 消</el-button>
+					<el-button type="primary" @click="timeBack('ok')">确 定</el-button>
+				</span>
+			</el-dialog>
 			<el-button @click="setTimeIssue(false)" type="primary">立刻发布</el-button>
-			<el-button @click="setTimeIssue(true)" type="primary" plain>定时发布</el-button>
+			<el-button @click="timeWinShow = true" type="primary" plain>定时发布</el-button>
 			<el-button @click="addNotice(true)" plain>保存草稿箱</el-button>
 			<el-button @click="goToback" type="info" plain>上一步</el-button>
 			<h3 v-if="redDetial.sendType=='1'" style="padding: 20px;margin-left: 86px;color: #e1bb4a;">已设置：{{redDetial.newTime}}发布</h3>
@@ -85,7 +101,7 @@
 		<shopNoticeTwo v-if="isOpenjob" @selectBack="radioBack" :jobList="jobList" :jobIds="jobIds" :jobtype="jobtype" :shopIds="shopIds"></shopNoticeTwo>
 		<elShopListWin :shopIds="shopIds" @chooseShop="getShopResult" v-if="showShop" :delShopId="delShopId"></elShopListWin>
 		<!-- 添加时间弹窗 -->
-		<win v-if="timeWinShow" width="360" height="150" @winEvent="timeBack" :align="'center'">
+		<!-- <win v-if="timeWinShow" width="360" height="150" @winEvent="timeBack" :align="'center'">
 			<div slot="content" style="margin-top:60px;">
 				<el-form :model="redDetial" :rules="rules" ref="redDetial" label-width="90px">
 					<el-form-item label="发布时间">
@@ -94,7 +110,7 @@
 					</el-form-item>
 				</el-form>
 			</div>
-		</win>
+		</win> -->
 	</div>
 </template>
 
@@ -220,8 +236,6 @@ export default {
 				this.detial.time = this.staTime;
 				this.addNotice(false);
 			}
-			console.log(res);
-			console.log(this.staTime);
 			this.timeWinShow = false;
 		},
 		handleClick(tab, event) {
@@ -432,14 +446,14 @@ export default {
 				caseList[i].shopIds = caseList[i].shopIds.toString();
 				caseList[i].roleIds = caseList[i].roleIds.toString();
 				if(this.isNext&&!ble){
-					if(caseList[i].shopIds==''){
+					if(caseList[i].shopIds=='' && this.ischain == '3'){
 						this.$store.commit('setWin', {
 							winType: 'alert',
 							content: '请选择要发布的门店！'
 						});
 						return false;
 					}
-					if(caseList[i].roleIds==''){
+					if(caseList[i].roleIds=='' && this.ischain == '3'){
 						this.$store.commit('setWin', {
 							winType: 'alert',
 							content: '请选择要发布的职位！'
