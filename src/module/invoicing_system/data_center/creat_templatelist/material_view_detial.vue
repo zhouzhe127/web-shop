@@ -123,6 +123,7 @@
 			},
 			sizeChange(num) {
 				this.num = num;
+				this.getDetail();
 			},
 			initBtn() {
 				this.$store.commit('setPageTools', [{
