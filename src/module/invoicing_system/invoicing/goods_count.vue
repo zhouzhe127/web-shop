@@ -302,7 +302,7 @@ export default {
 			//匹配商品数量
 			for(let ele of nowList){
 				for(let e of list){
-					if(ele.id == e.id){
+					if(ele.id == e.id && ele.wid == e.wid && ele.areaId == e.areaId){
 						ele.countNum = e.countNum;
 						break;
 					}
