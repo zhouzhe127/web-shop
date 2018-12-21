@@ -111,7 +111,11 @@ export const mixin = {
 				if (item.type == '1' || item.type == '6') {
 					return operate + (parseInt(Number(item.operateAmount) * 100) + parseInt(Number(item.operateGiftAmount) * 100)) / 100;
 				} else if (item.type == '2') {
-					return operate + (parseInt(Number(item.rechargeAmount) * 100) + parseInt(Number(item.operateGiftAmount) * 100)) / 100;
+					if (this.bannerIndex == 2) {
+						return operate + (Number(item.operatePoint));
+					} else {
+						return operate + (parseInt(Number(item.rechargeAmount) * 100) + parseInt(Number(item.operateGiftAmount) * 100)) / 100;
+					}
 				} else {
 					if (this.bannerIndex == 2) {
 						return operate + (Number(item.operatePoint));

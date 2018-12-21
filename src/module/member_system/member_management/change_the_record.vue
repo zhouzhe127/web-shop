@@ -55,7 +55,8 @@
 	export default {
 		props: {
 			mid: String,
-			shopsId: String
+			shopsId: String,
+			bannerIndex: Number
 		},
 		mixins: [mixin],
 		data() {
