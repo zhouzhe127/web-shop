@@ -127,6 +127,7 @@
 			},
 			sizeChange(num) {
 				this.num = num;
+				this.getDetail();
 			},
 			async getHttp(url, obj = {}, err = false) {
 				let res = await http[url]({
