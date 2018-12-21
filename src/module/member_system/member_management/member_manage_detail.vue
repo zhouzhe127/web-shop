@@ -78,13 +78,13 @@
 					</el-radio-group>
 				</div>
 				<!-- 历史记录 -->
-				<historical-record v-if="bannerIndex == 0" :mid='mid' :shopsId='shopsId' @eventrecord="getEvent"></historical-record>
+				<historical-record v-if="bannerIndex == 0" :mid='mid' :shopsId='shopsId' :bannerIndex="bannerIndex" @eventrecord="getEvent"></historical-record>
 				<!-- 更改记录 -->
-				<change-record v-if="bannerIndex == 1" :mid='mid' :shopsId='shopsId'></change-record>
+				<change-record v-if="bannerIndex == 1" :mid='mid' :shopsId='shopsId' :bannerIndex="bannerIndex"></change-record>
 				<!-- 积分变动 -->
-				<integral-change v-if="bannerIndex == 2" :mid='mid' :shopsId='shopsId'></integral-change>
+				<integral-change v-if="bannerIndex == 2" :mid='mid' :shopsId='shopsId' :bannerIndex="bannerIndex"></integral-change>
 				<!-- 余额变动 -->
-				<change-balance v-if="bannerIndex == 3" :mid='mid' :shopsId='shopsId'></change-balance>
+				<change-balance v-if="bannerIndex == 3" :mid='mid' :shopsId='shopsId' :bannerIndex="bannerIndex"></change-balance>
 			</div>
 			<!-- 订单详情 -->
 			<orderDetail :detail="detail" :isDelete="false" v-if="isShow == 'order'" @detailShow="getDetailShow"></orderDetail>

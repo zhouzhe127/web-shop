@@ -33,7 +33,7 @@
 				<span class="online-sub fl required">添加图片</span>
 				<div class="rightHalf">
 					<div class="fl uploadImgs clearfix">
-						<el-button type="primary" icon="el-icon-plus" style="width:179px;">上传图片
+						<el-button type="primary" icon="el-icon-plus" style="width:179px;">{{addImage}}
 						</el-button>
 						<form enctype="multipart/form-data" id="comForms">
 							<input @change="fileNameChange" type="file" id="file_upload" accept="image/jpeg,image/png,image/gif,image/tiff" name="image" />
@@ -80,7 +80,8 @@ export default {
 			isUpload: false,
 			Hnum: '', //环境图片的数量
 			Gnum: '', //商品图片的数量
-			uploadTip: '已上传'
+			uploadTip: '已上传',
+			addImage: '上传图片'
 		};
 	},
 	props: {
@@ -207,6 +208,7 @@ export default {
 			this.typeName = this.typeList[this.typeId - 1].name;
 			this.fileName = this.detail.url;
 			this.title = '编辑图片';
+			this.addImage = '重新上传';
 			this.okStyle = {
 				content: '保存',
 				style: {
