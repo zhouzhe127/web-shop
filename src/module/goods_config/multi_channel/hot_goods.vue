@@ -125,8 +125,8 @@ const mousePosition = {
 	y: 0
 };
 const minSize = {
-	width: 50,
-	height: 50
+	width: 20,
+	height: 20
 };
 // 用于记录 点击放大缩小的 所点的那个按钮的类名
 let className = '';
@@ -270,7 +270,7 @@ export default {
 					fn: () => {
 						this.areaList.push(generate_area());
 						for (let i = 0; i < this.areaList.length; i++) {
-							this.areaList[i].name = `热区${i + 1}`;
+							this.areaList[i].name = `${i + 1}`;
 							this.areaList[i].id = i;
 						}
 					},
@@ -297,7 +297,7 @@ export default {
 			//赋值
 			let arr = utils.deepCopy(item.hotGoods);
 			for (let i = 0; i < arr.length; i++) {
-				arr[i].name = `热区${i + 1}`;
+				arr[i].name = `${i + 1}`;
 				arr[i].isMove = false;
 				arr[i].isScale = false;
 				arr[i].backId = arr[i].id; //传递给后台的id
@@ -403,7 +403,7 @@ export default {
 		async delHotGoods(i) {
 			this.areaList.splice(i, 1);
 			for (let i = 0; i < this.areaList.length; i++) {
-				this.areaList[i].name = `热区${i + 1}`;
+				this.areaList[i].name = `${i + 1}`;
 				this.areaList[i].id = i;
 			}
 		},
