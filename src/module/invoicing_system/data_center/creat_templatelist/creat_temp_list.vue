@@ -81,7 +81,7 @@
 				</el-table-column>
 			</el-table>
 		</div>
-		<add-position v-if="positionWin" :roleList="roleList" :sleRoleArr="sleRoleArr" :showWin="positionWin" @positionEvent="positionEvent"></add-position>
+		<add-position v-if="positionWin" :title="'查看权限职位选择'" :roleList="roleList" :sleRoleArr="sleRoleArr" @positionEvent="positionEvent"></add-position>
 		<add-column v-if="columnShow" :pObj="columnListData" @emit="columnEmit"></add-column>
 		<addRow-win v-if="rowShow" :title="isEdit?'编辑行':'添加行'" :pShowMaterial="pShowMaterial" :pList="materialList" :pSortObj="pSortObj"
 		 :pScope="pScope" :pCollection="pCollection" @change="getRowData"></addRow-win>
