@@ -103,6 +103,7 @@
 						this.loseNum = this.loseNum.substr(0, this.loseNum.indexOf('.') + 4);
 					}
 				}
+				if(isNaN(this.loseNum)) this.loseNum = 0;
 			},
 			async continueLoss(type) {
 				if (Number(this.loseNum) > Number(this.detail.surplus)) {
