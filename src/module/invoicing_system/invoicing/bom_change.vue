@@ -100,7 +100,7 @@
 								</el-select>
 							</template>
 						</el-table-column>
-						<el-table-column label="盘库数量" width="320" align="center">
+						<el-table-column label="消耗数量" min-width="320" align="center">
 							<template slot-scope="scope">
 								<template v-if="scope.row.def">
 									<div class="input-box">
@@ -115,7 +115,7 @@
 								</div>
 							</template>
 						</el-table-column>
-						<el-table-column label="出成率" min-width="150">
+						<el-table-column label="出成率" width="150">
 							<template slot-scope="scope">
 								<el-input placeholder="输入数字" v-model="scope.row.yield" ></el-input>
 							</template>
