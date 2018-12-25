@@ -569,6 +569,7 @@
 						this.houseTotal = this.houseTotal.substr(0, this.houseTotal.indexOf('.') + 4);
 					}
 				}
+				if(isNaN(this.houseTotal)) this.houseTotal = 0;
 			},
 			wareClose() {
 				let wareWin = this.$refs.warehouse;

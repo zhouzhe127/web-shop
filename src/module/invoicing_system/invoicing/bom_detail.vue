@@ -98,7 +98,7 @@
 				</el-table-column>
 				<el-table-column label="已选仓库数" min-width="100">
 					<template slot-scope="scope">
-						{{scope.row.wids? scope.row.wids.length : ''}}
+						{scope.row.host.length}}
 					</template>
 				</el-table-column>
 			</el-table>
