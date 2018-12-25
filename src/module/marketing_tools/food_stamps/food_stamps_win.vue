@@ -140,7 +140,7 @@ export default {
 		},
 		async foodUpdate() { //更新配置 上传菜品图
 			let key = '';
-			if (this.type == 'add') {
+			if (this.type == 'view') {
 				if (this.typeId == 1) {
 					key = this.keyName + (this.Hnum + 1);
 				} else {
