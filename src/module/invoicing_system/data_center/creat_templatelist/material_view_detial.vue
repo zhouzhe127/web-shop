@@ -81,6 +81,7 @@
 		},
 		methods: {
 			filterReset(sym) {
+				this.page = 1;
 				if (sym == 'reset') {
 					this.initCondition();
 				}

@@ -58,6 +58,7 @@
 			}
 			let arr=[];
 			for(let item of obj.list){
+				console.log(this.isBrand);
 				if(this.isBrand){//品牌
 					if(item.brandId==this.shopId && item.shopId=='0'){
 						arr.push(item);
