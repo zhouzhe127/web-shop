@@ -13,9 +13,9 @@
 				<div>
 					<el-button type="primary" @click="getActivityList">查询</el-button>
 				</div>
-				<div class="rightBtn">
+				<div class="rightBtn" v-if="isBrand">
+					<el-button type="primary" @click="newActivity" >新建活动</el-button>
 					<el-button type="primary" @click="downQrCode" >下载小程序码</el-button>
-					<el-button type="primary" @click="newActivity" v-if="isBrand">新建活动</el-button>
 				</div>
 			</div>
 			<div class="list">
@@ -32,6 +32,10 @@
 						<el-table-column align="center" prop="goodsNum" label="商品数量"> </el-table-column>
 						<el-table-column align="center" prop="launchNum" label="发起砍价人数"></el-table-column>
 						<el-table-column align="center" prop="helperNum" label="帮砍人数"></el-table-column>
+					</template>
+						<el-table-column align="center" prop="payNum" label="购券人数"></el-table-column>
+
+					<template v-if="isBrand">
 						<el-table-column align="center" prop="income" label="券金收入"></el-table-column>
 						<el-table-column align="center" prop="fsCoin" label="返利金额"></el-table-column>
 						<el-table-column align="center" prop="grantNum" label="发券量"></el-table-column>

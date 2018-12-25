@@ -21,6 +21,7 @@
 						</form>
 					</div>
 				</div>
+				<span class="textTip">推荐尺寸:260*260 </span>
 				<!-- <section style="width:100%;overflow:auto;">
 				</section> -->
 			</el-form-item>
@@ -83,7 +84,7 @@
 						active-text="收起篇幅"
 						inactive-text="展开篇幅">
 					</el-switch>
-        	<span class="textTip">规格750*X(最多十张)</span>
+        	<span class="textTip">规格750*n(最多十张)</span>
 				</div>
 				<div class="img-list" :class="{collapse: imgListCollapse}">
 					<div class="imgBox" :key="i" v-for="(v,i) in form.imgList">
@@ -172,7 +173,7 @@ function notEmptyString(r, v, cb) {
 	}
 }
 function validateName(r, v, cb) {
-	if (!/^([\u4e00-\u9fa5a-zA-Z0-9()（）.,，。！!%#$￥:：+-=@——【】]|\s|\[|\])+$/.test(v)) {
+	if(!/^([\u4e00-\u9fa5a-zA-Z0-9()（）.,，。！!%#$￥:：+-=@——【】]|\s|\[|\])+$/.test(v)){
 		cb(new Error('名称必须由中文、字母、数字以及常规符号组成'));
 	} else {
 		cb();

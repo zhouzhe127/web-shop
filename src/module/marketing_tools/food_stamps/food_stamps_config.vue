@@ -34,7 +34,7 @@
 					</form>
 				</div>
 				<div class="fl handle-tips">
-					<i></i> 推荐尺寸:大小1M
+					<i></i> 推荐尺寸:668×375   推荐大小:小于1M
 				</div>
 			</div>
 		</div>
@@ -51,10 +51,10 @@
 			<div class="online-box clearfix">
 				<span class="online-sub fl required">更多图片</span>
 				<div class="rightHalf">
-					<el-button class="fl" type="primary" style="width:179px;" @click="addImages('add')">添加图片
+					<el-button class="fl" type="primary" style="width:179px;" @click="addImages('view')">添加图片
 					</el-button>
 					<div class="fl handle-tips">
-						<i></i> 推荐尺寸:大小1M 上限100张
+						<i></i> 推荐尺寸:350×350  推荐大小:小于1M 上限100张
 					</div>
 				</div>
 			</div>
@@ -138,7 +138,7 @@ export default {
 				1: '环境',
 				2: '商品'
 			},
-			type: 'add', //新增或编辑
+			type: 'view', //新增或编辑
 			detail: {} //某个详情
 		};
 	},

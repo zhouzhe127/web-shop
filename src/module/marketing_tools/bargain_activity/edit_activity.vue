@@ -75,7 +75,7 @@ export default {
 								cb(new Error('请输入活动名称'));
 							}else{
 								if(!/^([\u4e00-\u9fa5a-zA-Z0-9()（）.,，。！!%#$￥:：+-=@——【】]|\s|\[|\])+$/.test(v)){
-									return cb(new Error('名称必须由中文、字母、数字以及英文小括号组成'));
+									return cb(new Error('名称必须由中文、字母、数字以及常规符号组成'));
 								} 
 								cb();
 							}
