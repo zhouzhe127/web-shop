@@ -240,6 +240,7 @@
 					return res.id;
 				});
 				this.ownerArr = [...this.ownerSel];
+				this.ownerName =` 已选中${this.ownerSel.length}个`;
 			},
 			ownerClose(){
 				this.visible = false;
@@ -324,9 +325,10 @@
 				});
 				this.ownerSel = list;
 				this.ownerArr = list;
-				this.isShared = 0;
+				this.isShared = '';
 				this.page = 1;
 				this.showNum = 10;
+				this.ownerName =` 已选中${this.ownerSel.length}个`;
 				this.filter();
 			},
 			paging() { //分页
@@ -342,7 +344,8 @@
 				let list = utils.deepCopy(this.allList);
 				for(let key in obj) { //遍历筛选条件
 					let newList = [];
-					if(obj[key] != '') {
+					console.log(key,obj.owner);
+					if(obj[key] !== '') {
 						if(key == 'owner') { //店铺所属匹配
 							for(let item1 of obj.owner) {
 								for(let item2 of list) {
