@@ -145,9 +145,6 @@
 									</el-option>
 								</el-select>								
 							</li>
-
-
-                            <li>{{item.materialType}}</li>
                         </div>
                     </div>     
                     <div class="table-footer" v-show="selectMaterial.length==0"></div>
@@ -215,7 +212,6 @@
 					{titleName:'当前库存',dataName:'storeNum'},
 					{titleName:'调度数量/重量',dataName:'name'},
 					{titleName:'单位选择',dataName:'name'},
-					{titleName:'类型',dataName:'materialtype'},
 				],
 				subObj: {
 					reason: '', //原因
@@ -950,13 +946,13 @@
     .table-material{
         width:1436px;
         border:1px solid #ccc;
-        .title-common;
+        .title-common(16.66%);
         .table-body{
             .table-row{
                 &:hover{
                     background: #efefef;
                 }
-                .row-common;
+                .row-common(16.66%);
                 border-bottom:2px solid #f2f2f2;
                 &:after{
                     .clear;
@@ -983,7 +979,8 @@
                 .whb(210px,100px,1px solid #ccc);
                 font-size:14px;
                 resize: none;
-                outline: none;
+				outline: none;
+				padding: 10px;
             }
             .add-input{
                 display: inline-block;
