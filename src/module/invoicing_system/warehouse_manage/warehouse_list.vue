@@ -59,7 +59,7 @@
 						<el-input v-model='place' placeholder="请输入详细地址" class="el-input"></el-input>
 					</div>
 					<div class="inline-box input-check select-ban">
-						<i @click="clickCheck" :class="{active:this.isShare === '0'}"></i>
+						<i @click="clickCheck" :class="{active:this.isShared === '0'}"></i>
 						非共享
 					</div>
 					<div class="inline-box button-box">
@@ -141,7 +141,7 @@
 				cityName: '',
 				townName: '',
 				place: '', //详细地址
-				isShare: '', //是否共享 ''都有 1共享 0非共享
+				isShared: '', //是否共享 ''都有 1共享 0非共享
 				owner: '', //仓库所属
 				ownerName:'',//选择的所属名称
 				ownerSel:[],//选择仓库所属
@@ -239,11 +239,11 @@
 				this.ownerSel = this.owner.map((res)=>{
 					return res.id;
 				});
-				this.ownerArr = this.ownerSel;
+				this.ownerArr = [...this.ownerSel];
 			},
 			ownerClose(){
 				this.visible = false;
-				this.ownerSel = this.ownerArr;
+				this.ownerSel = [...this.ownerArr];
 			},
 			selOwnerAll(type){
 				if(type===1){//全选
@@ -257,7 +257,7 @@
 			ownerHandle(type){
 				this.visible = false;
 				if(type===1){//确定
-					this.ownerArr = this.ownerSel;
+					this.ownerArr = [...this.ownerSel];
 					this.page = 1;
 					this.filter();
 					if(this.ownerSel.length>1){
@@ -270,7 +270,7 @@
 						this.ownerName = '';
 					}
 				}else{//取消
-					this.ownerSel = this.ownerArr;
+					this.ownerSel = [...this.ownerArr];
 				}
 			},
 			async getList() { //获取仓库列表
@@ -288,9 +288,8 @@
 							this[i] = backRequest[i];
 						}
 					}
-				} else {
-					this.getOwners();
 				}
+				this.getOwners();
 				storage.session('warehouseListsDestroy', null);
 				storage.session('warehouseListsRequest', null);
 			},
@@ -302,33 +301,37 @@
 				let obj = { //筛选条件 只适用于一级筛选 筛选key对应列表key
 					code: this.code,
 					name: this.name,
-					owner: this.ownerArr,
+					owner: this.ownerSel,
 					province: this.province,
 					city: this.city,
 					town: this.town,
 					place: this.place,
-					isShared: this.isShare,
+					isShared: this.isShared,
 				};
-				this.filterObj = obj;
+				this.filterObj = utils.deepCopy(obj);
+				this.filterObj.page = this.page;
+				this.filterObj.showNum = this.showNum;
 				this.condition(obj);
 				this.paging();
 			},
 			reset() { //重置
-				for(let i in this.filterObj) {
-					if(i == 'owner') {
-						let list = utils.deepCopy(this.owner);
-						for(let item of list) {
-							item.selected = true;
-						}
-						this.owner = list;
-					} else {
-						this[i] = '';
-					}
+				let empty = ['code','name','province','city','town','place'];
+				for(let item of empty){
+					this[item] = '';
 				}
+				let list = this.owner.map((res)=>{
+					return res.id;
+				});
+				this.ownerSel = list;
+				this.ownerArr = list;
+				this.isShared = 0;
+				this.page = 1;
+				this.showNum = 10;
 				this.filter();
 			},
 			paging() { //分页
 				this.pageTotal = Math.ceil(this.filterList.length / this.showNum);
+				this.listLength = this.filterList.length;
 				let start = (this.page - 1) * this.showNum;
 				let end = this.page * this.showNum;
 				if(end > this.filterList.length) end = this.filterList.length;
@@ -366,10 +369,10 @@
 				}
 			},
 			clickCheck() { //改变共享状态 这里用'1'/'0'表示，便于筛选
-				if(this.isShare === '0') {
-					this.isShare = '';
+				if(this.isShared === '0') {
+					this.isShared = '';
 				} else {
-					this.isShare = '0';
+					this.isShared = '0';
 				}
 				this.page = 1;
 				this.filter();
@@ -411,7 +414,7 @@
 		}
 	}
 	.warehouse-lists{
-		.choose-btn{width: 100%;height: 40px;cursor: pointer;margin-bottom:20px;}
+		.choose-btn{height: 40px;margin-bottom:20px;}
 		.el-input{width: 210px;}
 		.filter{width: 100%;
 			.block{display: inline-block;}
